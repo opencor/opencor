@@ -1,11 +1,5 @@
 PROJECT(BSMLDataStorePlugin)
 
-FIND_PACKAGE(biosignalml REQUIRED)
-FIND_PACKAGE(typedobject REQUIRED)
-
-find_library(typedobject_LIB typedobject PATHS ${typedobject_LIBRARY_DIR})
-find_library(biosignalml_LIB biosignalml PATHS ${biosignalml_LIBRARY_DIR})
-
 # Add the plugin
 
 ADD_PLUGIN(BSMLDataStore
@@ -31,11 +25,10 @@ ADD_PLUGIN(BSMLDataStore
     EXTERNAL_BINARIES
         libtypedobject.dylib
         libbiosignalml.dylib
-#        ${typedobject_LIB}
-#        ${biosignalml_LIB}
 
     PLUGINS
         Core
+        BioSignalMLAPI
         CoreDataStore
     QT_MODULES
         Widgets

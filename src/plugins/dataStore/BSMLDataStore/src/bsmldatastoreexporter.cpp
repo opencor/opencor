@@ -25,10 +25,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <biosignalml.h>
-#include <data/hdf5.h>              // ****
-//#include <biosignalml/biosignalml.h>
-//#include <biosignalml/data/hdf5.h>
+#include <biosignalml/biosignalml.h>
+#include <biosignalml/data/hdf5.h>
 
 //==============================================================================
 

@@ -250,6 +250,7 @@ SET(PLUGINS
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
+    api/BioSignalMLAPI
 
     dataStore/CoreDataStore
 
