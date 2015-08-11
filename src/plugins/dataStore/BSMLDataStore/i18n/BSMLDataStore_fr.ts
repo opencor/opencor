@@ -12,15 +12,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Change</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Short name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>nnnnnnnn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -32,10 +24,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Investigation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -43,15 +31,19 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Set name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>Export to a BioSignalML file</source>
+        <source>BioSignalML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>BioSignalML</source>
+        <source>Enter BioSignalML file name</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
