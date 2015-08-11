@@ -78,7 +78,7 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
             recording->set_comment(comment.toStdString());
             recording->set_label(mSaveDialog->shortName().toStdString()) ;
             recording->set_description(mSaveDialog->description().toStdString()) ;
-// save author
+            recording->set_investigator(rdf::Literal(mSaveDialog->author().toStdString())) ;
 
             recording->add_prefix(rdf::Namespace("units", base_units)) ;
 
