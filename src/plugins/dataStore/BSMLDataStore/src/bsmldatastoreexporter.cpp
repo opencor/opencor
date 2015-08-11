@@ -43,8 +43,8 @@ namespace BSMLDataStore {
 
 //==============================================================================
 
-BioSignalMLExporter::BioSignalMLExporter(QMainWindow *pMainWindow) :
-    CoreDataStore::DataStoreExporter(),
+BioSignalMLExporter::BioSignalMLExporter(QMainWindow *pMainWindow, const QString &pId) :
+    CoreDataStore::DataStoreExporter(pId),
     mSaveDialog(new BioSignalMLSaveDialog(pMainWindow))
 {
 }

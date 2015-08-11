@@ -51,7 +51,7 @@ namespace BSMLDataStore {
 class BSMLDATASTORE_EXPORT BioSignalMLExporter : public CoreDataStore::DataStoreExporter
 {
 public:
-    BioSignalMLExporter(QMainWindow *pMainWindow);
+    BioSignalMLExporter(QMainWindow *pMainWindow, const QString &pId = QString());
     virtual void execute(CoreDataStore::CoreDataStore *pDataStore) const;
 
 private:

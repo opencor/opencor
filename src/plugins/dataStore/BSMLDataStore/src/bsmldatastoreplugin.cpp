@@ -71,9 +71,9 @@ void * BSMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) con
 
 //==============================================================================
 
-void BSMLDataStorePlugin::deleteDataStoreExporterInstance(const QString &pId) const
+void BSMLDataStorePlugin::deleteDataStoreExporterInstance(void *pDataStoreExporterInstance) const
 {
-    Q_UNUSED(pId);
+    Q_UNUSED(pDataStoreExporterInstance);
 
     // We don't handle this interface...
 }
