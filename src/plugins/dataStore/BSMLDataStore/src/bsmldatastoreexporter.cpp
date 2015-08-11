@@ -25,16 +25,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <biosignalml/biosignalml.h>
-#include <biosignalml/data/hdf5.h>
+#include "biosignalml/biosignalml.h"
+#include "biosignalml/data/hdf5.h"
+
+//==============================================================================
+
 
 //==============================================================================
 
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
-
-#include <iostream>
 
 //==============================================================================
 
@@ -62,7 +63,6 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
     if (mSaveDialog->run()) {
 
         QString fileName = mSaveDialog->fileName();
-
 
         // To come from user dialog... (And restrict to http: scheme ??)
         // Or use URI in repository??
