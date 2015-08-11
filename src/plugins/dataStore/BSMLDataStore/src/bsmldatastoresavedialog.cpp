@@ -107,11 +107,13 @@ void BioSignalMLSaveDialog::setFileName(bool checked)
                                          bsmlFiles, &bsmlFiles);
     if (!name.isEmpty()) {
         mGui->fileNameValue->setText(name);
+        mGui->fileNameValue->setCursorPosition(name.length());
         mGui->setFileName->setDefault(false);
         mGui->shortNameValue->setFocus(Qt::TabFocusReason);
         mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(true) ;
         mGui->cancel_ok->button(QDialogButtonBox::Ok)->setDefault(true) ;
     }
+    this->activateWindow();
 }
 
 //==============================================================================
