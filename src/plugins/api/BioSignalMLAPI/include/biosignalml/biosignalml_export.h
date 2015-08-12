@@ -1,4 +1,3 @@
-
 #ifndef BIOSIGNALML_EXPORT_H
 #define BIOSIGNALML_EXPORT_H
 
@@ -7,22 +6,38 @@
 #  define BIOSIGNALML_NO_EXPORT
 #else
 #  ifndef BIOSIGNALML_EXPORT
-#    ifdef biosignalml_EXPORTS
+#    ifdef typedobject_EXPORTS
         /* We are building this library */
-#      define BIOSIGNALML_EXPORT __attribute__((visibility("default")))
+#      ifdef WIN32
+#        define BIOSIGNALML_EXPORT __declspec(dllexport)
+#      else
+#        define BIOSIGNALML_EXPORT __attribute__((visibility("default")))
+#      endif
 #    else
         /* We are using this library */
-#      define BIOSIGNALML_EXPORT __attribute__((visibility("default")))
+#      ifdef WIN32
+#        define BIOSIGNALML_EXPORT __declspec(dllimport)
+#      else
+#        define BIOSIGNALML_EXPORT __attribute__((visibility("default")))
+#      endif
 #    endif
 #  endif
 
 #  ifndef BIOSIGNALML_NO_EXPORT
-#    define BIOSIGNALML_NO_EXPORT __attribute__((visibility("hidden")))
+#    ifdef WIN32
+#      define BIOSIGNALML_NO_EXPORT 
+#    else
+#      define BIOSIGNALML_NO_EXPORT __attribute__((visibility("hidden")))
+#    endif
 #  endif
 #endif
 
 #ifndef BIOSIGNALML_DEPRECATED
-#  define BIOSIGNALML_DEPRECATED __attribute__ ((__deprecated__))
+#  ifdef WIN32
+#    define BIOSIGNALML_DEPRECATED __declspec(deprecated)
+#  else
+#    define BIOSIGNALML_DEPRECATED __attribute__ ((__deprecated__))
+#  endif
 #endif
 
 #ifndef BIOSIGNALML_DEPRECATED_EXPORT
