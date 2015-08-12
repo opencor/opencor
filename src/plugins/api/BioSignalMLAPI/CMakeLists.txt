@@ -5,8 +5,8 @@ MACRO(RETRIEVE_BioSignalML_API_SETTINGS)
 
     IF(WIN32)
         SET(BioSignalML_API_EXTERNAL_BINARIES
-            libbiosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX}
-            libtypedobject${CMAKE_IMPORT_LIBRARY_SUFFIX}
+            biosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX}
+            typedobject${CMAKE_IMPORT_LIBRARY_SUFFIX}
         )
     ELSEIF(APPLE)
         SET(BioSignalML_API_EXTERNAL_BINARIES
@@ -40,10 +40,10 @@ IF(WIN32)
         ENDIF()
     ELSE()
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.dll e2fb73caa0cb20d6722a66638ce2a26233dc875f)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.lib eab202a68ddcb5ab0391ed149a5423d9222ffd42)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.dll e2fb73caa0cb20d6722a66638ce2a26233dc875f)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.lib eab202a68ddcb5ab0391ed149a5423d9222ffd42)
+            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll c4d7113f6976a7f41d16241eca169ab14a221f96)
+            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 0e0d73d647f8bf58fd33fc86ed4edb827c947b3b)
+            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll abd6cd1ff41717d79e13ebef361453c9c2841e82)
+            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 40b9bb9a89acb443ab3be17006939f8237feba07)
         ELSE()
             RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.dll db2df210af341e833fb79021ddda4ce1b8b31d0b)
             RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.lib 35d17fda6341331e1fb532f7b0742fd4ea94fe72)
@@ -98,9 +98,9 @@ ADD_PLUGIN(BioSignalMLAPI
 
 IF(WIN32)
     WINDOWS_DEPLOY_LIBRARY(${BioSignalML_API_EXTERNAL_BINARIES_DIR}
-                           libbiosignalml${CMAKE_SHARED_LIBRARY_SUFFIX})
+                           biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX})
     WINDOWS_DEPLOY_LIBRARY(${BioSignalML_API_EXTERNAL_BINARIES_DIR}
-                           libtypedobject${CMAKE_SHARED_LIBRARY_SUFFIX})
+                           typedobject${CMAKE_SHARED_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
     OS_X_DEPLOY_LIBRARY(${BioSignalML_API_EXTERNAL_BINARIES_DIR} biosignalml.0
                         typedobject.1)
