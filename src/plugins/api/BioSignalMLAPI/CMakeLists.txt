@@ -87,8 +87,8 @@ ADD_PLUGIN(BioSignalMLAPI
         ${BioSignalML_API_EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${BioSignalML_API_EXTERNAL_BINARIES}
-    TESTS
-        tests
+#    TESTS
+#        tests
 )
 
 # Deploy the plugin's external binaries
