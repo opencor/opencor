@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
-#include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationwidget.h"
@@ -56,11 +55,11 @@ SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::Cellml
     mEndingPoint(1000.0),
     mPointInterval(1.0),
     mOdeSolverName(QString()),
-    mOdeSolverProperties(CoreSolver::Properties()),
+    mOdeSolverProperties(Solver::Solver::Properties()),
     mDaeSolverName(QString()),
-    mDaeSolverProperties(CoreSolver::Properties()),
+    mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(CoreSolver::Properties())
+    mNlaSolverProperties(Solver::Solver::Properties())
 {
     // Create our various arrays, if possible
 
@@ -250,11 +249,11 @@ void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverNam
 
 //==============================================================================
 
-CoreSolver::Properties SingleCellViewSimulationData::odeSolverProperties() const
+Solver::Solver::Properties SingleCellViewSimulationData::odeSolverProperties() const
 {
     // Return our ODE solver's properties
 
-    return (mRuntime && mRuntime->needOdeSolver())?mOdeSolverProperties:CoreSolver::Properties();
+    return (mRuntime && mRuntime->needOdeSolver())?mOdeSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -298,11 +297,11 @@ void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverNam
 
 //==============================================================================
 
-CoreSolver::Properties SingleCellViewSimulationData::daeSolverProperties() const
+Solver::Solver::Properties SingleCellViewSimulationData::daeSolverProperties() const
 {
     // Return our DAE solver's properties
 
-    return (mRuntime && mRuntime->needDaeSolver())?mDaeSolverProperties:CoreSolver::Properties();
+    return (mRuntime && mRuntime->needDaeSolver())?mDaeSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -355,11 +354,11 @@ void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverNam
 
 //==============================================================================
 
-CoreSolver::Properties SingleCellViewSimulationData::nlaSolverProperties() const
+Solver::Solver::Properties SingleCellViewSimulationData::nlaSolverProperties() const
 {
     // Return our NLA solver's properties
 
-    return (mRuntime && mRuntime->needNlaSolver())?mNlaSolverProperties:CoreSolver::Properties();
+    return (mRuntime && mRuntime->needNlaSolver())?mNlaSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -401,7 +400,7 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     // Note #2: recomputeComputedConstantsAndVariables() will let people know
     //          that our data has changed...
 
-    CoreSolver::CoreNlaSolver *nlaSolver = 0;
+    Solver::NlaSolver *nlaSolver = 0;
 
     if (mRuntime->needNlaSolver()) {
         // Retrieve an instance of our NLA solver
@@ -411,12 +410,12 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
                 // The requested NLA solver was found, so retrieve an instance
                 // of it
 
-                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->solverInstance());
+                nlaSolver = static_cast<Solver::NlaSolver *>(solverInterface->solverInstance());
 
                 // Keep track of our NLA solver, so that doNonLinearSolve() can
                 // work as expected
 
-                CoreSolver::setNlaSolver(mRuntime->address(), nlaSolver);
+                Solver::setNlaSolver(mRuntime->address(), nlaSolver);
 
                 break;
             }
@@ -444,11 +443,11 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     // Reset our parameter values
 
     if (pInitialize) {
-        memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
-        memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDouble);
-        memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
-        memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDouble);
-        memset(mCondVar, 0, mRuntime->condVarCount()*CoreSolver::SizeOfDouble);
+        memset(mConstants, 0, mRuntime->constantsCount()*Solver::SizeOfDouble);
+        memset(mRates, 0, mRuntime->ratesCount()*Solver::SizeOfDouble);
+        memset(mStates, 0, mRuntime->statesCount()*Solver::SizeOfDouble);
+        memset(mAlgebraic, 0, mRuntime->algebraicCount()*Solver::SizeOfDouble);
+        memset(mCondVar, 0, mRuntime->condVarCount()*Solver::SizeOfDouble);
 
         mRuntime->initializeConstants()(mConstants, mRates, mStates);
     }
@@ -472,14 +471,14 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     if (nlaSolver) {
         delete nlaSolver;
 
-        CoreSolver::unsetNlaSolver(mRuntime->address());
+        Solver::unsetNlaSolver(mRuntime->address());
     }
 
     // Keep track of our various initial values
 
     if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
-        memcpy(mInitialStates, mStates, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
+        memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*Solver::SizeOfDouble);
+        memcpy(mInitialStates, mStates, mRuntime->statesCount()*Solver::SizeOfDouble);
     }
 
     // Let people know whether our data is 'cleaned', i.e. not modified
@@ -930,7 +929,7 @@ double SingleCellViewSimulation::requiredMemory()
                  +mRuntime->ratesCount()
                  +mRuntime->statesCount()
                  +mRuntime->algebraicCount())
-               *CoreSolver::SizeOfDouble;
+               *Solver::SizeOfDouble;
     } else {
         return 0.0;
     }

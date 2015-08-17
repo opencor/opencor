@@ -254,8 +254,6 @@ SET(PLUGINS
 
     miscellaneous/Core
 
-    solver/CoreSolver
-
     support/StandardSupport
 
     thirdParty/libgit2

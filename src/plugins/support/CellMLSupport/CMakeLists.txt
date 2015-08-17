@@ -12,6 +12,7 @@ ADD_PLUGIN(CellMLSupport
         ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../solverinterface.cpp
 
         src/cellmlfile.cpp
         src/cellmlfilecellml10exporter.cpp
@@ -25,6 +26,8 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfileruntime.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/cellmlfile.h
         src/cellmlfilemanager.h
         src/cellmlsupportplugin.h
@@ -36,7 +39,6 @@ ADD_PLUGIN(CellMLSupport
         CellMLAPI
         Compiler
         Core
-        CoreSolver
         ${LLVM_PLUGIN}
         StandardSupport
     PLUGIN_BINARIES

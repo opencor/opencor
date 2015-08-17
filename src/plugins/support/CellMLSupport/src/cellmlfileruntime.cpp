@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "compilerengine.h"
 #include "compilermath.h"
 #include "corecliutils.h"
-#include "corenlasolver.h"
+#include "solverinterface.h"
 
 //==============================================================================
 

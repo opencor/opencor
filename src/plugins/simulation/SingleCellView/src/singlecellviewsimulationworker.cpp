@@ -21,11 +21,9 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
-#include "coredaesolver.h"
-#include "corenlasolver.h"
-#include "coreodesolver.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationworker.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -208,9 +206,9 @@ void SingleCellViewSimulationWorker::started()
 
     // Set up our ODE/DAE solver
 
-    CoreSolver::CoreVoiSolver *voiSolver = 0;
-    CoreSolver::CoreOdeSolver *odeSolver = 0;
-    CoreSolver::CoreDaeSolver *daeSolver = 0;
+    Solver::VoiSolver *voiSolver = 0;
+    Solver::OdeSolver *odeSolver = 0;
+    Solver::DaeSolver *daeSolver = 0;
 
     if (mRuntime->needOdeSolver()) {
         foreach (SolverInterface *solverInterface, mSolverInterfaces) {
@@ -218,7 +216,7 @@ void SingleCellViewSimulationWorker::started()
                 // The requested ODE solver was found, so retrieve an instance
                 // of it
 
-                voiSolver = odeSolver = static_cast<CoreSolver::CoreOdeSolver *>(solverInterface->solverInstance());
+                voiSolver = odeSolver = static_cast<Solver::OdeSolver *>(solverInterface->solverInstance());
 
                 break;
             }
@@ -229,7 +227,7 @@ void SingleCellViewSimulationWorker::started()
                 // The requested DAE solver was found, so retrieve an instance
                 // of it
 
-                voiSolver = daeSolver = static_cast<CoreSolver::CoreDaeSolver *>(solverInterface->solverInstance());
+                voiSolver = daeSolver = static_cast<Solver::DaeSolver *>(solverInterface->solverInstance());
 
                 break;
             }
@@ -254,7 +252,7 @@ void SingleCellViewSimulationWorker::started()
 
     // Set up our NLA solver, if needed
 
-    CoreSolver::CoreNlaSolver *nlaSolver = 0;
+    Solver::NlaSolver *nlaSolver = 0;
 
     if (mRuntime->needNlaSolver()) {
         foreach (SolverInterface *solverInterface, mSolverInterfaces) {
@@ -262,12 +260,12 @@ void SingleCellViewSimulationWorker::started()
                 // The requested NLA solver was found, so retrieve an instance
                 // of it
 
-                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->solverInstance());
+                nlaSolver = static_cast<Solver::NlaSolver *>(solverInterface->solverInstance());
 
                 // Keep track of our NLA solver, so that doNonLinearSolve() can
                 // work as expected
 
-                CoreSolver::setNlaSolver(mRuntime->address(), nlaSolver);
+                Solver::setNlaSolver(mRuntime->address(), nlaSolver);
 
                 break;
             }
@@ -492,7 +490,7 @@ void SingleCellViewSimulationWorker::started()
     if (nlaSolver) {
         delete nlaSolver;
 
-        CoreSolver::unsetNlaSolver(mRuntime->address());
+        Solver::unsetNlaSolver(mRuntime->address());
     }
 
     // Reset our simulation owner's knowledge of us
