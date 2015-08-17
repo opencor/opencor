@@ -172,45 +172,6 @@ void removeGlobalInstances()
 
 //==============================================================================
 
-QString shortVersion(QCoreApplication *pApp)
-{
-    QString res = QString();
-    QString appVersion = pApp->applicationVersion();
-    QString bitVersion;
-
-    enum {
-        SizeOfPointer = sizeof(void *)
-    };
-
-    if (SizeOfPointer == 4)
-        bitVersion = "32-bit";
-    else if (SizeOfPointer == 8)
-        bitVersion = "64-bit";
-    else
-        bitVersion = QString();
-
-    if (!appVersion.contains("-"))
-        res += "Version ";
-    else
-        res += "Snapshot ";
-
-    res += appVersion;
-
-    if (!bitVersion.isEmpty())
-        res += " ("+bitVersion+")";
-
-    return res;
-}
-
-//==============================================================================
-
-QString version(QCoreApplication *pApp)
-{
-    return  pApp->applicationName()+" "+shortVersion(pApp);
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================
