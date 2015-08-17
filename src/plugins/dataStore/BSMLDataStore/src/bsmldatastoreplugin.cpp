@@ -42,7 +42,7 @@ PLUGININFO_FUNC BSMLDataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à BioSignalML."));
 
     return new PluginInfo("Data Store", true, false,
-                          QStringList() << "BioSignalMLAPI" << "CoreDataStore",
+                          QStringList() << "BioSignalMLAPI",
                           descriptions);
 }
 
@@ -62,7 +62,7 @@ void BSMLDataStorePlugin::retranslateUi()
 // Data store interface
 //==============================================================================
 
-void * BSMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
+DataStore::DataStoreExporter * BSMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
 {
     Q_UNUSED(pId);
 
@@ -71,7 +71,7 @@ void * BSMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) con
 
 //==============================================================================
 
-void BSMLDataStorePlugin::deleteDataStoreExporterInstance(void *pDataStoreExporterInstance) const
+void BSMLDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance)
 {
     Q_UNUSED(pDataStoreExporterInstance);
 

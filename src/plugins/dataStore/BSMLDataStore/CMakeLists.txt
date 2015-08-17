@@ -4,6 +4,8 @@ PROJECT(BSMLDataStorePlugin)
 
 ADD_PLUGIN(BSMLDataStore
     SOURCES
+        ../../datastoreinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/bsmldatastoreexporter.cpp
@@ -29,7 +31,6 @@ ADD_PLUGIN(BSMLDataStore
     PLUGINS
         Core
         BioSignalMLAPI
-        CoreDataStore
     QT_MODULES
         Widgets
 )

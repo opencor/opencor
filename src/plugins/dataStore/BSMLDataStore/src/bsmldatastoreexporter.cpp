@@ -19,12 +19,7 @@ specific language governing permissions and limitations under the License.
 // BioSignalML data store exporter class
 //==============================================================================
 
-#include "coredatastore.h"
 #include "bsmldatastoreexporter.h"
-#include "datastorevariable.h"
-
-//==============================================================================
-
 #include "biosignalml/biosignalml.h"
 #include "biosignalml/data/hdf5.h"
 
@@ -45,14 +40,14 @@ namespace BSMLDataStore {
 //==============================================================================
 
 BioSignalMLExporter::BioSignalMLExporter(QMainWindow *pMainWindow, const QString &pId) :
-    CoreDataStore::DataStoreExporter(pId),
+    DataStore::DataStoreExporter(pId),
     mSaveDialog(new BioSignalMLSaveDialog(pMainWindow))
 {
 }
 
 //==============================================================================
 
-void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) const
+void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
 {
     // Export the given data store to a BioSignalML file
 
@@ -82,14 +77,14 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
 
             recording->add_prefix(rdf::Namespace("units", base_units)) ;
 
-            CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
+            DataStore::DataStoreVariable *voi = pDataStore->voi();
             auto clock = recording->new_clock(voi->uri().toStdString(),
                                               rdf::URI(base_units + voi->unit().toStdString()),
                                               voi->values(), voi->size());
             clock->set_label(voi->label().toStdString()) ;
 //std::cout << clock->uri() << "  |  " << clock->units() << "  |  " << clock->label() << std::endl ;
 
-            CoreDataStore::DataStoreVariables variables = pDataStore->variables();
+            DataStore::DataStoreVariables variables = pDataStore->variables();
             auto variableBegin = variables.constBegin();
             auto variableEnd = variables.constEnd();
 

@@ -25,8 +25,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "bsmldatastoreglobal.h"
-#include "datastoreexporter.h"
 #include "bsmldatastoresavedialog.h"
+#include "datastoreinterface.h"
 
 //==============================================================================
 
@@ -36,23 +36,15 @@ specific language governing permissions and limitations under the License.
 
 namespace OpenCOR {
 
-//==============================================================================
-
-namespace CoreDataStore {
-    class CoreDataStore;
-}   // namespace CoreDataStore
-
-//==============================================================================
-
 namespace BSMLDataStore {
 
 //==============================================================================
 
-class BSMLDATASTORE_EXPORT BioSignalMLExporter : public CoreDataStore::DataStoreExporter
+class BSMLDATASTORE_EXPORT BioSignalMLExporter : public DataStore::DataStoreExporter
 {
 public:
     BioSignalMLExporter(QMainWindow *pMainWindow, const QString &pId = QString());
-    virtual void execute(CoreDataStore::CoreDataStore *pDataStore) const;
+    virtual void execute(DataStore::DataStore *pDataStore) const;
 
 private:
     BioSignalMLSaveDialog *mSaveDialog;
