@@ -59,7 +59,7 @@ void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * FourthOrderRungeKuttaSolverPlugin::solverInstance() const
+Solver::Solver * FourthOrderRungeKuttaSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

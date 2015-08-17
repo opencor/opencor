@@ -57,7 +57,7 @@ void ForwardEulerSolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-void * ForwardEulerSolverPlugin::solverInstance() const
+Solver::Solver * ForwardEulerSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

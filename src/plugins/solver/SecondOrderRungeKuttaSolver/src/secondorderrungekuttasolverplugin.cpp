@@ -57,7 +57,7 @@ void SecondOrderRungeKuttaSolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-void * SecondOrderRungeKuttaSolverPlugin::solverInstance() const
+Solver::Solver * SecondOrderRungeKuttaSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

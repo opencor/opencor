@@ -59,7 +59,7 @@ void HeunSolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * HeunSolverPlugin::solverInstance() const
+Solver::Solver * HeunSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

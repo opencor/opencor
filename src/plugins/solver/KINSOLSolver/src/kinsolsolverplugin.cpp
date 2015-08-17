@@ -45,7 +45,7 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
 // Solver interface
 //==============================================================================
 
-void * KINSOLSolverPlugin::solverInstance() const
+Solver::Solver * KINSOLSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

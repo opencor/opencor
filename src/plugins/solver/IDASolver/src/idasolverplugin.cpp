@@ -59,7 +59,7 @@ void IDASolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * IDASolverPlugin::solverInstance() const
+Solver::Solver * IDASolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

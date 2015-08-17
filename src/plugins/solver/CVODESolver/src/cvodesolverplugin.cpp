@@ -57,7 +57,7 @@ void CVODESolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-void * CVODESolverPlugin::solverInstance() const
+Solver::Solver * CVODESolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
