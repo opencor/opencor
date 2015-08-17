@@ -10,6 +10,7 @@ RETRIEVE_QWT_SETTINGS()
 
 ADD_PLUGIN(SingleCellView
     SOURCES
+        ../../datastoreinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
@@ -33,6 +34,7 @@ ADD_PLUGIN(SingleCellView
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
+        ../../solverinterface.h
 
         src/singlecellviewcontentswidget.h
         src/singlecellviewgraphpanelplotwidget.h
@@ -61,8 +63,6 @@ ADD_PLUGIN(SingleCellView
         CellMLSupport
         Compiler
         Core
-        CoreDataStore
-        CoreSolver
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
     PLUGIN_BINARIES

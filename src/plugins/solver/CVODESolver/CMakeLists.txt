@@ -11,11 +11,12 @@ ADD_PLUGIN(CVODESolver
         src/cvodesolver.cpp
         src/cvodesolverplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/cvodesolverplugin.h
     INCLUDE_DIRS
         src
     PLUGINS
-        CoreSolver
         ${SUNDIALS_PLUGIN}
     PLUGIN_BINARIES
         ${SUNDIALS_PLUGIN_BINARY}

@@ -37,7 +37,7 @@ PLUGININFO_FUNC IDASolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> pour résoudre des EADs."));
 
     return new PluginInfo("Solver", true, false,
-                          QStringList() << "CoreSolver" << "SUNDIALS",
+                          QStringList() << "SUNDIALS",
                           descriptions);
 }
 
@@ -59,7 +59,7 @@ void IDASolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * IDASolverPlugin::solverInstance() const
+Solver::Solver * IDASolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 

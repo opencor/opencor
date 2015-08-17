@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coreodesolver.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -41,7 +41,7 @@ static const double StepDefaultValue = 1.0;
 
 //==============================================================================
 
-class SecondOrderRungeKuttaSolver : public CoreSolver::CoreOdeSolver
+class SecondOrderRungeKuttaSolver : public Solver::OdeSolver
 {
 public:
     explicit SecondOrderRungeKuttaSolver();

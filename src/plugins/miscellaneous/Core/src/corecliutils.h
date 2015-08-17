@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QAbstractMessageHandler>
 #include <QByteArray>
+#include <QCoreApplication>
 #include <QDomDocument>
 #include <QSourceLocation>
 #include <QSslError>

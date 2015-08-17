@@ -4,8 +4,8 @@
     #define PURE
 #endif
 
-    virtual void * newDataStoreExporterInstance(const QString &pId = QString()) const PURE;
-    virtual void deleteDataStoreExporterInstance(void *pDataStoreExporterInstance) const PURE;
+    virtual DataStore::DataStoreExporter * newDataStoreExporterInstance(const QString &pId = QString()) const PURE;
+    virtual void deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance) PURE;
 
     virtual QString dataStoreName() const PURE;
 

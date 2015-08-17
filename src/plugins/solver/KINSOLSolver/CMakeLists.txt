@@ -10,12 +10,15 @@ ADD_PLUGIN(KINSOLSolver
         src/kinsolsolver.cpp
         src/kinsolsolverplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/kinsolsolverplugin.h
     INCLUDE_DIRS
         src
     PLUGINS
-        CoreSolver
         ${SUNDIALS_PLUGIN}
     PLUGIN_BINARIES
         ${SUNDIALS_PLUGIN_BINARY}
+    QT_MODULES
+        Widgets
 )

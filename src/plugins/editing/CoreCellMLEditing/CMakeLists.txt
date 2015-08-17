@@ -35,7 +35,6 @@ ADD_PLUGIN(CoreCellMLEditing
         Compiler
         Core
         CoreEditing
-        CoreSolver
         Editor
         EditorList
         ${LLVM_PLUGIN}

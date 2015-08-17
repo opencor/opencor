@@ -70,7 +70,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 //==============================================================================
 
 CvodeSolverUserData::CvodeSolverUserData(double *pConstants, double *pAlgebraic,
-                                         CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) :
+                                         Solver::OdeSolver::ComputeRatesFunction pComputeRates) :
     mConstants(pConstants),
     mAlgebraic(pAlgebraic),
     mComputeRates(pComputeRates)
@@ -97,7 +97,7 @@ double * CvodeSolverUserData::algebraic() const
 
 //==============================================================================
 
-CoreSolver::CoreOdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() const
+Solver::OdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() const
 {
     // Return our compute rates function
 
@@ -300,11 +300,9 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Initialise the ODE solver itself
 
-        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart,
-                                                       pRatesStatesCount,
-                                                       pConstants, pRates,
-                                                       pStates, pAlgebraic,
-                                                       pComputeRates);
+        OpenCOR::Solver::OdeSolver::initialize(pVoiStart, pRatesStatesCount,
+                                               pConstants, pRates, pStates,
+                                               pAlgebraic, pComputeRates);
 
         // Create the states vector
 

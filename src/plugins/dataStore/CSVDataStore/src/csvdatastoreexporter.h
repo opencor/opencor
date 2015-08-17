@@ -25,28 +25,19 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "csvdatastoreglobal.h"
-#include "datastoreexporter.h"
+#include "datastoreinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace CoreDataStore {
-    class CoreDataStore;
-}   // namespace CoreDataStore
-
-//==============================================================================
-
 namespace CSVDataStore {
 
 //==============================================================================
 
-class CSVDATASTORE_EXPORT CsvDataStoreExporter : public CoreDataStore::DataStoreExporter
+class CSVDATASTORE_EXPORT CsvDataStoreExporter : public DataStore::DataStoreExporter
 {
 public:
-    virtual void execute(CoreDataStore::CoreDataStore *pDataStore) const;
+    virtual void execute(DataStore::DataStore *pDataStore) const;
 };
 
 //==============================================================================
