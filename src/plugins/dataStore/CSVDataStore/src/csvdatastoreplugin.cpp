@@ -68,7 +68,7 @@ void * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) cons
 
 //==============================================================================
 
-void CSVDataStorePlugin::deleteDataStoreExporterInstance(void *pDataStoreExporterInstance) const
+void CSVDataStorePlugin::deleteDataStoreExporterInstance(void *pDataStoreExporterInstance)
 {
     Q_UNUSED(pDataStoreExporterInstance);
 
