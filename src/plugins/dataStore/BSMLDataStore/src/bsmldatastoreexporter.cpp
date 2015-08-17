@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <QFile>
 #include <QTextStream>
 #include <QDateTime>
+#include <QUrl>
 
 //==============================================================================
 
@@ -62,14 +63,8 @@ void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
     if (mSaveDialog->run()) {
 
         QString fileName = mSaveDialog->fileName();
-
-        // To come from user dialog... (And restrict to http: scheme ??)
-        // Or use URI in repository??
-        std::string rec_uri = pDataStore->uri().toStdString();
-
-        std::string base_units = "http://www.cellml.org/units/"
-                                + pDataStore->id().toStdString()
-                                + "#";
+        std::string rec_uri = QUrl::fromLocalFile(fileName).toString().toStdString();
+        std::string base_units = pDataStore->uri().toStdString() + "/units#";
 
         bsml::HDF5::Recording *recording = nullptr;
         try {
