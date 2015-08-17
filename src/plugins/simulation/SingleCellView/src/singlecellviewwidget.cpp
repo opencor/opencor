@@ -1299,11 +1299,11 @@ void SingleCellViewWidget::simulationDataExport()
     showBusyWidget(this);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(sender());
-    DataStore::DataStoreExporter *dataStoreExporterInstance = dataStoreInterface->newDataStoreExporterInstance();
+    DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
 
-    dataStoreExporterInstance->execute(mSimulation->results()->dataStore());
+    dataStoreExporter->execute(mSimulation->results()->dataStore());
 
-    dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporterInstance);
+    dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
     hideBusyWidget();
     setEnabled(true);
