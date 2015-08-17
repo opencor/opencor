@@ -11,11 +11,11 @@ ADD_PLUGIN(SecondOrderRungeKuttaSolver
         src/secondorderrungekuttasolver.cpp
         src/secondorderrungekuttasolverplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/secondorderrungekuttasolverplugin.h
     INCLUDE_DIRS
         src
-    PLUGINS
-        CoreSolver
     QT_MODULES
         Widgets
 )

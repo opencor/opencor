@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coreodesolver.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -105,23 +105,23 @@ class CvodeSolverUserData
 {
 public:
     explicit CvodeSolverUserData(double *pConstants, double *pAlgebraic,
-                                 CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates);
+                                 Solver::OdeSolver::ComputeRatesFunction pComputeRates);
 
     double * constants() const;
     double * algebraic() const;
 
-    CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates() const;
+    Solver::OdeSolver::ComputeRatesFunction computeRates() const;
 
 private:
     double *mConstants;
     double *mAlgebraic;
 
-    CoreSolver::CoreOdeSolver::ComputeRatesFunction mComputeRates;
+    Solver::OdeSolver::ComputeRatesFunction mComputeRates;
 };
 
 //==============================================================================
 
-class CvodeSolver : public CoreSolver::CoreOdeSolver
+class CvodeSolver : public Solver::OdeSolver
 {
 public:
     explicit CvodeSolver();

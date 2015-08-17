@@ -11,11 +11,11 @@ ADD_PLUGIN(ForwardEulerSolver
         src/forwardeulersolver.cpp
         src/forwardeulersolverplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/forwardeulersolverplugin.h
     INCLUDE_DIRS
         src
-    PLUGINS
-        CoreSolver
     QT_MODULES
         Widgets
 )

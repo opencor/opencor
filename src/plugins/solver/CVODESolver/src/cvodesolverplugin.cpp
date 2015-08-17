@@ -37,7 +37,7 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> pour résoudre des EDOs."));
 
     return new PluginInfo("Solver", true, false,
-                          QStringList() << "CoreSolver" << "SUNDIALS",
+                          QStringList() << "SUNDIALS",
                           descriptions);
 }
 

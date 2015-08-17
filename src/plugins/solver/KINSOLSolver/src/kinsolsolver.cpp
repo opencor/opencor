@@ -63,7 +63,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 //==============================================================================
 
 KinsolSolverUserData::KinsolSolverUserData(void *pUserData,
-                                           CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem) :
+                                           Solver::NlaSolver::ComputeSystemFunction pComputeSystem) :
     mUserData(pUserData),
     mComputeSystem(pComputeSystem)
 {
@@ -80,7 +80,7 @@ void * KinsolSolverUserData::userData() const
 
 //==============================================================================
 
-CoreSolver::CoreNlaSolver::ComputeSystemFunction KinsolSolverUserData::computeSystem() const
+Solver::NlaSolver::ComputeSystemFunction KinsolSolverUserData::computeSystem() const
 {
     // Return our compute system function
 
@@ -135,7 +135,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::CoreSolver::CoreNlaSolver::initialize(pComputeSystem, pParameters, pSize);
+    OpenCOR::Solver::NlaSolver::initialize(pComputeSystem, pParameters, pSize);
 
     // Create some vectors
 

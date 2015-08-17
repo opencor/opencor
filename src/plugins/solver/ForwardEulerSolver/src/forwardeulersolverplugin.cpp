@@ -37,7 +37,7 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Euler_method\">méthode Forward Euler</a> pour résoudre des EDOs."));
 
     return new PluginInfo("Solver", true, false,
-                          QStringList() << "CoreSolver",
+                          QStringList(),
                           descriptions);
 }
 

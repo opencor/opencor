@@ -70,9 +70,9 @@ void HeunSolver::initialize(const double &pVoiStart,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pRatesStatesCount,
-                                                   pConstants, pRates, pStates,
-                                                   pAlgebraic, pComputeRates);
+    OpenCOR::Solver::OdeSolver::initialize(pVoiStart, pRatesStatesCount,
+                                           pConstants, pRates, pStates,
+                                           pAlgebraic, pComputeRates);
 
     // (Re)create our various arrays
 

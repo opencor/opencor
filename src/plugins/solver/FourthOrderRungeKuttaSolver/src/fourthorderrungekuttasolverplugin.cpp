@@ -37,7 +37,7 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">méthode Runge-Kutta du quatrième ordre</a> pour résoudre des EDOs."));
 
     return new PluginInfo("Solver", true, false,
-                          QStringList() << "CoreSolver",
+                          QStringList(),
                           descriptions);
 }
 

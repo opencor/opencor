@@ -34,6 +34,7 @@ ADD_PLUGIN(SingleCellView
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
+        ../../solverinterface.h
 
         src/singlecellviewcontentswidget.h
         src/singlecellviewgraphpanelplotwidget.h
@@ -62,7 +63,6 @@ ADD_PLUGIN(SingleCellView
         CellMLSupport
         Compiler
         Core
-        CoreSolver
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
     PLUGIN_BINARIES
