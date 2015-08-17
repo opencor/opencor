@@ -37,7 +37,7 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à CSV."));
 
     return new PluginInfo("Data Store", true, false,
-                          QStringList() << "CoreDataStore",
+                          QStringList(),
                           descriptions);
 }
 

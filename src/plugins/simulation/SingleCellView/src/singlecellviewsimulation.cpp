@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
-#include "coredatastore.h"
 #include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -581,10 +580,10 @@ SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::
     mSize(0),
     mDataStore(0),
     mPoints(0),
-    mConstants(CoreDataStore::DataStoreVariables()),
-    mRates(CoreDataStore::DataStoreVariables()),
-    mStates(CoreDataStore::DataStoreVariables()),
-    mAlgebraic(CoreDataStore::DataStoreVariables())
+    mConstants(DataStore::DataStoreVariables()),
+    mRates(DataStore::DataStoreVariables()),
+    mStates(DataStore::DataStoreVariables()),
+    mAlgebraic(DataStore::DataStoreVariables())
 {
 }
 
@@ -638,9 +637,9 @@ bool SingleCellViewSimulationResults::createDataStore()
     // well as with constant, rate, state and algebraic variables
 
     try {
-        mDataStore = new CoreDataStore::CoreDataStore(mRuntime->cellmlFile()->cmetaId(),
-                                                      mRuntime->cellmlFile()->xmlBase(),
-                                                      simulationSize);
+        mDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->cmetaId(),
+                                              mRuntime->cellmlFile()->xmlBase(),
+                                              simulationSize);
 
         mPoints = mDataStore->addVoi();
         mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
@@ -663,7 +662,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-        CoreDataStore::DataStoreVariable *variable = 0;
+        DataStore::DataStoreVariable *variable = 0;
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
@@ -739,8 +738,8 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
     mDataStore->setValues(mSize, pPoint);
 
     ++mSize;
-    // Note: we want to do this after the call to CoreDataStore::setValues()
-    //       since it may otherwise mess up our plotting of simulation data (see
+    // Note: we want to do this after the call to DataStore::setValues() since
+    //       it may otherwise mess up our plotting of simulation data (see
     //       https://github.com/opencor/opencor/issues/636)...
 }
 
@@ -755,7 +754,7 @@ qulonglong SingleCellViewSimulationResults::size() const
 
 //==============================================================================
 
-CoreDataStore::CoreDataStore * SingleCellViewSimulationResults::dataStore() const
+DataStore::DataStore * SingleCellViewSimulationResults::dataStore() const
 {
     // Return our data store
 
