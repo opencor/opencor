@@ -37,7 +37,7 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à CSV."));
 
     return new PluginInfo("Data Store", true, false,
-                          QStringList() << "CoreDataStore",
+                          QStringList(),
                           descriptions);
 }
 
@@ -57,7 +57,7 @@ void CSVDataStorePlugin::retranslateUi()
 // Data store interface
 //==============================================================================
 
-void * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
+DataStore::DataStoreExporter * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
 {
     Q_UNUSED(pId);
 
@@ -68,7 +68,7 @@ void * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) cons
 
 //==============================================================================
 
-void CSVDataStorePlugin::deleteDataStoreExporterInstance(void *pDataStoreExporterInstance)
+void CSVDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance)
 {
     Q_UNUSED(pDataStoreExporterInstance);
 

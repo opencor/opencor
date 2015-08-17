@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "datastoreexporter.h"
 #include "datastoreinterface.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
@@ -1300,7 +1299,7 @@ void SingleCellViewWidget::simulationDataExport()
     showBusyWidget(this);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(sender());
-    CoreDataStore::DataStoreExporter *dataStoreExporterInstance = static_cast<CoreDataStore::DataStoreExporter *>(dataStoreInterface->newDataStoreExporterInstance());
+    DataStore::DataStoreExporter *dataStoreExporterInstance = dataStoreInterface->newDataStoreExporterInstance();
 
     dataStoreExporterInstance->execute(mSimulation->results()->dataStore());
 

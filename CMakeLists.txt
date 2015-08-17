@@ -60,6 +60,7 @@ SET(SOURCES
     src/misc/cliutils.cpp
     src/misc/guiutils.cpp
 
+    src/plugins/datastoreinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
@@ -250,8 +251,6 @@ SET(PLUGINS
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
-
-    dataStore/CoreDataStore
 
     miscellaneous/Core
 

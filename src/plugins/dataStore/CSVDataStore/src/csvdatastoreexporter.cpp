@@ -21,9 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "coredatastore.h"
 #include "csvdatastoreexporter.h"
-#include "datastorevariable.h"
 
 //==============================================================================
 
@@ -38,7 +36,7 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) const
+void CsvDataStoreExporter::execute(DataStore::DataStore *pDataStore) const
 {
     // Export the given data store to a CSV file
 
@@ -51,8 +49,8 @@ void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) con
 
         static const QString Header = "%1 (%2)";
 
-        CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
-        CoreDataStore::DataStoreVariables variables = pDataStore->variables();
+        DataStore::DataStoreVariable *voi = pDataStore->voi();
+        DataStore::DataStoreVariables variables = pDataStore->variables();
 
         QString data = QString();
 
