@@ -502,6 +502,29 @@ QColor lockedColor(const QColor &pColor)
 
 //==============================================================================
 
+QString fileTypes(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+{
+    // Convert and return as a string the given file types, using the given MIME
+    // types, if any
+
+    QString res = QString();
+
+    foreach (FileType *fileType, pFileTypes) {
+        if (   pMimeTypes.isEmpty()
+            || pMimeTypes.contains(fileType->mimeType())) {
+            if (!res.isEmpty())
+                res += ";;";
+
+            res +=  fileType->description()
+                   +" (*."+fileType->fileExtension()+")";
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
