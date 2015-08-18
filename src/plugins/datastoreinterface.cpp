@@ -16,24 +16,150 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core data store class
+// Data store interface
 //==============================================================================
 
-#include "coredatastore.h"
-
-//==============================================================================
-
-#include <Qt>
+#include "datastoreinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreDataStore {
+namespace DataStore {
 
 //==============================================================================
 
-CoreDataStore::CoreDataStore(const QString &pId, const QString &pUri,
-                             const qulonglong &pSize) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
+    mUri(QString()),
+    mName(QString()),
+    mUnit(QString()),
+    mSize(pSize),
+    mValue(pValue)
+{
+    // Create our array of values
+
+    mValues = new double[pSize];
+}
+
+//==============================================================================
+
+DataStoreVariable::~DataStoreVariable()
+{
+    // Delete some internal objects
+
+    delete[] mValues;
+}
+
+//==============================================================================
+
+QString DataStoreVariable::uri() const
+{
+    // Return our URI
+
+    return mUri;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setUri(const QString &pUri)
+{
+    // Set our URI
+
+    mUri = pUri;
+}
+
+//==============================================================================
+
+QString DataStoreVariable::label() const
+{
+    // Return our label
+
+    return mName;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setLabel(const QString &pLabel)
+{
+    // Set our label
+
+    mName = pLabel;
+}
+
+//==============================================================================
+
+QString DataStoreVariable::unit() const
+{
+    // Return our unit
+
+    return mUnit;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setUnit(const QString &pUnit)
+{
+    // Set our unit
+
+    mUnit = pUnit;
+}
+
+//==============================================================================
+
+qulonglong DataStoreVariable::size() const
+{
+    // Return our size
+
+    return mSize;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setValue(const qulonglong &pPosition)
+{
+    // Set the value of the variable at the given position
+
+    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mValue);
+
+    mValues[pPosition] = *mValue;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setValue(const qulonglong &pPosition,
+                                 const double &pValue)
+{
+    // Set the value of the variable at the given position using the given value
+
+    Q_ASSERT(pPosition < mSize);
+
+    mValues[pPosition] = pValue;
+}
+
+//==============================================================================
+
+double DataStoreVariable::value(const qulonglong &pPosition) const
+{
+    // Return our value at the given position
+
+    Q_ASSERT(pPosition < mSize);
+
+    return mValues[pPosition];
+}
+
+//==============================================================================
+
+double * DataStoreVariable::values() const
+{
+    // Return our values
+
+    return mValues;
+}
+
+//==============================================================================
+
+DataStore::DataStore(const QString &pId, const QString &pUri,
+                     const qulonglong &pSize) :
     mId(pId),
     mlUri(pUri),
     mSize(pSize),
@@ -44,7 +170,7 @@ CoreDataStore::CoreDataStore(const QString &pId, const QString &pUri,
 
 //==============================================================================
 
-CoreDataStore::~CoreDataStore()
+DataStore::~DataStore()
 {
     // Delete some internal objects
 
@@ -58,7 +184,7 @@ CoreDataStore::~CoreDataStore()
 
 //==============================================================================
 
-QString CoreDataStore::id() const
+QString DataStore::id() const
 {
     // Return our id
 
@@ -67,7 +193,7 @@ QString CoreDataStore::id() const
 
 //==============================================================================
 
-QString CoreDataStore::uri() const
+QString DataStore::uri() const
 {
     // Return our URI
 
@@ -76,7 +202,7 @@ QString CoreDataStore::uri() const
 
 //==============================================================================
 
-qulonglong CoreDataStore::size() const
+qulonglong DataStore::size() const
 {
     // Return our size
 
@@ -85,7 +211,7 @@ qulonglong CoreDataStore::size() const
 
 //==============================================================================
 
-DataStoreVariable * CoreDataStore::voi() const
+DataStoreVariable * DataStore::voi() const
 {
     // Return our variable of integration
 
@@ -94,7 +220,7 @@ DataStoreVariable * CoreDataStore::voi() const
 
 //==============================================================================
 
-DataStoreVariable * CoreDataStore::addVoi()
+DataStoreVariable * DataStore::addVoi()
 {
     // Add a (new) variable of integration to our data store
 
@@ -118,7 +244,7 @@ bool sortVariables(DataStoreVariable *pVariable1, DataStoreVariable *pVariable2)
 
 //==============================================================================
 
-DataStoreVariables CoreDataStore::variables()
+DataStoreVariables DataStore::variables()
 {
     // Return all our variables, after making sure that they are sorted
 
@@ -129,7 +255,7 @@ DataStoreVariables CoreDataStore::variables()
 
 //==============================================================================
 
-DataStoreVariable * CoreDataStore::addVariable(double *pValue)
+DataStoreVariable * DataStore::addVariable(double *pValue)
 {
     // Add a variable to our data store
 
@@ -142,8 +268,8 @@ DataStoreVariable * CoreDataStore::addVariable(double *pValue)
 
 //==============================================================================
 
-DataStoreVariables CoreDataStore::addVariables(const int &pCount,
-                                               double *pValues)
+DataStoreVariables DataStore::addVariables(const int &pCount,
+                                           double *pValues)
 {
     // Add some variables to our data store
 
@@ -160,7 +286,7 @@ DataStoreVariables CoreDataStore::addVariables(const int &pCount,
 
 //==============================================================================
 
-void CoreDataStore::setValues(const qulonglong &pPosition, const double &pValue)
+void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
 {
     // Set the value at the given position of all our variables including our
     // variable of integration, which value is directly given to us
@@ -176,7 +302,29 @@ void CoreDataStore::setValues(const qulonglong &pPosition, const double &pValue)
 
 //==============================================================================
 
-}   // namespace CoreDataStore
+DataStoreExporter::DataStoreExporter(const QString &pId) :
+    mId(pId)
+{
+}
+
+//==============================================================================
+
+DataStoreExporter::~DataStoreExporter()
+{
+}
+
+//==============================================================================
+
+QString DataStoreExporter::id() const
+{
+    // Return our id
+
+    return mId;
+}
+
+//==============================================================================
+
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================

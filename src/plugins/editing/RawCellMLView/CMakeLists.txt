@@ -31,7 +31,6 @@ ADD_PLUGIN(RawCellMLView
         Core
         CoreCellMLEditing
         CoreEditing
-        CoreSolver
         Editor
         EditorList
         ${LLVM_PLUGIN}

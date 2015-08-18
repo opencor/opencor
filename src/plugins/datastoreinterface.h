@@ -28,7 +28,105 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QVector>
+
+//==============================================================================
+
 namespace OpenCOR {
+namespace DataStore {
+
+//==============================================================================
+
+class DataStoreVariable
+{
+public:
+    explicit DataStoreVariable(const qulonglong &pSize, double *pValue = 0);
+    virtual ~DataStoreVariable();
+
+    QString uri() const;
+    void setUri(const QString &pUri);
+
+    QString label() const;
+    void setLabel(const QString &pLabel);
+
+    QString unit() const;
+    void setUnit(const QString &pUnit);
+
+    qulonglong size() const;
+
+    void setValue(const qulonglong &pPosition);
+    void setValue(const qulonglong &pPosition, const double &pValue);
+
+    double value(const qulonglong &pPosition) const;
+    double * values() const;
+
+private:
+    QString mUri;
+    QString mName;
+    QString mUnit;
+
+    qulonglong mSize;
+
+    double *mValue;
+    double *mValues;
+};
+
+//==============================================================================
+
+typedef QVector<DataStoreVariable *> DataStoreVariables;
+
+//==============================================================================
+
+class DataStore
+{
+public:
+    explicit DataStore(const QString &pId, const QString &pUri,
+                       const qulonglong &pSize);
+    virtual ~DataStore();
+
+    QString id() const;
+    QString uri() const;
+
+    qulonglong size() const;
+
+    DataStoreVariable * voi() const;
+    DataStoreVariable * addVoi();
+
+    DataStoreVariables variables();
+    DataStoreVariable * addVariable(double *pValue = 0);
+    DataStoreVariables addVariables(const int &pCount, double *pValues);
+
+    void setValues(const qulonglong &pPosition, const double &pValue);
+
+private:
+    QString mId;
+    QString mlUri;
+
+    const qulonglong mSize;
+
+    DataStoreVariable *mVoi;
+    DataStoreVariables mVariables;
+};
+
+//==============================================================================
+
+class DataStoreExporter
+{
+public:
+    explicit DataStoreExporter(const QString &pId = QString());
+    virtual ~DataStoreExporter();
+
+    virtual void execute(DataStore *pDataStore) const = 0;
+
+    QString id() const;
+
+private:
+    QString mId;
+};
+
+//==============================================================================
+
+}   // namespace DataStore
 
 //==============================================================================
 

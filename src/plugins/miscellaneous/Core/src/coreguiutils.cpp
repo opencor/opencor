@@ -139,10 +139,11 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 {
     // Retrieve and return a save file name
 
+    QFileInfo fileInfo = pFileName;
     QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
                                                                         pCaption,
-                                                                        !QFileInfo(pFileName).canonicalPath().compare(".")?
-                                                                            activeDirectory():
+                                                                        !fileInfo.canonicalPath().compare(".")?
+                                                                            activeDirectory()+QDir::separator()+fileInfo.fileName():
                                                                             pFileName,
                                                                         allFilters(pFilters),
                                                                         pSelectedFilter,

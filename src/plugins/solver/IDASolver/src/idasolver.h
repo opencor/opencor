@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coredaesolver.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -85,9 +85,9 @@ public:
     explicit IdaSolverUserData(double *pConstants, double *pOldRates,
                                double *pOldStates, double *pAlgebraic,
                                double *pCondVar,
-                               CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                               CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
-                               CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation);
+                               Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                               Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
+                               Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation);
 
     double * constants() const;
     double * oldRates() const;
@@ -95,9 +95,9 @@ public:
     double * algebraic() const;
     double * condVar() const;
 
-    CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables() const;
-    CoreSolver::CoreDaeSolver::ComputeResidualsFunction computeResiduals() const;
-    CoreSolver::CoreDaeSolver::ComputeRootInformationFunction computeRootInformation() const;
+    Solver::DaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables() const;
+    Solver::DaeSolver::ComputeResidualsFunction computeResiduals() const;
+    Solver::DaeSolver::ComputeRootInformationFunction computeRootInformation() const;
 
 private:
     double *mConstants;
@@ -106,14 +106,14 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
-    CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction mComputeEssentialVariables;
-    CoreSolver::CoreDaeSolver::ComputeResidualsFunction mComputeResiduals;
-    CoreSolver::CoreDaeSolver::ComputeRootInformationFunction mComputeRootInformation;
+    Solver::DaeSolver::ComputeEssentialVariablesFunction mComputeEssentialVariables;
+    Solver::DaeSolver::ComputeResidualsFunction mComputeResiduals;
+    Solver::DaeSolver::ComputeRootInformationFunction mComputeRootInformation;
 };
 
 //==============================================================================
 
-class IdaSolver : public CoreSolver::CoreDaeSolver
+class IdaSolver : public Solver::DaeSolver
 {
 public:
     explicit IdaSolver();

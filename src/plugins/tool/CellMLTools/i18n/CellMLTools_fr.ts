@@ -55,5 +55,9 @@
         <source>User-Defined Format File</source>
         <translation>Fichier Format Défini Par L&apos;Utilisateur</translation>
     </message>
+    <message>
+        <source>Exported</source>
+        <translation>Exporté</translation>
+    </message>
 </context>
 </TS>

@@ -24,8 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coresolver.h"
-#include "datastorevariable.h"
+#include "datastoreinterface.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
 
@@ -42,12 +41,6 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
-
-//==============================================================================
-
-namespace CoreDataStore {
-    class CoreDataStore;
-}   // namespace CoreDataStore
 
 //==============================================================================
 
@@ -90,20 +83,20 @@ public:
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
 
-    CoreSolver::Properties odeSolverProperties() const;
+    Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
 
     QString daeSolverName() const;
     void setDaeSolverName(const QString &pDaeSolverName);
 
-    CoreSolver::Properties daeSolverProperties() const;
+    Solver::Solver::Properties daeSolverProperties() const;
     void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
 
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName,
                           const bool &pReset = true);
 
-    CoreSolver::Properties nlaSolverProperties() const;
+    Solver::Solver::Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
 
@@ -128,13 +121,13 @@ private:
     double mPointInterval;
 
     QString mOdeSolverName;
-    CoreSolver::Properties mOdeSolverProperties;
+    Solver::Solver::Properties mOdeSolverProperties;
 
     QString mDaeSolverName;
-    CoreSolver::Properties mDaeSolverProperties;
+    Solver::Solver::Properties mDaeSolverProperties;
 
     QString mNlaSolverName;
-    CoreSolver::Properties mNlaSolverProperties;
+    Solver::Solver::Properties mNlaSolverProperties;
 
     double *mConstants;
     double *mRates;
@@ -169,7 +162,7 @@ public:
 
     qulonglong size() const;
 
-    CoreDataStore::CoreDataStore * dataStore() const;
+    DataStore::DataStore * dataStore() const;
 
     double * points() const;
 
@@ -185,14 +178,14 @@ private:
 
     qulonglong mSize;
 
-    CoreDataStore::CoreDataStore *mDataStore;
+    DataStore::DataStore *mDataStore;
 
-    CoreDataStore::DataStoreVariable *mPoints;
+    DataStore::DataStoreVariable *mPoints;
 
-    CoreDataStore::DataStoreVariables mConstants;
-    CoreDataStore::DataStoreVariables mRates;
-    CoreDataStore::DataStoreVariables mStates;
-    CoreDataStore::DataStoreVariables mAlgebraic;
+    DataStore::DataStoreVariables mConstants;
+    DataStore::DataStoreVariables mRates;
+    DataStore::DataStoreVariables mStates;
+    DataStore::DataStoreVariables mAlgebraic;
 
     bool createDataStore();
     void deleteDataStore();

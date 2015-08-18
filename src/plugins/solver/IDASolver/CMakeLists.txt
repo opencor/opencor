@@ -11,11 +11,12 @@ ADD_PLUGIN(IDASolver
         src/idasolver.cpp
         src/idasolverplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/idasolverplugin.h
     INCLUDE_DIRS
         src
     PLUGINS
-        CoreSolver
         ${SUNDIALS_PLUGIN}
     PLUGIN_BINARIES
         ${SUNDIALS_PLUGIN_BINARY}

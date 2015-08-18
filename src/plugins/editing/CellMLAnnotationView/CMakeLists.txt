@@ -50,7 +50,6 @@ ADD_PLUGIN(CellMLAnnotationView
         CellMLSupport
         Compiler
         Core
-        CoreSolver
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}

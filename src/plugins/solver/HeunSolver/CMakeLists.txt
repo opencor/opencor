@@ -11,11 +11,11 @@ ADD_PLUGIN(HeunSolver
         src/heunsolver.cpp
         src/heunsolverplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/heunsolverplugin.h
     INCLUDE_DIRS
         src
-    PLUGINS
-        CoreSolver
     QT_MODULES
         Widgets
 )

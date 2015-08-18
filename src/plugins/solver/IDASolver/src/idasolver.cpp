@@ -100,9 +100,9 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pOldRates,
                                      double *pOldStates, double *pAlgebraic,
                                      double *pCondVar,
-                                     CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                                     CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
-                                     CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
+                                     Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                                     Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
+                                     Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
     mConstants(pConstants),
     mOldRates(pOldRates),
     mOldStates(pOldStates),
@@ -161,7 +161,7 @@ double * IdaSolverUserData::condVar() const
 
 //==============================================================================
 
-CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeEssentialVariables() const
+Solver::DaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeEssentialVariables() const
 {
     // Return our compute essential variables function
 
@@ -170,7 +170,7 @@ CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::
 
 //==============================================================================
 
-CoreSolver::CoreDaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals() const
+Solver::DaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals() const
 {
     // Return our compute residuals function
 
@@ -179,7 +179,7 @@ CoreSolver::CoreDaeSolver::ComputeResidualsFunction IdaSolverUserData::computeRe
 
 //==============================================================================
 
-CoreSolver::CoreDaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRootInformation() const
+Solver::DaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRootInformation() const
 {
     // Return our compute root information function
 
@@ -333,16 +333,14 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Initialise the DAE solver itself
 
-        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart, pVoiEnd,
-                                                       pRatesStatesCount,
-                                                       pCondVarCount,
-                                                       pConstants, pRates,
-                                                       pStates, pAlgebraic,
-                                                       pCondVar,
-                                                       pComputeEssentialVariables,
-                                                       pComputeResiduals,
-                                                       pComputeRootInformation,
-                                                       pComputeStateInformation);
+        OpenCOR::Solver::DaeSolver::initialize(pVoiStart, pVoiEnd,
+                                               pRatesStatesCount, pCondVarCount,
+                                               pConstants, pRates, pStates,
+                                               pAlgebraic, pCondVar,
+                                               pComputeEssentialVariables,
+                                               pComputeResiduals,
+                                               pComputeRootInformation,
+                                               pComputeStateInformation);
 
         // Create the states vector
 
@@ -436,8 +434,8 @@ void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
 
     IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
 
-    memcpy(mOldRates, N_VGetArrayPointer(mRatesVector), mRatesStatesCount*OpenCOR::CoreSolver::SizeOfDouble);
-    memcpy(mOldStates, N_VGetArrayPointer(mStatesVector), mRatesStatesCount*OpenCOR::CoreSolver::SizeOfDouble);
+    memcpy(mOldRates, N_VGetArrayPointer(mRatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
+    memcpy(mOldStates, N_VGetArrayPointer(mStatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
 }
 
 //==============================================================================

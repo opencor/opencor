@@ -70,15 +70,16 @@ void initPluginsPath(const QString &pAppFileName)
     QString appDir;
 
 #ifdef Q_OS_WIN
-    if (appFileInfo.suffix().isEmpty())
-        // If pAppFileName has no suffix, then it means we tried to run OpenCOR
-        // using something like "[OpenCOR]/OpenCOR", in which case QFileInfo()
-        // will get lost when trying to retrieve the canonical path for OpenCOR.
-        // Now, when use something like "[OpenCOR]/OpenCOR", it's as if we were
-        // to use something like "[OpenCOR]/OpenCOR.com", so update appFileInfo
-        // accordingly
+    if (appFileInfo.completeSuffix().isEmpty()) {
+        // If pAppFileName has no suffix, then it means that we tried to run
+        // OpenCOR using something like "[OpenCOR]/OpenCOR", in which case
+        // QFileInfo() will be lost when trying to retrieve the canonical path
+        // for OpenCOR. Now, when we use something like "[OpenCOR]/OpenCOR",
+        // it's as if we were to use something like "[OpenCOR]/OpenCOR.com", so
+        // update appFileInfo accordingly
 
         appFileInfo = pAppFileName+".com";
+    }
 #endif
 
     appDir = QDir::toNativeSeparators(appFileInfo.canonicalPath());
@@ -168,45 +169,6 @@ void removeGlobalInstances()
     // different plugins
 
     QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
-}
-
-//==============================================================================
-
-QString shortVersion(QCoreApplication *pApp)
-{
-    QString res = QString();
-    QString appVersion = pApp->applicationVersion();
-    QString bitVersion;
-
-    enum {
-        SizeOfPointer = sizeof(void *)
-    };
-
-    if (SizeOfPointer == 4)
-        bitVersion = "32-bit";
-    else if (SizeOfPointer == 8)
-        bitVersion = "64-bit";
-    else
-        bitVersion = QString();
-
-    if (!appVersion.contains("-"))
-        res += "Version ";
-    else
-        res += "Snapshot ";
-
-    res += appVersion;
-
-    if (!bitVersion.isEmpty())
-        res += " ("+bitVersion+")";
-
-    return res;
-}
-
-//==============================================================================
-
-QString version(QCoreApplication *pApp)
-{
-    return  pApp->applicationName()+" "+shortVersion(pApp);
 }
 
 //==============================================================================

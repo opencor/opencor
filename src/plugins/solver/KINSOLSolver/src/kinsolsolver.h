@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "corenlasolver.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -41,21 +41,21 @@ class KinsolSolverUserData
 {
 public:
     explicit KinsolSolverUserData(void *pUserData,
-                                  CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem);
+                                  Solver::NlaSolver::ComputeSystemFunction pComputeSystem);
 
     void * userData() const;
 
-    CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem() const;
+    Solver::NlaSolver::ComputeSystemFunction computeSystem() const;
 
 private:
     void *mUserData;
 
-    CoreSolver::CoreNlaSolver::ComputeSystemFunction mComputeSystem;
+    Solver::NlaSolver::ComputeSystemFunction mComputeSystem;
 };
 
 //==============================================================================
 
-class KinsolSolver : public CoreSolver::CoreNlaSolver
+class KinsolSolver : public Solver::NlaSolver
 {
 public:
     explicit KinsolSolver();

@@ -15,14 +15,9 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "<a href=\"http://www.sed-ml.org/\">SED-ML</a> API (via <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>)." }
                          ]
                        },
-                       { "name": "Organisation",
+                       { "name": "Data store",
                          "entries": [
-                           { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
-                             "entries": [
-                               { "type": "Added", "description": "Cloning of a workspace." },
-                               { "type": "Added", "description": "Open a file from a published exposure." }
-                             ]
-                           }
+                           { "type": "Improved", "description": "Interface." }
                          ]
                        },
                        { "name": "Editing",
@@ -41,7 +36,28 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
+                             "entries": [
+                               { "type": "Added", "description": "Cloning of a workspace." },
+                               { "type": "Added", "description": "Open a file from a published exposure." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                             "entries": [
+                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
+                               { "type": "Improved", "description": "Plotting of simulation data." },
+                               { "type": "Improved", "description": "Support for CellML models." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Solver",
                          "entries": [
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
                              "entries": [
@@ -51,13 +67,6 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
-                             ]
-                           },
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
-                             "entries": [
-                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
-                               { "type": "Improved", "description": "Plotting of simulation data." },
-                               { "type": "Improved", "description": "Support for CellML models." }
                              ]
                            }
                          ]
@@ -302,7 +311,11 @@ var jsonData = { "versions": [
                                { "type": "Fixed", "description": "Removal of a graph panel that is selected by another CellML file." },
                                { "type": "Fixed", "description": "Property settings of a CellML file that requires a non-linear algebraic solver." }
                              ]
-                           },
+                           }
+                         ]
+                       },
+                       { "name": "Solver",
+                         "entries": [
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
@@ -357,9 +370,6 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"http://en.wikipedia.org/wiki/Heun%27s_method\">Heun</a> solver." },
-                           { "type": "Added", "description": "Second-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." },
-                           { "type": "Added", "description": "Fourth-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." },
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
                                { "type": "Added", "description": "Have several graph panels." },
@@ -372,6 +382,13 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Support for a wider range of CellML files." }
                              ]
                            }
+                         ]
+                       },
+                       { "name": "Solver",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"http://en.wikipedia.org/wiki/Heun%27s_method\">Heun</a> solver." },
+                           { "type": "Added", "description": "Second-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." },
+                           { "type": "Added", "description": "Fourth-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." }
                          ]
                        }
                      ]

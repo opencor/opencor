@@ -4,6 +4,7 @@ PROJECT(CSVDataStorePlugin)
 
 ADD_PLUGIN(CSVDataStore
     SOURCES
+        ../../datastoreinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
@@ -15,7 +16,6 @@ ADD_PLUGIN(CSVDataStore
         src
     PLUGINS
         Core
-        CoreDataStore
     QT_MODULES
         Widgets
 )
