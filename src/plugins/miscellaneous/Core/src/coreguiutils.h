@@ -107,8 +107,9 @@ void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
 
+QString CORE_EXPORT fileTypes(const FileTypes &pFileTypes);
 QString CORE_EXPORT fileTypes(const FileTypes &pFileTypes,
-                              const QStringList &pMimeTypes = QStringList());
+                              const QStringList &pMimeTypes);
 
 //==============================================================================
 

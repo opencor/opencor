@@ -502,16 +502,16 @@ QColor lockedColor(const QColor &pColor)
 
 //==============================================================================
 
-QString fileTypes(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+QString fileTypes(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
+                  const QStringList &pMimeTypes)
 {
     // Convert and return as a string the given file types, using the given MIME
-    // types, if any
+    // types, if required
 
     QString res = QString();
 
     foreach (FileType *fileType, pFileTypes) {
-        if (   pMimeTypes.isEmpty()
-            || pMimeTypes.contains(fileType->mimeType())) {
+        if (!pCheckMimeTypes || pMimeTypes.contains(fileType->mimeType())) {
             if (!res.isEmpty())
                 res += ";;";
 
@@ -521,6 +521,25 @@ QString fileTypes(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
     }
 
     return res;
+}
+
+//==============================================================================
+
+QString fileTypes(const FileTypes &pFileTypes)
+{
+    // Convert and return as a string the given file types
+
+    return fileTypes(pFileTypes, false, QStringList());
+}
+
+//==============================================================================
+
+QString fileTypes(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+{
+    // Convert and return as a string the given file types, using the given MIME
+    // types, if any
+
+    return fileTypes(pFileTypes, true, pMimeTypes);
 }
 
 //==============================================================================
