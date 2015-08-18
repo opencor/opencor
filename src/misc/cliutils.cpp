@@ -70,15 +70,16 @@ void initPluginsPath(const QString &pAppFileName)
     QString appDir;
 
 #ifdef Q_OS_WIN
-    if (appFileInfo.suffix().isEmpty())
+    if (appFileInfo.suffix().isEmpty()) {
         // If pAppFileName has no suffix, then it means we tried to run OpenCOR
         // using something like "[OpenCOR]/OpenCOR", in which case QFileInfo()
-        // will get lost when trying to retrieve the canonical path for OpenCOR.
+        // will be lost when trying to retrieve the canonical path for OpenCOR.
         // Now, when use something like "[OpenCOR]/OpenCOR", it's as if we were
         // to use something like "[OpenCOR]/OpenCOR.com", so update appFileInfo
         // accordingly
 
         appFileInfo = pAppFileName+".com";
+    }
 #endif
 
     appDir = QDir::toNativeSeparators(appFileInfo.canonicalPath());
