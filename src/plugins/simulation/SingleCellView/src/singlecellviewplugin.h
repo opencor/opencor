@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "filehandlinginterface.h"
+#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
@@ -59,13 +60,19 @@ class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
+    explicit SingleCellViewPlugin();
+
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
+    FileTypes sedmlFileTypes() const;
+
 private:
     SingleCellViewWidget *mViewWidget;
+
+    FileTypes mSedmlFileTypes;
 };
 
 //==============================================================================

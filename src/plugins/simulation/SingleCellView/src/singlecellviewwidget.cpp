@@ -1254,9 +1254,18 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 {
     // Export ourselves to SED-ML
 
+    QString fileTypes = QString();
+
+    foreach (FileType *fileType, mPluginParent->sedmlFileTypes()) {
+        if (!fileTypes.isEmpty())
+            fileTypes += ";;";
+
+        fileTypes +=  fileType->description()
+                     +" (*."+fileType->fileExtension()+")";
+    }
+
     QString fileName = Core::getSaveFileName(QObject::tr("Export to a SED-ML file"),
-                                             QString(),
-                                             QObject::tr("SED-ML File")+" (*.xml)");
+                                             QString(), fileTypes);
 
     if (!fileName.isEmpty()) {
         // Create our SED-ML document and add the current CellML model to it
