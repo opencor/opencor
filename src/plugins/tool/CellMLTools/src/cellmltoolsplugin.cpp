@@ -29,9 +29,11 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QFile>
+#include <QFileInfo>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
+#include <QRegularExpression>
 
 //==============================================================================
 
@@ -256,6 +258,58 @@ void CellMLToolsPlugin::handleAction(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
+QString CellMLToolsPlugin::exportedFileName() const
+{
+    // Return the name of an exported file
+    // Note: the idea is to use one of the following for the exported file base
+    //       name:
+    //        - "My file" ---> "My file - Exported"
+    //        - "my file" ---> "my file - exported"
+    //        - "My_file" ---> "My_file_Exported"
+    //        - "my_file" ---> "my_file_exported"
+    //        - "My-file" ---> "My-file-Exported"
+    //        - "my-file" ---> "my-file-exported"
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString fileName = fileManagerInstance->isRemote(mFileName)?
+                           fileManagerInstance->url(mFileName):
+                           mFileName;
+    QFileInfo fileInfo = fileName;
+    QString fileCompleteSuffix = fileInfo.completeSuffix();
+
+    if (!fileCompleteSuffix.isEmpty()) {
+        fileCompleteSuffix.prepend(".");
+
+        static const QString Space = " ";
+        static const QString Hyphen = "-";
+        static const QString Underscore = "_";
+        static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
+
+        QString fileBaseName = fileInfo.baseName();
+
+        int nbOfSpaces = fileBaseName.count(Space);
+        int nbOfHyphens = fileBaseName.count(Hyphen);
+        int nbOfUnderscores = fileBaseName.count(Underscore);
+
+        QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
+                                Space+Hyphen+Space:
+                                ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
+                                    Underscore:
+                                    Hyphen;
+        QString exported = tr("Exported");
+
+        if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
+            exported[0] = exported[0].toLower();
+
+        fileName.replace(QRegularExpression(QRegularExpression::escape(fileCompleteSuffix)+"$"),
+                         separator+exported+fileCompleteSuffix);
+    }
+
+    return fileName;
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVersion)
 {
     // Ask for the name of the file that will contain the export
@@ -273,13 +327,8 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
                      +" (*."+fileType->fileExtension()+")";
     }
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
-                                             fileManagerInstance->isRemote(mFileName)?
-                                                 fileManagerInstance->url(mFileName):
-                                                 mFileName,
-                                             fileTypes);
+                                             exportedFileName(), fileTypes);
 
     if (fileName.isEmpty())
         return;
@@ -486,12 +535,8 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     // Ask for the name of the file that will contain the export
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
     QString fileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"),
-                                             fileManagerInstance->isRemote(mFileName)?
-                                                 fileManagerInstance->url(mFileName):
-                                                 mFileName);
+                                             exportedFileName());
 
     if (fileName.isEmpty())
         return;
