@@ -1260,8 +1260,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
     QString fileName = mSimulation->fileName();
     bool remoteFile = fileManagerInstance->isRemote(fileName);
     QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
-    QFileInfo cellmlFileInfo = cellmlFileName;
-    QString cellmlFileCompleteSuffix = cellmlFileInfo.completeSuffix();
+    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1287,12 +1286,20 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         // Set the algorithm used to compute the model
 //---GRY--- TO BE DONE...
 
-        // Set our SED-ML model's id and source
+        // Customise our SED-ML model
 
         sedmlModel->setId(cellmlFile->cmetaId().toStdString());
-        sedmlModel->setSource(remoteFile?
-                                  cellmlFileName.toStdString():
-                                  cellmlFileInfo.fileName().toStdString());
+        sedmlModel->setName(QString::fromStdWString(cellmlFile->model()->name()).toStdString());
+
+        // Set our SED-ML model's source
+
+        if (remoteFile) {
+            sedmlModel->setSource(cellmlFileName.toStdString());
+        } else {
+            QDir sedmlFileDir = sedmlFileName;
+
+            sedmlModel->setSource(sedmlFileDir.relativeFilePath(cellmlFileName).toStdString());
+        }
 
         // Set our SED-ML model's language
 
