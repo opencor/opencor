@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "filemanager.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
+#include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelswidget.h"
@@ -1254,11 +1255,28 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 {
     // Export ourselves to SED-ML
 
-    QString fileName = Core::getSaveFileName(QObject::tr("Export to a SED-ML file"),
-                                             QString(),
-                                             Core::fileTypes(mPluginParent->sedmlFileTypes()));
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString fileName = mSimulation->fileName();
 
-    if (!fileName.isEmpty()) {
+    fileName = fileManagerInstance->isRemote(fileName)?
+                   fileManagerInstance->url(fileName):
+                   fileName;
+
+    QString fileCompleteSuffix = QFileInfo(fileName).completeSuffix();
+    QString sedmlFileName = fileName;
+
+    if (!fileCompleteSuffix.isEmpty()) {
+        sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(fileCompleteSuffix)+"$"),
+                              SEDMLSupport::SedmlFileExtension);
+    } else {
+        sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
+    }
+
+    sedmlFileName = Core::getSaveFileName(QObject::tr("Export to a SED-ML file"),
+                                          sedmlFileName,
+                                          Core::fileTypes(mPluginParent->sedmlFileTypes()));
+
+    if (!sedmlFileName.isEmpty()) {
         // Create our SED-ML document and add the current CellML model to it
 
         libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
@@ -1270,7 +1288,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         // The data is ready, so write it to the file
 
-        Core::writeTextToFile(fileName, sedmlDocument->toSed());
+        Core::writeTextToFile(sedmlFileName, sedmlDocument->toSed());
 
         delete sedmlDocument;
     }
