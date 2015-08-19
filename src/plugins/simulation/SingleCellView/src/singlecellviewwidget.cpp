@@ -1253,17 +1253,17 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 void SingleCellViewWidget::on_actionSedmlExport_triggered()
 {
-    // Export ourselves to SED-ML
+    // Export ourselves to SED-ML by first getting a file name for our SED-ML
+    // file
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = mSimulation->fileName();
+    bool remoteFile = fileManagerInstance->isRemote(fileName);
 
-    fileName = fileManagerInstance->isRemote(fileName)?
-                   fileManagerInstance->url(fileName):
-                   fileName;
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
 
-    QString fileCompleteSuffix = QFileInfo(fileName).completeSuffix();
-    QString sedmlFileName = fileName;
+    QString fileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
+    QString sedmlFileName = cellmlFileName;
 
     if (!fileCompleteSuffix.isEmpty()) {
         sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(fileCompleteSuffix)+"$"),
@@ -1277,16 +1277,37 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                           Core::fileTypes(mPluginParent->sedmlFileTypes()));
 
     if (!sedmlFileName.isEmpty()) {
-        // Create our SED-ML document and add the current CellML model to it
+        // A SED-ML file name has been provided, so create a SED-ML document and
+        // add a model to it
+
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
 
         libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
         libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
-        sedmlModel->setId("myModel");
-        sedmlModel->setSource("myModel.cellml");
-        sedmlModel->setLanguage("urn:sedml:language:cellml");
+        // Set our SED-ML model's id and source
 
-        // The data is ready, so write it to the file
+        sedmlModel->setId(cellmlFile->cmetaId().toStdString());
+        sedmlModel->setSource(remoteFile?cellmlFileName.toStdString():"myModel.cellml");
+
+        // Set our SED-ML model's language
+
+        switch (CellMLSupport::CellmlFile::version(cellmlFile)) {
+        case CellMLSupport::CellmlFile::Cellml_1_0:
+            sedmlModel->setLanguage("urn:sedml:language:cellml.1_0");
+
+            break;
+        case CellMLSupport::CellmlFile::Cellml_1_1:
+            sedmlModel->setLanguage("urn:sedml:language:cellml.1_1");
+
+            break;
+        default:
+            // Unknown version , so use the generic CellML language
+
+            sedmlModel->setLanguage("urn:sedml:language:cellml");
+        }
+
+        // Our SED-ML document is ready, so write it to our SED-ML file
 
         Core::writeTextToFile(sedmlFileName, sedmlDocument->toSed());
 
