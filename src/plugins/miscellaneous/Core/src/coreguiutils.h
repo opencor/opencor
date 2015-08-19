@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "filetypeinterface.h"
 
 //==============================================================================
 
@@ -105,6 +106,10 @@ void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
                                   const bool &pEnabled = true);
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
+
+QString CORE_EXPORT fileTypes(const FileTypes &pFileTypes);
+QString CORE_EXPORT fileTypes(const FileTypes &pFileTypes,
+                              const QStringList &pMimeTypes);
 
 //==============================================================================
 

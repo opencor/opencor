@@ -795,17 +795,8 @@ void CentralWidget::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QString fileTypes = QString();
-
-    foreach (FileType *supportedFileType, mSupportedFileTypes) {
-        if (!fileTypes.isEmpty())
-            fileTypes += ";;";
-
-        fileTypes +=  supportedFileType->description()
-                     +" (*."+supportedFileType->fileExtension()+")";
-    }
-
-    QStringList files = getOpenFileNames(tr("Open File"), fileTypes);
+    QStringList files = getOpenFileNames(tr("Open File"),
+                                         fileTypes(mSupportedFileTypes));
 
     // Open the file(s)
 
@@ -1070,23 +1061,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // with a new file, so we ask the user for a file name based on the MIME
         // types supported by our current view
 
-        QStringList mimeTypes = viewInterface->viewMimeTypes();
-
-        QString fileTypes = QString();
-
-        foreach (FileType *supportedFileType, mSupportedFileTypes) {
-            if (mimeTypes.contains(supportedFileType->mimeType())) {
-                if (!fileTypes.isEmpty())
-                    fileTypes += ";;";
-
-                fileTypes +=  supportedFileType->description()
-                             +" (*."+supportedFileType->fileExtension()+")";
-            }
-        }
-
         newFileName = getSaveFileName(tr("Save File"),
                                       fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
-                                      fileTypes);
+                                      fileTypes(mSupportedFileTypes, viewInterface->viewMimeTypes()));
 
         // Make sure that a new file name was retrieved
 

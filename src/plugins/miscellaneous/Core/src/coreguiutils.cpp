@@ -139,10 +139,11 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 {
     // Retrieve and return a save file name
 
+    QFileInfo fileInfo = pFileName;
     QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
                                                                         pCaption,
-                                                                        !QFileInfo(pFileName).canonicalPath().compare(".")?
-                                                                            activeDirectory():
+                                                                        !fileInfo.canonicalPath().compare(".")?
+                                                                            activeDirectory()+QDir::separator()+fileInfo.fileName():
                                                                             pFileName,
                                                                         allFilters(pFilters),
                                                                         pSelectedFilter,
@@ -497,6 +498,48 @@ QColor lockedColor(const QColor &pColor)
     return QColor(alpha*lr+oneMinusAlpha*r,
                   alpha*lg+oneMinusAlpha*g,
                   alpha*lb+oneMinusAlpha*b);
+}
+
+//==============================================================================
+
+QString fileTypes(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
+                  const QStringList &pMimeTypes)
+{
+    // Convert and return as a string the given file types, using the given MIME
+    // types, if required
+
+    QString res = QString();
+
+    foreach (FileType *fileType, pFileTypes) {
+        if (!pCheckMimeTypes || pMimeTypes.contains(fileType->mimeType())) {
+            if (!res.isEmpty())
+                res += ";;";
+
+            res +=  fileType->description()
+                   +" (*."+fileType->fileExtension()+")";
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QString fileTypes(const FileTypes &pFileTypes)
+{
+    // Convert and return as a string the given file types
+
+    return fileTypes(pFileTypes, false, QStringList());
+}
+
+//==============================================================================
+
+QString fileTypes(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+{
+    // Convert and return as a string the given file types, using the given MIME
+    // types, if any
+
+    return fileTypes(pFileTypes, true, pMimeTypes);
 }
 
 //==============================================================================
