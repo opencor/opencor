@@ -1259,14 +1259,13 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = mSimulation->fileName();
     bool remoteFile = fileManagerInstance->isRemote(fileName);
-
     QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
-
-    QString fileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
+    QFileInfo cellmlFileInfo = cellmlFileName;
+    QString cellmlFileCompleteSuffix = cellmlFileInfo.completeSuffix();
     QString sedmlFileName = cellmlFileName;
 
-    if (!fileCompleteSuffix.isEmpty()) {
-        sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(fileCompleteSuffix)+"$"),
+    if (!cellmlFileCompleteSuffix.isEmpty()) {
+        sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
                               SEDMLSupport::SedmlFileExtension);
     } else {
         sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
@@ -1285,10 +1284,15 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
         libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
+        // Set the algorithm used to compute the model
+//---GRY--- TO BE DONE...
+
         // Set our SED-ML model's id and source
 
         sedmlModel->setId(cellmlFile->cmetaId().toStdString());
-        sedmlModel->setSource(remoteFile?cellmlFileName.toStdString():"myModel.cellml");
+        sedmlModel->setSource(remoteFile?
+                                  cellmlFileName.toStdString():
+                                  cellmlFileInfo.fileName().toStdString());
 
         // Set our SED-ML model's language
 
