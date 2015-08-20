@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "filemanager.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
+#include "sedmlfile.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelplotwidget.h"
@@ -1287,8 +1288,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
 
-        sedmlModel->setId(cellmlFile->cmetaId().toStdString());
-        sedmlModel->setName(QString::fromStdWString(cellmlFile->model()->name()).toStdString());
+        sedmlModel->setId(QString::fromStdWString(cellmlFile->model()->name()).toStdString());
 
         // Set our SED-ML model's source
 
@@ -1306,20 +1306,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         // Set our SED-ML model's language
 
-        switch (CellMLSupport::CellmlFile::version(cellmlFile)) {
-        case CellMLSupport::CellmlFile::Cellml_1_0:
-            sedmlModel->setLanguage("urn:sedml:language:cellml.1_0");
-
-            break;
-        case CellMLSupport::CellmlFile::Cellml_1_1:
-            sedmlModel->setLanguage("urn:sedml:language:cellml.1_1");
-
-            break;
-        default:
-            // Unknown version, so use the generic CellML language
-
-            sedmlModel->setLanguage("urn:sedml:language:cellml");
-        }
+        sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                    SEDMLSupport::Language::Cellml_1_1.toStdString():
+                                    SEDMLSupport::Language::Cellml_1_0.toStdString());
 
         // Create and customise a simulation for our SED-ML document
 
