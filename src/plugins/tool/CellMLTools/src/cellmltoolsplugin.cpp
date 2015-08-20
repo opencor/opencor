@@ -277,33 +277,32 @@ QString CellMLToolsPlugin::exportedFileName() const
     QFileInfo fileInfo = fileName;
     QString fileCompleteSuffix = fileInfo.completeSuffix();
 
-    if (!fileCompleteSuffix.isEmpty()) {
+    if (!fileCompleteSuffix.isEmpty())
         fileCompleteSuffix.prepend(".");
 
-        static const QString Space = " ";
-        static const QString Hyphen = "-";
-        static const QString Underscore = "_";
-        static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
+    static const QString Space = " ";
+    static const QString Hyphen = "-";
+    static const QString Underscore = "_";
+    static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
 
-        QString fileBaseName = fileInfo.baseName();
+    QString fileBaseName = fileInfo.baseName();
 
-        int nbOfSpaces = fileBaseName.count(Space);
-        int nbOfHyphens = fileBaseName.count(Hyphen);
-        int nbOfUnderscores = fileBaseName.count(Underscore);
+    int nbOfSpaces = fileBaseName.count(Space);
+    int nbOfHyphens = fileBaseName.count(Hyphen);
+    int nbOfUnderscores = fileBaseName.count(Underscore);
 
-        QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
-                                Space+Hyphen+Space:
-                                ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
-                                    Underscore:
-                                    Hyphen;
-        QString exported = tr("Exported");
+    QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
+                            Space+Hyphen+Space:
+                            ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
+                                Underscore:
+                                Hyphen;
+    QString exported = tr("Exported");
 
-        if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
-            exported[0] = exported[0].toLower();
+    if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
+        exported[0] = exported[0].toLower();
 
-        fileName.replace(QRegularExpression(QRegularExpression::escape(fileCompleteSuffix)+"$"),
-                         separator+exported+fileCompleteSuffix);
-    }
+    fileName.replace(QRegularExpression(QRegularExpression::escape(fileCompleteSuffix)+"$"),
+                     separator+exported+fileCompleteSuffix);
 
     return fileName;
 }
