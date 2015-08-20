@@ -1296,6 +1296,10 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         if (remoteFile) {
             sedmlModel->setSource(cellmlFileName.toStdString());
         } else {
+            // We are dealing with a local CellML file, so refer to it
+            // relatively to the directory where we are going to save our SED-ML
+            // file
+
             QDir sedmlFileDir = sedmlFileName;
 
             sedmlModel->setSource(sedmlFileDir.relativeFilePath(cellmlFileName).toStdString());
@@ -1313,7 +1317,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
             break;
         default:
-            // Unknown version , so use the generic CellML language
+            // Unknown version, so use the generic CellML language
 
             sedmlModel->setLanguage("urn:sedml:language:cellml");
         }
