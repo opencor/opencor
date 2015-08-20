@@ -1275,18 +1275,14 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                           Core::fileTypes(mPluginParent->sedmlFileTypes()));
 
     if (!sedmlFileName.isEmpty()) {
-        // A SED-ML file name has been provided, so create a SED-ML document and
-        // add a model to it
-
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
+        // A SED-ML file name has been provided, so create a SED-ML document
 
         libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+
+        // Create and customise a model for our SED-ML document
+
         libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-
-        // Set the algorithm used to compute the model
-//---GRY--- TO BE DONE...
-
-        // Customise our SED-ML model
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
 
         sedmlModel->setId(cellmlFile->cmetaId().toStdString());
         sedmlModel->setName(QString::fromStdWString(cellmlFile->model()->name()).toStdString());
@@ -1321,6 +1317,17 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
             sedmlModel->setLanguage("urn:sedml:language:cellml");
         }
+
+        // Create and customise a simulation for our SED-ML document
+
+        libsedml::SedUniformTimeCourse *sedmlSimulation = sedmlDocument->createUniformTimeCourse();
+//---GRY--- TO BE COMPLETED...
+
+        // Create and customise an algorithm for our SED-ML simulation
+
+        libsedml::SedAlgorithm *sedmlAlgorithm = sedmlSimulation->createAlgorithm();
+//---GRY--- TO BE COMPLETED...
+Q_UNUSED(sedmlAlgorithm);
 
         // Our SED-ML document is ready, so write it to our SED-ML file
 
