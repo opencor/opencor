@@ -1274,6 +1274,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                           sedmlFileName,
                                           Core::fileTypes(mPluginParent->sedmlFileTypes()));
 
+    // Effectively export ourselves to SED-ML, if SED-ML file name has been
+    // provided
+
     if (!sedmlFileName.isEmpty()) {
         // A SED-ML file name has been provided, so create a SED-ML document
 
@@ -1328,6 +1331,18 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         libsedml::SedAlgorithm *sedmlAlgorithm = sedmlSimulation->createAlgorithm();
 //---GRY--- TO BE COMPLETED...
 Q_UNUSED(sedmlAlgorithm);
+
+        // Create and customise a task for our SED-ML document
+
+        libsedml::SedTask *sedmlTask = sedmlDocument->createTask();
+//---GRY--- TO BE COMPLETED...
+Q_UNUSED(sedmlTask);
+
+        // Create and customise a 2D plot for our SED-ML document
+
+        libsedml::SedPlot2D *sedmlPlot2D = sedmlDocument->createPlot2D();
+//---GRY--- TO BE COMPLETED...
+Q_UNUSED(sedmlPlot2D);
 
         // Our SED-ML document is ready, so write it to our SED-ML file
 
