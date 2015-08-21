@@ -209,6 +209,8 @@ public:
 
     QString fileName() const;
 
+    CellMLSupport::CellmlFileRuntime * runtime() const;
+
     SingleCellViewSimulationData * data() const;
     SingleCellViewSimulationResults * results() const;
 

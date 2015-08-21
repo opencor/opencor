@@ -850,9 +850,18 @@ QString SingleCellViewSimulation::fileName() const
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
+{
+    // Return our runtime
+
+    return mRuntime;
+}
+
+//==============================================================================
+
 SingleCellViewSimulationData * SingleCellViewSimulation::data() const
 {
-    // Retrieve and return our data
+    // Return our data
 
     return mData;
 }

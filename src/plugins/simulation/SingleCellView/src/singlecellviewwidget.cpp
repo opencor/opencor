@@ -1288,7 +1288,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
 
-        sedmlModel->setId(QString::fromStdWString(cellmlFile->model()->name()).toStdString());
+        sedmlModel->setId("model");
 
         // Set our SED-ML model's source
 
@@ -1330,8 +1330,17 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         // Create and customise an algorithm for our SED-ML simulation
 
         libsedml::SedAlgorithm *sedmlAlgorithm = sedmlSimulation->createAlgorithm();
-//---GRY--- TO BE COMPLETED...
-Q_UNUSED(sedmlAlgorithm);
+
+        QString solverName = (mSimulation->runtime()->needOdeSolver())?
+                                 mSimulation->data()->odeSolverName():
+                                 mSimulation->data()->daeSolverName();
+qDebug("---------");
+qDebug(">>> Solver: %s", qPrintable(solverName));
+Solver::Solver::Properties properties = mSimulation->runtime()->needOdeSolver()?mSimulation->data()->odeSolverProperties():mSimulation->data()->daeSolverProperties();
+foreach (const QString &property, properties.keys())
+    qDebug(">>> %s: %s", qPrintable(property), qPrintable(properties.value(property).toString()));
+
+sedmlAlgorithm->setKisaoID("KISAO:0000032");
 
         // Create and customise a task for our SED-ML document
 
