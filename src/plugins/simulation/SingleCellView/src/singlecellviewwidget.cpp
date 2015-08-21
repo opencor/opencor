@@ -1386,11 +1386,6 @@ Q_UNUSED(sedmlPlot2D);
 
 void SingleCellViewWidget::initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData)
 {
-    // Make sure that we have a simulation object
-
-    if (!mSimulation)
-        return;
-
     // Initialise our solver(s) properties
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
