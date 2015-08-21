@@ -188,10 +188,9 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
             //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
-            //       with CellML imports that rely on https (see
-            //       https://github.com/opencor/opencor/issues/417), so rather
-            //       than calling CDA_CellMLImport::instantiate(), we call
-            //       CDA_CellMLImport::instantiateFromText() instead, which
+            //       with CellML imports that rely on https (see issue #417), so
+            //       rather than calling CDA_CellMLImport::instantiate(), we
+            //       call CDA_CellMLImport::instantiateFromText() instead, which
             //       requires loading the imported CellML file. Otherwise, to
             //       speed things up as much as possible, we cache the contents
             //       of the URLs that we load...

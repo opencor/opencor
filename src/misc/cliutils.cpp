@@ -123,8 +123,7 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
     // Ignore SSL-related warnings
     // Note #1: this is to address an issue with QSslSocket not being able to
     //          resolve some methods...
-    // Note #2: see https://github.com/opencor/opencor/issues/516 for more
-    //          information...
+    // Note #2: see issue #516 for more information...
 
     qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
 

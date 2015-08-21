@@ -1469,7 +1469,7 @@ void SingleCellViewWidget::simulationPaused()
 
         updateSimulationMode();
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
         checkResults(mSimulation);
     }
@@ -1531,7 +1531,7 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
 
         updateSimulationMode();
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint());
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint(), true);
     }
 
     // Stop keeping track of our simulation progress
