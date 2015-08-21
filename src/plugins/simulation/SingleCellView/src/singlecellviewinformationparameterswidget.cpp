@@ -260,7 +260,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
         // Make sure that we don't hang up the GUI unnecessarily
         // Note: this is particularly useful when we run a model that has loads
         //       of parameters since otherwise the simulation wouldn't finish
-        //       smoothly (see https://github.com/opencor/opencor/issues/656)...
+        //       smoothly (see issue #656)...
 
         QCoreApplication::processEvents();
     }
@@ -304,9 +304,8 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
     // Note #2: some state variables may be considered as computed constants by
     //          the CellML API. This is fine when we need to initialise things,
     //          but not after the user has modified one or several model
-    //          parameters (see https://github.com/opencor/opencor/issues/234
-    //          for more insight on this issue), hence our passing false to
-    //          mSimulation->data()->reset()...
+    //          parameters (see issue #234 for more information), hence our
+    //          passing false to mSimulation->data()->reset()...
 
     mSimulation->data()->reset(false);
 }

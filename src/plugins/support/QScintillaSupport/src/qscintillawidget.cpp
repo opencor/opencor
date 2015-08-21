@@ -110,8 +110,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'T');
 
     // Add support for Specials (Unicode block)
-    // Note #1: see https://github.com/opencor/opencor/issues/709 for more
-    //          information...
+    // Note #1: see issue #709 for more information...
     // Note #2: make sure that we checkString() supports the below
     //          representations...
 

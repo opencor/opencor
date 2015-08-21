@@ -1692,8 +1692,8 @@ void CentralWidget::updateGui()
     //          that results from switching from one file to another (both using
     //          the same view) with the status bar visible and the mouse pointer
     //          over a button-like widget within the current view (see
-    //          https://github.com/opencor/opencor/issues/405). It's not neat,
-    //          but it seems like it might be an issue with Qt itself...
+    //          issue #405). It's not neat, but it seems like it might be an
+    //          issue with Qt itself...
 
     bool statusBarVisible = mMainWindow->statusBar()->isVisible();
 
