@@ -130,15 +130,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     targetTriple = (sizeof(void *) == 4)?"i686-pc-windows-msvc-elf":"x86_64-pc-windows-msvc-elf";
     // Note: MCJIT currently works only through the ELF object format, hence we
     //       are appending "-elf"...
-    //---GRY--- WE WERE ORIGINALLY TRYING TO USE i686-pc-win32-elf AND
-    //          x86_64-pc-win32-elf FOR WIN32 AND WIN64, RESPECTIVELY, BUT
-    //          THOUGH IT WORKS FINE ON WIN64, IT DOESN'T ON WIN32. INDEED, ON
-    //          THAT PLATFORM, WE GET THE SAME PROBLEM AS THE ONE REPORTED IN
-    //          ISSUE #583. NOW, THINGS MIGHT BE DIFFERENT ONCE LLVM 3.6.1 IS
-    //          OUT, SO WE MIGHT WANT TO REVISIT THE SITUATION THEN. UNTIL THEN,
-    //          WE USE i686-pc-windows-msvc-elf AND x86_64-pc-windows-msvc-elf
-    //          SINCE WE KNOW THEM TO WORK FINE (THANKS TO THE LLVM PATCH USED
-    //          TO FIX ISSUE #583)...
 #elif defined(Q_OS_LINUX)
     targetTriple = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
 #elif defined(Q_OS_MAC)
