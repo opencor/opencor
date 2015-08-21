@@ -1254,8 +1254,30 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 void SingleCellViewWidget::on_actionSedmlExport_triggered()
 {
-    // Export ourselves to SED-ML by first getting a file name for our SED-ML
-    // file
+    // Export ourselves to SED-ML by first checking that we can create a
+    // 'proper' uniform time course in SED-ML
+
+    double startingPoint = mSimulation->data()->startingPoint();
+    double endingPoint = mSimulation->data()->endingPoint();
+    int nbOfPoints = ceil((endingPoint-startingPoint)/mSimulation->data()->pointInterval());
+    double newPointInterval = (endingPoint-startingPoint)/nbOfPoints;
+qDebug(">>> %f vs. %f", newPointInterval, mSimulation->data()->pointInterval());
+
+    if (newPointInterval != mSimulation->data()->pointInterval()) {
+        if (QMessageBox::question(this, qAppName(),
+                                  tr("SED-ML export currently requires a <strong>number of points</strong>, " \
+                                     "which can be determined using the <strong>point interval</strong>. "    \
+                                     "However, that <strong>number of points</strong> will not result back "  \
+                                     "in the correct <strong>point interval</strong> (%1 vs. %2). "           \
+                                     "Do you still wish to proceed?").arg(newPointInterval)
+                                                                     .arg(mSimulation->data()->pointInterval()),
+                                  QMessageBox::Yes|QMessageBox::No,
+                                  QMessageBox::Yes) == QMessageBox::No) {
+            return;
+        }
+    }
+
+    // Get a file name for our SED-ML file
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = mSimulation->fileName();
@@ -1318,14 +1340,11 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         libsedml::SedUniformTimeCourse *sedmlSimulation = sedmlDocument->createUniformTimeCourse();
 //---GRY--- TO BE COMPLETED...
 
-        double startingPoint = mSimulation->data()->startingPoint();
-        double endingPoint = mSimulation->data()->endingPoint();
-
         sedmlSimulation->setId("simulation");
         sedmlSimulation->setInitialTime(startingPoint);
         sedmlSimulation->setOutputStartTime(startingPoint);
         sedmlSimulation->setOutputEndTime(endingPoint);
-        sedmlSimulation->setNumberOfPoints(ceil((endingPoint-startingPoint)/mSimulation->data()->pointInterval()));
+        sedmlSimulation->setNumberOfPoints(nbOfPoints);
 
         // Create and customise an algorithm for our SED-ML simulation
 
