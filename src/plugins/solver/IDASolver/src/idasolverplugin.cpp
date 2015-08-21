@@ -68,6 +68,15 @@ Solver::Solver * IDASolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString IDASolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    return pId;
+}
+
+//==============================================================================
+
 Solver::Type IDASolverPlugin::solverType() const
 {
     // Return the type of the solver

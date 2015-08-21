@@ -68,6 +68,15 @@ Solver::Solver * FourthOrderRungeKuttaSolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString FourthOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    return pId;
+}
+
+//==============================================================================
+
 Solver::Type FourthOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver

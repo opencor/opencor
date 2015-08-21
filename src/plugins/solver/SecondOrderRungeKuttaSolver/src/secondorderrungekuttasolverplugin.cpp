@@ -66,6 +66,15 @@ Solver::Solver * SecondOrderRungeKuttaSolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString SecondOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    return pId;
+}
+
+//==============================================================================
+
 Solver::Type SecondOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver

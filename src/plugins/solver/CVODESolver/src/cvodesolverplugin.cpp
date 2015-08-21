@@ -66,6 +66,15 @@ Solver::Solver * CVODESolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString CVODESolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    return pId;
+}
+
+//==============================================================================
+
 Solver::Type CVODESolverPlugin::solverType() const
 {
     // Return the type of the solver
