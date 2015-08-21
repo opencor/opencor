@@ -1261,10 +1261,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
     double endingPoint = mSimulation->data()->endingPoint();
     int nbOfPoints = ceil((endingPoint-startingPoint)/mSimulation->data()->pointInterval());
     double newPointInterval = (endingPoint-startingPoint)/nbOfPoints;
-qDebug(">>> %f vs. %f", newPointInterval, mSimulation->data()->pointInterval());
 
-    if (newPointInterval != mSimulation->data()->pointInterval()) {
-        if (QMessageBox::question(this, qAppName(),
+    if (   (newPointInterval != mSimulation->data()->pointInterval())
+        && (QMessageBox::question(this, qAppName(),
                                   tr("SED-ML export currently requires a <strong>number of points</strong>, " \
                                      "which can be determined using the <strong>point interval</strong>. "    \
                                      "However, that <strong>number of points</strong> will not result back "  \
@@ -1272,9 +1271,8 @@ qDebug(">>> %f vs. %f", newPointInterval, mSimulation->data()->pointInterval());
                                      "Do you still wish to proceed?").arg(newPointInterval)
                                                                      .arg(mSimulation->data()->pointInterval()),
                                   QMessageBox::Yes|QMessageBox::No,
-                                  QMessageBox::Yes) == QMessageBox::No) {
-            return;
-        }
+                                  QMessageBox::Yes) == QMessageBox::No)) {
+        return;
     }
 
     // Get a file name for our SED-ML file
@@ -1338,7 +1336,6 @@ qDebug(">>> %f vs. %f", newPointInterval, mSimulation->data()->pointInterval());
         // Create and customise a simulation for our SED-ML document
 
         libsedml::SedUniformTimeCourse *sedmlSimulation = sedmlDocument->createUniformTimeCourse();
-//---GRY--- TO BE COMPLETED...
 
         sedmlSimulation->setId("simulation");
         sedmlSimulation->setInitialTime(startingPoint);
