@@ -1331,14 +1331,16 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         libsedml::SedAlgorithm *sedmlAlgorithm = sedmlSimulation->createAlgorithm();
 
-        QString solverName = (mSimulation->runtime()->needOdeSolver())?
+        QString solverName = mSimulation->runtime()->needOdeSolver()?
                                  mSimulation->data()->odeSolverName():
                                  mSimulation->data()->daeSolverName();
+        Solver::Solver::Properties solverProperties = mSimulation->runtime()->needOdeSolver()?
+                                                          mSimulation->data()->odeSolverProperties():
+                                                          mSimulation->data()->daeSolverProperties();
 qDebug("---------");
 qDebug(">>> Solver: %s", qPrintable(solverName));
-Solver::Solver::Properties properties = mSimulation->runtime()->needOdeSolver()?mSimulation->data()->odeSolverProperties():mSimulation->data()->daeSolverProperties();
-foreach (const QString &property, properties.keys())
-    qDebug(">>> %s: %s", qPrintable(property), qPrintable(properties.value(property).toString()));
+foreach (const QString &solverProperty, solverProperties.keys())
+    qDebug(">>> %s: %s", qPrintable(solverProperty), qPrintable(solverProperties.value(solverProperty).toString()));
 
 sedmlAlgorithm->setKisaoID("KISAO:0000032");
 
