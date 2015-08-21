@@ -1310,10 +1310,22 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                     SEDMLSupport::Language::Cellml_1_1.toStdString():
                                     SEDMLSupport::Language::Cellml_1_0.toStdString());
 
+        // Apply some parameter changes, if any, to our SED-ML model
+//---GRY--- TO BE DONE...
+
         // Create and customise a simulation for our SED-ML document
 
         libsedml::SedUniformTimeCourse *sedmlSimulation = sedmlDocument->createUniformTimeCourse();
 //---GRY--- TO BE COMPLETED...
+
+        double startingPoint = mSimulation->data()->startingPoint();
+        double endingPoint = mSimulation->data()->endingPoint();
+
+        sedmlSimulation->setId("simulation");
+        sedmlSimulation->setInitialTime(startingPoint);
+        sedmlSimulation->setOutputStartTime(startingPoint);
+        sedmlSimulation->setOutputEndTime(endingPoint);
+        sedmlSimulation->setNumberOfPoints(ceil((endingPoint-startingPoint)/mSimulation->data()->pointInterval()));
 
         // Create and customise an algorithm for our SED-ML simulation
 
@@ -1324,8 +1336,10 @@ Q_UNUSED(sedmlAlgorithm);
         // Create and customise a task for our SED-ML document
 
         libsedml::SedTask *sedmlTask = sedmlDocument->createTask();
-//---GRY--- TO BE COMPLETED...
-Q_UNUSED(sedmlTask);
+
+        sedmlTask->setId("task");
+        sedmlTask->setModelReference(sedmlModel->getId());
+        sedmlTask->setSimulationReference(sedmlSimulation->getId());
 
         // Create and customise a 2D plot for our SED-ML document
 
