@@ -213,8 +213,14 @@ private:
 
     QVariant value(Core::Property *pProperty) const;
 
-    void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
-    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData);
+    void updateSimulationProperties();
+
+    void updateSolversProperties();
+    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
+
+    void checkSolversPropertyChanged(Core::Property *pProperty,
+                                     const QString &pSolverName,
+                                     SingleCellViewInformationSolversWidgetData *pSolverData);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
