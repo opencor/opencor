@@ -1424,7 +1424,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
             libsedml::SedSubTask *sedmlOneStepSubTask = sedmlRepeatedTask->createSubTask();
 
             sedmlOneStepSubTask->setTask(sedmlOneStepTask->getId());
-            sedmlOneStepSubTask->setOrder(1);
+            sedmlOneStepSubTask->setOrder(2);
         }
 
         // Create and customise a 2D plot output
