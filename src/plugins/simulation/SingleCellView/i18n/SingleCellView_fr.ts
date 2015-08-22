@@ -314,10 +314,6 @@
         <source>File</source>
         <translation>Fichier</translation>
     </message>
-    <message>
-        <source>SED-ML export currently requires a &lt;strong&gt;number of points&lt;/strong&gt;, which can be determined using the &lt;strong&gt;point interval&lt;/strong&gt;. However, that &lt;strong&gt;number of points&lt;/strong&gt; will not result back in the correct &lt;strong&gt;point interval&lt;/strong&gt; (%1 vs. %2). Do you still wish to proceed?</source>
-        <translation>L&apos;export SED-ML recquiert actuellement un &lt;strong&gt;nombre de points&lt;/strong&gt;, qui peut être déterminé à partir de l&apos;&lt;strong&gt;interval de point&lt;/strong&gt;. Cependant, ce &lt;strong&gt;nombre de points&lt;/strong&gt; ne redonnera pas le correct &lt;strong&gt;interval de point&lt;/strong&gt; (%1 contre %2). Voulez-vous quand même continuer ?</translation>
-    </message>
 </context>
 <context>
     <name>QObject</name>

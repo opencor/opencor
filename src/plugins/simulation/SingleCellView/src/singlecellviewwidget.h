@@ -51,6 +51,12 @@ namespace Ui {
 
 //==============================================================================
 
+namespace libsedml {
+    class SedSimulation;
+}   // namespace libsedml
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -221,6 +227,8 @@ private:
     void checkSolversPropertyChanged(Core::Property *pProperty,
                                      const QString &pSolverName,
                                      SingleCellViewInformationSolversWidgetData *pSolverData);
+
+    void addSedmlAlgorithm(libsedml::SedSimulation *pSedmlSimulation);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
