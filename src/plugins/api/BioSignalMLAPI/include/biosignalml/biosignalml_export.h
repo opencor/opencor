@@ -6,7 +6,7 @@
 #  define BIOSIGNALML_NO_EXPORT
 #else
 #  ifndef BIOSIGNALML_EXPORT
-#    ifdef typedobject_EXPORTS
+#    ifdef biosignalml_EXPORTS
         /* We are building this library */
 #      ifdef WIN32
 #        define BIOSIGNALML_EXPORT __declspec(dllexport)
