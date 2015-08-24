@@ -38,11 +38,6 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const auto Cellml_1_0 = QStringLiteral("1.0");
-static const auto Cellml_1_1 = QStringLiteral("1.1");
-
-//==============================================================================
-
 class CELLMLSUPPORT_EXPORT CellmlFileIssue
 {
 public:

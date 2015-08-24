@@ -223,7 +223,7 @@ void SingleCellViewSimulationWorker::started()
         }
     } else {
         foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-            if (!solverInterface->solverName().compare("IDA")) {
+            if (!solverInterface->solverName().compare(mSimulation->data()->daeSolverName())) {
                 // The requested DAE solver was found, so retrieve an instance
                 // of it
 
