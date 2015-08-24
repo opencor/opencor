@@ -81,6 +81,9 @@ void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
                                               voi->values(), voi->size());
             clock->set_label(voi->label().toStdString()) ;
 
+            double duration = voi->value(voi->size()-1) - voi->value(0);
+            recording->set_duration(xsd::Duration(duration, voi->unit().toStdString()));
+
             DataStore::DataStoreVariables variables = pDataStore->variables();
             auto variableBegin = variables.constBegin();
             auto variableEnd = variables.constEnd();
