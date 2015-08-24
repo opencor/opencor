@@ -85,6 +85,7 @@ namespace xsd {
     Duration(const rdf::Node & node) ;
     Duration(const Duration & other) ;
     Duration(Duration && other) ;
+    Duration(const double time, const std::string & units="second") ;
     virtual ~Duration() ;
     Duration & operator=(const Duration & other) ;
     Duration & operator=(Duration && other) ;

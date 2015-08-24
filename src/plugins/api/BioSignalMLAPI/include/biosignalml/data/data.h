@@ -31,8 +31,8 @@ namespace bsml {
 
   namespace data {
 
-    class /* BIOSIGNALML_EXPORT */ Exception : public std::runtime_error
-    /*----------------------------------------------------------*/
+    class Exception : public std::runtime_error
+    /*---------------------------------------*/
     {
      public:
       Exception(const std::string &msg) : std::runtime_error(msg) { }

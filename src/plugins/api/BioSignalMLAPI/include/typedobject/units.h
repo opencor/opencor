@@ -18,18 +18,48 @@
  *                                                                            *
  ******************************************************************************/
 
-#ifndef BSML_FORMATS_H
-#define BSML_FORMATS_H
+#ifndef TYPEDOBJECT_UNITS_H
+#define TYPEDOBJECT_UNITS_H
 
-#include <typedobject/rdf.h>
+#include <typedobject/typedobject_export.h>
 
-namespace bsml {
+#include <string>
+#include <map>
 
-  namespace Format {
-    static const rdf::Literal EDF("application/x-bsml+edf") ;
-    static const rdf::Literal HDF5("application/x-bsml+hdf5") ;
-    } ;
+namespace Unit {
 
-  } ;
+  class TYPEDOBJECT_EXPORT Converter
+  /*------------------------------*/
+  {
+   public:
+    Converter(const std::string & pFromUnits, const std::string & pToUnits);
+
+    double convert(const double pValue) const;
+
+   private:
+    double mScale;
+    double mOffset;
+    };
+
+  };
 
 #endif
+
+/*
+
+
+Dimensions:
+# reference
+meter = [length] = m = metre
+second = [time] = s = sec
+ampere = [current] = A = amp
+candela = [luminosity] = cd = candle
+gram = [mass] = g
+mole = [substance] = mol
+kelvin = [temperature]; offset: 0 = K = degK
+radian = [] = rad
+bit = []
+count = []
+
+
+*/
