@@ -88,7 +88,7 @@ void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
             std::vector<const std::string> uris;
             std::vector<const rdf::URI> units;
             for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-                uris.push_back((*variable)->uri().toStdString());
+                uris.push_back(rec_uri + "/signal/" + (*variable)->uri().toStdString());
                 units.push_back(rdf::URI(base_units + (*variable)->unit().toStdString()));
             }
 
