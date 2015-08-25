@@ -76,7 +76,7 @@ void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
             recording->add_prefix(rdf::Namespace("units", base_units)) ;
 
             DataStore::DataStoreVariable *voi = pDataStore->voi();
-            auto clock = recording->new_clock(voi->uri().toStdString(),
+            auto clock = recording->new_clock(rec_uri + "/clock/" + voi->uri().toStdString(),
                                               rdf::URI(base_units + voi->unit().toStdString()),
                                               voi->values(), voi->size());
             clock->set_label(voi->label().toStdString()) ;
