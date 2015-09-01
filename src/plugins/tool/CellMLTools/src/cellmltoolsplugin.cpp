@@ -265,7 +265,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
                          "CellML 1.1";
 
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
-                                             Core::newFileName(mFileName, tr("Exported")),
+                                             Core::newFileName(mFileName, tr("Exported"), false),
                                              Core::fileTypes(mCellmlFileTypes));
 
     if (fileName.isEmpty())
@@ -474,7 +474,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
     // Ask for the name of the file that will contain the export
 
     QString fileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"),
-                                             Core::newFileName(mFileName, tr("Exported")));
+                                             Core::newFileName(mFileName, tr("Exported"), false));
 
     if (fileName.isEmpty())
         return;

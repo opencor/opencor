@@ -42,7 +42,7 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
     // Export the given data store to a CSV file
 
     QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV File"),
-                                             Core::newFileName(pFileName, QObject::tr("Data"), "csv"),
+                                             Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
                                              QObject::tr("CSV File")+" (*.csv)");
 
     if (!fileName.isEmpty()) {
