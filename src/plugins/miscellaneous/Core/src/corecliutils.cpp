@@ -703,7 +703,7 @@ QString cleanMathml(const QString &pMathml)
 //==============================================================================
 
 QString newFileName(const QString &pFileName, const QString &pExtra,
-                    const QString &pFileExtension)
+                    const bool &pBefore, const QString &pFileExtension)
 {
     // Return the name of a 'new' file
     // Note: see Tests::newFileNameTests() for what we want to be able to get...
@@ -713,32 +713,33 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
                            fileManagerInstance->url(pFileName):
                            pFileName;
     QFileInfo fileInfo = fileName;
-    QString oldFileCompleteSuffix = fileInfo.completeSuffix();
-    QString newFileCompleteSuffix = pFileExtension.isEmpty()?
-                                        oldFileCompleteSuffix:
-                                        pFileExtension;
+    QString fileCanonicalPath = fileInfo.canonicalPath();
+    QString fileBaseName = fileInfo.baseName();
+    QString fileCompleteSuffix = pFileExtension.isEmpty()?
+                                     fileInfo.completeSuffix():
+                                     pFileExtension;
 
-    if (!oldFileCompleteSuffix.isEmpty())
-        oldFileCompleteSuffix.prepend(".");
+    if (!fileCanonicalPath.compare("."))
+        fileCanonicalPath = QString();
+    else
+        fileCanonicalPath += QDir::separator();
 
-    if (!newFileCompleteSuffix.isEmpty())
-        newFileCompleteSuffix.prepend(".");
+    if (!fileCompleteSuffix.isEmpty())
+        fileCompleteSuffix.prepend(".");
 
     static const QString Space = " ";
     static const QString Hyphen = "-";
     static const QString Underscore = "_";
-    static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
-
-    QString fileBaseName = fileInfo.baseName();
 
     int nbOfSpaces = fileBaseName.count(Space);
     int nbOfHyphens = fileBaseName.count(Hyphen);
     int nbOfUnderscores = fileBaseName.count(Underscore);
 
     if (pExtra.isEmpty()) {
-        fileName.replace(QRegularExpression(QRegularExpression::escape(oldFileCompleteSuffix)+"$"),
-                         newFileCompleteSuffix);
+        return fileCanonicalPath+fileBaseName+fileCompleteSuffix;
     } else {
+        static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
+
         QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
                                 Space+Hyphen+Space:
                                 ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
@@ -749,11 +750,32 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
         if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
             extra[0] = extra[0].toLower();
 
-        fileName.replace(QRegularExpression(QRegularExpression::escape(oldFileCompleteSuffix)+"$"),
-                         separator+extra+newFileCompleteSuffix);
+        if (pBefore)
+            return fileCanonicalPath+extra+separator+fileBaseName+fileCompleteSuffix;
+        else
+            return fileCanonicalPath+fileBaseName+separator+extra+fileCompleteSuffix;
     }
 
     return fileName;
+}
+
+//==============================================================================
+
+QString newFileName(const QString &pFileName, const QString &pExtra,
+                    const bool &pBefore)
+{
+    // Return the name of a 'new' file
+
+    return newFileName(pFileName, pExtra, pBefore, QString());
+}
+
+//==============================================================================
+
+QString newFileName(const QString &pFileName, const QString &pFileExtension)
+{
+    // Return the name of a 'new' file
+
+    return newFileName(pFileName, QString(), true, pFileExtension);
 }
 
 //==============================================================================

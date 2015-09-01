@@ -178,59 +178,71 @@ void Tests::newFileNameTests()
 {
     // Test the newFileName() method
 
-    QCOMPARE(OpenCOR::Core::newFileName("My file.txt"),
-             QString("My file.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", QString(), "dat"),
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "dat"),
              QString("My file.dat"));
-    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "Extra"),
-             QString("My file - Extra.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "Extra", "dat"),
-             QString("My file - Extra.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "Before", true),
+             QString("Before - My file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "Before", true, "dat"),
+             QString("Before - My file.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "After", false),
+             QString("My file - After.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "After", false, "dat"),
+             QString("My file - After.dat"));
 
-    QCOMPARE(OpenCOR::Core::newFileName("my file.txt"),
-             QString("my file.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", QString(), "dat"),
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "dat"),
              QString("my file.dat"));
-    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "Extra"),
-             QString("my file - extra.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "Extra", "dat"),
-             QString("my file - extra.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "Before", true),
+             QString("before - my file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "Before", true, "dat"),
+             QString("before - my file.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "After", false),
+             QString("my file - after.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "After", false, "dat"),
+             QString("my file - after.dat"));
 
-    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt"),
-             QString("My_file.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", QString(), "dat"),
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "dat"),
              QString("My_file.dat"));
-    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "Extra"),
-             QString("My_file_Extra.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "Extra", "dat"),
-             QString("My_file_Extra.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "Before", true),
+             QString("Before_My_file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "Before", true, "dat"),
+             QString("Before_My_file.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "After", false),
+             QString("My_file_After.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "After", false, "dat"),
+             QString("My_file_After.dat"));
 
-    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt"),
-             QString("my_file.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", QString(), "dat"),
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "dat"),
              QString("my_file.dat"));
-    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "Extra"),
-             QString("my_file_extra.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "Extra", "dat"),
-             QString("my_file_extra.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "Before", true),
+             QString("before_my_file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "Before", true, "dat"),
+             QString("before_my_file.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "After", false),
+             QString("my_file_after.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "After", false, "dat"),
+             QString("my_file_after.dat"));
 
-    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt"),
-             QString("My-file.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", QString(), "dat"),
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "dat"),
              QString("My-file.dat"));
-    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "Extra"),
-             QString("My-file-Extra.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "Extra", "dat"),
-             QString("My-file-Extra.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "Before", true),
+             QString("Before-My-file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "Before", true, "dat"),
+             QString("Before-My-file.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "After", false),
+             QString("My-file-After.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "After", false, "dat"),
+             QString("My-file-After.dat"));
 
-    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt"),
-             QString("my-file.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", QString(), "dat"),
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "dat"),
              QString("my-file.dat"));
-    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "Extra"),
-             QString("my-file-extra.txt"));
-    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "Extra", "dat"),
-             QString("my-file-extra.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "Before", true),
+             QString("before-my-file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "Before", true, "dat"),
+             QString("before-my-file.dat"));
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "After", false),
+             QString("my-file-after.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "After", false, "dat"),
+             QString("my-file-after.dat"));
 }
 
 //==============================================================================
