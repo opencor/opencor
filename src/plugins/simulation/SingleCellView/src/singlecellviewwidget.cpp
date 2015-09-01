@@ -1287,7 +1287,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
     }
 
-    sedmlFileName = Core::getSaveFileName(QObject::tr("Export to a SED-ML file"),
+    sedmlFileName = Core::getSaveFileName(QObject::tr("Export To SED-ML File"),
                                           sedmlFileName,
                                           Core::fileTypes(mPluginParent->sedmlFileTypes()));
 

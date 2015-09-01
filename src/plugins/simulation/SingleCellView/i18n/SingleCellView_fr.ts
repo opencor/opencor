@@ -318,8 +318,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Export to a SED-ML file</source>
-        <translation>Exporter vers un fichier SED-ML</translation>
+        <source>Export To SED-ML File</source>
+        <translation>Exporter Vers Fichier SED-ML</translation>
     </message>
 </context>
 <context>
