@@ -249,6 +249,15 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString SingleCellViewPlugin::viewDefaultFileExtension() const
+{
+    // Return the default file extension we support
+
+    return CellMLSupport::CellmlFileExtension;
+}
+
+//==============================================================================
+
 bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
