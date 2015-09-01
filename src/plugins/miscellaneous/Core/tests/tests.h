@@ -44,6 +44,7 @@ private Q_SLOTS:
     void sha1Tests();
     void stringPositionAsLineColumnTests();
     void stringLineColumnAsPositionTests();
+    void newFileNameTests();
 };
 
 //==============================================================================

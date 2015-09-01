@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "coresettings.h"
+#include "filemanager.h"
 #include "settings.h"
 
 //==============================================================================
@@ -36,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QDir>
 #include <QEventLoop>
 #include <QFile>
+#include <QFileInfo>
 #include <QIODevice>
 #include <QLocale>
 #include <QMap>
@@ -43,6 +45,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QResource>
 #include <QSettings>
 #include <QString>
@@ -695,6 +698,57 @@ QString cleanMathml(const QString &pMathml)
     } else {
         return QString();
     }
+}
+
+//==============================================================================
+
+QString newFileName(const QString &pFileName, const QString &pExtra,
+                    const QString &pFileExtension)
+{
+    // Return the name of a 'new' file
+    // Note: see Tests::newFileNameTests() for what we want to be able to get...
+
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = fileManagerInstance->isRemote(pFileName)?
+                           fileManagerInstance->url(pFileName):
+                           pFileName;
+    QFileInfo fileInfo = fileName;
+    QString oldFileCompleteSuffix = fileInfo.completeSuffix();
+    QString newFileCompleteSuffix = pFileExtension.isEmpty()?
+                                        oldFileCompleteSuffix:
+                                        pFileExtension;
+
+    if (!oldFileCompleteSuffix.isEmpty())
+        oldFileCompleteSuffix.prepend(".");
+
+    if (!newFileCompleteSuffix.isEmpty())
+        newFileCompleteSuffix.prepend(".");
+
+    static const QString Space = " ";
+    static const QString Hyphen = "-";
+    static const QString Underscore = "_";
+    static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
+
+    QString fileBaseName = fileInfo.baseName();
+
+    int nbOfSpaces = fileBaseName.count(Space);
+    int nbOfHyphens = fileBaseName.count(Hyphen);
+    int nbOfUnderscores = fileBaseName.count(Underscore);
+
+    QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
+                            Space+Hyphen+Space:
+                            ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
+                                Underscore:
+                                Hyphen;
+    QString extra = pExtra;
+
+    if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
+        extra[0] = extra[0].toLower();
+
+    fileName.replace(QRegularExpression(QRegularExpression::escape(oldFileCompleteSuffix)+"$"),
+                     separator+extra+newFileCompleteSuffix);
+
+    return fileName;
 }
 
 //==============================================================================
