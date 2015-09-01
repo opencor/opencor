@@ -36,12 +36,13 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-void CsvDataStoreExporter::execute(DataStore::DataStore *pDataStore) const
+void CsvDataStoreExporter::execute(const QString &pFileName,
+                                   DataStore::DataStore *pDataStore) const
 {
     // Export the given data store to a CSV file
 
-    QString fileName = Core::getSaveFileName(QObject::tr("Export to a CSV file"),
-                                             QString(),
+    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV File"),
+                                             Core::newFileName(pFileName, QObject::tr("Data"), "csv"),
                                              QObject::tr("CSV File")+" (*.csv)");
 
     if (!fileName.isEmpty()) {
