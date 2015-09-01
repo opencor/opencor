@@ -735,18 +735,23 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
     int nbOfHyphens = fileBaseName.count(Hyphen);
     int nbOfUnderscores = fileBaseName.count(Underscore);
 
-    QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
-                            Space+Hyphen+Space:
-                            ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
-                                Underscore:
-                                Hyphen;
-    QString extra = pExtra;
+    if (pExtra.isEmpty()) {
+        fileName.replace(QRegularExpression(QRegularExpression::escape(oldFileCompleteSuffix)+"$"),
+                         newFileCompleteSuffix);
+    } else {
+        QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
+                                Space+Hyphen+Space:
+                                ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
+                                    Underscore:
+                                    Hyphen;
+        QString extra = pExtra;
 
-    if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
-        extra[0] = extra[0].toLower();
+        if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
+            extra[0] = extra[0].toLower();
 
-    fileName.replace(QRegularExpression(QRegularExpression::escape(oldFileCompleteSuffix)+"$"),
-                     separator+extra+newFileCompleteSuffix);
+        fileName.replace(QRegularExpression(QRegularExpression::escape(oldFileCompleteSuffix)+"$"),
+                         separator+extra+newFileCompleteSuffix);
+    }
 
     return fileName;
 }

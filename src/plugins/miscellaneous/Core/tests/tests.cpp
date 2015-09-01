@@ -178,31 +178,55 @@ void Tests::newFileNameTests()
 {
     // Test the newFileName() method
 
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt"),
+             QString("My file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My file.txt", QString(), "dat"),
+             QString("My file.dat"));
     QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "Extra"),
              QString("My file - Extra.txt"));
     QCOMPARE(OpenCOR::Core::newFileName("My file.txt", "Extra", "dat"),
              QString("My file - Extra.dat"));
 
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt"),
+             QString("my file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my file.txt", QString(), "dat"),
+             QString("my file.dat"));
     QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "Extra"),
              QString("my file - extra.txt"));
     QCOMPARE(OpenCOR::Core::newFileName("my file.txt", "Extra", "dat"),
              QString("my file - extra.dat"));
 
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt"),
+             QString("My_file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", QString(), "dat"),
+             QString("My_file.dat"));
     QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "Extra"),
              QString("My_file_Extra.txt"));
     QCOMPARE(OpenCOR::Core::newFileName("My_file.txt", "Extra", "dat"),
              QString("My_file_Extra.dat"));
 
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt"),
+             QString("my_file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", QString(), "dat"),
+             QString("my_file.dat"));
     QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "Extra"),
              QString("my_file_extra.txt"));
     QCOMPARE(OpenCOR::Core::newFileName("my_file.txt", "Extra", "dat"),
              QString("my_file_extra.dat"));
 
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt"),
+             QString("My-file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", QString(), "dat"),
+             QString("My-file.dat"));
     QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "Extra"),
              QString("My-file-Extra.txt"));
     QCOMPARE(OpenCOR::Core::newFileName("My-file.txt", "Extra", "dat"),
              QString("My-file-Extra.dat"));
 
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt"),
+             QString("my-file.txt"));
+    QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", QString(), "dat"),
+             QString("my-file.dat"));
     QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "Extra"),
              QString("my-file-extra.txt"));
     QCOMPARE(OpenCOR::Core::newFileName("my-file.txt", "Extra", "dat"),
