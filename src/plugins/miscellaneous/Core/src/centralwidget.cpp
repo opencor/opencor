@@ -1056,13 +1056,17 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileIsNew = fileManagerInstance->isNew(oldFileName);
     bool hasNewFileName = false;
 
-    if (pNeedNewFileName || fileIsNew) {
-        // Either we want to save the file under a new name or we are dealing
-        // with a new file, so we ask the user for a file name based on the MIME
-        // types supported by our current view
+    if (fileIsNew || pNeedNewFileName) {
+        // Either we are dealing with a new file or we want to save the file
+        // under a new name, so we ask the user for a file name based on the
+        // MIME types supported by our current view
 
-        newFileName = getSaveFileName(tr("Save File"),
-                                      fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
+        newFileName = getSaveFileName(pNeedNewFileName?
+                                          tr("Save File As"):
+                                          tr("Save File"),
+                                      fileIsNew?
+                                          Core::newFileName(mFileTabs->tabToolTip(pIndex), viewInterface->viewDefaultFileExtension()):
+                                          Core::newFileName(newFileName, tr("New"), true),
                                       fileTypes(mSupportedFileTypes, viewInterface->viewMimeTypes()));
 
         // Make sure that a new file name was retrieved

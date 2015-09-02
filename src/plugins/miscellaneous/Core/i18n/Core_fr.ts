@@ -123,6 +123,14 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
     </message>
+    <message>
+        <source>Save File As</source>
+        <translation>Sauvegarder Sous</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>Nouveau</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

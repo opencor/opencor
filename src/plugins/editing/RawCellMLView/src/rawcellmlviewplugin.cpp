@@ -290,6 +290,15 @@ QStringList RawCellMLViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString RawCellMLViewPlugin::viewDefaultFileExtension() const
+{
+    // Return the default file extension we support
+
+    return CellMLSupport::CellmlFileExtension;
+}
+
+//==============================================================================
+
 bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
