@@ -58,7 +58,10 @@ QString KINSOLSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    return pId;
+    if (!pId.compare(solverName()))
+        return "KISAO:0000282";
+
+    return "???";
 }
 
 //==============================================================================

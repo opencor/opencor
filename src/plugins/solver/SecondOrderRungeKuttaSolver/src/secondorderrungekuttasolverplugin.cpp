@@ -70,7 +70,10 @@ QString SecondOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    return pId;
+    if (!pId.compare(solverName()))
+        return "---GRY--- SECOND-ORDER RUNGE-KUTTA METHOD";
+
+    return "???";
 }
 
 //==============================================================================
