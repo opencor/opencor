@@ -1247,7 +1247,11 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::addSedmlAlgorithm(libsedml::SedSimulation *pSedmlSimulation)
+void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
+                                              libsedml::SedModel *pSedmlModel,
+                                              libsedml::SedRepeatedTask *pSedmlRepeatedTask,
+                                              libsedml::SedSimulation *pSedmlSimulation,
+                                              const int &pOrder)
 {
     // Create, customise and add an algorithm to our given SED-ML simulation
 
@@ -1265,6 +1269,21 @@ foreach (const QString &solverProperty, solverProperties.keys())
 qDebug(">>> %s: %s", qPrintable(solverProperty), qPrintable(solverProperties.value(solverProperty).toString()));
 
 sedmlAlgorithm->setKisaoID("KISAO:0000032");
+
+    // Create and customise a task for our SED-ML simulation
+
+    libsedml::SedTask *sedmlTask = pSedmlDocument->createTask();
+
+    sedmlTask->setId(QString("task%1").arg(pOrder).toStdString());
+    sedmlTask->setModelReference(pSedmlModel->getId());
+    sedmlTask->setSimulationReference(pSedmlSimulation->getId());
+
+    // Create and customise the corresponding sub-task for our SED-ML simulation
+
+    libsedml::SedSubTask *sedmlSubTask = pSedmlRepeatedTask->createSubTask();
+
+    sedmlSubTask->setTask(sedmlTask->getId());
+    sedmlSubTask->setOrder(pOrder);
 }
 
 //==============================================================================
@@ -1329,102 +1348,60 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         // Apply some parameter changes, if any, to our SED-ML model
 //---GRY--- TO BE DONE...
 
-        // Create and customise a task
+        // Create and customise a repeated task containing a uniform time course
+        // simulation followed by a one-step simulation, if needed
+        // Note: a uniform time course simulation would be enough if we can
+        //       retrieve our point interval from the number of points and if we
+        //       run a simulation without modifying any of the model parameters,
+        //       but this would be a special case while here, using a repeated
+        //       task, we can handle everything that we can do using the GUI...
 
+        libsedml::SedRepeatedTask *sedmlRepeatedTask = sedmlDocument->createRepeatedTask();
+
+        sedmlRepeatedTask->setId("repeatedTask");
+        sedmlRepeatedTask->setRangeId("once");
+        sedmlRepeatedTask->setResetModel(true);
+
+        // Make our SED-ML repeated task non repeatable
+
+        libsedml::SedVectorRange *sedmlVectorRange = sedmlRepeatedTask->createVectorRange();
+
+        sedmlVectorRange->setId("vectorRange");
+        sedmlVectorRange->addValue(1);
+
+        // Create and customise a uniform time course simulation
+
+        int simulationNumber = 0;
         double startingPoint = mSimulation->data()->startingPoint();
         double endingPoint = mSimulation->data()->endingPoint();
         double pointInterval = mSimulation->data()->pointInterval();
         int nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
+        bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
 
-        if ((endingPoint-startingPoint)/nbOfPoints == pointInterval) {
-            // We can retrieve our point interval from the number of points, so
-            // create and customise a uniform time course simulation
+        libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
 
-            libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
-
-            sedmlUniformTimeCourse->setId("uniformTimeCourse");
-            sedmlUniformTimeCourse->setInitialTime(startingPoint);
-            sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
-            sedmlUniformTimeCourse->setOutputEndTime(endingPoint);
-            sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
-
-            addSedmlAlgorithm(sedmlUniformTimeCourse);
-
-            // Create and customise a task
-
-            libsedml::SedTask *sedmlTask = sedmlDocument->createTask();
-
-            sedmlTask->setId("task");
-            sedmlTask->setModelReference(sedmlModel->getId());
-            sedmlTask->setSimulationReference(sedmlUniformTimeCourse->getId());
-        } else {
-            // We cannot retrieve our point interval from the number of points,
-            // so create and customise a repeated task (that doesn't actually
-            // repeat) containing a uniform time course simulation followed by a
-            // one-step simulation
-
-            libsedml::SedRepeatedTask *sedmlRepeatedTask = sedmlDocument->createRepeatedTask();
-
-            sedmlRepeatedTask->setId("repeatedTask");
-            sedmlRepeatedTask->setRangeId("once");
-            sedmlRepeatedTask->setResetModel(true);
-
-            // Make our SED-ML repeated task non repetable
-
-            libsedml::SedVectorRange *sedmlVectorRange = sedmlRepeatedTask->createVectorRange();
-
-            sedmlVectorRange->setId("vectorRange");
-            sedmlVectorRange->addValue(1);
-
-            // Create and customise a uniform time course simulation
-
-            libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
-
+        if (needOneStepTask)
             --nbOfPoints;
 
-            sedmlUniformTimeCourse->setId("uniformTimeCourse");
-            sedmlUniformTimeCourse->setInitialTime(startingPoint);
-            sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
-            sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
-            sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
+        sedmlUniformTimeCourse->setId(QString("simulation%1").arg(++simulationNumber).toStdString());
+        sedmlUniformTimeCourse->setInitialTime(startingPoint);
+        sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
+        sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
+        sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
 
-            addSedmlAlgorithm(sedmlUniformTimeCourse);
+        addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
+                           sedmlUniformTimeCourse, simulationNumber);
 
-            // Create and customise a one-step simulation
+        // Complete our simulation with a one-step simulation, if needed
 
+        if (needOneStepTask) {
             libsedml::SedOneStep *sedmlOneStep = sedmlDocument->createOneStep();
 
-            sedmlOneStep->setId("oneStep");
+            sedmlOneStep->setId(QString("simulation%1").arg(++simulationNumber).toStdString());
             sedmlOneStep->setStep(endingPoint-sedmlUniformTimeCourse->getOutputEndTime());
 
-            addSedmlAlgorithm(sedmlOneStep);
-
-            // Create and customise a couple of tasks for our uniform time
-            // course and one-step simulations
-
-            libsedml::SedTask *sedmlUniformTimeCourseTask = sedmlDocument->createTask();
-
-            sedmlUniformTimeCourseTask->setId("uniformTimeCourseTask");
-            sedmlUniformTimeCourseTask->setModelReference(sedmlModel->getId());
-            sedmlUniformTimeCourseTask->setSimulationReference(sedmlUniformTimeCourse->getId());
-
-            libsedml::SedTask *sedmlOneStepTask = sedmlDocument->createTask();
-
-            sedmlOneStepTask->setId("oneStepTask");
-            sedmlOneStepTask->setModelReference(sedmlModel->getId());
-            sedmlOneStepTask->setSimulationReference(sedmlOneStep->getId());
-
-            // Create and customise the corresponding sub-tasks
-
-            libsedml::SedSubTask *sedmlUniformTimeCourseSubTask = sedmlRepeatedTask->createSubTask();
-
-            sedmlUniformTimeCourseSubTask->setTask(sedmlUniformTimeCourseTask->getId());
-            sedmlUniformTimeCourseSubTask->setOrder(1);
-
-            libsedml::SedSubTask *sedmlOneStepSubTask = sedmlRepeatedTask->createSubTask();
-
-            sedmlOneStepSubTask->setTask(sedmlOneStepTask->getId());
-            sedmlOneStepSubTask->setOrder(2);
+            addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
+                               sedmlOneStep, simulationNumber);
         }
 
         // Create and customise a 2D plot output
