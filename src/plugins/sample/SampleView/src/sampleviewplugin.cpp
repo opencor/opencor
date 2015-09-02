@@ -238,6 +238,15 @@ QStringList SampleViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString SampleViewPlugin::viewDefaultFileExtension() const
+{
+    // Return the default file extension we support
+
+    return QString();
+}
+
+//==============================================================================
+
 bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we have a view widget for the given file, which is always

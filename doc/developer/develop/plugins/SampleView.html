@@ -279,6 +279,15 @@ void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
+void SampleViewPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void SampleViewPlugin::fileClosed(const QString &pFileName)
 {
     // The given file has been closed, so update our internals, if needed
@@ -290,14 +299,14 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not want to handle the <code>saveFile()</code> method (lines 63-72). Other methods that do not need to be implemented are <code>fileOpened()</code> (lines 76-81) and <code>fileModified()</code> (lines 96-101). On the other hand, should the current file have its permissions changed or be renamed, then we want to update the information presented in our view. We do this by implementing the <code>filePermissionsChanged()</code> (lines 85-92) and <code>fileReloaded()</code> (lines 105-111) methods. The same holds true if the current file gets renamed, in which case we also want to update <code>mFileName</code> (see <code>fileRenamed()</code>; lines 115-127). Finally, we want to reset <code>mFileName</code> if the current file gets closed (see <code>fileClosed()</code>; lines 131-137).
+            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not want to handle the <code>saveFile()</code> method (lines 63-72). Other methods that do not need to be implemented are <code>fileOpened()</code> (lines 76-81), <code>fileModified()</code> (lines 96-101) and <code>fileSaved()</code> (lines 131-136). On the other hand, should the current file have its permissions changed or be renamed, then we want to update the information presented in our view. We do this by implementing the <code>filePermissionsChanged()</code> (lines 85-92) and <code>fileReloaded()</code> (lines 105-111) methods. The same holds true if the current file gets renamed, in which case we also want to update <code>mFileName</code> (see <code>fileRenamed()</code>; lines 115-127). Finally, we want to reset <code>mFileName</code> if the current file gets closed (see <code>fileClosed()</code>; lines 131-137).
         </p>
 
         <p>
             Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:139">//==============================================================================
+        <pre class="prettyprint linenums:148">//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -319,7 +328,7 @@ void SampleViewPlugin::retranslateUi()
             After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:151">//==============================================================================
+        <pre class="prettyprint linenums:160">//==============================================================================
 // Plugin interface
 //==============================================================================
 
@@ -381,14 +390,14 @@ void SampleViewPlugin::handleAction(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 155-165), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 164-174), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
         </p>
 
         <p>
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">view</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:210">//==============================================================================
+        <pre class="prettyprint linenums:219">//==============================================================================
 // View interface
 //==============================================================================
 
@@ -410,6 +419,15 @@ QStringList SampleViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString SampleViewPlugin::viewDefaultFileExtension() const
+{
+    // Return the default file extension we support
+
+    return QString();
+}
+
+//==============================================================================
+
 bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we have a view widget for the given file, which is always
@@ -425,10 +443,14 @@ bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
 QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our sample view widget using the given file
+    // Note: we temporarily disable updates for our sample view widget, so as to
+    //       avoid any risk of known/unknown/potential flickering...
 
     mFileName = pFileName;
 
-    mViewWidget->update(pFileName);
+    mViewWidget->setUpdatesEnabled(false);
+        mViewWidget->update(pFileName);
+    mViewWidget->setUpdatesEnabled(true);
 
     return mViewWidget;
 }
@@ -467,7 +489,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 256-261), its type (see <code>viewMode()</code>; lines 214-219), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 223-228) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 265-272). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 232-241). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 245-252), which happens whenever a file gets closed.
+            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 290-295), its type (see <code>viewMode()</code>; lines 223-228), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 232-237), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 241-246) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 299-306). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 262-275). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. We also have a means to check whether a view already exists for a given file (see <code>hasViewWidget()</code>; lines 250-258). Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 279-286), which happens whenever a file gets closed.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>
