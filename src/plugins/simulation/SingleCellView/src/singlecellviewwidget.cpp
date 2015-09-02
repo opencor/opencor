@@ -1270,7 +1270,7 @@ qDebug(">>> %s: %s", qPrintable(solverProperty), qPrintable(solverProperties.val
 
 sedmlAlgorithm->setKisaoID("KISAO:0000032");
 
-    // Create and customise a task for our SED-ML simulation
+    // Create and customise a task for our given SED-ML simulation
 
     libsedml::SedTask *sedmlTask = pSedmlDocument->createTask();
 
@@ -1278,7 +1278,8 @@ sedmlAlgorithm->setKisaoID("KISAO:0000032");
     sedmlTask->setModelReference(pSedmlModel->getId());
     sedmlTask->setSimulationReference(pSedmlSimulation->getId());
 
-    // Create and customise the corresponding sub-task for our SED-ML simulation
+    // Create and customise the corresponding sub-task for our given SED-ML
+    // simulation
 
     libsedml::SedSubTask *sedmlSubTask = pSedmlRepeatedTask->createSubTask();
 
