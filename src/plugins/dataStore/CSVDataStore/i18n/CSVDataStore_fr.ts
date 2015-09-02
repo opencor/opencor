@@ -8,12 +8,12 @@
         <translation>Fichier CSV</translation>
     </message>
     <message>
-        <source>Export To CSV File</source>
-        <translation>Exporter Vers Fichier CSV</translation>
-    </message>
-    <message>
         <source>Data</source>
         <translation>Données</translation>
+    </message>
+    <message>
+        <source>Export To CSV</source>
+        <translation>Exporter Vers CSV</translation>
     </message>
 </context>
 </TS>

@@ -128,8 +128,8 @@
         <translation>Sauvegarder Sous</translation>
     </message>
     <message>
-        <source>New %1</source>
-        <translation>Nouveau %1</translation>
+        <source>New</source>
+        <translation>Nouveau</translation>
     </message>
 </context>
 <context>
