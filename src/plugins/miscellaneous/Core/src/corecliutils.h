@@ -137,6 +137,16 @@ QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
 QString CORE_EXPORT cleanMathml(const QString &pMathml);
 
+QString CORE_EXPORT newFileName(const QString &pFileName,
+                                const QString &pExtra,
+                                const bool &pBefore,
+                                const QString &pFileExtension);
+QString CORE_EXPORT newFileName(const QString &pFileName,
+                                const QString &pExtra,
+                                const bool &pBefore);
+QString CORE_EXPORT newFileName(const QString &pFileName,
+                                const QString &pFileExtension);
+
 //==============================================================================
 
 }   // namespace Core

@@ -37,7 +37,8 @@ namespace CSVDataStore {
 class CSVDATASTORE_EXPORT CsvDataStoreExporter : public DataStore::DataStoreExporter
 {
 public:
-    virtual void execute(DataStore::DataStore *pDataStore) const;
+    virtual void execute(const QString &pFileName,
+                         DataStore::DataStore *pDataStore) const;
 };
 
 //==============================================================================
