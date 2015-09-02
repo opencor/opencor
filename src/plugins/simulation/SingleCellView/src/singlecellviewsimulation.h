@@ -80,17 +80,23 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
+    SolverInterface * odeSolverInterface() const;
+
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
 
     Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
 
+    SolverInterface * daeSolverInterface() const;
+
     QString daeSolverName() const;
     void setDaeSolverName(const QString &pDaeSolverName);
 
     Solver::Solver::Properties daeSolverProperties() const;
     void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
+
+    SolverInterface * nlaSolverInterface() const;
 
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName,

@@ -210,82 +210,20 @@ void SingleCellViewSimulationWorker::started()
     Solver::OdeSolver *odeSolver = 0;
     Solver::DaeSolver *daeSolver = 0;
 
-    if (mRuntime->needOdeSolver()) {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-            if (!solverInterface->solverName().compare(mSimulation->data()->odeSolverName())) {
-                // The requested ODE solver was found, so retrieve an instance
-                // of it
+    if (mRuntime->needOdeSolver())
+        voiSolver = odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
+    else
+        voiSolver = daeSolver = static_cast<Solver::DaeSolver *>(mSimulation->data()->daeSolverInterface()->solverInstance());
 
-                voiSolver = odeSolver = static_cast<Solver::OdeSolver *>(solverInterface->solverInstance());
-
-                break;
-            }
-        }
-    } else {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-            if (!solverInterface->solverName().compare(mSimulation->data()->daeSolverName())) {
-                // The requested DAE solver was found, so retrieve an instance
-                // of it
-
-                voiSolver = daeSolver = static_cast<Solver::DaeSolver *>(solverInterface->solverInstance());
-
-                break;
-            }
-        }
-    }
-
-    // Make sure that we have found our ODE/DAE solver
-    // Note: this should never happen, but we never know...
-
-    if (!voiSolver) {
-        if (mRuntime->needOdeSolver())
-            emitError(tr("the ODE solver could not be found"));
-        else
-            emitError(tr("the DAE solver could not be found"));
-
-        *mSelf = 0;
-
-        emit finished(-1);
-
-        return;
-    }
-
-    // Set up our NLA solver, if needed
+    // Set our NLA solver, if needed
+    // Note: we unset it at the end of this method...
 
     Solver::NlaSolver *nlaSolver = 0;
 
     if (mRuntime->needNlaSolver()) {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-            if (!solverInterface->solverName().compare(mSimulation->data()->nlaSolverName())) {
-                // The requested NLA solver was found, so retrieve an instance
-                // of it
+        nlaSolver = static_cast<Solver::NlaSolver *>(mSimulation->data()->nlaSolverInterface()->solverInstance());
 
-                nlaSolver = static_cast<Solver::NlaSolver *>(solverInterface->solverInstance());
-
-                // Keep track of our NLA solver, so that doNonLinearSolve() can
-                // work as expected
-
-                Solver::setNlaSolver(mRuntime->address(), nlaSolver);
-
-                break;
-            }
-        }
-
-        // Make sure that we have found our NLA solver
-        // Note #1: this should never happen, but we never know...
-        // Note #2: see the end of this method about we do before returning...
-
-        if (!nlaSolver) {
-            emitError(tr("the NLA solver could not be found"));
-
-            delete voiSolver;
-
-            *mSelf = 0;
-
-            emit finished(-1);
-
-            return;
-        }
+        Solver::setNlaSolver(mRuntime->address(), nlaSolver);
     }
 
     // Keep track of any error that might be reported by any of our solvers
