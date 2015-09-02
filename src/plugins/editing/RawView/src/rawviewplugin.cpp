@@ -263,6 +263,15 @@ QStringList RawViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString RawViewPlugin::viewDefaultFileExtension() const
+{
+    // Return the default file extension we support
+
+    return "txt";
+}
+
+//==============================================================================
+
 bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we have a view widget for the given file

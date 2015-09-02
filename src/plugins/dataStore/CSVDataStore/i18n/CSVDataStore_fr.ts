@@ -4,12 +4,16 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Export to a CSV file</source>
-        <translation>Exporter vers un fichier CSV</translation>
-    </message>
-    <message>
         <source>CSV File</source>
         <translation>Fichier CSV</translation>
+    </message>
+    <message>
+        <source>Data</source>
+        <translation>Données</translation>
+    </message>
+    <message>
+        <source>Export To CSV</source>
+        <translation>Exporter Vers CSV</translation>
     </message>
 </context>
 </TS>

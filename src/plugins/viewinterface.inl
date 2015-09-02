@@ -6,6 +6,7 @@
 
     virtual Mode viewMode() const PURE;
     virtual QStringList viewMimeTypes() const PURE;
+    virtual QString viewDefaultFileExtension() const PURE;
 
     virtual bool hasViewWidget(const QString &pFileName) PURE;
     virtual QWidget * viewWidget(const QString &pFileName) PURE;

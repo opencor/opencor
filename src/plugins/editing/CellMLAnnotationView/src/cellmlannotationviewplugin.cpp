@@ -227,6 +227,15 @@ QStringList CellMLAnnotationViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString CellMLAnnotationViewPlugin::viewDefaultFileExtension() const
+{
+    // Return the default file extension we support
+
+    return CellMLSupport::CellmlFileExtension;
+}
+
+//==============================================================================
+
 bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file

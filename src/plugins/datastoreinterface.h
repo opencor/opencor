@@ -116,7 +116,8 @@ public:
     explicit DataStoreExporter(const QString &pId = QString());
     virtual ~DataStoreExporter();
 
-    virtual void execute(DataStore *pDataStore) const = 0;
+    virtual void execute(const QString &pFileName,
+                         DataStore *pDataStore) const = 0;
 
     QString id() const;
 

@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "coresettings.h"
+#include "filemanager.h"
 #include "settings.h"
 
 //==============================================================================
@@ -36,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QDir>
 #include <QEventLoop>
 #include <QFile>
+#include <QFileInfo>
 #include <QIODevice>
 #include <QLocale>
 #include <QMap>
@@ -43,6 +45,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QResource>
 #include <QSettings>
 #include <QString>
@@ -695,6 +698,84 @@ QString cleanMathml(const QString &pMathml)
     } else {
         return QString();
     }
+}
+
+//==============================================================================
+
+QString newFileName(const QString &pFileName, const QString &pExtra,
+                    const bool &pBefore, const QString &pFileExtension)
+{
+    // Return the name of a 'new' file
+    // Note: see Tests::newFileNameTests() for what we want to be able to get...
+
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = fileManagerInstance->isRemote(pFileName)?
+                           fileManagerInstance->url(pFileName):
+                           pFileName;
+    QFileInfo fileInfo = fileName;
+    QString fileCanonicalPath = fileInfo.canonicalPath();
+    QString fileBaseName = fileInfo.baseName();
+    QString fileCompleteSuffix = pFileExtension.isEmpty()?
+                                     fileInfo.completeSuffix():
+                                     pFileExtension;
+
+    if (!fileCanonicalPath.compare("."))
+        fileCanonicalPath = QString();
+    else
+        fileCanonicalPath += QDir::separator();
+
+    if (!fileCompleteSuffix.isEmpty())
+        fileCompleteSuffix.prepend(".");
+
+    static const QString Space = " ";
+    static const QString Hyphen = "-";
+    static const QString Underscore = "_";
+
+    int nbOfSpaces = fileBaseName.count(Space);
+    int nbOfHyphens = fileBaseName.count(Hyphen);
+    int nbOfUnderscores = fileBaseName.count(Underscore);
+
+    if (pExtra.isEmpty()) {
+        return fileCanonicalPath+fileBaseName+fileCompleteSuffix;
+    } else {
+        static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
+
+        QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
+                                Space+Hyphen+Space:
+                                ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
+                                    Underscore:
+                                    Hyphen;
+        QString extra = pExtra;
+
+        if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
+            extra[0] = extra[0].toLower();
+
+        if (pBefore)
+            return fileCanonicalPath+extra+separator+fileBaseName+fileCompleteSuffix;
+        else
+            return fileCanonicalPath+fileBaseName+separator+extra+fileCompleteSuffix;
+    }
+
+    return fileName;
+}
+
+//==============================================================================
+
+QString newFileName(const QString &pFileName, const QString &pExtra,
+                    const bool &pBefore)
+{
+    // Return the name of a 'new' file
+
+    return newFileName(pFileName, pExtra, pBefore, QString());
+}
+
+//==============================================================================
+
+QString newFileName(const QString &pFileName, const QString &pFileExtension)
+{
+    // Return the name of a 'new' file
+
+    return newFileName(pFileName, QString(), true, pFileExtension);
 }
 
 //==============================================================================

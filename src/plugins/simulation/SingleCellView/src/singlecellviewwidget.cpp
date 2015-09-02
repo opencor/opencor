@@ -1509,7 +1509,8 @@ void SingleCellViewWidget::simulationDataExport()
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(sender());
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
 
-    dataStoreExporter->execute(mSimulation->results()->dataStore());
+    dataStoreExporter->execute(mSimulation->fileName(),
+                               mSimulation->results()->dataStore());
 
     dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
