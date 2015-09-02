@@ -46,5 +46,9 @@ p, li { white-space: pre-wrap; }
         <source>Enter BioSignalML file name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Data</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

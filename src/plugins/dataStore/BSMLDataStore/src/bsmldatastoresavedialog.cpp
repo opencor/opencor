@@ -38,6 +38,7 @@ namespace BSMLDataStore {
 BioSignalMLSaveDialog::BioSignalMLSaveDialog(QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::BioSignalMLSaveDialog),
+    mDefaultFileName(QString()),
     mAccepted(false)
 {
     // Set up the GUI
@@ -97,13 +98,20 @@ bool BioSignalMLSaveDialog::run(void)
 
 //==============================================================================
 
+void BioSignalMLSaveDialog::setDefaultFileName(const QString &pFileName)
+{
+    mDefaultFileName = pFileName;
+}
+
+//==============================================================================
+
 void BioSignalMLSaveDialog::setFileName(bool checked)
 {
     Q_UNUSED(checked)
 
     QString bsmlFiles = QObject::tr("BioSignalML")+" (*.bsml)";
     QString name = Core::getSaveFileName(QObject::tr("Enter BioSignalML file name"),
-                                         QString(),
+                                         mDefaultFileName,
                                          bsmlFiles, &bsmlFiles);
     if (!name.isEmpty()) {
         mGui->fileNameValue->setText(name);

@@ -55,6 +55,7 @@ public:
 
     bool run(void);
 
+    void setDefaultFileName(const QString &pFileName);
     QString fileName(void) const;
     QString shortName(void) const;
     QString description(void) const;
@@ -68,6 +69,7 @@ private slots:
 private:
     Ui::BioSignalMLSaveDialog *mGui;
 
+    QString mDefaultFileName;
     bool mAccepted;
 };
 

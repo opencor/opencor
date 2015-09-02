@@ -50,7 +50,8 @@ BioSignalMLExporter::BioSignalMLExporter(QMainWindow *pMainWindow, const QString
 
 //==============================================================================
 
-void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
+void BioSignalMLExporter::execute(const QString &pFileName,
+                                  DataStore::DataStore *pDataStore) const
 {
     // Export the given data store to a BioSignalML file
 
@@ -59,6 +60,8 @@ void BioSignalMLExporter::execute(DataStore::DataStore *pDataStore) const
                     + " from " + pDataStore->uri();
 
     mSaveDialog->setComment(comment);
+    mSaveDialog->setDefaultFileName(Core::newFileName(pFileName, QObject::tr("Data"), false, "bsml"));
+
     if (mSaveDialog->run()) {
 
         QString fileName = mSaveDialog->fileName();

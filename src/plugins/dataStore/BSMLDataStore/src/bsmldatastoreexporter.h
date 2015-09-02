@@ -44,7 +44,8 @@ class BSMLDATASTORE_EXPORT BioSignalMLExporter : public DataStore::DataStoreExpo
 {
 public:
     BioSignalMLExporter(QMainWindow *pMainWindow, const QString &pId = QString());
-    virtual void execute(DataStore::DataStore *pDataStore) const;
+    virtual void execute(const QString &pFileName,
+                         DataStore::DataStore *pDataStore) const;
 
 private:
     BioSignalMLSaveDialog *mSaveDialog;
