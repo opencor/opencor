@@ -1257,6 +1257,9 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
 
+    SolverInterface *solverInterface = mSimulation->runtime()->needOdeSolver()?
+                                           mSimulation->data()->odeSolverInterface():
+                                           mSimulation->data()->daeSolverInterface();
     QString solverName = mSimulation->runtime()->needOdeSolver()?
                              mSimulation->data()->odeSolverName():
                              mSimulation->data()->daeSolverName();
@@ -1264,11 +1267,15 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
                                                       mSimulation->data()->odeSolverProperties():
                                                       mSimulation->data()->daeSolverProperties();
 qDebug("---------");
-qDebug(">>> Solver: %s", qPrintable(solverName));
-foreach (const QString &solverProperty, solverProperties.keys())
-qDebug(">>> %s: %s", qPrintable(solverProperty), qPrintable(solverProperties.value(solverProperty).toString()));
+qDebug(">>> Solver: %s [%s]", qPrintable(solverName),
+                              qPrintable(solverInterface->kisaoId(solverName)));
+foreach (const QString &solverProperty, solverProperties.keys()) {
+    qDebug(">>> %s [%s]: %s", qPrintable(solverProperty),
+                              qPrintable(solverInterface->kisaoId(solverProperty)),
+                              qPrintable(solverProperties.value(solverProperty).toString()));
+}
 
-sedmlAlgorithm->setKisaoID("KISAO:0000032");
+sedmlAlgorithm->setKisaoID(solverInterface->kisaoId(solverName).toStdString());
 
     // Create and customise a task for our given SED-ML simulation
 
