@@ -71,7 +71,7 @@ QString CVODESolverPlugin::kisaoId(const QString &pId) const
     // Return the KiSAO id for the given id
 
     if (!pId.compare(solverName()))
-        return "KISAO:0000283";
+        return "KISAO:0000019";
     else if (!pId.compare(MaximumStepId))
         return "KISAO:0000467";
     else if (!pId.compare(MaximumNumberOfStepsId))
