@@ -75,7 +75,7 @@ QString FourthOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
     if (!pId.compare(solverName()))
         return "KISAO:0000032";
 
-    return "???";
+    return QString();
 }
 
 //==============================================================================
