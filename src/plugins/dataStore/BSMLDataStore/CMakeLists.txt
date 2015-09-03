@@ -8,14 +8,17 @@ ADD_PLUGIN(BSMLDataStore
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/bsmldatastoreplugin.cpp
         src/bsmldatastoreexporter.cpp
         src/bsmldatastoresavedialog.cpp
-        src/bsmldatastoreplugin.cpp
+        src/bsmldatastoreselectvars.cpp
     HEADERS_MOC
         src/bsmldatastoreplugin.h
         src/bsmldatastoresavedialog.h
+        src/bsmldatastoreselectvars.h
     UIS
         src/bsmldatastoresavedialog.ui
+        src/bsmldatastoreselectvars.ui
     INCLUDE_DIRS
         src
         ${biosignalml_INCLUDE_DIR}

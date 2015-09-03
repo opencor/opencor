@@ -19,23 +19,21 @@ specific language governing permissions and limitations under the License.
 // Save as BioSignalML widget
 //==============================================================================
 
-#ifndef BSMLDATASTORESAVEDIALOG_H
-#define BSMLDATASTORESAVEDIALOG_H
+#ifndef BSMLDATASTORESELECTVARS_H
+#define BSMLDATASTORESELECTVARS_H
 
 //==============================================================================
 
 #include "bsmldatastoreglobal.h"
-#include "datastoreinterface.h"
 
 //==============================================================================
 
 #include <QDialog>
-#include <QVector>
 
 //==============================================================================
 
 namespace Ui {
-    class BioSignalMLSaveDialog;
+    class BioSignalMLSelectVariables;
 }
 
 //==============================================================================
@@ -45,42 +43,25 @@ namespace BSMLDataStore {
 
 //==============================================================================
 
-class BSMLDATASTORE_EXPORT BioSignalMLSaveDialog : public QDialog
+class BSMLDATASTORE_EXPORT BioSignalMLSelectVariables : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSaveDialog(QWidget * pParent);
-    ~BioSignalMLSaveDialog();
+    explicit BioSignalMLSelectVariables(QWidget * pParent,
+                                        const QVector<QString> & pLabels,
+                                        const QVector<bool> & pChecked);
+    ~BioSignalMLSelectVariables();
 
     virtual void retranslateUi();
-
-    bool run(void);
-
-    void setDefaultFileName(const QString &pFileName);
-    QString fileName(void) const;
-    QString shortName(void) const;
-    QString description(void) const;
-    QString author(void) const;
-    void setComment(const QString & pComment);
-    void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
-    bool selectedVariable(const size_t pIndex) const;
+    bool checked(size_t pIndex);
 
 private slots:
-    void accepted(void);
-    void setFileName(bool checked = false);
-    void selectVariables(bool checked = false);
+    void selectAllVariables(bool checked = false);
 
 private:
-    void setButtonStates(void) const;
+    Ui::BioSignalMLSelectVariables *mGui;
 
-    Ui::BioSignalMLSaveDialog *mGui;
-
-    QString mDefaultFileName;
-    QVector<QString> mVariableLabels;
-    QVector<bool> mSelectedVariables;
-    bool mGotSignals;
-    bool mAccepted;
 };
 
 //==============================================================================

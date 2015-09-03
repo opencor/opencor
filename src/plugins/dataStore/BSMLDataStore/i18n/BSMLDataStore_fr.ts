@@ -37,6 +37,21 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>BioSignalMLSelectVariables</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select variables to export:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>BioSignalML</source>
@@ -60,6 +75,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Variable</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

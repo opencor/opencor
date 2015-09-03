@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "coreguiutils.h"
 #include "bsmldatastoresavedialog.h"
+#include "bsmldatastoreselectvars.h"
 #include "i18ninterface.h"
 #include "filemanager.h"
 
@@ -39,6 +40,9 @@ BioSignalMLSaveDialog::BioSignalMLSaveDialog(QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::BioSignalMLSaveDialog),
     mDefaultFileName(QString()),
+    mVariableLabels(QVector<QString>()),
+    mSelectedVariables(QVector<bool>()),
+    mGotSignals(false),
     mAccepted(false)
 {
     // Set up the GUI
@@ -46,6 +50,8 @@ BioSignalMLSaveDialog::BioSignalMLSaveDialog(QWidget *pParent) :
     mGui->setupUi(this);
     QObject::connect(mGui->setFileName, SIGNAL(clicked(bool)),
                      this, SLOT(setFileName(bool)));
+    QObject::connect(mGui->selectVariables, SIGNAL(clicked(bool)),
+                     this, SLOT(selectVariables(bool)));
     QObject::connect(mGui->cancel_ok, SIGNAL(accepted()),
                      this, SLOT(accepted()));
     this->setVisible(false);
@@ -98,6 +104,24 @@ bool BioSignalMLSaveDialog::run(void)
 
 //==============================================================================
 
+void BioSignalMLSaveDialog::setButtonStates(void) const
+{
+    if (mGui->fileNameValue->text() != "" && mGotSignals) {
+        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(true);
+        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setDefault(true);
+    }
+    else if (mGui->fileNameValue->text() == "") {
+        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(false);
+        mGui->setFileName->setDefault(true);
+    }
+    else {
+        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(false);
+        mGui->selectVariables->setDefault(true);
+    }
+}
+
+//==============================================================================
+
 void BioSignalMLSaveDialog::setDefaultFileName(const QString &pFileName)
 {
     mDefaultFileName = pFileName;
@@ -118,8 +142,7 @@ void BioSignalMLSaveDialog::setFileName(bool checked)
         mGui->fileNameValue->setCursorPosition(name.length());
         mGui->setFileName->setDefault(false);
         mGui->shortNameValue->setFocus(Qt::TabFocusReason);
-        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(true) ;
-        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setDefault(true) ;
+        setButtonStates();
     }
     this->activateWindow();
 }
@@ -132,6 +155,55 @@ QString BioSignalMLSaveDialog::fileName(void) const
 }
 
 //==============================================================================
+
+void BioSignalMLSaveDialog::setSelectedVariables(const DataStore::DataStoreVariables &pVariables)
+{
+    mVariableLabels.clear();
+    auto variableBegin = pVariables.constBegin();
+    auto variableEnd = pVariables.constEnd();
+    for (auto variable = variableBegin; variable != variableEnd; ++variable)
+        mVariableLabels.append((*variable)->label());
+    mSelectedVariables = QVector<bool>(mVariableLabels.size(), true);
+    mGui->selectedVariables->setText(QObject::tr("All variables"));
+    mGotSignals = true;
+}
+
+//==============================================================================
+
+void BioSignalMLSaveDialog::selectVariables(bool checked)
+{
+    Q_UNUSED(checked)
+
+    // Set text to "All" "Selected" "None"
+    // If None then OK disabled...
+
+    BioSignalMLSelectVariables selection(this, mVariableLabels, mSelectedVariables);
+    if (selection.exec() == QDialog::Accepted) {
+        int selected = 0;
+        for (auto i = 0 ;  i < mVariableLabels.size() ;  ++i) {
+            mSelectedVariables[i] = selection.checked(i) ;
+            if (mSelectedVariables[i]) ++selected;
+            }
+        mGui->selectedVariables->setText(
+            selected == 0                     ? QObject::tr("No variables")
+          : selected < mVariableLabels.size() ? QObject::tr("As specified")
+                                              : QObject::tr("All variables"));
+        mGotSignals = (selected > 0);
+        setButtonStates();
+    }
+
+    this->activateWindow();
+}
+
+//==============================================================================
+
+bool BioSignalMLSaveDialog::selectedVariable(const size_t pIndex) const
+{
+    return mSelectedVariables[pIndex];
+}
+
+//==============================================================================
+
 
 QString BioSignalMLSaveDialog::shortName(void) const
 {

@@ -60,6 +60,8 @@ void BioSignalMLExporter::execute(const QString &pFileName,
                     + " "+QObject::tr("from")+" " + pDataStore->uri();
     mSaveDialog->setComment(comment);
     mSaveDialog->setDefaultFileName(Core::newFileName(pFileName, QObject::tr("Data"), false, "bsml"));
+    DataStore::DataStoreVariables variables = pDataStore->variables();
+    mSaveDialog->setSelectedVariables(variables);
 
     if (mSaveDialog->run()) {
 
@@ -88,21 +90,21 @@ void BioSignalMLExporter::execute(const QString &pFileName,
             double duration = voi->value(voi->size()-1) - voi->value(0);
             recording->set_duration(xsd::Duration(duration, voi->unit().toStdString()));
 
-            DataStore::DataStoreVariables variables = pDataStore->variables();
-            auto variableBegin = variables.constBegin();
-            auto variableEnd = variables.constEnd();
-
             std::vector<const std::string> uris;
             std::vector<const rdf::URI> units;
-            for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-                uris.push_back(rec_uri + "/signal/" + (*variable)->uri().toStdString());
-                units.push_back(rdf::URI(base_units + (*variable)->unit().toStdString()));
-            }
-
-            auto sigs = recording->new_signalarray(uris, units, clock) ;
+            std::vector<size_t> varindex;
             size_t nvars = variables.size();
             for (size_t i = 0 ;  i < nvars ;  ++i) {
-                (*sigs)[i]->set_label(variables[i]->label().toStdString()) ;
+                if (mSaveDialog->selectedVariable(i)) {
+                    uris.push_back(rec_uri + "/signal/" + variables[i]->uri().toStdString());
+                    units.push_back(rdf::URI(base_units + variables[i]->unit().toStdString()));
+                    varindex.push_back(i);
+                }
+            }
+            auto sigs = recording->new_signalarray(uris, units, clock) ;
+            nvars = sigs->size();
+            for (size_t i = 0 ;  i < nvars ;  ++i) {
+                (*sigs)[i]->set_label(variables[varindex[i]]->label().toStdString()) ;
             }
 
 #define BUFFER_ROWS 50000
@@ -111,8 +113,9 @@ void BioSignalMLExporter::execute(const QString &pFileName,
             int rowcount = 0;
 
             for (qulonglong i = 0; i < pDataStore->size(); ++i) {
-                for (auto variable = variableBegin; variable != variableEnd; ++variable)
-                    *dp++ = (*variable)->value(i);
+                for (size_t j = 0 ;  j < nvars ;  ++j) {
+                    *dp++ = variables[varindex[j]]->value(i);
+                    }
                 ++rowcount;
                 if (rowcount >= BUFFER_ROWS) {
                     sigs->extend(data, BUFFER_ROWS*nvars);
