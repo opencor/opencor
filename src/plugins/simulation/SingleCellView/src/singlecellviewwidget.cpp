@@ -1276,13 +1276,17 @@ foreach (const QString &solverProperty, solverProperties.keys()) {
 
     sedmlAlgorithm->setKisaoID(solverInterface->kisaoId(solverName).toStdString());
 
+    QString sedmlAlgorithmAnnotations = QString();
+
     foreach (const QString &solverProperty, solverProperties.keys()) {
         QString kisaoId = solverInterface->kisaoId(solverProperty);
 
         if (kisaoId.isEmpty()) {
-            // No KiSAO id exists for the property, so set it differently
+            // No KiSAO id exists for the property, so let our SED-ML algorithm
+            // know about it through an annotation
 
-//---GRY--- TO BE DONE...
+            sedmlAlgorithmAnnotations += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
+                                                                                                 solverProperties.value(solverProperty).toString());
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
@@ -1290,6 +1294,9 @@ foreach (const QString &solverProperty, solverProperties.keys()) {
             sedmlAlgorithmParameter->setValue(solverProperties.value(solverProperty).toString().toStdString());
         }
     }
+
+    if (!sedmlAlgorithmAnnotations.isEmpty())
+        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"http://www.opencor.ws/\">%1</solverProperties>").arg(sedmlAlgorithmAnnotations).toStdString());
 
     // Create and customise a task for our given SED-ML simulation
 
