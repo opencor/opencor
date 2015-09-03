@@ -1265,18 +1265,9 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
     Solver::Solver::Properties solverProperties = mSimulation->runtime()->needOdeSolver()?
                                                       mSimulation->data()->odeSolverProperties():
                                                       mSimulation->data()->daeSolverProperties();
-qDebug("---------");
-qDebug(">>> Solver: %s [%s]", qPrintable(solverName),
-                              qPrintable(solverInterface->kisaoId(solverName)));
-foreach (const QString &solverProperty, solverProperties.keys()) {
-    qDebug(">>> %s [%s]: %s", qPrintable(solverProperty),
-                              qPrintable(solverInterface->kisaoId(solverProperty)),
-                              qPrintable(solverProperties.value(solverProperty).toString()));
-}
+    QString sedmlAlgorithmAnnotations = QString();
 
     sedmlAlgorithm->setKisaoID(solverInterface->kisaoId(solverName).toStdString());
-
-    QString sedmlAlgorithmAnnotations = QString();
 
     foreach (const QString &solverProperty, solverProperties.keys()) {
         QString kisaoId = solverInterface->kisaoId(solverProperty);
