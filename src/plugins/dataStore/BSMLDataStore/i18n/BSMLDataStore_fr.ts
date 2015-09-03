@@ -35,19 +35,31 @@ p, li { white-space: pre-wrap; }
         <source>Set name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Exported Variables:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BioSignalMLSelectVariables</name>
-    <message>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Select variables to export:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>All variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -78,7 +90,15 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Variable</source>
+        <source>All variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>As specified</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
