@@ -1253,7 +1253,8 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
                                               libsedml::SedSimulation *pSedmlSimulation,
                                               const int &pOrder)
 {
-    // Create, customise and add an algorithm to our given SED-ML simulation
+    // Create, customise and add an algorithm (i.e. an ODE or DAE solver) to our
+    // given SED-ML simulation
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
     SolverInterface *solverInterface = mSimulation->runtime()->needOdeSolver()?
@@ -1265,7 +1266,7 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
     Solver::Solver::Properties solverProperties = mSimulation->runtime()->needOdeSolver()?
                                                       mSimulation->data()->odeSolverProperties():
                                                       mSimulation->data()->daeSolverProperties();
-    QString sedmlAlgorithmAnnotations = QString();
+    QString voiSolverProperties = QString();
 
     sedmlAlgorithm->setKisaoID(solverInterface->kisaoId(solverName).toStdString());
 
@@ -1276,8 +1277,8 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
             // No KiSAO id exists for the property, so let our SED-ML algorithm
             // know about it through an annotation
 
-            sedmlAlgorithmAnnotations += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
-                                                                                                 solverProperties.value(solverProperty).toString());
+            voiSolverProperties += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
+                                                                                           solverProperties.value(solverProperty).toString());
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
@@ -1286,8 +1287,24 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
         }
     }
 
-    if (!sedmlAlgorithmAnnotations.isEmpty())
-        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"http://www.opencor.ws/\">%1</solverProperties>").arg(sedmlAlgorithmAnnotations).toStdString());
+    if (!voiSolverProperties.isEmpty())
+        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"http://www.opencor.ws/\">%1</solverProperties>").arg(voiSolverProperties).toStdString());
+
+    // Check whether the simulation required an NLA solver and, if so, let our
+    // SED-ML simulation known about it through an annotation (since we cannot
+    // have more than one SED-ML algorithm per SED-ML simulation)
+
+    if (mSimulation->runtime()->needNlaSolver()) {
+        QString nlaSolverProperties = QString();
+
+        foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
+            nlaSolverProperties += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
+                                                                                           solverProperties.value(solverProperty).toString());
+        }
+
+        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"http://www.opencor.ws/\" name=\"%1\">%2</nlaSolver>").arg(mSimulation->data()->nlaSolverName(),
+                                                                                                                                 nlaSolverProperties).toStdString());
+    }
 
     // Create and customise a task for our given SED-ML simulation
 
