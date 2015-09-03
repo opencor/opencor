@@ -231,16 +231,18 @@ void SingleCellViewSimulationWorker::started()
     mStopped = false;
     mError = false;
 
-    if (odeSolver)
+    if (odeSolver) {
         connect(odeSolver, SIGNAL(error(const QString &)),
                 this, SLOT(emitError(const QString &)));
-    else
+    } else {
         connect(daeSolver, SIGNAL(error(const QString &)),
                 this, SLOT(emitError(const QString &)));
+    }
 
-    if (nlaSolver)
+    if (nlaSolver) {
         connect(nlaSolver, SIGNAL(error(const QString &)),
                 this, SLOT(emitError(const QString &)));
+    }
 
     // Retrieve our simulation properties
 
