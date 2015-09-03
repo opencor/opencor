@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>675</width>
-    <height>510</height>
+    <width>555</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -245,20 +245,10 @@
            <property name="text">
             <string>Description:</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -327,6 +317,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QTextBrowser" name="commentValue">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>80</height>
+          </size>
+         </property>
          <property name="palette">
           <palette>
            <active>
