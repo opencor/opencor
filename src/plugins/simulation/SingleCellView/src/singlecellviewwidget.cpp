@@ -79,6 +79,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sbml/math/FormulaParser.h"
+
+//==============================================================================
+
 #include "sedmlapidisablewarnings.h"
     #include "sedml/SedTypes.h"
 #include "sedmlapienablewarnings.h"
@@ -1469,7 +1473,8 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                 foreach (Core::Property *property, graphs) {
                     ++graphCounter;
 
-                    // Create data generators for our current graph
+                    // Create two data generators for the X and Y parameters of
+                    // our current graph
 
                     libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
                     libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
@@ -1497,6 +1502,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                                                         QString::number(graphCounter)).toStdString());
                     sedmlVariableY->setTarget(Target.arg(propertyY.first(),
                                                          propertyY.last()).toStdString());
+
+                    sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
+                    sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
 
                     // Create a curve for our current graph
 
