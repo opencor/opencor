@@ -1705,7 +1705,7 @@ void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPl
 
         graph->setVisible(graph->isValid() && graph->isSelected());
 
-        // Update the graph's data and replot it
+        // Update the graph's data
         // Note: it may happen that we don't have a simulation associated with
         //       the given graph, hence we must check for it. Indeed, say that
         //       you have two files opened, but only one has been selected so
@@ -1716,20 +1716,12 @@ void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPl
 
         SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
-        if (simulation) {
-            // Update the graph's data
-
+        if (simulation)
             updateGraphData(graph, simulation->results()->size());
 
-            // Keep track of the plot that we will need to update and replot
-            // Note: see the corresponding comment in
-            //       SingleCellViewWidget::graphsRemoved() above...
+        // Keep track of the plot that needs to be updated and replotted
 
-            SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot());
-
-            if (!plots.contains(plot))
-                plots << plot;
-        }
+        plots << qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot());
     }
 
     // Update and replot our various plots, if allowed
