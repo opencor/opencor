@@ -1441,17 +1441,25 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                sedmlOneStep, simulationNumber);
         }
 
-        // Create and customise a 2D plot output
+        // Retrieve all the graphs that are to be plotted, if any
 
-        libsedml::SedPlot2D *sedmlPlot2D = sedmlDocument->createPlot2D();
-//---GRY--- TO BE COMPLETED...
-Q_UNUSED(sedmlPlot2D);
-
+        QList<Core::Properties> graphsList = QList<Core::Properties>();
         SingleCellViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
 
         foreach (SingleCellViewGraphPanelWidget *graphPanel,
                  mContentsWidget->graphPanelsWidget()->graphPanels()) {
-            graphsWidget->graphProperties(graphPanel, fileName);
+            graphsList << graphsWidget->graphProperties(graphPanel, fileName);
+        }
+
+        // Create and customise 2D plot outputs, if needed
+
+        if (!graphsList.isEmpty()) {
+            foreach (Core::Properties graphs, graphsList) {
+Q_UNUSED(graphs);
+                libsedml::SedPlot2D *sedmlPlot2D = sedmlDocument->createPlot2D();
+//---GRY--- TO BE COMPLETED...
+Q_UNUSED(sedmlPlot2D);
+            }
         }
 
         // Our SED-ML document is ready, so write it to our SED-ML file

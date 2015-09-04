@@ -538,6 +538,10 @@ void SingleCellViewInformationGraphsWidget::finishEditing()
 
 //==============================================================================
 
+static const auto PropertySeparator = QStringLiteral(" | ");
+
+//==============================================================================
+
 Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                                         const QString &pFileName) const
 {
@@ -549,10 +553,20 @@ Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(SingleCe
 
     if (propertyEditor) {
         foreach (Core::Property *property, propertyEditor->properties()) {
-qDebug("---[%s]---", qPrintable(pFileName));
-qDebug(">>> Checked: %s", property->isChecked()?"YES":"FALSE");
-qDebug(">>> Name: %s", qPrintable(property->name()));
-qDebug(">>> Value: %s", qPrintable(property->value()));
+            // The property should be returned if it is a section (i.e. a graph
+            // property), is checked (i.e. a selected graph) and have its first
+            // sub-property (i.e. to which model the graph applies) has either a
+            // value of "Current" or that of the given file name
+
+            if (   (property->type() == Core::Property::Section)
+                && property->isChecked()) {
+                QString modelPropertyValue = property->properties().first()->value();
+
+                if (   !modelPropertyValue.compare(tr("Current"))
+                    || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
+                    res << property;
+                }
+            }
         }
     }
 
@@ -777,10 +791,6 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
     return res;
 }
-
-//==============================================================================
-
-static const auto PropertySeparator = QStringLiteral(" | ");
 
 //==============================================================================
 
