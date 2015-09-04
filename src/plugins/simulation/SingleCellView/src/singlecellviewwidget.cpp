@@ -1457,11 +1457,31 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         // Create and customise 2D plot outputs, if needed
 
         if (!graphsList.isEmpty()) {
+            int graphPlotCounter = 0;
+
             foreach (Core::Properties graphs, graphsList) {
-Q_UNUSED(graphs);
-                libsedml::SedPlot2D *sedmlPlot2D = sedmlDocument->createPlot2D();
-//---GRY--- TO BE COMPLETED...
-Q_UNUSED(sedmlPlot2D);
+                ++graphPlotCounter;
+
+                int graphCounter = 0;
+                libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
+
+                foreach (Core::Property *property, graphs) {
+Q_UNUSED(property);
+                    ++graphCounter;
+
+                    libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
+
+                    sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
+                                                                QString::number(graphCounter)).toStdString());
+
+                    sedmlCurve->setXDataReference(QString("xDataReference%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                     QString::number(graphCounter)).toStdString());
+                    sedmlCurve->setLogX(false);
+
+                    sedmlCurve->setYDataReference(QString("yDataReference%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                     QString::number(graphCounter)).toStdString());
+                    sedmlCurve->setLogY(false);
+                }
             }
         }
 
