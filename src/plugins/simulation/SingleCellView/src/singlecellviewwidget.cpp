@@ -1351,22 +1351,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
     // provided
 
     if (!sedmlFileName.isEmpty()) {
-        // A SED-ML file name has been provided, so create a SED-ML document and
-        // add the MathML and CellML namespaces to it
+        // A SED-ML file name has been provided, so create a SED-ML document
 
         libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
-        CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(cellmlFile);
-
-        XMLNamespaces *xmlNamespaces = sedmlDocument->getNamespaces();
-
-        xmlNamespaces->add(CellMLSupport::MathmlNamespace.toStdString(), "math");
-        xmlNamespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
-                               CellMLSupport::Cellml_1_1_Namespace.toStdString():
-                               CellMLSupport::Cellml_1_0_Namespace.toStdString(),
-                           "cellml");
-
-        sedmlDocument->setNamespaces(xmlNamespaces->clone());
 
         // Create and customise a model
 
@@ -1390,7 +1377,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         // Set our SED-ML model's language
 
-        sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
+
+        sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                     SEDMLSupport::Language::Cellml_1_1.toStdString():
                                     SEDMLSupport::Language::Cellml_1_0.toStdString());
 
@@ -1466,7 +1455,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                 graphsList << graphs;
         }
 
-        // Create and customise 2D plot outputs, if needed
+        // Create and customise 2D plot outputs and data generators, if needed
 
         if (!graphsList.isEmpty()) {
             int graphPlotCounter = 0;
@@ -1478,20 +1467,48 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                 libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
                 foreach (Core::Property *property, graphs) {
-Q_UNUSED(property);
                     ++graphCounter;
+
+                    // Create data generators for our current graph
+
+                    libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
+                    libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
+                    std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                           QString::number(graphCounter)).toStdString();
+                    std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                           QString::number(graphCounter)).toStdString();
+
+                    sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
+                    sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
+
+                    static const QString Target = "/cellml:model/cellml:component[@name='%1']/cellml:variable[@name='%2']";
+
+                    libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
+                    libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
+                    QStringList propertyX = property->properties().at(1)->value().split(".");
+                    QStringList propertyY = property->properties().at(2)->value().split(".");
+
+                    sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
+                                                                        QString::number(graphCounter)).toStdString());
+                    sedmlVariableX->setTarget(Target.arg(propertyX.first(),
+                                                         propertyX.last()).toStdString());
+
+                    sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
+                                                                        QString::number(graphCounter)).toStdString());
+                    sedmlVariableY->setTarget(Target.arg(propertyY.first(),
+                                                         propertyY.last()).toStdString());
+
+                    // Create a curve for our current graph
 
                     libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
 
                     sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
                                                                 QString::number(graphCounter)).toStdString());
 
-                    sedmlCurve->setXDataReference(QString("xDataReference%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                     QString::number(graphCounter)).toStdString());
+                    sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
                     sedmlCurve->setLogX(false);
 
-                    sedmlCurve->setYDataReference(QString("yDataReference%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                     QString::number(graphCounter)).toStdString());
+                    sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
                     sedmlCurve->setLogY(false);
                 }
             }
