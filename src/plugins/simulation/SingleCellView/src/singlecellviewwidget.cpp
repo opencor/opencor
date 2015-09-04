@@ -1678,11 +1678,11 @@ void SingleCellViewWidget::graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPl
 
     // One or several graphs have been removed, so update and stop tracking (if
     // needed) their corresponding plot
-
-    updatePlot(pPlot, true);
     // Note: even if the axes' values of the plot haven't changed, we still want
     //       to replot the plot since at least one of its graphs has been
     //       removed...
+
+    updatePlot(pPlot, true);
 
     if (pPlot->graphs().isEmpty())
         mPlots.removeOne(pPlot);
