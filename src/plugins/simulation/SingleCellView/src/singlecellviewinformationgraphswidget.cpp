@@ -538,6 +538,29 @@ void SingleCellViewInformationGraphsWidget::finishEditing()
 
 //==============================================================================
 
+Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                                                        const QString &pFileName) const
+{
+    // Retrieve and return all the graph properties associated with the given
+    // graph and file name, if any
+
+    Core::Properties res = Core::Properties();
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+
+    if (propertyEditor) {
+        foreach (Core::Property *property, propertyEditor->properties()) {
+qDebug("---[%s]---", qPrintable(pFileName));
+qDebug(">>> Checked: %s", property->isChecked()?"YES":"FALSE");
+qDebug(">>> Name: %s", qPrintable(property->name()));
+qDebug(">>> Value: %s", qPrintable(property->value()));
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);

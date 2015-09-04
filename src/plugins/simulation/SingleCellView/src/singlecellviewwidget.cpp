@@ -1447,6 +1447,13 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 //---GRY--- TO BE COMPLETED...
 Q_UNUSED(sedmlPlot2D);
 
+        SingleCellViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
+
+        foreach (SingleCellViewGraphPanelWidget *graphPanel,
+                 mContentsWidget->graphPanelsWidget()->graphPanels()) {
+            graphsWidget->graphProperties(graphPanel, fileName);
+        }
+
         // Our SED-ML document is ready, so write it to our SED-ML file
 
         Core::writeTextToFile(sedmlFileName, sedmlDocument->toSed());
