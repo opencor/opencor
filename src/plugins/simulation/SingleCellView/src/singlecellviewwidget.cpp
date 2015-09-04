@@ -1259,6 +1259,9 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
 {
     // Create, customise and add an algorithm (i.e. an ODE or DAE solver) to our
     // given SED-ML simulation
+    // Note: the algorithm parameters require the use of KiSAO ids, so if none
+    //       exists for an algorithm parameter then we set the algorithm
+    //       parameter using an annotation...
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
     SolverInterface *solverInterface = mSimulation->runtime()->needOdeSolver()?
@@ -1278,9 +1281,6 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
         QString kisaoId = solverInterface->kisaoId(solverProperty);
 
         if (kisaoId.isEmpty()) {
-            // No KiSAO id exists for the property, so let our SED-ML algorithm
-            // know about it through an annotation
-
             voiSolverProperties += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
                                                                                            solverProperties.value(solverProperty).toString());
         } else {
@@ -1351,7 +1351,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                           sedmlFileName,
                                           Core::fileTypes(mPluginParent->sedmlFileTypes()));
 
-    // Effectively export ourselves to SED-ML, if SED-ML file name has been
+    // Effectively export ourselves to SED-ML, if a SED-ML file name has been
     // provided
 
     if (!sedmlFileName.isEmpty()) {
@@ -1459,7 +1459,8 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                 graphsList << graphs;
         }
 
-        // Create and customise 2D plot outputs and data generators, if needed
+        // Create and customise 2D plot outputs and data generators for all the
+        // graphs that are to be plotted, if any
 
         if (!graphsList.isEmpty()) {
             int graphPlotCounter = 0;
