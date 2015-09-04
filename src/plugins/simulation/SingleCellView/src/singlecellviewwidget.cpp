@@ -1448,7 +1448,10 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         foreach (SingleCellViewGraphPanelWidget *graphPanel,
                  mContentsWidget->graphPanelsWidget()->graphPanels()) {
-            graphsList << graphsWidget->graphProperties(graphPanel, fileName);
+            Core::Properties graphs = graphsWidget->graphProperties(graphPanel, fileName);
+
+            if (!graphs.isEmpty())
+                graphsList << graphs;
         }
 
         // Create and customise 2D plot outputs, if needed
