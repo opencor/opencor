@@ -1351,14 +1351,26 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
     // provided
 
     if (!sedmlFileName.isEmpty()) {
-        // A SED-ML file name has been provided, so create a SED-ML document
+        // A SED-ML file name has been provided, so create a SED-ML document and
+        // add the MathML and CellML namespaces to it
 
         libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
+        CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(cellmlFile);
+
+        XMLNamespaces *xmlNamespaces = sedmlDocument->getNamespaces();
+
+        xmlNamespaces->add(CellMLSupport::MathmlNamespace.toStdString(), "math");
+        xmlNamespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
+                               CellMLSupport::Cellml_1_1_Namespace.toStdString():
+                               CellMLSupport::Cellml_1_0_Namespace.toStdString(),
+                           "cellml");
+
+        sedmlDocument->setNamespaces(xmlNamespaces->clone());
 
         // Create and customise a model
 
         libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
 
         sedmlModel->setId("model");
 
@@ -1378,7 +1390,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         // Set our SED-ML model's language
 
-        sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+        sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                                     SEDMLSupport::Language::Cellml_1_1.toStdString():
                                     SEDMLSupport::Language::Cellml_1_0.toStdString());
 
