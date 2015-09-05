@@ -1471,6 +1471,8 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                 int graphCounter = 0;
                 libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
+                sedmlPlot2d->setId(QString("plot%1").arg(QString::number(graphPlotCounter)).toStdString());
+
                 foreach (Core::Property *property, graphs) {
                     ++graphCounter;
 
@@ -1525,7 +1527,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         // Our SED-ML document is ready, so write it to our SED-ML file
 
-        Core::writeTextToFile(sedmlFileName, sedmlDocument->toSed());
+        Core::writeTextToFile(sedmlFileName, writeSedMLToString(sedmlDocument));
 
         delete sedmlDocument;
     }
