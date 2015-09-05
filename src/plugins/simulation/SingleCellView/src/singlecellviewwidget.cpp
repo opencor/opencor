@@ -1491,8 +1491,8 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
                     libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
                     libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-                    QStringList propertyX = property->properties().at(1)->value().split(".");
-                    QStringList propertyY = property->properties().at(2)->value().split(".");
+                    QStringList propertyX = property->properties()[1]->value().split(".");
+                    QStringList propertyY = property->properties()[2]->value().split(".");
 
                     sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                         QString::number(graphCounter)).toStdString());
