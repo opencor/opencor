@@ -38,6 +38,13 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
+namespace Language {
+    static const auto Cellml_1_0 = QStringLiteral("urn:sedml:language:cellml.1_0");
+    static const auto Cellml_1_1 = QStringLiteral("urn:sedml:language:cellml.1_1");
+}
+
+//==============================================================================
+
 class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
 {
     Q_OBJECT

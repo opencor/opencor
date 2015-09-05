@@ -68,6 +68,26 @@ Solver::Solver * IDASolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString IDASolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    if (!pId.compare(solverName()))
+        return "KISAO:0000283";
+    else if (!pId.compare(MaximumStepId))
+        return "KISAO:0000467";
+    else if (!pId.compare(MaximumNumberOfStepsId))
+        return "KISAO:0000415";
+    else if (!pId.compare(RelativeToleranceId))
+        return "KISAO:0000209";
+    else if (!pId.compare(AbsoluteToleranceId))
+        return "KISAO:0000211";
+
+    return QString();
+}
+
+//==============================================================================
+
 Solver::Type IDASolverPlugin::solverType() const
 {
     // Return the type of the solver

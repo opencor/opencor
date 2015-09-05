@@ -66,6 +66,18 @@ Solver::Solver * ForwardEulerSolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString ForwardEulerSolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    if (!pId.compare(solverName()))
+        return "KISAO:0000030";
+
+    return QString();
+}
+
+//==============================================================================
+
 Solver::Type ForwardEulerSolverPlugin::solverType() const
 {
     // Return the type of the solver

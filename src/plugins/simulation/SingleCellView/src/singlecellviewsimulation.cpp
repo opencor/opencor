@@ -224,6 +224,22 @@ void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval
 
 //==============================================================================
 
+SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
+{
+    // Return our ODE solver interface, if any
+
+    QString solverName = odeSolverName();
+
+    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+        if (!solverInterface->solverName().compare(solverName))
+            return solverInterface;
+    }
+
+    return 0;
+}
+
+//==============================================================================
+
 QString SingleCellViewSimulationData::odeSolverName() const
 {
     // Return our ODE solver name
@@ -272,6 +288,22 @@ void SingleCellViewSimulationData::addOdeSolverProperty(const QString &pName,
 
 //==============================================================================
 
+SolverInterface * SingleCellViewSimulationData::daeSolverInterface() const
+{
+    // Return our DAE solver interface, if any
+
+    QString solverName = daeSolverName();
+
+    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+        if (!solverInterface->solverName().compare(solverName))
+            return solverInterface;
+    }
+
+    return 0;
+}
+
+//==============================================================================
+
 QString SingleCellViewSimulationData::daeSolverName() const
 {
     // Return our DAE solver name
@@ -316,6 +348,22 @@ void SingleCellViewSimulationData::addDaeSolverProperty(const QString &pName,
 
     if (mRuntime->needDaeSolver())
         mDaeSolverProperties.insert(pName, pValue);
+}
+
+//==============================================================================
+
+SolverInterface * SingleCellViewSimulationData::nlaSolverInterface() const
+{
+    // Return our NLA solver interface, if any
+
+    QString solverName = nlaSolverName();
+
+    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+        if (!solverInterface->solverName().compare(solverName))
+            return solverInterface;
+    }
+
+    return 0;
 }
 
 //==============================================================================
@@ -403,32 +451,12 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     Solver::NlaSolver *nlaSolver = 0;
 
     if (mRuntime->needNlaSolver()) {
-        // Retrieve an instance of our NLA solver
+        // Set our NLA solver
+        // Note: we unset it at the end of this method...
 
-        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-            if (!solverInterface->solverName().compare(mNlaSolverName)) {
-                // The requested NLA solver was found, so retrieve an instance
-                // of it
+        nlaSolver = static_cast<Solver::NlaSolver *>(nlaSolverInterface()->solverInstance());
 
-                nlaSolver = static_cast<Solver::NlaSolver *>(solverInterface->solverInstance());
-
-                // Keep track of our NLA solver, so that doNonLinearSolve() can
-                // work as expected
-
-                Solver::setNlaSolver(mRuntime->address(), nlaSolver);
-
-                break;
-            }
-        }
-
-        // Make sure that we have found our NLA solver
-        // Note: this should never happen, but we never know...
-
-        if (!nlaSolver) {
-            emit error(tr("the NLA solver could not be found"));
-
-            return;
-        }
+        Solver::setNlaSolver(mRuntime->address(), nlaSolver);
 
         // Keep track of any error that might be reported by our NLA solver
 
@@ -850,9 +878,18 @@ QString SingleCellViewSimulation::fileName() const
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
+{
+    // Return our runtime
+
+    return mRuntime;
+}
+
+//==============================================================================
+
 SingleCellViewSimulationData * SingleCellViewSimulation::data() const
 {
-    // Retrieve and return our data
+    // Return our data
 
     return mData;
 }

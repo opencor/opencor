@@ -66,6 +66,20 @@ Solver::Solver * SecondOrderRungeKuttaSolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString SecondOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+    // Note: our second-order Runge-Kutta method is effectively the midpoint
+    //       method...
+
+    if (!pId.compare(solverName()))
+        return "KISAO:0000381";
+
+    return QString();
+}
+
+//==============================================================================
+
 Solver::Type SecondOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver

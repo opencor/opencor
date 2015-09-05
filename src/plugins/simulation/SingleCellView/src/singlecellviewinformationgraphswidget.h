@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
@@ -48,13 +49,6 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class Property;
-    class PropertyEditorWidget;
-}   // namespace Core
 
 //==============================================================================
 
@@ -101,6 +95,9 @@ public:
     void fileClosed(const QString &pFileName);
 
     void finishEditing();
+
+    Core::Properties graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                     const QString &pFileName = QString()) const;
 
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;

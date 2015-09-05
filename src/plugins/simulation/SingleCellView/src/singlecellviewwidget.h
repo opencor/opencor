@@ -51,6 +51,15 @@ namespace Ui {
 
 //==============================================================================
 
+namespace libsedml {
+    class SedDocument;
+    class SedModel;
+    class SedRepeatedTask;
+    class SedSimulation;
+}   // namespace libsedml
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -222,6 +231,12 @@ private:
                                      const QString &pSolverName,
                                      SingleCellViewInformationSolversWidgetData *pSolverData);
 
+    void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
+                            libsedml::SedModel *pSedmlModel,
+                            libsedml::SedRepeatedTask *pSedmlRepeatedTask,
+                            libsedml::SedSimulation *pSedmlSimulation,
+                            const int &pOrder);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();
@@ -236,6 +251,8 @@ private Q_SLOTS:
     void on_actionRemoveGraphPanel_triggered();
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
+
+    void on_actionSedmlExport_triggered();
 
     void simulationDataExport();
 
