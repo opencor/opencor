@@ -804,27 +804,20 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assigned to its corresponding property) , hence the order of our &&
     //       assignment...
 
-    bool graphOk = true;
     CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
-
-    if (pProperty->properties().count() >= 2)
-        graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
-
-    if (pProperty->properties().count() == 3)
-        graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
+    bool graphOk =    checkParameter(runtime, graph, pProperty->properties()[1], true)
+                   && checkParameter(runtime, graph, pProperty->properties()[2], false);
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
     //       (through graphChanged()), yet we don't want to (and can't) do what
     //       follows if not all the properties are available...
 
-    if (pProperty->properties().count() == 3) {
-        pProperty->setName( pProperty->properties()[1]->value()
-                           +PropertySeparator
-                           +pProperty->properties()[2]->value());
-    }
+    pProperty->setName( pProperty->properties()[1]->value()
+                       +PropertySeparator
+                       +pProperty->properties()[2]->value());
 
     // Update the status (i.e. icon) of our (section) property
 
