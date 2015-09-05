@@ -1422,10 +1422,12 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
 
+        ++simulationNumber;
+
         if (needOneStepTask)
             --nbOfPoints;
 
-        sedmlUniformTimeCourse->setId(QString("simulation%1").arg(++simulationNumber).toStdString());
+        sedmlUniformTimeCourse->setId(QString("simulation%1").arg(simulationNumber).toStdString());
         sedmlUniformTimeCourse->setInitialTime(startingPoint);
         sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
         sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
@@ -1439,7 +1441,9 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
         if (needOneStepTask) {
             libsedml::SedOneStep *sedmlOneStep = sedmlDocument->createOneStep();
 
-            sedmlOneStep->setId(QString("simulation%1").arg(++simulationNumber).toStdString());
+            ++simulationNumber;
+
+            sedmlOneStep->setId(QString("simulation%1").arg(simulationNumber).toStdString());
             sedmlOneStep->setStep(endingPoint-sedmlUniformTimeCourse->getOutputEndTime());
 
             addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
