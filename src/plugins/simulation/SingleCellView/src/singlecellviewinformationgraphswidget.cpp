@@ -804,11 +804,13 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assigned to its corresponding property) , hence the order of our &&
     //       assignment...
 
+    bool graphOk = true;
     CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
-    bool graphOk =    checkParameter(runtime, graph, pProperty->properties()[1], true)
-                   && checkParameter(runtime, graph, pProperty->properties()[2], false);
+
+    graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
+    graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
