@@ -1374,7 +1374,7 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
             // relatively to the directory where we are going to save our SED-ML
             // file
 
-            QDir sedmlFileDir = sedmlFileName;
+            QDir sedmlFileDir = QFileInfo(sedmlFileName).canonicalPath();
 
             sedmlModel->setSource(sedmlFileDir.relativeFilePath(cellmlFileName).toStdString());
         }
