@@ -1373,8 +1373,11 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
             // We are dealing with a local CellML file, so refer to it
             // relatively to the directory where we are going to save our SED-ML
             // file
+            // Note: normally, we would use QFileInfo::canonicalPath(), but this
+            //       requires an existing file, so use QFileInfo::path()
+            //       instead...
 
-            QDir sedmlFileDir = QFileInfo(sedmlFileName).canonicalPath();
+            QDir sedmlFileDir = QFileInfo(sedmlFileName).path();
 
             sedmlModel->setSource(sedmlFileDir.relativeFilePath(cellmlFileName).toStdString());
         }

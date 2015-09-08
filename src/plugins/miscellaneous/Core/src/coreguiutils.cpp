@@ -86,6 +86,8 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters,
     if (!res.isEmpty()) {
         // We have retrieved a file name, so keep track of the folder in which
         // it is
+        // Note: normally, we would use QFileInfo::canonicalPath(), but this
+        //       requires an existing file, so use QFileInfo::path() instead...
 
         setActiveDirectory(QFileInfo(res).path());
     }
@@ -123,6 +125,9 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
         //          which would result in a non-native looking file dialog box
         //          (on Windows 7 at least), so it's not an option
         //          unfortunately...
+        // Note #3: normally, we would use QFileInfo::canonicalPath(), but this
+        //          requires an existing file, so use QFileInfo::path()
+        //          instead...
 
         setActiveDirectory(QFileInfo(res[res.count()-1]).path());
     }
@@ -162,6 +167,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
         }
 
         // Update our active directory
+        // Note: normally, we would use QFileInfo::canonicalPath(), but this
+        //       requires an existing file, so use QFileInfo::path() instead...
 
         QFileInfo resInfo = res;
 
