@@ -1505,11 +1505,13 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
                     sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                         QString::number(graphCounter)).toStdString());
+                    sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
                     sedmlVariableX->setTarget(Target.arg(propertyX.first(),
                                                          propertyX.last()).toStdString());
 
                     sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                         QString::number(graphCounter)).toStdString());
+                    sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
                     sedmlVariableY->setTarget(Target.arg(propertyY.first(),
                                                          propertyY.last()).toStdString());
 
