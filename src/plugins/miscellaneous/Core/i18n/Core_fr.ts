@@ -325,10 +325,6 @@
         <translation> : </translation>
     </message>
     <message>
-        <source>Please choose a different file name.</source>
-        <translation>Veuillez choisir un nom de fichier différent.</translation>
-    </message>
-    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>

@@ -157,15 +157,6 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     // Make sure that we have got a save file name
 
     if (!res.isEmpty()) {
-        // Make sure that the save file name is not the same as our given one
-
-        if (!res.compare(pFileName)) {
-            QMessageBox::warning(qApp->activeWindow(), pCaption,
-                                 QObject::tr("Please choose a different file name."));
-
-            return QString();
-        }
-
         // Update our active directory
         // Note: normally, we would use QFileInfo::canonicalPath(), but this
         //       requires an existing file, so use QFileInfo::path() instead...

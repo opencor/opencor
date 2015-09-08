@@ -1071,10 +1071,12 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         // Make sure that a new file name was retrieved
 
-        hasNewFileName = !newFileName.isEmpty();
-
-        if (!hasNewFileName)
+        if (    newFileName.isEmpty()
+            || !newFileName.compare(oldFileName)) {
             return false;
+        } else {
+            hasNewFileName = true;
+        }
     }
 
     // Try to save the file in case it has been modified or it needs a new file
