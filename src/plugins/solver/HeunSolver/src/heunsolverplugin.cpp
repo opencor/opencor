@@ -74,6 +74,8 @@ QString HeunSolverPlugin::kisaoId(const QString &pId) const
 
     if (!pId.compare(solverName()))
         return "KISAO:0000301";
+    else if (!pId.compare(StepId))
+        return "KISAO:0000483";
 
     return QString();
 }

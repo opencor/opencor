@@ -78,10 +78,18 @@ QString IDASolverPlugin::kisaoId(const QString &pId) const
         return "KISAO:0000467";
     else if (!pId.compare(MaximumNumberOfStepsId))
         return "KISAO:0000415";
+    else if (!pId.compare(LinearSolverId))
+        return "KISAO:0000477";
+    else if (!pId.compare(UpperHalfBandwidthId))
+        return "KISAO:0000479";
+    else if (!pId.compare(LowerHalfBandwidthId))
+        return "KISAO:0000480";
     else if (!pId.compare(RelativeToleranceId))
         return "KISAO:0000209";
     else if (!pId.compare(AbsoluteToleranceId))
         return "KISAO:0000211";
+    else if (!pId.compare(InterpolateSolutionId))
+        return "KISAO:0000481";
 
     return QString();
 }

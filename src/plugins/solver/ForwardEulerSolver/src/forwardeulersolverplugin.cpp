@@ -72,6 +72,8 @@ QString ForwardEulerSolverPlugin::kisaoId(const QString &pId) const
 
     if (!pId.compare(solverName()))
         return "KISAO:0000030";
+    else if (!pId.compare(StepId))
+        return "KISAO:0000483";
 
     return QString();
 }
