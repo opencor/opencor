@@ -2103,10 +2103,10 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
 
     bool hasAxesValues = false;
 
-    double minX =    0.0;
-    double maxX = 1000.0;
-    double minY =    0.0;
-    double maxY = 1000.0;
+    double minX = DefMinAxis;
+    double maxX = DefMaxAxis;
+    double minY = DefMinAxis;
+    double maxY = DefMaxAxis;
 
     QRectF dataRect = pPlot->dataRect();
 

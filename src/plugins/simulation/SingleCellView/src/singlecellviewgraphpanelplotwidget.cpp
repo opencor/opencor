@@ -466,9 +466,6 @@ static const double MinAxisRange = 1.0e-5;
 //       a 6-digit precision, we give ourselves a bit of a safety net and allow
 //       minimum axis range of 10^-5...
 
-static const double DefMinAxis =    0.0;
-static const double DefMaxAxis = 1000.0;
-
 //==============================================================================
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :

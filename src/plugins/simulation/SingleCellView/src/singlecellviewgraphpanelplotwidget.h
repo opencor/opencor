@@ -62,6 +62,11 @@ namespace SingleCellView {
 
 //==============================================================================
 
+static const double DefMinAxis =    0.0;
+static const double DefMaxAxis = 1000.0;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
