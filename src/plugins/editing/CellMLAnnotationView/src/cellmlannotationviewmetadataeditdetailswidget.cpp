@@ -158,8 +158,9 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTerm(QString()),
     mTerms(QStringList()),
     mItemsCount(0),
-    mErrorMessage(QString()),
     mLookUpTerm(false),
+    mErrorMessage(QString()),
+    mInternetConnectionAvailable(true),
     mInformationType(None),
     mLookUpInformation(false),
     mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
@@ -399,7 +400,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // Retranslate our output message
 
-    upudateOutputMessage(mLookUpTerm, mErrorMessage);
+    upudateOutputMessage(mLookUpTerm, mErrorMessage,
+                         mInternetConnectionAvailable);
 
     // Retranslate our output headers
 
@@ -452,7 +454,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
         || termIsDirect) {
         updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                       !termIsDirect, QString());
+                       !termIsDirect);
     }
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -489,6 +491,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const bool &pLookUpTerm,
                                                                          const QString &pErrorMessage,
+                                                                         const bool &pInternetConnectionAvailable,
                                                                          bool *pShowBusyWidget)
 {
     // Update our output message
@@ -510,7 +513,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
 
         if (pShowBusyWidget)
             *pShowBusyWidget = true;
-    } else if (pErrorMessage.isEmpty()) {
+    } else if (pInternetConnectionAvailable && pErrorMessage.isEmpty()) {
         if (isDirectTerm(mTermValue->text())) {
             if (mAddTermButton->isEnabled())
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
@@ -524,7 +527,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
         }
     } else {
         mOutputMessage->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                       Core::formatMessage(pErrorMessage, false, true));
+                                       Core::formatMessage(pInternetConnectionAvailable?
+                                                               pErrorMessage:
+                                                               Core::noInternetConnectionAvailableMessage(),
+                                                           false, true));
     }
 }
 
@@ -552,12 +558,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
                                                                    const bool &pLookUpTerm,
-                                                                   const QString &pErrorMessage)
+                                                                   const QString &pErrorMessage,
+                                                                   const bool &pInternetConnectionAvailable)
 {
     // Keep track of some information
 
     mLookUpTerm = pLookUpTerm;
     mErrorMessage = pErrorMessage;
+    mInternetConnectionAvailable = pInternetConnectionAvailable;
 
     // Reset various properties
     // Note: we might only do that before adding new items, but then again there
@@ -631,7 +639,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
         // No items to show, so either there is no data available or an error
         // occurred, so update our output message
 
-        upudateOutputMessage(pLookUpTerm, pErrorMessage, &showBusyWidget);
+        upudateOutputMessage(pLookUpTerm, pErrorMessage,
+                             pInternetConnectionAvailable,
+                             &showBusyWidget);
 
         // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -972,6 +982,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     CellmlAnnotationViewMetadataEditDetailsItems items = CellmlAnnotationViewMetadataEditDetailsItems();
     QString errorMessage = QString();
+    bool internetConnectionAvailable = true;
 
     if (pNetworkReply) {
         // Ignore the network reply if it got cancelled
@@ -1026,7 +1037,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
             errorMessage = pNetworkReply->errorString();
         }
     } else {
-        errorMessage = QObject::tr("No Internet connection available.");
+        internetConnectionAvailable = false;
     }
 
     // Update our GUI with the results of the look up after having sorted them
@@ -1036,7 +1047,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     mItemsCount = items.count();
 
-    updateItemsGui(items, false, errorMessage);
+    updateItemsGui(items, false, errorMessage, internetConnectionAvailable);
 
     // Update our GUI (incl. its enabled state)
 
@@ -1084,7 +1095,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Update our items' GUI
 
     updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                   !isDirectTerm(mTermValue->text()), QString());
+                   !isDirectTerm(mTermValue->text()));
 
     // Ask our parent to update its GUI with the added RDF triple
 

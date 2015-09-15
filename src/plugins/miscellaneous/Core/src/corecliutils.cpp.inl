@@ -219,7 +219,6 @@ bool internetConnectionAvailable()
     // active and is a loopback, and has at least one IP address
 
     QList<QNetworkInterface> networkInterfaces = QNetworkInterface::allInterfaces();
-static int counter = 0;
 
     for (int i = 0, iMax = networkInterfaces.count(); i < iMax; ++i) {
         QNetworkInterface networkInterface = networkInterfaces[i];
@@ -227,13 +226,20 @@ static int counter = 0;
         if (    networkInterface.flags().testFlag(QNetworkInterface::IsUp)
             && !networkInterface.flags().testFlag(QNetworkInterface::IsLoopBack)
             &&  networkInterface.addressEntries().count()) {
-qDebug("[%05d] Connected...", ++counter);
             return true;
         }
     }
-qDebug("[%05d] NOT connected...", ++counter);
 
     return false;
+}
+
+//==============================================================================
+
+QString noInternetConnectionAvailableMessage()
+{
+    // Return a typical message about no Internet connection being available
+
+    return QObject::tr("No Internet connection available.");
 }
 
 //==============================================================================

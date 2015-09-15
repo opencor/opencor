@@ -286,6 +286,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     QString exposureFile = QString();
     QString errorMessage = QString();
     QStringList bookmarkUrls = QStringList();
+    bool internetConnectionAvailable = true;
 
     if (pNetworkReply) {
         if (pNetworkReply->error() == QNetworkReply::NoError) {
@@ -370,7 +371,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             errorMessage = pNetworkReply->errorString();
         }
     } else {
-        errorMessage = QObject::tr("No Internet connection available.");
+        internetConnectionAvailable = false;
     }
 
     // Some additional processing based on our PMR request
@@ -446,7 +447,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
         // Ask our PMR widget to initialise itself and filter its output
 
-        mPhysiomeModelRepositoryWidget->initialize(exposures, errorMessage);
+        mPhysiomeModelRepositoryWidget->initialize(exposures, errorMessage,
+                                                   internetConnectionAvailable);
         mPhysiomeModelRepositoryWidget->filter(mGui->filterValue->text());
     }
 

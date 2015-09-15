@@ -139,8 +139,9 @@ private:
 
     int mItemsCount;
 
-    QString mErrorMessage;
     bool mLookUpTerm;
+    QString mErrorMessage;
+    bool mInternetConnectionAvailable;
 
     Core::Widget *mOutput;
 
@@ -174,11 +175,14 @@ private:
 
     void upudateOutputMessage(const bool &pLookUpTerm,
                               const QString &pErrorMessage,
+                              const bool &pInternetConnectionAvailable,
                               bool *pShowBusyWidget = 0);
     void updateOutputHeaders();
 
     void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
-                        const bool &pLookUpTerm, const QString &pErrorMessage);
+                        const bool &pLookUpTerm,
+                        const QString &pErrorMessage = QString(),
+                        const bool &pInternetConnectionAvailable = true);
 
     void genericLookUp(const QString &pItemInformation = QString(),
                        const InformationType &pInformationType = None);
