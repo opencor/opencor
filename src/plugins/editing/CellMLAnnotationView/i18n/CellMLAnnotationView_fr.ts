@@ -425,5 +425,9 @@
         <source>Connection #%1</source>
         <translation>Connexion n° %1</translation>
     </message>
+    <message>
+        <source>No Internet connection available.</source>
+        <translation>Aucune connexion Internet disponible.</translation>
+    </message>
 </context>
 </TS>

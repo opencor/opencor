@@ -171,32 +171,37 @@ void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrR
 
     busy(true);
 
-    // Send our request to the PMR, asking for the response to be compressed
+    // Send our request to the PMR, asking for the response to be compressed,
+    // but only if we are connected to the Internet
 
-    QNetworkRequest networkRequest;
+    if (Core::internetConnectionAvailable()) {
+        QNetworkRequest networkRequest;
 
-    networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
-    networkRequest.setRawHeader("Accept-Encoding", "gzip");
+        networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
+        networkRequest.setRawHeader("Accept-Encoding", "gzip");
 
-    switch (pPmrRequest) {
-    case BookmarkUrlsForCloning:
-    case BookmarkUrlsForExposureFiles:
-    case ExposureFileForCloning:
-    case ExposureFileForExposureFiles:
-        networkRequest.setUrl(QUrl(pUrl));
+        switch (pPmrRequest) {
+        case BookmarkUrlsForCloning:
+        case BookmarkUrlsForExposureFiles:
+        case ExposureFileForCloning:
+        case ExposureFileForExposureFiles:
+            networkRequest.setUrl(QUrl(pUrl));
 
-        break;
-    default:   // ExposuresList
-        networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
+            break;
+        default:   // ExposuresList
+            networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
+        }
+
+        QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
+
+        // Keep track of the type of our PMR request and of the given extra
+        // information
+
+        networkReply->setProperty(PmrRequestProperty, pPmrRequest);
+        networkReply->setProperty(ExtraProperty, pExtra);
+    } else {
+        finished();
     }
-
-    QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
-
-    // Keep track of the type of our PMR request and of the given extra
-    // information
-
-    networkReply->setProperty(PmrRequestProperty, pPmrRequest);
-    networkReply->setProperty(ExtraProperty, pExtra);
 }
 
 //==============================================================================
@@ -275,93 +280,97 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether our PMR request was successful
 
-    PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
+    PmrRequest pmrRequest = pNetworkReply?PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt()):ExposuresList;
 
     PhysiomeModelRepositoryWindowExposures exposures = PhysiomeModelRepositoryWindowExposures();
     QString exposureFile = QString();
     QString errorMessage = QString();
     QStringList bookmarkUrls = QStringList();
 
-    if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Retrieve an uncompress our JSON data
+    if (pNetworkReply) {
+        if (pNetworkReply->error() == QNetworkReply::NoError) {
+            // Retrieve an uncompress our JSON data
 
-        QByteArray compressedData = pNetworkReply->readAll();
-        QByteArray uncompressedData = QByteArray();
-        z_stream stream;
+            QByteArray compressedData = pNetworkReply->readAll();
+            QByteArray uncompressedData = QByteArray();
+            z_stream stream;
 
-        memset(&stream, 0, sizeof(z_stream));
+            memset(&stream, 0, sizeof(z_stream));
 
-        if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
-            static const int BufferSize = 32768;
+            if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
+                static const int BufferSize = 32768;
 
-            Bytef buffer[BufferSize];
+                Bytef buffer[BufferSize];
 
-            stream.next_in = (Bytef *) compressedData.data();
-            stream.avail_in = compressedData.size();
+                stream.next_in = (Bytef *) compressedData.data();
+                stream.avail_in = compressedData.size();
 
-            do {
-                stream.next_out = buffer;
-                stream.avail_out = BufferSize;
+                do {
+                    stream.next_out = buffer;
+                    stream.avail_out = BufferSize;
 
-                inflate(&stream, Z_NO_FLUSH);
+                    inflate(&stream, Z_NO_FLUSH);
 
-                if (!stream.msg)
-                    uncompressedData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
-                else
-                    uncompressedData = QByteArray();
-            } while (!stream.avail_out);
+                    if (!stream.msg)
+                        uncompressedData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
+                    else
+                        uncompressedData = QByteArray();
+                } while (!stream.avail_out);
 
-            inflateEnd(&stream);
-        }
-
-        // Parse our uncompressed JSON data
-
-        QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
-
-        if (jsonParseError.error == QJsonParseError::NoError) {
-            // Check our PMR request to determine what we should do with the
-            // data
-
-            QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
-
-            switch (pmrRequest) {
-            case BookmarkUrlsForCloning:
-            case BookmarkUrlsForExposureFiles:
-                foreach (const QVariant &linkVariant, collectionMap["links"].toList())
-                    bookmarkUrls << linkVariant.toMap()["href"].toString().trimmed();
-
-                mNumberOfExposureFilesLeft = bookmarkUrls.count();
-
-                break;
-            case ExposureFileForCloning:
-            case ExposureFileForExposureFiles: {
-                exposureFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
-
-                --mNumberOfExposureFilesLeft;
-
-                break;
+                inflateEnd(&stream);
             }
-            default:   // ExposuresList
-                // Retrieve the list of exposures
 
-                foreach (const QVariant &linkVariant, collectionMap["links"].toList()) {
-                    QVariantMap linkMap = linkVariant.toMap();
+            // Parse our uncompressed JSON data
 
-                    exposures << PhysiomeModelRepositoryWindowExposure(linkMap["href"].toString().trimmed(),
-                                                                       linkMap["prompt"].toString().trimmed().replace("\n", " ").replace("  ", " "));
-                    // Note: the prompt may contain some '\n', so we want to
-                    //       remove them, which in turn may mean that it will
-                    //       contain two consecutive spaces (should we have had
-                    //       something like "xxx \nyyy"), which we want to
-                    //       replace with only one of them...
+            QJsonParseError jsonParseError;
+            QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
+
+            if (jsonParseError.error == QJsonParseError::NoError) {
+                // Check our PMR request to determine what we should do with the
+                // data
+
+                QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
+
+                switch (pmrRequest) {
+                case BookmarkUrlsForCloning:
+                case BookmarkUrlsForExposureFiles:
+                    foreach (const QVariant &linkVariant, collectionMap["links"].toList())
+                        bookmarkUrls << linkVariant.toMap()["href"].toString().trimmed();
+
+                    mNumberOfExposureFilesLeft = bookmarkUrls.count();
+
+                    break;
+                case ExposureFileForCloning:
+                case ExposureFileForExposureFiles: {
+                    exposureFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
+
+                    --mNumberOfExposureFilesLeft;
+
+                    break;
                 }
+                default:   // ExposuresList
+                    // Retrieve the list of exposures
+
+                    foreach (const QVariant &linkVariant, collectionMap["links"].toList()) {
+                        QVariantMap linkMap = linkVariant.toMap();
+
+                        exposures << PhysiomeModelRepositoryWindowExposure(linkMap["href"].toString().trimmed(),
+                                                                           linkMap["prompt"].toString().trimmed().replace("\n", " ").replace("  ", " "));
+                        // Note: the prompt may contain some '\n', so we want to
+                        //       remove them, which in turn may mean that it will
+                        //       contain two consecutive spaces (should we have had
+                        //       something like "xxx \nyyy"), which we want to
+                        //       replace with only one of them...
+                    }
+                }
+            } else {
+                errorMessage = jsonParseError.errorString();
             }
         } else {
-            errorMessage = jsonParseError.errorString();
+            errorMessage = pNetworkReply->errorString();
         }
     } else {
-        errorMessage = pNetworkReply->errorString();
+        errorMessage = QObject::tr("No Internet connection available.");
     }
 
     // Some additional processing based on our PMR request
@@ -453,7 +462,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     // Delete (later) the network reply
 
-    pNetworkReply->deleteLater();
+    if (pNetworkReply)
+        pNetworkReply->deleteLater();
 }
 
 //==============================================================================

@@ -112,4 +112,11 @@
         <translation>Rafraîchir</translation>
     </message>
 </context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>No Internet connection available.</source>
+        <translation>Aucune connexion Internet disponible.</translation>
+    </message>
+</context>
 </TS>

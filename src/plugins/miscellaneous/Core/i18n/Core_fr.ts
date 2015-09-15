@@ -332,5 +332,9 @@
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
     </message>
+    <message>
+        <source>No Internet connection available.</source>
+        <translation>Aucune connexion Internet disponible.</translation>
+    </message>
 </context>
 </TS>

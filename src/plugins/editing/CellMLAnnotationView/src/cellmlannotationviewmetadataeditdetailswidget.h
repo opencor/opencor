@@ -210,7 +210,7 @@ private Q_SLOTS:
     void lookUpTerm();
 
     void termChanged(const QString &pTerm);
-    void termLookedUp(QNetworkReply *pNetworkReply);
+    void termLookedUp(QNetworkReply *pNetworkReply = 0);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
 

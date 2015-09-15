@@ -949,74 +949,84 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
         mNetworkReply = 0;
     }
 
-    // Now, retrieve some ontological terms
+    // Now, retrieve some ontological terms, but only if we are connected to the
+    // Internet
 
-    QString term = mTerms.first();
+    if (Core::internetConnectionAvailable()) {
+        QString term = mTerms.first();
 
-    mTerms.removeFirst();
+        mTerms.removeFirst();
 
-    if (mTerms.isEmpty())
-        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+term));
+        if (mTerms.isEmpty())
+            mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+term));
+    } else {
+        termLookedUp();
+    }
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
-    // Ignore the network reply if it got cancelled
-
-    if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
-        pNetworkReply->deleteLater();
-
-        return;
-    } else {
-        mNetworkReply = 0;
-    }
-
-    // Keep track of the term we have just looked up
-
-    mTerm = pNetworkReply->url().toString().remove(Pmr2RicordoUrl);
-
-    // Retrieve the list of terms, should we have retrieved it without any
-    // problem
+    // Retrieve the list of terms, should there be a network reply
 
     CellmlAnnotationViewMetadataEditDetailsItems items = CellmlAnnotationViewMetadataEditDetailsItems();
     QString errorMessage = QString();
 
-    if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Parse the JSON data
+    if (pNetworkReply) {
+        // Ignore the network reply if it got cancelled
 
-        QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+        if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
+            pNetworkReply->deleteLater();
 
-        if (jsonParseError.error == QJsonParseError::NoError) {
-            // Retrieve the list of terms
+            return;
+        } else {
+            mNetworkReply = 0;
+        }
 
-            QVariantMap termMap;
-            QString name;
-            QString resource;
-            QString id;
+        // Keep track of the term we have just looked up
 
-            foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
-                termMap = termsVariant.toMap();
-                name = termMap["name"].toString();
+        mTerm = pNetworkReply->url().toString().remove(Pmr2RicordoUrl);
 
-                if (   !name.isEmpty()
-                    &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
-                    // We have a name and we could decode the term, so add the
-                    // item to our list, should it not already be in it
+        // Retrieve the list of terms, should the network reply have no error
 
-                    CellmlAnnotationViewMetadataEditDetailsItem newItem = CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
+        if (pNetworkReply->error() == QNetworkReply::NoError) {
+            // Parse the JSON data
 
-                    if (!items.contains(newItem))
-                        items << newItem;
+            QJsonParseError jsonParseError;
+            QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+
+            if (jsonParseError.error == QJsonParseError::NoError) {
+                // Retrieve the list of terms
+
+                QVariantMap termMap;
+                QString name;
+                QString resource;
+                QString id;
+
+                foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
+                    termMap = termsVariant.toMap();
+                    name = termMap["name"].toString();
+
+                    if (   !name.isEmpty()
+                        &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
+                        // We have a name and we could decode the term, so add
+                        // the item to our list, should it not already be in it
+
+                        CellmlAnnotationViewMetadataEditDetailsItem newItem = CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
+
+                        if (!items.contains(newItem))
+                            items << newItem;
+                    }
                 }
+            } else {
+                errorMessage = jsonParseError.errorString();
             }
         } else {
-            errorMessage = jsonParseError.errorString();
+            errorMessage = pNetworkReply->errorString();
         }
     } else {
-        errorMessage = pNetworkReply->errorString();
+        errorMessage = QObject::tr("No Internet connection available.");
     }
 
     // Update our GUI with the results of the look up after having sorted them
@@ -1034,7 +1044,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     // Delete (later) the network reply
 
-    pNetworkReply->deleteLater();
+    if (pNetworkReply)
+        pNetworkReply->deleteLater();
 }
 
 //==============================================================================
