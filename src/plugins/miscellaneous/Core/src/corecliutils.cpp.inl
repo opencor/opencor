@@ -402,7 +402,7 @@ QString eolString()
 QString nonDiacriticString(const QString &pString)
 {
     // Remove and return a non-accentuated version of the given string
-    // Note: this code is based on the one that can be found at
+    // Note: this code is based on the one found at
     //       http://stackoverflow.com/questions/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
 
     static QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
@@ -412,9 +412,9 @@ QString nonDiacriticString(const QString &pString)
 
     for (int i = 0, iMax = pString.length(); i < iMax; ++i) {
         QChar letter = pString[i];
-        int dIndex = diacriticLetters.indexOf(letter);
+        int index = diacriticLetters.indexOf(letter);
 
-        res.append((dIndex < 0)?letter:nonDiacriticLetters[dIndex]);
+        res.append((index < 0)?letter:nonDiacriticLetters[index]);
     }
 
     return res;
