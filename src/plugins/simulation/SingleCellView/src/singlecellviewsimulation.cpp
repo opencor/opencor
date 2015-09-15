@@ -578,13 +578,15 @@ bool SingleCellViewSimulationData::isModified() const
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
-    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i) {
         if (!qIsFinite(mStates[i]) || !qFuzzyCompare(mStates[i], mInitialStates[i]))
             return true;
+    }
 
-    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i) {
         if (!qIsFinite(mConstants[i]) || !qFuzzyCompare(mConstants[i], mInitialConstants[i]))
             return true;
+    }
 
     return false;
 }

@@ -633,11 +633,12 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 
     QRectF dRect = dataRect();
 
-    if (dRect == QRectF())
+    if (dRect == QRectF()) {
         dRect = QRectF(DefMinAxis, DefMinAxis,
                        DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
-    else
+    } else {
         dRect = optimisedRect(dRect);
+    }
 
     mGui->actionResetZoom->setEnabled(   (crtMinX != dRect.left())
                                       || (crtMaxX != dRect.left()+dRect.width())
@@ -880,9 +881,10 @@ QRectF SingleCellViewGraphPanelPlotWidget::dataRect() const
 
     QRectF res = QRect();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
             res |= graph->boundingRect();
+    }
 
     return res;
 }
@@ -1244,9 +1246,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft(), false),
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()), false));
 
-        if (zoomRegion.width() && zoomRegion.height())
+        if (zoomRegion.width() && zoomRegion.height()) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
                     zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
+        }
 
         break;
     }
