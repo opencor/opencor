@@ -148,7 +148,7 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
 
         QRectF dataRect = plotsRects.value(plot);
 
-        if (dataRect == QRectF()) {
+        if ((dataRect == QRectF()) || (dataRect == DefPlotRect)) {
             if (!plot->resetAxes())
                 plot->replotNow();
         } else {
