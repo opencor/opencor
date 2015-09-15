@@ -1358,7 +1358,7 @@ void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlV
 
     if (variableDegree)
         pSedmlVariable->appendAnnotation(QString("<variableDegree xmlns=\"%1\">%2</variableDegree>").arg(OpencorNamespace,
-                                                                                                         variableDegree).toStdString());
+                                                                                                         QString::number(variableDegree)).toStdString());
 }
 
 //==============================================================================
