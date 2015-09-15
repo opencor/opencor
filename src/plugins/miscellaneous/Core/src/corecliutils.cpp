@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <QLocale>
 #include <QMap>
 #include <QNetworkAccessManager>
+#include <QNetworkInterface>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>

@@ -24,6 +24,9 @@ QString CORE_EXPORT version(QCoreApplication *pApp);
 
 QString CORE_EXPORT osName();
 
+bool CORE_EXPORT internetConnectionAvailable();
+QString CORE_EXPORT noInternetConnectionAvailableMessage();
+
 QString CORE_EXPORT copyright();
 
 QString CORE_EXPORT formatMessage(const QString &pMessage,

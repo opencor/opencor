@@ -79,7 +79,8 @@ public:
     virtual void retranslateUi();
 
     void initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
-                    const QString &pErrorMessage);
+                    const QString &pErrorMessage,
+                    const bool &pInternetConnectionAvailable);
 
     void filter(const QString &pFilter);
 
@@ -104,6 +105,7 @@ private:
     QMap<QString, int> mExposureUrlId;
 
     QString mErrorMessage;
+    bool mInternetConnectionAvailable;
 
     int mNumberOfFilteredExposures;
 
