@@ -1251,6 +1251,10 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 //==============================================================================
 
+static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
+
+//==============================================================================
+
 void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                                               libsedml::SedModel *pSedmlModel,
                                               libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -1292,7 +1296,8 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
     }
 
     if (!voiSolverProperties.isEmpty())
-        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"http://www.opencor.ws/\">%1</solverProperties>").arg(voiSolverProperties).toStdString());
+        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"%1\">%2</solverProperties>").arg(OpencorNamespace,
+                                                                                                             voiSolverProperties).toStdString());
 
     // Check whether the simulation required an NLA solver and, if so, let our
     // SED-ML simulation known about it through an annotation (since we cannot
@@ -1306,8 +1311,9 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
                                                                                            solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"http://www.opencor.ws/\" name=\"%1\">%2</nlaSolver>").arg(mSimulation->data()->nlaSolverName(),
-                                                                                                                                 nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"%1\" name=\"%2\">%3</nlaSolver>").arg(OpencorNamespace,
+                                                                                                             mSimulation->data()->nlaSolverName(),
+                                                                                                             nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1325,6 +1331,34 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
 
     sedmlSubTask->setTask(sedmlTask->getId());
     sedmlSubTask->setOrder(pOrder);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
+                                                  const QString &pComponent,
+                                                  const QString &pVariable)
+{
+    // Set the target for the given SED-ML variable
+
+    static const QString Target = "/cellml:model/cellml:component[@name='%1']/cellml:variable[@name='%2']";
+
+    QString variable = pVariable;
+    int variableDegree = variable.size();
+
+    // Determine the degree of our variable, if any
+
+    variable.replace("'", QString());
+
+    variableDegree -= variable.size();
+
+    // Set the target itself, as we as its degree, if any
+
+    pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
+
+    if (variableDegree)
+        pSedmlVariable->appendAnnotation(QString("<variableDegree xmlns=\"%1\">%2</variableDegree>").arg(OpencorNamespace,
+                                                                                                         variableDegree).toStdString());
 }
 
 //==============================================================================
@@ -1496,8 +1530,6 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                     sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
                     sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
 
-                    static const QString Target = "/cellml:model/cellml:component[@name='%1']/cellml:variable[@name='%2']";
-
                     libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
                     libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
                     QStringList propertyX = property->properties()[1]->value().split(".");
@@ -1506,14 +1538,12 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                     sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                         QString::number(graphCounter)).toStdString());
                     sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-                    sedmlVariableX->setTarget(Target.arg(propertyX.first(),
-                                                         propertyX.last()).toStdString());
+                    addSedmlVariableTarget(sedmlVariableX, propertyX.first(), propertyX.last());
 
                     sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                         QString::number(graphCounter)).toStdString());
                     sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-                    sedmlVariableY->setTarget(Target.arg(propertyY.first(),
-                                                         propertyY.last()).toStdString());
+                    addSedmlVariableTarget(sedmlVariableY, propertyY.first(), propertyY.last());
 
                     sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
                     sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));

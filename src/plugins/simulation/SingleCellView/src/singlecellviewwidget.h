@@ -56,6 +56,7 @@ namespace libsedml {
     class SedModel;
     class SedRepeatedTask;
     class SedSimulation;
+    class SedVariable;
 }   // namespace libsedml
 
 //==============================================================================
@@ -236,6 +237,9 @@ private:
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
                             libsedml::SedSimulation *pSedmlSimulation,
                             const int &pOrder);
+    void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
+                                const QString &pComponent,
+                                const QString &pVariable);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
