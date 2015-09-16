@@ -170,7 +170,7 @@ ELSE()
         SET(ADDITIONAL_SOURCES
             src/hash/hash_win32.c
 
-            src/win32/buffer.c
+            src/win32/w32_buffer.c
             src/win32/dir.c
             src/win32/error.c
             src/win32/findfile.c
