@@ -292,6 +292,10 @@
         <source>File</source>
         <translation>Fichier</translation>
     </message>
+    <message>
+        <source>Export the simulation data to %1</source>
+        <translation>Exporter les données de la simulation vers %1</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

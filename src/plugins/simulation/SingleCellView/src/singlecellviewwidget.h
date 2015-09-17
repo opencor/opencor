@@ -139,7 +139,7 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
-    QMap<QObject *, DataStoreInterface *> mDataStoreInterfaces;
+    QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
@@ -198,6 +198,8 @@ private:
     int tabBarPixmapSize() const;
 
     void updateRunPauseAction(const bool &pRunActionEnabled);
+
+    void updateDataStoreActions();
 
     void updateInvalidModelMessageWidget();
 
