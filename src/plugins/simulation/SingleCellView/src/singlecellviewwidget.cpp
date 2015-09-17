@@ -100,7 +100,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mGui(new Ui::SingleCellViewWidget),
     mPluginParent(pPluginParent),
     mSolverInterfaces(SolverInterfaces()),
-    mDataStoreInterfaces(QMap<QObject *, DataStoreInterface *>()),
+    mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellViewSimulation *>()),
@@ -378,6 +378,10 @@ void SingleCellViewWidget::retranslateUi()
 
     updateRunPauseAction(mRunActionEnabled);
 
+    // Retranslate our data store actions
+
+    updateDataStoreActions();
+
     // Retranslate our invalid model message
 
     updateInvalidModelMessageWidget();
@@ -439,19 +443,37 @@ void SingleCellViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverIn
 
 //==============================================================================
 
+void SingleCellViewWidget::updateDataStoreActions()
+{
+    // Update our data store actions
+
+    foreach (QAction *action, mDataStoreInterfaces.keys())
+        action->setStatusTip(tr("Export the simulation data to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces)
 {
     // Populate our simulation data export drop-down menu with the given data
     // store interfaces
 
     foreach (DataStoreInterface *dataStoreInterface, pDataStoreInterfaces) {
-        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreInterface->dataStoreName());
+        QString dataStoreName = dataStoreInterface->dataStoreName();
+
+        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
+
+        action->setToolTip(dataStoreName);
 
         mDataStoreInterfaces.insert(action, dataStoreInterface);
 
         connect(action, SIGNAL(triggered()),
                 this, SLOT(simulationDataExport()));
     }
+
+    // Update our data store actions
+
+    updateDataStoreActions();
 }
 
 //==============================================================================
@@ -1635,7 +1657,7 @@ void SingleCellViewWidget::simulationDataExport()
     setEnabled(false);
     showBusyWidget(this);
 
-    DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(sender());
+    DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
 
     dataStoreExporter->execute(mSimulation->fileName(),
