@@ -151,6 +151,28 @@
     <string>Export the simulation to SED-ML</string>
    </property>
   </action>
+  <action name="actionSedmlExportSedmlFile">
+   <property name="text">
+    <string>SED-ML File...</string>
+   </property>
+   <property name="toolTip">
+    <string>SED-ML File</string>
+   </property>
+   <property name="statusTip">
+    <string>Export the simulation to SED-ML using a SED-ML file</string>
+   </property>
+  </action>
+  <action name="actionSedmlExportCombineArchive">
+   <property name="text">
+    <string>COMBINE Archive...</string>
+   </property>
+   <property name="toolTip">
+    <string>COMBINE Archive</string>
+   </property>
+   <property name="statusTip">
+    <string>Export the simulation to SED-ML using a COMBINE archive</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../res/SingleCellView.qrc"/>

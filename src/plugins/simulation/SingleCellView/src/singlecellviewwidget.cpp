@@ -161,6 +161,16 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
+    QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
+    QMenu *sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
+
+    sedmlExportToolButton->setDefaultAction(mGui->actionSedmlExport);
+    sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
+    sedmlExportToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    sedmlExportDropDownMenu->addAction(mGui->actionSedmlExportSedmlFile);
+    sedmlExportDropDownMenu->addAction(mGui->actionSedmlExportCombineArchive);
+
     QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
 
     mSimulationDataExportDropDownMenu = new QMenu(simulationDataExportToolButton);
@@ -188,7 +198,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionSedmlExport);
+    mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(simulationDataExportToolButton);
 
@@ -1361,9 +1371,9 @@ void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlV
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionSedmlExport_triggered()
+void SingleCellViewWidget::on_actionSedmlExportSedmlFile_triggered()
 {
-    // Export ourselves to SED-ML by first getting a file name
+    // Export ourselves to SED-ML using a SED-ML file, but first get a file name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = mSimulation->fileName();
@@ -1568,6 +1578,16 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
 
         delete sedmlDocument;
     }
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
+{
+    // Export ourselves to SED-ML using a COMBINE archive
+
+//---GRY--- TO BE DONE...
+    QMessageBox::information(qApp->activeWindow(), "Info", "Coming soon...");
 }
 
 //==============================================================================

@@ -476,5 +476,29 @@
         <source>Export the simulation to SED-ML</source>
         <translation>Exporter la simulation vers SED-ML</translation>
     </message>
+    <message>
+        <source>SED-ML File...</source>
+        <translation>Fichier SED-ML...</translation>
+    </message>
+    <message>
+        <source>SED-ML File</source>
+        <translation>Fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML using a SED-ML file</source>
+        <translation>Exporter la simulation vers SED-ML en utilisant un fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>COMBINE Archive...</source>
+        <translation>Archive COMBINE...</translation>
+    </message>
+    <message>
+        <source>COMBINE Archive</source>
+        <translation>Archive COMBINE</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML using a COMBINE archive</source>
+        <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
+    </message>
 </context>
 </TS>

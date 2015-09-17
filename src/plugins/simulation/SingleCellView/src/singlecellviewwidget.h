@@ -256,7 +256,8 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
-    void on_actionSedmlExport_triggered();
+    void on_actionSedmlExportSedmlFile_triggered();
+    void on_actionSedmlExportCombineArchive_triggered();
 
     void simulationDataExport();
 
