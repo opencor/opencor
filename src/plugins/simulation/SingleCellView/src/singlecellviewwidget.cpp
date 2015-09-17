@@ -1251,10 +1251,6 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 //==============================================================================
 
-static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
-
-//==============================================================================
-
 void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                                               libsedml::SedModel *pSedmlModel,
                                               libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -1295,9 +1291,10 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
         }
     }
 
-    if (!voiSolverProperties.isEmpty())
-        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"%1\">%2</solverProperties>").arg(OpencorNamespace,
+    if (!voiSolverProperties.isEmpty()) {
+        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"%1\">%2</solverProperties>").arg(SEDMLSupport::OpencorNamespace,
                                                                                                              voiSolverProperties).toStdString());
+    }
 
     // Check whether the simulation required an NLA solver and, if so, let our
     // SED-ML simulation known about it through an annotation (since we cannot
@@ -1311,7 +1308,7 @@ void SingleCellViewWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocum
                                                                                            solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"%1\" name=\"%2\">%3</nlaSolver>").arg(OpencorNamespace,
+        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"%1\" name=\"%2\">%3</nlaSolver>").arg(SEDMLSupport::OpencorNamespace,
                                                                                                              mSimulation->data()->nlaSolverName(),
                                                                                                              nlaSolverProperties).toStdString());
     }
@@ -1356,9 +1353,10 @@ void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlV
 
     pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
 
-    if (variableDegree)
-        pSedmlVariable->appendAnnotation(QString("<variableDegree xmlns=\"%1\">%2</variableDegree>").arg(OpencorNamespace,
+    if (variableDegree) {
+        pSedmlVariable->appendAnnotation(QString("<variableDegree xmlns=\"%1\">%2</variableDegree>").arg(SEDMLSupport::OpencorNamespace,
                                                                                                          QString::number(variableDegree)).toStdString());
+    }
 }
 
 //==============================================================================
