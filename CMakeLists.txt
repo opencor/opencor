@@ -270,6 +270,7 @@ SET(PLUGINS
     # Plugins that provide support for some third-party libraries
 
     support/CellMLSupport
+    support/COMBINESupport
     support/QScintillaSupport
     support/SEDMLSupport
 
