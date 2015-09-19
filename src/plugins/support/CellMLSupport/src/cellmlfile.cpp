@@ -153,10 +153,10 @@ iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 
 //==============================================================================
 
-void CellmlFile::retrieveImports(iface::cellml_api::Model *pModel,
+void CellmlFile::retrieveImports(const QString &pXmlBase,
+                                 iface::cellml_api::Model *pModel,
                                  QList<iface::cellml_api::CellMLImport *> &pImportList,
-                                 QStringList &pImportXmlBaseList,
-                                 const QString &pXmlBase)
+                                 QStringList &pImportXmlBaseList)
 {
     // Retrieve all the imports of the given model
 
@@ -201,8 +201,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
             QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
             QStringList importXmlBaseList = QStringList();
 
-            retrieveImports(pModel, importList, importXmlBaseList,
-                            QString::fromStdWString(baseUri->asText()));
+            retrieveImports(QString::fromStdWString(baseUri->asText()),
+                            pModel, importList, importXmlBaseList);
 
             // Instantiate all the imports in our list
 
@@ -266,10 +266,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     if (!importModel)
                         throw(std::exception());
 
-                    retrieveImports(importModel, importList, importXmlBaseList,
-                                    isLocalFile?
+                    retrieveImports(isLocalFile?
                                         QUrl::fromLocalFile(fileNameOrUrl).toString():
-                                        fileNameOrUrl);
+                                        fileNameOrUrl,
+                                    importModel, importList, importXmlBaseList);
                 }
             }
 
@@ -948,7 +948,16 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 
 //==============================================================================
 
-QString CellmlFile::cmetaId()
+QStringList CellmlFile::importedFileNames() const
+{
+    // Return the CellML model's imported file names
+
+    return mImportContents.keys();
+}
+
+//==============================================================================
+
+QString CellmlFile::cmetaId() const
 {
     // Return the CellML model's cmeta:id
 

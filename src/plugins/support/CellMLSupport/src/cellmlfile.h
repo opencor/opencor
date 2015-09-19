@@ -117,7 +117,9 @@ public:
                          const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                          const QString &pResource, const QString &pId);
 
-    QString cmetaId();
+    QStringList importedFileNames() const;
+
+    QString cmetaId() const;
     QString xmlBase();
 
     bool exportTo(const QString &pFileName, const Version &pVersion);
@@ -154,10 +156,10 @@ private:
 
     void reset();
 
-    void retrieveImports(iface::cellml_api::Model *pModel,
+    void retrieveImports(const QString &pXmlBase,
+                         iface::cellml_api::Model *pModel,
                          QList<iface::cellml_api::CellMLImport *> &pImportList,
-                         QStringList &pImportXmlBaseList,
-                         const QString &pXmlBase);
+                         QStringList &pImportXmlBaseList);
 
     bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                  CellmlFileIssues &pIssues);

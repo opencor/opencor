@@ -1632,6 +1632,13 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
     // provided
 
     if (!combineArchiveName.isEmpty()) {
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
+qDebug("=========");
+qDebug(">>> %s", qPrintable(fileName));
+qDebug("---------");
+foreach (const QString &importedFileName, cellmlFile->importedFileNames())
+    qDebug(">>> %s", qPrintable(importedFileName));
+
 //---GRY--- TO BE COMPLETED...
 QMessageBox::information(qApp->activeWindow(), "Info", "To be completed...");
     }
