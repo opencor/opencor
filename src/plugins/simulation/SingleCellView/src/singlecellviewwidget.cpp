@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
+#include "combinesupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "datastoreinterface.h"
@@ -1606,10 +1607,34 @@ void SingleCellViewWidget::on_actionSedmlExportSedmlFile_triggered()
 
 void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 {
-    // Export ourselves to SED-ML using a COMBINE archive
+    // Export ourselves to SED-ML using a COMBINE archive, but first get a file
+    // name
 
-//---GRY--- TO BE DONE...
-    QMessageBox::information(qApp->activeWindow(), "Info", "Coming soon...");
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString fileName = mSimulation->fileName();
+    bool remoteFile = fileManagerInstance->isRemote(fileName);
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
+    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
+    QString combineArchiveName = cellmlFileName;
+
+    if (!cellmlFileCompleteSuffix.isEmpty()) {
+        combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
+                                   COMBINESupport::CombineFileExtension);
+    } else {
+        combineArchiveName += "."+COMBINESupport::CombineFileExtension;
+    }
+
+    combineArchiveName = Core::getSaveFileName(QObject::tr("Export To COMBINE Archive"),
+                                               combineArchiveName,
+                                               Core::fileTypes(mPluginParent->combineFileTypes()));
+
+    // Effectively export ourselves to SED-ML, if a SED-ML file name has been
+    // provided
+
+    if (!combineArchiveName.isEmpty()) {
+//---GRY--- TO BE COMPLETED...
+QMessageBox::information(qApp->activeWindow(), "Info", "To be completed...");
+    }
 }
 
 //==============================================================================

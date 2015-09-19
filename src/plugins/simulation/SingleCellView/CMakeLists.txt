@@ -63,6 +63,7 @@ ADD_PLUGIN(SingleCellView
     PLUGINS
         CellMLAPI
         CellMLSupport
+        COMBINESupport
         Compiler
         Core
         ${LLVM_PLUGIN}

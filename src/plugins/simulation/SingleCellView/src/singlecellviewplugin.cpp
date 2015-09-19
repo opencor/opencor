@@ -46,14 +46,15 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
     return new PluginInfo("Simulation", true, false,
-                          QStringList() << "CellMLSupport" << "Qwt" << "SEDMLSupport",
+                          QStringList() << "CellMLSupport" << "COMBINESupport"<< "Qwt" << "SEDMLSupport",
                           descriptions);
 }
 
 //==============================================================================
 
 SingleCellViewPlugin::SingleCellViewPlugin() :
-    mSedmlFileTypes(FileTypes())
+    mSedmlFileTypes(FileTypes()),
+    mCombineFileTypes(FileTypes())
 {
 }
 
@@ -199,12 +200,16 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (dataStoreInterface)
             dataStoreInterfaces << dataStoreInterface;
 
-        // File types supported by the SEDMLSupport plugin
+        // File types supported by the SEDMLSupport and COMBINESupport plugins
 
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
-        if (!plugin->name().compare("SEDMLSupport") && fileTypeInterface)
-            mSedmlFileTypes << fileTypeInterface->fileTypes();
+        if (fileTypeInterface) {
+            if (!plugin->name().compare("SEDMLSupport"))
+                mSedmlFileTypes << fileTypeInterface->fileTypes();
+            else if (!plugin->name().compare("COMBINESupport"))
+                mCombineFileTypes << fileTypeInterface->fileTypes();
+        }
     }
 
     // Initialise our view widget with the different solvers and data stores
@@ -344,6 +349,15 @@ FileTypes SingleCellViewPlugin::sedmlFileTypes() const
     // Return our SED-ML file types
 
     return mSedmlFileTypes;
+}
+
+//==============================================================================
+
+FileTypes SingleCellViewPlugin::combineFileTypes() const
+{
+    // Return our COMBINE file types
+
+    return mCombineFileTypes;
 }
 
 //==============================================================================

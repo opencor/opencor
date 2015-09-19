@@ -303,6 +303,10 @@
         <source>Export To SED-ML File</source>
         <translation>Exporter Vers Fichier SED-ML</translation>
     </message>
+    <message>
+        <source>Export To COMBINE Archive</source>
+        <translation>Exporter Vers Archive COMBINE</translation>
+    </message>
 </context>
 <context>
     <name>SingleCellViewGraphPanelPlotWidget</name>
