@@ -233,7 +233,7 @@ static const auto SettingsGlobal = QStringLiteral("Global");
 
 //==============================================================================
 
-NlaSolver * nlaSolver(const QString &pRuntime)
+NlaSolver * nlaSolver(const QString &pRuntimeAddress)
 {
     // Return the runtime's NLA solver
 
@@ -241,7 +241,7 @@ NlaSolver * nlaSolver(const QString &pRuntime)
     qulonglong res;
 
     settings.beginGroup(SettingsGlobal);
-        res = settings.value(pRuntime, 0).toULongLong();
+        res = settings.value(pRuntimeAddress, 0).toULongLong();
     settings.endGroup();
 
     // Return the NLA solver
@@ -251,14 +251,14 @@ NlaSolver * nlaSolver(const QString &pRuntime)
 
 //==============================================================================
 
-void setNlaSolver(const QString &pRuntime, NlaSolver *pGlobalNlaSolver)
+void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
 {
     // Keep track of the runtime's NLA solver
 
     QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsGlobal);
-        settings.setValue(pRuntime, QString::number(qulonglong(pGlobalNlaSolver)));
+        settings.setValue(pRuntimeAddress, QString::number(qulonglong(pGlobalNlaSolver)));
         // Note #1: for some reasons, on OS X, QSettings doesn't handle
         //          qulonglong values properly, so we do it through a QString
         //          value instead...
@@ -269,14 +269,14 @@ void setNlaSolver(const QString &pRuntime, NlaSolver *pGlobalNlaSolver)
 
 //==============================================================================
 
-void unsetNlaSolver(const QString &pRuntime)
+void unsetNlaSolver(const QString &pRuntimeAddress)
 {
     // Stop tracking the runtime's NLA solver
 
     QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsGlobal);
-        settings.remove(pRuntime);
+        settings.remove(pRuntimeAddress);
     settings.endGroup();
 }
 
