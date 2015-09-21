@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellmlsupportglobal.h"
 #include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"

@@ -62,6 +62,4 @@ script:
 #       fi
 
 notifications:
-  email:
-    - team@opencor.ws
-    - agarny@hellix.com
+  email: team@opencor.ws

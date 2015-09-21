@@ -163,10 +163,10 @@ private:
 
 //==============================================================================
 
-NlaSolver * nlaSolver(const QString &pRuntime);
+NlaSolver * nlaSolver(const QString &pRuntimeAddress);
 
-void setNlaSolver(const QString &pRuntime, NlaSolver *pGlobalNlaSolver);
-void unsetNlaSolver(const QString &pRuntime);
+void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver);
+void unsetNlaSolver(const QString &pRuntimeAddress);
 
 //==============================================================================
 
