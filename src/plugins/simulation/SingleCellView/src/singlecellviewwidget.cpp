@@ -1636,8 +1636,29 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 qDebug("=========");
 qDebug(">>> %s", qPrintable(fileName));
 qDebug("---------");
-foreach (const QString &importedFileName, cellmlFile->importedFileNames())
+        QString commonPath = QString();
+
+foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
     qDebug(">>> %s", qPrintable(importedFileName));
+
+        // Determine the
+
+        QString importedFilePath = QFileInfo(importedFileName).canonicalPath();
+
+        if (commonPath.isEmpty()) {
+            commonPath = importedFilePath;
+        } else {
+            for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
+                if (commonPath[i] != importedFilePath[i]) {
+                    commonPath = commonPath.left(i);
+
+                    break;
+                }
+            }
+        }
+}
+qDebug("---------");
+qDebug(">>> %s", qPrintable(commonPath));
 
 //---GRY--- TO BE COMPLETED...
 QMessageBox::information(qApp->activeWindow(), "Info", "To be completed...");
