@@ -40,7 +40,7 @@ void Tests::basicTests()
 
     // Check the version of libSEDML
 
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.0");
+    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.1");
 
     // Create a SED-ML document with a model inside it, then set the name of the
     // model and check that it has been properly set
