@@ -325,16 +325,16 @@
         <translation> : </translation>
     </message>
     <message>
-        <source>Please choose a different file name.</source>
-        <translation>Veuillez choisir un nom de fichier différent.</translation>
-    </message>
-    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
+    <message>
+        <source>No Internet connection available.</source>
+        <translation>Aucune connexion Internet disponible.</translation>
     </message>
 </context>
 </TS>

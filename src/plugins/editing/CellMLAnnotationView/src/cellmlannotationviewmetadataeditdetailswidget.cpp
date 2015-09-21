@@ -158,8 +158,9 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTerm(QString()),
     mTerms(QStringList()),
     mItemsCount(0),
-    mErrorMessage(QString()),
     mLookUpTerm(false),
+    mErrorMessage(QString()),
+    mInternetConnectionAvailable(true),
     mInformationType(None),
     mLookUpInformation(false),
     mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
@@ -399,7 +400,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // Retranslate our output message
 
-    upudateOutputMessage(mLookUpTerm, mErrorMessage);
+    upudateOutputMessage(mLookUpTerm, mErrorMessage,
+                         mInternetConnectionAvailable);
 
     // Retranslate our output headers
 
@@ -452,7 +454,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
         || termIsDirect) {
         updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                       !termIsDirect, QString());
+                       !termIsDirect);
     }
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -489,6 +491,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const bool &pLookUpTerm,
                                                                          const QString &pErrorMessage,
+                                                                         const bool &pInternetConnectionAvailable,
                                                                          bool *pShowBusyWidget)
 {
     // Update our output message
@@ -510,7 +513,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
 
         if (pShowBusyWidget)
             *pShowBusyWidget = true;
-    } else if (pErrorMessage.isEmpty()) {
+    } else if (pInternetConnectionAvailable && pErrorMessage.isEmpty()) {
         if (isDirectTerm(mTermValue->text())) {
             if (mAddTermButton->isEnabled())
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
@@ -524,7 +527,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
         }
     } else {
         mOutputMessage->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                       Core::formatMessage(pErrorMessage, false, true));
+                                       Core::formatMessage(pInternetConnectionAvailable?
+                                                               pErrorMessage:
+                                                               Core::noInternetConnectionAvailableMessage(),
+                                                           false, true));
     }
 }
 
@@ -552,12 +558,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
                                                                    const bool &pLookUpTerm,
-                                                                   const QString &pErrorMessage)
+                                                                   const QString &pErrorMessage,
+                                                                   const bool &pInternetConnectionAvailable)
 {
     // Keep track of some information
 
     mLookUpTerm = pLookUpTerm;
     mErrorMessage = pErrorMessage;
+    mInternetConnectionAvailable = pInternetConnectionAvailable;
 
     // Reset various properties
     // Note: we might only do that before adding new items, but then again there
@@ -631,7 +639,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
         // No items to show, so either there is no data available or an error
         // occurred, so update our output message
 
-        upudateOutputMessage(pLookUpTerm, pErrorMessage, &showBusyWidget);
+        upudateOutputMessage(pLookUpTerm, pErrorMessage,
+                             pInternetConnectionAvailable,
+                             &showBusyWidget);
 
         // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -949,74 +959,85 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
         mNetworkReply = 0;
     }
 
-    // Now, retrieve some ontological terms
+    // Now, retrieve some ontological terms, but only if we are connected to the
+    // Internet
 
-    QString term = mTerms.first();
+    if (Core::internetConnectionAvailable()) {
+        QString term = mTerms.first();
 
-    mTerms.removeFirst();
+        mTerms.removeFirst();
 
-    if (mTerms.isEmpty())
-        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+term));
+        if (mTerms.isEmpty())
+            mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+term));
+    } else {
+        termLookedUp();
+    }
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
-    // Ignore the network reply if it got cancelled
-
-    if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
-        pNetworkReply->deleteLater();
-
-        return;
-    } else {
-        mNetworkReply = 0;
-    }
-
-    // Keep track of the term we have just looked up
-
-    mTerm = pNetworkReply->url().toString().remove(Pmr2RicordoUrl);
-
-    // Retrieve the list of terms, should we have retrieved it without any
-    // problem
+    // Retrieve the list of terms, should there be a network reply
 
     CellmlAnnotationViewMetadataEditDetailsItems items = CellmlAnnotationViewMetadataEditDetailsItems();
     QString errorMessage = QString();
+    bool internetConnectionAvailable = true;
 
-    if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Parse the JSON data
+    if (pNetworkReply) {
+        // Ignore the network reply if it got cancelled
 
-        QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+        if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
+            pNetworkReply->deleteLater();
 
-        if (jsonParseError.error == QJsonParseError::NoError) {
-            // Retrieve the list of terms
+            return;
+        } else {
+            mNetworkReply = 0;
+        }
 
-            QVariantMap termMap;
-            QString name;
-            QString resource;
-            QString id;
+        // Keep track of the term we have just looked up
 
-            foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
-                termMap = termsVariant.toMap();
-                name = termMap["name"].toString();
+        mTerm = pNetworkReply->url().toString().remove(Pmr2RicordoUrl);
 
-                if (   !name.isEmpty()
-                    &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
-                    // We have a name and we could decode the term, so add the
-                    // item to our list, should it not already be in it
+        // Retrieve the list of terms, should the network reply have no error
 
-                    CellmlAnnotationViewMetadataEditDetailsItem newItem = CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
+        if (pNetworkReply->error() == QNetworkReply::NoError) {
+            // Parse the JSON data
 
-                    if (!items.contains(newItem))
-                        items << newItem;
+            QJsonParseError jsonParseError;
+            QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+
+            if (jsonParseError.error == QJsonParseError::NoError) {
+                // Retrieve the list of terms
+
+                QVariantMap termMap;
+                QString name;
+                QString resource;
+                QString id;
+
+                foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
+                    termMap = termsVariant.toMap();
+                    name = termMap["name"].toString();
+
+                    if (   !name.isEmpty()
+                        &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
+                        // We have a name and we could decode the term, so add
+                        // the item to our list, should it not already be in it
+
+                        CellmlAnnotationViewMetadataEditDetailsItem newItem = CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
+
+                        if (!items.contains(newItem))
+                            items << newItem;
+                    }
                 }
+            } else {
+                errorMessage = jsonParseError.errorString();
             }
         } else {
-            errorMessage = jsonParseError.errorString();
+            errorMessage = pNetworkReply->errorString();
         }
     } else {
-        errorMessage = pNetworkReply->errorString();
+        internetConnectionAvailable = false;
     }
 
     // Update our GUI with the results of the look up after having sorted them
@@ -1026,7 +1047,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     mItemsCount = items.count();
 
-    updateItemsGui(items, false, errorMessage);
+    updateItemsGui(items, false, errorMessage, internetConnectionAvailable);
 
     // Update our GUI (incl. its enabled state)
 
@@ -1034,7 +1055,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     // Delete (later) the network reply
 
-    pNetworkReply->deleteLater();
+    if (pNetworkReply)
+        pNetworkReply->deleteLater();
 }
 
 //==============================================================================
@@ -1073,7 +1095,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Update our items' GUI
 
     updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                   !isDirectTerm(mTermValue->text()), QString());
+                   !isDirectTerm(mTermValue->text()));
 
     // Ask our parent to update its GUI with the added RDF triple
 

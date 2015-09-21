@@ -62,48 +62,58 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
                                                     QString *pErrorMessage) const
 {
-    // Create a network access manager so that we can retrieve the contents
-    // of the remote file
+    // Try to read a remote file as text, but only if we are connected to the
+    // Internet
 
-    QNetworkAccessManager networkAccessManager;
+    if (internetConnectionAvailable()) {
+        // Create a network access manager so that we can retrieve the contents
+        // of the remote file
 
-    // Make sure that we get told if there are SSL errors (which would happen if
-    // a website's certificate is invalid, e.g. it has expired)
+        QNetworkAccessManager networkAccessManager;
 
-    connect(&networkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)));
+        // Make sure that we get told if there are SSL errors (which would happen
+        // if a website's certificate is invalid, e.g. it has expired)
 
-    // Download the contents of the remote file
+        connect(&networkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+                this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)));
 
-    QNetworkReply *networkReply = networkAccessManager.get(QNetworkRequest(pUrl));
-    QEventLoop eventLoop;
+        // Download the contents of the remote file
 
-    connect(networkReply, SIGNAL(finished()),
-            &eventLoop, SLOT(quit()));
+        QNetworkReply *networkReply = networkAccessManager.get(QNetworkRequest(pUrl));
+        QEventLoop eventLoop;
 
-    eventLoop.exec();
+        connect(networkReply, SIGNAL(finished()),
+                &eventLoop, SLOT(quit()));
 
-    // Check whether we were able to retrieve the contents of the file
+        eventLoop.exec();
 
-    bool res = networkReply->error() == QNetworkReply::NoError;
+        // Check whether we were able to retrieve the contents of the file
 
-    if (res) {
-        pText = networkReply->readAll();
+        bool res = networkReply->error() == QNetworkReply::NoError;
 
-        if (pErrorMessage)
-            *pErrorMessage = QString();
+        if (res) {
+            pText = networkReply->readAll();
+
+            if (pErrorMessage)
+                *pErrorMessage = QString();
+        } else {
+            pText = QString();
+
+            if (pErrorMessage)
+                *pErrorMessage = networkReply->errorString();
+        }
+
+        // Delete (later) the network reply
+
+        networkReply->deleteLater();
+
+        return res;
     } else {
-        pText = QString();
-
         if (pErrorMessage)
-            *pErrorMessage = networkReply->errorString();
+            *pErrorMessage = QObject::tr("No Internet connection available.");
+
+        return false;
     }
-
-    // Delete (later) the network reply
-
-    networkReply->deleteLater();
-
-    return res;
 }
 
 //==============================================================================
@@ -198,6 +208,38 @@ QString osName()
 #else
     #error Unsupported platform
 #endif
+}
+
+//==============================================================================
+
+bool internetConnectionAvailable()
+{
+    // Check whether an Internet connection is available, this by going through
+    // all of our network interfaces and checking whether one of them is both
+    // active and is a loopback, and has at least one IP address
+
+    QList<QNetworkInterface> networkInterfaces = QNetworkInterface::allInterfaces();
+
+    for (int i = 0, iMax = networkInterfaces.count(); i < iMax; ++i) {
+        QNetworkInterface networkInterface = networkInterfaces[i];
+
+        if (    networkInterface.flags().testFlag(QNetworkInterface::IsUp)
+            && !networkInterface.flags().testFlag(QNetworkInterface::IsLoopBack)
+            &&  networkInterface.addressEntries().count()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+QString noInternetConnectionAvailableMessage()
+{
+    // Return a typical message about no Internet connection being available
+
+    return QObject::tr("No Internet connection available.");
 }
 
 //==============================================================================
@@ -402,7 +444,7 @@ QString eolString()
 QString nonDiacriticString(const QString &pString)
 {
     // Remove and return a non-accentuated version of the given string
-    // Note: this code is based on the one that can be found at
+    // Note: this code is based on the one found at
     //       http://stackoverflow.com/questions/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
 
     static QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
@@ -412,9 +454,9 @@ QString nonDiacriticString(const QString &pString)
 
     for (int i = 0, iMax = pString.length(); i < iMax; ++i) {
         QChar letter = pString[i];
-        int dIndex = diacriticLetters.indexOf(letter);
+        int index = diacriticLetters.indexOf(letter);
 
-        res.append((dIndex < 0)?letter:nonDiacriticLetters[dIndex]);
+        res.append((index < 0)?letter:nonDiacriticLetters[index]);
     }
 
     return res;

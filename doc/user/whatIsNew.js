@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 8, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 7, "month": 9, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -50,6 +50,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
+                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." }

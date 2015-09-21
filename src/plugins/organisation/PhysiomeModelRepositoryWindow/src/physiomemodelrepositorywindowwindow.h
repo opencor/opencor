@@ -95,7 +95,7 @@ private Q_SLOTS:
     void on_filterValue_textChanged(const QString &pText);
     void on_refreshButton_clicked();
 
-    void finished(QNetworkReply *pNetworkReply);
+    void finished(QNetworkReply *pNetworkReply = 0);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
 

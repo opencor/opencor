@@ -68,6 +68,20 @@ Solver::Solver * HeunSolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString HeunSolverPlugin::kisaoId(const QString &pId) const
+{
+    // Return the KiSAO id for the given id
+
+    if (!pId.compare(solverName()))
+        return "KISAO:0000301";
+    else if (!pId.compare(StepId))
+        return "KISAO:0000483";
+
+    return QString();
+}
+
+//==============================================================================
+
 Solver::Type HeunSolverPlugin::solverType() const
 {
     // Return the type of the solver

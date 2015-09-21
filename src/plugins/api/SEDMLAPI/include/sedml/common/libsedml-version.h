@@ -46,7 +46,7 @@
  *
  * A version string of the form "1.2.3".
  */
-#define LIBSEDML_DOTTED_VERSION	"0.3.0"
+#define LIBSEDML_DOTTED_VERSION	"0.3.1"
 
 
 /**
@@ -57,7 +57,7 @@
  * libSEDML is released, making it easy to use less-than and greater-than
  * comparisons when testing versions numbers.
  */
-#define LIBSEDML_VERSION		300
+#define LIBSEDML_VERSION		301
 
 
 /**
@@ -65,7 +65,7 @@
  *
  * The numeric version as a string: version 1.2.3 becomes "10203".
  */
-#define LIBSEDML_VERSION_STRING	"300"
+#define LIBSEDML_VERSION_STRING	"301"
 
 
 LIBSEDML_CPP_NAMESPACE_BEGIN

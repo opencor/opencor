@@ -538,6 +538,43 @@ void SingleCellViewInformationGraphsWidget::finishEditing()
 
 //==============================================================================
 
+static const auto PropertySeparator = QStringLiteral(" | ");
+
+//==============================================================================
+
+Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                                                        const QString &pFileName) const
+{
+    // Retrieve and return all the graph properties associated with the given
+    // graph and file name, if any
+
+    Core::Properties res = Core::Properties();
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+
+    if (propertyEditor) {
+        foreach (Core::Property *property, propertyEditor->properties()) {
+            // The property should be returned if it is a section (i.e. a graph
+            // property), is checked (i.e. a selected graph) and have its first
+            // sub-property (i.e. to which model the graph applies) has either a
+            // value of "Current" or that of the given file name
+
+            if (   (property->type() == Core::Property::Section)
+                && property->isChecked()) {
+                QString modelPropertyValue = property->properties().first()->value();
+
+                if (   !modelPropertyValue.compare(tr("Current"))
+                    || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
+                    res << property;
+                }
+            }
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
@@ -757,10 +794,6 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
 //==============================================================================
 
-static const auto PropertySeparator = QStringLiteral(" | ");
-
-//==============================================================================
-
 void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
                                                             const QString &pFileName)
 {
@@ -809,22 +842,17 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
-    if (pProperty->properties().count() >= 2)
-        graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
-
-    if (pProperty->properties().count() == 3)
-        graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
+    graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
+    graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
     //       (through graphChanged()), yet we don't want to (and can't) do what
     //       follows if not all the properties are available...
 
-    if (pProperty->properties().count() == 3) {
-        pProperty->setName( pProperty->properties()[1]->value()
-                           +PropertySeparator
-                           +pProperty->properties()[2]->value());
-    }
+    pProperty->setName( pProperty->properties()[1]->value()
+                       +PropertySeparator
+                       +pProperty->properties()[2]->value());
 
     // Update the status (i.e. icon) of our (section) property
 

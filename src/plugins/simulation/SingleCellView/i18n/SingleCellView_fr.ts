@@ -151,28 +151,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewSimulationData</name>
-    <message>
-        <source>the NLA solver could not be found</source>
-        <translation>le solveur ALN n&apos;a pas pu être trouvé</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::SingleCellView::SingleCellViewSimulationWorker</name>
-    <message>
-        <source>the ODE solver could not be found</source>
-        <translation>le solveur EDO n&apos;a pas pu être trouvé</translation>
-    </message>
-    <message>
-        <source>the DAE solver could not be found</source>
-        <translation>le solveur EAD n&apos;a pas pu être trouvé</translation>
-    </message>
-    <message>
-        <source>the NLA solver could not be found</source>
-        <translation>le solveur ALN n&apos;a pas pu être trouvé</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
     <message>
         <source>Delay between two data points</source>
@@ -313,6 +291,17 @@
     <message>
         <source>File</source>
         <translation>Fichier</translation>
+    </message>
+    <message>
+        <source>Export the simulation data to %1</source>
+        <translation>Exporter les données de la simulation vers %1</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Export To SED-ML File</source>
+        <translation>Exporter Vers Fichier SED-ML</translation>
     </message>
 </context>
 <context>
@@ -482,6 +471,14 @@
     <message>
         <source>Clear the simulation data</source>
         <translation>Supprimer les données de la simulation</translation>
+    </message>
+    <message>
+        <source>SED-ML Export</source>
+        <translation>Exporter Vers SED-ML</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML</source>
+        <translation>Exporter la simulation vers SED-ML</translation>
     </message>
 </context>
 </TS>

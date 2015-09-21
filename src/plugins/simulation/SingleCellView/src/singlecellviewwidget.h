@@ -51,6 +51,16 @@ namespace Ui {
 
 //==============================================================================
 
+namespace libsedml {
+    class SedDocument;
+    class SedModel;
+    class SedRepeatedTask;
+    class SedSimulation;
+    class SedVariable;
+}   // namespace libsedml
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -129,7 +139,7 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
-    QMap<QObject *, DataStoreInterface *> mDataStoreInterfaces;
+    QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
@@ -189,6 +199,8 @@ private:
 
     void updateRunPauseAction(const bool &pRunActionEnabled);
 
+    void updateDataStoreActions();
+
     void updateInvalidModelMessageWidget();
 
     void checkAxisValue(double &pValue, const double &pOrigValue,
@@ -222,6 +234,15 @@ private:
                                      const QString &pSolverName,
                                      SingleCellViewInformationSolversWidgetData *pSolverData);
 
+    void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
+                            libsedml::SedModel *pSedmlModel,
+                            libsedml::SedRepeatedTask *pSedmlRepeatedTask,
+                            libsedml::SedSimulation *pSedmlSimulation,
+                            const int &pOrder);
+    void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
+                                const QString &pComponent,
+                                const QString &pVariable);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();
@@ -236,6 +257,8 @@ private Q_SLOTS:
     void on_actionRemoveGraphPanel_triggered();
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
+
+    void on_actionSedmlExport_triggered();
 
     void simulationDataExport();
 

@@ -94,11 +94,12 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     QIntList splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
     int graphPanelsCount = splitterSizes.count();
 
-    if (!graphPanelsCount)
+    if (!graphPanelsCount) {
         // For some reasons, the settings for the number of graph panels to be
         // created got messed up, so reset it
 
         graphPanelsCount = 1;
+    }
 
     for (int i = 0; i < graphPanelsCount; ++i)
         addGraphPanel();
@@ -147,7 +148,7 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
 
         QRectF dataRect = plotsRects.value(plot);
 
-        if (dataRect == QRectF()) {
+        if ((dataRect == QRectF()) || (dataRect == DefPlotRect)) {
             if (!plot->resetAxes())
                 plot->replotNow();
         } else {
@@ -301,9 +302,10 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
     // Note: mActiveGraphPanel will automatically get updated when another graph
     //       panel gets selected...
 
-    foreach (const QString &fileName, mActiveGraphPanels.keys())
+    foreach (const QString &fileName, mActiveGraphPanels.keys()) {
         if (mActiveGraphPanels.value(fileName) == pGraphPanel)
             mActiveGraphPanels.remove(fileName);
+    }
 
     // Now, we can delete our graph panel
 
@@ -315,15 +317,16 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
 
     // Activate the next graph panel or the last one available, if any
 
-    if (index < count())
+    if (index < count()) {
         // There is a next graph panel, so activate it
 
         qobject_cast<SingleCellViewGraphPanelWidget *>(widget(index))->setActive(true);
-    else
+    } else {
         // We were dealing with the last graph panel, so just activate the new
         // last graph panel
 
         qobject_cast<SingleCellViewGraphPanelWidget *>(widget(count()-1))->setActive(true);
+    }
 
     // Keep track of our new sizes
 

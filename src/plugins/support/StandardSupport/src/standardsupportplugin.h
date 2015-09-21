@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "plugininfo.h"
-#include "standardsupportglobal.h"
 
 //==============================================================================
 

@@ -46,8 +46,15 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
     return new PluginInfo("Simulation", true, false,
-                          QStringList() << "CellMLSupport" << "Qwt",
+                          QStringList() << "CellMLSupport" << "Qwt" << "SEDMLSupport",
                           descriptions);
+}
+
+//==============================================================================
+
+SingleCellViewPlugin::SingleCellViewPlugin() :
+    mSedmlFileTypes(FileTypes())
+{
 }
 
 //==============================================================================
@@ -171,26 +178,37 @@ void SingleCellViewPlugin::finalizePlugin()
 
 void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different solvers and data store exporters that are
-    // available to us
+    // Retrieve the different solvers and data stores that are available to us,
+    // as well as the file types supported by the SEDMLSupport plugin
 
     SolverInterfaces solverInterfaces = SolverInterfaces();
     DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
+        // Look for a solver
+
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
 
         if (solverInterface)
             solverInterfaces << solverInterface;
 
+        // Look for a data store
+
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
 
         if (dataStoreInterface)
             dataStoreInterfaces << dataStoreInterface;
+
+        // File types supported by the SEDMLSupport plugin
+
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
+
+        if (!plugin->name().compare("SEDMLSupport") && fileTypeInterface)
+            mSedmlFileTypes << fileTypeInterface->fileTypes();
     }
 
-    // Initialise our view widget with the different solvers and data store
-    // exporters that are available to us
+    // Initialise our view widget with the different solvers and data stores
+    // that are available to us
 
     mViewWidget->setSolverInterfaces(solverInterfaces);
     mViewWidget->setDataStoreInterfaces(dataStoreInterfaces);
@@ -315,6 +333,17 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
     // Return the requested file tab icon
 
     return mViewWidget->fileTabIcon(pFileName);
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+FileTypes SingleCellViewPlugin::sedmlFileTypes() const
+{
+    // Return our SED-ML file types
+
+    return mSedmlFileTypes;
 }
 
 //==============================================================================

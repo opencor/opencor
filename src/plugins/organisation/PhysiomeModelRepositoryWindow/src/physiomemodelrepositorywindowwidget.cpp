@@ -89,6 +89,7 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
     mErrorMessage(QString()),
+    mInternetConnectionAvailable(true),
     mNumberOfFilteredExposures(0),
     mExposureUrl(QString())
 {
@@ -158,7 +159,7 @@ void PhysiomeModelRepositoryWindowWidget::retranslateUi()
 
     QWebElement messageElement = page()->mainFrame()->documentElement().findFirst("p[id=message]");
 
-    if (mErrorMessage.isEmpty()) {
+    if (mInternetConnectionAvailable && mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredExposures) {
             if (mExposureNames.isEmpty())
                 messageElement.removeAllChildren();
@@ -170,7 +171,10 @@ void PhysiomeModelRepositoryWindowWidget::retranslateUi()
             messageElement.setInnerXml(tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures));
         }
     } else {
-        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true));
+        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mInternetConnectionAvailable?
+                                                                                          mErrorMessage:
+                                                                                          Core::noInternetConnectionAvailableMessage(),
+                                                                                      true, true));
     }
 }
 
@@ -210,7 +214,8 @@ void PhysiomeModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 //==============================================================================
 
 void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
-                                                     const QString &pErrorMessage)
+                                                     const QString &pErrorMessage,
+                                                     const bool &pInternetConnectionAvailable)
 {
     // Initialise / keep track of some properties
 
@@ -219,6 +224,8 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
     mExposureUrlId = QMap<QString, int>();
 
     mErrorMessage = pErrorMessage;
+
+    mInternetConnectionAvailable = pInternetConnectionAvailable;
 
     // Initialise our list of exposures
 
@@ -266,11 +273,6 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
 
 void PhysiomeModelRepositoryWindowWidget::filter(const QString &pFilter)
 {
-    // Make sure that we have something to filter (i.e. no error message)
-
-    if (!mErrorMessage.isEmpty())
-        return;
-
     // Filter our list of exposures, remove any duplicates (they will be
     // reintroduced in the next step) and update our message (by retranslating
     // ourselves)
