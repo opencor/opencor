@@ -9,6 +9,8 @@ os:
   - linux
   - osx
 
+dist: trusty
+
 env:
   - CONFIG=Release
   - CONFIG=Debug
