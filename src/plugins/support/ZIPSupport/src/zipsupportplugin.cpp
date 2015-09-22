@@ -16,44 +16,34 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some useful tests-related functions
+// ZIPSupport plugin
 //==============================================================================
 
-#ifndef TESTSUTILS_H
-#define TESTSUTILS_H
-
-//==============================================================================
-
-#include <QString>
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#include "zipsupportplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace ZIPSupport {
 
 //==============================================================================
 
-QString dirName(const QString &pDirName);
-QString fileName(const QString &pFileName);
-QString cliFileName(const QString &pFileName);
+PLUGININFO_FUNC ZIPSupportPluginInfo()
+{
+    Descriptions descriptions;
 
-QByteArray rawFileContents(const QString &pFileName);
-QStringList fileContents(const QString &pFileName);
+    descriptions.insert("en", QString::fromUtf8("a plugin to support the <a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> format."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter le format <a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a>."));
 
-QString fileSha1(const QString &pFileName);
-
-QStringList runCli(const QStringList pArguments);
+    return new PluginInfo("Support", false, false,
+                          QStringList() << "Core" << "zlib",
+                          descriptions);
+}
 
 //==============================================================================
 
+}   // namespace ZIPSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

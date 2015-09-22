@@ -16,39 +16,37 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some useful tests-related functions
+// ZIPSupport plugin
 //==============================================================================
 
-#ifndef TESTSUTILS_H
-#define TESTSUTILS_H
-
-//==============================================================================
-
-#include <QString>
+#ifndef ZIPSUPPORTPLUGIN_H
+#define ZIPSUPPORTPLUGIN_H
 
 //==============================================================================
 
-#include <QtTest/QtTest>
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace ZIPSupport {
 
 //==============================================================================
 
-QString dirName(const QString &pDirName);
-QString fileName(const QString &pFileName);
-QString cliFileName(const QString &pFileName);
-
-QByteArray rawFileContents(const QString &pFileName);
-QStringList fileContents(const QString &pFileName);
-
-QString fileSha1(const QString &pFileName);
-
-QStringList runCli(const QStringList pArguments);
+PLUGININFO_FUNC ZIPSupportPluginInfo();
 
 //==============================================================================
 
+class ZIPSupportPlugin : public QObject
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.ZIPSupportPlugin" FILE "zipsupportplugin.json")
+};
+
+//==============================================================================
+
+}   // namespace ZIPSupport
 }   // namespace OpenCOR
 
 //==============================================================================

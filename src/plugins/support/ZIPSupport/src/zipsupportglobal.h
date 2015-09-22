@@ -16,40 +16,23 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some useful tests-related functions
+// ZIPSupport global
 //==============================================================================
 
-#ifndef TESTSUTILS_H
-#define TESTSUTILS_H
-
-//==============================================================================
-
-#include <QString>
+#ifndef ZIPSUPPORTGLOBAL_H
+#define ZIPSUPPORTGLOBAL_H
 
 //==============================================================================
 
-#include <QtTest/QtTest>
-
-//==============================================================================
-
-namespace OpenCOR {
-
-//==============================================================================
-
-QString dirName(const QString &pDirName);
-QString fileName(const QString &pFileName);
-QString cliFileName(const QString &pFileName);
-
-QByteArray rawFileContents(const QString &pFileName);
-QStringList fileContents(const QString &pFileName);
-
-QString fileSha1(const QString &pFileName);
-
-QStringList runCli(const QStringList pArguments);
-
-//==============================================================================
-
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef ZIPSupport_PLUGIN
+        #define ZIPSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define ZIPSUPPORT_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define ZIPSUPPORT_EXPORT
+#endif
 
 //==============================================================================
 

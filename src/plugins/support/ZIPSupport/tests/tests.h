@@ -16,40 +16,32 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some useful tests-related functions
+// ZIP support tests
 //==============================================================================
 
-#ifndef TESTSUTILS_H
-#define TESTSUTILS_H
-
-//==============================================================================
-
-#include <QString>
+#ifndef TESTS_H
+#define TESTS_H
 
 //==============================================================================
 
-#include <QtTest/QtTest>
+#include <QObject>
 
 //==============================================================================
 
-namespace OpenCOR {
+class Tests : public QObject
+{
+    Q_OBJECT
 
-//==============================================================================
+private:
+    QString mOrigPath;
 
-QString dirName(const QString &pDirName);
-QString fileName(const QString &pFileName);
-QString cliFileName(const QString &pFileName);
+private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
 
-QByteArray rawFileContents(const QString &pFileName);
-QStringList fileContents(const QString &pFileName);
-
-QString fileSha1(const QString &pFileName);
-
-QStringList runCli(const QStringList pArguments);
-
-//==============================================================================
-
-}   // namespace OpenCOR
+    void compressTests();
+    void uncompressTests();
+};
 
 //==============================================================================
 
