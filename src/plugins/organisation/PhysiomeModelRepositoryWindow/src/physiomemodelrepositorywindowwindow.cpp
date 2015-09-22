@@ -290,7 +290,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     if (pNetworkReply) {
         if (pNetworkReply->error() == QNetworkReply::NoError) {
-            // Retrieve an uncompress our JSON data
+            // Retrieve and uncompress our JSON data
 
             QByteArray compressedData = pNetworkReply->readAll();
             QByteArray uncompressedData = QByteArray();
