@@ -75,8 +75,7 @@ public:
     iface::rdf_api::DataSource * rdfDataSource();
 
     virtual bool load();
-
-    bool save(const QString &pNewFileName = QString());
+    virtual bool save(const QString &pNewFileName = QString());
 
     bool isValid();
     bool isValid(const QString &pFileName, const QString &pFileContents,
