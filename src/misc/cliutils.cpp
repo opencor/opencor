@@ -28,7 +28,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QCoreApplication>
 #include <QDir>
-#include <QFile>
 #include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
