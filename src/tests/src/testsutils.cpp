@@ -33,18 +33,38 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QString dirOrFileName(const QString &pDirOrFileName)
+{
+    // Format and return the given directory or file name, so that it can be
+    // used on all our supported platforms
+
+#if defined(Q_OS_WIN)
+    return "..\\..\\..\\"+QString(pDirOrFileName).replace("/", "\\");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    return pDirOrFileName;
+#else
+    #error Unsupported platform
+#endif
+}
+
+//==============================================================================
+
+QString dirName(const QString &pDirName)
+{
+    // Format and return the given file name, so that it can be used on all our
+    // supported platforms
+
+    return dirOrFileName(pDirName);
+}
+
+//==============================================================================
+
 QString fileName(const QString &pFileName)
 {
     // Format and return the given file name, so that it can be used on all our
     // supported platforms
 
-#if defined(Q_OS_WIN)
-    return "..\\..\\..\\"+QString(pFileName).replace("/", "\\");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    return pFileName;
-#else
-    #error Unsupported platform
-#endif
+    return dirOrFileName(pFileName);
 }
 
 //==============================================================================
@@ -61,6 +81,24 @@ QString cliFileName(const QString &pFileName)
 #else
     #error Unsupported platform
 #endif
+}
+
+//==============================================================================
+
+QByteArray rawFileContents(const QString &pFileName)
+{
+    // Read and return the contents of the given file
+
+    QFile file(pFileName);
+    QByteArray contents = QByteArray();
+
+    if (file.open(QIODevice::ReadOnly)) {
+        contents = file.readAll();
+
+        file.close();
+    }
+
+    return contents;
 }
 
 //==============================================================================
@@ -82,6 +120,16 @@ QStringList fileContents(const QString &pFileName)
     }
 
     return contents.split("\n");
+}
+
+//==============================================================================
+
+QString fileSha1(const QString &pFileName)
+{
+    // Read and return the contents of the given file
+
+    return QCryptographicHash::hash(rawFileContents(pFileName),
+                                    QCryptographicHash::Sha1).toHex();
 }
 
 //==============================================================================

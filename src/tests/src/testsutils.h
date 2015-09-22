@@ -36,10 +36,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QString dirName(const QString &pDirName);
 QString fileName(const QString &pFileName);
 QString cliFileName(const QString &pFileName);
 
+QByteArray rawFileContents(const QString &pFileName);
 QStringList fileContents(const QString &pFileName);
+
+QString fileSha1(const QString &pFileName);
 
 QStringList runCli(const QStringList pArguments);
 

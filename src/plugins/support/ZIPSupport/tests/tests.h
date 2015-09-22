@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// ZIP Support tests
+// ZIP support tests
 //==============================================================================
 
 #ifndef TESTS_H
@@ -32,7 +32,13 @@ class Tests : public QObject
 {
     Q_OBJECT
 
+private:
+    QString mOrigPath;
+
 private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
+
     void compressTests();
     void uncompressTests();
 };
