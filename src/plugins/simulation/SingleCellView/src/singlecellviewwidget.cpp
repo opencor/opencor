@@ -1135,34 +1135,34 @@ QVariant SingleCellViewWidget::value(Core::Property *pProperty) const
 
 void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 {
-    // Run or resume our simulation, or pause it
+    // Run/resume our simulation or pause it
 
     if (mRunActionEnabled) {
-        if (mSimulation->isPaused()) {
-            // Our simulation is paused, so resume it
+        // Protect ourselves against two successive (and very) quick attempts at
+        // trying to run a simulation
 
-            mSimulation->resume();
-        } else {
-            // Protect ourselves against two successive (and very) quick
-            // attempts at trying to run a simulation
+        static bool handlingAction = false;
 
-            static bool handlingAction = false;
-
+        if (!mSimulation->isPaused()) {
             if (handlingAction || mSimulation->isRunning())
                 return;
 
             handlingAction = true;
+        }
 
-            // Our simulation is not paused, so finish any editing of our
-            // simulation information before running it
+        // Finish any editing of our simulation information, and update our
+        // simulation and solvers properties before running/resuming it
 
-            mContentsWidget->informationWidget()->finishEditing();
+        mContentsWidget->informationWidget()->finishEditing();
 
-            // Update our simulation and solvers properties
+        updateSimulationProperties();
+        updateSolversProperties();
 
-            updateSimulationProperties();
-            updateSolversProperties();
+        // Run or resume our simulation
 
+        if (mSimulation->isPaused()) {
+            mSimulation->resume();
+        } else {
             // Check that we have enough memory to run our simulation
 
             bool runSimulation = true;
@@ -1187,8 +1187,6 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                 // allocate all the memory we need to run the simulation
 
                 if (runSimulation) {
-                    // Now, we really run our simulation
-
                     mSimulation->run();
                 } else {
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
@@ -1199,8 +1197,6 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             handlingAction = false;
         }
     } else {
-        // Pause our simulation
-
         mSimulation->pause();
     }
 }
