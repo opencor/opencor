@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "combinesupportglobal.h"
+#include "standardfile.h"
 
 //==============================================================================
 
@@ -37,9 +38,22 @@ namespace COMBINESupport {
 
 //==============================================================================
 
+namespace Format {
+    static const auto Cellml_1_0 = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
+    static const auto Cellml_1_1 = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
+    static const auto Sedml      = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
+}
+
+//==============================================================================
+
 class COMBINESUPPORT_EXPORT CombineArchive : public QObject
 {
     Q_OBJECT
+
+public:
+    explicit CombineArchive(const QString &pFileName);
+
+    virtual bool load();
 };
 
 //==============================================================================

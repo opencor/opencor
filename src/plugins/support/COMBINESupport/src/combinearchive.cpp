@@ -28,6 +28,22 @@ namespace COMBINESupport {
 
 //==============================================================================
 
+CombineArchive::CombineArchive(const QString &pFileName) :
+    StandardSupport::StandardFile(pFileName)
+{
+}
+
+//==============================================================================
+
+bool CombineArchive::load()
+{
+    // Consider the file loaded
+
+    return true;
+}
+
+//==============================================================================
+
 }   // namespace COMBINESupport
 }   // namespace OpenCOR
 

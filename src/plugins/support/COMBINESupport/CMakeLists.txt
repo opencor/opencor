@@ -16,4 +16,5 @@ ADD_PLUGIN(COMBINESupport
         src
     PLUGINS
         Core
+        StandardSupport
 )
