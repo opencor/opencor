@@ -31,6 +31,15 @@ specific language governing permissions and limitations under the License.
 class Tests : public QObject
 {
     Q_OBJECT
+
+private:
+    QString mOrigPath;
+
+private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
+
+    void basicTests();
 };
 
 //==============================================================================

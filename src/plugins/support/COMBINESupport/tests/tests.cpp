@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINE support tests
 //==============================================================================
 
+#include "combinearchive.h"
 #include "tests.h"
 
 //==============================================================================
@@ -28,6 +29,47 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QtTest/QtTest>
+
+//==============================================================================
+
+static const auto CombineArchiveName = QStringLiteral("tests.omex");
+
+//==============================================================================
+
+void Tests::initTestCase()
+{
+    // Keep track of our original directory and go to our tests directory
+
+    mOrigPath = QDir::currentPath();
+
+    QDir::setCurrent(OpenCOR::dirName("src/plugins/support/COMBINESupport/tests/"));
+}
+
+//==============================================================================
+
+void Tests::cleanupTestCase()
+{
+    // Delete the file we created
+
+    QFile::remove(CombineArchiveName);
+
+    // Go back to our original directory
+
+    QDir::setCurrent(mOrigPath);
+}
+
+//==============================================================================
+
+void Tests::basicTests()
+{
+    // Create a simple COMBINE archive
+
+    OpenCOR::COMBINESupport::CombineArchive combineArchive(CombineArchiveName);
+
+    combineArchive.save();
+
+    QVERIFY(QFile::exists(CombineArchiveName));
+}
 
 //==============================================================================
 

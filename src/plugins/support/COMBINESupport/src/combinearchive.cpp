@@ -100,7 +100,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
     QTextStream out(&file);
 
-    out << "The magic number is: " << 42 << "\n";
+    out << "The magic number is: " << 42 << ".\n";
 
     file.close();
 
