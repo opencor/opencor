@@ -23,6 +23,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QFile>
+#include <QTextStream>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace COMBINESupport {
 
@@ -85,8 +90,19 @@ bool CombineArchive::load()
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-Q_UNUSED(pNewFileName);
-    // Consider the file saved
+    // Save ourselves to either the given file, which name is given, or to our
+    // current file
+
+    QFile file(pNewFileName.isEmpty()?mFileName:pNewFileName);
+
+    if (!file.open(QIODevice::WriteOnly|QIODevice::Text))
+        return false;
+
+    QTextStream out(&file);
+
+    out << "The magic number is: " << 42 << "\n";
+
+    file.close();
 
     return true;
 }

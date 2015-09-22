@@ -17,4 +17,6 @@ ADD_PLUGIN(COMBINESupport
     PLUGINS
         Core
         StandardSupport
+    TESTS
+        tests
 )
