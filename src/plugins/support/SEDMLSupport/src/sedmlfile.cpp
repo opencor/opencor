@@ -45,6 +45,16 @@ bool SedmlFile::load()
 
 //==============================================================================
 
+bool SedmlFile::save(const QString &pNewFileName)
+{
+Q_UNUSED(pNewFileName);
+    // Consider the file saved
+
+    return true;
+}
+
+//==============================================================================
+
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
