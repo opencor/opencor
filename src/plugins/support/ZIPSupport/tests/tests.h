@@ -16,50 +16,36 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SEDML API tests
+// ZIP support tests
 //==============================================================================
 
-#include "tests.h"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#ifndef TESTS_H
+#define TESTS_H
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/common/libsedml-version.h"
-    #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+#include <QObject>
 
 //==============================================================================
 
-void Tests::basicTests()
+class Tests : public QObject
 {
-    // Some very basic tests to make sure that we have access to libSEDML
+    Q_OBJECT
 
-    // Check the version of libSEDML
+private:
+    QString mOrigPath;
 
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.1");
+private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
 
-    // Create a SED-ML document with a model inside it, then set the name of the
-    // model and check that it has been properly set
-
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-
-    static const std::string modelName = "myModel";
-
-    sedmlModel->setName(modelName);
-
-    QCOMPARE(sedmlModel->getName(), modelName);
-
-    delete sedmlDocument;
-}
+    void compressTests();
+    void uncompressTests();
+};
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(Tests)
+#endif
 
 //==============================================================================
 // End of file

@@ -273,6 +273,7 @@ SET(PLUGINS
     support/COMBINESupport
     support/QScintillaSupport
     support/SEDMLSupport
+    support/ZIPSupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 

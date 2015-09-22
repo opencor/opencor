@@ -16,50 +16,27 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SEDML API tests
+// ZIPSupport global
 //==============================================================================
 
-#include "tests.h"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#ifndef ZIPSUPPORTGLOBAL_H
+#define ZIPSUPPORTGLOBAL_H
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/common/libsedml-version.h"
-    #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+#ifdef _WIN32
+    #ifdef ZIPSupport_PLUGIN
+        #define ZIPSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define ZIPSUPPORT_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define ZIPSUPPORT_EXPORT
+#endif
 
 //==============================================================================
 
-void Tests::basicTests()
-{
-    // Some very basic tests to make sure that we have access to libSEDML
-
-    // Check the version of libSEDML
-
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.1");
-
-    // Create a SED-ML document with a model inside it, then set the name of the
-    // model and check that it has been properly set
-
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-
-    static const std::string modelName = "myModel";
-
-    sedmlModel->setName(modelName);
-
-    QCOMPARE(sedmlModel->getName(), modelName);
-
-    delete sedmlDocument;
-}
-
-//==============================================================================
-
-QTEST_GUILESS_MAIN(Tests)
+#endif
 
 //==============================================================================
 // End of file

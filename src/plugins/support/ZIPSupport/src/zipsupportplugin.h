@@ -16,50 +16,42 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SEDML API tests
+// ZIPSupport plugin
 //==============================================================================
 
-#include "tests.h"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#ifndef ZIPSUPPORTPLUGIN_H
+#define ZIPSUPPORTPLUGIN_H
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/common/libsedml-version.h"
-    #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
-void Tests::basicTests()
+namespace OpenCOR {
+namespace ZIPSupport {
+
+//==============================================================================
+
+PLUGININFO_FUNC ZIPSupportPluginInfo();
+
+//==============================================================================
+
+class ZIPSupportPlugin : public QObject
 {
-    // Some very basic tests to make sure that we have access to libSEDML
+    Q_OBJECT
 
-    // Check the version of libSEDML
-
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.1");
-
-    // Create a SED-ML document with a model inside it, then set the name of the
-    // model and check that it has been properly set
-
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-
-    static const std::string modelName = "myModel";
-
-    sedmlModel->setName(modelName);
-
-    QCOMPARE(sedmlModel->getName(), modelName);
-
-    delete sedmlDocument;
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.ZIPSupportPlugin" FILE "zipsupportplugin.json")
+};
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(Tests)
+}   // namespace ZIPSupport
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

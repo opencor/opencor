@@ -16,50 +16,34 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SEDML API tests
+// ZIPSupport plugin
 //==============================================================================
 
-#include "tests.h"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#include "zipsupportplugin.h"
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/common/libsedml-version.h"
-    #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+namespace OpenCOR {
+namespace ZIPSupport {
 
 //==============================================================================
 
-void Tests::basicTests()
+PLUGININFO_FUNC ZIPSupportPluginInfo()
 {
-    // Some very basic tests to make sure that we have access to libSEDML
+    Descriptions descriptions;
 
-    // Check the version of libSEDML
+    descriptions.insert("en", QString::fromUtf8("a plugin to support the <a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> format."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter le format <a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a>."));
 
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.1");
-
-    // Create a SED-ML document with a model inside it, then set the name of the
-    // model and check that it has been properly set
-
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-
-    static const std::string modelName = "myModel";
-
-    sedmlModel->setName(modelName);
-
-    QCOMPARE(sedmlModel->getName(), modelName);
-
-    delete sedmlDocument;
+    return new PluginInfo("Support", false, false,
+                          QStringList() << "Core" << "zlib",
+                          descriptions);
 }
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(Tests)
+}   // namespace ZIPSupport
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file
