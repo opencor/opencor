@@ -25,14 +25,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
-#include <QFile>
-#include <QIODevice>
-#include <QTemporaryFile>
-#include <QTextStream>
-
-//==============================================================================
-
 #include "llvmdisablewarnings.h"
     #include "llvm/IR/LLVMContext.h"
     #include "llvm/IR/Module.h"

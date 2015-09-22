@@ -33,10 +33,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QChar>
 #include <QCryptographicHash>
-#include <QDate>
 #include <QDir>
-#include <QEventLoop>
-#include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
 #include <QLocale>
@@ -51,7 +48,6 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QString>
 #include <QStringList>
-#include <QSysInfo>
 #include <QTemporaryFile>
 #include <QTextStream>
 

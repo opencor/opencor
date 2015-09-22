@@ -29,9 +29,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDomDocument>
 #include <QFile>
-#include <QIODevice>
 #include <QStringList>
-#include <QTextStream>
 #include <QUrl>
 
 //==============================================================================
