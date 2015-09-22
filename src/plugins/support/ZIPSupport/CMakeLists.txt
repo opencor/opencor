@@ -10,6 +10,7 @@ ADD_PLUGIN(ZIPSupport
     SOURCES
         ../../plugininfo.cpp
 
+        src/qzip.cpp
         src/zipsupportplugin.cpp
     HEADERS_MOC
         src/zipsupportplugin.h
