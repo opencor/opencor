@@ -87,7 +87,7 @@ void Tests::compressTests()
 {
     // Compress ourselves and our header file
 
-    QZipWriter zipWriter(ZipFileName);
+    OpenCOR::ZIPSupport::QZipWriter zipWriter(ZipFileName);
 
     zipWriter.addFile(CppFileName, OpenCOR::rawFileContents(CppFileName));
     zipWriter.addFile(HFileName, OpenCOR::rawFileContents(HFileName));
@@ -101,7 +101,7 @@ void Tests::uncompressTests()
 {
     // Uncompress our ZIP file
 
-    QZipReader zipReader(ZipFileName);
+    OpenCOR::ZIPSupport::QZipReader zipReader(ZipFileName);
 
     zipReader.extractAll(ZipDirName);
 

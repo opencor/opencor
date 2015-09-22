@@ -93,6 +93,13 @@
 #define ZDEBUG if (0) qDebug
 #endif
 
+//==============================================================================
+
+namespace OpenCOR {
+namespace ZIPSupport {
+
+//==============================================================================
+
 QT_BEGIN_NAMESPACE
 
 static inline uint readUInt(const uchar *data)
@@ -1383,5 +1390,12 @@ void QZipWriter::close()
 }
 
 QT_END_NAMESPACE
+
+//==============================================================================
+
+}   // namespace ZIPSupport
+}   // namespace OpenCOR
+
+//==============================================================================
 
 #endif // QT_NO_TEXTODFWRITER
