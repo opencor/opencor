@@ -1124,7 +1124,7 @@ QVariant SingleCellViewWidget::value(Core::Property *pProperty) const
 
 void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 {
-    // Run or resume our simulation, or pause it
+    // Run/resume our simulation or pause it
 
     if (mRunActionEnabled) {
         if (mSimulation->isPaused()) {
@@ -1176,8 +1176,6 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                 // allocate all the memory we need to run the simulation
 
                 if (runSimulation) {
-                    // Now, we really run our simulation
-
                     mSimulation->run();
                 } else {
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
@@ -1188,8 +1186,6 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             handlingAction = false;
         }
     } else {
-        // Pause our simulation
-
         mSimulation->pause();
     }
 }
