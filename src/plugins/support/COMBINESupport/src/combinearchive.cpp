@@ -28,8 +28,47 @@ namespace COMBINESupport {
 
 //==============================================================================
 
+CombineArchiveFile::CombineArchiveFile(const QString &pFileName,
+                                       const QString &pLocation,
+                                       const Format &pFormat) :
+    mFileName(pFileName),
+    mLocation(pLocation),
+    mFormat(pFormat)
+{
+}
+
+//==============================================================================
+
+QString CombineArchiveFile::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+QString CombineArchiveFile::location() const
+{
+    // Return our location
+
+    return mLocation;
+}
+
+//==============================================================================
+
+CombineArchiveFile::Format CombineArchiveFile::format() const
+{
+    // Return our format
+
+    return mFormat;
+}
+
+//==============================================================================
+
 CombineArchive::CombineArchive(const QString &pFileName) :
-    StandardSupport::StandardFile(pFileName)
+    StandardSupport::StandardFile(pFileName),
+    mCombineArchiveFiles(CombineArchiveFiles())
 {
 }
 
@@ -40,6 +79,26 @@ bool CombineArchive::load()
     // Consider the file loaded
 
     return true;
+}
+
+//==============================================================================
+
+bool CombineArchive::save(const QString &pNewFileName)
+{
+Q_UNUSED(pNewFileName);
+    // Consider the file saved
+
+    return true;
+}
+
+//==============================================================================
+
+void CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
+                             const CombineArchiveFile::Format &pFormat)
+{
+    // Add the given file to our list
+
+    mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat);
 }
 
 //==============================================================================

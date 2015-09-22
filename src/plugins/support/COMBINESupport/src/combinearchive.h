@@ -38,15 +38,38 @@ namespace COMBINESupport {
 
 //==============================================================================
 
-namespace Format {
-    static const auto Cellml_1_0 = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
-    static const auto Cellml_1_1 = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
-    static const auto Sedml      = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
-}
+class CombineArchiveFile
+{
+public:
+    enum Format {
+        Cellml,
+        Cellml_1_0,
+        Cellml_1_1,
+        Sedml
+    };
+
+    explicit CombineArchiveFile(const QString &pFileName, const QString &pLocation,
+                                const Format &pFormat);
+
+    QString fileName() const;
+
+    QString location() const;
+    Format format() const;
+
+private:
+    QString mFileName;
+
+    QString mLocation;
+    Format mFormat;
+};
 
 //==============================================================================
 
-class COMBINESUPPORT_EXPORT CombineArchive : public QObject
+typedef QList<CombineArchiveFile> CombineArchiveFiles;
+
+//==============================================================================
+
+class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFile
 {
     Q_OBJECT
 
@@ -54,6 +77,13 @@ public:
     explicit CombineArchive(const QString &pFileName);
 
     virtual bool load();
+    virtual bool save(const QString &pNewFileName = QString());
+
+    void addFile(const QString &pFileName, const QString &pLocation,
+                 const CombineArchiveFile::Format &pFormat);
+
+private:
+    CombineArchiveFiles mCombineArchiveFiles;
 };
 
 //==============================================================================
