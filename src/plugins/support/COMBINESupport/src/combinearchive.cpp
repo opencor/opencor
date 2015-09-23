@@ -41,10 +41,12 @@ namespace COMBINESupport {
 
 CombineArchiveFile::CombineArchiveFile(const QString &pFileName,
                                        const QString &pLocation,
-                                       const Format &pFormat) :
+                                       const Format &pFormat,
+                                       const bool &pMaster) :
     mFileName(pFileName),
     mLocation(pLocation),
-    mFormat(pFormat)
+    mFormat(pFormat),
+    mMaster(pMaster)
 {
 }
 
@@ -73,6 +75,15 @@ CombineArchiveFile::Format CombineArchiveFile::format() const
     // Return our format
 
     return mFormat;
+}
+
+//==============================================================================
+
+bool CombineArchiveFile::master() const
+{
+    // Return whether we are a master file
+
+    return mMaster;
 }
 
 //==============================================================================
@@ -120,7 +131,10 @@ bool CombineArchive::save(const QString &pNewFileName)
 
         static const QString ManifestFileName = "manifest.xml";
 
-        QByteArray manifestFileContents = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        QByteArray manifestFileContents = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                                          "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
+                                          "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
+                                          "</omexManifest>\n";
 
         if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
             return false;
@@ -148,7 +162,8 @@ bool CombineArchive::save(const QString &pNewFileName)
 //==============================================================================
 
 void CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
-                             const CombineArchiveFile::Format &pFormat)
+                             const CombineArchiveFile::Format &pFormat,
+                             const bool &pMaster)
 {
     // Add the given file to our list
 qDebug("---[ADDING FILE]---");
@@ -157,7 +172,7 @@ qDebug("Location:  %s", qPrintable(pLocation));
 qDebug("Format:    %d", pFormat);
 qDebug("Master:    %s", pMaster?"true":"false");
 
-    mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat);
+    mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat, pMaster);
 }
 
 //==============================================================================
