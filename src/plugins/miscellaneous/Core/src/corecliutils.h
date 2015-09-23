@@ -39,6 +39,20 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace OpenCOR {
+namespace Core {
+
+//==============================================================================
+
+#include "corecliutils.h.inl"
+
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+
 typedef QList<bool> QBoolList;
 typedef QList<int> QIntList;
 
@@ -60,10 +74,6 @@ class QNetworkReply;
 
 namespace OpenCOR {
 namespace Core {
-
-//==============================================================================
-
-#include "corecliutils.h.inl"
 
 //==============================================================================
 

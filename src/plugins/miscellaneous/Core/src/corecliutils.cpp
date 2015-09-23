@@ -65,6 +65,20 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace OpenCOR {
+namespace Core {
+
+//==============================================================================
+
+#include "corecliutils.cpp.inl"
+
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+
 bool qSameStringLists(const QStringList &pStringList1,
                       const QStringList &pStringList2)
 {
@@ -274,10 +288,6 @@ QString qDomDocumentToString(const QDomDocument &pDomDocument)
 
 namespace OpenCOR {
 namespace Core {
-
-//==============================================================================
-
-#include "corecliutils.cpp.inl"
 
 //==============================================================================
 
