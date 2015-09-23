@@ -151,6 +151,11 @@ void CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat)
 {
     // Add the given file to our list
+qDebug("---[ADDING FILE]---");
+qDebug("File name: %s", qPrintable(pFileName));
+qDebug("Location:  %s", qPrintable(pLocation));
+qDebug("Format:    %d", pFormat);
+qDebug("Master:    %s", pMaster?"true":"false");
 
     mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat);
 }

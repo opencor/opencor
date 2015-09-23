@@ -48,19 +48,22 @@ public:
         Sedml
     };
 
-    explicit CombineArchiveFile(const QString &pFileName, const QString &pLocation,
-                                const Format &pFormat);
+    explicit CombineArchiveFile(const QString &pFileName,
+                                const QString &pLocation, const Format &pFormat,
+                                const bool &pMaster);
 
     QString fileName() const;
 
     QString location() const;
     Format format() const;
+    bool master() const;
 
 private:
     QString mFileName;
 
     QString mLocation;
     Format mFormat;
+    bool mMaster;
 };
 
 //==============================================================================
@@ -80,7 +83,8 @@ public:
     virtual bool save(const QString &pNewFileName = QString());
 
     void addFile(const QString &pFileName, const QString &pLocation,
-                 const CombineArchiveFile::Format &pFormat);
+                 const CombineArchiveFile::Format &pFormat,
+                 const bool &pMaster);
 
 private:
     CombineArchiveFiles mCombineArchiveFiles;
