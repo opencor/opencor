@@ -1633,13 +1633,13 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 qDebug("=========");
 qDebug(">>> %s", qPrintable(fileName));
 qDebug("---------");
-        QString commonPath = fileName;
+        QString commonPath = QFileInfo(fileName).canonicalPath();
+
+        // Determine the path that is common to our main and, if any, imported
+        // CellML files
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
 qDebug(">>> %s", qPrintable(importedFileName));
-            // Determine the path that is common to our main and, if any, imported
-            // files
-
             QString importedFilePath = QFileInfo(importedFileName).canonicalPath();
 
             for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
@@ -1657,10 +1657,15 @@ qDebug(">>> %s", qPrintable(commonPath));
 
         COMBINESupport::CombineArchive combineArchive(combineArchiveName);
 
-        combineArchive.addFile(fileName, QFileInfo(fileName).fileName(),
+        combineArchive.addFile(fileName, QString(fileName).remove(commonPath),
                                (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                    COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                    COMBINESupport::CombineArchiveFile::Cellml_1_0);
+
+        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+            combineArchive.addFile(importedFileName, QString(importedFileName).remove(commonPath),
+                                   COMBINESupport::CombineArchiveFile::Cellml);
+        }
 
         combineArchive.save();
 
