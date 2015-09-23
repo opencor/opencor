@@ -10,6 +10,7 @@ ADD_PLUGIN(COMBINESupport
     SOURCES
         ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
+        ../../plugininfo.cpp
 
         src/combinearchive.cpp
         src/combinesupportplugin.cpp
