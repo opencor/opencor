@@ -503,7 +503,7 @@ bool FileOrganiserWindowWidget::viewportEvent(QEvent *pEvent)
 
         if (crtItem)
             setToolTip(QDir::toNativeSeparators(crtItem->data(Item::Folder).toBool()?
-                                                    "":
+                                                    QString():
                                                     crtItem->data(Item::Path).toString()));
     }
 

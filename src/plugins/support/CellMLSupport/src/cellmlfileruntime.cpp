@@ -597,8 +597,8 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
         res += "    return 0;\n";
     } else {
         res += "    int ret = 0;\n"
-                     "    int *pret = &ret;\n"
-                     "\n";
+               "    int *pret = &ret;\n"
+               "\n";
 
         if (pHasDefines)
             res += "#define VOI 0.0\n"
@@ -922,22 +922,22 @@ void CellmlFileRuntime::update()
 
         mAtLeastOneNlaSystem = true;
 
-        modelCode += "struct rootfind_info\n"
-                     "{\n"
-                     "    double aVOI;\n"
-                     "\n"
-                     "    double *aCONSTANTS;\n"
-                     "    double *aRATES;\n"
-                     "    double *aSTATES;\n"
-                     "    double *aALGEBRAIC;\n"
-                     "\n"
-                     "    int *aPRET;\n"
-                     "};\n"
-                     "\n"
-                     "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n";
-        modelCode += "\n";
-        modelCode += functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
-        modelCode += "\n";
+        modelCode +=  "struct rootfind_info\n"
+                      "{\n"
+                      "    double aVOI;\n"
+                      "\n"
+                      "    double *aCONSTANTS;\n"
+                      "    double *aRATES;\n"
+                      "    double *aSTATES;\n"
+                      "    double *aALGEBRAIC;\n"
+                      "\n"
+                      "    int *aPRET;\n"
+                      "};\n"
+                      "\n"
+                      "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n"
+                      "\n"
+                     +functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()))
+                     +"\n";
 
         // Note: we rename do_nonlinearsolve() to doNonLinearSolve() because
         //       CellML's CIS service already defines do_nonlinearsolve(), yet
