@@ -153,7 +153,7 @@ bool CombineArchive::save(const QString &pNewFileName)
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
             origFileName = combineArchiveFile.fileName();
             destFileName = dirName+QDir::separator()+combineArchiveFile.location();
-            destDirName = QString(destDirName).remove(FileNameRegEx);
+            destDirName = QString(destFileName).remove(FileNameRegEx);
 
             if (!QDir(destDirName).exists()) {
                 if (!dir.mkpath(destDirName))
