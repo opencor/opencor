@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
+#include "combinearchive.h"
 #include "combinesupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -1632,18 +1633,15 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 qDebug("=========");
 qDebug(">>> %s", qPrintable(fileName));
 qDebug("---------");
-        QString commonPath = QString();
+        QString commonPath = fileName;
 
-foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-    qDebug(">>> %s", qPrintable(importedFileName));
+        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+qDebug(">>> %s", qPrintable(importedFileName));
+            // Determine the path that is common to our main and, if any, imported
+            // files
 
-        // Determine the
+            QString importedFilePath = QFileInfo(importedFileName).canonicalPath();
 
-        QString importedFilePath = QFileInfo(importedFileName).canonicalPath();
-
-        if (commonPath.isEmpty()) {
-            commonPath = importedFilePath;
-        } else {
             for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
                 if (commonPath[i] != importedFilePath[i]) {
                     commonPath = commonPath.left(i);
@@ -1652,9 +1650,19 @@ foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
                 }
             }
         }
-}
 qDebug("---------");
 qDebug(">>> %s", qPrintable(commonPath));
+
+        // Create our COMBINE archive after having added all our files to it
+
+        COMBINESupport::CombineArchive combineArchive(combineArchiveName);
+
+        combineArchive.addFile(fileName, QFileInfo(fileName).fileName(),
+                               (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                   COMBINESupport::CombineArchiveFile::Cellml_1_1:
+                                   COMBINESupport::CombineArchiveFile::Cellml_1_0);
+
+        combineArchive.save();
 
 //---GRY--- TO BE COMPLETED...
 QMessageBox::information(qApp->activeWindow(), "Info", "To be completed...");
