@@ -418,11 +418,13 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         //       the first and last exposure file...
 
         if (!mNumberOfExposureFilesLeft) {
+            static const QRegularExpression RawFileInfoRegEx = QRegularExpression("/rawfile/.*$");
+
             QStringList exposureFiles = mExposureFiles.values(url);
 
             std::sort(exposureFiles.begin(), exposureFiles.end(), sortExposureFiles);
 
-            mWorkspaces.insert(url, exposureFile.remove(QRegularExpression("/rawfile/.*$")));
+            mWorkspaces.insert(url, exposureFile.remove(RawFileInfoRegEx));
             mPhysiomeModelRepositoryWidget->addExposureFiles(url, exposureFiles);
 
             if (pmrRequest == ExposureFileForExposureFiles)
