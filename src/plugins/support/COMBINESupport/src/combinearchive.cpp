@@ -113,8 +113,6 @@ bool CombineArchive::save(const QString &pNewFileName)
     QTemporaryDir temporaryDirName;
 
     if (temporaryDirName.isValid()) {
-qDebug(">>> TEMPORARY DIRECTORY NAME: %s", qPrintable(temporaryDirName.path()));
-temporaryDirName.setAutoRemove(false);
         // Keep track of our current directory
 
         QString origPath = QDir::currentPath();
@@ -143,7 +141,8 @@ temporaryDirName.setAutoRemove(false);
         if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
             return false;
 
-        // Get a copy of our various files
+        // Get a copy of our various files, after creating the sub-folder(s) in
+        // which they are, if any
 
         QString origFileName;
         QString destFileName;
@@ -151,23 +150,17 @@ temporaryDirName.setAutoRemove(false);
 
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
             origFileName = combineArchiveFile.fileName();
-            destFileName = dirName+QDir::separator()+combineArchiveFile.location();
-            destDirName  = destFileName;
+            destFileName = destDirName = dirName+QDir::separator()+combineArchiveFile.location();
 
             destDirName.remove(QRegularExpression("/[^/]*$"));
-qDebug("Trying to copy '%s' to '%s'...", qPrintable(combineArchiveFile.fileName()), qPrintable(destFileName));
-qDebug(">>> origFileName: %s", qPrintable(origFileName));
-qDebug(">>> destFileName: %s", qPrintable(destFileName));
-qDebug(">>> destDirName:  %s", qPrintable(destDirName));
 
-            if (QDir(destDirName).exists() || dir.mkpath(destDirName)) {
-                if (!QFile::copy(combineArchiveFile.fileName(), destFileName))
+            if (!QDir(destDirName).exists()) {
+                if (!dir.mkpath(destDirName))
                     return false;
-            } else {
-                return false;
             }
 
-            qDebug(">>> COMBINE Archive file: %s", qPrintable(combineArchiveFile.fileName()));
+            if (!QFile::copy(combineArchiveFile.fileName(), destFileName))
+                return false;
         }
 
         // Go back to our original path
