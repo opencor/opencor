@@ -32,13 +32,7 @@ class Tests : public QObject
 {
     Q_OBJECT
 
-private:
-    QString mOrigPath;
-
 private Q_SLOTS:
-    void initTestCase();
-    void cleanupTestCase();
-
     void basicTests();
 };
 

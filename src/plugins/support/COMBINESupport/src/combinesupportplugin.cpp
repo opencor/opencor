@@ -36,7 +36,7 @@ PLUGININFO_FUNC COMBINESupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://co.mbine.org/\">COMBINE</a>."));
 
     return new PluginInfo("Support", false, false,
-                          QStringList(),
+                          QStringList() << "ZIPSupport",
                           descriptions);
 }
 

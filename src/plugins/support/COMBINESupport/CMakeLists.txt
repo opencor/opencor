@@ -1,5 +1,9 @@
 PROJECT(COMBINESupportPlugin)
 
+# Retrieve some zlib settings
+
+RETRIEVE_ZLIB_SETTINGS()
+
 # Add the plugin
 
 ADD_PLUGIN(COMBINESupport
@@ -14,9 +18,15 @@ ADD_PLUGIN(COMBINESupport
         src/combinesupportplugin.h
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${ZLIB_DEFINITIONS}
     PLUGINS
         Core
         StandardSupport
+        ZIPSupport
+        ${ZLIB_PLUGIN}
+    PLUGIN_BINARIES
+        ${ZLIB_PLUGIN_BINARY}
     TESTS
         tests
 )

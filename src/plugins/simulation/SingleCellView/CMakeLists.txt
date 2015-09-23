@@ -1,12 +1,13 @@
 PROJECT(SingleCellViewPlugin)
 
-# Retrieve some CellML API, LLVM, Qwt, SBML API and SED-ML API settings
+# Retrieve some CellML API, LLVM, Qwt, SBML API, SED-ML API and zlib settings
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
 RETRIEVE_QWT_SETTINGS()
 RETRIEVE_SBML_API_SETTINGS()
 RETRIEVE_SEDML_API_SETTINGS()
+RETRIEVE_ZLIB_SETTINGS()
 
 # Add the plugin
 
@@ -60,6 +61,7 @@ ADD_PLUGIN(SingleCellView
     DEFINITIONS
         ${LLVM_DEFINITIONS}
         ${QWT_DEFINITIONS}
+        ${ZLIB_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport
@@ -71,9 +73,11 @@ ADD_PLUGIN(SingleCellView
         SBMLAPI
         SEDMLAPI
         SEDMLSupport
+        ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
+        ${ZLIB_PLUGIN_BINARY}
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
         ${SBML_API_EXTERNAL_BINARIES}

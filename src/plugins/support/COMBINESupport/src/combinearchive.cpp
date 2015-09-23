@@ -20,11 +20,17 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "combinearchive.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
 #include <QFile>
+#include <QTemporaryDir>
 #include <QTextStream>
+
+//==============================================================================
+
+#include <QZipWriter>
 
 //==============================================================================
 
@@ -90,21 +96,53 @@ bool CombineArchive::load()
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-    // Save ourselves to either the given file, which name is given, or to our
-    // current file
+    // Create a temporary directory where we are going to put ourselves
 
-    QFile file(pNewFileName.isEmpty()?mFileName:pNewFileName);
+    QTemporaryDir temporaryDirName;
 
-    if (!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    if (temporaryDirName.isValid()) {
+        // Keep track of our current directory
+
+        QString origPath = QDir::currentPath();
+
+        // Create and go to a sub-directory where we are effecitvely going to
+        // put ourselves
+
+        QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
+        QString baseDirName = QFileInfo(fileName).baseName();
+        QString dirName = temporaryDirName.path()+QDir::separator()+baseDirName;
+
+        QDir().mkpath(dirName);
+
+        QDir::setCurrent(dirName);
+
+        // Create our manifest file
+
+        static const QString ManifestFileName = "manifest.xml";
+
+        QByteArray manifestFileContents = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+
+        if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
+            return false;
+
+        // Go back to our original path
+
+        QDir::setCurrent(origPath);
+
+        // Save ourselves to either the given file, which name is given, or to
+        // our current file
+
+        OpenCOR::ZIPSupport::QZipWriter zipWriter(fileName);
+
+        zipWriter.addFile(baseDirName+QDir::separator()+ManifestFileName,
+                          manifestFileContents);
+
+        zipWriter.close();
+
+        return true;
+    } else {
         return false;
-
-    QTextStream out(&file);
-
-    out << "The magic number is: " << 42 << ".\n";
-
-    file.close();
-
-    return true;
+    }
 }
 
 //==============================================================================
