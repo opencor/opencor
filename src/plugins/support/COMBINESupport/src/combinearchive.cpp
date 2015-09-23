@@ -144,6 +144,8 @@ bool CombineArchive::save(const QString &pNewFileName)
         // Get a copy of our various files, after creating the sub-folder(s) in
         // which they are, if any
 
+        static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+
         QString origFileName;
         QString destFileName;
         QString destDirName;
@@ -152,7 +154,7 @@ bool CombineArchive::save(const QString &pNewFileName)
             origFileName = combineArchiveFile.fileName();
             destFileName = destDirName = dirName+QDir::separator()+combineArchiveFile.location();
 
-            destDirName.remove(QRegularExpression("/[^/]*$"));
+            destDirName.remove(FileNameRegEx);
 
             if (!QDir(destDirName).exists()) {
                 if (!dir.mkpath(destDirName))
