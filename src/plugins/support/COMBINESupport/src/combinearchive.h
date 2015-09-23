@@ -42,6 +42,7 @@ class CombineArchiveFile
 {
 public:
     enum Format {
+        Unknown,
         Cellml,
         Cellml_1_0,
         Cellml_1_1,
@@ -56,7 +57,7 @@ public:
 
     QString location() const;
     Format format() const;
-    bool master() const;
+    bool isMaster() const;
 
 private:
     QString mFileName;
@@ -82,7 +83,7 @@ public:
     virtual bool load();
     virtual bool save(const QString &pNewFileName = QString());
 
-    void addFile(const QString &pFileName, const QString &pLocation,
+    bool addFile(const QString &pFileName, const QString &pLocation,
                  const CombineArchiveFile::Format &pFormat,
                  const bool &pMaster = false);
 

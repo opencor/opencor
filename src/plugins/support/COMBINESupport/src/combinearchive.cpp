@@ -80,7 +80,7 @@ CombineArchiveFile::Format CombineArchiveFile::format() const
 
 //==============================================================================
 
-bool CombineArchiveFile::master() const
+bool CombineArchiveFile::isMaster() const
 {
     // Return whether we are a master file
 
@@ -103,6 +103,13 @@ bool CombineArchive::load()
 
     return true;
 }
+
+//==============================================================================
+
+static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
+static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
+static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
+static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
 
 //==============================================================================
 
@@ -133,10 +140,44 @@ bool CombineArchive::save(const QString &pNewFileName)
 
         static const QString ManifestFileName = "manifest.xml";
 
-        QByteArray manifestFileContents = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                                          "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
-                                          "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
-                                          "</omexManifest>\n";
+        QString fileList = QString();
+        QString fileFormat;
+
+        foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
+            switch (combineArchiveFile.format()) {
+            case CombineArchiveFile::Cellml:
+                fileFormat = CellmlFormat;
+
+                break;
+            case CombineArchiveFile::Cellml_1_0:
+                fileFormat = Cellml_1_0_Format;
+
+                break;
+            case CombineArchiveFile::Cellml_1_1:
+                fileFormat = Cellml_1_1_Format;
+
+                break;
+            case CombineArchiveFile::Sedml:
+                fileFormat = SedmlFormat;
+
+                break;
+            default:   // CombineArchiveFile::Unknown
+                return false;
+            }
+
+            fileList += "    <content location=\""+combineArchiveFile.location()+"\" format=\""+fileFormat+"\"";
+
+            if (combineArchiveFile.isMaster())
+                fileList += " master=\"true\"";
+
+            fileList += "/>\n";
+        }
+
+        QByteArray manifestFileContents =  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                                           "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
+                                           "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
+                                          +fileList.toUtf8()
+                                          +"</omexManifest>\n";
 
         if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
             return false;
@@ -199,13 +240,20 @@ bool CombineArchive::save(const QString &pNewFileName)
 
 //==============================================================================
 
-void CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
+bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat,
                              const bool &pMaster)
 {
+    // Make sure the format is known
+
+    if (pFormat == CombineArchiveFile::Unknown)
+        return false;
+
     // Add the given file to our list
 
     mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat, pMaster);
+
+    return true;
 }
 
 //==============================================================================
