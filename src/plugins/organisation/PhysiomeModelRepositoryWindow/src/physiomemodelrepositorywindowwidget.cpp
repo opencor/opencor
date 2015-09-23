@@ -318,12 +318,14 @@ void PhysiomeModelRepositoryWindowWidget::addExposureFiles(const QString &pUrl,
 {
     // Add the given exposure files to the exposure
 
+    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
+
     QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
 
     foreach (const QString &exposureFile, pExposureFiles) {
         ulElement.appendInside(QString("<li class=\"exposureFile\">"
                                        "    <a href=\"%1\">%2</a>"
-                                       "</li>").arg(exposureFile, QString(exposureFile).remove(QRegularExpression(".*/"))));
+                                       "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
     }
 }
 
