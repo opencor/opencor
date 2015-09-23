@@ -351,10 +351,11 @@ void CoreCellMLEditingPlugin::newCellmlFile(const CellMLSupport::CellmlFile::Ver
 
     // Ask our file manager to create a new file
 
-    QString fileContents = "<?xml version=\"1.0\"?>\n"
-                           "<model xmlns=\"http://www.cellml.org/cellml/%1#\" name=\"%2\">\n"
-                           "    <!-- Your code goes here -->\n"
-                           "</model>\n";
+    static const QString fileContents = "<?xml version=\"1.0\"?>\n"
+                                        "<model xmlns=\"http://www.cellml.org/cellml/%1#\" name=\"%2\">\n"
+                                        "    <!-- Your code goes here -->\n"
+                                        "</model>\n";
+
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 #ifdef QT_DEBUG
     Core::FileManager::Status createStatus =
