@@ -34,11 +34,19 @@ specific language governing permissions and limitations under the License.
 
 void Tests::basicTests()
 {
-    // Create (and delete afterwards) a simple COMBINE archive
+    // Create (and delete afterwards) a simple COMBINE archive that contains
+    // various files
 
     QString fileName = OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/tests.omex");
 
     OpenCOR::COMBINESupport::CombineArchive combineArchive(fileName);
+
+    for (int i = 1; i <= 3; ++i) {
+        for (int j = 1; j <= 3; ++j)
+            combineArchive.addFile(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(i, j),
+                                   QString("data/dir0%1/file0%2").arg(i, j),
+                                   OpenCOR::COMBINESupport::CombineArchiveFile::Cellml);
+    }
 
     combineArchive.save();
 

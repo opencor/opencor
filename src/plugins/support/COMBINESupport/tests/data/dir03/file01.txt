@@ -1,0 +1,1 @@
+Contents for dir03/file01.txt

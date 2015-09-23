@@ -84,7 +84,7 @@ public:
 
     void addFile(const QString &pFileName, const QString &pLocation,
                  const CombineArchiveFile::Format &pFormat,
-                 const bool &pMaster);
+                 const bool &pMaster = false);
 
 private:
     CombineArchiveFiles mCombineArchiveFiles;
