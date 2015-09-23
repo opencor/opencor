@@ -89,7 +89,7 @@ public:
     bool isReadableAndWritable() const;
 
     bool isLocked() const;
-    Status  setLocked(const bool &pLocked);
+    Status setLocked(const bool &pLocked);
 
 private:
     QString mFileName;
