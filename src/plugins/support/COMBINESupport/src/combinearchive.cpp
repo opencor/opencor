@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QFile>
+#include <QRegularExpression>
 #include <QTemporaryDir>
 #include <QTextStream>
 
@@ -112,6 +113,8 @@ bool CombineArchive::save(const QString &pNewFileName)
     QTemporaryDir temporaryDirName;
 
     if (temporaryDirName.isValid()) {
+qDebug(">>> TEMPORARY DIRECTORY NAME: %s", qPrintable(temporaryDirName.path()));
+temporaryDirName.setAutoRemove(false);
         // Keep track of our current directory
 
         QString origPath = QDir::currentPath();
@@ -119,11 +122,12 @@ bool CombineArchive::save(const QString &pNewFileName)
         // Create and go to a sub-directory where we are effecitvely going to
         // put ourselves
 
+        QDir dir;
         QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
         QString baseDirName = QFileInfo(fileName).baseName();
         QString dirName = temporaryDirName.path()+QDir::separator()+baseDirName;
 
-        QDir().mkpath(dirName);
+        dir.mkpath(dirName);
 
         QDir::setCurrent(dirName);
 
@@ -139,6 +143,33 @@ bool CombineArchive::save(const QString &pNewFileName)
         if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
             return false;
 
+        // Get a copy of our various files
+
+        QString origFileName;
+        QString destFileName;
+        QString destDirName;
+
+        foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
+            origFileName = combineArchiveFile.fileName();
+            destFileName = dirName+QDir::separator()+combineArchiveFile.location();
+            destDirName  = destFileName;
+
+            destDirName.remove(QRegularExpression("/[^/]*$"));
+qDebug("Trying to copy '%s' to '%s'...", qPrintable(combineArchiveFile.fileName()), qPrintable(destFileName));
+qDebug(">>> origFileName: %s", qPrintable(origFileName));
+qDebug(">>> destFileName: %s", qPrintable(destFileName));
+qDebug(">>> destDirName:  %s", qPrintable(destDirName));
+
+            if (QDir(destDirName).exists() || dir.mkpath(destDirName)) {
+                if (!QFile::copy(combineArchiveFile.fileName(), destFileName))
+                    return false;
+            } else {
+                return false;
+            }
+
+            qDebug(">>> COMBINE Archive file: %s", qPrintable(combineArchiveFile.fileName()));
+        }
+
         // Go back to our original path
 
         QDir::setCurrent(origPath);
@@ -150,6 +181,19 @@ bool CombineArchive::save(const QString &pNewFileName)
 
         zipWriter.addFile(baseDirName+QDir::separator()+ManifestFileName,
                           manifestFileContents);
+
+        QString combineArchiveFileContents;
+        QByteArray combineArchiveFileContentsAsByteArray;
+
+        foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
+            if (!Core::readTextFromFile(dirName+QDir::separator()+combineArchiveFile.location(), combineArchiveFileContents))
+                return false;
+
+            combineArchiveFileContentsAsByteArray = combineArchiveFileContents.toUtf8();
+
+            zipWriter.addFile(baseDirName+QDir::separator()+combineArchiveFile.location(),
+                              combineArchiveFileContentsAsByteArray);
+        }
 
         zipWriter.close();
 
@@ -166,11 +210,6 @@ void CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const bool &pMaster)
 {
     // Add the given file to our list
-qDebug("---[ADDING FILE]---");
-qDebug("File name: %s", qPrintable(pFileName));
-qDebug("Location:  %s", qPrintable(pLocation));
-qDebug("Format:    %d", pFormat);
-qDebug("Master:    %s", pMaster?"true":"false");
 
     mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat, pMaster);
 }
