@@ -1633,7 +1633,7 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 qDebug("=========");
 qDebug(">>> %s", qPrintable(fileName));
 qDebug("---------");
-        QString commonPath = QFileInfo(fileName).canonicalPath();
+        QString commonPath = QFileInfo(fileName).canonicalPath()+QDir::separator();
 
         // Determine the path that is common to our main and, if any, imported
         // CellML files
