@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
 #include "cellmlfilecellml11exporter.h"
+#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "filemanager.h"
 
@@ -1145,7 +1146,19 @@ CellmlFile::Version CellmlFile::version(CellmlFile *pCellmlFile)
 {
     // Return the version of the given CellML file
 
-    return version(pCellmlFile->model());
+    if (pCellmlFile)
+        return version(pCellmlFile->model());
+    else
+        return Unknown;
+}
+
+//==============================================================================
+
+CellmlFile::Version CellmlFile::version(const QString &pFileName)
+{
+    // Return the version of the given CellML file
+
+    return version(CellmlFileManager::instance()->cellmlFile(pFileName));
 }
 
 //==============================================================================

@@ -1391,7 +1391,8 @@ void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlV
 
 //==============================================================================
 
-void SingleCellViewWidget::createSedmlFile(const QString &pFileName)
+void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
+                                           const QString &pModelSource)
 {
     // Create a SED-ML document
 
@@ -1400,38 +1401,13 @@ void SingleCellViewWidget::createSedmlFile(const QString &pFileName)
     // Create and customise a model
 
     libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
+    QString fileName = mSimulation->fileName();
 
     sedmlModel->setId("model");
-
-    // Set our SED-ML model's source
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString fileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(fileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
-
-    if (remoteFile) {
-        sedmlModel->setSource(cellmlFileName.toStdString());
-    } else {
-        // We are dealing with a local CellML file, so refer to it
-        // relatively to the directory where we are going to save our SED-ML
-        // file
-        // Note: normally, we would use QFileInfo::canonicalPath(), but this
-        //       requires an existing file, so use QFileInfo::path()
-        //       instead...
-
-        QDir sedmlFileDir = QFileInfo(pFileName).path();
-
-        sedmlModel->setSource(sedmlFileDir.relativeFilePath(cellmlFileName).toStdString());
-    }
-
-    // Set our SED-ML model's language
-
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
-
-    sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+    sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(fileName) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                 SEDMLSupport::Language::Cellml_1_1.toStdString():
                                 SEDMLSupport::Language::Cellml_1_0.toStdString());
+    sedmlModel->setSource(pModelSource.toStdString());
 
     // Apply some parameter changes, if any, to our SED-ML model
 //---GRY--- TO BE DONE...
@@ -1606,8 +1582,24 @@ void SingleCellViewWidget::on_actionSedmlExportSedmlFile_triggered()
 
     // Create a SED-ML file using the SED-ML file name that has been provided
 
-    if (!sedmlFileName.isEmpty())
-        createSedmlFile(sedmlFileName);
+    if (!sedmlFileName.isEmpty()) {
+        QString modelSource = cellmlFileName;
+
+        if (!remoteFile) {
+            // We are dealing with a local CellML file, so refer to it
+            // relatively to the directory where we are going to save our SED-ML
+            // file
+            // Note: normally, we would use QFileInfo::canonicalPath(), but this
+            //       requires an existing file, so we use QFileInfo::path()
+            //       instead...
+
+            QDir sedmlFileDir = QFileInfo(sedmlFileName).path();
+
+            modelSource = sedmlFileDir.relativeFilePath(modelSource);
+        }
+
+        createSedmlFile(sedmlFileName, modelSource);
+    }
 }
 
 //==============================================================================
@@ -1681,14 +1673,32 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
             }
         }
 
+        // Determine the location of our main CellML file
+
+        QString modelSource = remoteFile?
+                                  QString(cellmlFileName).remove(commonPath):
+                                  QString(fileName).remove(commonPath);
+
+        // Create a copy of the SED-ML file that will be the master file in our
+        // COMBINE archive
+
+        QString sedmlFileName = Core::temporaryFileName();
+
+        createSedmlFile(sedmlFileName, modelSource);
+
         // Create our COMBINE archive after having added all our files to it
 
         COMBINESupport::CombineArchive combineArchive(combineArchiveName);
+        QFileInfo combineArchiveInfo = QFileInfo(combineArchiveName);
+        QString sedmlFileLocation = combineArchiveInfo.fileName();
 
-        combineArchive.addFile(fileName,
-                               remoteFile?
-                                   QString(cellmlFileName).remove(commonPath):
-                                   QString(fileName).remove(commonPath),
+        sedmlFileLocation.replace(QRegularExpression(QRegularExpression::escape(combineArchiveInfo.completeSuffix())+"$"),
+                                  SEDMLSupport::SedmlFileExtension);
+
+        combineArchive.addFile(sedmlFileName, sedmlFileLocation,
+                               COMBINESupport::CombineArchiveFile::Sedml, true);
+
+        combineArchive.addFile(fileName, modelSource,
                                (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                    COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                    COMBINESupport::CombineArchiveFile::Cellml_1_0);

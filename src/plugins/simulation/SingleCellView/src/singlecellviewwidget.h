@@ -242,7 +242,7 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
-    void createSedmlFile(const QString &pFileName);
+    void createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();

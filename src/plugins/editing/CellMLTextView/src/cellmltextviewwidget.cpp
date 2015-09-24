@@ -276,10 +276,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // Keep track of our editing widget (and of whether the conversion was
         // successful) and add it to ourselves
 
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
-                                                               CellMLSupport::CellmlFile::version(cellmlFile);
+                                                               CellMLSupport::CellmlFile::version(pFileName);
 
         data = CellmlTextViewWidgetData(newEditingWidget,
                                         Core::sha1(newEditingWidget->editor()->contents()),
