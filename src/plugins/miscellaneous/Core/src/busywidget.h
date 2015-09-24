@@ -47,7 +47,10 @@ class CORE_EXPORT BusyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BusyWidget(QWidget *pParent, const double &pProgress = -1.0);
+    explicit BusyWidget(QWidget *pParent, const bool &pGlobal,
+                        const double &pProgress);
+
+    QWidget * effectiveParentWidget() const;
 
     int fps() const;
     void setFps(const int &pFps);
@@ -90,6 +93,8 @@ protected:
 
 private:
     QTimer *mTimer;
+
+    bool mGlobal;
 
     int mFps;
 

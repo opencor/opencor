@@ -49,7 +49,8 @@ public:
 
     bool isBusyWidgetVisible() const;
 
-    void showBusyWidget(QWidget *pParent, const double &pProgress = -1.0);
+    void showBusyWidget(QWidget *pParent, const bool &pGlobal = false,
+                        const double &pProgress = -1.0);
     void hideBusyWidget();
 
     void centerBusyWidget();

@@ -51,17 +51,25 @@ bool BusySupportWidget::isBusyWidgetVisible() const
 
 //==============================================================================
 
-void BusySupportWidget::showBusyWidget(QWidget *pParent,
+void BusySupportWidget::showBusyWidget(QWidget *pParent, const bool &pGlobal,
                                        const double &pProgress)
 {
-    // Show our busy widget, which implies deleting its previous instance (if
-    // any), creating a new one and centering it
+    // Make sure that our previous busy widget, if any, is hidden (and deleted)
 
-    delete mBusyWidget;
+    hideBusyWidget();
 
-    mBusyWidget = new BusyWidget(pParent, pProgress);
+    // Create and show our new busy widget centered
+
+    mBusyWidget = new BusyWidget(pParent, pGlobal, pProgress);
 
     centerBusyWidget();
+
+    // Disable our parent widget, if any
+
+    QWidget *effectiveParentWidget = mBusyWidget->effectiveParentWidget();
+
+    if (effectiveParentWidget)
+        effectiveParentWidget->setEnabled(false);
 
     // Make sure that our busy widget is shown straightaway
     // Note: indeed, depending on the operating system (e.g. OS X) and on what
@@ -76,6 +84,13 @@ void BusySupportWidget::showBusyWidget(QWidget *pParent,
 
 void BusySupportWidget::hideBusyWidget()
 {
+    // Determine our parent widget, if any, and enable it
+
+    QWidget *effectiveParentWidget = mBusyWidget?mBusyWidget->effectiveParentWidget():0;
+
+    if (effectiveParentWidget)
+        effectiveParentWidget->setEnabled(true);
+
     // Hide our busy widget by deleting it
 
     delete mBusyWidget;
