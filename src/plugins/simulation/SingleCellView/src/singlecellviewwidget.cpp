@@ -1651,7 +1651,7 @@ void SingleCellViewWidget::simulationDataExport()
     // Export our simulation data results
 
     setEnabled(false);
-    showBusyWidget(this);
+    showBusyWidget(this, true);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
