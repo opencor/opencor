@@ -118,6 +118,8 @@ public:
 
     QStringList importedFileNames() const;
 
+    QString importedFileContents(const QString &pImportedFileName) const;
+
     QString cmetaId() const;
     QString xmlBase();
 

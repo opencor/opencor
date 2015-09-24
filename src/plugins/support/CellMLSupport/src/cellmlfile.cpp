@@ -955,6 +955,15 @@ QStringList CellmlFile::importedFileNames() const
 
 //==============================================================================
 
+QString CellmlFile::importedFileContents(const QString &pImportedFileName) const
+{
+    // Return the contents of the given CellML model's imported file name
+
+    return mImportContents.value(pImportedFileName);
+}
+
+//==============================================================================
+
 QString CellmlFile::cmetaId() const
 {
     // Return the CellML model's cmeta:id

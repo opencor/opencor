@@ -1629,18 +1629,25 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
     // provided
 
     if (!combineArchiveName.isEmpty()) {
+        static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
-qDebug("=========");
-qDebug(">>> %s", qPrintable(fileName));
-qDebug("---------");
-        QString commonPath = QFileInfo(fileName).canonicalPath()+QDir::separator();
+        QString commonPath = remoteFile?
+                                 QString(cellmlFileName).remove(FileNameRegEx):
+                                 QFileInfo(fileName).canonicalPath()+QDir::separator();
 
         // Determine the path that is common to our main and, if any, imported
-        // CellML files
+        // CellML files, as well as get a copy of our imported CellML files,
+        // should they be remote ones
+
+        QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-qDebug(">>> %s", qPrintable(importedFileName));
-            QString importedFilePath = QFileInfo(importedFileName).canonicalPath();
+            // Check for the common path
+
+            QString importedFilePath = remoteFile?
+                                           QString(importedFileName).remove(FileNameRegEx):
+                                           QFileInfo(importedFileName).canonicalPath();
 
             for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
                 if (commonPath[i] != importedFilePath[i]) {
@@ -1649,28 +1656,46 @@ qDebug(">>> %s", qPrintable(importedFileName));
                     break;
                 }
             }
+
+            // Get a copy of the imported CellML file, if it is a remote one,
+            // and keep track of it
+
+            if (remoteFile) {
+                QString localImportedFileName = Core::temporaryFileName();
+
+                Core::writeTextToFile(localImportedFileName,
+                                      cellmlFile->importedFileContents(importedFileName));
+
+                remoteImportedFileNames.insert(importedFileName, localImportedFileName);
+            }
         }
-qDebug("---------");
-qDebug(">>> %s", qPrintable(commonPath));
 
         // Create our COMBINE archive after having added all our files to it
 
         COMBINESupport::CombineArchive combineArchive(combineArchiveName);
 
-        combineArchive.addFile(fileName, QString(fileName).remove(commonPath),
+        combineArchive.addFile(fileName,
+                               remoteFile?
+                                   QString(cellmlFileName).remove(commonPath):
+                                   QString(fileName).remove(commonPath),
                                (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                    COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                    COMBINESupport::CombineArchiveFile::Cellml_1_0);
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-            combineArchive.addFile(importedFileName, QString(importedFileName).remove(commonPath),
+            combineArchive.addFile(remoteFile?
+                                       remoteImportedFileNames.value(importedFileName):
+                                       importedFileName,
+                                   QString(importedFileName).remove(commonPath),
                                    COMBINESupport::CombineArchiveFile::Cellml);
         }
 
         combineArchive.save();
 
-//---GRY--- TO BE COMPLETED...
-QMessageBox::information(qApp->activeWindow(), "Info", "To be completed...");
+        // Remove the local copy of our remote imported CellML files, if any
+
+        foreach (const QString &localImportedFileName, remoteImportedFileNames.values())
+            QFile::remove(localImportedFileName);
     }
 }
 
