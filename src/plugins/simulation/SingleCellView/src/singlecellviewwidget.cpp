@@ -1629,17 +1629,16 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
     // provided
 
     if (!combineArchiveName.isEmpty()) {
+        // Determine the path that is common to our main and, if any, imported
+        // CellML files, as well as get a copy of our imported CellML files,
+        // should they be remote ones
+
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
                                  QFileInfo(fileName).canonicalPath()+QDir::separator();
-
-        // Determine the path that is common to our main and, if any, imported
-        // CellML files, as well as get a copy of our imported CellML files,
-        // should they be remote ones
-
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
