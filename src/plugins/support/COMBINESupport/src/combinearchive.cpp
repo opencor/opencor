@@ -187,14 +187,10 @@ bool CombineArchive::save(const QString &pNewFileName)
 
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
-        QString origFileName;
-        QString destFileName;
-        QString destDirName;
-
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-            origFileName = combineArchiveFile.fileName();
-            destFileName = dirName+QDir::separator()+combineArchiveFile.location();
-            destDirName = QString(destFileName).remove(FileNameRegEx);
+            QString origFileName = combineArchiveFile.fileName();
+            QString destFileName = dirName+QDir::separator()+combineArchiveFile.location();
+            QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
             if (!QDir(destDirName).exists()) {
                 if (!dir.mkpath(destDirName))
@@ -217,14 +213,13 @@ bool CombineArchive::save(const QString &pNewFileName)
         zipWriter.addFile(baseDirName+QDir::separator()+ManifestFileName,
                           manifestFileContents);
 
-        QString combineArchiveFileContents;
-        QByteArray combineArchiveFileContentsAsByteArray;
-
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
+            QString combineArchiveFileContents;
+
             if (!Core::readTextFromFile(dirName+QDir::separator()+combineArchiveFile.location(), combineArchiveFileContents))
                 return false;
 
-            combineArchiveFileContentsAsByteArray = combineArchiveFileContents.toUtf8();
+            QByteArray combineArchiveFileContentsAsByteArray = combineArchiveFileContents.toUtf8();
 
             zipWriter.addFile(baseDirName+QDir::separator()+combineArchiveFile.location(),
                               combineArchiveFileContentsAsByteArray);
