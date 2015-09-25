@@ -53,22 +53,22 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qstring.h>
 
-//==============================================================================
-
+//---OPENCOR--- BEGIN
 #include "zipsupportglobal.h"
-
-//==============================================================================
 
 namespace OpenCOR {
 namespace ZIPSupport {
-
-//==============================================================================
-
+//---OPENCOR--- END
 QT_BEGIN_NAMESPACE
 
 class QZipReaderPrivate;
 
+/*---OPENCOR---
+class Q_GUI_EXPORT QZipReader
+*/
+//---OPENCOR--- BEGIN
 class ZIPSUPPORT_EXPORT QZipReader
+//---OPENCOR--- END
 {
 public:
     explicit QZipReader(const QString &fileName, QIODevice::OpenMode mode = QIODevice::ReadOnly );
@@ -81,7 +81,12 @@ public:
     bool isReadable() const;
     bool exists() const;
 
+/*---OPENCOR---
+    struct Q_GUI_EXPORT FileInfo
+*/
+//---OPENCOR--- BEGIN
     struct ZIPSUPPORT_EXPORT FileInfo
+//---OPENCOR--- END
     {
         FileInfo();
         FileInfo(const FileInfo &other);
@@ -124,13 +129,10 @@ private:
 };
 
 QT_END_NAMESPACE
-
-//==============================================================================
-
+//---OPENCOR--- BEGIN
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
-
-//==============================================================================
+//---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER
 #endif // QZIPREADER_H

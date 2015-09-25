@@ -51,23 +51,23 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qfile.h>
 
-//==============================================================================
-
+//---OPENCOR--- BEGIN
 #include "zipsupportglobal.h"
-
-//==============================================================================
 
 namespace OpenCOR {
 namespace ZIPSupport {
-
-//==============================================================================
-
+//---OPENCOR--- END
 QT_BEGIN_NAMESPACE
 
 class QZipWriterPrivate;
 
 
+/*---OPENCOR---
+class Q_GUI_EXPORT QZipWriter
+*/
+//---OPENCOR--- BEGIN
 class ZIPSUPPORT_EXPORT QZipWriter
+//---OPENCOR--- END
 {
 public:
     explicit QZipWriter(const QString &fileName, QIODevice::OpenMode mode = (QIODevice::WriteOnly | QIODevice::Truncate) );
@@ -117,13 +117,10 @@ private:
 };
 
 QT_END_NAMESPACE
-
-//==============================================================================
-
+//---OPENCOR--- BEGIN
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
-
-//==============================================================================
+//---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER
 #endif // QZIPWRITER_H
