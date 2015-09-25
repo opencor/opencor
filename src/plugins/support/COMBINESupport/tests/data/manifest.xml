@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<omexManifest xmlns="http://identifiers.org/combine.specifications/omex-manifest">
+    <content location="." format="http://identifiers.org/combine.specifications/omex"/>
+    <content location="dir01/file01.txt" format="http://identifiers.org/combine.specifications/cellml" master="true"/>
+    <content location="dir01/file02.txt" format="http://identifiers.org/combine.specifications/cellml.1.0"/>
+    <content location="dir01/file03.txt" format="http://identifiers.org/combine.specifications/cellml.1.1" master="true"/>
+    <content location="dir02/file01.txt" format="http://identifiers.org/combine.specifications/sed-ml"/>
+    <content location="dir02/file02.txt" format="http://identifiers.org/combine.specifications/cellml" master="true"/>
+    <content location="dir02/file03.txt" format="http://identifiers.org/combine.specifications/cellml.1.0"/>
+    <content location="dir03/file01.txt" format="http://identifiers.org/combine.specifications/cellml.1.1" master="true"/>
+    <content location="dir03/file02.txt" format="http://identifiers.org/combine.specifications/sed-ml"/>
+    <content location="dir03/file03.txt" format="http://identifiers.org/combine.specifications/cellml" master="true"/>
+</omexManifest>

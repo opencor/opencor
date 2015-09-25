@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "combinearchive.h"
+#include "corecliutils.h"
 #include "tests.h"
 
 //==============================================================================
@@ -32,13 +33,15 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QZipReader>
+
+//==============================================================================
+
 void Tests::basicTests()
 {
-    // Create (and delete afterwards) a simple COMBINE archive that contains
-    // various files
+    // Create a simple COMBINE archive that contains various files
 
-    QString fileName = OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/tests.omex");
-
+    QString fileName = OpenCOR::Core::temporaryFileName();
     OpenCOR::COMBINESupport::CombineArchive combineArchive(fileName);
     int counter = 0;
 
@@ -55,7 +58,19 @@ void Tests::basicTests()
 
     QVERIFY(QFile::exists(fileName));
 
-    QFile::remove(fileName);
+    // Unzip our COMBINE archive
+
+    OpenCOR::ZIPSupport::QZipReader zipReader(fileName);
+    QTemporaryDir temporaryDir;
+
+    QVERIFY(zipReader.extractAll(temporaryDir.path()));
+
+    zipReader.close();
+
+    // Make sure that our COMBINE archive's manifest is correct
+
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+"manifest.xml"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
 }
 
 //==============================================================================

@@ -182,8 +182,8 @@ bool CombineArchive::save(const QString &pNewFileName)
         if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
             return false;
 
-        // Get a copy of our various files, after creating the sub-folder(s) in
-        // which they are, if any
+        // Get a copy of our various files, if any, after creating the
+        // sub-folder(s) in which they are
 
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
