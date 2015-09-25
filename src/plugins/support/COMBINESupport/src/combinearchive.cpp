@@ -117,9 +117,9 @@ bool CombineArchive::save(const QString &pNewFileName)
 {
     // Create a temporary directory where we are going to put ourselves
 
-    QTemporaryDir temporaryDirName;
+    QTemporaryDir temporaryDir;
 
-    if (temporaryDirName.isValid()) {
+    if (temporaryDir.isValid()) {
         // Keep track of our current directory
 
         QString origPath = QDir::currentPath();
@@ -130,7 +130,7 @@ bool CombineArchive::save(const QString &pNewFileName)
         QDir dir;
         QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
         QString baseDirName = QFileInfo(fileName).baseName();
-        QString dirName = temporaryDirName.path()+QDir::separator()+baseDirName;
+        QString dirName = temporaryDir.path()+QDir::separator()+baseDirName;
 
         dir.mkpath(dirName);
 
