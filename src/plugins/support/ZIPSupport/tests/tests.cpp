@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 
 static const auto CppFileName = QStringLiteral("tests.cpp");
 static const auto HFileName   = QStringLiteral("tests.h");
+static const auto TxtFileName = QStringLiteral("data/data.txt");
 
 //==============================================================================
 
@@ -78,6 +79,7 @@ void Tests::compressTests()
 
     zipWriter.addFile(CppFileName, OpenCOR::rawFileContents(CppFileName));
     zipWriter.addFile(HFileName, OpenCOR::rawFileContents(HFileName));
+    zipWriter.addFile(TxtFileName, OpenCOR::rawFileContents(TxtFileName));
 
     zipWriter.close();
 }
@@ -101,6 +103,8 @@ void Tests::uncompressTests()
              OpenCOR::fileContents(CppFileName));
     QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+HFileName),
              OpenCOR::fileContents(HFileName));
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+TxtFileName),
+             OpenCOR::fileContents(TxtFileName));
 }
 
 //==============================================================================

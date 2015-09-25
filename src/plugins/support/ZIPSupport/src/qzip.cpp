@@ -45,6 +45,9 @@
 
 #include <zlib.h>
 
+//---OPENCOR--- BEGIN
+#include <QRegularExpression>
+//---OPENCOR--- END
 // Zip standard version for archives handled by this API
 // (actually, the only basic support of this version is implemented but it is enough for now)
 #define ZIP_VERSION 20
@@ -93,13 +96,10 @@
 #define ZDEBUG if (0) qDebug
 #endif
 
-//==============================================================================
-
+//---OPENCOR--- BEGIN
 namespace OpenCOR {
 namespace ZIPSupport {
-
-//==============================================================================
-
+//---OPENCOR--- END
 QT_BEGIN_NAMESPACE
 
 static inline uint readUInt(const uchar *data)
@@ -1080,9 +1080,18 @@ bool QZipReader::extractAll(const QString &destinationDir) const
         }
     }
 
+//---OPENCOR--- BEGIN
+    static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+//---OPENCOR--- END
     foreach (const FileInfo &fi, allFiles) {
         const QString absPath = destinationDir + QDir::separator() + fi.filePath;
         if (fi.isFile) {
+//---OPENCOR--- BEGIN
+            QString absPathDir = QString(absPath).remove(FileNameRegEx);
+            if (!QDir(absPathDir).exists())
+                if (!QDir().mkpath(absPathDir))
+                    return false;
+//---OPENCOR--- END
             QFile f(absPath);
             if (!f.open(QIODevice::WriteOnly))
                 return false;
@@ -1390,12 +1399,9 @@ void QZipWriter::close()
 }
 
 QT_END_NAMESPACE
-
-//==============================================================================
-
+//---OPENCOR--- BEGIN
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
-
-//==============================================================================
+//---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER
