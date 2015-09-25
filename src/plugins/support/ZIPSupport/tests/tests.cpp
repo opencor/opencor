@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // ZIP support tests
 //==============================================================================
 
+#include "corecliutils.h"
 #include "tests.h"
 
 //==============================================================================
@@ -36,15 +37,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-static const auto DirName = QStringLiteral("src/plugins/support/ZIPSupport/tests/");
-
-//==============================================================================
-
-static const auto ZipDirName  = QStringLiteral("tests");
-static const auto ZipFileName = QStringLiteral("tests.zip");
-
-//==============================================================================
-
 static const auto CppFileName = QStringLiteral("tests.cpp");
 static const auto HFileName   = QStringLiteral("tests.h");
 
@@ -52,33 +44,18 @@ static const auto HFileName   = QStringLiteral("tests.h");
 
 void Tests::initTestCase()
 {
-    // Keep track of our original directory and go to our tests directory
+    // Get a temporary file name for our ZIP file
 
-    mOrigPath = QDir::currentPath();
-
-    QDir::setCurrent(OpenCOR::dirName("src/plugins/support/ZIPSupport/tests/"));
-
-    // Create the directory where we are going to uncompress our ZIP file
-
-    QDir().mkdir(ZipDirName);
+    mFileName = OpenCOR::Core::temporaryFileName();
 }
 
 //==============================================================================
 
 void Tests::cleanupTestCase()
 {
-    // Delete the files and directory we created
+    // Delete our ZIP file
 
-    QFile::remove(ZipFileName);
-
-    QFile::remove(ZipDirName+QDir::separator()+CppFileName);
-    QFile::remove(ZipDirName+QDir::separator()+HFileName);
-
-    QDir().rmdir(ZipDirName);
-
-    // Go back to our original directory
-
-    QDir::setCurrent(mOrigPath);
+    QFile::remove(mFileName);
 }
 
 //==============================================================================
@@ -87,12 +64,17 @@ void Tests::compressTests()
 {
     // Compress ourselves and our header file
 
-    OpenCOR::ZIPSupport::QZipWriter zipWriter(ZipFileName);
+    OpenCOR::ZIPSupport::QZipWriter zipWriter(mFileName);
+    QString origPath = QDir::currentPath();
+
+    QDir::setCurrent(OpenCOR::dirName("src/plugins/support/ZIPSupport/tests/"));
 
     zipWriter.addFile(CppFileName, OpenCOR::rawFileContents(CppFileName));
     zipWriter.addFile(HFileName, OpenCOR::rawFileContents(HFileName));
 
     zipWriter.close();
+
+    QDir::setCurrent(origPath);
 }
 
 //==============================================================================
@@ -101,18 +83,19 @@ void Tests::uncompressTests()
 {
     // Uncompress our ZIP file
 
-    OpenCOR::ZIPSupport::QZipReader zipReader(ZipFileName);
+    OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
+    QString dirName = QTemporaryDir().path();
 
-    zipReader.extractAll(ZipDirName);
+    zipReader.extractAll(dirName);
 
     zipReader.close();
 
     // Make sure that its contents is what we expect
 
-    QCOMPARE(OpenCOR::fileSha1(ZipDirName+QDir::separator()+CppFileName),
-             OpenCOR::fileSha1(CppFileName));
-    QCOMPARE(OpenCOR::fileSha1(ZipDirName+QDir::separator()+HFileName),
-             OpenCOR::fileSha1(HFileName));
+    QCOMPARE(OpenCOR::fileContents(dirName+QDir::separator()+CppFileName),
+             OpenCOR::fileContents(CppFileName));
+    QCOMPARE(OpenCOR::fileContents(dirName+QDir::separator()+HFileName),
+             OpenCOR::fileContents(HFileName));
 }
 
 //==============================================================================

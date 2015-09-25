@@ -33,7 +33,7 @@ class Tests : public QObject
     Q_OBJECT
 
 private:
-    QString mOrigPath;
+    QString mFileName;
 
 private Q_SLOTS:
     void initTestCase();
