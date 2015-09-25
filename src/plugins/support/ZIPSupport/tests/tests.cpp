@@ -89,17 +89,17 @@ void Tests::uncompressTests()
     // Uncompress our ZIP file
 
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
-    QTemporaryDir dirName;
+    QTemporaryDir temporaryDir;
 
-    QVERIFY(zipReader.extractAll(dirName.path()));
+    QVERIFY(zipReader.extractAll(temporaryDir.path()));
 
     zipReader.close();
 
     // Make sure that its contents is what we expect
 
-    QCOMPARE(OpenCOR::fileContents(dirName.path()+QDir::separator()+CppFileName),
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+CppFileName),
              OpenCOR::fileContents(CppFileName));
-    QCOMPARE(OpenCOR::fileContents(dirName.path()+QDir::separator()+HFileName),
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+HFileName),
              OpenCOR::fileContents(HFileName));
 }
 
