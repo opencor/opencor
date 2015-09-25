@@ -44,6 +44,12 @@ static const auto HFileName   = QStringLiteral("tests.h");
 
 void Tests::initTestCase()
 {
+    // Keep track of our original directory and go to our tests directory
+
+    mOrigPath = QDir::currentPath();
+
+    QDir::setCurrent(OpenCOR::dirName("src/plugins/support/ZIPSupport/tests/"));
+
     // Get a temporary file name for our ZIP file
 
     mFileName = OpenCOR::Core::temporaryFileName();
@@ -56,6 +62,10 @@ void Tests::cleanupTestCase()
     // Delete our ZIP file
 
     QFile::remove(mFileName);
+
+    // Go back to our original directory
+
+    QDir::setCurrent(mOrigPath);
 }
 
 //==============================================================================
@@ -65,16 +75,11 @@ void Tests::compressTests()
     // Compress ourselves and our header file
 
     OpenCOR::ZIPSupport::QZipWriter zipWriter(mFileName);
-    QString origPath = QDir::currentPath();
-
-    QDir::setCurrent(OpenCOR::dirName("src/plugins/support/ZIPSupport/tests/"));
 
     zipWriter.addFile(CppFileName, OpenCOR::rawFileContents(CppFileName));
     zipWriter.addFile(HFileName, OpenCOR::rawFileContents(HFileName));
 
     zipWriter.close();
-
-    QDir::setCurrent(origPath);
 }
 
 //==============================================================================
@@ -84,17 +89,17 @@ void Tests::uncompressTests()
     // Uncompress our ZIP file
 
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
-    QString dirName = QTemporaryDir().path();
+    QTemporaryDir dirName;
 
-    zipReader.extractAll(dirName);
+    QVERIFY(zipReader.extractAll(dirName.path()));
 
     zipReader.close();
 
     // Make sure that its contents is what we expect
 
-    QCOMPARE(OpenCOR::fileContents(dirName+QDir::separator()+CppFileName),
+    QCOMPARE(OpenCOR::fileContents(dirName.path()+QDir::separator()+CppFileName),
              OpenCOR::fileContents(CppFileName));
-    QCOMPARE(OpenCOR::fileContents(dirName+QDir::separator()+HFileName),
+    QCOMPARE(OpenCOR::fileContents(dirName.path()+QDir::separator()+HFileName),
              OpenCOR::fileContents(HFileName));
 }
 
