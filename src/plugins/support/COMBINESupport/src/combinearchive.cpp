@@ -188,7 +188,6 @@ bool CombineArchive::save(const QString &pNewFileName)
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-            QString origFileName = combineArchiveFile.fileName();
             QString destFileName = dirName+QDir::separator()+combineArchiveFile.location();
             QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
@@ -210,8 +209,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
         OpenCOR::ZIPSupport::QZipWriter zipWriter(fileName);
 
-        zipWriter.addFile(baseDirName+QDir::separator()+ManifestFileName,
-                          manifestFileContents);
+        zipWriter.addFile(ManifestFileName, manifestFileContents);
 
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
             QString combineArchiveFileContents;
@@ -221,8 +219,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
             QByteArray combineArchiveFileContentsAsByteArray = combineArchiveFileContents.toUtf8();
 
-            zipWriter.addFile(baseDirName+QDir::separator()+combineArchiveFile.location(),
-                              combineArchiveFileContentsAsByteArray);
+            zipWriter.addFile(combineArchiveFile.location(), combineArchiveFileContentsAsByteArray);
         }
 
         zipWriter.close();
