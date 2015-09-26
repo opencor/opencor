@@ -551,7 +551,7 @@ void RawCellmlViewWidget::updateViewer()
                         // We haven't already retrieved its Presentation MathML
                         // version, so do it now
 
-                        static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+                        static const QString CtopXsl = Core::resourceAsByteArray(":ctop.xsl");
 
                         mXslTransformer->transform(contentMathmlEquation, CtopXsl);
                     }
