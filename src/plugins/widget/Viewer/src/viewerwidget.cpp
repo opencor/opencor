@@ -582,7 +582,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-2]));
                         newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-1]));
 
-                        if (domChildNodeSubValuesCount > 2)
+                        if (domChildNodeSubValuesCount > 2) {
                             for (int j = domChildNodeSubValuesCount-3; j >= 0; --j) {
                                 QDomElement newerDomElement = domNode.ownerDocument().createElement("msub");
 
@@ -591,6 +591,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
                                 newDomElement = newerDomElement;
                             }
+                        }
 
                         // Replace the current node with our new one
 
