@@ -474,8 +474,9 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:plus]]
                                 |m:apply[*[1][self::m:csymbol='plus']]">
   <x:param name="p" select="0"/>
+  <x:param name="op" select="name(../*[1])"/>
   <mrow>
-  <x:if test="$p &gt; 2"><mo>(</mo></x:if>
+  <x:if test="$p &gt; 2 or $op = 'minus'"><mo>(</mo></x:if>
   <x:for-each select="*[position()&gt;1]">
    <x:choose>
     <x:when test="self::m:apply[*[1][self::m:times] and *[2][self::m:apply/*[1][self::m:minus] or
@@ -494,7 +495,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
     </x:when>
     <x:when test=" self::m:apply[count(*)=2 and *[1][self::m:minus]]">
      <x:apply-templates select="*[2]">
-      <x:with-param name="first" select="2"/>
+      <x:with-param name="first" select="1"/>
       <x:with-param name="p" select="2"/>
      </x:apply-templates>
     </x:when>
@@ -526,7 +527,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
     </x:otherwise>
    </x:choose>
   </x:for-each>
-  <x:if test="$p &gt; 2"><mo>)</mo></x:if>
+  <x:if test="$p &gt; 2 or $op = 'minus'"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
@@ -581,8 +582,9 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
               name="times">
   <x:param name="p" select="0"/>
   <x:param name="first" select="1"/>
+  <x:param name="op" select="name(../*[1])"/>
   <mrow>
-  <x:if test="$p &gt; 3"><mo>(</mo></x:if>
+  <x:if test="$p &gt; 3 and $op != 'minus'"><mo>(</mo></x:if>
   <x:for-each select="*[position()&gt;1]">
    <x:if test="position() &gt; 1">
     <mo>&#183;<!-- middle dot --></mo>
@@ -593,7 +595,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
    </x:apply-templates>
    </x:if>
   </x:for-each>
-  <x:if test="$p &gt; 3"><mo>)</mo></x:if>
+  <x:if test="$p &gt; 3 and $op != 'minus'"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
