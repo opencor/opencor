@@ -30,9 +30,15 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "Improved", "description": "Equation rendering." },
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "Raw CellML view",
+                             "entries": [
+                               { "type": "Improved", "description": "Equation rendering." }
                              ]
                            }
                          ]
