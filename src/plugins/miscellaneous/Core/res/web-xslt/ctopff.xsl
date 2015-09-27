@@ -495,7 +495,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
     </x:when>
     <x:when test=" self::m:apply[count(*)=2 and *[1][self::m:minus]]">
      <x:apply-templates select="*[2]">
-      <x:with-param name="first" select="2"/>
+      <x:with-param name="first" select="1"/>
       <x:with-param name="p" select="2"/>
      </x:apply-templates>
     </x:when>
