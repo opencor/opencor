@@ -1146,7 +1146,9 @@ QString CellmlTextViewWidget::cleanPresentationMathml(const QString &pPresentati
 
     domDocument.setContent(pPresentationMathml);
 
-    cleanPresentationMathmlElement(domDocument.documentElement());
+    QDomElement domElement = domDocument.documentElement();
+
+    cleanPresentationMathmlElement(domElement);
 
     return qDomDocumentToString(domDocument);
 }
