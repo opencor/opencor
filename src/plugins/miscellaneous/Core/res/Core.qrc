@@ -16,7 +16,7 @@
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file>oxygen/places/document-multiple.png</file>
         <file>oxygen/status/object-locked.png</file>
-        <file>web-xslt/ctop.xsl</file>
+        <file alias="ctop.xsl">web-xslt/ctopff.xsl</file>
         <file>logo.png</file>
         <file alias="Core_fr">../../../../../build/Core_fr.qm</file>
     </qresource>

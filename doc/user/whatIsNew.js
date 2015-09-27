@@ -7,7 +7,9 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
                            { "type": "Added", "description": "<a href=\"https://groups.google.com/forum/#!forum/opencor-users\">Users</a> and <a href=\"https://groups.google.com/forum/#!forum/opencor-developers\">developers</a> mailing lists." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
-                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
+                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
+                           { "type": "Improved", "description": "Equation rendering." },
+                           { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
                          ]
                        },
                        { "name": "API",
@@ -133,6 +135,7 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "File handling." },
+                           { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Display of numbers." },
                            { "type": "Improved", "description": "Opening and reopening of files." }
                          ]
@@ -170,7 +173,6 @@ var jsonData = { "versions": [
                                { "type": "Added", "description": "Reformatting the contents of the editor." },
                                { "type": "Improved", "description": "Context menu." },
                                { "type": "Improved", "description": "CellML validation." },
-                               { "type": "Improved", "description": "Equation rendering." },
                                { "type": "Improved", "description": "File permissions changes." },
                                { "type": "Fixed", "description": "Retrieval of view settings." }
                              ]

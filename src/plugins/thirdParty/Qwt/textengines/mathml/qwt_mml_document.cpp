@@ -132,10 +132,22 @@ public:
     void setBaseFontPointSize( qreal size ) { m_base_font_point_size = size; }
 
     QColor foregroundColor() const { return m_foreground_color; }
-    void setForegroundColor( const QColor &color ) { m_foreground_color = color; }
+    void setForegroundColor( const QColor &color ) {
+#ifdef MML_TEST
+        Q_UNUSED(color);
+#else
+        m_foreground_color = color;
+#endif
+    }
 
     QColor backgroundColor() const { return m_background_color; }
-    void setBackgroundColor( const QColor &color ) { m_background_color = color; }
+    void setBackgroundColor( const QColor &color ) {
+#ifdef MML_TEST
+        Q_UNUSED(color);
+#else
+        m_background_color = color;
+#endif
+    }
 
 #ifdef MML_TEST
     bool drawFrames() const { return m_draw_frames; }
@@ -1206,7 +1218,7 @@ QwtMmlDocument::QwtMmlDocument()
 #ifdef MML_TEST
     m_foreground_color = Qt::black;
     m_background_color = Qt::white;
-    m_draw_frames = false;
+    m_draw_frames = true;
 #endif
 }
 

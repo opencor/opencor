@@ -582,7 +582,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-2]));
                         newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-1]));
 
-                        if (domChildNodeSubValuesCount > 2)
+                        if (domChildNodeSubValuesCount > 2) {
                             for (int j = domChildNodeSubValuesCount-3; j >= 0; --j) {
                                 QDomElement newerDomElement = domNode.ownerDocument().createElement("msub");
 
@@ -591,6 +591,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
                                 newDomElement = newerDomElement;
                             }
+                        }
 
                         // Replace the current node with our new one
 
@@ -706,11 +707,13 @@ void ViewerWidget::copyToClipboard()
     // Copy our contents to the clipboard
 
     QSizeF mathmlDocumentSize = mMathmlDocument.size();
+    int contentsWidth = qCeil(mathmlDocumentSize.width());
+    int contentsHeight = qCeil(mathmlDocumentSize.height());
+    QPixmap pixmap(contentsWidth, contentsHeight);
 
-    QApplication::clipboard()->setPixmap(grab().copy(qFloor(0.5*(width()-mathmlDocumentSize.width())),
-                                                     qFloor(0.5*(height()-mathmlDocumentSize.height())),
-                                                     qCeil(mathmlDocumentSize.width()),
-                                                     qCeil(mathmlDocumentSize.height())));
+    render(&pixmap, QPoint(), QRegion(0, 0, contentsWidth, contentsHeight));
+
+    QApplication::clipboard()->setPixmap(pixmap);
 }
 
 //==============================================================================
