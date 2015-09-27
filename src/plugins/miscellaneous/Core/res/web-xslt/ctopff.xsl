@@ -1115,7 +1115,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 
 <!-- 4.4.5.6  bvar-->
 <x:template match="m:bvar">
- <mi><x:apply-templates/></mi>
+ <x:apply-templates/>
  <x:if test="following-sibling::m:bvar"><mo>,</mo></x:if>
 </x:template>
 
