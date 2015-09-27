@@ -1085,6 +1085,74 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWid
 
 //==============================================================================
 
+void CellmlTextViewWidget::cleanPresentationMathmlElement(QDomElement &pDomElement) const
+{
+    // Merge successive child mrow elements, as long as their parent is not an
+    // element that requires a specific number of arguments (which could become
+    // wrong if we were to merge two successive mrow elements)
+    // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
+    //       list of the elements to check...
+
+    if (   pDomElement.nodeName().compare("mfrac")
+        && pDomElement.nodeName().compare("mroot")
+        && pDomElement.nodeName().compare("msub")
+        && pDomElement.nodeName().compare("msup")
+        && pDomElement.nodeName().compare("msubsup")
+        && pDomElement.nodeName().compare("munder")
+        && pDomElement.nodeName().compare("mover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")) {
+        for (QDomElement childElement = pDomElement.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            QDomElement nextChildElement = childElement.nextSiblingElement();
+
+            if (   !nextChildElement.isNull()
+                && !childElement.nodeName().compare("mrow")
+                && !childElement.nodeName().compare(nextChildElement.nodeName())) {
+                // The current and next child elements are both mrow's, so merge
+                // them together
+
+                for (QDomElement nextChildChildElement = nextChildElement.firstChildElement();
+                     !nextChildChildElement.isNull(); nextChildChildElement = nextChildElement.firstChildElement()) {
+                    childElement.appendChild(nextChildChildElement);
+                }
+
+                pDomElement.removeChild(nextChildElement);
+            }
+        }
+    }
+
+    // Recursively clean ourselves
+
+    for (QDomElement childElement = pDomElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanPresentationMathmlElement(childElement);
+    }
+}
+
+//==============================================================================
+
+QString CellmlTextViewWidget::cleanPresentationMathml(const QString &pPresentationMathml) const
+{
+    // Clean the given Presentation MathML by merging successive mrow elements
+    // together
+    // Note: see https://github.com/opencor/opencor/issues/763...
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(pPresentationMathml);
+
+    cleanPresentationMathmlElement(domDocument.documentElement());
+
+    return qDomDocumentToString(domDocument);
+}
+
+//==============================================================================
+
 void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
                                                  const QString &pOutput)
 {
@@ -1095,7 +1163,8 @@ void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
         return;
 
     // The XSL transformation is done, so update our viewer and keep track of
-    // the mapping between the Content and Presentation MathML
+    // the mapping between the Content and Presentation MathML (after having
+    // cleaned it up)
     // Note: before setting the contents of our viewer, we need to make sure
     //       that pInput is still our current Content MathML equation. Indeed,
     //       say that updateViewer() gets called many times in a short period of
@@ -1105,10 +1174,12 @@ void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
 
-    if (!pInput.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(pOutput);
+    QString output = cleanPresentationMathml(pOutput);
 
-    mPresentationMathmlEquations.insert(pInput, pOutput);
+    if (!pInput.compare(mContentMathmlEquation))
+        mEditingWidget->viewer()->setContents(output);
+
+    mPresentationMathmlEquations.insert(pInput, output);
 }
 
 //==============================================================================

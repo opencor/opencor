@@ -165,6 +165,9 @@ private:
     QString endOfPiecewiseStatement(int &pPosition) const;
     QString statement(const int &pPosition) const;
 
+    void cleanPresentationMathmlElement(QDomElement &pDomElement) const;
+    QString cleanPresentationMathml(const QString &pPresentationMathml) const;
+
 private Q_SLOTS:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
