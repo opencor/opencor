@@ -581,8 +581,9 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
               name="times">
   <x:param name="p" select="0"/>
   <x:param name="first" select="1"/>
+  <x:param name="op" select="name(../*[1])"/>
   <mrow>
-  <x:if test="$p &gt; 3"><mo>(</mo></x:if>
+  <x:if test="$p &gt; 3 and $op != 'minus'"><mo>(</mo></x:if>
   <x:for-each select="*[position()&gt;1]">
    <x:if test="position() &gt; 1">
     <mo>&#183;<!-- middle dot --></mo>
@@ -593,7 +594,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
    </x:apply-templates>
    </x:if>
   </x:for-each>
-  <x:if test="$p &gt; 3"><mo>)</mo></x:if>
+  <x:if test="$p &gt; 3 and $op != 'minus'"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
