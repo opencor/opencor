@@ -25,7 +25,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
@@ -51,7 +51,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
@@ -113,7 +113,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Fixed", "description": "Mac <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.7 and <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.8 issue with models that need to compute 10<sup>x</sup>." }
                              ]
@@ -147,7 +147,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Added", "description": "Two new <a href=\"http://biomodels.net/qualifiers/\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked CellML files." },
@@ -201,7 +201,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for the parameters section." },
@@ -260,7 +260,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Improved", "description": "Retrieval of possible ontological terms." },
                                { "type": "Fixed", "description": "Listing of some unrecognisable metadata." },
@@ -306,7 +306,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "View settings upon reloading a CellML file." },
                                { "type": "Improved", "description": "Delay between two data points." },
@@ -351,7 +351,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Added", "description": "Open an imported CellML file." }
                              ]
@@ -374,7 +374,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Added", "description": "Have several graph panels." },
                                { "type": "Added", "description": "Plot any model parameter against any other." },
@@ -401,7 +401,7 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Fixed", "description": "Runtime generation of some CellML files." }
                              ]
@@ -419,7 +419,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "Editing of property values." },
                                { "type": "Fixed", "description": "Plotting of property values." }
