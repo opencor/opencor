@@ -258,7 +258,7 @@ function versions(downloads) {
         document.write("    </table>\n");
         document.write("</div>\n");
 
-        // Add some information, if needed
+        // Add some information, if any
 
         if (typeof versionInformation !== "undefined") {
             var versionClass;
