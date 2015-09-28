@@ -74,11 +74,17 @@ div.main {
     margin-left: 330px;
 }
 
-table.version {
+span.changes {
+    color: rgb(103, 103, 103);
+}
+
+table.version,
+table.changes {
     width: 100%;
 }
 
-table.version td.topSeparator {
+table.version td.topSeparator,
+table.changes td.topSeparator {
     border-top: 1px dashed rgba(103, 103, 103, 0.39);
 }
 
