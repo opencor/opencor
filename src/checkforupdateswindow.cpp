@@ -61,14 +61,11 @@ void CheckForUpdatesEngine::check()
 
     QString fileVersionsContents = QString();
     QString errorMessage = QString();
-    QJsonDocument versions = QJsonDocument();
-
-    mStatus = QString();
 
     mNewerVersions.clear();
 
     if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
-        versions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8());
+        QJsonDocument versions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8());
 
         QVariantMap versionMap;
         int versionMajor, versionMinor, versionPatch;
@@ -107,6 +104,8 @@ void CheckForUpdatesEngine::check()
             if (mApplicationDate.compare(versionDate) < 0)
                 mNewerVersions << versionVersion;
         }
+
+        mStatus = QString();
     } else {
         mStatus = formatMessage(errorMessage, false, true);
     }
@@ -239,7 +238,7 @@ void CheckForUpdatesWindow::updateGui()
 {
     // Determine the status of our check
 
-    static const QString WhatIsNewUrl = "http://localhost/user/whatIsNew.html?#";
+    static const QString WhatIsNewUrl = "http://opencor.ws/user/whatIsNew.html?#";
 
     QString versionInformation = tr("<a href=\"%1\">%2 %3</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
     QString snapshotInformation = tr("The <a href=\"%1\">latest snapshot</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
