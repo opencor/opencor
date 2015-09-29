@@ -385,11 +385,11 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         if (bookmarkUrls.isEmpty()) {
             QString url = pNetworkReply->url().toString();
 
-            QMessageBox::information(qApp->activeWindow(),
-                                     tr("Bookmark URLs"),
+            QMessageBox::information( qApp->activeWindow(),
+                                      tr("Bookmark URLs"),
                                       tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
                                      +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
-                                     QMessageBox::Ok);
+                                      QMessageBox::Ok);
         } else {
             QString url = pNetworkReply->url().toString();
 
