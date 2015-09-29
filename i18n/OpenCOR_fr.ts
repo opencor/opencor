@@ -419,4 +419,15 @@
         <translation>Préférences</translation>
     </message>
 </context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>The version information is mal-formatted.</source>
+        <translation>Les informations sur la version sont mal formatées.</translation>
+    </message>
+    <message>
+        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+    </message>
+</context>
 </TS>
