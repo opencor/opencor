@@ -32,10 +32,10 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
+#include "mathmlconverter.h"
 #include "qscintillawidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
-#include "xsltransformer.h"
 
 //==============================================================================
 
@@ -146,13 +146,22 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
 
     setLayout(layout);
 
-    // Create our XSL transformer and create a connection to retrieve the result
-    // of its XSL transformations
+    // Create our MathML converter and create a connection to retrieve the
+    // result of its MathML conversions
 
-    mXslTransformer = new Core::XslTransformer();
+    mMathmlConverter = new Core::MathmlConverter();
 
-    connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(xslTransformationDone(const QString &, const QString &)));
+    connect(mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
+            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
+}
+
+//==============================================================================
+
+CellmlTextViewWidget::~CellmlTextViewWidget()
+{
+    // Delete some internal objects
+
+    delete mMathmlConverter;
 }
 
 //==============================================================================
@@ -1034,16 +1043,10 @@ void CellmlTextViewWidget::updateViewer()
 
                 QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
-                if (!presentationMathmlEquation.isEmpty()) {
+                if (!presentationMathmlEquation.isEmpty())
                     mEditingWidget->viewer()->setContents(presentationMathmlEquation);
-                } else {
-                    // We haven't already retrieved its Presentation MathML
-                    // version, so do it now
-
-                    static const QString CtopXsl = Core::resourceAsByteArray(":ctop.xsl");
-
-                    mXslTransformer->transform(contentMathmlEquation, CtopXsl);
-                }
+                else
+                    mMathmlConverter->convert(contentMathmlEquation);
             }
         } else {
             // The parsing wasn't successful
@@ -1085,78 +1088,8 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWid
 
 //==============================================================================
 
-void CellmlTextViewWidget::cleanPresentationMathmlElement(QDomElement &pDomElement) const
-{
-    // Merge successive child mrow elements, as long as their parent is not an
-    // element that requires a specific number of arguments (which could become
-    // wrong if we were to merge two successive mrow elements)
-    // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
-    //       list of the elements to check...
-
-    if (   pDomElement.nodeName().compare("mfrac")
-        && pDomElement.nodeName().compare("mroot")
-        && pDomElement.nodeName().compare("msub")
-        && pDomElement.nodeName().compare("msup")
-        && pDomElement.nodeName().compare("msubsup")
-        && pDomElement.nodeName().compare("munder")
-        && pDomElement.nodeName().compare("mover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")) {
-        for (QDomElement childElement = pDomElement.firstChildElement();
-             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-            QDomElement nextChildElement = childElement.nextSiblingElement();
-
-            if (   !nextChildElement.isNull()
-                && !childElement.nodeName().compare("mrow")
-                && !childElement.nodeName().compare(nextChildElement.nodeName())) {
-                // The current and next child elements are both mrow's, so merge
-                // them together
-
-                for (QDomElement nextChildChildElement = nextChildElement.firstChildElement();
-                     !nextChildChildElement.isNull(); nextChildChildElement = nextChildElement.firstChildElement()) {
-                    childElement.appendChild(nextChildChildElement);
-                }
-
-                pDomElement.removeChild(nextChildElement);
-            }
-        }
-    }
-
-    // Recursively clean ourselves
-
-    for (QDomElement childElement = pDomElement.firstChildElement();
-         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanPresentationMathmlElement(childElement);
-    }
-}
-
-//==============================================================================
-
-QString CellmlTextViewWidget::cleanPresentationMathml(const QString &pPresentationMathml) const
-{
-    // Clean the given Presentation MathML by merging successive mrow elements
-    // together
-    // Note: see https://github.com/opencor/opencor/issues/763...
-
-    QDomDocument domDocument;
-
-    domDocument.setContent(pPresentationMathml);
-
-    QDomElement domElement = domDocument.documentElement();
-
-    cleanPresentationMathmlElement(domElement);
-
-    return qDomDocumentToString(domDocument);
-}
-
-//==============================================================================
-
-void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
-                                                 const QString &pOutput)
+void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
+                                                const QString &pPresentationMathml)
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
@@ -1165,8 +1098,7 @@ void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
         return;
 
     // The XSL transformation is done, so update our viewer and keep track of
-    // the mapping between the Content and Presentation MathML (after having
-    // cleaned it up)
+    // the mapping between the Content and Presentation MathML
     // Note: before setting the contents of our viewer, we need to make sure
     //       that pInput is still our current Content MathML equation. Indeed,
     //       say that updateViewer() gets called many times in a short period of
@@ -1176,12 +1108,10 @@ void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
 
-    QString output = cleanPresentationMathml(pOutput);
+    if (!pContentMathml.compare(mContentMathmlEquation))
+        mEditingWidget->viewer()->setContents(pPresentationMathml);
 
-    if (!pInput.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(output);
-
-    mPresentationMathmlEquations.insert(pInput, output);
+    mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }
 
 //==============================================================================

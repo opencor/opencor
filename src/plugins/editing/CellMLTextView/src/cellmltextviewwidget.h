@@ -41,7 +41,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class XslTransformer;
+    class MathmlConverter;
 }   // namespace Core
 
 //==============================================================================
@@ -107,6 +107,7 @@ class CellmlTextViewWidget : public Core::ViewWidget
 
 public:
     explicit CellmlTextViewWidget(QWidget *pParent);
+    ~CellmlTextViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -149,7 +150,7 @@ private:
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
-    Core::XslTransformer *mXslTransformer;
+    Core::MathmlConverter *mMathmlConverter;
 
     QString mContentMathmlEquation;
 
@@ -165,9 +166,6 @@ private:
     QString endOfPiecewiseStatement(int &pPosition) const;
     QString statement(const int &pPosition) const;
 
-    void cleanPresentationMathmlElement(QDomElement &pDomElement) const;
-    QString cleanPresentationMathml(const QString &pPresentationMathml) const;
-
 private Q_SLOTS:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
@@ -175,7 +173,8 @@ private Q_SLOTS:
 
     void selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList = 0);
 
-    void xslTransformationDone(const QString &pInput, const QString &pOutput);
+    void mathmlConversionDone(const QString &pContentMathml,
+                              const QString &pPresentationMathml);
 };
 
 //==============================================================================
