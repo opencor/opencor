@@ -38,7 +38,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class XslTransformer;
+    class MathmlConverter;
 }   // namespace Core
 
 //==============================================================================
@@ -98,7 +98,7 @@ private:
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
-    Core::XslTransformer *mXslTransformer;
+    Core::MathmlConverter *mMathmlConverter;
 
     QString mContentMathmlEquation;
 
@@ -108,7 +108,8 @@ private:
 private Q_SLOTS:
     void updateViewer();
 
-    void xslTransformationDone(const QString &pInput, const QString &pOutput);
+    void mathmlConversionDone(const QString &pContentMathml,
+                              const QString &pPresentationMathml);
 };
 
 //==============================================================================

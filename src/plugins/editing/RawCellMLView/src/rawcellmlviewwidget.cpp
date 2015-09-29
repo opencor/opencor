@@ -28,10 +28,10 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
+#include "mathmlconverter.h"
 #include "rawcellmlviewwidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
-#include "xsltransformer.h"
 
 //==============================================================================
 
@@ -71,24 +71,22 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
     setLayout(layout);
 
-    // Create our XSL transformer and create a connection to retrieve the result
-    // of its XSL transformations
+    // Create our MathML converter and create a connection to retrieve the
+    // result of its MathML conversions
 
-    mXslTransformer = new Core::XslTransformer();
+    mMathmlConverter = new Core::MathmlConverter();
 
-    connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(xslTransformationDone(const QString &, const QString &)));
+    connect(mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
+            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
 }
 
 //==============================================================================
 
 RawCellmlViewWidget::~RawCellmlViewWidget()
 {
-    // Stop our XSL transformer
-    // Note: we don't need to delete it since it will be done as part of its
-    //       thread being stopped...
+    // Delete some internal objects
 
-    mXslTransformer->stop();
+    delete mMathmlConverter;
 }
 
 //==============================================================================
@@ -545,16 +543,10 @@ void RawCellmlViewWidget::updateViewer()
 
                     QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
-                    if (!presentationMathmlEquation.isEmpty()) {
+                    if (!presentationMathmlEquation.isEmpty())
                         mEditingWidget->viewer()->setContents(presentationMathmlEquation);
-                    } else {
-                        // We haven't already retrieved its Presentation MathML
-                        // version, so do it now
-
-                        static const QString CtopXsl = Core::resourceAsByteArray(":ctop.xsl");
-
-                        mXslTransformer->transform(contentMathmlEquation, CtopXsl);
-                    }
+                    else
+                        mMathmlConverter->convert(contentMathmlEquation);
                 }
             } else {
                 // Our current position is not within a Content MathML equation
@@ -575,8 +567,8 @@ void RawCellmlViewWidget::updateViewer()
 
 //==============================================================================
 
-void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
-                                                const QString &pOutput)
+void RawCellmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
+                                               const QString &pPresentationMathml)
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
@@ -595,10 +587,10 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
 
-    if (!pInput.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(pOutput);
+    if (!pContentMathml.compare(mContentMathmlEquation))
+        mEditingWidget->viewer()->setContents(pPresentationMathml);
 
-    mPresentationMathmlEquations.insert(pInput, pOutput);
+    mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }
 
 //==============================================================================
