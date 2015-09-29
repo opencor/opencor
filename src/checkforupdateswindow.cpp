@@ -61,51 +61,57 @@ void CheckForUpdatesEngine::check()
 
     QString fileVersionsContents = QString();
     QString errorMessage = QString();
-    QJsonDocument versions = QJsonDocument();
-
-    mStatus = QString();
 
     mNewerVersions.clear();
 
     if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
-        versions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8());
+        QJsonParseError jsonParseError;
+        QJsonDocument versions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8(), &jsonParseError);
 
-        QVariantMap versionMap;
-        int versionMajor, versionMinor, versionPatch;
-        int versionDay, versionMonth, versionYear;
-        QString versionVersion;
-        QString versionDate;
+        if (jsonParseError.error == QJsonParseError::NoError) {
+            QVariantMap versionMap;
+            int versionMajor, versionMinor, versionPatch;
+            int versionDay, versionMonth, versionYear;
+            QString versionVersion;
+            QString versionDate;
 
-        foreach (const QVariant &version, versions.object().toVariantMap()["versions"].toList()) {
-            // Retrieve the version and date of the current version
+            foreach (const QVariant &version, versions.object().toVariantMap()["versions"].toList()) {
+                // Retrieve the version and date of the current version
 
-            versionMap = version.toMap();
+                versionMap = version.toMap();
 
-            versionMajor = versionMap["major"].toInt();
-            versionMinor = versionMap["minor"].toInt();
-            versionPatch = versionMap["patch"].toInt();
+                versionMajor = versionMap["major"].toInt();
+                versionMinor = versionMap["minor"].toInt();
+                versionPatch = versionMap["patch"].toInt();
 
-            versionDay   = versionMap["day"].toInt();
-            versionMonth = versionMap["month"].toInt();
-            versionYear  = versionMap["year"].toInt();
+                versionDay   = versionMap["day"].toInt();
+                versionMonth = versionMap["month"].toInt();
+                versionYear  = versionMap["year"].toInt();
 
-            versionDate = QString("%1-%2-%3").arg(versionYear)
-                                             .arg(versionMonth, 2, 10, QChar('0'))
-                                             .arg(versionDay, 2, 10, QChar('0'));
+                versionDate = QString("%1-%2-%3").arg(versionYear)
+                                                 .arg(versionMonth, 2, 10, QChar('0'))
+                                                 .arg(versionDay, 2, 10, QChar('0'));
 
-            if (!versionMajor && !versionMinor && !versionPatch) {
-                versionVersion = versionDate;
-            } else {
-                versionVersion = QString("%1.%2").arg(versionMajor).arg(versionMinor);
+                if (!versionMajor && !versionMinor && !versionPatch) {
+                    versionVersion = versionDate;
+                } else {
+                    versionVersion = QString("%1.%2").arg(versionMajor).arg(versionMinor);
 
-                if (versionPatch)
-                    versionVersion = QString("%1.%2").arg(versionVersion).arg(versionPatch);
+                    if (versionPatch)
+                        versionVersion = QString("%1.%2").arg(versionVersion).arg(versionPatch);
+                }
+
+                // Check whether the version is newer and, if so, add it to our list
+
+                if (mApplicationDate.compare(versionDate) < 0)
+                    mNewerVersions << versionVersion;
             }
 
-            // Check whether the version is newer and, if so, add it to our list
-
-            if (mApplicationDate.compare(versionDate) < 0)
-                mNewerVersions << versionVersion;
+            mStatus = QString();
+        } else {
+            mStatus =  QObject::tr("The version information is mal-formatted.")
+                      +"<br/>"
+                      +QObject::tr("Please <a href=\"http://opencor.ws/user/contactUs.html\">contact us</a> about this error.");
         }
     } else {
         mStatus = formatMessage(errorMessage, false, true);
@@ -239,7 +245,7 @@ void CheckForUpdatesWindow::updateGui()
 {
     // Determine the status of our check
 
-    static const QString WhatIsNewUrl = "http://localhost/user/whatIsNew.html?#";
+    static const QString WhatIsNewUrl = "http://opencor.ws/user/whatIsNew.html?#";
 
     QString versionInformation = tr("<a href=\"%1\">%2 %3</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
     QString snapshotInformation = tr("The <a href=\"%1\">latest snapshot</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
