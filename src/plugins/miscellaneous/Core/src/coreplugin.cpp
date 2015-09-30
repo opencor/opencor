@@ -96,9 +96,10 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
     //       files since if they are not then CentralWidget::openRemoteFile()
     //       will open them as normal files...
 
-    foreach (const QString &argument, pArguments)
+    foreach (const QString &argument, pArguments) {
         if (!argument.isEmpty())
             mCentralWidget->openRemoteFile(argument);
+    }
 }
 
 //==============================================================================
@@ -134,12 +135,11 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (fileManagerInstance->isRemote(pFileName))
-        mRecentFileNamesOrUrls.removeOne(fileManagerInstance->url(pFileName));
-    else
-        mRecentFileNamesOrUrls.removeOne(pFileName);
-
-    updateFileReopenMenu();
+    if (fileManagerInstance->isRemote(pFileName)?
+            mRecentFileNamesOrUrls.removeOne(fileManagerInstance->url(pFileName)):
+            mRecentFileNamesOrUrls.removeOne(pFileName)) {
+        updateFileReopenMenu();
+    }
 }
 
 //==============================================================================
@@ -148,12 +148,13 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
 {
     // Update the checked state of our Locked menu, if needed
 
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
+    if (!pFileName.compare(mCentralWidget->currentFileName())) {
         mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(pFileName));
         // Note: we really want to call isReadableAndWritable() rather than
         //       isLocked() since from the GUI perspective a file should only be
         //       considered unlocked if it can be both readable and writable
         //       (see CentralWidget::updateFileTab())...
+    }
 }
 
 //==============================================================================
@@ -185,7 +186,8 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
     //       done in that case (thus avoiding us having to test for its
     //       presence)...
 
-    mRecentFileNamesOrUrls.removeOne(pNewFileName);
+    if (mRecentFileNamesOrUrls.removeOne(pNewFileName))
+        updateFileReopenMenu();
 
     // A file has been created or saved under a new name, so we want the old
     // file name to be added to our list of recent files, i.e. as if it had been
@@ -524,14 +526,16 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
-        if (fileTypeInterface)
+        if (fileTypeInterface) {
             // The plugin implements our file type interface, so add the
             // supported file types, but only if they are not already in our
             // list
 
-            foreach (FileType *fileType, fileTypeInterface->fileTypes())
+            foreach (FileType *fileType, fileTypeInterface->fileTypes()) {
                 if (!supportedFileTypes.contains(fileType))
                     supportedFileTypes << fileType;
+            }
+        }
     }
 
     mCentralWidget->setSupportedFileTypes(supportedFileTypes);
@@ -542,11 +546,12 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     foreach (Plugin *plugin, pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (viewInterface)
+        if (viewInterface) {
             // The plugin implements our View interface, so add it to our
             // central widget
 
             mCentralWidget->addView(plugin);
+        }
     }
 }
 
@@ -683,15 +688,16 @@ void CorePlugin::reopenFile(const QString &pFileName)
     checkFileNameOrUrl(pFileName, isLocalFile, fileNameOrUrl);
 
     if (isLocalFile) {
-        if (QFile::exists(fileNameOrUrl))
+        if (QFile::exists(fileNameOrUrl)) {
             // Open the recent file
 
             mCentralWidget->openFile(fileNameOrUrl);
-        else
+        } else {
             // The file doesn't exist anymore, so let the user know about it
 
             QMessageBox::warning(mMainWindow, tr("Reopen File"),
                                  tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+        }
     } else {
         // Open the recent remote file
 
