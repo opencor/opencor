@@ -680,6 +680,12 @@ void CorePlugin::updateNewModifiedSensitiveActions()
 
 void CorePlugin::reopenFile(const QString &pFileName)
 {
+    // Remove the file from our list of recent files and update our Reopen
+    // sub-menu, if needed
+
+    if (mRecentFileNamesOrUrls.removeOne(pFileName))
+        updateFileReopenMenu();
+
     // Check that the recent file still exists
 
     bool isLocalFile;
@@ -703,14 +709,6 @@ void CorePlugin::reopenFile(const QString &pFileName)
 
         mCentralWidget->openRemoteFile(fileNameOrUrl);
     }
-
-    // Try to remove the file from our list of recent files and update our
-    // Reopen sub-menu, if needed
-    // Note: if the file was successfully opened, then it will have already been
-    //       removed from our list of recent files...
-
-    if (mRecentFileNamesOrUrls.removeOne(pFileName))
-        updateFileReopenMenu();
 }
 
 //==============================================================================
@@ -727,8 +725,13 @@ void CorePlugin::reopenRecentFile()
 void CorePlugin::reopenMostRecentFile()
 {
     // Reopen the most recently closed file
+    // Note: we don't want to get a reference to mRecentFileNamesOrUrls' first
+    //       item, hence we construct a new string from it. Indeed, reopenFile()
+    //       is going to remove that item from mRecentFileNamesOrUrls, so if we
+    //       were to use the reference, it will eventually become an empty
+    //       string...
 
-    reopenFile(mRecentFileNamesOrUrls.first());
+    reopenFile(QString(mRecentFileNamesOrUrls.first()));
 }
 
 //==============================================================================
