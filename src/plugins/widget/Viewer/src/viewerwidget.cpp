@@ -532,9 +532,17 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 {
     // Go through the node's children and process them
 
+    static const QString MiElement = "mi";
+    static const QString MnElement = "mn";
+    static const QString MoElement = "mo";
+
     static const QRegularExpression LeadingAndTrailingUnderscoresRegEx = QRegularExpression("(^_+|_+$)");
     static const QRegularExpression MultipleUnderscoresRegEx = QRegularExpression("_+");
     static const QRegularExpression NotUnderscoreRegEx = QRegularExpression("[^_]");
+
+    bool processSubscripts = subscripts();
+    bool processGreekSymbols = greekSymbols();
+    bool processDigitGrouping = digitGrouping();
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
@@ -546,18 +554,19 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
         if ((domNode.childNodes().count() == 1) && (childNode.isText())) {
             // Check whether we want to use subscripts and/or Greek symbols and
-            // the current node is an mi element, or whether we want to do digit
-            // grouping and the current node is an mn element
+            // the current node is an mi element, whether we want to do digit
+            // grouping and the current node is an mn element, or whether we
+            // are dealing with an mo element
 
-            if (    (subscripts() || greekSymbols())
-                && !domNode.nodeName().compare("mi")) {
+            if (    (processSubscripts || processGreekSymbols)
+                && !domNode.nodeName().compare(MiElement)) {
                 // We want to use subscripts and/or Greek symbols and the
                 // current node is an mi element, so check whether we want to
                 // use subscripts
 
                 QString childNodeValue = childNode.nodeValue();
 
-                if (subscripts()) {
+                if (processSubscripts) {
                     // We want to use subscripts (and maybe also Greek symbols),
                     // so remove leading, trailing and duplicate underscores
 
@@ -596,14 +605,16 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         // Replace the current node with our new one
 
                         domNode.parentNode().replaceChild(newDomElement, domNode);
-                    } else if (greekSymbols()) {
+
+                        domNode = newDomElement;
+                    } else if (processGreekSymbols) {
                         // There are no subscripts to be processed, but we want
                         // to use Greek symbols, so try to Greek symbolise our
                         // child node value
 
                         childNode.setNodeValue(greekSymbolize(childNodeValue));
                     }
-                } else if (greekSymbols()) {
+                } else if (processGreekSymbols) {
                     // We want to use Greek symbols, so go through the value of
                     // the child node (from the end) and replace whatever can be
                     // replaced with Greek symbols
@@ -637,12 +648,17 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 }
 
                 processDomNode = false;
-            } else if (    digitGrouping()
-                       && !domNode.nodeName().compare("mn")) {
+            } else if (    processDigitGrouping
+                       && !domNode.nodeName().compare(MnElement)) {
                 // We want to do digit grouping and the current node is an mn
                 // element, so we can go ahead
 
                 childNode.setNodeValue(Core::digitGroupNumber(childNode.nodeValue()));
+
+                processDomNode = false;
+            } else if (!domNode.nodeName().compare(MoElement)) {
+                // The current node is an mo element, so no need to process it
+                // further
 
                 processDomNode = false;
             }
