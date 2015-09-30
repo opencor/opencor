@@ -411,7 +411,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
-                                                              const bool &pResetItemsGui)
+                                                              const bool &pResetItemsGui,
+                                                              const bool &pFilePermissionsChanged)
 {
     // Keep track of the CellML element
 
@@ -455,7 +456,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
         || termIsDirect) {
         updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                       !termIsDirect);
+                       !termIsDirect && !pFilePermissionsChanged);
     }
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -1151,7 +1152,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::filePermissionsChanged()
 {
     // Update our GUI (incl. its enabled state)
 
-    updateGui(mElement, !mItemsCount);
+    updateGui(mElement, !mItemsCount, true);
 }
 
 //==============================================================================
