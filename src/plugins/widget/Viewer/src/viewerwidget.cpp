@@ -532,6 +532,10 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 {
     // Go through the node's children and process them
 
+    static const QString MiElement = "mi";
+    static const QString MnElement = "mn";
+    static const QString MoElement = "mo";
+
     static const QRegularExpression LeadingAndTrailingUnderscoresRegEx = QRegularExpression("(^_+|_+$)");
     static const QRegularExpression MultipleUnderscoresRegEx = QRegularExpression("_+");
     static const QRegularExpression NotUnderscoreRegEx = QRegularExpression("[^_]");
@@ -550,11 +554,12 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
         if ((domNode.childNodes().count() == 1) && (childNode.isText())) {
             // Check whether we want to use subscripts and/or Greek symbols and
-            // the current node is an mi element, or whether we want to do digit
-            // grouping and the current node is an mn element
+            // the current node is an mi element, whether we want to do digit
+            // grouping and the current node is an mn element, or whether we
+            // are dealing with an mo element
 
             if (    (processSubscripts || processGreekSymbols)
-                && !domNode.nodeName().compare("mi")) {
+                && !domNode.nodeName().compare(MiElement)) {
                 // We want to use subscripts and/or Greek symbols and the
                 // current node is an mi element, so check whether we want to
                 // use subscripts
@@ -642,11 +647,16 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
                 processDomNode = false;
             } else if (    processDigitGrouping
-                       && !domNode.nodeName().compare("mn")) {
+                       && !domNode.nodeName().compare(MnElement)) {
                 // We want to do digit grouping and the current node is an mn
                 // element, so we can go ahead
 
                 childNode.setNodeValue(Core::digitGroupNumber(childNode.nodeValue()));
+
+                processDomNode = false;
+            } else if (!domNode.nodeName().compare(MoElement)) {
+                // The current node is an mo element, so no need to process it
+                // further
 
                 processDomNode = false;
             }
