@@ -411,7 +411,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
-                                                              const bool &pResetItemsGui)
+                                                              const bool &pResetItemsGui,
+                                                              const bool &pFilePermissionsChanged)
 {
     // Keep track of the CellML element
 
@@ -455,7 +456,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
         || termIsDirect) {
         updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                       !termIsDirect);
+                       !termIsDirect && !pFilePermissionsChanged);
     }
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -501,13 +502,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
     if (pShowBusyWidget)
         *pShowBusyWidget = false;
 
-    if (   !Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
-        ||  mCellmlFile->issues().count()) {
-        mOutputMessage->setIconMessage(QString(), QString());
+    bool lockedOrIssues =    !Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
+                          ||  mCellmlFile->issues().count();
 
-        if (pShowBusyWidget && pLookUpTerm && !mTermValue->text().isEmpty())
-            *pShowBusyWidget = true;
-    } else if (mTermValue->text().isEmpty()) {
+    if (mTermValue->text().isEmpty()) {
         mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
                                        tr("Enter a term above..."));
     } else if (pLookUpTerm) {
@@ -520,6 +518,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
             if (mAddTermButton->isEnabled()) {
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
                                                tr("You can directly add the term <strong>%1</strong>...").arg(mTermValue->text()));
+            } else if (lockedOrIssues) {
+                mOutputMessage->setIconMessage(":/oxygen/actions/help-about.png",
+                                               tr("The term <strong>%1</strong> cannot be added using the above qualifier...").arg(mTermValue->text()));
             } else {
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("The term <strong>%1</strong> has already been added using the above qualifier...").arg(mTermValue->text()));
@@ -1151,7 +1152,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::filePermissionsChanged()
 {
     // Update our GUI (incl. its enabled state)
 
-    updateGui(mElement, !mItemsCount);
+    updateGui(mElement, !mItemsCount, true);
 }
 
 //==============================================================================
