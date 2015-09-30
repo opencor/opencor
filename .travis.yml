@@ -14,9 +14,6 @@ env:
   - CONFIG=Debug
 
 install:
-  # Note: on OS X, to install Qt 5 using brew causes Travis CI to fail (see
-  #       https://github.com/Homebrew/homebrew/issues/44446). A temporary fix
-  #       is to redirect the output of the brew command /dev/null...
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          wget http://www.cmake.org/files/v3.3/cmake-3.3.0-Linux-i386.tar.gz
       && tar -xzf cmake-3.3.0-Linux-i386.tar.gz
@@ -29,10 +26,12 @@ install:
       && export CC="gcc-4.8"
       ;
     else
-         brew update
-      && brew unlink cmake
-      && brew install cmake
+         brew update >/dev/null
+      && brew unlink cmake >/dev/null
+      && brew install cmake >/dev/null
+      && echo "Installed the 'cmake' formula..."
       && brew install qt5 >/dev/null
+      && echo "Installed the 'qt5' formula..."
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi
