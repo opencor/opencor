@@ -427,18 +427,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (termIsDirect) {
         QStringList termInformation = mTermValue->text().split("/");
 
-        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                                   termInformation[0],
                                                                   termInformation[1]));
-        else
+        } else {
             mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                                   termInformation[0],
                                                                   termInformation[1]));
+        }
     } else {
         mAddTermButton->setEnabled(false);
     }
@@ -467,16 +468,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
         bool enabledButton;
 
-        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                        item.resource(), item.id());
-        else
+        } else {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                        item.resource(), item.id());
+        }
 
         if (enabledButton != mEnabledItems.value(itemInformationSha1)) {
             mEnabledItems.insert(itemInformationSha1, enabledButton);
@@ -515,12 +517,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
             *pShowBusyWidget = true;
     } else if (pInternetConnectionAvailable && pErrorMessage.isEmpty()) {
         if (isDirectTerm(mTermValue->text())) {
-            if (mAddTermButton->isEnabled())
+            if (mAddTermButton->isEnabled()) {
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
                                                tr("You can directly add the term <strong>%1</strong>...").arg(mTermValue->text()));
-            else
+            } else {
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("The term <strong>%1</strong> has already been added using the above qualifier...").arg(mTermValue->text()));
+            }
         } else {
             mOutputMessage->setIconMessage(":/oxygen/actions/help-about.png",
                                            tr("No terms were found for <strong>%1</strong>...").arg(mTerm));
@@ -813,14 +816,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier()
 
     // Call our generic look up function
 
-    if (mLookUpQualifierButton->isChecked())
+    if (mLookUpQualifierButton->isChecked()) {
         // We want to look something up
 
         genericLookUp(mQualifierValue->currentText(), Qualifier);
-    else
+    } else {
         // We don't want to look anything up anymore
 
         genericLookUp();
+    }
 }
 
 //==============================================================================
@@ -843,14 +847,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         CellMLSupport::CellmlFileRdfTriple *rdfTriple;
 
-        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                   item.resource(), item.id());
-        else
+        } else {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                   item.resource(), item.id());
+        }
 
         // Disable the add button, now that we have added the ontological term
 
@@ -1079,14 +1084,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
     QStringList termInformation = Core::stringFromPercentEncoding(mTermValue->text()).split("/");
 
-    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                               CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                               termInformation[0], termInformation[1]);
-    else
+    } else {
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                               CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                               termInformation[0], termInformation[1]);
+    }
 
     // Disable the add term buton, now that we have added the term
 
