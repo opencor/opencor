@@ -536,6 +536,10 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
     static const QRegularExpression MultipleUnderscoresRegEx = QRegularExpression("_+");
     static const QRegularExpression NotUnderscoreRegEx = QRegularExpression("[^_]");
 
+    bool processSubscripts = subscripts();
+    bool processGreekSymbols = greekSymbols();
+    bool processDigitGrouping = digitGrouping();
+
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         bool processDomNode = true;
@@ -549,7 +553,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
             // the current node is an mi element, or whether we want to do digit
             // grouping and the current node is an mn element
 
-            if (    (subscripts() || greekSymbols())
+            if (    (processSubscripts || processGreekSymbols)
                 && !domNode.nodeName().compare("mi")) {
                 // We want to use subscripts and/or Greek symbols and the
                 // current node is an mi element, so check whether we want to
@@ -557,7 +561,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
                 QString childNodeValue = childNode.nodeValue();
 
-                if (subscripts()) {
+                if (processSubscripts) {
                     // We want to use subscripts (and maybe also Greek symbols),
                     // so remove leading, trailing and duplicate underscores
 
@@ -596,14 +600,14 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         // Replace the current node with our new one
 
                         domNode.parentNode().replaceChild(newDomElement, domNode);
-                    } else if (greekSymbols()) {
+                    } else if (processGreekSymbols) {
                         // There are no subscripts to be processed, but we want
                         // to use Greek symbols, so try to Greek symbolise our
                         // child node value
 
                         childNode.setNodeValue(greekSymbolize(childNodeValue));
                     }
-                } else if (greekSymbols()) {
+                } else if (processGreekSymbols) {
                     // We want to use Greek symbols, so go through the value of
                     // the child node (from the end) and replace whatever can be
                     // replaced with Greek symbols
@@ -637,7 +641,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 }
 
                 processDomNode = false;
-            } else if (    digitGrouping()
+            } else if (    processDigitGrouping
                        && !domNode.nodeName().compare("mn")) {
                 // We want to do digit grouping and the current node is an mn
                 // element, so we can go ahead
