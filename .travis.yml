@@ -15,9 +15,9 @@ env:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         wget http://www.cmake.org/files/v3.3/cmake-3.3.0-Linux-i386.tar.gz
-      && tar -xzf cmake-3.3.0-Linux-i386.tar.gz
-      && sudo cp -fR cmake-3.3.0-Linux-i386/* /usr
+         wget http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.tar.gz
+      && tar -xzf cmake-3.3.2-Linux-i386.tar.gz
+      && sudo cp -fR cmake-3.3.2-Linux-i386/* /usr
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt542
       && sudo apt-get -qq update
