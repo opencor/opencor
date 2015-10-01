@@ -26,12 +26,10 @@ install:
       && export CC="gcc-4.8"
       ;
     else
-         brew update >/dev/null
-      && brew unlink cmake >/dev/null
-      && brew install cmake >/dev/null
-      && echo "Installed the 'cmake' formula..."
-      && brew install qt5 >/dev/null
-      && echo "Installed the 'qt5' formula..."
+         brew update
+      && brew unlink cmake
+      && brew install -v cmake
+      && brew install -v qt5
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi

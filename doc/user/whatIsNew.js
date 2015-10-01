@@ -7,6 +7,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Equation rendering." },
+                           { "type": "Improved", "description": "Reopening of the most recent file." },
                            { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
                          ]
                        },

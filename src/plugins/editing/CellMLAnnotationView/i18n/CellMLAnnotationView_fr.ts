@@ -352,6 +352,10 @@
         <source>Add Term</source>
         <translation>Ajouter Terme</translation>
     </message>
+    <message>
+        <source>The term &lt;strong&gt;%1&lt;/strong&gt; cannot be added using the above qualifier...</source>
+        <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; ne peut pas être ajouté avec le qualificatif ci-dessus...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
