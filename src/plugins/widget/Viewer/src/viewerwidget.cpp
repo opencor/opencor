@@ -69,6 +69,35 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     // Populate our table of Greek symbols, if needed
 
     if (GreekSymbols.isEmpty()) {
+        // Upper case
+
+        GreekSymbols.insert("ALPHA", "Α");
+        GreekSymbols.insert("BETA", "Β");
+        GreekSymbols.insert("GAMMA", "Γ");
+        GreekSymbols.insert("DELTA", "Δ");
+        GreekSymbols.insert("EPSILON", "Ε");
+        GreekSymbols.insert("ZETA", "Ζ");
+        GreekSymbols.insert("ETA", "Η");
+        GreekSymbols.insert("THETA", "Θ");
+        GreekSymbols.insert("IOTA", "Ι");
+        GreekSymbols.insert("KAPPA", "Κ");
+        GreekSymbols.insert("LAMBDA", "Λ");
+        GreekSymbols.insert("MU", "Μ");
+        GreekSymbols.insert("NU", "Ν");
+        GreekSymbols.insert("XI", "Ξ");
+        GreekSymbols.insert("OMICRON", "Ο");
+        GreekSymbols.insert("PI", "Π");
+        GreekSymbols.insert("RHO", "Ρ");
+        GreekSymbols.insert("SIGMA", "Σ");
+        GreekSymbols.insert("TAU", "Τ");
+        GreekSymbols.insert("UPSILON", "Υ");
+        GreekSymbols.insert("PHI", "Φ");
+        GreekSymbols.insert("CHI", "Χ");
+        GreekSymbols.insert("PSI", "Ψ");
+        GreekSymbols.insert("OMEGA", "Ω");
+
+        // Lower case
+
         GreekSymbols.insert("alpha", "α");
         GreekSymbols.insert("beta", "β");
         GreekSymbols.insert("gamma", "γ");
@@ -506,7 +535,7 @@ QString ViewerWidget::greekSymbolize(const QString &pValue) const
 {
     // Convert the given value into a Greek symbol, if possible
 
-    return GreekSymbols.value(pValue.toLower(), pValue);
+    return GreekSymbols.value(pValue, pValue);
 }
 
 //==============================================================================
