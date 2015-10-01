@@ -21,6 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
+#include "combinearchive.h"
+#include "combinesupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "datastoreinterface.h"
@@ -161,6 +163,16 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
+    QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
+    QMenu *sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
+
+    sedmlExportToolButton->setDefaultAction(mGui->actionSedmlExport);
+    sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
+    sedmlExportToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    sedmlExportDropDownMenu->addAction(mGui->actionSedmlExportSedmlFile);
+    sedmlExportDropDownMenu->addAction(mGui->actionSedmlExportCombineArchive);
+
     QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
 
     mSimulationDataExportDropDownMenu = new QMenu(simulationDataExportToolButton);
@@ -188,7 +200,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionSedmlExport);
+    mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(simulationDataExportToolButton);
 
@@ -1379,9 +1391,176 @@ void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlV
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionSedmlExport_triggered()
+void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
+                                           const QString &pModelSource)
 {
-    // Export ourselves to SED-ML by first getting a file name
+    // Create a SED-ML document
+
+    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+
+    // Create and customise a model
+
+    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
+    QString fileName = mSimulation->fileName();
+
+    sedmlModel->setId("model");
+    sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(fileName) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                SEDMLSupport::Language::Cellml_1_1.toStdString():
+                                SEDMLSupport::Language::Cellml_1_0.toStdString());
+    sedmlModel->setSource(pModelSource.toStdString());
+
+    // Apply some parameter changes, if any, to our SED-ML model
+//---GRY--- TO BE DONE...
+
+    // Create and customise a repeated task containing a uniform time course
+    // simulation followed by a one-step simulation, if needed
+    // Note: a uniform time course simulation would be enough if we can
+    //       retrieve our point interval from the number of points and if we
+    //       run a simulation without modifying any of the model parameters,
+    //       but this would be a special case while here, using a repeated
+    //       task, we can handle everything that we can do using the GUI...
+
+    libsedml::SedRepeatedTask *sedmlRepeatedTask = sedmlDocument->createRepeatedTask();
+
+    sedmlRepeatedTask->setId("repeatedTask");
+    sedmlRepeatedTask->setRangeId("once");
+    sedmlRepeatedTask->setResetModel(true);
+
+    // Make our SED-ML repeated task non repeatable
+
+    libsedml::SedVectorRange *sedmlVectorRange = sedmlRepeatedTask->createVectorRange();
+
+    sedmlVectorRange->setId("vectorRange");
+    sedmlVectorRange->addValue(1);
+
+    // Create and customise a uniform time course simulation
+
+    int simulationNumber = 0;
+    double startingPoint = mSimulation->data()->startingPoint();
+    double endingPoint = mSimulation->data()->endingPoint();
+    double pointInterval = mSimulation->data()->pointInterval();
+    int nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
+    bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
+
+    libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
+
+    ++simulationNumber;
+
+    if (needOneStepTask)
+        --nbOfPoints;
+
+    sedmlUniformTimeCourse->setId(QString("simulation%1").arg(simulationNumber).toStdString());
+    sedmlUniformTimeCourse->setInitialTime(startingPoint);
+    sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
+    sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
+    sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
+
+    addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
+                       sedmlUniformTimeCourse, simulationNumber);
+
+    // Complete our simulation with a one-step simulation, if needed
+
+    if (needOneStepTask) {
+        libsedml::SedOneStep *sedmlOneStep = sedmlDocument->createOneStep();
+
+        ++simulationNumber;
+
+        sedmlOneStep->setId(QString("simulation%1").arg(simulationNumber).toStdString());
+        sedmlOneStep->setStep(endingPoint-sedmlUniformTimeCourse->getOutputEndTime());
+
+        addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
+                           sedmlOneStep, simulationNumber);
+    }
+
+    // Retrieve all the graphs that are to be plotted, if any
+
+    QList<Core::Properties> graphsList = QList<Core::Properties>();
+    SingleCellViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
+
+    foreach (SingleCellViewGraphPanelWidget *graphPanel,
+             mContentsWidget->graphPanelsWidget()->graphPanels()) {
+        Core::Properties graphs = graphsWidget->graphProperties(graphPanel, fileName);
+
+        if (!graphs.isEmpty())
+            graphsList << graphs;
+    }
+
+    // Create and customise 2D plot outputs and data generators for all the
+    // graphs that are to be plotted, if any
+
+    if (!graphsList.isEmpty()) {
+        int graphPlotCounter = 0;
+
+        foreach (Core::Properties graphs, graphsList) {
+            ++graphPlotCounter;
+
+            int graphCounter = 0;
+            libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
+
+            sedmlPlot2d->setId(QString("plot%1").arg(QString::number(graphPlotCounter)).toStdString());
+
+            foreach (Core::Property *property, graphs) {
+                ++graphCounter;
+
+                // Create two data generators for the X and Y parameters of
+                // our current graph
+
+                libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
+                libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
+                std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                       QString::number(graphCounter)).toStdString();
+                std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                       QString::number(graphCounter)).toStdString();
+
+                sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
+                sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
+
+                libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
+                libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
+                QStringList propertyX = property->properties()[1]->value().split(".");
+                QStringList propertyY = property->properties()[2]->value().split(".");
+
+                sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
+                                                                    QString::number(graphCounter)).toStdString());
+                sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
+                addSedmlVariableTarget(sedmlVariableX, propertyX.first(), propertyX.last());
+
+                sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
+                                                                    QString::number(graphCounter)).toStdString());
+                sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
+                addSedmlVariableTarget(sedmlVariableY, propertyY.first(), propertyY.last());
+
+                sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
+                sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
+
+                // Create a curve for our current graph
+
+                libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
+
+                sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
+                                                            QString::number(graphCounter)).toStdString());
+
+                sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
+                sedmlCurve->setLogX(false);
+
+                sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
+                sedmlCurve->setLogY(false);
+            }
+        }
+    }
+
+    // Our SED-ML document is ready, so write it to our SED-ML file
+
+    Core::writeTextToFile(pFileName, writeSedMLToString(sedmlDocument));
+
+    delete sedmlDocument;
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::on_actionSedmlExportSedmlFile_triggered()
+{
+    // Export ourselves to SED-ML using a SED-ML file, but first get a file name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = mSimulation->fileName();
@@ -1401,190 +1580,143 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                           sedmlFileName,
                                           Core::fileTypes(mPluginParent->sedmlFileTypes()));
 
-    // Effectively export ourselves to SED-ML, if a SED-ML file name has been
-    // provided
+    // Create a SED-ML file using the SED-ML file name that has been provided
 
     if (!sedmlFileName.isEmpty()) {
-        // A SED-ML file name has been provided, so create a SED-ML document
+        QString modelSource = cellmlFileName;
 
-        libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-
-        // Create and customise a model
-
-        libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-
-        sedmlModel->setId("model");
-
-        // Set our SED-ML model's source
-
-        if (remoteFile) {
-            sedmlModel->setSource(cellmlFileName.toStdString());
-        } else {
+        if (!remoteFile) {
             // We are dealing with a local CellML file, so refer to it
             // relatively to the directory where we are going to save our SED-ML
             // file
             // Note: normally, we would use QFileInfo::canonicalPath(), but this
-            //       requires an existing file, so use QFileInfo::path()
+            //       requires an existing file, so we use QFileInfo::path()
             //       instead...
 
             QDir sedmlFileDir = QFileInfo(sedmlFileName).path();
 
-            sedmlModel->setSource(sedmlFileDir.relativeFilePath(cellmlFileName).toStdString());
+            modelSource = sedmlFileDir.relativeFilePath(modelSource);
         }
 
-        // Set our SED-ML model's language
+        createSedmlFile(sedmlFileName, modelSource);
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
+{
+    // Export ourselves to SED-ML using a COMBINE archive, but first get a file
+    // name
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString fileName = mSimulation->fileName();
+    bool remoteFile = fileManagerInstance->isRemote(fileName);
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
+    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
+    QString combineArchiveName = cellmlFileName;
+
+    if (!cellmlFileCompleteSuffix.isEmpty()) {
+        combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
+                                   COMBINESupport::CombineFileExtension);
+    } else {
+        combineArchiveName += "."+COMBINESupport::CombineFileExtension;
+    }
+
+    combineArchiveName = Core::getSaveFileName(QObject::tr("Export To COMBINE Archive"),
+                                               combineArchiveName,
+                                               Core::fileTypes(mPluginParent->combineFileTypes()));
+
+    // Effectively export ourselves to SED-ML, if a SED-ML file name has been
+    // provided
+
+    if (!combineArchiveName.isEmpty()) {
+        // Determine the path that is common to our main and, if any, imported
+        // CellML files, as well as get a copy of our imported CellML files,
+        // should they be remote ones
+
+        static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
+        QString commonPath = remoteFile?
+                                 QString(cellmlFileName).remove(FileNameRegEx)+"/":
+                                 QFileInfo(fileName).canonicalPath()+QDir::separator();
+        QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
-        sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
-                                    SEDMLSupport::Language::Cellml_1_1.toStdString():
-                                    SEDMLSupport::Language::Cellml_1_0.toStdString());
+        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+            // Check for the common path
 
-        // Apply some parameter changes, if any, to our SED-ML model
-//---GRY--- TO BE DONE...
+            QString importedFilePath = remoteFile?
+                                           QString(importedFileName).remove(FileNameRegEx)+"/":
+                                           QFileInfo(importedFileName).canonicalPath()+QDir::separator();
 
-        // Create and customise a repeated task containing a uniform time course
-        // simulation followed by a one-step simulation, if needed
-        // Note: a uniform time course simulation would be enough if we can
-        //       retrieve our point interval from the number of points and if we
-        //       run a simulation without modifying any of the model parameters,
-        //       but this would be a special case while here, using a repeated
-        //       task, we can handle everything that we can do using the GUI...
+            for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
+                if (commonPath[i] != importedFilePath[i]) {
+                    commonPath = commonPath.left(i);
 
-        libsedml::SedRepeatedTask *sedmlRepeatedTask = sedmlDocument->createRepeatedTask();
-
-        sedmlRepeatedTask->setId("repeatedTask");
-        sedmlRepeatedTask->setRangeId("once");
-        sedmlRepeatedTask->setResetModel(true);
-
-        // Make our SED-ML repeated task non repeatable
-
-        libsedml::SedVectorRange *sedmlVectorRange = sedmlRepeatedTask->createVectorRange();
-
-        sedmlVectorRange->setId("vectorRange");
-        sedmlVectorRange->addValue(1);
-
-        // Create and customise a uniform time course simulation
-
-        int simulationNumber = 0;
-        double startingPoint = mSimulation->data()->startingPoint();
-        double endingPoint = mSimulation->data()->endingPoint();
-        double pointInterval = mSimulation->data()->pointInterval();
-        int nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
-        bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
-
-        libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
-
-        ++simulationNumber;
-
-        if (needOneStepTask)
-            --nbOfPoints;
-
-        sedmlUniformTimeCourse->setId(QString("simulation%1").arg(simulationNumber).toStdString());
-        sedmlUniformTimeCourse->setInitialTime(startingPoint);
-        sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
-        sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
-        sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
-
-        addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
-                           sedmlUniformTimeCourse, simulationNumber);
-
-        // Complete our simulation with a one-step simulation, if needed
-
-        if (needOneStepTask) {
-            libsedml::SedOneStep *sedmlOneStep = sedmlDocument->createOneStep();
-
-            ++simulationNumber;
-
-            sedmlOneStep->setId(QString("simulation%1").arg(simulationNumber).toStdString());
-            sedmlOneStep->setStep(endingPoint-sedmlUniformTimeCourse->getOutputEndTime());
-
-            addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
-                               sedmlOneStep, simulationNumber);
-        }
-
-        // Retrieve all the graphs that are to be plotted, if any
-
-        QList<Core::Properties> graphsList = QList<Core::Properties>();
-        SingleCellViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
-
-        foreach (SingleCellViewGraphPanelWidget *graphPanel,
-                 mContentsWidget->graphPanelsWidget()->graphPanels()) {
-            Core::Properties graphs = graphsWidget->graphProperties(graphPanel, fileName);
-
-            if (!graphs.isEmpty())
-                graphsList << graphs;
-        }
-
-        // Create and customise 2D plot outputs and data generators for all the
-        // graphs that are to be plotted, if any
-
-        if (!graphsList.isEmpty()) {
-            int graphPlotCounter = 0;
-
-            foreach (Core::Properties graphs, graphsList) {
-                ++graphPlotCounter;
-
-                int graphCounter = 0;
-                libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
-
-                sedmlPlot2d->setId(QString("plot%1").arg(QString::number(graphPlotCounter)).toStdString());
-
-                foreach (Core::Property *property, graphs) {
-                    ++graphCounter;
-
-                    // Create two data generators for the X and Y parameters of
-                    // our current graph
-
-                    libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
-                    libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
-                    std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                           QString::number(graphCounter)).toStdString();
-                    std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                           QString::number(graphCounter)).toStdString();
-
-                    sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
-                    sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
-
-                    libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
-                    libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-                    QStringList propertyX = property->properties()[1]->value().split(".");
-                    QStringList propertyY = property->properties()[2]->value().split(".");
-
-                    sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
-                                                                        QString::number(graphCounter)).toStdString());
-                    sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-                    addSedmlVariableTarget(sedmlVariableX, propertyX.first(), propertyX.last());
-
-                    sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
-                                                                        QString::number(graphCounter)).toStdString());
-                    sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-                    addSedmlVariableTarget(sedmlVariableY, propertyY.first(), propertyY.last());
-
-                    sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
-                    sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
-
-                    // Create a curve for our current graph
-
-                    libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
-
-                    sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
-                                                                QString::number(graphCounter)).toStdString());
-
-                    sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
-                    sedmlCurve->setLogX(false);
-
-                    sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
-                    sedmlCurve->setLogY(false);
+                    break;
                 }
+            }
+
+            commonPath = commonPath.left(qMin(commonPath.length(), importedFilePath.length()));
+
+            // Get a copy of the imported CellML file, if it is a remote one,
+            // and keep track of it
+
+            if (remoteFile) {
+                QString localImportedFileName = Core::temporaryFileName();
+
+                Core::writeTextToFile(localImportedFileName,
+                                      cellmlFile->importedFileContents(importedFileName));
+
+                remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }
         }
 
-        // Our SED-ML document is ready, so write it to our SED-ML file
+        // Determine the location of our main CellML file
 
-        Core::writeTextToFile(sedmlFileName, writeSedMLToString(sedmlDocument));
+        QString modelSource = remoteFile?
+                                  QString(cellmlFileName).remove(commonPath):
+                                  QString(fileName).remove(commonPath);
 
-        delete sedmlDocument;
+        // Create a copy of the SED-ML file that will be the master file in our
+        // COMBINE archive
+
+        QString sedmlFileName = Core::temporaryFileName();
+
+        createSedmlFile(sedmlFileName, modelSource);
+
+        // Create our COMBINE archive after having added all our files to it
+
+        COMBINESupport::CombineArchive combineArchive(combineArchiveName);
+        QFileInfo combineArchiveInfo = QFileInfo(combineArchiveName);
+        QString sedmlFileLocation = combineArchiveInfo.fileName();
+
+        sedmlFileLocation.replace(QRegularExpression(QRegularExpression::escape(combineArchiveInfo.completeSuffix())+"$"),
+                                  SEDMLSupport::SedmlFileExtension);
+
+        combineArchive.addFile(sedmlFileName, sedmlFileLocation,
+                               COMBINESupport::CombineArchiveFile::Sedml, true);
+
+        combineArchive.addFile(fileName, modelSource,
+                               (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                   COMBINESupport::CombineArchiveFile::Cellml_1_1:
+                                   COMBINESupport::CombineArchiveFile::Cellml_1_0);
+
+        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+            combineArchive.addFile(remoteFile?
+                                       remoteImportedFileNames.value(importedFileName):
+                                       importedFileName,
+                                   QString(importedFileName).remove(commonPath),
+                                   COMBINESupport::CombineArchiveFile::Cellml);
+        }
+
+        combineArchive.save();
+
+        // Remove the local copy of our remote imported CellML files, if any
+
+        foreach (const QString &localImportedFileName, remoteImportedFileNames.values())
+            QFile::remove(localImportedFileName);
     }
 }
 

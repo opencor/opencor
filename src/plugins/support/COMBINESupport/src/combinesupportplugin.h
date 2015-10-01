@@ -16,70 +16,54 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SingleCellView plugin
+// COMBINESupport plugin
 //==============================================================================
 
-#ifndef SINGLECELLVIEWPLUGIN_H
-#define SINGLECELLVIEWPLUGIN_H
+#ifndef COMBINESUPPORTPLUGIN_H
+#define COMBINESUPPORTPLUGIN_H
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
 #include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
-#include "plugininterface.h"
-#include "viewinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace COMBINESupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellViewPluginInfo();
+PLUGININFO_FUNC COMBINESupportPluginInfo();
 
 //==============================================================================
 
-class SingleCellViewWidget;
+static const auto CombineMimeType      = QStringLiteral("application/combine+zip");
+static const auto CombineFileExtension = QStringLiteral("omex");
 
 //==============================================================================
 
-class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
-                             public I18nInterface, public PluginInterface,
-                             public ViewInterface
+class COMBINESupportPlugin : public QObject, public FileTypeInterface,
+                             public I18nInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SingleCellViewPlugin" FILE "singlecellviewplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.COMBINESupportPlugin" FILE "combinesupportplugin.json")
 
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::FileTypeInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit SingleCellViewPlugin();
+    explicit COMBINESupportPlugin();
 
-#include "filehandlinginterface.inl"
+#include "filetypeinterface.inl"
 #include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
-
-    FileTypes sedmlFileTypes() const;
-    FileTypes combineFileTypes() const;
-
-private:
-    SingleCellViewWidget *mViewWidget;
-
-    FileTypes mSedmlFileTypes;
-    FileTypes mCombineFileTypes;
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace COMBINESupport
 }   // namespace OpenCOR
 
 //==============================================================================

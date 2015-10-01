@@ -16,70 +16,84 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SingleCellView plugin
+// COMBINE archive class
 //==============================================================================
 
-#ifndef SINGLECELLVIEWPLUGIN_H
-#define SINGLECELLVIEWPLUGIN_H
+#ifndef COMBINEARCHIVE_H
+#define COMBINEARCHIVE_H
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
-#include "filetypeinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "viewinterface.h"
+#include "combinesupportglobal.h"
+#include "standardfile.h"
+
+//==============================================================================
+
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace COMBINESupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellViewPluginInfo();
-
-//==============================================================================
-
-class SingleCellViewWidget;
-
-//==============================================================================
-
-class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
-                             public I18nInterface, public PluginInterface,
-                             public ViewInterface
+class CombineArchiveFile
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.SingleCellViewPlugin" FILE "singlecellviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
 public:
-    explicit SingleCellViewPlugin();
+    enum Format {
+        Unknown,
+        Cellml,
+        Cellml_1_0,
+        Cellml_1_1,
+        Sedml
+    };
 
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
+    explicit CombineArchiveFile(const QString &pFileName,
+                                const QString &pLocation, const Format &pFormat,
+                                const bool &pMaster);
 
-    FileTypes sedmlFileTypes() const;
-    FileTypes combineFileTypes() const;
+    QString fileName() const;
+
+    QString location() const;
+    Format format() const;
+    bool isMaster() const;
 
 private:
-    SingleCellViewWidget *mViewWidget;
+    QString mFileName;
 
-    FileTypes mSedmlFileTypes;
-    FileTypes mCombineFileTypes;
+    QString mLocation;
+    Format mFormat;
+    bool mMaster;
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+typedef QList<CombineArchiveFile> CombineArchiveFiles;
+
+//==============================================================================
+
+class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFile
+{
+    Q_OBJECT
+
+public:
+    explicit CombineArchive(const QString &pFileName);
+
+    virtual bool load();
+    virtual bool save(const QString &pNewFileName = QString());
+
+    bool addFile(const QString &pFileName, const QString &pLocation,
+                 const CombineArchiveFile::Format &pFormat,
+                 const bool &pMaster = false);
+
+private:
+    CombineArchiveFiles mCombineArchiveFiles;
+};
+
+//==============================================================================
+
+}   // namespace COMBINESupport
 }   // namespace OpenCOR
 
 //==============================================================================

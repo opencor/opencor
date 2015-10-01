@@ -242,6 +242,7 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
+    void createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
@@ -258,7 +259,8 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
-    void on_actionSedmlExport_triggered();
+    void on_actionSedmlExportSedmlFile_triggered();
+    void on_actionSedmlExportCombineArchive_triggered();
 
     void simulationDataExport();
 

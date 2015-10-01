@@ -274,6 +274,11 @@ SET(PLUGINS
     support/SEDMLSupport
     support/ZIPSupport
 
+    # Plugins that provide support for some third-party libraries that have
+    # dependencies on others
+
+    support/COMBINESupport
+
     # Plugins that extend some libraries (incl. third-party ones)
 
     widget/Editor

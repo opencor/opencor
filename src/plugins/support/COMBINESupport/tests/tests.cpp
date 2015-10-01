@@ -16,75 +16,66 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SingleCellView plugin
+// COMBINE support tests
 //==============================================================================
 
-#ifndef SINGLECELLVIEWPLUGIN_H
-#define SINGLECELLVIEWPLUGIN_H
-
-//==============================================================================
-
-#include "filehandlinginterface.h"
-#include "filetypeinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "viewinterface.h"
+#include "combinearchive.h"
+#include "corecliutils.h"
+#include "tests.h"
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace SingleCellView {
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellViewPluginInfo();
+#include <QtTest/QtTest>
 
 //==============================================================================
 
-class SingleCellViewWidget;
+#include <QZipReader>
 
 //==============================================================================
 
-class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
-                             public I18nInterface, public PluginInterface,
-                             public ViewInterface
+void Tests::basicTests()
 {
-    Q_OBJECT
+    // Create a simple COMBINE archive that contains various files
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SingleCellViewPlugin" FILE "singlecellviewplugin.json")
+    QString fileName = OpenCOR::Core::temporaryFileName();
+    OpenCOR::COMBINESupport::CombineArchive combineArchive(fileName);
+    int counter = 0;
 
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
+    for (int i = 1; i <= 3; ++i) {
+        for (int j = 1; j <= 3; ++j, ++counter) {
+            combineArchive.addFile(QDir::currentPath()+QDir::separator()+OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
+                                   QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
+                                   OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%4),
+                                   !(counter%2));
+        }
+    }
 
-public:
-    explicit SingleCellViewPlugin();
+    combineArchive.save();
 
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
+    QVERIFY(QFile::exists(fileName));
 
-    FileTypes sedmlFileTypes() const;
-    FileTypes combineFileTypes() const;
+    // Unzip our COMBINE archive
 
-private:
-    SingleCellViewWidget *mViewWidget;
+    OpenCOR::ZIPSupport::QZipReader zipReader(fileName);
+    QTemporaryDir temporaryDir;
 
-    FileTypes mSedmlFileTypes;
-    FileTypes mCombineFileTypes;
-};
+    QVERIFY(zipReader.extractAll(temporaryDir.path()));
+
+    zipReader.close();
+
+    // Make sure that our COMBINE archive's manifest is correct
+
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+"manifest.xml"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
+}
 
 //==============================================================================
 
-}   // namespace SingleCellView
-}   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
+QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
 // End of file
