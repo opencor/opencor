@@ -40,8 +40,8 @@ void updateColors()
     //          it's rendered as a rounded corner...
     // Note #3: on OS X, our widget must be shown otherwise, the retrieved
     //          border colour will be black. So we show it off screen, even on
-    //          Windows and Linux, in case their behaviour was to change in the
-    //          future...
+    //          Windows and Linux, in case their respective behaviour was to
+    //          change in the future...
 
     // Create our widget and show it off screen
 
