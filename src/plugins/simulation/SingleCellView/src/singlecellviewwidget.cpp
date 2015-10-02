@@ -1394,17 +1394,24 @@ void SingleCellViewWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlV
 void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
                                            const QString &pModelSource)
 {
-    // Create a SED-ML document
+    // Create a SED-ML document and add the CellML namespace to it
 
     libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+    XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
+    QString fileName = mSimulation->fileName();
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(fileName);
+
+    namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
+                        CellMLSupport::Cellml_1_1_Namespace.toStdString():
+                        CellMLSupport::Cellml_1_0_Namespace.toStdString(),
+                    "cellml");
 
     // Create and customise a model
 
     libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
-    QString fileName = mSimulation->fileName();
 
     sedmlModel->setId("model");
-    sedmlModel->setLanguage((CellMLSupport::CellmlFile::version(fileName) == CellMLSupport::CellmlFile::Cellml_1_1)?
+    sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                                 SEDMLSupport::Language::Cellml_1_1.toStdString():
                                 SEDMLSupport::Language::Cellml_1_0.toStdString());
     sedmlModel->setSource(pModelSource.toStdString());
