@@ -112,7 +112,7 @@ ELSE()
     # Ignore some warnings on Windows, as well as allow for big objects
 
     IF(WIN32)
-        SET(COMPILATION_FLAGS "/bigobj /wd4146 /wd4180 /wd4244 /wd4258 /wd4267 /wd4291 /wd4345 /wd4351 /wd4355 /wd4456 /wd4457 /wd4458 /wd4459 /wd4503 /wd4624 /wd4722 /wd4800 /w14062 /we4238")
+        SET(COMPILATION_FLAGS "/bigobj /wd4146 /wd4180 /wd4244 /wd4258 /wd4267 /wd4291 /wd4345 /wd4351 /wd4355 /wd4456 /wd4457 /wd4458 /wd4459 /wd4503 /wd4624 /wd4722 /wd4800 /wd4805 /w14062 /we4238")
 
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMPILATION_FLAGS}")
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILATION_FLAGS}")
