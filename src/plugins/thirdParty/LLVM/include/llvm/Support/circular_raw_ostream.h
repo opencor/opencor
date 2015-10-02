@@ -108,29 +108,16 @@ namespace llvm
     ///
     circular_raw_ostream(raw_ostream &Stream, const char *Header,
                          size_t BuffSize = 0, bool Owns = REFERENCE_ONLY)
-        : raw_ostream(/*unbuffered*/true),
-            TheStream(nullptr),
-            OwnsStream(Owns),
-            BufferSize(BuffSize),
-            BufferArray(nullptr),
-            Filled(false),
-            Banner(Header) {
+        : raw_ostream(/*unbuffered*/ true), TheStream(nullptr),
+          OwnsStream(Owns), BufferSize(BuffSize), BufferArray(nullptr),
+          Filled(false), Banner(Header) {
       if (BufferSize != 0)
         BufferArray = new char[BufferSize];
       Cur = BufferArray;
       setStream(Stream, Owns);
     }
-    explicit circular_raw_ostream()
-        : raw_ostream(/*unbuffered*/true),
-            TheStream(nullptr),
-            OwnsStream(REFERENCE_ONLY),
-            BufferArray(nullptr),
-            Filled(false),
-            Banner("") {
-      Cur = BufferArray;
-    }
 
-    ~circular_raw_ostream() {
+    ~circular_raw_ostream() override {
       flush();
       flushBufferWithBanner();
       releaseStream();

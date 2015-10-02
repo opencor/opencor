@@ -91,7 +91,7 @@ protected:
       NumContainedTys(0), ContainedTys(nullptr) {
     setTypeID(tid);
   }
-  ~Type() {}
+  ~Type() = default;
 
   void setTypeID(TypeID ID) {
     IDAndSubclassData = (ID & 0xFF) | (IDAndSubclassData & 0xFFFFFF00);
@@ -395,6 +395,7 @@ public:
   static IntegerType *getInt16Ty(LLVMContext &C);
   static IntegerType *getInt32Ty(LLVMContext &C);
   static IntegerType *getInt64Ty(LLVMContext &C);
+  static IntegerType *getInt128Ty(LLVMContext &C);
 
   //===--------------------------------------------------------------------===//
   // Convenience methods for getting pointer types with one of the above builtin
