@@ -445,15 +445,18 @@ ELSE()
             lib/DebugInfo/PDB/PDBSymbolUnknown.cpp
             lib/DebugInfo/PDB/PDBSymbolUsingNamespace.cpp
 
-            lib/DebugInfo/PDB/DIA/DIADataStream.cpp
-            lib/DebugInfo/PDB/DIA/DIAEnumDebugStreams.cpp
-            lib/DebugInfo/PDB/DIA/DIAEnumLineNumbers.cpp
-            lib/DebugInfo/PDB/DIA/DIAEnumSourceFiles.cpp
-            lib/DebugInfo/PDB/DIA/DIAEnumSymbols.cpp
-            lib/DebugInfo/PDB/DIA/DIALineNumber.cpp
-            lib/DebugInfo/PDB/DIA/DIARawSymbol.cpp
-            lib/DebugInfo/PDB/DIA/DIASession.cpp
-            lib/DebugInfo/PDB/DIA/DIASourceFile.cpp
+#            lib/DebugInfo/PDB/DIA/DIADataStream.cpp
+#            lib/DebugInfo/PDB/DIA/DIAEnumDebugStreams.cpp
+#            lib/DebugInfo/PDB/DIA/DIAEnumLineNumbers.cpp
+#            lib/DebugInfo/PDB/DIA/DIAEnumSourceFiles.cpp
+#            lib/DebugInfo/PDB/DIA/DIAEnumSymbols.cpp
+#            lib/DebugInfo/PDB/DIA/DIALineNumber.cpp
+#            lib/DebugInfo/PDB/DIA/DIARawSymbol.cpp
+#            lib/DebugInfo/PDB/DIA/DIASession.cpp
+#            lib/DebugInfo/PDB/DIA/DIASourceFile.cpp
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM. Indeed, the DIA SDK is only available on Windows,
+#       and it may or not be present on a build machine...
 
             lib/ExecutionEngine/ExecutionEngine.cpp
             lib/ExecutionEngine/ExecutionEngineBindings.cpp
