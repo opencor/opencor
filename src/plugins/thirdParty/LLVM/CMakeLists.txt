@@ -499,13 +499,13 @@ ELSE()
 
 #            lib/Fuzzer/FuzzerCrossOver.cpp
 #            lib/Fuzzer/FuzzerDriver.cpp
-#            lib/Fuzzer/FuzzerIO.cpp
 #            lib/Fuzzer/FuzzerInterface.cpp
+#            lib/Fuzzer/FuzzerIO.cpp
 #            lib/Fuzzer/FuzzerLoop.cpp
 #            lib/Fuzzer/FuzzerMain.cpp
 #            lib/Fuzzer/FuzzerMutate.cpp
-#            lib/Fuzzer/FuzzerSHA1.cpp
 #            lib/Fuzzer/FuzzerSanitizerOptions.cpp
+#            lib/Fuzzer/FuzzerSHA1.cpp
 #            lib/Fuzzer/FuzzerTraceState.cpp
 #            lib/Fuzzer/FuzzerUtil.cpp
 # Note: we don't need the above, but we leave them so we know about them next
@@ -639,6 +639,7 @@ ELSE()
             lib/MC/MCParser/MCTargetAsmParser.cpp
 
             lib/Object/Archive.cpp
+            lib/Object/ArchiveWriter.cpp
             lib/Object/Binary.cpp
             lib/Object/COFFObjectFile.cpp
             lib/Object/COFFYAML.cpp
@@ -653,6 +654,7 @@ ELSE()
             lib/Object/ObjectFile.cpp
             lib/Object/RecordStreamer.cpp
             lib/Object/SymbolicFile.cpp
+            lib/Object/SymbolSize.cpp
 
             lib/Option/Arg.cpp
             lib/Option/ArgList.cpp
