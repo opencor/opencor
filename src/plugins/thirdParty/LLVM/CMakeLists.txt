@@ -497,17 +497,21 @@ ELSE()
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyldMachO.cpp
 
-            lib/Fuzzer/FuzzerCrossOver.cpp
-            lib/Fuzzer/FuzzerDriver.cpp
-            lib/Fuzzer/FuzzerIO.cpp
-            lib/Fuzzer/FuzzerInterface.cpp
-            lib/Fuzzer/FuzzerLoop.cpp
-            lib/Fuzzer/FuzzerMain.cpp
-            lib/Fuzzer/FuzzerMutate.cpp
-            lib/Fuzzer/FuzzerSHA1.cpp
-            lib/Fuzzer/FuzzerSanitizerOptions.cpp
-            lib/Fuzzer/FuzzerTraceState.cpp
-            lib/Fuzzer/FuzzerUtil.cpp
+#            lib/Fuzzer/FuzzerCrossOver.cpp
+#            lib/Fuzzer/FuzzerDriver.cpp
+#            lib/Fuzzer/FuzzerIO.cpp
+#            lib/Fuzzer/FuzzerInterface.cpp
+#            lib/Fuzzer/FuzzerLoop.cpp
+#            lib/Fuzzer/FuzzerMain.cpp
+#            lib/Fuzzer/FuzzerMutate.cpp
+#            lib/Fuzzer/FuzzerSHA1.cpp
+#            lib/Fuzzer/FuzzerSanitizerOptions.cpp
+#            lib/Fuzzer/FuzzerTraceState.cpp
+#            lib/Fuzzer/FuzzerUtil.cpp
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM. Indeed, the Fuzzer library is to be moved to
+#       http://llvm.org/docs/LibFuzzer.html, so it's not part of LLVM as
+#       such...
 
             lib/IR/AsmWriter.cpp
             lib/IR/Attributes.cpp
