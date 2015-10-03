@@ -9,16 +9,16 @@
 
 // FastEmit Immediate Predicate functions.
 static bool Predicate_i16immSExt8(int64_t Imm) {
- return Imm == (int8_t)Imm; 
+ return Imm == (int8_t)Imm;
 }
 static bool Predicate_i32immSExt8(int64_t Imm) {
- return Imm == (int8_t)Imm; 
+ return Imm == (int8_t)Imm;
 }
 static bool Predicate_i64immSExt8(int64_t Imm) {
- return Imm == (int8_t)Imm; 
+ return Imm == (int8_t)Imm;
 }
 static bool Predicate_i64immSExt32(int64_t Imm) {
- return Imm == (int32_t)Imm; 
+ return Imm == (int32_t)Imm;
 }
 static bool Predicate_i8immZExt5(int64_t Imm) {
 
@@ -31,7 +31,7 @@ static bool Predicate_i8immZExt3(int64_t Imm) {
 
 }
 static bool Predicate_FROUND_NO_EXC(int64_t Imm) {
- return Imm == 8; 
+ return Imm == 8;
 }
 static bool Predicate_FROUND_CURRENT(int64_t Imm) {
 

@@ -1059,7 +1059,7 @@ static llvm::StringRef getPrettyPlatformName(llvm::StringRef Platform) {
              .Case("ios_app_extension", "iOS (App Extension)")
              .Case("macosx_app_extension", "OS X (App Extension)")
              .Default(llvm::StringRef());
-} 
+}
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Availability; }
 };
@@ -1659,7 +1659,7 @@ public:
 
     bool isMutex() const { return getName().equals_lower("mutex"); }
     bool isRole() const { return getName().equals_lower("role"); }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Capability; }
 };
@@ -2754,7 +2754,7 @@ public:
   void printPrettyPragma(raw_ostream &OS, const PrintingPolicy &Policy) const {
     OS << '(' << getSection() << ')';
   }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::InitSeg; }
 };
@@ -3055,7 +3055,7 @@ public:
     assert(SpellingIndex == Pragma_clang_loop && "Unexpected spelling");
     return getOptionName(option) + getValueString(Policy);
   }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LoopHint; }
 };
@@ -3161,7 +3161,7 @@ public:
       return Inheritance <= Keyword_single_inheritance;
     return Inheritance <= Keyword_multiple_inheritance;
   }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSInheritance; }
 };
@@ -3287,7 +3287,7 @@ public:
   };
 
   Mode getVtorDispMode() const { return Mode(vdm); }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSVtorDisp; }
 };
@@ -3811,7 +3811,7 @@ public:
       }
       return Mask;
     }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoSanitize; }
 };
@@ -3939,7 +3939,7 @@ bool isNonNull(unsigned idx) const {
       if (V == idx)
         return true;
     return false;
-  } 
+  }
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NonNull; }
 };
@@ -4705,7 +4705,7 @@ public:
              isTakes() ? Takes :
              Returns;
     }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Ownership; }
 };
