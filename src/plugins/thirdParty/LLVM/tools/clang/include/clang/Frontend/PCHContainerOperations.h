@@ -14,6 +14,9 @@
 #include "llvm/ADT/StringMap.h"
 #include "llvm/Support/MemoryBuffer.h"
 #include <memory>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class raw_pwrite_stream;
@@ -95,7 +98,12 @@ class RawPCHContainerReader : public PCHContainerReader {
 };
 
 /// A registry of PCHContainerWriter and -Reader objects for different formats.
+/*---OPENCOR---
 class PCHContainerOperations {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT PCHContainerOperations {
+//---OPENCOR--- END
   llvm::StringMap<std::unique_ptr<PCHContainerWriter>> Writers;
   llvm::StringMap<std::unique_ptr<PCHContainerReader>> Readers;
 public:
