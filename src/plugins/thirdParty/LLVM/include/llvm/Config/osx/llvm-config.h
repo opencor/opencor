@@ -24,10 +24,14 @@
 /* #undef LLVM_DATADIR */
 
 /* Target triple LLVM will generate code for by default */
-#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin14.4.0"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.0.0"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
+
+/* Define if LLVM is built with asserts and checks that change the layout of
+   client-visible data structures.  */
+/* #undef LLVM_ENABLE_ABI_BREAKING_CHECKS */
 
 /* Define if threads enabled */
 #define LLVM_ENABLE_THREADS 1
@@ -39,7 +43,7 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOST_TRIPLE "x86_64-apple-darwin14.4.0"
+#define LLVM_HOST_TRIPLE "x86_64-apple-darwin15.0.0"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
@@ -90,13 +94,13 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 6
+#define LLVM_VERSION_MINOR 7
 
 /* Patch version of the LLVM API */
-#define LLVM_VERSION_PATCH 2
+#define LLVM_VERSION_PATCH 0
 
 /* LLVM version string */
-#define LLVM_VERSION_STRING "3.6.2"
+#define LLVM_VERSION_STRING "3.7.0"
 
 /* Define if we link Polly to the tools */
 /* #undef LINK_POLLY_INTO_TOOLS */

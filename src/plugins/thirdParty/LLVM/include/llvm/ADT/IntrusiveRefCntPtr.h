@@ -21,10 +21,9 @@
 #ifndef LLVM_ADT_INTRUSIVEREFCNTPTR_H
 #define LLVM_ADT_INTRUSIVEREFCNTPTR_H
 
-#include "llvm/Support/Casting.h"
-#include "llvm/Support/Compiler.h"
 #include <atomic>
-#include <memory>
+#include <cassert>
+#include <cstddef>
 
 namespace llvm {
 
@@ -177,7 +176,7 @@ public:
 
     T* get() const { return Obj; }
 
-    LLVM_EXPLICIT operator bool() const { return Obj; }
+    explicit operator bool() const { return Obj; }
 
     void swap(IntrusiveRefCntPtr& other) {
       T* tmp = other.Obj;
@@ -267,6 +266,8 @@ public:
 //===----------------------------------------------------------------------===//
 // LLVM-style downcasting support for IntrusiveRefCntPtr objects
 //===----------------------------------------------------------------------===//
+
+  template <typename From> struct simplify_type;
 
   template<class T> struct simplify_type<IntrusiveRefCntPtr<T> > {
     typedef T* SimpleType;

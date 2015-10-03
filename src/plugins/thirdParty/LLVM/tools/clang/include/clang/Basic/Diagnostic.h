@@ -18,6 +18,7 @@
 #include "clang/Basic/DiagnosticIDs.h"
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/Basic/SourceLocation.h"
+#include "clang/Basic/Specifiers.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
@@ -140,8 +141,8 @@ class DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
 //---OPENCOR--- BEGIN
 class LLVM_EXPORT DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
 //---OPENCOR--- END
-  DiagnosticsEngine(const DiagnosticsEngine &) LLVM_DELETED_FUNCTION;
-  void operator=(const DiagnosticsEngine &) LLVM_DELETED_FUNCTION;
+  DiagnosticsEngine(const DiagnosticsEngine &) = delete;
+  void operator=(const DiagnosticsEngine &) = delete;
 
 public:
   /// \brief The level of the diagnostic, after it has been through mapping.
@@ -885,7 +886,7 @@ class DiagnosticBuilder {
   /// call to ForceEmit.
   mutable bool IsForceEmit;
 
-  void operator=(const DiagnosticBuilder &) LLVM_DELETED_FUNCTION;
+  void operator=(const DiagnosticBuilder &) = delete;
   friend class DiagnosticsEngine;
 
   DiagnosticBuilder()
@@ -999,7 +1000,8 @@ public:
 
   void AddFixItHint(const FixItHint &Hint) const {
     assert(isActive() && "Clients must not add to cleared diagnostic!");
-    DiagObj->DiagFixItHints.push_back(Hint);
+    if (!Hint.isNull())
+      DiagObj->DiagFixItHints.push_back(Hint);
   }
 
   void addFlagValue(StringRef V) const { DiagObj->FlagValue = V; }
@@ -1103,10 +1105,23 @@ inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
 
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
                                            const FixItHint &Hint) {
-  if (!Hint.isNull())
+  DB.AddFixItHint(Hint);
+  return DB;
+}
+
+inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
+                                           ArrayRef<FixItHint> Hints) {
+  for (const FixItHint &Hint : Hints)
     DB.AddFixItHint(Hint);
   return DB;
 }
+
+/// A nullability kind paired with a bit indicating whether it used a
+/// context-sensitive keyword.
+typedef std::pair<NullabilityKind, bool> DiagNullabilityKind;
+
+const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
+                                    DiagNullabilityKind nullability);
 
 inline DiagnosticBuilder DiagnosticsEngine::Report(SourceLocation Loc,
                                                    unsigned DiagID) {
@@ -1268,7 +1283,7 @@ public:
   ~StoredDiagnostic();
 
   /// \brief Evaluates true when this object stores a diagnostic.
-  LLVM_EXPLICIT operator bool() const { return Message.size() > 0; }
+  explicit operator bool() const { return Message.size() > 0; }
 
   unsigned getID() const { return ID; }
   DiagnosticsEngine::Level getLevel() const { return Level; }
@@ -1377,7 +1392,7 @@ class ForwardingDiagnosticConsumer : public DiagnosticConsumer {
 public:
   ForwardingDiagnosticConsumer(DiagnosticConsumer &Target) : Target(Target) {}
 
-  virtual ~ForwardingDiagnosticConsumer();
+  ~ForwardingDiagnosticConsumer() override;
 
   void HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
                         const Diagnostic &Info) override;

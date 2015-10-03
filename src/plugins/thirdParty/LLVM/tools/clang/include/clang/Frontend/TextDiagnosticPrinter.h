@@ -48,7 +48,7 @@ class LLVM_EXPORT TextDiagnosticPrinter : public DiagnosticConsumer {
 public:
   TextDiagnosticPrinter(raw_ostream &os, DiagnosticOptions *diags,
                         bool OwnsOutputStream = false);
-  virtual ~TextDiagnosticPrinter();
+  ~TextDiagnosticPrinter() override;
 
   /// setPrefix - Set the diagnostic printer prefix string, which will be
   /// printed at the start of any diagnostics. If empty, no prefix string is

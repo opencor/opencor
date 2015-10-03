@@ -27,9 +27,12 @@ specific language governing permissions and limitations under the License.
 #if defined(Q_OS_WIN)
     #pragma warning(push)
     #pragma warning(disable: 4291)
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#elif defined(Q_OS_MAC)
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
 #else
     #error Unsupported platform
 #endif
