@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
     #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic error "-Wmissing-field-initializers"
+    #pragma GCC diagnostic error "-Wstrict-aliasing"
     #pragma GCC diagnostic error "-Wunused-parameter"
 #elif defined(Q_OS_MAC)
     #pragma GCC diagnostic error "-Wunused-parameter"
