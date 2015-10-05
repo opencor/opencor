@@ -97,9 +97,9 @@ void SingleCellViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void SingleCellViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Let our view widget know that a file has been modified
 
-    // We don't handle this interface...
+    mViewWidget->fileModified(pFileName);
 }
 
 //==============================================================================

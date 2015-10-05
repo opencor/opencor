@@ -107,7 +107,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellViewSimulation *>()),
     mProgresses(QMap<QString, int>()),
-    mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
@@ -635,10 +634,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
         graphPanelsWidget->backup(prevFileName);
 
-        // Keep track of the status of the reset action and of the value of the
-        // delay widget
+        // Keep track of the status of the value of the delay widget
 
-        mResets.insert(prevFileName, mGui->actionResetModelParameters->isEnabled());
         mDelays.insert(prevFileName, mDelayWidget->value());
     }
 
@@ -691,7 +688,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
     // Retrieve the status of the reset action and the value of the delay widget
 
-    mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName));
+    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
 
     mDelayWidget->setValue(mDelays.value(pFileName));
 
@@ -965,8 +962,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
 
     mProgresses.remove(pFileName);
 
-    mResets.remove(pFileName);
-
     if (pReloadingView)
         mDelays.insert(pFileName, mDelayWidget->value());
     else
@@ -1041,6 +1036,17 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
     // Let our graphs widget know that the given file has been opened
 
     mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::fileModified(const QString &pFileName)
+{
+    // Update our reset action, but only if we are dealing with the active
+    // simulation
+
+    if (!mSimulation->fileName().compare(pFileName))
+        mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
 }
 
 //==============================================================================
@@ -2036,11 +2042,9 @@ void SingleCellViewWidget::simulationError(const QString &pMessage,
 
 void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
 {
-    // Update our refresh action, but only if we are dealing with the active
-    // simulation
+    // Update the modified state of the sender's corresponding file
 
-    if (qobject_cast<SingleCellViewSimulationData *>(sender()) == mSimulation->data())
-        mGui->actionResetModelParameters->setEnabled(pIsModified);
+    Core::FileManager::instance()->setModified(qobject_cast<SingleCellViewSimulationData *>(sender())->simulation()->fileName(), pIsModified);
 }
 
 //==============================================================================
@@ -2419,16 +2423,15 @@ void SingleCellViewWidget::updateGraphData(SingleCellViewGraphPanelPlotGraph *pG
 void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize)
 {
-    // Enable/disable the reset action, in case we are dealing with the active
-    // simulation
+    // Update the modified state of the simulation's corresponding file
     // Note: normally, our simulation worker would, for each point interval,
     //       call SingleCellViewSimulationData::checkForModifications(), but
     //       this would result in a signal being emitted (and then handled by
     //       SingleCellViewWidget::simulationDataModified()), resulting in some
     //       time overhead, so we check things here instead...
 
-    if (pSimulation == mSimulation)
-        mGui->actionResetModelParameters->setEnabled(pSimulation->data()->isModified());
+    Core::FileManager::instance()->setModified(pSimulation->fileName(),
+                                               pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
 

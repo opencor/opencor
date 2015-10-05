@@ -41,8 +41,10 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                           SingleCellViewSimulation *pSimulation,
                                                            const SolverInterfaces &pSolverInterfaces) :
     mRuntime(pRuntime),
+    mSimulation(pSimulation),
     mSolverInterfaces(pSolverInterfaces),
     mDelay(0),
     mStartingPoint(0.0),
@@ -90,6 +92,15 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
+}
+
+//==============================================================================
+
+SingleCellViewSimulation * SingleCellViewSimulationData::simulation() const
+{
+    // Return our simulation
+
+    return mSimulation;
 }
 
 //==============================================================================
@@ -838,7 +849,7 @@ SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
     mFileName(pFileName),
     mRuntime(pRuntime),
     mSolverInterfaces(pSolverInterfaces),
-    mData(new SingleCellViewSimulationData(pRuntime, pSolverInterfaces)),
+    mData(new SingleCellViewSimulationData(pRuntime, this, pSolverInterfaces)),
     mResults(new SingleCellViewSimulationResults(pRuntime, this))
 {
     // Keep track of any error occurring in our data
