@@ -1031,6 +1031,18 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
+bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
+                                    const QString &pNewFileName)
+{
+    // Save the given file
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
+
+    return cellmlFile?cellmlFile->save(pNewFileName):false;
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::fileOpened(const QString &pFileName)
 {
     // Let our graphs widget know that the given file has been opened
