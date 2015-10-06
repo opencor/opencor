@@ -199,7 +199,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     pEvent->accept();
 
-    // Check whether a action is to be carried out
+    // Check whether an action is to be carried out
 
     if (mOwner->action() == SingleCellViewGraphPanelPlotWidget::None)
         return;

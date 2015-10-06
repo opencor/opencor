@@ -72,7 +72,7 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);
 
 bool cliApplication(QCoreApplication *pApp, int *pRes);
 
-void removeGlobalInstances();
+void removeGlobalSettings();
 
 //==============================================================================
 
