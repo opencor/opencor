@@ -1104,8 +1104,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 return false;
             }
         } else {
-            // The file hasn't been modified, so we just need to make a physical
-            // copy of it
+            // The file hasn't been modified, so we just make a physical copy of
+            // it
             // Note: there may already be a file, which name is that of the one
             //       we want to use, so remove it (if no such file exists, then
             //       nothing will happen, so we are fine)...
