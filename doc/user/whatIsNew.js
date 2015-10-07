@@ -115,7 +115,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
-                               { "type": "Fixed", "description": "Mac <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.7 and <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.8 issue with models that need to compute 10<sup>x</sup>." }
+                               { "type": "Fixed", "description": "Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and <a href=\"https://en.wikipedia.org/wiki/OS_X_Mountain_Lion\">OS X 10.8</a> (Mountain Lion) issue with models that need to compute 10<sup>x</sup>." }
                              ]
                            }
                          ]
@@ -129,7 +129,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Checking for updates." },
                            { "type": "Added", "description": "<a href=\"howToGetStarted.html\">How to get started</a> section." },
                            { "type": "Added", "description": "Support for 64-bit <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
-                           { "type": "Added", "description": "Support for <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.10 (Yosemite)." },
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_Yosemite\">OS X 10.10</a> (Yosemite)." },
                            { "type": "Improved", "description": "OpenCOR logo." },
                            { "type": "Improved", "description": "Binaries on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
@@ -339,7 +339,7 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "<a href=\"licensing.html\">Open source license</a>." },
-                           { "type": "Added", "description": "Support for Mac <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.7 (Lion) and later." },
+                           { "type": "Added", "description": "Support for Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and later." },
                            { "type": "Added", "description": "Reload a file (either as a result of a direct action or because it got modified outside OpenCOR)." },
                            { "type": "Added", "description": "Show/hide all the recent/current docked widgets at once." },
                            { "type": "Added", "description": "<a href=\"http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the CellML file examples." },
