@@ -61,8 +61,6 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QMainWindow *mMainWindow;
-
     QAction *mAddTwoNumbersAction;
 
     void runHelpCommand();
