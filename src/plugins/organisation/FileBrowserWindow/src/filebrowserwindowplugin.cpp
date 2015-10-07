@@ -71,15 +71,15 @@ void FileBrowserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void FileBrowserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
+void FileBrowserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our file browser window
 
-    mFileBrowserWindowAction = Core::newAction(true, pMainWindow);
+    mFileBrowserWindowAction = Core::newAction(true, Core::mainWindow());
 
     // Create our file browser window
 
-    mFileBrowserWindowWindow = new FileBrowserWindowWindow(pMainWindow);
+    mFileBrowserWindowWindow = new FileBrowserWindowWindow(Core::mainWindow());
 }
 
 //==============================================================================

@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewplugin.h"
 #include "cellmltextviewwidget.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -198,11 +199,11 @@ void CellMLTextViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLTextViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CellMLTextViewPlugin::initializePlugin()
 {
     // Create our CellML text view widget
 
-    mViewWidget = new CellmlTextViewWidget(pMainWindow);
+    mViewWidget = new CellmlTextViewWidget(Core::mainWindow());
 
     // Hide our CellML text view widget since it may not initially be shown in
     // our central widget

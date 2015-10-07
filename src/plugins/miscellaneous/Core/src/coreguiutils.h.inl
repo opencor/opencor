@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
+QMainWindow CORE_EXPORT * mainWindow();
+
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
                                   const bool &pEnabled = true);
-
-void CORE_EXPORT updateColors();
 
 QColor CORE_EXPORT baseColor();
 QColor CORE_EXPORT borderColor();

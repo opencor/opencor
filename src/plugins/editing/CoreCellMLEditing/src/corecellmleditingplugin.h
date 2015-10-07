@@ -71,8 +71,6 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QMainWindow *mMainWindow;
-
     QAction *mFileNewCellml1_0FileAction;
     QAction *mFileNewCellml1_1FileAction;
 

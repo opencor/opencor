@@ -19,16 +19,14 @@ specific language governing permissions and limitations under the License.
 // SampleView plugin
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "sampleviewplugin.h"
 #include "sampleviewwidget.h"
 
 //==============================================================================
 
-#include <QMainWindow>
-
-//==============================================================================
-
 #include <QIcon>
+#include <QMainWindow>
 
 //==============================================================================
 
@@ -161,11 +159,11 @@ void SampleViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SampleViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SampleViewPlugin::initializePlugin()
 {
     // Create our sample view widget
 
-    mViewWidget = new SampleViewWidget(pMainWindow);
+    mViewWidget = new SampleViewWidget(Core::mainWindow());
 
     // Hide our sample view widget since it may not initially be shown in our
     // central widget

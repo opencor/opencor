@@ -164,23 +164,19 @@ void CellMLToolsPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CellMLToolsPlugin::initializePlugin()
 {
-    // Keep track of our main window
-
-    mMainWindow = pMainWindow;
-
     // Create our Tools | Export To menu
 
-    mCellmlFileExportToMenu = Core::newMenu("CellmlFileExportTo", pMainWindow);
+    mCellmlFileExportToMenu = Core::newMenu("CellmlFileExportTo", Core::mainWindow());
 
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu
 
-    mExportToCellml10Action = new QAction(pMainWindow);
-    mExportToCellml11Action = new QAction(pMainWindow);
+    mExportToCellml10Action = new QAction(Core::mainWindow());
+    mExportToCellml11Action = new QAction(Core::mainWindow());
 
-    mExportToUserDefinedFormatAction = new QAction(pMainWindow);
+    mExportToUserDefinedFormatAction = new QAction(Core::mainWindow());
 
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
     mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
@@ -284,7 +280,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
             // Note: if there are 'issues', then there can be only one of them
             //       following a CellML export...
 
-        QMessageBox::warning(mMainWindow, tr("Export CellML File To %1").arg(format),
+        QMessageBox::warning(Core::mainWindow(), tr("Export CellML File To %1").arg(format),
                              tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
     }
 }
@@ -493,7 +489,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             // Note: if there are 'issues', then there can be only one of them
             //       following a CellML export...
 
-        QMessageBox::warning(mMainWindow, tr("Export CellML File To User-Defined Format"),
+        QMessageBox::warning(Core::mainWindow(), tr("Export CellML File To User-Defined Format"),
                              tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
     }
 }

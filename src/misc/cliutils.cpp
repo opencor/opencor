@@ -115,10 +115,10 @@ void initPluginsPath(const QString &pAppFileName)
 
 void initApplication(QCoreApplication *pApp, QString *pAppDate)
 {
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // Remove our global settings, in case OpenCOR previously crashed or
     // something (and therefore didn't remove all of them before quitting)
 
-    OpenCOR::removeGlobalInstances();
+    OpenCOR::removeGlobalSettings();
 
     // Ignore SSL-related warnings
     // Note #1: this is to address an issue with QSslSocket not being able to
@@ -162,10 +162,10 @@ bool cliApplication(QCoreApplication *pApp, int *pRes)
 
 //==============================================================================
 
-void removeGlobalInstances()
+void removeGlobalSettings()
 {
-    // Remove all the 'global' information shared between OpenCOR and its
-    // different plugins
+    // Remove the global settings shared between OpenCOR and its different
+    // plugins
 
     QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
 }

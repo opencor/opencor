@@ -179,14 +179,14 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
         if (editor) {
             QList<QAction *> contextMenuActions = editor->contextMenu()->actions();
 
-            QAction *separatorAction = new QAction(mMainWindow);
+            QAction *separatorAction = new QAction(Core::mainWindow());
 
             separatorAction->setSeparator(true);
 
             contextMenuActions.append(separatorAction);
             contextMenuActions.append(mEditReformatAction);
 
-            separatorAction = new QAction(mMainWindow);
+            separatorAction = new QAction(Core::mainWindow());
 
             separatorAction->setSeparator(true);
 
@@ -249,22 +249,18 @@ void CoreCellMLEditingPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CoreCellMLEditingPlugin::initializePlugin()
 {
-    // Keep track of our main window
-
-    mMainWindow = pMainWindow;
-
     // Create our different actions
 
-    mFileNewCellml1_0FileAction = new QAction(pMainWindow);
-    mFileNewCellml1_1FileAction = new QAction(pMainWindow);
+    mFileNewCellml1_0FileAction = new QAction(Core::mainWindow());
+    mFileNewCellml1_1FileAction = new QAction(Core::mainWindow());
 
-    mEditReformatAction = new QAction(pMainWindow);
+    mEditReformatAction = new QAction(Core::mainWindow());
 
     mEditReformatAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_R));
 
-    mToolsCellmlValidationAction = new QAction(pMainWindow);
+    mToolsCellmlValidationAction = new QAction(Core::mainWindow());
 
     mToolsCellmlValidationAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_T));
 

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 #include "rawviewplugin.h"
 #include "rawviewwidget.h"
@@ -182,11 +183,11 @@ void RawViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void RawViewPlugin::initializePlugin()
 {
     // Create our raw view widget
 
-    mViewWidget = new RawViewWidget(pMainWindow);
+    mViewWidget = new RawViewWidget(Core::mainWindow());
 
     // Hide our raw view widget since it may not initially be shown in our
     // central widget

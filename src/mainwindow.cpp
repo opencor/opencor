@@ -231,7 +231,7 @@ showEnableAction(mGui->actionPreferences, false);
     // Initialise the plugin itself
 
     foreach (Plugin *plugin, mLoadedPluginPlugins)
-        qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin(this);
+        qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
 
     // Initialise the plugin further by doing things that can only be done by
     // OpenCOR itself (e.g. set the central widget, create some menus)
@@ -330,10 +330,6 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
         mGui->actionFullScreen->setChecked(isFullScreen());
 #endif
-    } else if (pEvent->type() == QEvent::PaletteChange) {
-        // The palette has changed, so update our colours
-
-        updateColors();
     }
 }
 

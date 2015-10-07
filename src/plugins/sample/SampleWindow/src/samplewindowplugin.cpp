@@ -63,15 +63,15 @@ void SampleWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SampleWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SampleWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our sample window
 
-    mSampleWindowAction = Core::newAction(true, pMainWindow);
+    mSampleWindowAction = Core::newAction(true, Core::mainWindow());
 
     // Create our sample window
 
-    mSampleWindowWindow = new SampleWindowWindow(pMainWindow);
+    mSampleWindowWindow = new SampleWindowWindow(Core::mainWindow());
 }
 
 //==============================================================================

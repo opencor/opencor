@@ -105,10 +105,9 @@ int main(int pArgC, char *pArgV[])
         }
     }
 
-    // Remove all 'global' instances that were created and used during this
-    // session
+    // Remove the global settings that were created and used during this session
 
-    OpenCOR::removeGlobalInstances();
+    OpenCOR::removeGlobalSettings();
 
     // Release some memory
 
