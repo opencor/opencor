@@ -233,10 +233,6 @@ int main(int pArgC, char *pArgV[])
     }
 #endif
 
-    // Initialise our colours by 'updating' them
-
-    OpenCOR::updateColors();
-
     // Create and show our splash screen, if we are not in debug mode
 
 #ifndef QT_DEBUG

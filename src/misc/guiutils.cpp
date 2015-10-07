@@ -26,8 +26,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QApplication>
-#include <QSettings>
-#include <QStackedWidget>
 
 //==============================================================================
 

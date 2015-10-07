@@ -330,10 +330,6 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
         mGui->actionFullScreen->setChecked(isFullScreen());
 #endif
-    } else if (pEvent->type() == QEvent::PaletteChange) {
-        // The palette has changed, so update our colours
-
-        updateColors();
     }
 }
 
