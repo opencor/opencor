@@ -41,7 +41,13 @@ QColor baseColor()
 
 QColor borderColor()
 {
-    // Retrieve and return the border colour, but first retrieve our main window
+    // Retrieve and return the colour used for a 'normal' border, but first
+    // retrieve our main window
+    // Note #1: we use a QStackedWidget object and retrieve the colour of the
+    //          pixel which is in the middle of the right border...
+    // Note #2: we don't rely on the top border because it may be rendered in a
+    //          special way. Also, we don't rely on a corner as such in case
+    //          it's rendered as a rounded corner...
 
     QWidget *mainWindow = 0;
 
@@ -59,6 +65,8 @@ QColor borderColor()
 
     static QStackedWidget *stackedWidget;
     static QImage image;
+    static int xPixel;
+    static int yPixel;
     static bool firstTime = true;
 
     if (firstTime) {
@@ -68,16 +76,17 @@ QColor borderColor()
 
         stackedWidget->setFrameShape(QFrame::StyledPanel);
 
-        stackedWidget->move(-2*stackedWidget->width(),
-                            -2*stackedWidget->height());
-        stackedWidget->show();
+        stackedWidget->hide();
+
+        xPixel = image.width()-1;
+        yPixel = 0.5*image.height();
 
         firstTime = false;
     }
 
     stackedWidget->render(&image);
 
-    return QColor(image.pixel(image.width()-1, 0.5*image.height()));
+    return QColor(image.pixel(xPixel, yPixel));
 }
 
 //==============================================================================
