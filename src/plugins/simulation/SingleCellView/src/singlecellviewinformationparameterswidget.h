@@ -87,6 +87,8 @@ public:
 
     void finishEditing();
 
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
+
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;

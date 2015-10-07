@@ -333,6 +333,15 @@ void SingleCellViewInformationParametersWidget::finishEditing()
 
 //==============================================================================
 
+QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SingleCellViewInformationParametersWidget::parameters() const
+{
+    // Return our parameters
+
+    return mParameters;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Make sure that we have a property editor

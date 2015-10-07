@@ -1034,11 +1034,38 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    // Save the given file
+    // Save the given file, but first retrieve the simulation associated with
+    // the given (old) file name
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
+    SingleCellViewSimulation *simulation = mSimulations.value(pOldFileName);
 
-    return cellmlFile?cellmlFile->save(pNewFileName):false;
+    if (simulation) {
+        // Retrieve all the state and constant parameters which value has
+        // changed and update our CellML object with their 'new' values
+
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
+        ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
+        QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
+
+        foreach (Core::Property *property, parameters.keys()) {
+            CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
+
+            if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+                || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
+                ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
+                ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
+                ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
+
+                variable->initialValue(property->value().toStdWString());
+            }
+        }
+
+        // Now, we can effectively save our given file
+
+        return cellmlFile->save(pNewFileName);
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
