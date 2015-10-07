@@ -41,10 +41,43 @@ QColor baseColor()
 
 QColor borderColor()
 {
-    // Return the border colour
-//---GRY--- TO BE DONE...
+    // Retrieve and return the border colour, but first retrieve our main window
 
-return Qt::red;
+    QWidget *mainWindow = 0;
+
+    foreach (QWidget *widget, qApp->topLevelWidgets()) {
+        if (widget->inherits("QMainWindow")) {
+            mainWindow = widget;
+
+            break;
+        }
+    }
+
+    Q_ASSERT(mainWindow);
+
+    // Now, we can retrieve and return the border colour
+
+    static QStackedWidget *stackedWidget;
+    static QImage image;
+    static bool firstTime = true;
+
+    if (firstTime) {
+        stackedWidget = new QStackedWidget(mainWindow);
+        image = QImage(stackedWidget->size(),
+                       QImage::Format_ARGB32_Premultiplied);
+
+        stackedWidget->setFrameShape(QFrame::StyledPanel);
+
+        stackedWidget->move(-2*stackedWidget->width(),
+                            -2*stackedWidget->height());
+        stackedWidget->show();
+
+        firstTime = false;
+    }
+
+    stackedWidget->render(&image);
+
+    return QColor(image.pixel(image.width()-1, 0.5*image.height()));
 }
 
 //==============================================================================
