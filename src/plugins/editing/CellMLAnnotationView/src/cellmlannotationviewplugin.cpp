@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
@@ -142,15 +143,11 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CellMLAnnotationViewPlugin::initializePlugin()
 {
-    // Keep track of our main window
-
-    mMainWindow = pMainWindow;
-
     // Create our CellML annotation view widget
 
-    mViewWidget = new CellmlAnnotationViewWidget(this, pMainWindow);
+    mViewWidget = new CellmlAnnotationViewWidget(this, Core::mainWindow());
 
     // Hide our CellML annotation view widget since it may not initially be
     // shown in our central widget

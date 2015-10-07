@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 #include "rawcellmlviewplugin.h"
 #include "rawcellmlviewwidget.h"
@@ -209,11 +210,11 @@ void RawCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawCellMLViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void RawCellMLViewPlugin::initializePlugin()
 {
     // Create our raw CellML view widget
 
-    mViewWidget = new RawCellmlViewWidget(pMainWindow);
+    mViewWidget = new RawCellmlViewWidget(Core::mainWindow());
 
     // Hide our raw CellML view widget since it may not initially be shown in
     // our central widget

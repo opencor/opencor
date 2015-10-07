@@ -70,8 +70,6 @@ public:
 #include "viewinterface.inl"
 
 private:
-    QMainWindow *mMainWindow;
-
     CellmlAnnotationViewWidget *mViewWidget;
 };
 

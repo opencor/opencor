@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 class QAction;
 class QFrame;
 class QLabel;
+class QMainWindow;
 class QMenu;
 class QWidget;
 

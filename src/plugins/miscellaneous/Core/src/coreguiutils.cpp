@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <QFrame>
 #include <QIODevice>
 #include <QLabel>
+#include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPalette>

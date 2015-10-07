@@ -19,6 +19,32 @@ specific language governing permissions and limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
+QMainWindow * mainWindow()
+{
+    // Retrieve and return our main window
+
+    static bool firstTime = true;
+    static QMainWindow *res = 0;
+
+    if (firstTime) {
+        foreach (QWidget *widget, qApp->topLevelWidgets()) {
+            if (widget->inherits("QMainWindow")) {
+                res = qobject_cast<QMainWindow *>(widget);
+
+                break;
+            }
+        }
+
+        firstTime = false;
+    }
+
+    Q_ASSERT(res);
+
+    return res;
+}
+
+//==============================================================================
+
 void showEnableAction(QAction *pAction, const bool &pVisible,
                       const bool &pEnabled)
 {
@@ -55,24 +81,7 @@ QColor borderColor()
     static int yPixel;
 
     if (firstTime) {
-        // Retrieve our main window
-
-        QWidget *mainWindow = 0;
-
-        foreach (QWidget *widget, qApp->topLevelWidgets()) {
-            if (widget->inherits("QMainWindow")) {
-                mainWindow = widget;
-
-                break;
-            }
-        }
-
-        Q_ASSERT(mainWindow);
-
-        // Create a QStackedWidget object, so we can render it in an image and
-        // thus retrieve its border colour
-
-        stackedWidget = new QStackedWidget(mainWindow);
+        stackedWidget = new QStackedWidget(mainWindow());
         image = QImage(stackedWidget->size(),
                        QImage::Format_ARGB32_Premultiplied);
 

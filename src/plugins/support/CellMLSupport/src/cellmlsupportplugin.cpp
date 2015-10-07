@@ -97,10 +97,8 @@ void CellMLSupportPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLSupportPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CellMLSupportPlugin::initializePlugin()
 {
-    Q_UNUSED(pMainWindow);
-
     // We don't handle this interface...
 }
 

@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "coreguiutils.h"
 #include "datastoreinterface.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
@@ -156,11 +157,11 @@ void SingleCellViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SingleCellViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SingleCellViewPlugin::initializePlugin()
 {
     // Create our single view widget
 
-    mViewWidget = new SingleCellViewWidget(this, pMainWindow);
+    mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
     // Hide our single view widget since it may not initially be shown in our
     // central widget
