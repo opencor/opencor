@@ -103,7 +103,7 @@ void CliApplication::about() const
 
     version();
 
-    std::cout << osName().toStdString() << std::endl;
+    std::cout << QSysInfo::prettyProductName().toStdString() << std::endl;
     std::cout << copyright().toStdString() << std::endl;
     std::cout << std::endl;
     std::cout << mApp->applicationName().toStdString()
