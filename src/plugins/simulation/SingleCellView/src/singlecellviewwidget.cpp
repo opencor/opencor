@@ -1414,7 +1414,7 @@ void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
     sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                                 SEDMLSupport::Language::Cellml_1_1.toStdString():
                                 SEDMLSupport::Language::Cellml_1_0.toStdString());
-    sedmlModel->setSource(pModelSource.toStdString());
+    sedmlModel->setSource(Core::nativeCanonicalFileName(pModelSource).toStdString());
 
     // Apply some parameter changes, if any, to our SED-ML model
 //---GRY--- TO BE DONE...
