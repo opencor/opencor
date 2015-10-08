@@ -1634,8 +1634,8 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
                                                combineArchiveName,
                                                Core::fileTypes(mPluginParent->combineFileTypes()));
 
-    // Effectively export ourselves to SED-ML, if a SED-ML file name has been
-    // provided
+    // Effectively export ourselves to a COMBINE archive, if a COMBINE archive
+    // name has been provided
 
     if (!combineArchiveName.isEmpty()) {
         // Determine the path that is common to our main and, if any, imported
