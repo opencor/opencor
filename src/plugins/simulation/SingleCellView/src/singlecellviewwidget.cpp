@@ -1154,11 +1154,19 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulations.remove(pOldFileName);
     }
 
-    mProgresses.insert(pNewFileName, mProgresses.value(pOldFileName));
-    mProgresses.remove(pOldFileName);
+    int progress = mProgresses.value(pOldFileName, -1);
 
-    mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
-    mDelays.remove(pOldFileName);
+    if (progress != -1) {
+        mProgresses.insert(pNewFileName, progress);
+        mProgresses.remove(pOldFileName);
+    }
+
+    int delay = mDelays.value(pOldFileName, -1);
+
+    if (delay != -1) {
+        mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
+        mDelays.remove(pOldFileName);
+    }
 
     // Let our graphs widget know that the given file has been renamed
 
