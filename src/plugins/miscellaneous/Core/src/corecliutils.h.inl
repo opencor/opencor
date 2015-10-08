@@ -22,8 +22,6 @@ specific language governing permissions and limitations under the License.
 QString CORE_EXPORT shortVersion(QCoreApplication *pApp);
 QString CORE_EXPORT version(QCoreApplication *pApp);
 
-QString CORE_EXPORT osName();
-
 bool CORE_EXPORT internetConnectionAvailable();
 QString CORE_EXPORT noInternetConnectionAvailableMessage();
 

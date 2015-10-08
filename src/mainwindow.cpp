@@ -1156,7 +1156,7 @@ void MainWindow::on_actionAbout_triggered()
 
     QMessageBox::about(this, tr("About"),
                        "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
-                       "<h3 align=center><em>"+osName()+"</em></h3>"
+                       "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                        "<p align=center><em>"+copyright()+"</em></p>"
                        "<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qAppName()+"</strong></a> "+tr("is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files."));
 }
