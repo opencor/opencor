@@ -220,6 +220,7 @@ public:
     ~SingleCellViewSimulation();
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 

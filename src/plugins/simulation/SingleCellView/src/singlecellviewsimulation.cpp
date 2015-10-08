@@ -885,6 +885,15 @@ QString SingleCellViewSimulation::fileName() const
 
 //==============================================================================
 
+void SingleCellViewSimulation::setFileName(const QString &pFileName)
+{
+    // Set our file name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
 CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
 {
     // Return our runtime

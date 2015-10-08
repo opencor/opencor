@@ -152,7 +152,6 @@ private:
     Core::ProgressBarWidget *mProgressBarWidget;
 
     QMap<QString, int> mProgresses;
-
     QMap<QString, int> mDelays;
 
     Core::ToolBarWidget *mToolBarWidget;

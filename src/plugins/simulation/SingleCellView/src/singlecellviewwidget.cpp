@@ -1143,6 +1143,23 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
+    // Replace the old file name with the new one in our various trackers
+
+    SingleCellViewSimulation *simulation = mSimulations.value(pOldFileName);
+
+    if (simulation) {
+        simulation->setFileName(pNewFileName);
+
+        mSimulations.insert(pNewFileName, simulation);
+        mSimulations.remove(pOldFileName);
+    }
+
+    mProgresses.insert(pNewFileName, mProgresses.value(pOldFileName));
+    mProgresses.remove(pOldFileName);
+
+    mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
+    mDelays.remove(pOldFileName);
+
     // Let our graphs widget know that the given file has been renamed
 
     mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
