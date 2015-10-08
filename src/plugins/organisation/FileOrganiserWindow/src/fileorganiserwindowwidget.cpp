@@ -187,9 +187,10 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
         //       childItemsCount will be equal to -1 in the case of a file
         //       item), but it doesn't harm having it...
 
-        if (childParentItem)
+        if (childParentItem) {
             for (int i = 0; i < childItemsCount; ++i)
                 loadItemSettings(pSettings, childParentItem);
+        }
     }
 }
 
@@ -284,7 +285,7 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
     bool crtItemVisible = true;
     QModelIndex crtIndexParent = currentIndex().parent();
 
-    while (crtIndexParent.isValid())
+    while (crtIndexParent.isValid()) {
         if (isExpanded(crtIndexParent)) {
             // The current parent is expanded, so check to its parent
 
@@ -294,6 +295,7 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
 
             break;
         }
+    }
 
     pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?currentIndex():QModelIndex()));
 }
@@ -424,34 +426,36 @@ void FileOrganiserWindowWidget::dropEvent(QDropEvent *pEvent)
 
         // Move the contents of the list to its final destination
 
-        if (dropPosition != QAbstractItemView::BelowItem)
+        if (dropPosition != QAbstractItemView::BelowItem) {
             // Move the items in the order they were dropped
 
             for (int i = 0, iMax = items.count(); i < iMax; ++i)
                 moveItem(items[i], dropItem, dropPosition);
-        else
+        } else {
             // Move the items in a reverse order to that they were dropped since
             // we want them moved below the current item
 
             for (int i = items.count()-1; i >= 0; --i)
                 moveItem(items[i], dropItem, dropPosition);
+        }
     } else {
         // The user wants to drop files, so add them to the widget and this at
         // the right place
 
         QList<QUrl> urls = pEvent->mimeData()->urls();
 
-        if (dropPosition != QAbstractItemView::BelowItem)
+        if (dropPosition != QAbstractItemView::BelowItem) {
             // Add the files in the order they were dropped
 
             for (int i = 0, iMax = urls.count(); i < iMax; ++i)
                 addFile(urls[i].toLocalFile(), dropItem, dropPosition);
-        else
+        } else {
             // Add the files in a reverse order to that they were dropped since
             // we want them added below the current item
 
             for (int i = urls.count()-1; i >= 0; --i)
                 addFile(urls[i].toLocalFile(), dropItem, dropPosition);
+        }
     }
 
     // Accept the proposed action for the event
@@ -501,10 +505,11 @@ bool FileOrganiserWindowWidget::viewportEvent(QEvent *pEvent)
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
         QStandardItem *crtItem = mModel->itemFromIndex(indexAt(helpEvent->pos()));
 
-        if (crtItem)
+        if (crtItem) {
             setToolTip(QDir::toNativeSeparators(crtItem->data(Item::Folder).toBool()?
                                                     QString():
                                                     crtItem->data(Item::Path).toString()));
+        }
     }
 
     // Default handling of the event
@@ -526,13 +531,14 @@ bool FileOrganiserWindowWidget::parentIndexExists(const QModelIndex &pIndex,
         // The current index has a valid parent, so check whether the parent is
         // in the list
 
-        if (pIndexes.indexOf(parentIndex) != -1)
+        if (pIndexes.indexOf(parentIndex) != -1) {
             return true;
-        else
+        } else {
             // The parent index couldn't be found, but what about the parent
             // index's parent?
 
             return parentIndexExists(parentIndex, pIndexes);
+        }
     } else {
         return false;
     }
@@ -569,10 +575,12 @@ QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList 
 
             QStandardItem *crtItem = mModel->itemFromIndex(crtIndex);
 
-            if (crtItem && crtItem->data(Item::Folder).toBool())
-                for (int j = res.count()-1; j >= 0; --j)
+            if (crtItem && crtItem->data(Item::Folder).toBool()) {
+                for (int j = res.count()-1; j >= 0; --j) {
                     if (parentIndexExists(res[j], res))
                         res.removeAt(j);
+                }
+            }
         }
     }
 
@@ -584,7 +592,7 @@ QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList 
     for (int i = res.count()-1; i >= 0; --i) {
         QStandardItem *crtItem = mModel->itemFromIndex(res[i]);
 
-        if (crtItem && !crtItem->data(Item::Folder).toBool())
+        if (crtItem && !crtItem->data(Item::Folder).toBool()) {
             // The index corresponds to a valid file item, so check whether in
             // the cleaned list there is another file item referencing the same
             // physical file and, if so, remove it from the cleaned list and the
@@ -611,6 +619,7 @@ QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList 
                     break;
                 }
             }
+        }
     }
 
     return res;
@@ -629,9 +638,10 @@ bool FileOrganiserWindowWidget::itemIsOrIsChildOf(QStandardItem *pItem,
     } else if (pOtherItem->rowCount()) {
         // pOtherItem has children, so check against them
 
-        for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i)
+        for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i) {
             if (itemIsOrIsChildOf(pItem, pOtherItem->child(i)))
                 return true;
+        }
 
         return false;
     } else {
@@ -799,21 +809,21 @@ void FileOrganiserWindowWidget::dropItems(QStandardItem *pDropItem,
     // Drop pItems based on pDropPosition's value
 
     switch (pDropPosition) {
-        case QAbstractItemView::AboveItem:
-            pNewParentItem->insertRow(pDropItem->row(), pItems);
+    case QAbstractItemView::AboveItem:
+        pNewParentItem->insertRow(pDropItem->row(), pItems);
 
-            break;
-        case QAbstractItemView::BelowItem:
-            pNewParentItem->insertRow(pDropItem->row()+1, pItems);
+        break;
+    case QAbstractItemView::BelowItem:
+        pNewParentItem->insertRow(pDropItem->row()+1, pItems);
 
-            break;
-        default:
-            pNewParentItem->appendRow(pItems);
+        break;
+    default:
+        pNewParentItem->appendRow(pItems);
 
-            // Expand pNewParentItem, so the user knows that the item has been
-            // moved to it (assuming that pNewParentItem was collapsed)
+        // Expand pNewParentItem, so the user knows that the item has been moved
+        // to it (assuming that pNewParentItem was collapsed)
 
-            setExpanded(pNewParentItem->index(), true);
+        setExpanded(pNewParentItem->index(), true);
     }
 }
 
@@ -970,9 +980,10 @@ void FileOrganiserWindowWidget::collapseEmptyFolders(QStandardItem *pFolder)
 {
     // Recursively collapse any empty child folder
 
-    for (int i = 0, iMax = pFolder->rowCount(); i < iMax; ++i)
+    for (int i = 0, iMax = pFolder->rowCount(); i < iMax; ++i) {
         if (pFolder->child(i)->data(Item::Folder).toBool())
             collapseEmptyFolders(pFolder->child(i));
+    }
 
     // Collapse the current folder, if necessary and if it isn't the root folder
 
@@ -1060,12 +1071,8 @@ QStringList FileOrganiserWindowWidget::selectedFiles() const
         QString fileName = filePath(crtSelectedIndexes[i]);
 
         if (fileName.isEmpty())
-            // The current item is not a file, so return an empty list
-
             return QStringList();
         else
-            // The current item is a file, so just add to the list
-
             res << fileName;
     }
 
@@ -1111,16 +1118,17 @@ bool FileOrganiserWindowWidget::canCreateNewFolder() const
 
     // Determnine whether we can create a new folder
 
-    if (selectedIndexesCount == 1)
+    if (selectedIndexesCount == 1) {
         // One item is currently selected, so the only way we could create a new
         // folder is if the current item is also a folder
 
         return mModel->itemFromIndex(selectedIndexes.first())->data(Item::Folder).toBool();
-    else
+    } else {
         // Either no item or several items are currently selected, so the only
         // way we could create a new folder is if no item is currently selected
 
         return !selectedIndexesCount;
+    }
 }
 
 //==============================================================================

@@ -50,8 +50,8 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     QStringList fileNames = QStringList();
 
-    foreach (const QFileInfo &file, fileInfoList)
-        fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
+    foreach (const QFileInfo &fileInfo, fileInfoList)
+        fileNames << QDir::toNativeSeparators(fileInfo.canonicalFilePath());
 
     // Retrieve and initialise some information about the plugins
 
