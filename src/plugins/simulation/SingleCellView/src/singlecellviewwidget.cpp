@@ -1642,7 +1642,13 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
         // CellML files, as well as get a copy of our imported CellML files,
         // should they be remote ones
 
+#if defined(Q_OS_WIN)
+        static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+#else
+    #error Unsupported platform
+#endif
 
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
         QString commonPath = remoteFile?
@@ -1684,7 +1690,7 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 
         QString modelSource = remoteFile?
                                   QString(cellmlFileName).remove(commonPath):
-                                  QString(fileName).remove(commonPath);
+                                  QString(fileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive

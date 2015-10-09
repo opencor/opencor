@@ -185,10 +185,16 @@ bool CombineArchive::save(const QString &pNewFileName)
         // Get a copy of our various files, if any, after creating the
         // sub-folder(s) in which they are
 
+#if defined(Q_OS_WIN)
+        static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+#else
+    #error Unsupported platform
+#endif
 
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-            QString destFileName = dirName+QDir::separator()+combineArchiveFile.location();
+            QString destFileName = Core::nativeCanonicalDirName(dirName)+QDir::separator()+combineArchiveFile.location();
             QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
             if (!QDir(destDirName).exists()) {
