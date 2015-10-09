@@ -96,8 +96,6 @@ MACRO(INITIALISE_PROJECT)
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
-
-        SET(Qt5${REQUIRED_QT_MODULE}_DIR ${Qt5${REQUIRED_QT_MODULE}_DIR} CACHE INTERNAL "${Qt5${REQUIRED_QT_MODULE}_DIR}" FORCE)
     ENDFOREACH()
 
     IF(ENABLE_TESTS)
@@ -718,6 +716,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       build...
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
+                    ../../../misc/cliutils.h
+
                     ../../plugin.h
                     ../../pluginmanager.h
 
@@ -725,6 +725,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
+                    ../../../misc/cliapplication.cpp
+                    ../../../misc/cliutils.cpp
+
                     ../../../tests/src/testsutils.cpp
 
                     ../../plugin.cpp
@@ -747,7 +750,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Plugins
 
-                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
+                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME} Core)
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         ${PLUGIN}Plugin
                     )
@@ -763,7 +766,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Qt modules
 
-                FOREACH(QT_MODULE ${QT_MODULES} Test)
+                FOREACH(QT_MODULE ${QT_MODULES} Network Test Xml XmlPatterns)
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         Qt5::${QT_MODULE}
                     )

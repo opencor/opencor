@@ -134,8 +134,6 @@ void CORE_EXPORT * globalInstance(const QString &pObjectName,
 QString CORE_EXPORT activeDirectory();
 void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 
-QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
-
 void CORE_EXPORT doNothing(const int &pMax);
 
 void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,

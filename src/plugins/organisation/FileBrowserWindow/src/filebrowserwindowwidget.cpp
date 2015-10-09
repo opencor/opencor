@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // File browser widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "filebrowserwindowwidget.h"
 
 //==============================================================================
@@ -484,7 +485,7 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        setToolTip(QDir::toNativeSeparators(mModel->filePath(indexAt(helpEvent->pos()))));
+        setToolTip(Core::nativeCanonicalFileName(mModel->filePath(indexAt(helpEvent->pos()))));
     }
 
     // Default handling of the event

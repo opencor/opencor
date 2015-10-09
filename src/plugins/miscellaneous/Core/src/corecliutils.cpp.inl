@@ -53,7 +53,33 @@ QString shortVersion(QCoreApplication *pApp)
 
 QString version(QCoreApplication *pApp)
 {
-    return  pApp->applicationName()+" "+shortVersion(pApp);
+    return pApp->applicationName()+" "+shortVersion(pApp);
+}
+
+//==============================================================================
+
+QString nativeCanonicalDirName(const QString &pDirName)
+{
+    // Return a native and canonical version of the given directory name or a
+    // native version, if the native and canonical version is empty (i.e. the
+    // directory doesn't exist (anymore?))
+
+    QString res = QDir::toNativeSeparators(QDir(pDirName).canonicalPath());
+
+    return res.isEmpty()?QDir::toNativeSeparators(pDirName):res;
+}
+
+//==============================================================================
+
+QString nativeCanonicalFileName(const QString &pFileName)
+{
+    // Return a native and canonical version of the given file name or a native
+    // version, if the native and canonical version is empty (i.e. the file
+    // doesn't exist (anymore?))
+
+    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+
+    return res.isEmpty()?QDir::toNativeSeparators(pFileName):res;
 }
 
 //==============================================================================

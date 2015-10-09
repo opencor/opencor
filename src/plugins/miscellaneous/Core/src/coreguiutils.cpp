@@ -145,14 +145,14 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     // Retrieve and return a save file name
 
     QFileInfo fileInfo = pFileName;
-    QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
-                                                                        pCaption,
-                                                                        !fileInfo.canonicalPath().compare(".")?
-                                                                            activeDirectory()+QDir::separator()+fileInfo.fileName():
-                                                                            pFileName,
-                                                                        allFilters(pFilters),
-                                                                        pSelectedFilter,
-                                                                        QFileDialog::DontConfirmOverwrite));
+    QString res = Core::nativeCanonicalFileName(QFileDialog::getSaveFileName(qApp->activeWindow(),
+                                                                             pCaption,
+                                                                             !fileInfo.canonicalPath().compare(".")?
+                                                                                 activeDirectory()+QDir::separator()+fileInfo.fileName():
+                                                                                 pFileName,
+                                                                             allFilters(pFilters),
+                                                                             pSelectedFilter,
+                                                                             QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we have got a save file name
 
@@ -192,11 +192,11 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
 {
     // Retrieve and return a save file name
 
-    QString res = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(qApp->activeWindow(),
-                                                                             pCaption,
-                                                                             pDirName.isEmpty()?
-                                                                                 activeDirectory():
-                                                                                 pDirName));
+    QString res = Core::nativeCanonicalDirName(QFileDialog::getExistingDirectory(qApp->activeWindow(),
+                                                                                 pCaption,
+                                                                                 pDirName.isEmpty()?
+                                                                                     activeDirectory():
+                                                                                     pDirName));
 
     // Make sure that we have got a directory
 
