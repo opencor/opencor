@@ -716,23 +716,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       build...
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
-                    ../../../misc/cliutils.h
-
-                    ../../plugin.h
-                    ../../pluginmanager.h
-
                     ${TEST_HEADER_MOC}
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
-                    ../../../misc/cliapplication.cpp
-                    ../../../misc/cliutils.cpp
-
                     ../../../tests/src/testsutils.cpp
-
-                    ../../plugin.cpp
-                    ../../plugininfo.cpp
-                    ../../pluginmanager.cpp
 
                     ${SOURCES}
                     ${SOURCES_MOC}
@@ -750,7 +738,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Plugins
 
-                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME} Core)
+                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         ${PLUGIN}Plugin
                     )
@@ -766,7 +754,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Qt modules
 
-                FOREACH(QT_MODULE ${QT_MODULES} Network Test Xml XmlPatterns)
+                FOREACH(QT_MODULE ${QT_MODULES} Test)
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         Qt5::${QT_MODULE}
                     )
