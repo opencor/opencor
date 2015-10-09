@@ -194,7 +194,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 #endif
 
         foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-            QString destFileName = Core::nativeCanonicalDirName(dirName)+QDir::separator()+combineArchiveFile.location();
+            QString destFileName = Core::nativeCanonicalFileName(dirName+QDir::separator()+combineArchiveFile.location());
             QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
             if (!QDir(destDirName).exists()) {
