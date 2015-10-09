@@ -96,8 +96,6 @@ MACRO(INITIALISE_PROJECT)
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
-
-        SET(Qt5${REQUIRED_QT_MODULE}_DIR ${Qt5${REQUIRED_QT_MODULE}_DIR} CACHE INTERNAL "${Qt5${REQUIRED_QT_MODULE}_DIR}" FORCE)
     ENDFOREACH()
 
     IF(ENABLE_TESTS)
@@ -718,18 +716,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       build...
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
-                    ../../plugin.h
-                    ../../pluginmanager.h
-
                     ${TEST_HEADER_MOC}
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
-
-                    ../../plugin.cpp
-                    ../../plugininfo.cpp
-                    ../../pluginmanager.cpp
 
                     ${SOURCES}
                     ${SOURCES_MOC}

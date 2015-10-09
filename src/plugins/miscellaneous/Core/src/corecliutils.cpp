@@ -572,19 +572,6 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName)
 
 //==============================================================================
 
-QString nativeCanonicalFileName(const QString &pFileName)
-{
-    // Return a native and canonical version of the given file name or the given
-    // file name, the native and canonical version is empty (i.e. the file
-    // doesn't exist (anymore?))
-
-    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
-
-    return res.isEmpty()?pFileName:res;
-}
-
-//==============================================================================
-
 #ifdef Q_OS_WIN
     #pragma optimize("", off)
 #endif

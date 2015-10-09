@@ -19,6 +19,11 @@ specific language governing permissions and limitations under the License.
 // Plugin manager
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
+    #include "corecliutils.h"
+#else
+    #include "cliutils.h"
+#endif
 #include "plugin.h"
 #include "pluginmanager.h"
 
@@ -50,8 +55,12 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     QStringList fileNames = QStringList();
 
-    foreach (const QFileInfo &file, fileInfoList)
-        fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
+    foreach (const QFileInfo &fileInfo, fileInfoList)
+#ifndef OpenCOR_MAIN
+        fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
+#else
+        fileNames << nativeCanonicalFileName(fileInfo.canonicalFilePath());
+#endif
 
     // Retrieve and initialise some information about the plugins
 
