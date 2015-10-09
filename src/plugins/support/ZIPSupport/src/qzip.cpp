@@ -1093,7 +1093,8 @@ bool QZipReader::extractAll(const QString &destinationDir) const
         const QString absPath = destinationDir + QDir::separator() + fi.filePath;
         if (fi.isFile) {
 //---OPENCOR--- BEGIN
-            QString absPathDir = QString(absPath).remove(FileNameRegEx);
+            QString absPathDir = QDir::toNativeSeparators(absPath);
+            absPathDir.remove(FileNameRegEx);
             if (!QDir(absPathDir).exists())
                 if (!QDir().mkpath(absPathDir))
                     return false;
