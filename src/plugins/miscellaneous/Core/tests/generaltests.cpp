@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core tests
+// Core general tests
 //==============================================================================
 
 #include "corecliutils.h"
-#include "tests.h"
+#include "generaltests.h"
 
 //==============================================================================
 
@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void Tests::initTestCase()
+void GeneralTests::initTestCase()
 {
     // Initialise some constants
 
@@ -38,7 +38,7 @@ void Tests::initTestCase()
 
 //==============================================================================
 
-void Tests::qSameStringListsTests()
+void GeneralTests::qSameStringListsTests()
 {
     // Compare two identical string lists
 
@@ -64,7 +64,7 @@ void Tests::qSameStringListsTests()
 
 //==============================================================================
 
-void Tests::sizeAsStringTests()
+void GeneralTests::sizeAsStringTests()
 {
     // Test the sizeAsString() method
 
@@ -84,7 +84,7 @@ void Tests::sizeAsStringTests()
 
 //==============================================================================
 
-void Tests::sha1Tests()
+void GeneralTests::sha1Tests()
 {
     // Test the sha1() method
 
@@ -98,7 +98,7 @@ void Tests::sha1Tests()
 
 //==============================================================================
 
-void Tests::stringPositionAsLineColumnTests()
+void GeneralTests::stringPositionAsLineColumnTests()
 {
     // Test the stringPositionAsLineColumn() method
 
@@ -133,7 +133,7 @@ void Tests::stringPositionAsLineColumnTests()
 
 //==============================================================================
 
-void Tests::stringLineColumnAsPositionTests()
+void GeneralTests::stringLineColumnAsPositionTests()
 {
     // Test the stringLineColumnAsPosition() method
 
@@ -174,7 +174,7 @@ void Tests::stringLineColumnAsPositionTests()
 
 //==============================================================================
 
-void Tests::newFileNameTests()
+void GeneralTests::newFileNameTests()
 {
     // Test the newFileName() method
 
@@ -247,7 +247,7 @@ void Tests::newFileNameTests()
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(Tests)
+QTEST_GUILESS_MAIN(GeneralTests)
 
 //==============================================================================
 // End of file

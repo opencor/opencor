@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core tests
+// Core MathML tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#ifndef MATHMLTESTS_H
+#define MATHMLTESTS_H
 
 //==============================================================================
 
@@ -28,23 +28,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class Tests : public QObject
+class MathmlTests : public QObject
 {
     Q_OBJECT
 
-private:
-    QString mString;
-    QString mEol;
-
 private Q_SLOTS:
-    void initTestCase();
-
-    void qSameStringListsTests();
-    void sizeAsStringTests();
-    void sha1Tests();
-    void stringPositionAsLineColumnTests();
-    void stringLineColumnAsPositionTests();
-    void newFileNameTests();
+    void tests();
 };
 
 //==============================================================================
