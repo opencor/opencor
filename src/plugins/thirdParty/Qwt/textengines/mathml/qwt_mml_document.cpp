@@ -18,7 +18,6 @@ static const qreal   g_mfrac_spacing          = 0.05;
 static const qreal   g_mroot_base_margin      = 0.1;
 static const qreal   g_mroot_base_line        = 0.5;
 static const qreal   g_script_size_multiplier = 0.5;
-static const qreal   g_sup_shift_multiplier   = 0.5;
 static const char *  g_subsup_spacing         = "veryverythinmathspace";
 static const qreal   g_min_font_point_size    = 8.0;
 static const ushort  g_radical                = ( 0x22 << 8 ) | 0x1B;
@@ -2478,20 +2477,30 @@ void QwtMmlMsupNode::layoutSymbol()
 {
     QwtMmlNode *b = base();
     QwtMmlNode *s = sscript();
+    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
+    qreal threshold = b->myRect().top() + 0.5 * ( b->myRect().height() - subsup_spacing );
+    qreal shift = 0.0;
+
+    if ( b->myRect().top() + s->myRect().bottom() > threshold )
+        shift = threshold - ( b->myRect().top() + s->myRect().bottom() );
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    s->setRelOrigin( QPointF( interpretSpacing( g_subsup_spacing, 0 ),
-                              -g_sup_shift_multiplier * s->myRect().height() ) );
+    s->setRelOrigin( QPointF( subsup_spacing, b->myRect().top() + shift ) );
 }
 
 void QwtMmlMsubNode::layoutSymbol()
 {
     QwtMmlNode *b = base();
     QwtMmlNode *s = sscript();
+    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
+    qreal threshold = b->myRect().top() + 0.5 * ( b->myRect().height() + subsup_spacing );
+    qreal sub_shift = 0.0;
+
+    if ( b->myRect().bottom() + s->myRect().top() < threshold )
+        sub_shift = threshold - ( b->myRect().bottom() + s->myRect().top() );
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    s->setRelOrigin( QPointF( interpretSpacing( g_subsup_spacing, 0 ),
-                              s->myRect().height() ) );
+    s->setRelOrigin( QPointF( subsup_spacing, b->myRect().bottom() + sub_shift ) );
 }
 
 QwtMmlNode *QwtMmlMsubsupNode::base() const
@@ -2519,24 +2528,21 @@ void QwtMmlMsubsupNode::layoutSymbol()
     QwtMmlNode *b = base();
     QwtMmlNode *sub = subscript();
     QwtMmlNode *sup = superscript();
+    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
+    qreal sub_threshold = b->myRect().top() + 0.5 * ( b->myRect().height() + subsup_spacing );
+    qreal sup_threshold = sub_threshold - subsup_spacing;
+    qreal sub_shift = 0.0;
+    qreal sup_shift = 0.0;
+
+    if ( b->myRect().bottom() + sub->myRect().top() < sub_threshold )
+        sub_shift = sub_threshold - ( b->myRect().bottom() + sub->myRect().top() );
+
+    if ( b->myRect().top() + sup->myRect().bottom() > sup_threshold )
+        sup_shift = sup_threshold - ( b->myRect().top() + sup->myRect().bottom() );
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-
-    QRectF sub_rect = sub->myRect();
-    QRectF sup_rect = sup->myRect();
-    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
-    qreal shift = 0.0;
-
-    sub_rect.moveTo( QPointF( 0.0, sub->myRect().height() ) );
-    sup_rect.moveTo( QPointF( 0.0, -g_sup_shift_multiplier * sup->myRect().height() ) );
-
-    qreal subsup_diff = sub_rect.top() - sup_rect.bottom();
-
-    if ( subsup_diff < subsup_spacing )
-        shift = 0.5 * ( subsup_spacing - subsup_diff );
-
-    sub->setRelOrigin( QPointF( subsup_spacing, sub_rect.top() + shift ) );
-    sup->setRelOrigin( QPointF( subsup_spacing, sup_rect.top() - shift ) );
+    sub->setRelOrigin( QPointF( subsup_spacing, b->myRect().bottom() + sub_shift ) );
+    sup->setRelOrigin( QPointF( subsup_spacing, b->myRect().top() + sup_shift ) );
 }
 
 int QwtMmlMsubsupNode::scriptlevel( const QwtMmlNode *child ) const
