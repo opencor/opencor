@@ -28,7 +28,6 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "mathmlconverter.h"
 #include "rawcellmlviewwidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
@@ -74,19 +73,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
 
-    mMathmlConverter = new Core::MathmlConverter();
-
-    connect(mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
+    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
             this, SLOT(mathmlConversionDone(const QString &, const QString &)));
-}
-
-//==============================================================================
-
-RawCellmlViewWidget::~RawCellmlViewWidget()
-{
-    // Delete some internal objects
-
-    delete mMathmlConverter;
 }
 
 //==============================================================================
@@ -546,7 +534,7 @@ void RawCellmlViewWidget::updateViewer()
                     if (!presentationMathmlEquation.isEmpty())
                         mEditingWidget->viewer()->setContents(presentationMathmlEquation);
                     else
-                        mMathmlConverter->convert(contentMathmlEquation);
+                        mMathmlConverter.convert(contentMathmlEquation);
                 }
             } else {
                 // Our current position is not within a Content MathML equation
