@@ -19,6 +19,10 @@ specific language governing permissions and limitations under the License.
 // Core MathML tests
 //==============================================================================
 
+#include "../../../../tests/src/testsutils.h"
+
+//==============================================================================
+
 #include "mathmltests.h"
 
 //==============================================================================
@@ -27,8 +31,55 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+void MathmlTests::initTestCase()
+{
+    // Keep track of our original directory and go to our tests directory
+
+    mOrigPath = QDir::currentPath();
+
+    QDir::setCurrent(OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data"));
+}
+
+//==============================================================================
+
+void MathmlTests::cleanupTestCase()
+{
+    // Go back to our original directory
+
+    QDir::setCurrent(mOrigPath);
+}
+
+//==============================================================================
+
 void MathmlTests::tests()
 {
+    // Create our MathML converter and create a connection to retrieve the
+    // result of its MathML conversions
+
+    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
+            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
+
+    // Convert some Content MathML to Presentation MathML
+
+    foreach (const QString &fileName, QDir().entryList(QStringList() << "*.in")) {
+        mFileNames << fileName;
+
+        mMathmlConverter.convert(OpenCOR::rawFileContents(fileName));
+    }
+}
+
+//==============================================================================
+
+void MathmlTests::mathmlConversionDone(const QString &pContentMathml,
+                                       const QString &pPresentationMathml)
+{
+qDebug("=========");
+qDebug("%s", qPrintable(mFileNames.first()));
+mFileNames.removeFirst();
+qDebug("---------");
+qDebug("%s", qPrintable(pContentMathml));
+qDebug("---------");
+qDebug("%s", qPrintable(pPresentationMathml));
 }
 
 //==============================================================================

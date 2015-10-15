@@ -24,7 +24,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "mathmlconverter.h"
+
+//==============================================================================
+
 #include <QObject>
+#include <QStringList>
 
 //==============================================================================
 
@@ -32,8 +37,20 @@ class MathmlTests : public QObject
 {
     Q_OBJECT
 
+private:
+    QString mOrigPath;
+
+    OpenCOR::Core::MathmlConverter mMathmlConverter;
+    QStringList mFileNames;
+
 private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
+
     void tests();
+
+    void mathmlConversionDone(const QString &pContentMathml,
+                              const QString &pPresentationMathml);
 };
 
 //==============================================================================
