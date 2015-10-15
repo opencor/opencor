@@ -19,12 +19,12 @@ specific language governing permissions and limitations under the License.
 // ZIP support tests
 //==============================================================================
 
-#include "corecliutils.h"
-#include "tests.h"
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
-#include "../../../../tests/src/testsutils.h"
+#include "corecliutils.h"
+#include "tests.h"
 
 //==============================================================================
 

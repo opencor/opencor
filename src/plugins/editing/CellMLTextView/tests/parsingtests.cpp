@@ -19,15 +19,15 @@ specific language governing permissions and limitations under the License.
 // CellML Text view parsing tests
 //==============================================================================
 
+#include "../../../../tests/src/testsutils.h"
+
+//==============================================================================
+
 #include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
 #include "corecliutils.h"
 #include "parsingtests.h"
-
-//==============================================================================
-
-#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
