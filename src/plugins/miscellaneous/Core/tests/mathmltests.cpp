@@ -50,8 +50,27 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
 //==============================================================================
 
+QtMessageHandler gOrigMessageHandler;
+
+//==============================================================================
+
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    // Handle, using the default message handler, all messages except warning
+    // messages
+
+    if (type != QtWarningMsg)
+        gOrigMessageHandler(type, context, msg);
+}
+
+//==============================================================================
+
 void MathmlTests::tests()
 {
+    // We don't want to see warning messages (about QXmlQuery and threading)
+
+    gOrigMessageHandler = qInstallMessageHandler(messageHandler);
+
     // Convert some Content MathML to Presentation MathML
 
     QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+QDir::separator();
