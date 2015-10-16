@@ -31,55 +31,44 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void MathmlTests::initTestCase()
-{
-    // Keep track of our original directory and go to our tests directory
-
-    mOrigPath = QDir::currentPath();
-
-    QDir::setCurrent(OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data"));
-}
+#include <QXmlQuery>
 
 //==============================================================================
 
-void MathmlTests::cleanupTestCase()
+void DummyMessageHandler::handleMessage(QtMsgType pType,
+                                        const QString &pDescription,
+                                        const QUrl &pIdentifier,
+                                        const QSourceLocation &pSourceLocation)
 {
-    // Go back to our original directory
+    Q_UNUSED(pType);
+    Q_UNUSED(pDescription);
+    Q_UNUSED(pIdentifier);
+    Q_UNUSED(pSourceLocation);
 
-    QDir::setCurrent(mOrigPath);
+    // We ignore the message...
 }
 
 //==============================================================================
 
 void MathmlTests::tests()
 {
-    // Create our MathML converter and create a connection to retrieve the
-    // result of its MathML conversions
-
-    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
-
     // Convert some Content MathML to Presentation MathML
 
-    foreach (const QString &fileName, QDir().entryList(QStringList() << "*.in")) {
-        mFileNames << fileName;
+    QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+QDir::separator();
+    QXmlQuery xmlQuery(QXmlQuery::XSLT20);
+    DummyMessageHandler dummyMessageHandler;
+    QString output;
 
-        mMathmlConverter.convert(OpenCOR::rawFileContents(fileName));
+    xmlQuery.setMessageHandler(&dummyMessageHandler);
+
+    foreach (const QString &fileName, QDir(dirName).entryList(QStringList() << "*.in")) {
+        xmlQuery.setFocus(OpenCOR::rawFileContents(dirName+fileName));
+        xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
+
+        QVERIFY(xmlQuery.evaluateTo(&output));
+
+        QCOMPARE(output, QString(OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"))));
     }
-}
-
-//==============================================================================
-
-void MathmlTests::mathmlConversionDone(const QString &pContentMathml,
-                                       const QString &pPresentationMathml)
-{
-qDebug("=========");
-qDebug("%s", qPrintable(mFileNames.first()));
-mFileNames.removeFirst();
-qDebug("---------");
-qDebug("%s", qPrintable(pContentMathml));
-qDebug("---------");
-qDebug("%s", qPrintable(pPresentationMathml));
 }
 
 //==============================================================================
