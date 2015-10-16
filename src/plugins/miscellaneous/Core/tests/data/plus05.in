@@ -1,0 +1,22 @@
+<!--
+a=b/c+d/e;
+-->
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <plus/>
+            <apply>
+                <divide/>
+                <ci>b</ci>
+                <ci>c</ci>
+            </apply>
+            <apply>
+                <divide/>
+                <ci>d</ci>
+                <exponentiale/>
+            </apply>
+        </apply>
+    </apply>
+</math>

@@ -1,0 +1,17 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+        <mrow>
+            <mi mathvariant="italic">a</mi>
+        </mrow>
+        <mo>=</mo>
+        <mrow>
+            <mrow>
+                <mi mathvariant="italic">b</mi>
+            </mrow>
+            <mo>+</mo>
+            <mrow>
+                <mi mathvariant="italic">c</mi>
+            </mrow>
+        </mrow>
+    </mrow>
+</math>
