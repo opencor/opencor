@@ -1,0 +1,20 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+        <mi mathvariant="italic">a</mi>
+        <mo>=</mo>
+        <mfrac>
+            <mrow>
+                <mrow>
+                    <mo>−</mo>
+                    <mfrac>
+                        <mi mathvariant="italic">b</mi>
+                        <mi mathvariant="italic">c</mi>
+                    </mfrac>
+                </mrow>
+                <mo>·</mo>
+                <mi mathvariant="italic">d</mi>
+            </mrow>
+            <mi>e</mi>
+        </mfrac>
+    </mrow>
+</math>
