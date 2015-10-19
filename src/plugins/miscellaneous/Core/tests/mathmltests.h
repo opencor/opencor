@@ -46,8 +46,13 @@ class MathmlTests : public QObject
 {
     Q_OBJECT
 
+private:
+    void tests(const QString &pCategory);
+
 private Q_SLOTS:
-    void tests();
+    void initTestCase();
+
+    void plusTests();
 };
 
 //==============================================================================

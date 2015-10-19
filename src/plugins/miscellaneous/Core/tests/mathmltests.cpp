@@ -65,15 +65,20 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 //==============================================================================
 
-void MathmlTests::tests()
+void MathmlTests::initTestCase()
 {
     // We don't want to see warning messages (about QXmlQuery and threading)
 
     gOrigMessageHandler = qInstallMessageHandler(messageHandler);
+}
 
+//==============================================================================
+
+void MathmlTests::tests(const QString &pCategory)
+{
     // Convert some Content MathML to Presentation MathML
 
-    QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+QDir::separator();
+    QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+QDir::separator()+pCategory+QDir::separator();
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
     DummyMessageHandler dummyMessageHandler;
     QString actualOutput;
@@ -93,18 +98,27 @@ void MathmlTests::tests()
                 if (!failMessage.isEmpty())
                     failMessage += "\nFAIL!  : MathmlTests::tests() ";
 
-                failMessage += QString("Failed to convert '%1'\n%2\n%3").arg(fileName, actualOutput, expectedOutput);
+                failMessage += QString("Failed to convert '%1/%2'\n%3\n%4").arg(pCategory, fileName, actualOutput, expectedOutput);
             }
         } else {
             if (!failMessage.isEmpty())
                 failMessage += "\nFAIL!  : MathmlTests::tests() ";
 
-            failMessage += QString("Could not convert '%1'").arg(fileName);
+            failMessage += QString("Could not convert '%1/%2'").arg(pCategory, fileName);
         }
     }
 
     if (!failMessage.isEmpty())
         QFAIL(qPrintable(failMessage));
+}
+
+//==============================================================================
+
+void MathmlTests::plusTests()
+{
+    // Run some tests for the plus category
+
+    tests("plus");
 }
 
 //==============================================================================
