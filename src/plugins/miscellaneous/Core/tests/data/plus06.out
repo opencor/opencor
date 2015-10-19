@@ -3,17 +3,15 @@
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
         <mrow>
-            <mrow>
+            <mfrac>
                 <mi mathvariant="italic">b</mi>
-                <mo>·</mo>
                 <mi mathvariant="italic">c</mi>
-            </mrow>
+            </mfrac>
             <mo>+</mo>
-            <mrow>
+            <mfrac>
                 <mi mathvariant="italic">d</mi>
-                <mo>·</mo>
                 <mi>e</mi>
-            </mrow>
+            </mfrac>
         </mrow>
     </mrow>
 </math>

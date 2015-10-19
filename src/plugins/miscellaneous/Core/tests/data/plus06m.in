@@ -1,5 +1,5 @@
 <!--
-a=b*c+d*e;
+a=-b/c+d/e;
 -->
 <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -8,12 +8,15 @@ a=b*c+d*e;
         <apply>
             <plus/>
             <apply>
-                <times/>
-                <ci>b</ci>
+                <divide/>
+                <apply>
+                    <minus/>
+                    <ci>b</ci>
+                </apply>
                 <ci>c</ci>
             </apply>
             <apply>
-                <times/>
+                <divide/>
                 <ci>d</ci>
                 <exponentiale/>
             </apply>

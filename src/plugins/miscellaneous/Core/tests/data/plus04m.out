@@ -5,7 +5,10 @@
         <mrow>
             <mrow>
                 <mrow>
-                    <mi mathvariant="italic">b</mi>
+                    <mrow>
+                        <mo>−</mo>
+                        <mi mathvariant="italic">b</mi>
+                    </mrow>
                     <mo>−</mo>
                     <mi mathvariant="italic">c</mi>
                 </mrow>

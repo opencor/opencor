@@ -4,15 +4,20 @@
         <mo>=</mo>
         <mrow>
             <mrow>
+                <mo>−</mo>
                 <mrow>
-                    <mi mathvariant="italic">b</mi>
-                    <mo>−</mo>
-                    <mi mathvariant="italic">c</mi>
+                    <mo>(</mo>
+                    <mrow>
+                        <mi mathvariant="italic">b</mi>
+                        <mo>+</mo>
+                        <mi mathvariant="italic">c</mi>
+                    </mrow>
+                    <mo>)</mo>
                 </mrow>
                 <mo>+</mo>
                 <mi mathvariant="italic">d</mi>
             </mrow>
-            <mo>−</mo>
+            <mo>+</mo>
             <mi>e</mi>
         </mrow>
     </mrow>

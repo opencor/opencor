@@ -1,5 +1,5 @@
 <!--
-a=b-c+d-e;
+a=-(b-c)+d-e;
 -->
 <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -11,8 +11,11 @@ a=b-c+d-e;
                 <plus/>
                 <apply>
                     <minus/>
-                    <ci>b</ci>
-                    <ci>c</ci>
+                    <apply>
+                        <minus/>
+                        <ci>b</ci>
+                        <ci>c</ci>
+                    </apply>
                 </apply>
                 <ci>d</ci>
             </apply>
