@@ -78,6 +78,7 @@ void MathmlTests::tests()
     DummyMessageHandler dummyMessageHandler;
     QString actualOutput;
     QString expectedOutput;
+    QString failMessage = QString();
 
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
@@ -85,14 +86,25 @@ void MathmlTests::tests()
         xmlQuery.setFocus(OpenCOR::rawFileContents(dirName+fileName));
         xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
 
-        if (!xmlQuery.evaluateTo(&actualOutput))
-            QFAIL(qPrintable(QString("Could not convert '%1'").arg(fileName)));
+        if (xmlQuery.evaluateTo(&actualOutput)) {
+            expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
 
-        expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
+            if (actualOutput.compare(expectedOutput)) {
+                if (!failMessage.isEmpty())
+                    failMessage += "\nFAIL!  : MathmlTests::tests() ";
 
-        if (actualOutput.compare(expectedOutput))
-            QFAIL(qPrintable(QString("Failed to convert '%1'\n%2\n%3").arg(fileName, actualOutput, expectedOutput)));
+                failMessage += QString("Failed to convert '%1'\n%2\n%3").arg(fileName, actualOutput, expectedOutput);
+            }
+        } else {
+            if (!failMessage.isEmpty())
+                failMessage += "\nFAIL!  : MathmlTests::tests() ";
+
+            failMessage += QString("Could not convert '%1'").arg(fileName);
+        }
     }
+
+    if (!failMessage.isEmpty())
+        QFAIL(qPrintable(failMessage));
 }
 
 //==============================================================================
