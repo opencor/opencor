@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "corecliutils.h"
 #include "mathmltests.h"
 
 //==============================================================================
@@ -92,6 +93,7 @@ void MathmlTests::tests(const QString &pCategory)
         xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
 
         if (xmlQuery.evaluateTo(&actualOutput)) {
+            actualOutput = OpenCOR::Core::cleanPresentationMathml(actualOutput);
             expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
 
             if (actualOutput.compare(expectedOutput)) {
