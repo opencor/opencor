@@ -76,7 +76,8 @@ void MathmlTests::tests()
     QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+QDir::separator();
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
     DummyMessageHandler dummyMessageHandler;
-    QString output;
+    QString actualOutput;
+    QString expectedOutput;
 
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
@@ -84,9 +85,12 @@ void MathmlTests::tests()
         xmlQuery.setFocus(OpenCOR::rawFileContents(dirName+fileName));
         xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
 
-        QVERIFY(xmlQuery.evaluateTo(&output));
+        QVERIFY(xmlQuery.evaluateTo(&actualOutput));
 
-        QCOMPARE(output, QString(OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"))));
+        expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
+
+        if (actualOutput.compare(expectedOutput))
+            QFAIL(qPrintable(QString("Failed to convert %1:\n%2\n%3").arg(fileName, actualOutput, expectedOutput)));
     }
 }
 

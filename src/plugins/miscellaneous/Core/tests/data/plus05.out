@@ -1,34 +1,16 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML">
     <mrow>
-        <mrow>
-            <mi mathvariant="italic">a</mi>
-        </mrow>
+        <mi mathvariant="italic">a</mi>
         <mo>=</mo>
         <mrow>
             <mfrac>
-                <mrow>
-                    <divide/>
-                    <mrow>
-                        <mi mathvariant="italic">b</mi>
-                    </mrow>
-                </mrow>
-                <mrow>
-                    <mrow>
-                        <mi mathvariant="italic">c</mi>
-                    </mrow>
-                </mrow>
+                <mi mathvariant="italic">b</mi>
+                <mi mathvariant="italic">c</mi>
             </mfrac>
             <mo>+</mo>
             <mfrac>
-                <mrow>
-                    <divide/>
-                    <mrow>
-                        <mi mathvariant="italic">d</mi>
-                    </mrow>
-                </mrow>
-                <mrow>
-                    <mi>e</mi>
-                </mrow>
+                <mi mathvariant="italic">d</mi>
+                <mi>e</mi>
             </mfrac>
         </mrow>
     </mrow>

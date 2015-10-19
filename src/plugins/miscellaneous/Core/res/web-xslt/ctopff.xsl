@@ -141,7 +141,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 </x:template>
 
 <x:template match="m:ci">
- <mrow><x:apply-templates/></mrow>
+ <x:apply-templates/>
 </x:template>
 
 <!-- 4.4.1.2 csymbol -->
@@ -151,7 +151,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 </x:template>
 
 <x:template match="m:csymbol">
- <mrow><x:apply-templates/></mrow>
+ <x:apply-templates/>
 </x:template>
 
 <!-- 4.4.2.1 apply 4.4.2.2 reln -->
@@ -422,12 +422,8 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:divide]]
                                 |m:apply[*[1][self::m:csymbol='divide']]">
 <mfrac>
-  <mrow>
-    <x:apply-templates select="*[position()!=last()]"/>
-  </mrow>
-  <mrow>
-    <x:apply-templates select="*[last()]"/>
-  </mrow>
+  <x:apply-templates select="*[position()!=last()]"/>
+  <x:apply-templates select="*[last()]"/>
 </mfrac>
 </x:template>
 
