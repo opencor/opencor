@@ -422,8 +422,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:divide]]
                                 |m:apply[*[1][self::m:csymbol='divide']]">
 <mfrac>
-  <x:apply-templates select="*[position()!=last()]"/>
-  <x:apply-templates select="*[last()]"/>
+  <x:apply-templates select="*[position()!=1]"/>
 </mfrac>
 </x:template>
 
