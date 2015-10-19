@@ -85,12 +85,13 @@ void MathmlTests::tests()
         xmlQuery.setFocus(OpenCOR::rawFileContents(dirName+fileName));
         xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
 
-        QVERIFY(xmlQuery.evaluateTo(&actualOutput));
+        if (!xmlQuery.evaluateTo(&actualOutput))
+            QFAIL(qPrintable(QString("Could not convert '%1'").arg(fileName)));
 
         expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
 
         if (actualOutput.compare(expectedOutput))
-            QFAIL(qPrintable(QString("Failed to convert %1:\n%2\n%3").arg(fileName, actualOutput, expectedOutput)));
+            QFAIL(qPrintable(QString("Failed to convert '%1'\n%2\n%3").arg(fileName, actualOutput, expectedOutput)));
     }
 }
 
