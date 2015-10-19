@@ -1,6 +1,3 @@
-<!--
-a=-(b*c)+d*e;
--->
 <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
         <eq/>
