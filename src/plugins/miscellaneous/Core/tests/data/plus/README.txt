@@ -7,15 +7,15 @@
 005     a=b+c+d+e;
 006     a=-b+c+d+e;
 007     a=(b+c)+d+e;
-008     a=-(b+c)+d+e;       // NOK: a=-b+c+d+e
+008     a=-(b+c)+d+e;
 009     a=b+c+(d+e);
 010     a=(b+c)+(d+e);
-011     a=-(b+c)+(d+e);     // NOK: a=-b+c+d+e
+011     a=-(b+c)+(d+e);
 
 012     a=b-c+d-e;
 013     a=-b-c+d-e;
 014     a=(b-c)+d-e;
-015     a=-(b-c)+d-e;       // NOK: a=-b-c+d-e
+015     a=-(b-c)+d-e;
 016     a=b-c+(d-e);        // NOK: a=b-c+(d-e)
 017     a=(b-c)+(d-e);      // NOK: a=b-c+(d-e)
 018     a=-(b-c)+(d-e);     // NOK: a=-b-c+(d-e)

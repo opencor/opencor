@@ -471,7 +471,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
   <x:param name="p" select="0"/>
   <x:param name="op" select="name(../*[1])"/>
   <mrow>
-  <x:if test="$p &gt; 2 or ($op = 'minus' and . != ../*[2])"><mo>(</mo></x:if>
+  <x:if test="$p &gt; 2 or ($op = 'minus' and (. != ../*[2] or count(../*) = 2))"><mo>(</mo></x:if>
   <x:for-each select="*[position()&gt;1]">
    <x:choose>
     <x:when test="self::m:apply[*[1][self::m:times] and *[2][self::m:apply/*[1][self::m:minus] or
@@ -522,7 +522,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
     </x:otherwise>
    </x:choose>
   </x:for-each>
-  <x:if test="$p &gt; 2 or ($op = 'minus' and . != ../*[2])"><mo>)</mo></x:if>
+  <x:if test="$p &gt; 2 or ($op = 'minus' and (. != ../*[2] or count(../*) = 2))"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
@@ -2023,7 +2023,7 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
   <x:param name="p" select="0"/>
   <x:param name="this-p" select="0"/>
   <mrow>
-  <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and . != ../*[2])"><mo>(</mo></x:if>
+  <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and (. != ../*[2] or count(../*) = 2))"><mo>(</mo></x:if>
    <x:apply-templates select="*[2]">
      <x:with-param name="p" select="$this-p"/>
    </x:apply-templates>
@@ -2031,7 +2031,7 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
    <x:apply-templates select="*[3]">
      <x:with-param name="p" select="$this-p"/>
    </x:apply-templates>
-   <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and . != ../*[2])"><mo>)</mo></x:if>
+   <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and (. != ../*[2] or count(../*) = 2))"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
