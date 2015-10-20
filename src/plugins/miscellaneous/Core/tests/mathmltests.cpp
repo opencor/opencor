@@ -118,7 +118,7 @@ void MathmlTests::tests(const QString &pCategory)
 
 void MathmlTests::plusTests()
 {
-    // Run some tests for the plus category
+    // Run some tests for our plus category
 
     tests("plus");
 }
@@ -127,9 +127,18 @@ void MathmlTests::plusTests()
 
 void MathmlTests::timesTests()
 {
-    // Run some tests for the times category
+    // Run some tests for our times category
 
     tests("times");
+}
+
+//==============================================================================
+
+void MathmlTests::divideTests()
+{
+    // Run some tests for our divide category
+
+    tests("divide");
 }
 
 //==============================================================================

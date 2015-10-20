@@ -54,6 +54,7 @@ private Q_SLOTS:
 
     void plusTests();
     void timesTests();
+    void divideTests();
 };
 
 //==============================================================================
