@@ -3,18 +3,22 @@
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
         <mrow>
-            <mfrac>
+            <mrow>
+                <mo>−</mo>
                 <mrow>
-                    <mo>−</mo>
-                    <mi mathvariant="italic">b</mi>
+                    <mo>(</mo>
+                    <mrow>
+                        <mi mathvariant="italic">b</mi>
+                        <mo>−</mo>
+                        <mi mathvariant="italic">c</mi>
+                    </mrow>
+                    <mo>)</mo>
                 </mrow>
-                <mi mathvariant="italic">c</mi>
-            </mfrac>
-            <mo>+</mo>
-            <mfrac>
+                <mo>+</mo>
                 <mi mathvariant="italic">d</mi>
-                <mi>e</mi>
-            </mfrac>
+            </mrow>
+            <mo>−</mo>
+            <mi>e</mi>
         </mrow>
     </mrow>
 </math>

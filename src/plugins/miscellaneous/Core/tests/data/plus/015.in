@@ -3,20 +3,20 @@
         <eq/>
         <ci>a</ci>
         <apply>
-            <plus/>
+            <minus/>
             <apply>
-                <divide/>
+                <plus/>
                 <apply>
                     <minus/>
-                    <ci>b</ci>
+                    <apply>
+                        <minus/>
+                        <ci>b</ci>
+                        <ci>c</ci>
+                    </apply>
                 </apply>
-                <ci>c</ci>
-            </apply>
-            <apply>
-                <divide/>
                 <ci>d</ci>
-                <exponentiale/>
             </apply>
+            <exponentiale/>
         </apply>
     </apply>
 </math>

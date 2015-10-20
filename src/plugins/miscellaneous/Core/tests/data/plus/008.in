@@ -3,16 +3,16 @@
         <eq/>
         <ci>a</ci>
         <apply>
-            <minus/>
+            <plus/>
             <apply>
-                <plus/>
+                <minus/>
                 <apply>
-                    <minus/>
+                    <plus/>
                     <ci>b</ci>
                     <ci>c</ci>
                 </apply>
-                <ci>d</ci>
             </apply>
+            <ci>d</ci>
             <exponentiale/>
         </apply>
     </apply>

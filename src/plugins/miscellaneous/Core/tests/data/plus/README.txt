@@ -6,16 +6,16 @@
 
 005     a=b+c+d+e;
 006     a=-b+c+d+e;
-007     a=-(b+c)+d+e;       // NOK
+008     a=-(b+c)+d+e;       // NOK
 
-008     a=b-c+d-e;
-009     a=-b-c+d-e;
-010     a=-(b-c)+d-e;       // NOK
+012     a=b-c+d-e;
+013     a=-b-c+d-e;
+015     a=-(b-c)+d-e;       // NOK
 
-011     a=b*c+d*e;
-012     a=-b*c+d*e;     	// Kind of NOK
-013     a=-(b*c)+d*e;
+019     a=b*c+d*e;
+020     a=-b*c+d*e;         // Kind of NOK
+022     a=-(b*c)+d*e;
 
-014     a=b/c+d/e;
-015     a=-b/c+d/e;
-016     a=-(b/c)+d/e;
+026     a=b/c+d/e;
+027     a=-b/c+d/e;
+029     a=-(b/c)+d/e;

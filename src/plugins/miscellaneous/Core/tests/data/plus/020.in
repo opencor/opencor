@@ -5,15 +5,18 @@
         <apply>
             <plus/>
             <apply>
-                <minus/>
+                <times/>
                 <apply>
-                    <plus/>
+                    <minus/>
                     <ci>b</ci>
-                    <ci>c</ci>
                 </apply>
+                <ci>c</ci>
             </apply>
-            <ci>d</ci>
-            <exponentiale/>
+            <apply>
+                <times/>
+                <ci>d</ci>
+                <exponentiale/>
+            </apply>
         </apply>
     </apply>
 </math>
