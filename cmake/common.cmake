@@ -77,21 +77,8 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     SET(REQUIRED_QT_MODULES
-        Concurrent
-        Core
-        Gui
-        Help
-        ${MAC_EXTRAS}
         Network
-        OpenGL
-        PrintSupport
-        Svg
-        UiTools
-        WebKit
-        WebKitWidgets
         Widgets
-        Xml
-        XmlPatterns
     )
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
