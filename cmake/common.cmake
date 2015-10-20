@@ -78,6 +78,7 @@ MACRO(INITIALISE_PROJECT)
 
     SET(REQUIRED_QT_MODULES
         Network
+        WebKit
         Widgets
     )
 
