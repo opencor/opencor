@@ -98,13 +98,13 @@ void MathmlTests::tests(const QString &pCategory)
 
             if (actualOutput.compare(expectedOutput)) {
                 if (!failMessage.isEmpty())
-                    failMessage += "\nFAIL!  : MathmlTests::tests() ";
+                    failMessage += QString("\nFAIL!  : MathmlTests::%1Tests() ").arg(pCategory);
 
                 failMessage += QString("Failed to convert '%1/%2'\n%3\n%4").arg(pCategory, fileName, actualOutput, expectedOutput);
             }
         } else {
             if (!failMessage.isEmpty())
-                failMessage += "\nFAIL!  : MathmlTests::tests() ";
+                failMessage += QString("\nFAIL!  : MathmlTests::%1Tests() ").arg(pCategory);
 
             failMessage += QString("Could not convert '%1/%2'").arg(pCategory, fileName);
         }
