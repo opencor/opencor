@@ -14,7 +14,11 @@
 
 012     a=b-c+d-e;
 013     a=-b-c+d-e;
+014     a=(b-c)+d-e;
 015     a=-(b-c)+d-e;       // NOK
+016     a=b-c+(d-e);        // NOK
+017     a=(b-c)+(d-e);      // NOK
+018     a=-(b-c)+(d-e);     // NOK
 
 019     a=b*c+d*e;
 020     a=-b*c+d*e;         // Kind of NOK

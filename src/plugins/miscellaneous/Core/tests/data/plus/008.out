@@ -7,11 +7,9 @@
                 <mo>−</mo>
                 <mrow>
                     <mo>(</mo>
-                    <mrow>
-                        <mi mathvariant="italic">b</mi>
-                        <mo>+</mo>
-                        <mi mathvariant="italic">c</mi>
-                    </mrow>
+                    <mi mathvariant="italic">b</mi>
+                    <mo>+</mo>
+                    <mi mathvariant="italic">c</mi>
                     <mo>)</mo>
                 </mrow>
                 <mo>+</mo>
