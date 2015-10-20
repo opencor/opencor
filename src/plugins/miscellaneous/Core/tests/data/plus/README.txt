@@ -22,7 +22,11 @@
 
 019     a=b*c+d*e;
 020     a=-b*c+d*e;         // Kind of NOK
+021     a=(b*c)+d*e;
 022     a=-(b*c)+d*e;
+023     a=b*c+(d*e);
+024     a=(b*c)+(d*e);
+025     a=-(b*c)+(d*e);
 
 026     a=b/c+d/e;
 027     a=-b/c+d/e;
