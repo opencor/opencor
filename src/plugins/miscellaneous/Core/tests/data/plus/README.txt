@@ -21,7 +21,7 @@
 018     a=-(b-c)+(d-e);
 
 019     a=b*c+d*e;
-020     a=-b*c+d*e;         // Rendering not quite OK: no space before the first "."
+020     a=-b*c+d*e;
 021     a=(b*c)+d*e;
 022     a=-(b*c)+d*e;
 023     a=b*c+(d*e);
