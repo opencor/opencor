@@ -16,9 +16,9 @@
 013     a=-b-c+d-e;
 014     a=(b-c)+d-e;
 015     a=-(b-c)+d-e;
-016     a=b-c+(d-e);        // NOK: a=b-c+(d-e)
-017     a=(b-c)+(d-e);      // NOK: a=b-c+(d-e)
-018     a=-(b-c)+(d-e);     // NOK: a=-b-c+(d-e)
+016     a=b-c+(d-e);
+017     a=(b-c)+(d-e);
+018     a=-(b-c)+(d-e);
 
 019     a=b*c+d*e;
 020     a=-b*c+d*e;         // Rendering not quite OK: no space before the first "."

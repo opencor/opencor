@@ -2022,8 +2022,9 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
   <x:param name="mo"/>
   <x:param name="p" select="0"/>
   <x:param name="this-p" select="0"/>
+  <x:param name="op" select="name(../*[1])"/>
   <mrow>
-  <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and (. != ../*[2] or count(../*) = 2))"><mo>(</mo></x:if>
+  <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and $op = 'minus' and (. != ../*[2] or count(../*) = 2))"><mo>(</mo></x:if>
    <x:apply-templates select="*[2]">
      <x:with-param name="p" select="$this-p"/>
    </x:apply-templates>
@@ -2031,7 +2032,7 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
    <x:apply-templates select="*[3]">
      <x:with-param name="p" select="$this-p"/>
    </x:apply-templates>
-   <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and (. != ../*[2] or count(../*) = 2))"><mo>)</mo></x:if>
+   <x:if test="($this-p &lt; $p) or ($this-p=$p and $mo='&#8722;' and $op = 'minus' and (. != ../*[2] or count(../*) = 2))"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
