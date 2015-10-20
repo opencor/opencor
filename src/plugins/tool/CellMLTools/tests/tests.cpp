@@ -19,11 +19,11 @@ specific language governing permissions and limitations under the License.
 // CellML tools tests
 //==============================================================================
 
-#include "tests.h"
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
-#include "../../../../tests/src/testsutils.h"
+#include "tests.h"
 
 //==============================================================================
 

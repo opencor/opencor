@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QTimer>
 
 //==============================================================================
 
@@ -486,14 +487,16 @@ void PhysiomeModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply
 void PhysiomeModelRepositoryWindowWindow::retrieveExposuresList(const bool &pVisible)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
-    // of exposures has never been requested before
+    // of exposures has never been requested before (through a single shot, this
+    // to allow other events, such as the one asking OpenCOR's main window to
+    // resize itself, to be handled properly)
 
     static bool firstTime = true;
 
     if (pVisible && firstTime) {
         firstTime = false;
 
-        on_refreshButton_clicked();
+        QTimer::singleShot(0, this, SLOT(on_refreshButton_clicked()));
     }
 }
 

@@ -19,13 +19,13 @@ specific language governing permissions and limitations under the License.
 // COMBINE support tests
 //==============================================================================
 
-#include "combinearchive.h"
-#include "corecliutils.h"
-#include "tests.h"
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
-#include "../../../../tests/src/testsutils.h"
+#include "combinearchive.h"
+#include "corecliutils.h"
+#include "tests.h"
 
 //==============================================================================
 
