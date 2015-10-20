@@ -53,6 +53,7 @@ private Q_SLOTS:
     void initTestCase();
 
     void plusTests();
+    void minusTests();
     void timesTests();
     void divideTests();
 };

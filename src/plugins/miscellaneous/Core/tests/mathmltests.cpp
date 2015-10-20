@@ -125,6 +125,15 @@ void MathmlTests::plusTests()
 
 //==============================================================================
 
+void MathmlTests::minusTests()
+{
+    // Run some tests for our minus category
+
+    tests("minus");
+}
+
+//==============================================================================
+
 void MathmlTests::timesTests()
 {
     // Run some tests for our times category
