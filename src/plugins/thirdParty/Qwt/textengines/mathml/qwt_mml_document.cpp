@@ -2659,7 +2659,12 @@ qreal QwtMmlMoNode::lspace() const
                  && parent()->nodeType() != MfencedNode
                  && parent()->nodeType() != UnknownNode )
             || previousSibling() == 0
-            || ( previousSibling() == 0 && nextSibling() == 0 ) )
+            || ( previousSibling() == 0 && nextSibling() == 0 )
+            || ( !text().compare( "−" )
+                 && previousSibling() != 0
+                 && previousSibling()->nodeType() == MoNode
+                 && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
+                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "(" ) ) ) )
         return 0.0;
     else
         return interpretSpacing( dictionaryAttribute( "lspace" ), 0 );
