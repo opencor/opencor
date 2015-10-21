@@ -2,7 +2,7 @@
 <model name="periodic_stimulus" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- this block of XML is used by CSim to execute a simulation (https://code.google.com/p/cellml-simulator/) -->
     <simulation id="simulation1" xmlns="http://cellml.sourceforge.net/csim/simulation/0.1#">
-        <boundVariable end="220.0" maxStep="0.05" start="0.0" tabulationStep="0.1"/>
+        <boundVariable end="220" maxStep="0.05" start="0" tabulationStep="0.1"/>
         <outputVariable column="1" component="outputs" variable="time"/>
         <outputVariable column="2" component="outputs" variable="INa"/>
         <outputVariable column="3" component="outputs" variable="IK"/>
@@ -43,7 +43,7 @@
     <component name="stimulus_protocol_params">
         <variable initial_value="50" name="stimPeriod" public_interface="out" units="ms"/>
         <variable initial_value="0.5" name="stimDuration" public_interface="out" units="ms"/>
-        <variable initial_value="-10.0" name="stimCurrent" public_interface="out" units="uA_per_cmsq"/>
+        <variable initial_value="-10" name="stimCurrent" public_interface="out" units="uA_per_cmsq"/>
     </component>
     <!-- and connect the parameters to the protocol definition -->
     <connection>

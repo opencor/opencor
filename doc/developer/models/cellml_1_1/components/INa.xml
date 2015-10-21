@@ -56,7 +56,7 @@
                     <apply>
                         <power/>
                         <ci>m</ci>
-                        <cn cellml:units="dimensionless">3.0</cn>
+                        <cn cellml:units="dimensionless">3</cn>
                     </apply>
                     <ci>h</ci>
                 </apply>

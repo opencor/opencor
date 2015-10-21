@@ -21,7 +21,7 @@
                         <apply>
                             <plus/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">10.0</cn>
+                            <cn cellml:units="mV">10</cn>
                         </apply>
                     </apply>
                     <apply>
@@ -33,12 +33,12 @@
                                 <apply>
                                     <plus/>
                                     <ci>V</ci>
-                                    <cn cellml:units="mV">10.0</cn>
+                                    <cn cellml:units="mV">10</cn>
                                 </apply>
-                                <cn cellml:units="mV">10.0</cn>
+                                <cn cellml:units="mV">10</cn>
                             </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1.0</cn>
+                        <cn cellml:units="dimensionless">1</cn>
                     </apply>
                 </apply>
             </apply>
@@ -59,7 +59,7 @@
                         <apply>
                             <divide/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">80.0</cn>
+                            <cn cellml:units="mV">80</cn>
                         </apply>
                     </apply>
                 </apply>

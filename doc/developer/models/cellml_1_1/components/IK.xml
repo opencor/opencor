@@ -49,7 +49,7 @@
                     <apply>
                         <power/>
                         <ci>n</ci>
-                        <cn cellml:units="dimensionless">4.0</cn>
+                        <cn cellml:units="dimensionless">4</cn>
                     </apply>
                 </apply>
             </apply>
