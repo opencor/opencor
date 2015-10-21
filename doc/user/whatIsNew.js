@@ -10,7 +10,6 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
-                           { "type": "Improved", "description": "Rendering of equations with Greek characters." },
                            { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
                          ]
                        },
