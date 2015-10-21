@@ -4,13 +4,11 @@
         <mo>=</mo>
         <mfrac>
             <mrow>
-                <mrow>
-                    <mo>−</mo>
-                    <mfrac>
-                        <mi mathvariant="italic">b</mi>
-                        <mi mathvariant="italic">c</mi>
-                    </mfrac>
-                </mrow>
+                <mo>−</mo>
+                <mfrac>
+                    <mi mathvariant="italic">b</mi>
+                    <mi mathvariant="italic">c</mi>
+                </mfrac>
                 <mo>·</mo>
                 <mi mathvariant="italic">d</mi>
             </mrow>
