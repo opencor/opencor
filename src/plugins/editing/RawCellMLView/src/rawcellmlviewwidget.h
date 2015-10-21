@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "mathmlconverter.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -34,12 +35,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class MathmlConverter;
-}   // namespace Core
 
 //==============================================================================
 
@@ -65,7 +60,6 @@ class RawCellmlViewWidget : public Core::ViewWidget
 
 public:
     explicit RawCellmlViewWidget(QWidget *pParent);
-    ~RawCellmlViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -98,7 +92,7 @@ private:
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
-    Core::MathmlConverter *mMathmlConverter;
+    Core::MathmlConverter mMathmlConverter;
 
     QString mContentMathmlEquation;
 

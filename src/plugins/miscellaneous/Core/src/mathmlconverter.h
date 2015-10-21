@@ -55,9 +55,6 @@ public:
 private:
     XslTransformer *mXslTransformer;
 
-    void cleanPresentationMathmlElement(QDomElement &pDomElement) const;
-    QString cleanPresentationMathml(const QString &pPresentationMathml) const;
-
 Q_SIGNALS:
     void done(const QString &pContentMathml,
               const QString &pPresentationMathml);

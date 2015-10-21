@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "mathmlconverter.h"
 #include "qscintillawidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
@@ -149,19 +148,8 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
 
-    mMathmlConverter = new Core::MathmlConverter();
-
-    connect(mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
+    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
             this, SLOT(mathmlConversionDone(const QString &, const QString &)));
-}
-
-//==============================================================================
-
-CellmlTextViewWidget::~CellmlTextViewWidget()
-{
-    // Delete some internal objects
-
-    delete mMathmlConverter;
 }
 
 //==============================================================================
@@ -1045,7 +1033,7 @@ void CellmlTextViewWidget::updateViewer()
                 if (!presentationMathmlEquation.isEmpty())
                     mEditingWidget->viewer()->setContents(presentationMathmlEquation);
                 else
-                    mMathmlConverter->convert(contentMathmlEquation);
+                    mMathmlConverter.convert(contentMathmlEquation);
             }
         } else {
             // The parsing wasn't successful

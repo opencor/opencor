@@ -213,6 +213,7 @@ IF(ENABLE_TESTS)
 
     TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}
         Qt5::Core
+        Qt5::Network
     )
 
     # Copy our main test program to our tests directory
@@ -391,8 +392,7 @@ IF(WIN32)
 
     TARGET_LINK_LIBRARIES(${WINDOWS_CLI_PROJECT_NAME}
         Qt5::Core
-        Qt5::Xml
-        Qt5::XmlPatterns
+        Qt5::Network
     )
 ENDIF()
 
@@ -696,7 +696,7 @@ ELSE()
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
         LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
                                 ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                                 ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})

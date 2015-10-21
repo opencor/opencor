@@ -144,6 +144,7 @@ QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
 QString CORE_EXPORT cleanMathml(const QString &pMathml);
+QString CORE_EXPORT cleanPresentationMathml(const QString &pPresentationMathml);
 
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pExtra,

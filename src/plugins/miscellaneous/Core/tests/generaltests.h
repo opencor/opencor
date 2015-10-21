@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core tests
+// Core general tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#ifndef GENERALTESTS_H
+#define GENERALTESTS_H
 
 //==============================================================================
 
@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class Tests : public QObject
+class GeneralTests : public QObject
 {
     Q_OBJECT
 

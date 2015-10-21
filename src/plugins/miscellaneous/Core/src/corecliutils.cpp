@@ -696,6 +696,104 @@ QString cleanMathml(const QString &pMathml)
 
 //==============================================================================
 
+void cleanPresentationMathml(QDomElement &pDomElement)
+{
+    // Merge successive child mrow elements, as long as their parent is not an
+    // element that requires a specific number of arguments (which could become
+    // wrong if we were to merge two successive mrow elements)
+    // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
+    //       list of the elements to check...
+
+    if (   pDomElement.nodeName().compare("mfrac")
+        && pDomElement.nodeName().compare("mroot")
+        && pDomElement.nodeName().compare("msub")
+        && pDomElement.nodeName().compare("msup")
+        && pDomElement.nodeName().compare("msubsup")
+        && pDomElement.nodeName().compare("munder")
+        && pDomElement.nodeName().compare("mover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")) {
+        for (QDomElement childElement = pDomElement.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            QDomElement nextChildElement = childElement.nextSiblingElement();
+
+            if (   !nextChildElement.isNull()
+                && !childElement.nodeName().compare("mrow")
+                && !childElement.nodeName().compare(nextChildElement.nodeName())) {
+                // The current and next child elements are both mrow's, so merge
+                // them together
+
+                for (QDomElement nextChildChildElement = nextChildElement.firstChildElement();
+                     !nextChildChildElement.isNull(); nextChildChildElement = nextChildElement.firstChildElement()) {
+                    childElement.appendChild(nextChildChildElement);
+                }
+
+                pDomElement.removeChild(nextChildElement);
+            }
+        }
+    }
+
+    // Recursively clean ourselves
+
+    for (QDomElement childElement = pDomElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanPresentationMathml(childElement);
+    }
+
+    // Move the contents of child mrow elements to their parent, should it also
+    // be an mrow element
+    // Note: we do this after having recursively cleaned ourselves to make sure
+    //       that we also take into account the root element, in case it's an
+    //       mrow element and the contents of its mrow child elements have been
+    //       moved to it...
+
+    if (!pDomElement.nodeName().compare("mrow")) {
+        for (QDomElement childElement = pDomElement.firstChildElement();
+             !childElement.isNull(); ) {
+            QDomElement nextChildElement = childElement.nextSiblingElement();
+
+            if (!childElement.nodeName().compare("mrow")) {
+                // The current child element is an mrow, so move its contents to
+                // its parent
+
+                for (QDomElement childChildElement = childElement.firstChildElement();
+                     !childChildElement.isNull(); childChildElement = childElement.firstChildElement()) {
+                    pDomElement.insertBefore(childChildElement, childElement);
+                }
+
+                pDomElement.removeChild(childElement);
+            }
+
+            childElement = nextChildElement;
+        }
+    }
+}
+
+//==============================================================================
+
+QString cleanPresentationMathml(const QString &pPresentationMathml)
+{
+    // Clean the given Presentation MathML by merging successive mrow elements
+    // together
+    // Note: see https://github.com/opencor/opencor/issues/763...
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(pPresentationMathml);
+
+    QDomElement domElement = domDocument.documentElement();
+
+    cleanPresentationMathml(domElement);
+
+    return qDomDocumentToString(domDocument);
+}
+
+//==============================================================================
+
 QString newFileName(const QString &pFileName, const QString &pExtra,
                     const bool &pBefore, const QString &pFileExtension)
 {
