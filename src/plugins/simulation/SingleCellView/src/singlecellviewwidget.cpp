@@ -1084,7 +1084,7 @@ void SingleCellViewWidget::fileModified(const QString &pFileName)
     // Update our reset action, but only if we are dealing with the active
     // simulation
 
-    if (!mSimulation->fileName().compare(pFileName))
+    if (mSimulation && !mSimulation->fileName().compare(pFileName))
         mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
 }
 
