@@ -743,6 +743,34 @@ void cleanPresentationMathml(QDomElement &pDomElement)
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         cleanPresentationMathml(childElement);
     }
+
+    // Move the contents of child mrow elements to their parent, should it also
+    // be an mrow element
+    // Note: we do this after having recursively cleaned ourselves to make sure
+    //       that we also take into account the root element, in case it's an
+    //       mrow element and the contents of its mrow child elements have been
+    //       moved to it...
+
+    if (!pDomElement.nodeName().compare("mrow")) {
+        for (QDomElement childElement = pDomElement.firstChildElement();
+             !childElement.isNull(); ) {
+            QDomElement nextChildElement = childElement.nextSiblingElement();
+
+            if (!childElement.nodeName().compare("mrow")) {
+                // The current child element is an mrow, so move its contents to
+                // its parent
+
+                for (QDomElement childChildElement = childElement.firstChildElement();
+                     !childChildElement.isNull(); childChildElement = childElement.firstChildElement()) {
+                    pDomElement.insertBefore(childChildElement, childElement);
+                }
+
+                pDomElement.removeChild(childElement);
+            }
+
+            childElement = nextChildElement;
+        }
+    }
 }
 
 //==============================================================================

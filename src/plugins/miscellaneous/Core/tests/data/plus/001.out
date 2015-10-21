@@ -2,10 +2,8 @@
     <mrow>
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
-        <mrow>
-            <mi mathvariant="italic">b</mi>
-            <mo>+</mo>
-            <mi mathvariant="italic">c</mi>
-        </mrow>
+        <mi mathvariant="italic">b</mi>
+        <mo>+</mo>
+        <mi mathvariant="italic">c</mi>
     </mrow>
 </math>

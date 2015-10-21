@@ -5,11 +5,9 @@
         <mfrac>
             <mrow>
                 <mo>−</mo>
-                <mrow>
-                    <mi mathvariant="italic">b</mi>
-                    <mo>·</mo>
-                    <mi mathvariant="italic">c</mi>
-                </mrow>
+                <mi mathvariant="italic">b</mi>
+                <mo>·</mo>
+                <mi mathvariant="italic">c</mi>
             </mrow>
             <mrow>
                 <mi mathvariant="italic">d</mi>
