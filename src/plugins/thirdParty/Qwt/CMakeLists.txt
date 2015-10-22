@@ -213,6 +213,7 @@ ELSE()
             src
             textengines/mathml
         DEFINITIONS
+            MML_TEST
             ${QWT_DEFINITIONS}
             QWT_MAKEDLL
         QT_MODULES

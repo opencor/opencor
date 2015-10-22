@@ -1094,6 +1094,10 @@ void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
     //       don't require an XSL transformation, then we may end up in a case
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
+qDebug("=========");
+qDebug("%s", qPrintable(Core::formatXml(pContentMathml)));
+qDebug("---------");
+qDebug("%s", qPrintable(Core::formatXml(pPresentationMathml)));
 
     if (!pContentMathml.compare(mContentMathmlEquation))
         mEditingWidget->viewer()->setContents(pPresentationMathml);
