@@ -170,6 +170,15 @@ void MathmlTests::rootTests()
 
 //==============================================================================
 
+void MathmlTests::absTests()
+{
+    // Run some tests for our abs category
+
+    tests("abs");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category
