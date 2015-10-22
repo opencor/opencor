@@ -647,7 +647,21 @@ QString stringFromPercentEncoding(const QString &pString)
 
 //==============================================================================
 
-void cleanMathml(QDomElement pElement)
+QString formatXml(const QString &pXml)
+{
+    // Format the given XML
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(pXml))
+        return qDomDocumentToString(domDocument);
+    else
+        return QString();
+}
+
+//==============================================================================
+
+void cleanContentMathml(QDomElement pDomElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
@@ -656,7 +670,7 @@ void cleanMathml(QDomElement pElement)
 
     static const QString MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
 
-    QDomNamedNodeMap attributes = pElement.attributes();
+    QDomNamedNodeMap attributes = pDomElement.attributes();
     QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
 
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {

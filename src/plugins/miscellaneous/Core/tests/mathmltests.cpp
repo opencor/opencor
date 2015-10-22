@@ -93,7 +93,7 @@ void MathmlTests::tests(const QString &pCategory)
         xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
 
         if (xmlQuery.evaluateTo(&actualOutput)) {
-            actualOutput = OpenCOR::Core::cleanPresentationMathml(actualOutput);
+            actualOutput = OpenCOR::Core::formatXml(OpenCOR::Core::cleanPresentationMathml(actualOutput));
             expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
 
             if (actualOutput.compare(expectedOutput)) {
