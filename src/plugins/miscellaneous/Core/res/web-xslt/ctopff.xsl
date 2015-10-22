@@ -539,9 +539,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="5"/>
 </x:apply-templates>
-<x:apply-templates select="*[3]">
-  <x:with-param name="p" select="5"/>
-</x:apply-templates>
+<x:apply-templates select="*[3]"/>
 </msup>
 <mo>)</mo>
 </mrow>
@@ -551,9 +549,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="5"/>
 </x:apply-templates>
-<x:apply-templates select="*[3]">
-  <x:with-param name="p" select="5"/>
-</x:apply-templates>
+<x:apply-templates select="*[3]"/>
 </msup>
 </x:otherwise>
 </x:choose>
