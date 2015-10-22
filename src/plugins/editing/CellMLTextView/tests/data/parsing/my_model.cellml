@@ -688,6 +688,17 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
+                    <log/>
+                    <logbase>
+                        <ci>c</ci>
+                    </logbase>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
                     <power/>
                     <ci>b</ci>
                     <cn cellml:units="dimensionless">3</cn>
