@@ -58,6 +58,7 @@ private Q_SLOTS:
     void divideTests();
     void powerTests();
     void rootTests();
+    void remTests();
 };
 
 //==============================================================================
