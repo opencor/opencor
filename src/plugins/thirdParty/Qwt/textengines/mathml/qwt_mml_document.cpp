@@ -3920,6 +3920,8 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
 {
     OperSpecSearchResult result;
 
+    const QwtMmlOperSpec *firstSpec = 0;
+
     QStringList::const_iterator it = name_list.begin();
     for ( ; it != name_list.end(); ++it )
     {
@@ -3934,6 +3936,11 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
         while ( spec > g_oper_spec_data && ( spec - 1 )->name.compare( name ) == 0 )
             --spec;
 
+        // Keep track of the first intance, if we haven't already done so
+
+        if ( !firstSpec )
+            firstSpec = spec;
+
         // iterate over instances of name until the instances are exhausted or until we
         // find an instance in the specified form.
         do
@@ -3946,6 +3953,22 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
 
         if ( result.haveForm( form ) )
             break;
+    }
+
+    // Check whether we have found an instance in the specified form for one of
+    // the different names in the given list. If not, and if there is more than
+    // one name in the given list, then use our first instance, if any.
+
+    if ( !result.haveForm( form ) && name_list.count() > 1 && firstSpec ) {
+        const QString &name = firstSpec->name;
+
+        do
+        {
+            result.addForm( firstSpec++ );
+            if ( result.haveForm( form ) )
+                break;
+        }
+        while ( firstSpec->name.compare( name ) == 0 );
     }
 
     return result;
