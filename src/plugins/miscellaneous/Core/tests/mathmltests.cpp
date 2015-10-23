@@ -179,6 +179,15 @@ void MathmlTests::absTests()
 
 //==============================================================================
 
+void MathmlTests::expTests()
+{
+    // Run some tests for our exp category
+
+    tests("exp");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category
