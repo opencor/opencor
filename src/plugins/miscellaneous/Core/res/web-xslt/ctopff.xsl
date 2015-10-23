@@ -596,7 +596,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 
 
 <!-- 4.4.3.10 root -->
-<x:template match="m:apply[*[1][self::m:root] and not(m:degree) or m:degree=2]" priority="4">
+<x:template match="m:apply[*[1][self::m:root] and not(m:degree) or m:degree='2']" priority="4">
 <msqrt>
 <x:apply-templates select="*[position()&gt;1]"/>
 </msqrt>
