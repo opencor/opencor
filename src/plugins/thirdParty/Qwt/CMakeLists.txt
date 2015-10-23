@@ -3,14 +3,16 @@ PROJECT(QwtPlugin)
 MACRO(RETRIEVE_QWT_SETTINGS)
     # Retrieve some Qwt settings
 
+    SET(QWT_DEFINITIONS
+        MML_TEST
+    )
+
     IF(WIN32)
-        SET(QWT_DEFINITIONS
+        LIST(APPEND QWT_DEFINITIONS
             _SCL_SECURE_NO_WARNINGS
 
             QWT_DLL
         )
-    ELSE()
-        SET(QWT_DEFINITIONS)
     ENDIF()
 ENDMACRO()
 
@@ -213,7 +215,6 @@ ELSE()
             src
             textengines/mathml
         DEFINITIONS
-            MML_TEST
             ${QWT_DEFINITIONS}
             QWT_MAKEDLL
         QT_MODULES

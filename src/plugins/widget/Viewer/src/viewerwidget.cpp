@@ -66,6 +66,8 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mContents(QString()),
     mError(false)
 {
+//---GRY--- JUST FOR TESTING THINGS...
+mMathmlDocument.setDrawFrames(true);
     // Populate our table of Greek symbols, if needed
 
     if (GreekSymbols.isEmpty()) {

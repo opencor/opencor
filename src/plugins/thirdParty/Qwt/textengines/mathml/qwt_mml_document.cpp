@@ -1205,7 +1205,7 @@ QwtMmlDocument::QwtMmlDocument()
     m_background_color = Qt::white;
 
 #ifdef MML_TEST
-    m_draw_frames = true;
+    m_draw_frames = false;
 #endif
 }
 
