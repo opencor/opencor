@@ -466,6 +466,7 @@ protected:
 
 private:
     const QwtMmlOperSpec *m_oper_spec;
+    bool unaryMinus() const;
 };
 
 class QwtMmlMstyleNode : public QwtMmlNode
@@ -1047,7 +1048,7 @@ static const QwtMmlOperSpec g_oper_spec_data[] =
     { "max",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "max"
     { "min",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "min"
     { "{",                                 QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "{"
-    { "|",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "|"
+    { "|",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "|"
     { "||",                                QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        0        }, QwtMmlOperSpec::NoStretch }, // "||"
     { "}",                                 QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "}"
     { "~",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "~"
@@ -2571,7 +2572,7 @@ void QwtMmlMoNode::layoutSymbol()
     firstChild()->setRelOrigin( QPointF( 0.0, 0.0 ) );
 
     if ( m_oper_spec == 0 )
-        m_oper_spec = mmlFindOperSpec( text(), form() );
+        m_oper_spec = mmlFindOperSpec( !text().compare( "−" )?"-":text(), form() );
 }
 
 QwtMmlMoNode::QwtMmlMoNode( QwtMmlDocument *document,
@@ -2597,6 +2598,16 @@ QString QwtMmlMoNode::dictionaryAttribute( const QString &name ) const
     return mmlDictAttribute( name, m_oper_spec );
 }
 
+bool QwtMmlMoNode::unaryMinus() const
+{
+    return !text().compare( "−" )
+            && previousSibling() != 0
+            && previousSibling()->nodeType() == MoNode
+            && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "(" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "|" ) );
+}
+
 QwtMml::FormType QwtMmlMoNode::form() const
 {
     QString value_str = inheritAttributeFromMrow( "form" );
@@ -2615,6 +2626,8 @@ QwtMml::FormType QwtMmlMoNode::form() const
         return PrefixForm;
     else if ( lastSibling() == ( QwtMmlNode* )this && firstSibling() != ( QwtMmlNode* )this )
         return PostfixForm;
+    else if ( unaryMinus() )
+        return PrefixForm;
     else
         return InfixForm;
 }
@@ -2660,11 +2673,12 @@ qreal QwtMmlMoNode::lspace() const
                  && parent()->nodeType() != UnknownNode )
             || previousSibling() == 0
             || ( previousSibling() == 0 && nextSibling() == 0 )
-            || ( !text().compare( "−" )
+            || unaryMinus()
+            || ( !text().compare( "|" )
                  && previousSibling() != 0
                  && previousSibling()->nodeType() == MoNode
                  && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
-                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "(" ) ) ) )
+                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "−" ) ) ) )
         return 0.0;
     else
         return interpretSpacing( dictionaryAttribute( "lspace" ), 0 );
