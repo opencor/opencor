@@ -188,6 +188,15 @@ void MathmlTests::expTests()
 
 //==============================================================================
 
+void MathmlTests::lnTests()
+{
+    // Run some tests for our ln category
+
+    tests("ln");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category
