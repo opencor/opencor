@@ -507,7 +507,7 @@ void RawCellmlViewWidget::updateViewer()
         // Note: indeed, our Content MathML block may not be valid, in which
         //       case cleaning it up will result in an empty string...
 
-        if (Core::cleanMathml(contentMathmlBlock).isEmpty()) {
+        if (Core::cleanContentMathml(contentMathmlBlock).isEmpty()) {
             mContentMathmlEquation = QString();
 
             mEditingWidget->viewer()->setError(true);
@@ -515,7 +515,7 @@ void RawCellmlViewWidget::updateViewer()
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
 
-            QString contentMathmlEquation = Core::cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
+            QString contentMathmlEquation = Core::cleanContentMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
 
             // Check whether we have got a Content MathML equation
 

@@ -242,8 +242,12 @@ def model{my_model_cmeta_id} my_model as
         a = acoth(b);
         a = log(b);
         a = log(b, 3{dimensionless});
+        a = log(b, c);
         a = pow(b, 3{dimensionless});
+        a = pow(b, c);
         a = root(b, 3{dimensionless});
+        a = root(b, c);
+        a = rem(b, 3{dimensionless});
         a = rem(b, c);
 
         // In between comment #38...

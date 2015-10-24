@@ -688,9 +688,29 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
+                    <log/>
+                    <logbase>
+                        <ci>c</ci>
+                    </logbase>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
                     <power/>
                     <ci>b</ci>
                     <cn cellml:units="dimensionless">3</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <power/>
+                    <ci>b</ci>
+                    <ci>c</ci>
                 </apply>
             </apply>
             <apply>
@@ -702,6 +722,26 @@
                         <cn cellml:units="dimensionless">3</cn>
                     </degree>
                     <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <degree>
+                        <ci>c</ci>
+                    </degree>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <rem/>
+                    <ci>b</ci>
+                    <cn cellml:units="dimensionless">3</cn>
                 </apply>
             </apply>
             <apply>

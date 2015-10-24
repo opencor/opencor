@@ -647,7 +647,21 @@ QString stringFromPercentEncoding(const QString &pString)
 
 //==============================================================================
 
-void cleanMathml(QDomElement pElement)
+QString formatXml(const QString &pXml)
+{
+    // Format the given XML
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(pXml))
+        return qDomDocumentToString(domDocument);
+    else
+        return QString();
+}
+
+//==============================================================================
+
+void cleanContentMathml(QDomElement pDomElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
@@ -656,7 +670,7 @@ void cleanMathml(QDomElement pElement)
 
     static const QString MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
 
-    QDomNamedNodeMap attributes = pElement.attributes();
+    QDomNamedNodeMap attributes = pDomElement.attributes();
     QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
 
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
@@ -667,26 +681,26 @@ void cleanMathml(QDomElement pElement)
     }
 
     foreach (QDomNode nonMathmlAttribute, nonMathmlAttributes)
-        pElement.removeAttributeNode(nonMathmlAttribute.toAttr());
+        pDomElement.removeAttributeNode(nonMathmlAttribute.toAttr());
 
     // Go through the element's child elements, if any, and clean them up
 
-    for (QDomElement childElement = pElement.firstChildElement();
+    for (QDomElement childElement = pDomElement.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanMathml(childElement);
+        cleanContentMathml(childElement);
     }
 }
 
 //==============================================================================
 
-QString cleanMathml(const QString &pMathml)
+QString cleanContentMathml(const QString &pContentMathml)
 {
     // Clean up and return the given MathML string
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pMathml, true)) {
-        cleanMathml(domDocument.documentElement());
+    if (domDocument.setContent(pContentMathml, true)) {
+        cleanContentMathml(domDocument.documentElement());
 
         return domDocument.toString(-1);
     } else {
@@ -696,7 +710,7 @@ QString cleanMathml(const QString &pMathml)
 
 //==============================================================================
 
-void cleanPresentationMathml(QDomElement &pDomElement)
+void cleanPresentationMathml(QDomElement pDomElement)
 {
     // Merge successive child mrow elements, as long as their parent is not an
     // element that requires a specific number of arguments (which could become
@@ -777,19 +791,17 @@ void cleanPresentationMathml(QDomElement &pDomElement)
 
 QString cleanPresentationMathml(const QString &pPresentationMathml)
 {
-    // Clean the given Presentation MathML by merging successive mrow elements
-    // together
-    // Note: see https://github.com/opencor/opencor/issues/763...
+    // Clean the given Presentation MathML
 
     QDomDocument domDocument;
 
-    domDocument.setContent(pPresentationMathml);
+    if (domDocument.setContent(pPresentationMathml)) {
+        cleanPresentationMathml(domDocument.documentElement());
 
-    QDomElement domElement = domDocument.documentElement();
-
-    cleanPresentationMathml(domElement);
-
-    return qDomDocumentToString(domDocument);
+        return domDocument.toString(-1);
+    } else {
+        return QString();
+    }
 }
 
 //==============================================================================

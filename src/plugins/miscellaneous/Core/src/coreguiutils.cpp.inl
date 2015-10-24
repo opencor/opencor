@@ -111,15 +111,6 @@ QColor highlightColor()
 
 //==============================================================================
 
-QColor linkColor()
-{
-    // Return the link colour
-
-    return qApp->palette().color(QPalette::Link);
-}
-
-//==============================================================================
-
 QColor shadowColor()
 {
     // Return the shadow colour

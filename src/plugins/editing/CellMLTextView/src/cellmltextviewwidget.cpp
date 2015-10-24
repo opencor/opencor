@@ -1019,7 +1019,7 @@ void CellmlTextViewWidget::updateViewer()
             // previous one
 
             QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"
-                                            +Core::cleanMathml(qDomDocumentToString(mParser.domDocument()))
+                                            +Core::cleanContentMathml(qDomDocumentToString(mParser.domDocument()))
                                             +"</math>";
 
             if (contentMathmlEquation.compare(mContentMathmlEquation)) {
