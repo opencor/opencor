@@ -77,7 +77,7 @@ QColor borderColor()
     //       prevents OpenCOR from retrieving the size of its main window. Not
     //       only that, but we can still see the 'hidden' widget...
 
-    return qApp->palette().color(QPalette::Highlight);
+    return qApp->palette().color(QPalette::Mid);
 }
 
 //==============================================================================
