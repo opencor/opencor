@@ -1568,9 +1568,11 @@ priority="2">
 </x:otherwise>
 </x:choose>
 <mo>&#8289;<!--function application--></mo>
+<x:if test="m:apply"><mo>(</mo></x:if>
 <x:apply-templates select="*[last()]">
   <x:with-param name="p" select="7"/>
 </x:apply-templates>
+<x:if test="m:apply"><mo>)</mo></x:if>
 </mrow>
 </x:template>
 
