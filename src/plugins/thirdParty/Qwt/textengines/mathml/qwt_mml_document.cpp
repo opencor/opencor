@@ -718,8 +718,8 @@ static const QwtMmlOperSpec g_oper_spec_data[] =
 {
 //                                                                accent   fence    largeop  lspace               minsize movablelimits rspace                   separator stretchy
 //                                                                -------- -------- -------- -------------------- ------- ------------- ------------------------ --------- --------
-    { "!!",                                QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!!"
     { "!",                                 QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!"
+    { "!!",                                QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!!"
     { "!=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "!="
     { "&And;",                             QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&And;"
     { "&ApplyFunction;",                   QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&ApplyFunction;"
@@ -2675,7 +2675,8 @@ qreal QwtMmlMoNode::lspace() const
                  && parent()->nodeType() != UnknownNode )
             || previousSibling() == 0
             || ( previousSibling() == 0 && nextSibling() == 0 )
-            || ( previousSibling() != 0
+            || ( form() != PostfixForm
+                 && previousSibling() != 0
                  && previousSibling()->nodeType() == MoNode
                  && ( ( QwtMmlMoNode* ) previousSibling() )->form() != PrefixForm )
             || unaryMinus()
