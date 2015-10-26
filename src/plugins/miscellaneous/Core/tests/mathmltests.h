@@ -72,6 +72,8 @@ private Q_SLOTS:
     void factTests();
 
     void remTests();
+
+    void trigonometricTests();
 };
 
 //==============================================================================

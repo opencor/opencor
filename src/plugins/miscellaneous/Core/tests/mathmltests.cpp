@@ -242,6 +242,15 @@ void MathmlTests::remTests()
 
 //==============================================================================
 
+void MathmlTests::trigonometricTests()
+{
+    // Run some tests for our trigonometric category
+
+    tests("trigonometric");
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(MathmlTests)
 
 //==============================================================================
