@@ -56,6 +56,24 @@ private Q_SLOTS:
     void minusTests();
     void timesTests();
     void divideTests();
+
+    void powerTests();
+    void rootTests();
+
+    void absTests();
+
+    void expTests();
+    void lnTests();
+    void logTests();
+
+    void floorTests();
+    void ceilTests();
+
+    void factTests();
+
+    void remTests();
+
+    void trigonometricTests();
 };
 
 //==============================================================================
