@@ -2605,7 +2605,9 @@ bool QwtMmlMoNode::unaryMinus() const
             && previousSibling()->nodeType() == MoNode
             && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
                  || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "(" )
-                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "|" ) );
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "|" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌊" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌈" ) );
 }
 
 QwtMml::FormType QwtMmlMoNode::form() const
