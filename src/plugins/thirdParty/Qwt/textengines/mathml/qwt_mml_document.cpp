@@ -2675,10 +2675,9 @@ qreal QwtMmlMoNode::lspace() const
                  && parent()->nodeType() != UnknownNode )
             || previousSibling() == 0
             || ( previousSibling() == 0 && nextSibling() == 0 )
-            || ( form() != PostfixForm
-                 && previousSibling() != 0
+            || ( previousSibling() != 0
                  && previousSibling()->nodeType() == MoNode
-                 && ( ( QwtMmlMoNode* ) previousSibling() )->form() != PrefixForm )
+                 && !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( text() ) )
             || unaryMinus()
             || ( !text().compare( "|" )
                  && previousSibling() != 0
