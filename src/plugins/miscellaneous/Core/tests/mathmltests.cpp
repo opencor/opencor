@@ -197,6 +197,15 @@ void MathmlTests::lnTests()
 
 //==============================================================================
 
+void MathmlTests::logTests()
+{
+    // Run some tests for our log category
+
+    tests("log");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category
