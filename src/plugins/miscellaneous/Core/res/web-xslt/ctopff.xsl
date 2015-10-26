@@ -410,9 +410,11 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:factorial]]
                                 |m:apply[*[1][self::m:csymbol='factorial']]">
 <mrow>
+<x:if test="m:apply"><mo>(</mo></x:if>
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="7"/>
 </x:apply-templates>
+<x:if test="m:apply"><mo>)</mo></x:if>
 <mo>!</mo>
 </mrow>
 </x:template>
