@@ -69,6 +69,8 @@ private Q_SLOTS:
     void floorTests();
     void ceilTests();
 
+    void factTests();
+
     void remTests();
 };
 

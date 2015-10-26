@@ -224,6 +224,15 @@ void MathmlTests::ceilTests()
 
 //==============================================================================
 
+void MathmlTests::factTests()
+{
+    // Run some tests for our fact category
+
+    tests("fact");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category
