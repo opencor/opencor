@@ -67,37 +67,17 @@ QColor baseColor()
 
 QColor borderColor()
 {
-    // Retrieve and return the colour used for a 'normal' border
-    // Note #1: we use a QStackedWidget object and retrieve the colour of the
-    //          pixel which is in the middle of the right border...
-    // Note #2: we don't rely on the top border because it may be rendered in a
-    //          special way. Also, we don't rely on a corner as such in case
-    //          it's rendered as a rounded corner...
+    // Return the mid colour, which we consider as the colour to be used for a
+    // 'normal' border
+    // Note: this is not quite the correct colour, but nonetheless the one that
+    //       is closest to it. Indeed, to use a hidden widget of sorts to
+    //       retrieve the colour of a border works fine on all our supported
+    //       operating systems except Windows 10 (while it works fine on
+    //       previous versions of Windows) where it has a side effect that
+    //       prevents OpenCOR from retrieving the size of its main window. Not
+    //       only that, but we can still see the 'hidden' widget...
 
-    static bool firstTime = true;
-    static QStackedWidget *stackedWidget;
-    static QImage image;
-    static int xPixel;
-    static int yPixel;
-
-    if (firstTime) {
-        stackedWidget = new QStackedWidget(mainWindow());
-        image = QImage(stackedWidget->size(),
-                       QImage::Format_ARGB32_Premultiplied);
-
-        stackedWidget->setFrameShape(QFrame::StyledPanel);
-
-        stackedWidget->hide();
-
-        xPixel = image.width()-1;
-        yPixel = 0.5*image.height();
-
-        firstTime = false;
-    }
-
-    stackedWidget->render(&image);
-
-    return QColor(image.pixel(xPixel, yPixel));
+    return qApp->palette().color(QPalette::Mid);
 }
 
 //==============================================================================

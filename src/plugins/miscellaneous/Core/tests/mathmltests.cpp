@@ -152,6 +152,105 @@ void MathmlTests::divideTests()
 
 //==============================================================================
 
+void MathmlTests::powerTests()
+{
+    // Run some tests for our power category
+
+    tests("power");
+}
+
+//==============================================================================
+
+void MathmlTests::rootTests()
+{
+    // Run some tests for our root category
+
+    tests("root");
+}
+
+//==============================================================================
+
+void MathmlTests::absTests()
+{
+    // Run some tests for our abs category
+
+    tests("abs");
+}
+
+//==============================================================================
+
+void MathmlTests::expTests()
+{
+    // Run some tests for our exp category
+
+    tests("exp");
+}
+
+//==============================================================================
+
+void MathmlTests::lnTests()
+{
+    // Run some tests for our ln category
+
+    tests("ln");
+}
+
+//==============================================================================
+
+void MathmlTests::logTests()
+{
+    // Run some tests for our log category
+
+    tests("log");
+}
+
+//==============================================================================
+
+void MathmlTests::floorTests()
+{
+    // Run some tests for our floor category
+
+    tests("floor");
+}
+
+//==============================================================================
+
+void MathmlTests::ceilTests()
+{
+    // Run some tests for our ceil category
+
+    tests("ceil");
+}
+
+//==============================================================================
+
+void MathmlTests::factTests()
+{
+    // Run some tests for our fact category
+
+    tests("fact");
+}
+
+//==============================================================================
+
+void MathmlTests::remTests()
+{
+    // Run some tests for our rem category
+
+    tests("rem");
+}
+
+//==============================================================================
+
+void MathmlTests::trigonometricTests()
+{
+    // Run some tests for our trigonometric category
+
+    tests("trigonometric");
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(MathmlTests)
 
 //==============================================================================

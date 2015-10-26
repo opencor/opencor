@@ -1,0 +1,9 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+        <mi mathvariant="italic">a</mi>
+        <mo>=</mo>
+        <msqrt>
+            <mi mathvariant="italic">b</mi>
+        </msqrt>
+    </mrow>
+</math>
