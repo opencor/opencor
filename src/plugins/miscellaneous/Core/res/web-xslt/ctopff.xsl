@@ -1557,7 +1557,7 @@ priority="2">
                        |m:apply[*[1][self::m:csymbol='log']]">
 <mrow>
 <x:choose>
-<x:when test="not(m:logbase) or m:logbase=10">
+<x:when test="not(m:logbase) or number(m:logbase)=10">
 <mi>log</mi>
 </x:when>
 <x:otherwise>
