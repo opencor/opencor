@@ -206,6 +206,15 @@ void MathmlTests::logTests()
 
 //==============================================================================
 
+void MathmlTests::floorTests()
+{
+    // Run some tests for our floor category
+
+    tests("floor");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category

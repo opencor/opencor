@@ -66,6 +66,8 @@ private Q_SLOTS:
     void lnTests();
     void logTests();
 
+    void floorTests();
+
     void remTests();
 };
 
