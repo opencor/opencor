@@ -215,6 +215,15 @@ void MathmlTests::floorTests()
 
 //==============================================================================
 
+void MathmlTests::ceilTests()
+{
+    // Run some tests for our ceil category
+
+    tests("ceil");
+}
+
+//==============================================================================
+
 void MathmlTests::remTests()
 {
     // Run some tests for our rem category
