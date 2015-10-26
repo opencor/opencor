@@ -13,3 +13,7 @@ a=-log(b, c);                                   // 009
 a=log(b, c+d);                                  // 010
 a=log(-b, c+d);                                 // 011
 a=-log(b, c+d);                                 // 012
+
+a=log(b+c);                                     // 013
+a=log(-b+c);                                    // 014
+a=-log(b+c);                                    // 015
