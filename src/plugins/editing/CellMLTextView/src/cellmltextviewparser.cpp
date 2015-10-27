@@ -2542,34 +2542,31 @@ Q_UNUSED(pMoreArguments);//---GRY---
 
     // Try to parse the first argument as a normal mathematical expression
 
-    if (pOneArgument || pTwoArguments) {
-        mScanner.getNextToken();
+    mScanner.getNextToken();
 
-        firstArgumentElement = parseNormalMathematicalExpression(pDomNode);
+    firstArgumentElement = parseNormalMathematicalExpression(pDomNode);
 
-        if (firstArgumentElement.isNull())
+    if (firstArgumentElement.isNull())
+        return QDomElement();
+
+    // Check wheter we expect or might expect a second argument
+
+    if (   (   pOneArgument && pTwoArguments
+            && isTokenType(pDomNode, CellmlTextViewScanner::CommaToken))
+        || (!pOneArgument && pTwoArguments)) {
+        // Expect ",", should we always be expecting a second argument
+
+        if (!pOneArgument && pTwoArguments && !commaToken(pDomNode))
             return QDomElement();
 
-        // Check wheter we expect or might expect a second argument
+        // Try to parse the second argument as a normal mathematical expression
 
-        if (   (   pOneArgument && pTwoArguments
-                && isTokenType(pDomNode, CellmlTextViewScanner::CommaToken))
-            || (!pOneArgument && pTwoArguments)) {
-            // Expect ",", should we always be expecting a second argument
+        mScanner.getNextToken();
 
-            if (!pOneArgument && pTwoArguments && !commaToken(pDomNode))
-                return QDomElement();
+        secondArgumentElement = parseNormalMathematicalExpression(pDomNode);
 
-            // Try to parse the second argument as a normal mathematical
-            // expression
-
-            mScanner.getNextToken();
-
-            secondArgumentElement = parseNormalMathematicalExpression(pDomNode);
-
-            if (secondArgumentElement.isNull())
-                return QDomElement();
-        }
+        if (secondArgumentElement.isNull())
+            return QDomElement();
     }
 
     // Expect ")"
