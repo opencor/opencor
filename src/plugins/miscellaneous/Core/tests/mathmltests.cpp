@@ -242,6 +242,24 @@ void MathmlTests::remTests()
 
 //==============================================================================
 
+void MathmlTests::minTests()
+{
+    // Run some tests for our min category
+
+    tests("min");
+}
+
+//==============================================================================
+
+void MathmlTests::maxTests()
+{
+    // Run some tests for our max category
+
+    tests("max");
+}
+
+//==============================================================================
+
 void MathmlTests::trigonometricTests()
 {
     // Run some tests for our trigonometric category
