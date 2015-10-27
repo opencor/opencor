@@ -34,6 +34,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "Added", "description": "Support for the <code>min()</code> and <code>max()</code> functions." },
+                               { "type": "Added", "description": "Support for the <code>gcd()</code> and <code>lcm()</code> functions." },
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
