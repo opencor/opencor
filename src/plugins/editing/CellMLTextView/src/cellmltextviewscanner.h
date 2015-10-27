@@ -59,6 +59,11 @@ public:
         AbsToken, CeilToken, ExpToken, FactToken, FloorToken, LnToken, SqrToken,
         SqrtToken,
 
+        MinToken, MaxToken,
+
+        FirstTwoOrMoreArgumentMathematicalFunctionToken = MinToken,
+        LastTwoOrMoreArgumentMathematicalFunctionToken = MaxToken,
+
         SinToken, CosToken, TanToken, SecToken, CscToken, CotToken,
         SinhToken, CoshToken, TanhToken, SechToken, CschToken, CothToken,
         AsinToken, AcosToken, AtanToken, AsecToken, AcscToken, AcotToken,

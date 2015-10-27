@@ -196,7 +196,8 @@ private:
     QDomElement parseNumber(QDomNode &pDomNode);
     QDomElement parseMathematicalFunction(QDomNode &pDomNode,
                                           const bool &pOneArgument,
-                                          const bool &pTwoArguments);
+                                          const bool &pTwoArguments,
+                                          const bool &pMoreArguments);
     QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,

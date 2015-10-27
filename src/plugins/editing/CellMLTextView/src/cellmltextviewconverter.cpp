@@ -987,6 +987,14 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                 else
                     return processDiffNode(pDomNode, pHasError);
 
+            // Min/max operators
+
+            } else if (mathmlNode(domNode, "min") || mathmlNode(domNode, "max")) {
+                if (currentChildNodesCount < 3)
+                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
+                else
+                    return processTwoOrMoreParameterFunctionNode(domNode.localName(), pDomNode, pHasError);
+
             // Trigonometric operators
 
             } else if (   mathmlNode(domNode,  "sin") || mathmlNode(domNode,  "cos") || mathmlNode(domNode,  "tan")
@@ -1597,6 +1605,7 @@ QString CellMLTextViewConverter::processOneParameterFunctionNode(const QString &
     QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode = QDomNode();
     int childElementNodeNumber = 0;
+    QString argument = QString();
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         childNode = childNodes.item(i);
@@ -1605,21 +1614,22 @@ QString CellMLTextViewConverter::processOneParameterFunctionNode(const QString &
             processCommentNode(childNode);
         } else {
             if (!childElementNodeNumber) {
-                // This is the function element, so nothing to process as such
-
-                ;
+                res = pFunction+"(";
             } else {
-                QString argument = processMathmlNode(childNode, pHasError);
+                argument = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
                     return QString();
                 else
-                    res = pFunction+"("+argument+")";
+                    res += argument;
             }
 
             ++childElementNodeNumber;
         }
     }
+
+    if (!res.isEmpty())
+        res += ")";
 
     return res;
 }
@@ -1636,7 +1646,7 @@ QString CellMLTextViewConverter::processTwoParameterFunctionNode(const QString &
     QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode = QDomNode();
     int childElementNodeNumber = 0;
-    QString argument1 = QString();
+    QString argument = QString();
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         childNode = childNodes.item(i);
@@ -1645,26 +1655,67 @@ QString CellMLTextViewConverter::processTwoParameterFunctionNode(const QString &
             processCommentNode(childNode);
         } else {
             if (!childElementNodeNumber) {
-                // This is the function element, so nothing to process as such
-
-                ;
-            } else if (childElementNodeNumber == 1) {
-                argument1 = processMathmlNode(childNode, pHasError);
-
-                if (pHasError)
-                    return QString();
+                res = pFunction+"(";
             } else {
-                QString argument2 = processMathmlNode(childNode, pHasError);
+                argument = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
                     return QString();
+                else if (childElementNodeNumber == 1)
+                    res += argument;
                 else
-                    res = pFunction+"("+argument1+", "+argument2+")";
+                    res += ", "+argument;
             }
 
             ++childElementNodeNumber;
         }
     }
+
+    if (!res.isEmpty())
+        res += ")";
+
+    return res;
+}
+
+//==============================================================================
+
+QString CellMLTextViewConverter::processTwoOrMoreParameterFunctionNode(const QString &pFunction,
+                                                                       const QDomNode &pDomNode,
+                                                                       bool &pHasError)
+{
+    // Process the two-parameter function node
+
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString argument = QString();
+
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
+
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
+        } else {
+            if (!childElementNodeNumber) {
+                res = pFunction+"(";
+            } else {
+                argument = processMathmlNode(childNode, pHasError);
+
+                if (pHasError)
+                    return QString();
+                else if (childElementNodeNumber == 1)
+                    res += argument;
+                else
+                    res += ", "+argument;
+            }
+
+            ++childElementNodeNumber;
+        }
+    }
+
+    if (!res.isEmpty())
+        res += ")";
 
     return res;
 }

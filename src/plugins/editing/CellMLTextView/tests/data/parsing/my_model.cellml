@@ -477,6 +477,44 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
+                    <min/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <min/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <max/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <max/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
                     <sin/>
                     <ci>b</ci>
                 </apply>

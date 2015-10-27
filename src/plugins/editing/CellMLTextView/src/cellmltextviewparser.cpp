@@ -2271,6 +2271,10 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
         return "power";
     case CellmlTextViewScanner::SqrtToken:
         return "root";
+    case CellmlTextViewScanner::MinToken:
+        return "min";
+    case CellmlTextViewScanner::MaxToken:
+        return "max";
     case CellmlTextViewScanner::SinToken:
         return "sin";
     case CellmlTextViewScanner::CosToken:
@@ -2516,8 +2520,10 @@ QDomElement CellmlTextViewParser::parseNumber(QDomNode &pDomNode)
 
 QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
                                                             const bool &pOneArgument,
-                                                            const bool &pTwoArguments)
+                                                            const bool &pTwoArguments,
+                                                            const bool &pMoreArguments)
 {
+Q_UNUSED(pMoreArguments);//---GRY---
     // Keep track of the mathematical function
 
     CellmlTextViewScanner::TokenType tokenType = mScanner.tokenType();
@@ -2823,6 +2829,7 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
     static CellmlTextViewScanner::TokenTypes oneArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
     static CellmlTextViewScanner::TokenTypes oneOrTwoArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
     static CellmlTextViewScanner::TokenTypes twoArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
+    static CellmlTextViewScanner::TokenTypes twoOrMoreArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
     static bool needInitializeTokenTypes = true;
 
     if (needInitializeTokenTypes) {
@@ -2834,6 +2841,8 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
                                                                            CellmlTextViewScanner::LastOneOrTwoArgumentMathematicalFunctionToken);
         twoArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstTwoArgumentMathematicalFunctionToken,
                                                                       CellmlTextViewScanner::LastTwoArgumentMathematicalFunctionToken);
+        twoOrMoreArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstTwoOrMoreArgumentMathematicalFunctionToken,
+                                                                            CellmlTextViewScanner::LastTwoOrMoreArgumentMathematicalFunctionToken);
 
         needInitializeTokenTypes = false;
     }
@@ -2857,15 +2866,19 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
     } else if (oneArgumentMathematicalFunctionTokenTypes.contains(mScanner.tokenType())) {
         // Try to parse a one-argument mathematical function
 
-        res = parseMathematicalFunction(pDomNode, true, false);
+        res = parseMathematicalFunction(pDomNode, true, false, false);
     } else if (oneOrTwoArgumentMathematicalFunctionTokenTypes.contains(mScanner.tokenType())) {
         // Try to parse a one- or two-argument mathematical function
 
-        res = parseMathematicalFunction(pDomNode, true, true);
+        res = parseMathematicalFunction(pDomNode, true, true, false);
     } else if (twoArgumentMathematicalFunctionTokenTypes.contains(mScanner.tokenType())) {
         // Try to parse a two-argument mathematical function
 
-        res = parseMathematicalFunction(pDomNode, false, true);
+        res = parseMathematicalFunction(pDomNode, false, true, false);
+    } else if (twoOrMoreArgumentMathematicalFunctionTokenTypes.contains(mScanner.tokenType())) {
+        // Try to parse a two-or-more argument mathematical function
+
+        res = parseMathematicalFunction(pDomNode, false, true, true);
     } else if (mScanner.tokenType() == CellmlTextViewScanner::OpeningBracketToken) {
         // Try to parse a parenthesised mathematical expression
 
