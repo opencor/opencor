@@ -435,8 +435,7 @@ QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTex
 //==============================================================================
 
 QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTextViewScanner::TokenType &pTokenType,
-                                                                 QDomElement &pFirstArgumentElement,
-                                                                 QDomElement &pSecondArgumentElement)
+                                                                 const QList<QDomElement> &pArgumentElements)
 {
     // Create and return a new mathematical function element for the given token
     // and arguments
@@ -445,29 +444,32 @@ QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTex
 
     mathematicalFunctionElement.appendChild(mDomDocument.createElement(mathmlName(pTokenType)));
 
-    if (!pSecondArgumentElement.isNull()) {
+    if (pArgumentElements.count() == 2) {
         if (pTokenType == CellmlTextViewScanner::LogToken) {
             QDomElement logBaseElement = mDomDocument.createElement("logbase");
 
-            logBaseElement.appendChild(pSecondArgumentElement);
+            logBaseElement.appendChild(pArgumentElements[1]);
             mathematicalFunctionElement.appendChild(logBaseElement);
         } else if (pTokenType == CellmlTextViewScanner::RootToken) {
             QDomElement degreeElement = mDomDocument.createElement("degree");
 
-            degreeElement.appendChild(pSecondArgumentElement);
+            degreeElement.appendChild(pArgumentElements[1]);
             mathematicalFunctionElement.appendChild(degreeElement);
         }
     }
 
-    if (!pFirstArgumentElement.isNull())
-        mathematicalFunctionElement.appendChild(pFirstArgumentElement);
+    mathematicalFunctionElement.appendChild(pArgumentElements[0]);
 
-    if (pSecondArgumentElement.isNull()) {
+    if (pArgumentElements.count() == 1) {
         if (pTokenType == CellmlTextViewScanner::SqrToken)
             mathematicalFunctionElement.appendChild(newNumberElement("2", "dimensionless"));
+    } else if (   (pTokenType == CellmlTextViewScanner::MinToken)
+               || (pTokenType == CellmlTextViewScanner::MaxToken)) {
+        for (int i = 1, iMax = pArgumentElements.count(); i < iMax; ++i)
+            mathematicalFunctionElement.appendChild(pArgumentElements[i]);
     } else if (   (pTokenType != CellmlTextViewScanner::LogToken)
                && (pTokenType != CellmlTextViewScanner::RootToken)) {
-        mathematicalFunctionElement.appendChild(pSecondArgumentElement);
+        mathematicalFunctionElement.appendChild(pArgumentElements[1]);
     }
 
     return mathematicalFunctionElement;
@@ -2523,7 +2525,6 @@ QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
                                                             const bool &pTwoArguments,
                                                             const bool &pMoreArguments)
 {
-Q_UNUSED(pMoreArguments);//---GRY---
     // Keep track of the mathematical function
 
     CellmlTextViewScanner::TokenType tokenType = mScanner.tokenType();
@@ -2535,19 +2536,17 @@ Q_UNUSED(pMoreArguments);//---GRY---
     if (!openingBracketToken(pDomNode))
         return QDomElement();
 
-    // Default argument values
-
-    QDomElement firstArgumentElement = QDomElement();
-    QDomElement secondArgumentElement = QDomElement();
-
     // Try to parse the first argument as a normal mathematical expression
 
     mScanner.getNextToken();
 
-    firstArgumentElement = parseNormalMathematicalExpression(pDomNode);
+    QList<QDomElement> argumentElements = QList<QDomElement>();
+    QDomElement argumentElement = parseNormalMathematicalExpression(pDomNode);
 
-    if (firstArgumentElement.isNull())
+    if (argumentElement.isNull())
         return QDomElement();
+    else
+        argumentElements << argumentElement;
 
     // Check wheter we expect or might expect a second argument
 
@@ -2563,10 +2562,28 @@ Q_UNUSED(pMoreArguments);//---GRY---
 
         mScanner.getNextToken();
 
-        secondArgumentElement = parseNormalMathematicalExpression(pDomNode);
+        argumentElement = parseNormalMathematicalExpression(pDomNode);
 
-        if (secondArgumentElement.isNull())
+        if (argumentElement.isNull())
             return QDomElement();
+        else
+            argumentElements << argumentElement;
+    }
+
+    // Check wheter we might expect more arguments
+
+    while (   pTwoArguments && pMoreArguments
+           && isTokenType(pDomNode, CellmlTextViewScanner::CommaToken)) {
+        // Try to parse the nth argument as a normal mathematical expression
+
+        mScanner.getNextToken();
+
+        argumentElement = parseNormalMathematicalExpression(pDomNode);
+
+        if (argumentElement.isNull())
+            return QDomElement();
+        else
+            argumentElements << argumentElement;
     }
 
     // Expect ")"
@@ -2576,7 +2593,7 @@ Q_UNUSED(pMoreArguments);//---GRY---
 
     // Return a mathematical function element
 
-    return newMathematicalFunctionElement(tokenType, firstArgumentElement, secondArgumentElement);
+    return newMathematicalFunctionElement(tokenType, argumentElements);
 }
 
 //==============================================================================
