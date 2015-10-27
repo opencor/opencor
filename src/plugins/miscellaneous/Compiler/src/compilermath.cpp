@@ -48,6 +48,54 @@ double arbitrary_log(double pNb, double pBase)
 
 //==============================================================================
 
+double multi_min(int pCount, ...)
+{
+    if (!pCount)
+        return strtod("NAN", 0);
+
+    va_list parameters;
+
+    va_start(parameters, pCount);
+        double res = va_arg(parameters, double);
+        double otherParameter;
+
+        while (--pCount) {
+            otherParameter = va_arg(parameters, double);
+
+            if (otherParameter < res)
+                res = otherParameter;
+        }
+    va_end(parameters);
+
+    return res;
+}
+
+//==============================================================================
+
+double multi_max(int pCount, ...)
+{
+    if (!pCount)
+        return strtod("NAN", 0);
+
+    va_list parameters;
+
+    va_start(parameters, pCount);
+        double res = va_arg(parameters, double);
+        double otherParameter;
+
+        while (--pCount) {
+            otherParameter = va_arg(parameters, double);
+
+            if (otherParameter > res)
+                res = otherParameter;
+        }
+    va_end(parameters);
+
+    return res;
+}
+
+//==============================================================================
+
 double gcdPair(double pNb1, double pNb2)
 {
     #define EVEN(pNb) !(pNb & 1)
@@ -124,54 +172,6 @@ double lcm_multi(int pCount, ...)
 
         while (--pCount)
             res = lcmPair(res, va_arg(parameters, double));
-    va_end(parameters);
-
-    return res;
-}
-
-//==============================================================================
-
-double multi_min(int pCount, ...)
-{
-    if (!pCount)
-        return strtod("NAN", 0);
-
-    va_list parameters;
-
-    va_start(parameters, pCount);
-        double res = va_arg(parameters, double);
-        double otherParameter;
-
-        while (--pCount) {
-            otherParameter = va_arg(parameters, double);
-
-            if (otherParameter < res)
-                res = otherParameter;
-        }
-    va_end(parameters);
-
-    return res;
-}
-
-//==============================================================================
-
-double multi_max(int pCount, ...)
-{
-    if (!pCount)
-        return strtod("NAN", 0);
-
-    va_list parameters;
-
-    va_start(parameters, pCount);
-        double res = va_arg(parameters, double);
-        double otherParameter;
-
-        while (--pCount) {
-            otherParameter = va_arg(parameters, double);
-
-            if (otherParameter > res)
-                res = otherParameter;
-        }
     va_end(parameters);
 
     return res;

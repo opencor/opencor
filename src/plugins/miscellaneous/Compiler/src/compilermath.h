@@ -36,10 +36,11 @@ extern "C" double COMPILER_EXPORT factorial(double pNb);
 
 extern "C" double COMPILER_EXPORT arbitrary_log(double pNb, double pBase);
 
+extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
+extern "C" double COMPILER_EXPORT multi_max(int pCount, ...);
+
 extern "C" double COMPILER_EXPORT gcd_multi(int pCount, ...);
 extern "C" double COMPILER_EXPORT lcm_multi(int pCount, ...);
-extern "C" double COMPILER_EXPORT multi_max(int pCount, ...);
-extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
 
 //==============================================================================
 
