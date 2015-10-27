@@ -3,10 +3,10 @@
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
         <mi>max</mi>
-        <mo>{</mo>
+        <mo>(</mo>
         <mi mathvariant="italic">b</mi>
         <mo>,</mo>
         <mi mathvariant="italic">c</mi>
-        <mo>}</mo>
+        <mo>)</mo>
     </mrow>
 </math>

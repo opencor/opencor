@@ -3,7 +3,7 @@
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
         <mi>lcm</mi>
-        <mo>{</mo>
+        <mo>(</mo>
         <mo>−</mo>
         <mi mathvariant="italic">b</mi>
         <mo>,</mo>
@@ -12,6 +12,6 @@
         <mo>,</mo>
         <mo>−</mo>
         <mi mathvariant="italic">d</mi>
-        <mo>}</mo>
+        <mo>)</mo>
     </mrow>
 </math>
