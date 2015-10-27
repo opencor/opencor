@@ -787,6 +787,210 @@ void Tests::atanhFunctionTests()
 
 //==============================================================================
 
+void Tests::secFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double sec(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return sec(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             sec(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             sec(mA));
+}
+
+//==============================================================================
+
+void Tests::sechFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double sech(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return sech(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             sech(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             sech(mA));
+}
+
+//==============================================================================
+
+void Tests::asecFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double asec(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return asec(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             asec(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             asec(mA));
+}
+
+//==============================================================================
+
+void Tests::asechFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double asech(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return asech(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+             asech(1.0/3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+             asech(1.0/mA));
+}
+
+//==============================================================================
+
+void Tests::cscFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double csc(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return csc(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             csc(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             csc(mA));
+}
+
+//==============================================================================
+
+void Tests::cschFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double csch(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return csch(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             csch(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             csch(mA));
+}
+
+//==============================================================================
+
+void Tests::acscFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double acsc(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return acsc(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             acsc(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             acsc(mA));
+}
+
+//==============================================================================
+
+void Tests::acschFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double acsch(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return acsch(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             acsch(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             acsch(mA));
+}
+
+//==============================================================================
+
+void Tests::cotFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double cot(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return cot(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             cot(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             cot(mA));
+}
+
+//==============================================================================
+
+void Tests::cothFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double coth(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return coth(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             coth(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             coth(mA));
+}
+
+//==============================================================================
+
+void Tests::acotFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double acot(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return acot(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+             acot(1.0/3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+             acot(1.0/mA));
+}
+
+//==============================================================================
+
+void Tests::acothFunctionTests()
+{
+    QVERIFY(mCompilerEngine->compileCode("extern double acoth(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return acoth(pNb);\n"
+                                         "}"));
+
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+             acoth(3.0));
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+             acoth(mA));
+}
+
+//==============================================================================
+
 void Tests::powFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double pow(double, double);\n"

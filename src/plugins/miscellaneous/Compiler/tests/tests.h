@@ -100,6 +100,21 @@ private Q_SLOTS:
     void atanFunctionTests();
     void atanhFunctionTests();
 
+    void secFunctionTests();
+    void sechFunctionTests();
+    void asecFunctionTests();
+    void asechFunctionTests();
+
+    void cscFunctionTests();
+    void cschFunctionTests();
+    void acscFunctionTests();
+    void acschFunctionTests();
+
+    void cotFunctionTests();
+    void cothFunctionTests();
+    void acotFunctionTests();
+    void acothFunctionTests();
+
     void powFunctionTests();
     void arbitraryLogFunctionTests();
 

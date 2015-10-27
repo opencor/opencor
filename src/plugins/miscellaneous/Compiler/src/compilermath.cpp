@@ -41,6 +41,96 @@ double factorial(double pNb)
 
 //==============================================================================
 
+double sec(double pNb)
+{
+    return 1.0/cos(pNb);
+}
+
+//==============================================================================
+
+double sech(double pNb)
+{
+    return 1.0/cosh(pNb);
+}
+
+//==============================================================================
+
+double asec(double pNb)
+{
+    return acos(1.0/pNb);
+}
+
+//==============================================================================
+
+double asech(double pNb)
+{
+    double oneOverNb = 1.0/pNb;
+
+    return log(oneOverNb+sqrt(oneOverNb*oneOverNb-1.0));
+}
+
+//==============================================================================
+
+double csc(double pNb)
+{
+    return 1.0/sin(pNb);
+}
+
+//==============================================================================
+
+double csch(double pNb)
+{
+    return 1.0/sinh(pNb);
+}
+
+//==============================================================================
+
+double acsc(double pNb)
+{
+    return asin(1.0/pNb);
+}
+
+//==============================================================================
+
+double acsch(double pNb)
+{
+    double oneOverNb = 1.0/pNb;
+
+    return log(oneOverNb+sqrt(oneOverNb*oneOverNb+1.0));
+}
+
+//==============================================================================
+
+double cot(double pNb)
+{
+    return 1.0/tan(pNb);
+}
+
+//==============================================================================
+
+double coth(double pNb)
+{
+    return 1.0/tanh(pNb);
+}
+
+//==============================================================================
+
+double acot(double pNb)
+{
+    return atan(1.0/pNb);
+}
+
+//==============================================================================
+
+double acoth(double pNb)
+{
+    double oneOverNb = 1.0/pNb;
+
+    return 0.5*log((1.0+oneOverNb)/(1.0-oneOverNb));
+}
+
+//==============================================================================
+
 double arbitrary_log(double pNb, double pBase)
 {
     return std::log(pNb)/std::log(pBase);
