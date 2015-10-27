@@ -76,6 +76,9 @@ private Q_SLOTS:
     void minTests();
     void maxTests();
 
+    void gcdTests();
+    void lcmTests();
+
     void trigonometricTests();
 };
 
