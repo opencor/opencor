@@ -169,15 +169,8 @@ private:
     QString processOtherwiseNode(const QDomNode &pDomNode, bool &pHasError);
     QString processOperatorNode(const QString &pOperator,
                                 const QDomNode &pDomNode, bool &pHasError);
-    QString processOneParameterFunctionNode(const QString &pFunction,
-                                            const QDomNode &pDomNode,
-                                            bool &pHasError);
-    QString processTwoParameterFunctionNode(const QString &pFunction,
-                                            const QDomNode &pDomNode,
-                                            bool &pHasError);
-    QString processTwoOrMoreParameterFunctionNode(const QString &pFunction,
-                                                  const QDomNode &pDomNode,
-                                                  bool &pHasError);
+    QString processFunctionNode(const QString &pFunction,
+                                const QDomNode &pDomNode, bool &pHasError);
     QString processPowerNode(const QDomNode &pDomNode, bool &pHasError);
     QString processRootNode(const QDomNode &pDomNode, bool &pHasError);
     QString processLogNode(const QDomNode &pDomNode, bool &pHasError);
