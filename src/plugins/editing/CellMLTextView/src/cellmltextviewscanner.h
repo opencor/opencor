@@ -77,6 +77,11 @@ public:
         FirstTwoArgumentMathematicalFunctionToken = PowToken,
         LastTwoArgumentMathematicalFunctionToken = RootToken,
 
+        MinToken, MaxToken,
+
+        FirstTwoOrMoreArgumentMathematicalFunctionToken = MinToken,
+        LastTwoOrMoreArgumentMathematicalFunctionToken = MaxToken,
+
         TrueToken, FalseToken, NanToken, PiToken, InfToken, EToken,
 
         FirstMathematicalConstantToken = TrueToken,
