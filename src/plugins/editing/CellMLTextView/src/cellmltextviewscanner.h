@@ -79,8 +79,10 @@ public:
 
         MinToken, MaxToken,
 
+        GcdToken, LcmToken,
+
         FirstTwoOrMoreArgumentMathematicalFunctionToken = MinToken,
-        LastTwoOrMoreArgumentMathematicalFunctionToken = MaxToken,
+        LastTwoOrMoreArgumentMathematicalFunctionToken = LcmToken,
 
         TrueToken, FalseToken, NanToken, PiToken, InfToken, EToken,
 

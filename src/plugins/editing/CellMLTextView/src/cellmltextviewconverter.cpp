@@ -995,6 +995,14 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                 else
                     return processFunctionNode(domNode.localName(), pDomNode, pHasError);
 
+            // Gcd/lcm operators
+
+            } else if (mathmlNode(domNode, "gcd") || mathmlNode(domNode, "lcm")) {
+                if (currentChildNodesCount < 3)
+                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
+                else
+                    return processFunctionNode(domNode.localName(), pDomNode, pHasError);
+
             // Trigonometric operators
 
             } else if (   mathmlNode(domNode,  "sin") || mathmlNode(domNode,  "cos") || mathmlNode(domNode,  "tan")
