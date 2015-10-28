@@ -725,11 +725,9 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
         // Also keep a copy of the new locale in our global settings (so that it
         // can be retrieved from any plugin)
 
-        QSettings settings(SettingsOrganization, SettingsApplication);
-
-        settings.beginGroup(SettingsGlobal);
-            settings.setValue(SettingsLocale, locale());
-        settings.endGroup();
+        mSettings->beginGroup(SettingsGlobal);
+            mSettings->setValue(SettingsLocale, locale());
+        mSettings->endGroup();
     }
 
     // Check whether the new locale is different from the old one and if so,
