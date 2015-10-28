@@ -16,58 +16,22 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SBML API tests
+// SBML API disable warnings
 //==============================================================================
 
-#include "tests.h"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#if !defined(SBMLAPIENABLEWARNINGS_H) && !defined(SBMLAPIDISABLEWARNINGS_H)
+#define SBMLAPIDISABLEWARNINGS_H
 
 //==============================================================================
 
-#include "sbmlapidisablewarnings.h"
-    #include "sbml/common/libsbml-version.h"
-    #include "sbml/SBMLDocument.h"
-#include "sbmlapienablewarnings.h"
+#ifdef Q_OS_WIN
+    #pragma warning(push)
+    #pragma warning(disable: 4005)
+#endif
 
 //==============================================================================
 
-void Tests::basicTests()
-{
-    // Some very basic tests to make sure that we have access to libSBML
-
-    // Check the version of libSBML
-
-    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.11.4");
-
-    // Check against which libraries libSBML has been compiled
-
-    QVERIFY( libsbml::isLibSBMLCompiledWith("bzip2"));
-    QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
-    QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
-    QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
-    QVERIFY( libsbml::isLibSBMLCompiledWith("zip"));
-
-    // Create an SBML document with a model inside it, then set the name of the
-    // model and check that it has been properly set
-
-    libsbml::SBMLDocument *sbmlDocument = new libsbml::SBMLDocument();
-    libsbml::Model *sbmlModel = sbmlDocument->createModel();
-
-    static const std::string modelName = "myModel";
-
-    sbmlModel->setName(modelName);
-
-    QCOMPARE(sbmlModel->getName(), modelName);
-
-    delete sbmlDocument;
-}
-
-//==============================================================================
-
-QTEST_GUILESS_MAIN(Tests)
+#endif
 
 //==============================================================================
 // End of file

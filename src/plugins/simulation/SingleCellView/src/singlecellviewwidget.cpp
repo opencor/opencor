@@ -81,7 +81,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sbml/math/FormulaParser.h"
+#include "sbmlapidisablewarnings.h"
+    #include "sbml/math/FormulaParser.h"
+#include "sbmlapienablewarnings.h"
 
 //==============================================================================
 
