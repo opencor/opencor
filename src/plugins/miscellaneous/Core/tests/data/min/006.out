@@ -4,12 +4,12 @@
         <mo>=</mo>
         <mo>−</mo>
         <mi>min</mi>
-        <mo>{</mo>
+        <mo>(</mo>
         <mi mathvariant="italic">b</mi>
         <mo>,</mo>
         <mi mathvariant="italic">c</mi>
         <mo>,</mo>
         <mi mathvariant="italic">d</mi>
-        <mo>}</mo>
+        <mo>)</mo>
     </mrow>
 </math>

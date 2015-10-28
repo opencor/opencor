@@ -434,14 +434,21 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
                                 |m:apply[*[1][self::m:csymbol='max']]">
 <mrow>
   <mi>max</mi>
-  <x:call-template name="set"/>
+  <x:call-template name="set">
+    <x:with-param name="o" select="'('"/>
+    <x:with-param name="c" select="')'"/>
+  </x:call-template>
 </mrow>
 </x:template>
 
-<x:template match="m:apply[*[1][self::m:min]]|m:reln[*[1][self::m:min]]">
+<x:template match="m:apply[*[1][self::m:min]]
+                                |m:apply[*[1][self::m:csymbol='min']]">
 <mrow>
   <mi>min</mi><!--dpc-->
-  <x:call-template name="set"/>
+  <x:call-template name="set">
+    <x:with-param name="o" select="'('"/>
+    <x:with-param name="c" select="')'"/>
+  </x:call-template>
 </mrow>
 </x:template>
 
@@ -619,8 +626,15 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 </x:template>
 
 <!-- 4.4.3.11 gcd -->
-<x:template match="m:gcd">
-<mi>gcd</mi>
+<x:template match="m:apply[*[1][self::m:gcd]]
+                                |m:apply[*[1][self::m:csymbol='gcd']]">
+<mrow>
+  <mi>gcd</mi>
+  <x:call-template name="set">
+    <x:with-param name="o" select="'('"/>
+    <x:with-param name="c" select="')'"/>
+  </x:call-template>
+</mrow>
 </x:template>
 
 <!-- 4.4.3.12 and -->
@@ -779,8 +793,15 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 </x:template>
 
 <!-- 4.4.3.24 lcm -->
-<x:template match="m:lcm">
- <mi>lcm</mi>
+<x:template match="m:apply[*[1][self::m:lcm]]
+                                |m:apply[*[1][self::m:csymbol='lcm']]">
+<mrow>
+  <mi>lcm</mi>
+  <x:call-template name="set">
+    <x:with-param name="o" select="'('"/>
+    <x:with-param name="c" select="')'"/>
+  </x:call-template>
+</mrow>
 </x:template>
 
 

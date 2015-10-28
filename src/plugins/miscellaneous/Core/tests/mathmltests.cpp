@@ -260,6 +260,24 @@ void MathmlTests::maxTests()
 
 //==============================================================================
 
+void MathmlTests::gcdTests()
+{
+    // Run some tests for our gcd category
+
+    tests("gcd");
+}
+
+//==============================================================================
+
+void MathmlTests::lcmTests()
+{
+    // Run some tests for our lcm category
+
+    tests("lcm");
+}
+
+//==============================================================================
+
 void MathmlTests::trigonometricTests()
 {
     // Run some tests for our trigonometric category

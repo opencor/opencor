@@ -463,8 +463,8 @@ QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTex
     if (pArgumentElements.count() == 1) {
         if (pTokenType == CellmlTextViewScanner::SqrToken)
             mathematicalFunctionElement.appendChild(newNumberElement("2", "dimensionless"));
-    } else if (   (pTokenType == CellmlTextViewScanner::MinToken)
-               || (pTokenType == CellmlTextViewScanner::MaxToken)) {
+    } else if (   (pTokenType >= CellmlTextViewScanner::FirstTwoOrMoreArgumentMathematicalFunctionToken)
+               && (pTokenType <= CellmlTextViewScanner::LastTwoOrMoreArgumentMathematicalFunctionToken)) {
         for (int i = 1, iMax = pArgumentElements.count(); i < iMax; ++i)
             mathematicalFunctionElement.appendChild(pArgumentElements[i]);
     } else if (   (pTokenType != CellmlTextViewScanner::LogToken)
@@ -2277,6 +2277,10 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
         return "min";
     case CellmlTextViewScanner::MaxToken:
         return "max";
+    case CellmlTextViewScanner::GcdToken:
+        return "gcd";
+    case CellmlTextViewScanner::LcmToken:
+        return "lcm";
     case CellmlTextViewScanner::SinToken:
         return "sin";
     case CellmlTextViewScanner::CosToken:

@@ -92,6 +92,9 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mKeywords.insert("min", MinToken);
     mKeywords.insert("max", MaxToken);
 
+    mKeywords.insert("gcd", GcdToken);
+    mKeywords.insert("lcm", LcmToken);
+
     mKeywords.insert("sin", SinToken);
     mKeywords.insert("cos", CosToken);
     mKeywords.insert("tan", TanToken);

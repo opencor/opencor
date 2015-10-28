@@ -385,6 +385,18 @@ void ConversionTests::failingConversionTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'max' element must have at least two siblings."));
 
+    // MathML gcd/lcm operators
+
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_gcd.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'gcd' element must have at least two siblings."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_lcm.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'lcm' element must have at least two siblings."));
+
     // MathML trigonometric operators
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_sin.cellml")).join("\n")));
