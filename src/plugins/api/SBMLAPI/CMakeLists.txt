@@ -73,6 +73,7 @@ ADD_PLUGIN(SBMLAPI
         src/sbmlapiplugin.h
     INCLUDE_DIRS
         include
+        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
