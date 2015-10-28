@@ -180,9 +180,161 @@
                 <!-- In between comment #51...-->
             </apply>
             <!-- In between comment #52...-->
+            <apply id="my_equation7_cmeta_id">
+                <!-- In between comment #53...-->
+                <eq/>
+                <!-- In between comment #54...-->
+                <ci>a</ci>
+                <!-- In between comment #55...-->
+                <apply>
+                    <!-- In between comment #56...-->
+                    <min/>
+                    <!-- In between comment #57...-->
+                    <ci>b</ci>
+                    <!-- In between comment #58...-->
+                    <ci>c</ci>
+                    <!-- In between comment #59...-->
+                </apply>
+                <!-- In between comment #60...-->
+            </apply>
+            <!-- In between comment #61...-->
+            <apply id="my_equation8_cmeta_id">
+                <!-- In between comment #62...-->
+                <eq/>
+                <!-- In between comment #63...-->
+                <ci>a</ci>
+                <!-- In between comment #64...-->
+                <apply>
+                    <!-- In between comment #65...-->
+                    <min/>
+                    <!-- In between comment #66...-->
+                    <ci>b</ci>
+                    <!-- In between comment #67...-->
+                    <ci>c</ci>
+                    <!-- In between comment #68...-->
+                    <ci>d</ci>
+                    <!-- In between comment #69...-->
+                </apply>
+                <!-- In between comment #70...-->
+            </apply>
+            <!-- In between comment #71...-->
+            <apply id="my_equation9_cmeta_id">
+                <!-- In between comment #72...-->
+                <eq/>
+                <!-- In between comment #73...-->
+                <ci>a</ci>
+                <!-- In between comment #74...-->
+                <apply>
+                    <!-- In between comment #75...-->
+                    <max/>
+                    <!-- In between comment #76...-->
+                    <ci>b</ci>
+                    <!-- In between comment #77...-->
+                    <ci>c</ci>
+                    <!-- In between comment #78...-->
+                </apply>
+                <!-- In between comment #79...-->
+            </apply>
+            <!-- In between comment #80...-->
+            <apply id="my_equation10_cmeta_id">
+                <!-- In between comment #81...-->
+                <eq/>
+                <!-- In between comment #82...-->
+                <ci>a</ci>
+                <!-- In between comment #83...-->
+                <apply>
+                    <!-- In between comment #84...-->
+                    <max/>
+                    <!-- In between comment #85...-->
+                    <ci>b</ci>
+                    <!-- In between comment #86...-->
+                    <ci>c</ci>
+                    <!-- In between comment #87...-->
+                    <ci>d</ci>
+                    <!-- In between comment #88...-->
+                </apply>
+                <!-- In between comment #89...-->
+            </apply>
+            <!-- In between comment #90...-->
+            <apply id="my_equation11_cmeta_id">
+                <!-- In between comment #91...-->
+                <eq/>
+                <!-- In between comment #92...-->
+                <ci>a</ci>
+                <!-- In between comment #93...-->
+                <apply>
+                    <!-- In between comment #94...-->
+                    <gcd/>
+                    <!-- In between comment #95...-->
+                    <ci>b</ci>
+                    <!-- In between comment #96...-->
+                    <ci>c</ci>
+                    <!-- In between comment #97...-->
+                </apply>
+                <!-- In between comment #98...-->
+            </apply>
+            <!-- In between comment #99...-->
+            <apply id="my_equation12_cmeta_id">
+                <!-- In between comment #100...-->
+                <eq/>
+                <!-- In between comment #101...-->
+                <ci>a</ci>
+                <!-- In between comment #102...-->
+                <apply>
+                    <!-- In between comment #103...-->
+                    <gcd/>
+                    <!-- In between comment #104...-->
+                    <ci>b</ci>
+                    <!-- In between comment #105...-->
+                    <ci>c</ci>
+                    <!-- In between comment #106...-->
+                    <ci>d</ci>
+                    <!-- In between comment #107...-->
+                </apply>
+                <!-- In between comment #108...-->
+            </apply>
+            <!-- In between comment #109...-->
+            <apply id="my_equation13_cmeta_id">
+                <!-- In between comment #110...-->
+                <eq/>
+                <!-- In between comment #111...-->
+                <ci>a</ci>
+                <!-- In between comment #112...-->
+                <apply>
+                    <!-- In between comment #113...-->
+                    <lcm/>
+                    <!-- In between comment #114...-->
+                    <ci>b</ci>
+                    <!-- In between comment #115...-->
+                    <ci>c</ci>
+                    <!-- In between comment #116...-->
+                </apply>
+                <!-- In between comment #117...-->
+            </apply>
+            <!-- In between comment #118...-->
+            <apply id="my_equation14_cmeta_id">
+                <!-- In between comment #119...-->
+                <eq/>
+                <!-- In between comment #120...-->
+                <ci>a</ci>
+                <!-- In between comment #121...-->
+                <apply>
+                    <!-- In between comment #122...-->
+                    <lcm/>
+                    <!-- In between comment #123...-->
+                    <ci>b</ci>
+                    <!-- In between comment #124...-->
+                    <ci>c</ci>
+                    <!-- In between comment #125...-->
+                    <ci>d</ci>
+                    <!-- In between comment #126...-->
+                </apply>
+                <!-- In between comment #127...-->
+            </apply>
+            <!-- In between comment #128...-->
         </math>
     </component>
-    <!-- In between comment #53...-->
+    <!-- In between comment #129...-->
     <group cmeta:id="my_group_cmeta_id">
         <!-- Comments can be within a group definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -190,7 +342,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment #54...-->
+        <!-- In between comment #130...-->
         <relationship_ref cmeta:id="my_containment1_cmeta_id" name="my_containment1" relationship="containment">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
@@ -201,7 +353,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </relationship_ref>
-        <!-- In between comment #55...-->
+        <!-- In between comment #131...-->
         <relationship_ref cmeta:id="my_containment2_cmeta_id" name="my_containment2" relationship="containment">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
@@ -212,7 +364,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </relationship_ref>
-        <!-- In between comment #56...-->
+        <!-- In between comment #132...-->
         <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
@@ -223,7 +375,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </relationship_ref>
-        <!-- In between comment #57...-->
+        <!-- In between comment #133...-->
         <component_ref cmeta:id="my_component1_cmeta_id" component="my_component1">
             <!-- Comments can be within a component reference
  with component reference children...-->
@@ -232,7 +384,7 @@
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
             </rdf:RDF>
-            <!-- In between comment #58...-->
+            <!-- In between comment #134...-->
             <component_ref cmeta:id="my_component11_cmeta_id" component="my_component11">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -244,7 +396,7 @@
                     </rdf:Description>
                 </rdf:RDF>
             </component_ref>
-            <!-- In between comment #59...-->
+            <!-- In between comment #135...-->
             <component_ref cmeta:id="my_component12_cmeta_id" component="my_component12">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -258,7 +410,7 @@
             </component_ref>
             <component_ref component="my_component13"/>
         </component_ref>
-        <!-- In between comment #60...-->
+        <!-- In between comment #136...-->
         <component_ref cmeta:id="my_component2_cmeta_id" component="my_component2">
             <!-- Comments can be within a component reference
  with component reference children...-->
@@ -267,7 +419,7 @@
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
             </rdf:RDF>
-            <!-- In between comment #61...-->
+            <!-- In between comment #137...-->
             <component_ref cmeta:id="my_component21_cmeta_id" component="my_component21">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -279,7 +431,7 @@
                     </rdf:Description>
                 </rdf:RDF>
             </component_ref>
-            <!-- In between comment #62...-->
+            <!-- In between comment #138...-->
             <component_ref cmeta:id="my_component22_cmeta_id" component="my_component22">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -294,7 +446,7 @@
             <component_ref component="my_component23"/>
         </component_ref>
     </group>
-    <!-- In between comment #63...-->
+    <!-- In between comment #139...-->
     <connection cmeta:id="my_connection_cmeta_id">
         <!-- Comments can be within a connection definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -302,7 +454,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment #64...-->
+        <!-- In between comment #140...-->
         <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2">
             <!-- Comments can be within a component mapping,
  but if kept it will be serialised back in the
@@ -313,7 +465,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </map_components>
-        <!-- In between comment #65...-->
+        <!-- In between comment #141...-->
         <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable12">
             <!-- Comments can be within a variable mapping,
  but if kept it will be serialised back in the
@@ -324,7 +476,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </map_variables>
-        <!-- In between comment #66...-->
+        <!-- In between comment #142...-->
         <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable21" variable_2="my_variable22">
             <!-- Comments can be within a variable mapping,
  but if kept it will be serialised back in the
@@ -336,10 +488,10 @@
             </rdf:RDF>
         </map_variables>
         <map_variables variable_1="my_variable31" variable_2="my_variable32"/>
-        <!-- In between comment #67...-->
+        <!-- In between comment #143...-->
     </connection>
-    <!-- In between comment #68...-->
+    <!-- In between comment #144...-->
     <component cmeta:id="" name="my_component_with_an_empty_cmeta_id">
     </component>
-    <!-- In between comment #69...-->
+    <!-- In between comment #145...-->
 </model>

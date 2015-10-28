@@ -216,6 +216,14 @@ def model{my_model_cmeta_id} my_model as
         a = ln(b);
         a = sqr(b);
         a = sqrt(b);
+        a = min(b, c);
+        a = min(b, c, d);
+        a = max(b, c);
+        a = max(b, c, d);
+        a = gcd(b, c);
+        a = gcd(b, c, d);
+        a = lcm(b, c);
+        a = lcm(b, c, d);
         a = sin(b);
         a = cos(b);
         a = tan(b);

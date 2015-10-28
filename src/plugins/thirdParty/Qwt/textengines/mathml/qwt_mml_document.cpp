@@ -2607,7 +2607,8 @@ bool QwtMmlMoNode::unaryMinus() const
                  || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "(" )
                  || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "|" )
                  || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌊" )
-                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌈" ) );
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌈" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "," ) );
 }
 
 QwtMml::FormType QwtMmlMoNode::form() const
@@ -2683,7 +2684,8 @@ qreal QwtMmlMoNode::lspace() const
                  && previousSibling() != 0
                  && previousSibling()->nodeType() == MoNode
                  && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
-                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "−" ) ) ) )
+                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "−" )
+                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "," ) ) ) )
         return 0.0;
     else
         return interpretSpacing( dictionaryAttribute( "lspace" ), 0 );
