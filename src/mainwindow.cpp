@@ -1152,7 +1152,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    static QString appName = "<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qAppName()+"</strong></a>";
+    static QString appName = "<a href=\""+QString(OpencorHomePageUrl)+"\">"+qAppName()+"</a>";
 
     QMessageBox::about(this, tr("About"),
                        "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
