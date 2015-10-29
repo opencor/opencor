@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
-#include "coresettings.h"
 #include "guiutils.h"
 #include "mainwindow.h"
 #include "settings.h"

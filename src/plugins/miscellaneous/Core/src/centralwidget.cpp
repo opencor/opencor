@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License.
 #include "centralwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "coresettings.h"
 #include "filehandlinginterface.h"
 #include "filemanager.h"
 #include "guiinterface.h"
@@ -459,11 +458,6 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             }
         }
     }
-
-    // Retrieve the active directory
-
-    setActiveDirectory(pSettings->value(SettingsActiveDirectory,
-                                        QDir::homePath()).toString());
 }
 
 //==============================================================================
@@ -560,10 +554,6 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         pSettings->setValue(SettingsFileModeView.arg(QString(), ViewInterface::viewModeAsString(fileMode)),
                             mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->name());
     }
-
-    // Keep track of the active directory
-
-    pSettings->setValue(SettingsActiveDirectory, activeDirectory());
 }
 
 //==============================================================================

@@ -229,10 +229,6 @@ void NlaSolver::initialize(ComputeSystemFunction pComputeSystem,
 
 //==============================================================================
 
-static const auto SettingsGlobal = QStringLiteral("Global");
-
-//==============================================================================
-
 NlaSolver * nlaSolver(const QString &pRuntimeAddress)
 {
     // Return the runtime's NLA solver

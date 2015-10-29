@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
 #include "coreinterface.h"
-#include "coresettings.h"
 #include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"

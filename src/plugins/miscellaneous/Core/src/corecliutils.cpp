@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coresettings.h"
 #include "filemanager.h"
 #include "settings.h"
 
@@ -543,18 +542,15 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 
 //==============================================================================
 
+static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
+
+//==============================================================================
+
 QString CORE_EXPORT activeDirectory()
 {
     // Retrieve and return the active directory
 
-    QString res;
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(SettingsActiveDirectory).toString();
-    settings.endGroup();
-
-    return res;
+    return QSettings(SettingsOrganization, SettingsApplication).value(SettingsActiveDirectory, QDir::homePath()).toString();
 }
 
 //==============================================================================
@@ -563,11 +559,7 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName)
 {
     // Keep track of the active directory
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsActiveDirectory, pDirName);
-    settings.endGroup();
+    QSettings(SettingsOrganization, SettingsApplication).setValue(SettingsActiveDirectory, pDirName);
 }
 
 //==============================================================================
