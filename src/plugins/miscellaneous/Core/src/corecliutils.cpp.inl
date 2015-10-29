@@ -19,24 +19,38 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
-static const auto SettingsLocale = QStringLiteral("Locale");
-
-//==============================================================================
-
 QString locale()
 {
-    // Retrieve and return the current locale
+    // Retrieve and return the locale
 
-    return QSettings(SettingsOrganization, SettingsApplication).value(SettingsLocale).toString();
+    QString res = rawLocale();
+
+    if (res.isEmpty())
+        return QLocale::system().name().left(2);
+    else
+        return res;
 }
 
 //==============================================================================
 
-void setLocale(const QString &pLocale)
-{
-    // Keep track of the current locale
+static const auto RawSettingsLocale = QStringLiteral("RawLocale");
 
-    QSettings(SettingsOrganization, SettingsApplication).setValue(SettingsLocale, pLocale);
+//==============================================================================
+
+QString rawLocale()
+{
+    // Retrieve and return the raw locale
+
+    return QSettings(SettingsOrganization, SettingsApplication).value(RawSettingsLocale).toString();
+}
+
+//==============================================================================
+
+void setRawLocale(const QString &pRawLocale)
+{
+    // Keep track of the raw locale
+
+    QSettings(SettingsOrganization, SettingsApplication).setValue(RawSettingsLocale, pRawLocale);
 }
 
 //==============================================================================

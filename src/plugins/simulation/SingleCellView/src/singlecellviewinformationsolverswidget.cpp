@@ -149,8 +149,8 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
             QString description = descriptions.value(Core::locale());
 
             if (description.isEmpty()) {
-                // No description exists for the current locale, so  retrieve
-                // the english description (which, hopefully, should exist)
+                // No description exists for the current locale, so retrieve the
+                // English description (which, hopefully, exists)
 
                 description = descriptions.value("en");
             }

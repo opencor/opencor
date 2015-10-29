@@ -193,12 +193,7 @@ int main(int pArgC, char *pArgV[])
             // Retrieve the language to be used to show the check for updates
             // window
 
-            const QString systemLocale = QLocale::system().name().left(2);
-
             QString locale = OpenCOR::locale();
-
-            if (locale.isEmpty())
-                locale = systemLocale;
 
             QLocale::setDefault(QLocale(locale));
 

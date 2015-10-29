@@ -77,8 +77,6 @@ public:
                         const QString &pApplicationDate);
     ~MainWindow();
 
-    QString locale() const;
-
     void restart(const bool &pSaveSettings) const;
 
     void handleArguments(const QString &pArguments);
@@ -107,7 +105,7 @@ private:
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedWindowPlugins;
 
-    QString mLocale;
+    QString mRawLocale;
 
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
@@ -130,7 +128,7 @@ private:
     void loadSettings();
     void saveSettings() const;
 
-    void setLocale(const QString &pLocale = QString(),
+    void setLocale(const QString &pRawLocale = QString(),
                    const bool &pForceSetting = false);
 
     void reorderViewWindowsMenu();

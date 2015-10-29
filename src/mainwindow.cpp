@@ -91,7 +91,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
-    mLocale(QString()),
+    mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
     mFileNewMenu(0),
     mViewWindowsMenu(0),
@@ -655,7 +655,7 @@ void MainWindow::loadSettings()
     //          widgets that need translating (e.g. graph panels get created in
     //          the SingleCellView plugin)...
 
-    setLocale(OpenCOR::locale(), true);
+    setLocale(OpenCOR::rawLocale(), true);
 }
 
 //==============================================================================
@@ -693,31 +693,22 @@ void MainWindow::saveSettings() const
 
 //==============================================================================
 
-QString MainWindow::locale() const
-{
-    // Return the current locale
-
-    return mLocale.isEmpty()?QLocale::system().name().left(2):mLocale;
-}
-
-//==============================================================================
-
-void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
+void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 {
     const QString systemLocale = QLocale::system().name().left(2);
 
-    QString oldLocale = mLocale.isEmpty()?systemLocale:mLocale;
-    QString newLocale = pLocale.isEmpty()?systemLocale:pLocale;
+    QString oldLocale = mRawLocale.isEmpty()?systemLocale:mRawLocale;
+    QString newLocale = pRawLocale.isEmpty()?systemLocale:pRawLocale;
 
     // Keep track of the new locale, if needed
 
-    if (pLocale.compare(mLocale) || pForceSetting) {
-        mLocale = pLocale;
+    if (pRawLocale.compare(mRawLocale) || pForceSetting) {
+        mRawLocale = pRawLocale;
 
-        // Also keep a copy of the new locale in our settings (so that it can be
-        // retrieved from any plugin)
+        // Also keep a copy of the new raw locale in our settings (so that the
+        // new locale can be retrieved from plugins)
 
-        OpenCOR::setLocale(locale());
+        OpenCOR::setRawLocale(mRawLocale);
     }
 
     // Check whether the new locale is different from the old one and if so,
@@ -771,10 +762,10 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status...
 
-    mGui->actionSystem->setChecked(pLocale.isEmpty());
+    mGui->actionSystem->setChecked(pRawLocale.isEmpty());
 
-    mGui->actionEnglish->setChecked(!pLocale.compare(EnglishLocale));
-    mGui->actionFrench->setChecked(!pLocale.compare(FrenchLocale));
+    mGui->actionEnglish->setChecked(!pRawLocale.compare(EnglishLocale));
+    mGui->actionFrench->setChecked(!pRawLocale.compare(FrenchLocale));
 }
 
 //==============================================================================

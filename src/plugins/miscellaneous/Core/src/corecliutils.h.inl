@@ -20,7 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 QString CORE_EXPORT locale();
-void CORE_EXPORT setLocale(const QString &pLocale);
+
+QString CORE_EXPORT rawLocale();
+void CORE_EXPORT setRawLocale(const QString &pRawLocale);
 
 QString CORE_EXPORT shortVersion(QCoreApplication *pApp);
 QString CORE_EXPORT version(QCoreApplication *pApp);
