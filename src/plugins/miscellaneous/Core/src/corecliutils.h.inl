@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
+QString CORE_EXPORT locale();
+void CORE_EXPORT setLocale(const QString &pLocale);
+
 QString CORE_EXPORT shortVersion(QCoreApplication *pApp);
 QString CORE_EXPORT version(QCoreApplication *pApp);
 

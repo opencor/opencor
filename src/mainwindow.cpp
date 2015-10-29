@@ -655,17 +655,13 @@ void MainWindow::loadSettings()
     //          widgets that need translating (e.g. graph panels get created in
     //          the SingleCellView plugin)...
 
-    setLocale(mSettings->value(SettingsLocale).toString(), true);
+    setLocale(OpenCOR::locale(), true);
 }
 
 //==============================================================================
 
 void MainWindow::saveSettings() const
 {
-    // Keep track of the language to be used by OpenCOR
-
-    mSettings->setValue(SettingsLocale, mLocale);
-
     // Keep track of the geometry and state of the main window
 
     mSettings->setValue(SettingsGeometry, saveGeometry());
@@ -718,12 +714,10 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
     if (pLocale.compare(mLocale) || pForceSetting) {
         mLocale = pLocale;
 
-        // Also keep a copy of the new locale in our global settings (so that it
-        // can be retrieved from any plugin)
+        // Also keep a copy of the new locale in our settings (so that it can be
+        // retrieved from any plugin)
 
-        mSettings->beginGroup(SettingsGlobal);
-            mSettings->setValue(SettingsLocale, locale());
-        mSettings->endGroup();
+        OpenCOR::setLocale(locale());
     }
 
     // Check whether the new locale is different from the old one and if so,

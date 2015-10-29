@@ -195,7 +195,7 @@ int main(int pArgC, char *pArgV[])
 
             const QString systemLocale = QLocale::system().name().left(2);
 
-            QString locale = settings.value(OpenCOR::SettingsLocale, QString()).toString();
+            QString locale = OpenCOR::locale();
 
             if (locale.isEmpty())
                 locale = systemLocale;

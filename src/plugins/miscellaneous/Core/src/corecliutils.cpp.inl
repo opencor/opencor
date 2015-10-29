@@ -19,6 +19,24 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
+QString locale()
+{
+    // Retrieve and return the current locale
+
+    return QSettings(SettingsOrganization, SettingsApplication).value(SettingsLocale).toString();
+}
+
+//==============================================================================
+
+void setLocale(const QString &pLocale)
+{
+    // Keep track of the current locale
+
+    QSettings(SettingsOrganization, SettingsApplication).setValue(SettingsLocale, pLocale);
+}
+
+//==============================================================================
+
 QString shortVersion(QCoreApplication *pApp)
 {
     QString res = QString();

@@ -305,23 +305,6 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
 //==============================================================================
 
-QString locale()
-{
-    // Return our current locale
-    // Note: this gets set in MainWindow::setLocale()...
-
-    QString res;
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(SettingsLocale).toString();
-    settings.endGroup();
-
-    return res;
-}
-
-//==============================================================================
-
 qulonglong totalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
