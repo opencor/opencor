@@ -1152,11 +1152,14 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
+    static QString appName = "<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qAppName()+"</strong></a>";
+
     QMessageBox::about(this, tr("About"),
                        "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
                        "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                        "<p align=center><em>"+copyright()+"</em></p>"
-                       "<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qAppName()+"</strong></a> "+tr("is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files."));
+                       "<p>"+tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg(appName)+"</p>"
+                       "<p><em>"+tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg(appName, qVersion())+"</em></p>");
 }
 
 //==============================================================================
