@@ -19,6 +19,10 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
+static const auto SettingsLocale = QStringLiteral("Locale");
+
+//==============================================================================
+
 QString locale()
 {
     // Retrieve and return the current locale

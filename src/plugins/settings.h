@@ -36,7 +36,6 @@ static const auto SettingsOrganization = QStringLiteral("Physiome");
 static const auto SettingsApplication  = QStringLiteral("OpenCOR");
 static const auto SettingsPlugins      = QStringLiteral("Plugins");
 static const auto SettingsGlobal       = QStringLiteral("Global");
-static const auto SettingsLocale       = QStringLiteral("Locale");
 
 //==============================================================================
 
