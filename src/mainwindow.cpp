@@ -1159,7 +1159,7 @@ void MainWindow::on_actionAbout_triggered()
                        "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                        "<p align=center><em>"+copyright()+"</em></p>"
                        "<p>"+tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg(appName)+"</p>"
-                       "<p><em>"+tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg(appName, qVersion())+"</em></p>");
+                       "<p>"+tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg(appName, qVersion())+"</p>");
 }
 
 //==============================================================================
