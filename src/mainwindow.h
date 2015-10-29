@@ -130,7 +130,8 @@ private:
     void loadSettings();
     void saveSettings() const;
 
-    void setLocale(const QString &pLocale, const bool &pForceSetting = false);
+    void setLocale(const QString &pLocale = QString(),
+                   const bool &pForceSetting = false);
 
     void reorderViewWindowsMenu();
 

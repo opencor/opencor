@@ -76,7 +76,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto SystemLocale  = QStringLiteral("");
 static const auto EnglishLocale = QStringLiteral("en");
 static const auto FrenchLocale  = QStringLiteral("fr");
 
@@ -319,7 +318,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
         // The system's locale has changed, so update OpenCOR's locale in case
         // the user wants to use the system's locale
 
-        setLocale(SystemLocale);
+        setLocale();
 #ifdef Q_OS_MAC
     } else if (pEvent->type() == QEvent::WindowStateChange) {
         // The window state has changed, so update the checked state of our full
@@ -656,7 +655,7 @@ void MainWindow::loadSettings()
     //          widgets that need translating (e.g. graph panels get created in
     //          the SingleCellView plugin)...
 
-    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
+    setLocale(mSettings->value(SettingsLocale).toString(), true);
 }
 
 //==============================================================================
@@ -702,9 +701,7 @@ QString MainWindow::locale() const
 {
     // Return the current locale
 
-    return !mLocale.compare(SystemLocale)?
-               QLocale::system().name().left(2):
-               mLocale;
+    return mLocale.isEmpty()?QLocale::system().name().left(2):mLocale;
 }
 
 //==============================================================================
@@ -713,8 +710,8 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
 {
     const QString systemLocale = QLocale::system().name().left(2);
 
-    QString oldLocale = !mLocale.compare(SystemLocale)?systemLocale:mLocale;
-    QString newLocale = !pLocale.compare(SystemLocale)?systemLocale:pLocale;
+    QString oldLocale = mLocale.isEmpty()?systemLocale:mLocale;
+    QString newLocale = pLocale.isEmpty()?systemLocale:pLocale;
 
     // Keep track of the new locale, if needed
 
@@ -780,7 +777,7 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status...
 
-    mGui->actionSystem->setChecked(!pLocale.compare(SystemLocale));
+    mGui->actionSystem->setChecked(pLocale.isEmpty());
 
     mGui->actionEnglish->setChecked(!pLocale.compare(EnglishLocale));
     mGui->actionFrench->setChecked(!pLocale.compare(FrenchLocale));
@@ -1054,7 +1051,7 @@ void MainWindow::on_actionSystem_triggered()
 {
     // Select the system's language as the language used by OpenCOR
 
-    setLocale(SystemLocale);
+    setLocale();
 }
 
 //==============================================================================
