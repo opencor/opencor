@@ -107,9 +107,13 @@ void CliApplication::about() const
     std::cout << copyright().toStdString() << std::endl;
     std::cout << std::endl;
     std::cout << mApp->applicationName().toStdString()
-              << " is a cross-platform CellML-based modelling environment,"
+              << " is a cross-platform modelling environment,"
               << " which can be used to organise, edit,"
               << " simulate and analyse CellML files."
+              << std::endl;
+    std::cout << std::endl;
+    std::cout << "This version of " << mApp->applicationName().toStdString()
+              << " was built using Qt " << qVersion() << "."
               << std::endl;
 }
 
