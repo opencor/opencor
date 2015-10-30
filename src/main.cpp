@@ -101,13 +101,13 @@ int main(int pArgC, char *pArgV[])
 
         QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
 
-        OpenCOR::initApplication(cliApp);
+        OpenCOR::initApplication();
 
         // Try to run the CLI version of OpenCOR
 
         int res;
 
-        bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
+        bool runCliApplication = OpenCOR::cliApplication(&res);
 
         OpenCOR::removeGlobalSettings();
 
@@ -170,7 +170,7 @@ int main(int pArgC, char *pArgV[])
 
     QString appDate = QString();
 
-    OpenCOR::initApplication(guiApp, &appDate);
+    OpenCOR::initApplication(&appDate);
 
     // Check whether we want to check for new versions at startup and, if so,
     // whether a new version of OpenCOR is available
@@ -237,7 +237,7 @@ int main(int pArgC, char *pArgV[])
 
     // Create our main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(guiApp, appDate);
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(appDate);
 
     // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)

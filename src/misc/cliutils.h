@@ -68,9 +68,9 @@ void initQtMessagePattern();
 
 void initPluginsPath(const QString &pAppFileName);
 
-void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);
+void initApplication(QString *pAppDate = 0);
 
-bool cliApplication(QCoreApplication *pApp, int *pRes);
+bool cliApplication(int *pRes);
 
 QString applicationDescription(const bool &pGuiMode = true);
 QString applicationBuildInformation(const bool &pGuiMode = true);

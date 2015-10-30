@@ -111,7 +111,7 @@ void initPluginsPath(const QString &pAppFileName)
 
 //==============================================================================
 
-void initApplication(QCoreApplication *pApp, QString *pAppDate)
+void initApplication(QString *pAppDate)
 {
     // Remove our global settings, in case OpenCOR previously crashed or
     // something (and therefore didn't remove all of them before quitting)
@@ -127,7 +127,7 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
     // Set the name of the application
 
-    pApp->setApplicationName(QFileInfo(pApp->applicationFilePath()).baseName());
+    qApp->setApplicationName(QFileInfo(qApp->applicationFilePath()).baseName());
 
     // Retrieve and set the version of the application
 
@@ -137,7 +137,7 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
     QStringList versionDataList = versionData.split(eolString());
 
-    pApp->setApplicationVersion(versionDataList.first());
+    qApp->setApplicationVersion(versionDataList.first());
 
     if (pAppDate)
         *pAppDate = versionDataList.last();
@@ -145,11 +145,11 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
 //==============================================================================
 
-bool cliApplication(QCoreApplication *pApp, int *pRes)
+bool cliApplication(int *pRes)
 {
     // Create and run our CLI application object
 
-    CliApplication *cliApp = new CliApplication(pApp);
+    CliApplication *cliApp = new CliApplication();
 
     bool res = cliApp->run(pRes);
 

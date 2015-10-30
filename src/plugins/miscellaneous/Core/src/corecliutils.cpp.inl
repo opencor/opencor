@@ -55,10 +55,10 @@ void setRawLocale(const QString &pRawLocale)
 
 //==============================================================================
 
-QString shortVersion(QCoreApplication *pApp)
+QString shortVersion()
 {
     QString res = QString();
-    QString appVersion = pApp->applicationVersion();
+    QString appVersion = qApp->applicationVersion();
     QString bitVersion;
 
     enum {
@@ -87,9 +87,9 @@ QString shortVersion(QCoreApplication *pApp)
 
 //==============================================================================
 
-QString version(QCoreApplication *pApp)
+QString version()
 {
-    return pApp->applicationName()+" "+shortVersion(pApp);
+    return qAppName()+" "+shortVersion();
 }
 
 //==============================================================================

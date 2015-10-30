@@ -106,7 +106,7 @@ SplashScreenWindow::SplashScreenWindow() :
     mGui->versionValue->setFont(newFont);
 
     mGui->copyrightValue->setText(copyright());
-    mGui->versionValue->setText(shortVersion(qApp));
+    mGui->versionValue->setText(shortVersion());
 
     // Adjust the size of our splash screen and then move it to the center of
     // our screen

@@ -73,8 +73,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(SharedTools::QtSingleApplication *pApplication,
-                        const QString &pApplicationDate);
+    explicit MainWindow(const QString &pApplicationDate);
     ~MainWindow();
 
     void restart(const bool &pSaveSettings) const;

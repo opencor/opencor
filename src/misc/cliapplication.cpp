@@ -44,8 +44,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication(QCoreApplication *pApp) :
-    mApp(pApp),
+CliApplication::CliApplication() :
     mPluginManager(0),
     mLoadedCliPlugins(Plugins())
 {
@@ -66,7 +65,7 @@ void CliApplication::loadPlugins()
 {
     // Load all the plugins by creating our plugin manager
 
-    mPluginManager = new PluginManager(mApp, false);
+    mPluginManager = new PluginManager(false);
 
     // Keep track of our loaded CLI plugins
 
@@ -189,7 +188,7 @@ void CliApplication::help() const
 {
     // Output some help
 
-    std::cout << "Usage: " << mApp->applicationName().toStdString()
+    std::cout << "Usage: " << qAppName().toStdString()
               << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
@@ -357,7 +356,7 @@ void CliApplication::version() const
 {
     // Output the version of OpenCOR
 
-    std::cout << OpenCOR::version(mApp).toStdString() << std::endl;
+    std::cout << OpenCOR::version().toStdString() << std::endl;
 }
 
 //==============================================================================
@@ -381,7 +380,7 @@ bool CliApplication::run(int *pRes)
 
     Option option = NoOption;
 
-    QStringList appArguments = mApp->arguments();
+    QStringList appArguments = qApp->arguments();
     QStringList commandArguments = QStringList();
 
     appArguments.removeFirst();

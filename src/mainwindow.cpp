@@ -81,8 +81,7 @@ static const auto FrenchLocale  = QStringLiteral("fr");
 
 //==============================================================================
 
-MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
-                       const QString &pApplicationDate) :
+MainWindow::MainWindow(const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
@@ -104,9 +103,9 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
     // operating system), as well as a message sent by another instance of
     // itself
 
-    QObject::connect(pApplication, SIGNAL(fileOpenRequest(const QString &)),
+    QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
                      this, SLOT(fileOpenRequest(const QString &)));
-    QObject::connect(pApplication, SIGNAL(messageReceived(const QString &, QObject *)),
+    QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
                      this, SLOT(messageReceived(const QString &, QObject *)));
 
     // Create our settings object
@@ -1130,7 +1129,7 @@ void MainWindow::on_actionAbout_triggered()
     // Display some information about OpenCOR
 
     QMessageBox::about(this, tr("About"),
-                       "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
+                       "<h1 align=center><strong>"+version()+"</strong></h1>"
                        "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                        "<p align=center><em>"+copyright()+"</em></p>"
                        "<p>"+applicationDescription()+"</p>"
