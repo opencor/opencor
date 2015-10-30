@@ -201,10 +201,10 @@ int main(int pArgC, char *pArgV[])
             QTranslator appTranslator;
 
             qtTranslator.load(":qt_"+locale);
-            qApp->installTranslator(&qtTranslator);
+            guiApp->installTranslator(&qtTranslator);
 
             appTranslator.load(":app_"+locale);
-            qApp->installTranslator(&appTranslator);
+            guiApp->installTranslator(&appTranslator);
 
             // Show the check for updates window
             // Note: checkForUpdatesEngine gets deleted by
