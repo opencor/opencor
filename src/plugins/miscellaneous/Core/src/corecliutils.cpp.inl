@@ -455,5 +455,25 @@ QString nonDiacriticString(const QString &pString)
 }
 
 //==============================================================================
+
+QString plainString(const QString &pString)
+{
+    // Return the given string after stripping out all its HTML code (should it
+    // have some)
+    // Note: we enclose the given string within an HTML tag so that its
+    //       stripping out can proceed without any problem...
+
+    QXmlStreamReader string("<html>"+pString+"</html>");
+    QString res = QString();
+
+    while (!string.atEnd()) {
+        if (string.readNext() == QXmlStreamReader::Characters)
+            res += string.text();
+    }
+
+    return res;
+}
+
+//==============================================================================
 // End of file
 //==============================================================================

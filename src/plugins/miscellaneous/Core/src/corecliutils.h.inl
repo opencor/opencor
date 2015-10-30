@@ -57,6 +57,8 @@ QString CORE_EXPORT eolString();
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
+QString CORE_EXPORT plainString(const QString &pString);
+
 //==============================================================================
 // End of file
 //==============================================================================

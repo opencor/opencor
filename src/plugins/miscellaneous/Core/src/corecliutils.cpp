@@ -49,6 +49,7 @@ specific language governing permissions and limitations under the License.
 #include <QStringList>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QXmlStreamReader>
 
 //==============================================================================
 

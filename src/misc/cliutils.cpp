@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include <QResource>
 #include <QSettings>
 #include <QTemporaryFile>
+#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -155,6 +156,24 @@ bool cliApplication(QCoreApplication *pApp, int *pRes)
     delete cliApp;
 
     return res;
+}
+
+//==============================================================================
+
+QString applicationDescription(const bool &pGuiMode)
+{
+    QString res = QObject::tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>");
+
+    return pGuiMode?res:plainString(res);
+}
+
+//==============================================================================
+
+QString applicationBuildInformation(const bool &pGuiMode)
+{
+    QString res = QObject::tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>", qVersion());
+
+    return pGuiMode?res:plainString(res);
 }
 
 //==============================================================================

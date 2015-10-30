@@ -37,7 +37,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QCoreApplication>
 #include <QSettings>
-#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -82,17 +81,8 @@ QString CliApplication::pluginDescription(Plugin *pPlugin) const
 {
     // Retrieve and return the plugin's default description, stripped out of all
     // its HTML (should it have some)
-    // Note: we enclose the CLI plugin's default description within an html tag
-    //       so that the stripping out can proceed without any problem...
 
-    QXmlStreamReader description("<html>"+pPlugin->info()->description()+"</html>");
-    QString res = QString();
-
-    while (!description.atEnd())
-        if (description.readNext() == QXmlStreamReader::Characters)
-            res += description.text();
-
-    return res;
+    return plainString(pPlugin->info()->description());
 }
 
 //==============================================================================
@@ -106,15 +96,9 @@ void CliApplication::about() const
     std::cout << QSysInfo::prettyProductName().toStdString() << std::endl;
     std::cout << copyright().toStdString() << std::endl;
     std::cout << std::endl;
-    std::cout << mApp->applicationName().toStdString()
-              << " is a cross-platform modelling environment,"
-              << " which can be used to organise, edit,"
-              << " simulate and analyse CellML files."
-              << std::endl;
+    std::cout << applicationDescription(false).toStdString() << std::endl;
     std::cout << std::endl;
-    std::cout << "This version of " << mApp->applicationName().toStdString()
-              << " was built using Qt " << qVersion() << "."
-              << std::endl;
+    std::cout << applicationBuildInformation(false).toStdString() << std::endl;
 }
 
 //==============================================================================

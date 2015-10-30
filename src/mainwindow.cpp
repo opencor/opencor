@@ -1097,15 +1097,11 @@ void MainWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-static const auto OpencorHomePageUrl = QStringLiteral("http://www.opencor.ws/");
-
-//==============================================================================
-
 void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR's home page
 
-    QDesktopServices::openUrl(OpencorHomePageUrl);
+    QDesktopServices::openUrl(HomePageUrl);
 }
 
 //==============================================================================
@@ -1133,14 +1129,12 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    static QString appName = "<a href=\""+QString(OpencorHomePageUrl)+"\">"+qAppName()+"</a>";
-
     QMessageBox::about(this, tr("About"),
                        "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
                        "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                        "<p align=center><em>"+copyright()+"</em></p>"
-                       "<p>"+tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg(appName)+"</p>"
-                       "<p>"+tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg(appName, qVersion())+"</p>");
+                       "<p>"+applicationDescription()+"</p>"
+                       "<p>"+applicationBuildInformation()+"</p>");
 }
 
 //==============================================================================

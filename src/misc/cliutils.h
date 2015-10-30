@@ -72,6 +72,9 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);
 
 bool cliApplication(QCoreApplication *pApp, int *pRes);
 
+QString applicationDescription(const bool &pGuiMode = true);
+QString applicationBuildInformation(const bool &pGuiMode = true);
+
 void removeGlobalSettings();
 
 //==============================================================================
