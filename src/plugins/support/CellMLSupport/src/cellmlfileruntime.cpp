@@ -212,7 +212,7 @@ QString CellmlFileRuntime::address() const
 {
     // Return our address as a string
 
-    return QString("%1").arg(qulonglong(this));
+    return QString::number(qulonglong(this));
 }
 
 //==============================================================================
