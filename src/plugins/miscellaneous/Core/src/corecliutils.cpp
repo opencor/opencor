@@ -501,7 +501,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     QSettings settings(SettingsOrganization, SettingsApplication);
     qulonglong globalInstance;
 
-    settings.beginGroup(SettingsGlobal);
+    settings.beginGroup(qGlobalSettings);
         globalInstance = settings.value(pObjectName, 0).toULongLong();
 
         if (!globalInstance) {

@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QObject>
 #include <QSettings>
 
@@ -236,7 +237,7 @@ NlaSolver * nlaSolver(const QString &pRuntimeAddress)
     QSettings settings(SettingsOrganization, SettingsApplication);
     qulonglong res;
 
-    settings.beginGroup(SettingsGlobal);
+    settings.beginGroup(qGlobalSettings);
         res = settings.value(pRuntimeAddress, 0).toULongLong();
     settings.endGroup();
 
@@ -253,7 +254,7 @@ void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
 
     QSettings settings(SettingsOrganization, SettingsApplication);
 
-    settings.beginGroup(SettingsGlobal);
+    settings.beginGroup(qGlobalSettings);
         settings.setValue(pRuntimeAddress, QString::number(qulonglong(pGlobalNlaSolver)));
         // Note #1: for some reasons, on OS X, QSettings doesn't handle
         //          qulonglong values properly, so we do it through a QString
@@ -271,7 +272,7 @@ void unsetNlaSolver(const QString &pRuntimeAddress)
 
     QSettings settings(SettingsOrganization, SettingsApplication);
 
-    settings.beginGroup(SettingsGlobal);
+    settings.beginGroup(qGlobalSettings);
         settings.remove(pRuntimeAddress);
     settings.endGroup();
 }

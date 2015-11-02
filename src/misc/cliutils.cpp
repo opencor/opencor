@@ -183,7 +183,7 @@ void removeGlobalSettings()
     // Remove the global settings shared between OpenCOR and its different
     // plugins
 
-    QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
+    QSettings(SettingsOrganization, SettingsApplication).remove(qGlobalSettings);
 }
 
 //==============================================================================

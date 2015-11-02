@@ -43,6 +43,10 @@ static const auto SettingsGlobal       = QStringLiteral("Global");
 
 //==============================================================================
 
+#define qGlobalSettings QString(OpenCOR::SettingsGlobal+QString::number(qulonglong(qApp)))
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================
