@@ -125,7 +125,11 @@ void initApplication(QString *pAppDate)
 
     qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
 
-    // Set the organisation and name of the application
+    // Customise our application a bit
+    // Note: on OS X, the orgnisation domain allows our settings file to respect
+    //       the way things are done on that operating system while it's not
+    //       useful on Windows and Linux (and, in fact, messes things up a
+    //       bit)...
 
     qApp->setApplicationName("OpenCOR");
 #ifdef Q_OS_MAC
