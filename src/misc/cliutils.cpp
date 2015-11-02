@@ -116,7 +116,7 @@ void initApplication(QString *pAppDate)
     // Remove our global settings, in case OpenCOR previously crashed or
     // something (and therefore didn't remove all of them before quitting)
 
-    OpenCOR::removeGlobalSettings();
+    removeGlobalSettings();
 
     // Ignore SSL-related warnings
     // Note #1: this is to address an issue with QSslSocket not being able to
