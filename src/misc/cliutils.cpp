@@ -127,9 +127,8 @@ void initApplication(QString *pAppDate)
 
     // Set the organisation and name of the application
 
-    qApp->setOrganizationDomain("opencor.ws");
-    qApp->setOrganizationName("Physiome");
     qApp->setApplicationName("OpenCOR");
+    qApp->setOrganizationDomain("opencor.ws");
 
     // Retrieve and set the version of the application
 
