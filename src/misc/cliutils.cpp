@@ -125,9 +125,11 @@ void initApplication(QString *pAppDate)
 
     qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
 
-    // Set the name of the application
+    // Set the organisation and name of the application
 
-    qApp->setApplicationName(QFileInfo(qApp->applicationFilePath()).baseName());
+    qApp->setOrganizationDomain("opencor.ws");
+    qApp->setOrganizationName("Physiome");
+    qApp->setApplicationName("OpenCOR");
 
     // Retrieve and set the version of the application
 
@@ -183,7 +185,9 @@ void removeGlobalSettings()
     // Remove the global settings shared between OpenCOR and its different
     // plugins
 
-    QSettings(SettingsOrganization, SettingsApplication).remove(qGlobalSettings);
+    QSettings settings;
+
+    settings.remove(qGlobalSettings);
 }
 
 //==============================================================================

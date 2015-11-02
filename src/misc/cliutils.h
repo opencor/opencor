@@ -45,6 +45,10 @@ namespace OpenCOR {
 #include "corecliutils.h.inl"
 
 //==============================================================================
+
+static const auto HomePageUrl = QStringLiteral("http://www.opencor.ws/");
+
+//==============================================================================
 // Note: both cliutils.h and corecliutils.h must specifically define
 //       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
 //       enough since the MOC won't pick it up...

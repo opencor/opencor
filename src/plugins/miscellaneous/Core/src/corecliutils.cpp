@@ -498,7 +498,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       to address this issue, we keep track of the address of a 'global'
     //       instance using QSettings...
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
+    QSettings settings;
     qulonglong globalInstance;
 
     settings.beginGroup(qGlobalSettings);
@@ -534,7 +534,7 @@ QString CORE_EXPORT activeDirectory()
 {
     // Retrieve and return the active directory
 
-    return QSettings(SettingsOrganization, SettingsApplication).value(SettingsActiveDirectory, QDir::homePath()).toString();
+    return QSettings().value(SettingsActiveDirectory, QDir::homePath()).toString();
 }
 
 //==============================================================================
@@ -543,7 +543,7 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName)
 {
     // Keep track of the active directory
 
-    QSettings(SettingsOrganization, SettingsApplication).setValue(SettingsActiveDirectory, pDirName);
+    QSettings().setValue(SettingsActiveDirectory, pDirName);
 }
 
 //==============================================================================

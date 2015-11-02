@@ -110,7 +110,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Create our settings object
 
-    mSettings = new QSettings(SettingsOrganization, SettingsApplication);
+    mSettings = new QSettings();
 
     // Create our plugin manager (which will automatically load our various
     // plugins)
