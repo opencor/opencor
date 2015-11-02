@@ -128,7 +128,9 @@ void initApplication(QString *pAppDate)
     // Set the organisation and name of the application
 
     qApp->setApplicationName("OpenCOR");
+#ifdef Q_OS_MAC
     qApp->setOrganizationDomain("opencor.ws");
+#endif
 
     // Retrieve and set the version of the application
 
