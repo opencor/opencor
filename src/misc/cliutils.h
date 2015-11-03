@@ -79,8 +79,6 @@ bool cliApplication(int *pRes);
 QString applicationDescription(const bool &pGuiMode = true);
 QString applicationBuildInformation(const bool &pGuiMode = true);
 
-void removeGlobalSettings();
-
 //==============================================================================
 
 }   // namespace OpenCOR

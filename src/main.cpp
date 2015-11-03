@@ -108,8 +108,6 @@ int main(int pArgC, char *pArgV[])
 
         bool runCliApplication = OpenCOR::cliApplication(&res);
 
-        OpenCOR::removeGlobalSettings();
-
         delete cliApp;
 
         if (runCliApplication) {
@@ -304,10 +302,6 @@ int main(int pArgC, char *pArgV[])
 #ifdef Q_OS_WIN
     QWebSettings::clearMemoryCaches();
 #endif
-
-    // Remove the global settings that were created and used during this session
-
-    OpenCOR::removeGlobalSettings();
 
     // Delete our application
 

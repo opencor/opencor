@@ -31,7 +31,6 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
-#include "settings.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"

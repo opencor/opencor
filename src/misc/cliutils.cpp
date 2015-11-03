@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cliapplication.h"
 #include "cliutils.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -113,11 +112,6 @@ void initPluginsPath(const QString &pAppFileName)
 
 void initApplication(QString *pAppDate)
 {
-    // Remove our global settings, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    removeGlobalSettings();
-
     // Ignore SSL-related warnings
     // Note #1: this is to address an issue with QSslSocket not being able to
     //          resolve some methods...
@@ -175,18 +169,6 @@ QString applicationBuildInformation(const bool &pGuiMode)
     QString res = QObject::tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>", qVersion());
 
     return pGuiMode?res:plainString(res);
-}
-
-//==============================================================================
-
-void removeGlobalSettings()
-{
-    // Remove the global settings shared between OpenCOR and its different
-    // plugins
-
-    QSettings settings;
-
-    settings.remove(qGlobalSettings);
 }
 
 //==============================================================================

@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "filemanager.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -487,7 +486,7 @@ void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
 
 void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 {
-    // Retrieve the 'global' instance of an object
+    // Retrieve and return the 'global' instance of an object
     // Note: initially, the plan was to have a static instance of an object and
     //       return its address. However, this approach doesn't work on Windows
     //       and Linux (but does on OS X). Indeed, say that the Core plugin is
@@ -496,32 +495,21 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       its own address space. (This is not the case on OS X, (most likely)
     //       because of the way applications are bundled on that platform.) So,
     //       to address this issue, we keep track of the address of a 'global'
-    //       instance using QSettings...
+    //       instance as a qApp property...
 
-    QSettings settings;
-    qulonglong globalInstance;
+    QByteArray objectName = pObjectName.toUtf8();
+    QVariant res = qApp->property(objectName.constData());
 
-    settings.beginGroup(qGlobalSettings);
-        globalInstance = settings.value(pObjectName, 0).toULongLong();
+    if (!res.isValid()) {
+        // There is no 'global' instance associated with the given object, so
+        // use the object's default 'global' instance we were given
 
-        if (!globalInstance) {
-            // There is no 'global' instance associated with the given object,
-            // so use the object's default 'global' instance we were given
+        res = qulonglong(pDefaultGlobalInstance);
 
-            globalInstance = qulonglong(pDefaultGlobalInstance);
+        qApp->setProperty(objectName.constData(), res);
+    }
 
-            settings.setValue(pObjectName, QString::number(globalInstance));
-            // Note #1: for some reasons, on OS X, QSettings doesn't handle
-            //          qulonglong values properly, so we do it through a
-            //          QString value instead...
-            // Note #2: see https://bugreports.qt.io/browse/QTBUG-29681 for
-            //          more information...
-        }
-    settings.endGroup();
-
-    // Return the class's 'global' instance
-
-    return (void *) globalInstance;
+    return (void *) res.toULongLong();
 }
 
 //==============================================================================
