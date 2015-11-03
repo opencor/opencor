@@ -105,10 +105,6 @@ int main(int pArgC, char *pArgV[])
         }
     }
 
-    // Remove the global settings that were created and used during this session
-
-    OpenCOR::removeGlobalSettings();
-
     // Release some memory
 
     delete cliApp;

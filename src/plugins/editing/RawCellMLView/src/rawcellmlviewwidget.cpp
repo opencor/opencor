@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawcellmlviewwidget.h"
-#include "settings.h"
 #include "viewerwidget.h"
 
 //==============================================================================
@@ -163,7 +162,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
         // 'old' one
 
         if (mNeedLoadingSettings) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 newEditingWidget->loadSettings(&settings);
@@ -216,7 +215,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
         // needed
 
         if (mEditingWidget == editingWidget) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 editingWidget->saveSettings(&settings);

@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "commonwidget.h"
 #include "coreguiutils.h"
-#include "settings.h"
 
 //==============================================================================
 

@@ -31,7 +31,6 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
-#include "settings.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -110,7 +109,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Create our settings object
 
-    mSettings = new QSettings(SettingsOrganization, SettingsApplication);
+    mSettings = new QSettings();
 
     // Create our plugin manager (which will automatically load our various
     // plugins)

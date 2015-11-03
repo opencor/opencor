@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "cliinterface.h"
 #include "cliutils.h"
 #include "pluginmanager.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -255,7 +254,7 @@ void CliApplication::plugins() const
 
 void CliApplication::reset() const
 {
-    QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
+    QSettings settings;
 
     settings.clear();
 

@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "guiutils.h"
 #include "mainwindow.h"
-#include "settings.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================
@@ -109,8 +108,6 @@ int main(int pArgC, char *pArgV[])
 
         bool runCliApplication = OpenCOR::cliApplication(&res);
 
-        OpenCOR::removeGlobalSettings();
-
         delete cliApp;
 
         if (runCliApplication) {
@@ -175,7 +172,7 @@ int main(int pArgC, char *pArgV[])
     // Check whether we want to check for new versions at startup and, if so,
     // whether a new version of OpenCOR is available
 
-    QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
+    QSettings settings;
 
 #ifndef QT_DEBUG
     settings.beginGroup("CheckForUpdatesWindow");
@@ -305,10 +302,6 @@ int main(int pArgC, char *pArgV[])
 #ifdef Q_OS_WIN
     QWebSettings::clearMemoryCaches();
 #endif
-
-    // Remove the global settings that were created and used during this session
-
-    OpenCOR::removeGlobalSettings();
 
     // Delete our application
 

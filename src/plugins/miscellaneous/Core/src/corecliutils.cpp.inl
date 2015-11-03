@@ -41,7 +41,7 @@ QString rawLocale()
 {
     // Retrieve and return the raw locale
 
-    return QSettings(SettingsOrganization, SettingsApplication).value(RawSettingsLocale).toString();
+    return QSettings().value(RawSettingsLocale).toString();
 }
 
 //==============================================================================
@@ -50,7 +50,7 @@ void setRawLocale(const QString &pRawLocale)
 {
     // Keep track of the raw locale
 
-    QSettings(SettingsOrganization, SettingsApplication).setValue(RawSettingsLocale, pRawLocale);
+    QSettings().setValue(RawSettingsLocale, pRawLocale);
 }
 
 //==============================================================================

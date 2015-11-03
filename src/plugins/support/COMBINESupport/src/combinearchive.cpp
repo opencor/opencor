@@ -223,9 +223,8 @@ bool CombineArchive::save(const QString &pNewFileName)
             if (!Core::readTextFromFile(dirName+QDir::separator()+combineArchiveFile.location(), combineArchiveFileContents))
                 return false;
 
-            QByteArray combineArchiveFileContentsAsByteArray = combineArchiveFileContents.toUtf8();
-
-            zipWriter.addFile(combineArchiveFile.location(), combineArchiveFileContentsAsByteArray);
+            zipWriter.addFile(combineArchiveFile.location(),
+                              combineArchiveFileContents.toUtf8());
         }
 
         zipWriter.close();

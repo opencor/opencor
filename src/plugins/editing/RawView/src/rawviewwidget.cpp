@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawviewwidget.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -133,7 +132,7 @@ void RawViewWidget::initialize(const QString &pFileName,
         // 'old' one
 
         if (mNeedLoadingSettings) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 newEditor->loadSettings(&settings);
@@ -181,7 +180,7 @@ void RawViewWidget::finalize(const QString &pFileName)
         // reset our memory of the current editor, if needed
 
         if (mEditor == editor) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 editor->saveSettings(&settings);
