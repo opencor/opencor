@@ -46,14 +46,12 @@ class PluginManager;
 
 class CliApplication {
 public:
-    explicit CliApplication(QCoreApplication *pApp);
+    explicit CliApplication();
     ~CliApplication();
 
     bool run(int *pRes);
 
 private:
-    QCoreApplication *mApp;
-
     PluginManager *mPluginManager;
 
     Plugins mLoadedCliPlugins;

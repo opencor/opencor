@@ -107,8 +107,6 @@ private Q_SLOTS:
 
 //==============================================================================
 
-QString CORE_EXPORT locale();
-
 qulonglong CORE_EXPORT totalMemory();
 qulonglong CORE_EXPORT freeMemory();
 

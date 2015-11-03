@@ -21,10 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
-#include "coresettings.h"
 #include "guiutils.h"
 #include "mainwindow.h"
-#include "settings.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================
@@ -102,15 +100,13 @@ int main(int pArgC, char *pArgV[])
 
         QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
 
-        OpenCOR::initApplication(cliApp);
+        OpenCOR::initApplication();
 
         // Try to run the CLI version of OpenCOR
 
         int res;
 
-        bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
-
-        OpenCOR::removeGlobalSettings();
+        bool runCliApplication = OpenCOR::cliApplication(&res);
 
         delete cliApp;
 
@@ -171,12 +167,12 @@ int main(int pArgC, char *pArgV[])
 
     QString appDate = QString();
 
-    OpenCOR::initApplication(guiApp, &appDate);
+    OpenCOR::initApplication(&appDate);
 
     // Check whether we want to check for new versions at startup and, if so,
     // whether a new version of OpenCOR is available
 
-    QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
+    QSettings settings;
 
 #ifndef QT_DEBUG
     settings.beginGroup("CheckForUpdatesWindow");
@@ -194,12 +190,7 @@ int main(int pArgC, char *pArgV[])
             // Retrieve the language to be used to show the check for updates
             // window
 
-            const QString systemLocale = QLocale::system().name().left(2);
-
-            QString locale = settings.value(OpenCOR::SettingsLocale, QString()).toString();
-
-            if (locale.isEmpty())
-                locale = systemLocale;
+            QString locale = OpenCOR::locale();
 
             QLocale::setDefault(QLocale(locale));
 
@@ -207,10 +198,10 @@ int main(int pArgC, char *pArgV[])
             QTranslator appTranslator;
 
             qtTranslator.load(":qt_"+locale);
-            qApp->installTranslator(&qtTranslator);
+            guiApp->installTranslator(&qtTranslator);
 
             appTranslator.load(":app_"+locale);
-            qApp->installTranslator(&appTranslator);
+            guiApp->installTranslator(&appTranslator);
 
             // Show the check for updates window
             // Note: checkForUpdatesEngine gets deleted by
@@ -243,7 +234,7 @@ int main(int pArgC, char *pArgV[])
 
     // Create our main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(guiApp, appDate);
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(appDate);
 
     // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
@@ -311,10 +302,6 @@ int main(int pArgC, char *pArgV[])
 #ifdef Q_OS_WIN
     QWebSettings::clearMemoryCaches();
 #endif
-
-    // Remove the global settings that were created and used during this session
-
-    OpenCOR::removeGlobalSettings();
 
     // Delete our application
 

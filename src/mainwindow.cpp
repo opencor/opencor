@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
 #include "coreinterface.h"
-#include "coresettings.h"
 #include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
@@ -32,7 +31,6 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
-#include "settings.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -77,14 +75,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto SystemLocale  = QStringLiteral("");
 static const auto EnglishLocale = QStringLiteral("en");
 static const auto FrenchLocale  = QStringLiteral("fr");
 
 //==============================================================================
 
-MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
-                       const QString &pApplicationDate) :
+MainWindow::MainWindow(const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
@@ -93,7 +89,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
-    mLocale(QString()),
+    mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
     mFileNewMenu(0),
     mViewWindowsMenu(0),
@@ -106,14 +102,14 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
     // operating system), as well as a message sent by another instance of
     // itself
 
-    QObject::connect(pApplication, SIGNAL(fileOpenRequest(const QString &)),
+    QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
                      this, SLOT(fileOpenRequest(const QString &)));
-    QObject::connect(pApplication, SIGNAL(messageReceived(const QString &, QObject *)),
+    QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
                      this, SLOT(messageReceived(const QString &, QObject *)));
 
     // Create our settings object
 
-    mSettings = new QSettings(SettingsOrganization, SettingsApplication);
+    mSettings = new QSettings();
 
     // Create our plugin manager (which will automatically load our various
     // plugins)
@@ -320,7 +316,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
         // The system's locale has changed, so update OpenCOR's locale in case
         // the user wants to use the system's locale
 
-        setLocale(SystemLocale);
+        setLocale();
 #ifdef Q_OS_MAC
     } else if (pEvent->type() == QEvent::WindowStateChange) {
         // The window state has changed, so update the checked state of our full
@@ -657,17 +653,13 @@ void MainWindow::loadSettings()
     //          widgets that need translating (e.g. graph panels get created in
     //          the SingleCellView plugin)...
 
-    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
+    setLocale(OpenCOR::rawLocale(), true);
 }
 
 //==============================================================================
 
 void MainWindow::saveSettings() const
 {
-    // Keep track of the language to be used by OpenCOR
-
-    mSettings->setValue(SettingsLocale, mLocale);
-
     // Keep track of the geometry and state of the main window
 
     mSettings->setValue(SettingsGeometry, saveGeometry());
@@ -699,37 +691,22 @@ void MainWindow::saveSettings() const
 
 //==============================================================================
 
-QString MainWindow::locale() const
-{
-    // Return the current locale
-
-    return !mLocale.compare(SystemLocale)?
-               QLocale::system().name().left(2):
-               mLocale;
-}
-
-//==============================================================================
-
-void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
+void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 {
     const QString systemLocale = QLocale::system().name().left(2);
 
-    QString oldLocale = !mLocale.compare(SystemLocale)?systemLocale:mLocale;
-    QString newLocale = !pLocale.compare(SystemLocale)?systemLocale:pLocale;
+    QString oldLocale = mRawLocale.isEmpty()?systemLocale:mRawLocale;
+    QString newLocale = pRawLocale.isEmpty()?systemLocale:pRawLocale;
 
     // Keep track of the new locale, if needed
 
-    if (pLocale.compare(mLocale) || pForceSetting) {
-        mLocale = pLocale;
+    if (pRawLocale.compare(mRawLocale) || pForceSetting) {
+        mRawLocale = pRawLocale;
 
-        // Also keep a copy of the new locale in our global settings (so that it
-        // can be retrieved from any plugin)
+        // Also keep a copy of the new raw locale in our settings (so that the
+        // new locale can be retrieved from plugins)
 
-        QSettings settings(SettingsOrganization, SettingsApplication);
-
-        settings.beginGroup(SettingsGlobal);
-            settings.setValue(SettingsLocale, locale());
-        settings.endGroup();
+        OpenCOR::setRawLocale(mRawLocale);
     }
 
     // Check whether the new locale is different from the old one and if so,
@@ -783,10 +760,10 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status...
 
-    mGui->actionSystem->setChecked(!pLocale.compare(SystemLocale));
+    mGui->actionSystem->setChecked(pRawLocale.isEmpty());
 
-    mGui->actionEnglish->setChecked(!pLocale.compare(EnglishLocale));
-    mGui->actionFrench->setChecked(!pLocale.compare(FrenchLocale));
+    mGui->actionEnglish->setChecked(!pRawLocale.compare(EnglishLocale));
+    mGui->actionFrench->setChecked(!pRawLocale.compare(FrenchLocale));
 }
 
 //==============================================================================
@@ -1057,7 +1034,7 @@ void MainWindow::on_actionSystem_triggered()
 {
     // Select the system's language as the language used by OpenCOR
 
-    setLocale(SystemLocale);
+    setLocale();
 }
 
 //==============================================================================
@@ -1118,15 +1095,11 @@ void MainWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-static const auto OpencorHomePageUrl = QStringLiteral("http://www.opencor.ws/");
-
-//==============================================================================
-
 void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR's home page
 
-    QDesktopServices::openUrl(OpencorHomePageUrl);
+    QDesktopServices::openUrl(HomePageUrl);
 }
 
 //==============================================================================
@@ -1155,10 +1128,11 @@ void MainWindow::on_actionAbout_triggered()
     // Display some information about OpenCOR
 
     QMessageBox::about(this, tr("About"),
-                       "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
+                       "<h1 align=center><strong>"+version()+"</strong></h1>"
                        "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                        "<p align=center><em>"+copyright()+"</em></p>"
-                       "<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qAppName()+"</strong></a> "+tr("is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files."));
+                       "<p>"+applicationDescription()+"</p>"
+                       "<p>"+applicationBuildInformation()+"</p>");
 }
 
 //==============================================================================

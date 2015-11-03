@@ -38,7 +38,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
+PluginManager::PluginManager(const bool &pGuiMode) :
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
     mCorePlugin(0)
@@ -46,7 +46,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     // Retrieve OpenCOR's plugins directory
     // Note: the plugin's directory is retrieved in main()...
 
-    mPluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+pApp->applicationName();
+    mPluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+qAppName();
 
     // Retrieve the list of plugins available for loading
 

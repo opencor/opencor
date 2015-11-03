@@ -27,8 +27,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sbml/common/libsbml-version.h"
-#include "sbml/SBMLDocument.h"
+#include "sbmlapidisablewarnings.h"
+    #include "sbml/common/libsbml-version.h"
+    #include "sbml/SBMLDocument.h"
+#include "sbmlapienablewarnings.h"
 
 //==============================================================================
 

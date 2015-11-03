@@ -45,6 +45,10 @@ namespace OpenCOR {
 #include "corecliutils.h.inl"
 
 //==============================================================================
+
+static const auto HomePageUrl = QStringLiteral("http://www.opencor.ws/");
+
+//==============================================================================
 // Note: both cliutils.h and corecliutils.h must specifically define
 //       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
 //       enough since the MOC won't pick it up...
@@ -68,11 +72,12 @@ void initQtMessagePattern();
 
 void initPluginsPath(const QString &pAppFileName);
 
-void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);
+void initApplication(QString *pAppDate = 0);
 
-bool cliApplication(QCoreApplication *pApp, int *pRes);
+bool cliApplication(int *pRes);
 
-void removeGlobalSettings();
+QString applicationDescription(const bool &pGuiMode = true);
+QString applicationBuildInformation(const bool &pGuiMode = true);
 
 //==============================================================================
 

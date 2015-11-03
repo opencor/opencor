@@ -19,8 +19,13 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
-QString CORE_EXPORT shortVersion(QCoreApplication *pApp);
-QString CORE_EXPORT version(QCoreApplication *pApp);
+QString CORE_EXPORT locale();
+
+QString CORE_EXPORT rawLocale();
+void CORE_EXPORT setRawLocale(const QString &pRawLocale);
+
+QString CORE_EXPORT shortVersion();
+QString CORE_EXPORT version();
 
 QString CORE_EXPORT nativeCanonicalDirName(const QString &pDirName);
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
@@ -51,6 +56,8 @@ bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
 QString CORE_EXPORT eolString();
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
+
+QString CORE_EXPORT plainString(const QString &pString);
 
 //==============================================================================
 // End of file

@@ -16,29 +16,17 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Settings
+// SBML API enable warnings
 //==============================================================================
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
-
-//==============================================================================
-
-#include <QString>
+#if defined(SBMLAPIENABLEWARNINGS_H) && !defined(SBMLAPIDISABLEWARNINGS_H)
+#define SBMLAPIENABLEWARNINGS_H
 
 //==============================================================================
 
-namespace OpenCOR {
-
-//==============================================================================
-
-static const auto SettingsOrganization = QStringLiteral("Physiome");
-static const auto SettingsApplication  = QStringLiteral("OpenCOR");
-static const auto SettingsPlugins      = QStringLiteral("Plugins");
-
-//==============================================================================
-
-}   // namespace OpenCOR
+#ifdef Q_OS_WIN
+    #pragma warning(pop)
+#endif
 
 //==============================================================================
 

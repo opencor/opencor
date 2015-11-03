@@ -16,29 +16,18 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core settings
+// SBML API disable warnings
 //==============================================================================
 
-#ifndef CORESETTINGS_H
-#define CORESETTINGS_H
-
-//==============================================================================
-
-#include <QString>
+#if !defined(SBMLAPIENABLEWARNINGS_H) && !defined(SBMLAPIDISABLEWARNINGS_H)
+#define SBMLAPIDISABLEWARNINGS_H
 
 //==============================================================================
 
-namespace OpenCOR {
-
-//==============================================================================
-
-static const auto SettingsGlobal          = QStringLiteral("Global");
-static const auto SettingsLocale          = QStringLiteral("Locale");
-static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
-
-//==============================================================================
-
-}   // namespace OpenCOR
+#ifdef Q_OS_WIN
+    #pragma warning(push)
+    #pragma warning(disable: 4005)
+#endif
 
 //==============================================================================
 

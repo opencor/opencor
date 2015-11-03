@@ -212,7 +212,7 @@ QString CellmlFileRuntime::address() const
 {
     // Return our address as a string
 
-    return QString("%1").arg(qulonglong(this));
+    return QString::number(qulonglong(this));
 }
 
 //==============================================================================
@@ -711,6 +711,25 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 
 //==============================================================================
 
+QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
+{
+    // Remove all the comments from the given code and return the resulting
+    // cleaned up code
+
+    static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
+
+    QString res = QString();
+
+    foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
+        if (!CommentRegEx.match(code).hasMatch())
+            res += (res.isEmpty()?QString():"\n")+code;
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void CellmlFileRuntime::update()
 {
     // Reset the runtime's properties
@@ -974,7 +993,7 @@ void CellmlFileRuntime::update()
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$");
 
-    QStringList initConstsList = QString::fromStdWString(genericCodeInformation->initConstsString()).split("\r\n");
+    QStringList initConstsList = cleanCode(genericCodeInformation->initConstsString()).split("\n");
     QString initConsts = QString();
     QString compCompConsts = QString();
 
@@ -982,21 +1001,10 @@ void CellmlFileRuntime::update()
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (InitializationStatementRegEx.match(initConst).hasMatch()) {
-            // We are dealing with a 'proper' constant (or a rate or a state)
-
-            if (!initConsts.isEmpty())
-                initConsts += "\n";
-
-            initConsts += initConst;
-        } else {
-            // We are dealing with a 'computed' constant
-
-            if (!compCompConsts.isEmpty())
-                compCompConsts += "\n";
-
-            compCompConsts += initConst;
-        }
+        if (InitializationStatementRegEx.match(initConst).hasMatch())
+            initConsts += (initConsts.isEmpty()?QString():"\n")+initConst;
+        else
+            compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
     }
 
     modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
@@ -1010,24 +1018,24 @@ void CellmlFileRuntime::update()
 
     if (mModelType == CellmlFileRuntime::Ode) {
         modelCode += functionCode("int computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  QString::fromStdWString(mOdeCodeInformation->ratesString()));
+                                  cleanCode(mOdeCodeInformation->ratesString()));
         modelCode += "\n";
         modelCode += functionCode("int computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  QString::fromStdWString(genericCodeInformation->variablesString()));
+                                  cleanCode(genericCodeInformation->variablesString()));
     } else {
         modelCode += functionCode("int computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()));
+                                  cleanCode(mDaeCodeInformation->essentialVariablesString()));
         modelCode += "\n";
         modelCode += functionCode("int computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
-                                  QString::fromStdWString(mDaeCodeInformation->ratesString()));
+                                  cleanCode(mDaeCodeInformation->ratesString()));
         modelCode += "\n";
         modelCode += functionCode("int computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  QString::fromStdWString(mDaeCodeInformation->rootInformationString()));
+                                  cleanCode(mDaeCodeInformation->rootInformationString()));
         modelCode += functionCode("int computeDaeStateInformation(double *SI)",
-                                  QString::fromStdWString(mDaeCodeInformation->stateInformationString()));
+                                  cleanCode(mDaeCodeInformation->stateInformationString()));
         modelCode += "\n";
         modelCode += functionCode("int computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  QString::fromStdWString(genericCodeInformation->variablesString()));
+                                  cleanCode(genericCodeInformation->variablesString()));
     }
 
     // Check whether the model code contains a definite integral, otherwise

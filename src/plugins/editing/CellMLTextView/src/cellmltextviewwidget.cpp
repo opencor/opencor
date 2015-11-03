@@ -33,7 +33,6 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "qscintillawidget.h"
-#include "settings.h"
 #include "viewerwidget.h"
 
 //==============================================================================
@@ -304,7 +303,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // 'old' one
 
         if (mNeedLoadingSettings) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 newEditingWidget->loadSettings(&settings);
@@ -367,7 +366,7 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
         // needed
 
         if (mEditingWidget == editingWidget) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 editingWidget->saveSettings(&settings);

@@ -19,13 +19,11 @@ specific language governing permissions and limitations under the License.
 // Solver interface
 //==============================================================================
 
-#include "settings.h"
 #include "solverinterface.h"
 
 //==============================================================================
 
-#include <QObject>
-#include <QSettings>
+#include <QApplication>
 
 //==============================================================================
 
@@ -229,24 +227,14 @@ void NlaSolver::initialize(ComputeSystemFunction pComputeSystem,
 
 //==============================================================================
 
-static const auto SettingsGlobal = QStringLiteral("Global");
-
-//==============================================================================
-
 NlaSolver * nlaSolver(const QString &pRuntimeAddress)
 {
     // Return the runtime's NLA solver
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
-    qulonglong res;
+    QByteArray runtimeAddress = pRuntimeAddress.toUtf8();
+    QVariant res = qApp->property(runtimeAddress.constData());
 
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(pRuntimeAddress, 0).toULongLong();
-    settings.endGroup();
-
-    // Return the NLA solver
-
-    return static_cast<NlaSolver *>((void *) res);
+    return res.isValid()?static_cast<NlaSolver *>((void *) res.toULongLong()):0;
 }
 
 //==============================================================================
@@ -255,16 +243,9 @@ void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
 {
     // Keep track of the runtime's NLA solver
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
+    QByteArray runtimeAddress = pRuntimeAddress.toUtf8();
 
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(pRuntimeAddress, QString::number(qulonglong(pGlobalNlaSolver)));
-        // Note #1: for some reasons, on OS X, QSettings doesn't handle
-        //          qulonglong values properly, so we do it through a QString
-        //          value instead...
-        // Note #2: see https://bugreports.qt.io/browse/QTBUG-29681 for more
-        //          information...
-    settings.endGroup();
+    qApp->setProperty(runtimeAddress.constData(), qulonglong(pGlobalNlaSolver));
 }
 
 //==============================================================================
@@ -273,11 +254,9 @@ void unsetNlaSolver(const QString &pRuntimeAddress)
 {
     // Stop tracking the runtime's NLA solver
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
+    QByteArray runtimeAddress = pRuntimeAddress.toUtf8();
 
-    settings.beginGroup(SettingsGlobal);
-        settings.remove(pRuntimeAddress);
-    settings.endGroup();
+    qApp->setProperty(runtimeAddress.constData(), QVariant::Invalid);
 }
 
 //==============================================================================

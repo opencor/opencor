@@ -106,11 +106,12 @@ QString PluginInfo::description(const QString &pLocale) const
 
     QString res = mDescriptions.value(pLocale);
 
-    if (res.isEmpty())
+    if (res.isEmpty()) {
         // There is no description for the required locale, so retrieve the
-        // english description (which, hopefully, should exist)
+        // English description (which, hopefully, exists)
 
         res = mDescriptions.value("en");
+    }
 
     return res;
 }

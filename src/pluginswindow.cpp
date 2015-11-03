@@ -436,7 +436,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             // The plugin's description
 
-            QString description = pluginInfo->description(mMainWindow->locale());
+            QString description = pluginInfo->description(OpenCOR::locale());
 
             mGui->fieldThreeLabel->setText(tr("Description:"));
             mGui->fieldThreeValue->setText(description.isEmpty()?tr("none"):description);

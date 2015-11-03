@@ -19,10 +19,46 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
-QString shortVersion(QCoreApplication *pApp)
+QString locale()
+{
+    // Retrieve and return the locale
+
+    QString res = rawLocale();
+
+    if (res.isEmpty())
+        return QLocale::system().name().left(2);
+    else
+        return res;
+}
+
+//==============================================================================
+
+static const auto RawSettingsLocale = QStringLiteral("RawLocale");
+
+//==============================================================================
+
+QString rawLocale()
+{
+    // Retrieve and return the raw locale
+
+    return QSettings().value(RawSettingsLocale).toString();
+}
+
+//==============================================================================
+
+void setRawLocale(const QString &pRawLocale)
+{
+    // Keep track of the raw locale
+
+    QSettings().setValue(RawSettingsLocale, pRawLocale);
+}
+
+//==============================================================================
+
+QString shortVersion()
 {
     QString res = QString();
-    QString appVersion = pApp->applicationVersion();
+    QString appVersion = qApp->applicationVersion();
     QString bitVersion;
 
     enum {
@@ -51,9 +87,9 @@ QString shortVersion(QCoreApplication *pApp)
 
 //==============================================================================
 
-QString version(QCoreApplication *pApp)
+QString version()
 {
-    return pApp->applicationName()+" "+shortVersion(pApp);
+    return qAppName()+" "+shortVersion();
 }
 
 //==============================================================================
@@ -413,6 +449,26 @@ QString nonDiacriticString(const QString &pString)
         int index = diacriticLetters.indexOf(letter);
 
         res.append((index < 0)?letter:nonDiacriticLetters[index]);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QString plainString(const QString &pString)
+{
+    // Return the given string after stripping out all its HTML code (should it
+    // have some)
+    // Note: we enclose the given string within an HTML tag so that its
+    //       stripping out can proceed without any problem...
+
+    QXmlStreamReader string("<html>"+pString+"</html>");
+    QString res = QString();
+
+    while (!string.atEnd()) {
+        if (string.readNext() == QXmlStreamReader::Characters)
+            res += string.text();
     }
 
     return res;

@@ -36,9 +36,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void error(QCoreApplication *pApp, const QString &pMsg)
+void error(const QString &pMsg)
 {
-    std::cout << qPrintable(OpenCOR::version(pApp)) << std::endl;
+    std::cout << qPrintable(OpenCOR::version()) << std::endl;
     std::cout << std::endl;
     std::cout << "Error: " << qPrintable(pMsg) << std::endl;
 }
@@ -57,36 +57,36 @@ int main(int pArgC, char *pArgV[])
 
     // Create our application
 
-    QCoreApplication *app = new QCoreApplication(pArgC, pArgV);
+    QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
 
     // Some general initialisations
 
-    OpenCOR::initApplication(app);
+    OpenCOR::initApplication();
 
     // Try to run OpenCOR as a CLI application
 
     int res;
 
-    if (!OpenCOR::cliApplication(app, &res)) {
+    if (!OpenCOR::cliApplication(&res)) {
         // OpenCOR isn't meant to be run as a CLI application, so start its GUI
         // version instead
 
         static const QString DotExe = ".exe";
 
-        if (app->applicationFilePath().right(DotExe.size()) == DotExe) {
+        if (cliApp->applicationFilePath().right(DotExe.size()) == DotExe) {
             // This is a safeguard from accidentally running a non-renamed (to
             // '.com') CLI version of OpenCOR
 
-            error(app, "the CLI version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
+            error("the CLI version of "+qAppName()+" has the wrong extension ('.exe' instead of '.com').");
 
             res = -1;
         } else {
-            QString guiAppFilePath = app->applicationDirPath()+QDir::separator()+app->applicationName()+DotExe;
+            QString guiAppFilePath = cliApp->applicationDirPath()+QDir::separator()+qAppName()+DotExe;
 
             if (!QFile::exists(guiAppFilePath)) {
                 // We can't find the GUI version of OpenCOR, so...
 
-                error(app, "the GUI version of "+app->applicationName()+" cannot be found.");
+                error("the GUI version of "+qAppName()+" cannot be found.");
 
                 res = -1;
             } else {
@@ -94,7 +94,7 @@ int main(int pArgC, char *pArgV[])
                 // arguments, minus the first one since it corresponds to the
                 // full path to our executable, which we are not interested in
 
-                QStringList appArguments = app->arguments();
+                QStringList appArguments = cliApp->arguments();
 
                 appArguments.removeFirst();
 
@@ -105,13 +105,9 @@ int main(int pArgC, char *pArgV[])
         }
     }
 
-    // Remove the global settings that were created and used during this session
-
-    OpenCOR::removeGlobalSettings();
-
     // Release some memory
 
-    delete app;
+    delete cliApp;
 
     // We are done, so...
 

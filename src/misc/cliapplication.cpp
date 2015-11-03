@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "cliinterface.h"
 #include "cliutils.h"
 #include "pluginmanager.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -37,7 +36,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QCoreApplication>
 #include <QSettings>
-#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -45,8 +43,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication(QCoreApplication *pApp) :
-    mApp(pApp),
+CliApplication::CliApplication() :
     mPluginManager(0),
     mLoadedCliPlugins(Plugins())
 {
@@ -67,7 +64,7 @@ void CliApplication::loadPlugins()
 {
     // Load all the plugins by creating our plugin manager
 
-    mPluginManager = new PluginManager(mApp, false);
+    mPluginManager = new PluginManager(false);
 
     // Keep track of our loaded CLI plugins
 
@@ -82,17 +79,8 @@ QString CliApplication::pluginDescription(Plugin *pPlugin) const
 {
     // Retrieve and return the plugin's default description, stripped out of all
     // its HTML (should it have some)
-    // Note: we enclose the CLI plugin's default description within an html tag
-    //       so that the stripping out can proceed without any problem...
 
-    QXmlStreamReader description("<html>"+pPlugin->info()->description()+"</html>");
-    QString res = QString();
-
-    while (!description.atEnd())
-        if (description.readNext() == QXmlStreamReader::Characters)
-            res += description.text();
-
-    return res;
+    return plainString(pPlugin->info()->description());
 }
 
 //==============================================================================
@@ -106,11 +94,9 @@ void CliApplication::about() const
     std::cout << QSysInfo::prettyProductName().toStdString() << std::endl;
     std::cout << copyright().toStdString() << std::endl;
     std::cout << std::endl;
-    std::cout << mApp->applicationName().toStdString()
-              << " is a cross-platform CellML-based modelling environment,"
-              << " which can be used to organise, edit,"
-              << " simulate and analyse CellML files."
-              << std::endl;
+    std::cout << applicationDescription(false).toStdString() << std::endl;
+    std::cout << std::endl;
+    std::cout << applicationBuildInformation(false).toStdString() << std::endl;
 }
 
 //==============================================================================
@@ -201,7 +187,7 @@ void CliApplication::help() const
 {
     // Output some help
 
-    std::cout << "Usage: " << mApp->applicationName().toStdString()
+    std::cout << "Usage: " << qAppName().toStdString()
               << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
@@ -268,7 +254,7 @@ void CliApplication::plugins() const
 
 void CliApplication::reset() const
 {
-    QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
+    QSettings settings;
 
     settings.clear();
 
@@ -369,7 +355,7 @@ void CliApplication::version() const
 {
     // Output the version of OpenCOR
 
-    std::cout << OpenCOR::version(mApp).toStdString() << std::endl;
+    std::cout << OpenCOR::version().toStdString() << std::endl;
 }
 
 //==============================================================================
@@ -393,7 +379,7 @@ bool CliApplication::run(int *pRes)
 
     Option option = NoOption;
 
-    QStringList appArguments = mApp->arguments();
+    QStringList appArguments = qApp->arguments();
     QStringList commandArguments = QStringList();
 
     appArguments.removeFirst();
