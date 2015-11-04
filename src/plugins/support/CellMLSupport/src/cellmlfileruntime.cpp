@@ -670,42 +670,12 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
         return QStringList();
     }
 
-    // Check whether this is an imported component and, if so, retrieve its
-    // imported name
-
-    QString componentName = QString::fromStdWString(component?component->name():parentComponent->name());
-
-    ObjRef<iface::cellml_api::CellMLElement> componentParent = component?component->parentElement():parentComponent->parentElement();
-    ObjRef<iface::cellml_api::CellMLElement> componentParentParent = componentParent->parentElement();
-
-    if (componentParentParent) {
-        // The given element comes from or is an imported component, so go
-        // through our different imported components and look for the one we are
-        // after
-
-        ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(componentParentParent);
-        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
-        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
-
-        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
-             importComponent; importComponent = importComponentsIter->nextImportComponent()) {
-            if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
-                // This is the imported component we are after, so retrieve its
-                // imported name
-
-                componentName = QString::fromStdWString(importComponent->name());
-
-                break;
-            }
-        }
-    }
-
     // Recursively retrieve the component hierarchy of the given element's
     // encapsulation parent, if any
 
     ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
 
-    return componentHierarchy(componentEncapsulationParent) << componentName;
+    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
 }
 
 //==============================================================================
