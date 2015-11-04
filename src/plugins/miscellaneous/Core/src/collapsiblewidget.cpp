@@ -379,7 +379,7 @@ void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
 
     mLayout->addWidget(header);
 
-    mHeaders.append(header);
+    mHeaders << header;
 
     // Add the widget itself
 

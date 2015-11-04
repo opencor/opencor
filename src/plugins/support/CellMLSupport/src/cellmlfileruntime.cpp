@@ -888,7 +888,7 @@ void CellmlFileRuntime::update()
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            mParameters.append(parameter);
+            mParameters << parameter;
         }
     }
 
