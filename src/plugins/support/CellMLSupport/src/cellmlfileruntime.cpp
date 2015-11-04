@@ -660,7 +660,6 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     // here through recursion)
 
     ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
-
     ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
