@@ -771,6 +771,28 @@ void CellmlFileRuntime::update()
         mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
+    // In the case of a CellML 1.1 file, retrieve all the variables defined in
+    // the main CellML file
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(model);
+    QList<iface::cellml_api::CellMLVariable *> localVariables = QList<iface::cellml_api::CellMLVariable *>();
+
+    if (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
+        ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
+        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
+
+        for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
+             component; component = localComponentsIter->nextComponent()) {
+            ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
+            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
+
+            for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
+                 variable; variable = variablesIter->nextVariable()) {
+                localVariables << variable;
+            }
+        }
+    }
+
     // Retrieve all the parameters and sort them by component/variable name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = genericCodeInformation->iterateTargets();
@@ -847,17 +869,123 @@ void CellmlFileRuntime::update()
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
-                                                                                   computationTarget->degree(),
-                                                                                   QString::fromStdWString(variable->unitsName()),
-                                                                                   componentHierarchy(variable),
-                                                                                   parameterType,
-                                                                                   computationTarget->assignedIndex());
+            // Now, in the case of a CellML 1.1 model, we also want to make sure
+            // that the parameter is either directly defined or referenced in
+            // the main CellML file
+            // Note: not only does it make sense, but only variables listed in
+            //       the main CellML file can be referenced by SED-ML...
 
-            if (parameterType == CellmlFileRuntimeParameter::Voi)
-                mVariableOfIntegration = parameter;
+            bool keepParameter = false;
 
-            mParameters << parameter;
+            if (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)
+                && !localVariables.contains(variable)) {
+                // The parameter is not directly defined in the main CellML
+                // file, which means that it is an imported parameter, so we
+                // need to retrieve the name of its imported component
+                // Note: variable->parentElement()->parentElement()->parentElement()
+                //       |                       |                |                |
+                //       \-----------+-----------/                |                |
+                //       |           |                            |                |
+                //       |   Imported component                   |                |
+                //       |                                        |                |
+                //       \-------------------+--------------------/                |
+                //       |                   |                                     |
+                //       |            Imported model                               |
+                //       |                                                         |
+                //       \----------------------------+----------------------------/
+                //                                    |
+                //                                 Import
+
+                ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(variable->parentElement()->parentElement()->parentElement());
+                ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
+                ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
+                QString componentName = QString::fromStdWString(variable->componentName());
+
+                for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
+                     importComponent; importComponent = importComponentsIter->nextImportComponent()) {
+                    if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
+                        componentName = QString::fromStdWString(importComponent->name());
+
+                        break;
+                    }
+                }
+
+                // Now that we have the name of our imported component, we go
+                // through our local variables in search for the one, if any,
+                // that references our imported parameter and this by checking
+                // our connections
+
+                QString variableName = QString::fromStdWString(variable->name());
+
+                foreach (iface::cellml_api::CellMLVariable *localVariable, localVariables) {
+                    QString localComponentName = QString::fromStdWString(localVariable->componentName());
+                    QString localVariableName = QString::fromStdWString(localVariable->name());
+
+                    ObjRef<iface::cellml_api::ConnectionSet> connections = model->connections();
+                    ObjRef<iface::cellml_api::ConnectionIterator> connectionsIter = connections->iterateConnections();
+
+                    for (ObjRef<iface::cellml_api::Connection> connection = connectionsIter->nextConnection();
+                         connection; connection = connectionsIter->nextConnection()) {
+                        ObjRef<iface::cellml_api::MapComponents> componentMapping = connection->componentMapping();
+                        QString firstComponentName = QString::fromStdWString(componentMapping->firstComponentName());
+                        QString secondComponentName = QString::fromStdWString(componentMapping->secondComponentName());
+                        bool variableInFirstComponent =    !firstComponentName.compare(componentName)
+                                                        && !secondComponentName.compare(localComponentName);
+                        bool variableInSecondComponent =    !firstComponentName.compare(localComponentName)
+                                                         && !secondComponentName.compare(componentName);
+
+                        if (variableInFirstComponent || variableInSecondComponent) {
+                            ObjRef<iface::cellml_api::MapVariablesSet> variableMappings = connection->variableMappings();
+                            ObjRef<iface::cellml_api::MapVariablesIterator> variableMappingsIter = variableMappings->iterateMapVariables();
+
+                            for (ObjRef<iface::cellml_api::MapVariables> mapVariables = variableMappingsIter->nextMapVariables();
+                                 mapVariables; mapVariables = variableMappingsIter->nextMapVariables()) {
+                                QString firstVariableName = QString::fromStdWString(mapVariables->firstVariableName());
+                                QString secondVariableName = QString::fromStdWString(mapVariables->secondVariableName());
+
+                                if (   (    variableInFirstComponent
+                                        && !firstVariableName.compare(variableName)
+                                        && !secondVariableName.compare(localVariableName))
+                                    || (    variableInSecondComponent
+                                        && !firstVariableName.compare(localVariableName)
+                                        && !secondVariableName.compare(variableName))) {
+                                    keepParameter = true;
+
+                                    variable = localVariable;
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (keepParameter)
+                            break;
+                    }
+
+                    if (keepParameter)
+                        break;
+                }
+            } else {
+                keepParameter = true;
+            }
+
+            // Keep track of the parameter, if needed or if it our variable of
+            // integration
+
+            if (    keepParameter
+                || (parameterType == CellmlFileRuntimeParameter::Voi)) {
+                CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
+                                                                                       computationTarget->degree(),
+                                                                                       QString::fromStdWString(variable->unitsName()),
+                                                                                       componentHierarchy(variable),
+                                                                                       parameterType,
+                                                                                       computationTarget->assignedIndex());
+
+                if (parameterType == CellmlFileRuntimeParameter::Voi)
+                    mVariableOfIntegration = parameter;
+
+                mParameters << parameter;
+            }
         }
     }
 
