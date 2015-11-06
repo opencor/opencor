@@ -168,7 +168,7 @@ void SingleCellViewGraphPanelWidget::addNeighbor(SingleCellViewGraphPanelWidget 
 {
     // Add the graph panel as a neighbour
 
-    if (!mNeighbors.contains(pGraphPanel))
+    if ((pGraphPanel != this) && !mNeighbors.contains(pGraphPanel))
         mNeighbors << pGraphPanel;
 }
 
