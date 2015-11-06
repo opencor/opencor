@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "propertyeditorwidget.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewwidget.h"

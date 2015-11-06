@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 
 //==============================================================================

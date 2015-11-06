@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // Single cell view graph panels widget
 //==============================================================================
 
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelswidget.h"
 
 //==============================================================================
