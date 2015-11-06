@@ -924,31 +924,35 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
     // Update our axes' values, if needed
 
-    bool axesValuesChanged = false;
+    bool xAxisValuesChanged = false;
+    bool yAxisValuesChanged = false;
 
     if ((pMinX != oldMinX) || (pMaxX != oldMaxX)) {
         setAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
-        axesValuesChanged = true;
+        xAxisValuesChanged = true;
     }
 
     if ((pMinY != oldMinY) || (pMaxY != oldMaxY)) {
         setAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
-        axesValuesChanged = true;
+        yAxisValuesChanged = true;
     }
 
-    // Update our actions in case the axes' values have changed
+    // Update our actions in case on the axes' values have changed
 
-    if (axesValuesChanged)
+    if (xAxisValuesChanged || yAxisValuesChanged) {
         updateActions();
 
-    // Replot ourselves, if needed and allowed
+        // Replot ourselves, if allowed
 
-    if (axesValuesChanged && pCanReplot) {
-        replotNow();
+        if (pCanReplot) {
+            replotNow();
 
-        return true;
+            return true;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }
