@@ -473,7 +473,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     QwtPlot(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
-    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
+    mGraphs(SingleCellViewGraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -795,7 +795,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
 

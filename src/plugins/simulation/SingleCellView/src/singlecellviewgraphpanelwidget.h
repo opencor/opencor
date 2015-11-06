@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "singlecellviewgraphpanelplotwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -41,7 +42,6 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 
@@ -65,10 +65,10 @@ public:
 
     SingleCellViewGraphPanelPlotWidget * plot() const;
 
-    QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
+    SingleCellViewGraphPanelPlotGraphs graphs() const;
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+    void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     bool hasNeighbors() const;
     SingleCellViewGraphPanelWidgets neighbors() const;
@@ -97,7 +97,7 @@ Q_SIGNALS:
     void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
     void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 };
 
 //==============================================================================

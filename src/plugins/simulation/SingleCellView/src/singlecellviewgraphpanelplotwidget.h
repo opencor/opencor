@@ -101,6 +101,10 @@ private:
 
 //==============================================================================
 
+typedef QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotGraphs;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelPlotWidget;
 
 //==============================================================================
@@ -166,7 +170,7 @@ public:
 
     virtual void retranslateUi();
 
-    QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
+    SingleCellViewGraphPanelPlotGraphs graphs() const;
 
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
@@ -213,7 +217,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
+    SingleCellViewGraphPanelPlotGraphs mGraphs;
 
     Action mAction;
 
@@ -274,6 +278,10 @@ private Q_SLOTS:
 
     void on_actionResetZoom_triggered();
 };
+
+//==============================================================================
+
+typedef QList<SingleCellViewGraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
 
 //==============================================================================
 

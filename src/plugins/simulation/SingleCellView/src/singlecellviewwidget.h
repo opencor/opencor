@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "datastoreinterface.h"
+#include "singlecellviewgraphpanelplotwidget.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
 
@@ -85,8 +86,6 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelPlotGraph;
-class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewInformationSolversWidgetData;
 class SingleCellViewPlugin;
@@ -182,7 +181,7 @@ private:
     QList<SingleCellViewSimulation *> mResetSimulations;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
-    QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
+    SingleCellViewGraphPanelPlotWidgets mPlots;
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
@@ -292,10 +291,10 @@ private Q_SLOTS:
     void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
     void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void callCheckResults();
 };

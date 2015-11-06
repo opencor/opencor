@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "propertyeditorwidget.h"
+#include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
@@ -63,7 +64,6 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewSimulation;
@@ -144,7 +144,7 @@ private:
 
 Q_SIGNALS:
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
@@ -153,7 +153,7 @@ public Q_SLOTS:
     void addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
                   SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
-                      const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                      const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void on_actionAddGraph_triggered();

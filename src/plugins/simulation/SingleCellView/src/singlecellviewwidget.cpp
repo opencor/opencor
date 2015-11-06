@@ -117,7 +117,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
     mResetSimulations(QList<SingleCellViewSimulation *>()),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
-    mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
+    mPlots(SingleCellViewGraphPanelPlotWidgets()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadViews(QList<QString>())
@@ -277,13 +277,13 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
             graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)),
-            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)),
-            this, SLOT(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SLOT(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -302,8 +302,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphsUpdated(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)),
-            this, SLOT(graphsUpdated(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)));
+    connect(graphsWidget, SIGNAL(graphsUpdated(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SLOT(graphsUpdated(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -2187,7 +2187,7 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
 //==============================================================================
 
 void SingleCellViewWidget::graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
-                                         const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
+                                         const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
 
@@ -2206,14 +2206,14 @@ void SingleCellViewWidget::graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPl
 //==============================================================================
 
 void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                                         const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
+                                         const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pPlot);
 
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
 
-    QList<SingleCellViewGraphPanelPlotWidget *> plots = QList<SingleCellViewGraphPanelPlotWidget *>();
+    SingleCellViewGraphPanelPlotWidgets plots = SingleCellViewGraphPanelPlotWidgets();
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
         // Show/hide the graph

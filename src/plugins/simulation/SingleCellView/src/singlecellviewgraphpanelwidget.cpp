@@ -130,7 +130,7 @@ SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot() cons
 
 //==============================================================================
 
-QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelWidget::graphs() const
 {
     // Return all our plot's graphs
 
@@ -149,11 +149,11 @@ void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph 
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
+void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     // Remove the graphs from our plot
 
-    QList<SingleCellViewGraphPanelPlotGraph *> graphs = QList<SingleCellViewGraphPanelPlotGraph *>();
+    SingleCellViewGraphPanelPlotGraphs graphs = SingleCellViewGraphPanelPlotGraphs();
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs)
         if (mPlot->removeGraph(graph))
