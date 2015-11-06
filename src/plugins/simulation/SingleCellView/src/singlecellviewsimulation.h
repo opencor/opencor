@@ -263,6 +263,10 @@ Q_SIGNALS:
 
 //==============================================================================
 
+typedef QList<SingleCellViewSimulation *> SingleCellViewSimulations;
+
+//==============================================================================
+
 }   // namespace SingleCellView
 }   // namespace OpenCOR
 

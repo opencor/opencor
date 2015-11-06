@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "datastoreinterface.h"
 #include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewsimulation.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
 
@@ -89,7 +90,6 @@ class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewInformationSolversWidgetData;
 class SingleCellViewPlugin;
-class SingleCellViewSimulation;
 
 //==============================================================================
 
@@ -143,7 +143,7 @@ private:
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
-    QList<SingleCellViewSimulation *> mStoppedSimulations;
+    SingleCellViewSimulations mStoppedSimulations;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -176,9 +176,9 @@ private:
     ErrorType mErrorType;
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
-    QList<SingleCellViewSimulation *> mCheckResultsSimulations;
+    SingleCellViewSimulations mCheckResultsSimulations;
 
-    QList<SingleCellViewSimulation *> mResetSimulations;
+    SingleCellViewSimulations mResetSimulations;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
