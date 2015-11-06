@@ -660,7 +660,6 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     // here through recursion)
 
     ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
-
     ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
@@ -671,42 +670,12 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
         return QStringList();
     }
 
-    // Check whether this is an imported component and, if so, retrieve its
-    // imported name
-
-    QString componentName = QString::fromStdWString(component?component->name():parentComponent->name());
-
-    ObjRef<iface::cellml_api::CellMLElement> componentParent = component?component->parentElement():parentComponent->parentElement();
-    ObjRef<iface::cellml_api::CellMLElement> componentParentParent = componentParent->parentElement();
-
-    if (componentParentParent) {
-        // The given element comes from or is an imported component, so go
-        // through our different imported components and look for the one we are
-        // after
-
-        ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(componentParentParent);
-        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
-        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
-
-        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
-             importComponent; importComponent = importComponentsIter->nextImportComponent()) {
-            if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
-                // This is the imported component we are after, so retrieve its
-                // imported name
-
-                componentName = QString::fromStdWString(importComponent->name());
-
-                break;
-            }
-        }
-    }
-
     // Recursively retrieve the component hierarchy of the given element's
     // encapsulation parent, if any
 
     ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
 
-    return componentHierarchy(componentEncapsulationParent) << componentName;
+    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
 }
 
 //==============================================================================
@@ -802,15 +771,54 @@ void CellmlFileRuntime::update()
         mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
+    // In the case of a CellML 1.1 file, retrieve all the variables defined or
+    // referenced in our main CellML file
+    // Note: indeed, when it comes to CellML 1.1 files, we only want to list the
+    //       parameters that are either defined or referenced in our main CellML
+    //       file. Not only does it make sense, but also only the variables
+    //       listed in a main CellML file can be referenced by SED-ML...
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(model);
+    QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
+
+    if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
+        ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
+        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
+
+        for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
+             component; component = localComponentsIter->nextComponent()) {
+            ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
+            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
+
+            for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
+                 variable; variable = variablesIter->nextVariable()) {
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+
+                mainVariables.insert(sourceVariable, variable);
+            }
+        }
+    }
+
     // Retrieve all the parameters and sort them by component/variable name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = genericCodeInformation->iterateTargets();
 
     for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
          computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
-        // Determine the type of the parameter
+        // Make sure that the parameter is defined or referenced in our main
+        // CellML file
 
         ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+        iface::cellml_api::CellMLVariable *mainVariable = variable;
+
+        if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            mainVariable = mainVariables.value(variable);
+
+        if (!mainVariable)
+            continue;
+
+        // Determine the type of the parameter
+
         CellmlFileRuntimeParameter::ParameterType parameterType;
 
         switch (computationTarget->type()) {
@@ -878,17 +886,17 @@ void CellmlFileRuntime::update()
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
+            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(mainVariable->name()),
                                                                                    computationTarget->degree(),
-                                                                                   QString::fromStdWString(variable->unitsName()),
-                                                                                   componentHierarchy(variable),
+                                                                                   QString::fromStdWString(mainVariable->unitsName()),
+                                                                                   componentHierarchy(mainVariable),
                                                                                    parameterType,
                                                                                    computationTarget->assignedIndex());
 
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            mParameters.append(parameter);
+            mParameters << parameter;
         }
     }
 

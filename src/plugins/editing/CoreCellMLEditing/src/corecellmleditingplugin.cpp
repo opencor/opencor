@@ -183,15 +183,15 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
 
             separatorAction->setSeparator(true);
 
-            contextMenuActions.append(separatorAction);
-            contextMenuActions.append(mEditReformatAction);
+            contextMenuActions << separatorAction;
+            contextMenuActions << mEditReformatAction;
 
             separatorAction = new QAction(Core::mainWindow());
 
             separatorAction->setSeparator(true);
 
-            contextMenuActions.append(separatorAction);
-            contextMenuActions.append(mToolsCellmlValidationAction);
+            contextMenuActions << separatorAction;
+            contextMenuActions << mToolsCellmlValidationAction;
 
             editor->setContextMenu(contextMenuActions);
         }

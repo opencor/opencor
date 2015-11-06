@@ -81,7 +81,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
 
     for (int i = 0, iMax = tempPropertyEditor->header()->count(); i < iMax; ++i)
-        mColumnWidths.append(tempPropertyEditor->columnWidth(i));
+        mColumnWidths << tempPropertyEditor->columnWidth(i);
 
     delete tempPropertyEditor;
 

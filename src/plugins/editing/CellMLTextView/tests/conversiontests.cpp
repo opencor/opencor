@@ -75,10 +75,10 @@ void ConversionTests::successfulConversionTests()
     for (int i = 1;; ++i) {
         currentLine = cellmlCorCellmlContents[i];
 
-        cellmlCorWithCommentsCellmlContents.append(currentLine);
+        cellmlCorWithCommentsCellmlContents << currentLine;
 
         if (currentLine.compare("</model>"))
-            cellmlCorWithCommentsCellmlContents.append(comment.arg(++commentNumber));
+            cellmlCorWithCommentsCellmlContents << comment.arg(++commentNumber);
         else
             break;
     }
