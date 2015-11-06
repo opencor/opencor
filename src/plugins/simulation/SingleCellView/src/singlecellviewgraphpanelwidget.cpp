@@ -164,6 +164,24 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const QList<SingleCellViewGrap
 
 //==============================================================================
 
+bool SingleCellViewGraphPanelWidget::hasNeighbors() const
+{
+    // Return whether we have neighbours
+
+    return !mNeighbors.isEmpty();
+}
+
+//==============================================================================
+
+SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelWidget::neighbors() const
+{
+    // Return our neighbours
+
+    return mNeighbors;
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelWidget::addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
     // Add the graph panel as a neighbour

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -944,9 +945,16 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
     if (xAxisValuesChanged || yAxisValuesChanged) {
         updateActions();
 
-        // Replot ourselves, if allowed
+        // Replot ourselves, if allowed, after ensuring that our Y axis is
+        // aligned with that of our neigbours, if any
 
         if (pCanReplot) {
+            SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(parent());
+
+            if (graphPanel->hasNeighbors()) {
+//---GRY--- TO BE DONE...
+            }
+
             replotNow();
 
             return true;

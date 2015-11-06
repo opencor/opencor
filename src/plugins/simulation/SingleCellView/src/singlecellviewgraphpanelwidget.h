@@ -70,6 +70,9 @@ public:
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
+    bool hasNeighbors() const;
+    SingleCellViewGraphPanelWidgets neighbors() const;
+
     void addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
     void removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
 
