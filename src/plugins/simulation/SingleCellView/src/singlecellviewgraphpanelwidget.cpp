@@ -41,7 +41,8 @@ namespace SingleCellView {
 
 SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent) :
     Widget(pParent),
-    mActive(false)
+    mActive(false),
+    mNeighbors(SingleCellViewGraphPanelWidgets())
 {
     // Create and set our horizontal layout
 
@@ -159,6 +160,25 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const QList<SingleCellViewGrap
             graphs << graph;
 
     emit graphsRemoved(mPlot, graphs);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Add the graph panel as a neighbour
+
+    if (!mNeighbors.contains(pGraphPanel))
+        mNeighbors << pGraphPanel;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Remove the graph panel from our neighbours
+
+    mNeighbors.removeOne(pGraphPanel);
 }
 
 //==============================================================================

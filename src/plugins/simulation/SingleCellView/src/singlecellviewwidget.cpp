@@ -2126,6 +2126,11 @@ void SingleCellViewWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGrap
     // Keep track of the graph panel's plot
 
     mGraphPanelsPlots.insert(pGraphPanel, pGraphPanel->plot());
+
+    // Let all our graph panels that they have a new neighbour
+
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanelsPlots.keys())
+        graphPanel->addNeighbor(pGraphPanel);
 }
 
 //==============================================================================
@@ -2137,6 +2142,11 @@ void SingleCellViewWidget::graphPanelRemoved(SingleCellViewGraphPanelWidget *pGr
     mPlots.removeOne(mGraphPanelsPlots.value(pGraphPanel));
 
     mGraphPanelsPlots.remove(pGraphPanel);
+
+    // Let all our graph panels that one of their neighbours has been removed
+
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanelsPlots.keys())
+        graphPanel->removeNeighbor(pGraphPanel);
 }
 
 //==============================================================================

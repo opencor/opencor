@@ -43,6 +43,11 @@ namespace SingleCellView {
 
 class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
+class SingleCellViewGraphPanelWidget;
+
+//==============================================================================
+
+typedef QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelWidgets;
 
 //==============================================================================
 
@@ -65,6 +70,9 @@ public:
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
+    void addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
@@ -74,6 +82,8 @@ private:
     SingleCellViewGraphPanelPlotWidget *mPlot;
 
     bool mActive;
+
+    SingleCellViewGraphPanelWidgets mNeighbors;
 
     void updateMarkerColor();
 
