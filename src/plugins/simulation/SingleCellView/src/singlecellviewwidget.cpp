@@ -2123,14 +2123,17 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
 void SingleCellViewWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
+    // Let all our graph panels know that they have a new neighbour and let our
+    // new graph panel that it has neigbours
+
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanelsPlots.keys()) {
+        graphPanel->addNeighbor(pGraphPanel);
+        pGraphPanel->addNeighbor(graphPanel);
+    }
+
     // Keep track of the graph panel's plot
 
     mGraphPanelsPlots.insert(pGraphPanel, pGraphPanel->plot());
-
-    // Let all our graph panels that they have a new neighbour
-
-    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanelsPlots.keys())
-        graphPanel->addNeighbor(pGraphPanel);
 }
 
 //==============================================================================
