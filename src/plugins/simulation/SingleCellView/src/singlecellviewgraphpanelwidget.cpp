@@ -40,8 +40,7 @@ namespace SingleCellView {
 
 SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent) :
     Widget(pParent),
-    mActive(false),
-    mNeighbors(SingleCellViewGraphPanelWidgets())
+    mActive(false)
 {
     // Create and set our horizontal layout
 
@@ -163,39 +162,20 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanel
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelWidget::hasNeighbors() const
-{
-    // Return whether we have neighbours
-
-    return !mNeighbors.isEmpty();
-}
-
-//==============================================================================
-
-SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelWidget::neighbors() const
-{
-    // Return our neighbours
-
-    return mNeighbors;
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelWidget::addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    // Add the graph panel as a neighbour
+    // Add the graph panel's plot as a neighbour to our plot
 
-    if ((pGraphPanel != this) && !mNeighbors.contains(pGraphPanel))
-        mNeighbors << pGraphPanel;
+    mPlot->addNeighbor(pGraphPanel->plot());
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelWidget::removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    // Remove the graph panel from our neighbours
+    // Remove the graph panel's from our plot's neighbours
 
-    mNeighbors.removeOne(pGraphPanel);
+    mPlot->removeNeighbor(pGraphPanel->plot());
 }
 
 //==============================================================================

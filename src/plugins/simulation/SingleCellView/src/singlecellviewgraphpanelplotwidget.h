@@ -157,6 +157,14 @@ protected:
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotWidget;
+
+//==============================================================================
+
+typedef QList<SingleCellViewGraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
                                            public Core::CommonWidget
 {
@@ -195,6 +203,9 @@ public:
                        const qulonglong &pFrom);
 
     void replotNow();
+
+    void addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
+    void removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -237,6 +248,8 @@ private:
     SingleCellViewGraphPanelPlotScaleDraw *mAxisX;
     SingleCellViewGraphPanelPlotScaleDraw *mAxisY;
 
+    SingleCellViewGraphPanelPlotWidgets mNeighbors;
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkAxisValues(double &pMin, double &pMax);
@@ -278,10 +291,6 @@ private Q_SLOTS:
 
     void on_actionResetZoom_triggered();
 };
-
-//==============================================================================
-
-typedef QList<SingleCellViewGraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
 
 //==============================================================================
 

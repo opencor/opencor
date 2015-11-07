@@ -70,9 +70,6 @@ public:
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
-    bool hasNeighbors() const;
-    SingleCellViewGraphPanelWidgets neighbors() const;
-
     void addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
     void removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
 
@@ -85,8 +82,6 @@ private:
     SingleCellViewGraphPanelPlotWidget *mPlot;
 
     bool mActive;
-
-    SingleCellViewGraphPanelWidgets mNeighbors;
 
     void updateMarkerColor();
 
