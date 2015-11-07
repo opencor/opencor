@@ -42,6 +42,7 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mSplitterSizes(QIntList()),
+    mGraphPanels(SingleCellViewGraphPanelWidgets()),
     mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
     mActiveGraphPanel(0),
     mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>>())
@@ -193,14 +194,9 @@ void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
 
 SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelsWidget::graphPanels() const
 {
-    // Return all our graph panels
+    // Return our graph panels
 
-    SingleCellViewGraphPanelWidgets res = SingleCellViewGraphPanelWidgets();
-
-    for (int i = 0, iMax = count(); i < iMax; ++i)
-        res << qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
-    return res;
+    return mGraphPanels;
 }
 
 //==============================================================================
@@ -220,16 +216,16 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     QIntList origSizes = sizes();
 
-    // Create a new graph panel
+    // Create a new graph panel, add it to ourselves and keep track of it
 
-    SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(this);
-
-    // Add the graph panel to ourselves
+    SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(mGraphPanels, this);
 
     addWidget(res);
 
+    mGraphPanels << res;
+
     // Resize the graph panels, thus making sure that their size is what it
-    // should be (see issue #58)
+    // should be
 
     double scalingFactor = double(count()-1)/count();
 
@@ -304,6 +300,8 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
         if (mActiveGraphPanels.value(fileName) == pGraphPanel)
             mActiveGraphPanels.remove(fileName);
     }
+
+    mGraphPanels.removeOne(pGraphPanel);
 
     // Now, we can delete our graph panel
 

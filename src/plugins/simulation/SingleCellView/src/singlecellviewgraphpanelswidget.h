@@ -74,6 +74,8 @@ public:
 private:
     QIntList mSplitterSizes;
 
+    SingleCellViewGraphPanelWidgets mGraphPanels;
+
     QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
 

@@ -56,7 +56,9 @@ class SingleCellViewGraphPanelWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelWidget(QWidget *pParent);
+    explicit SingleCellViewGraphPanelWidget(const SingleCellViewGraphPanelWidgets &pNeighbors,
+                                            QWidget *pParent);
+    ~SingleCellViewGraphPanelWidget();
 
     virtual void retranslateUi();
 
@@ -69,9 +71,6 @@ public:
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
-
-    void addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
-    void removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel);
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
