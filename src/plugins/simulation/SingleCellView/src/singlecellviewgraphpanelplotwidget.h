@@ -207,6 +207,8 @@ public:
     void addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
     void removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
 
+    void alignWithNeighbors(const bool &pForceAlignment = false);
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
