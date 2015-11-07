@@ -26,6 +26,8 @@ specific language governing permissions and limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
+#include "singlecellviewgraphpanelwidget.h"
+#include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
@@ -40,9 +42,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
-class SingleCellViewGraphPanelWidget;
 
 //==============================================================================
 
@@ -63,7 +63,7 @@ public:
     void backup(const QString &pFileName);
     void finalize(const QString &pFileName);
 
-    QList<SingleCellViewGraphPanelWidget *> graphPanels() const;
+    SingleCellViewGraphPanelWidgets graphPanels() const;
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
 
     SingleCellViewGraphPanelWidget * addGraphPanel();
@@ -92,7 +92,7 @@ Q_SIGNALS:
     void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
     void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void splitterMoved();

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -49,7 +50,9 @@ specific language governing permissions and limitations under the License.
 #include "qwt_plot_directpainter.h"
 #include "qwt_plot_grid.h"
 #include "qwt_plot_layout.h"
+#include "qwt_scale_draw.h"
 #include "qwt_scale_engine.h"
+#include "qwt_scale_widget.h"
 
 //==============================================================================
 
@@ -472,7 +475,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     QwtPlot(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
-    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
+    mGraphs(SingleCellViewGraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -480,7 +483,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mCanZoomOutX(true),
     mCanZoomInY(true),
     mCanZoomOutY(true),
-    mNeedContextMenu(false)
+    mNeedContextMenu(false),
+    mNeighbors(SingleCellViewGraphPanelPlotWidgets())
 {
     // Set up the GUI
 
@@ -511,7 +515,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
     // Set our axes' values
-    // Note: we are not all initialised yet, so we don't want to setAxes() to
+    // Note: we are not all initialised yet, so we don't want setAxes() to
     //       replot ourselves...
 
     setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false);
@@ -794,7 +798,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
 
@@ -924,31 +928,86 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
     // Update our axes' values, if needed
 
-    bool axesValuesChanged = false;
+    bool xAxisValuesChanged = false;
+    bool yAxisValuesChanged = false;
 
     if ((pMinX != oldMinX) || (pMaxX != oldMaxX)) {
         setAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
-        axesValuesChanged = true;
+        xAxisValuesChanged = true;
     }
 
     if ((pMinY != oldMinY) || (pMaxY != oldMaxY)) {
         setAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
-        axesValuesChanged = true;
+        yAxisValuesChanged = true;
     }
 
     // Update our actions in case the axes' values have changed
 
-    if (axesValuesChanged)
+    if (xAxisValuesChanged || yAxisValuesChanged) {
         updateActions();
 
-    // Replot ourselves, if needed and allowed
+        // Replot ourselves, if allowed, after ensuring that our Y axis is
+        // aligned with that of our neigbours, if any
 
-    if (axesValuesChanged && pCanReplot) {
-        replotNow();
+        if (pCanReplot) {
+            if (!mNeighbors.isEmpty()) {
+                for (int i = 0; i < 2; ++i) {
+                    // Note: we do the below twice because there are cases where
+                    //       it won't work properly otherwise. Indeed, say that
+                    //       you have two graph panels. By default, their Y axis
+                    //       will range from 0 to 1,000. Now, say that you zoom
+                    //       out one of the first graph panel and end up with
+                    //       somewhat wide labels for the Y axis, e.g. from
+                    //       -1,000,000 to 1,000. While doing this, the second
+                    //       graph will have kept aligning itself with the first
+                    //       graph panel, as expected. Now, say that you reset
+                    //       the zoom of the first graph panel. At this point,
+                    //       you would expect the Y axis to range from 0 to
+                    //       1,000 and it is the case, but we can see loads of
+                    //       empty space to the left of the Y axis and this on
+                    //       both graph panels. However, that empty space
+                    //       disappears if we do the below twice. It clearly has
+                    //       something to do with the internals of QwtPlot, yet
+                    //       it's not clear how to get it 'right' without doing
+                    //       the below twice, so...
 
-        return true;
+                    SingleCellViewGraphPanelPlotWidgets selfPlusNeighbors = SingleCellViewGraphPanelPlotWidgets() << this << mNeighbors;
+                    double origMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
+                    double newMaxExtent = 0;
+
+                    foreach (SingleCellViewGraphPanelPlotWidget *plot, selfPlusNeighbors) {
+                        QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
+                        QwtScaleDraw *scaleDraw = scaleWidget->scaleDraw();
+
+                        scaleDraw->setMinimumExtent(0.0);
+
+                        double extent = scaleDraw->extent(scaleWidget->font());
+
+                        if (extent > newMaxExtent)
+                            newMaxExtent = extent;
+                    }
+
+                    foreach (SingleCellViewGraphPanelPlotWidget *plot, selfPlusNeighbors) {
+                        plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
+
+                        if (newMaxExtent != origMaxExtent) {
+                            plot->updateLayout();
+                            plot->replotNow();
+                        } else if (plot == this) {
+                            replotNow();
+                        }
+                    }
+                }
+            } else {
+                replotNow();
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }
@@ -1371,6 +1430,25 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelP
     // Draw our graph from the given point
 
     mDirectPainter->drawSeries(pGraph, pFrom, -1);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot)
+{
+    // Add the plot as a neighbour
+
+    if ((pPlot != this) && !mNeighbors.contains(pPlot))
+        mNeighbors << pPlot;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot)
+{
+    // Remove the plot from our neighbours
+
+    mNeighbors.removeOne(pPlot);
 }
 
 //==============================================================================
