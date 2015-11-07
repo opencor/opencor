@@ -19,9 +19,7 @@ specific language governing permissions and limitations under the License.
 // Single cell view graph panels widget
 //==============================================================================
 
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelswidget.h"
-#include "singlecellviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -193,11 +191,11 @@ void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelsWidget::graphPanels() const
+SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelsWidget::graphPanels() const
 {
     // Return all our graph panels
 
-    QList<SingleCellViewGraphPanelWidget *> res = QList<SingleCellViewGraphPanelWidget *>();
+    SingleCellViewGraphPanelWidgets res = SingleCellViewGraphPanelWidgets();
 
     for (int i = 0, iMax = count(); i < iMax; ++i)
         res << qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
@@ -252,8 +250,8 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
             this, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)),
-            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const QList<SingleCellViewGraphPanelPlotGraph *> &)));
+    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // Activate the graph panel
 

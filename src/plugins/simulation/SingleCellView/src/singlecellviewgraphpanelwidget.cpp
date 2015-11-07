@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 
 //==============================================================================
@@ -129,7 +128,7 @@ SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot() cons
 
 //==============================================================================
 
-QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelWidget::graphs() const
 {
     // Return all our plot's graphs
 
@@ -148,17 +147,35 @@ void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph 
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
+void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     // Remove the graphs from our plot
 
-    QList<SingleCellViewGraphPanelPlotGraph *> graphs = QList<SingleCellViewGraphPanelPlotGraph *>();
+    SingleCellViewGraphPanelPlotGraphs graphs = SingleCellViewGraphPanelPlotGraphs();
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs)
         if (mPlot->removeGraph(graph))
             graphs << graph;
 
     emit graphsRemoved(mPlot, graphs);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Add the graph panel's plot as a neighbour to our plot
+
+    mPlot->addNeighbor(pGraphPanel->plot());
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Remove the graph panel's from our plot's neighbours
+
+    mPlot->removeNeighbor(pGraphPanel->plot());
 }
 
 //==============================================================================

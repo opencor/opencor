@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "propertyeditorwidget.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewwidget.h"
@@ -411,7 +410,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
-                                                         const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
+                                                         const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pPlot);
 
@@ -458,7 +457,7 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggere
     // Ask the graph panel associated with our current property editor to remove
     // the current graph
 
-    mGraphPanels.value(mPropertyEditor)->removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *>() << mGraphs.value(mPropertyEditor->currentProperty()));
+    mGraphPanels.value(mPropertyEditor)->removeGraphs(SingleCellViewGraphPanelPlotGraphs() << mGraphs.value(mPropertyEditor->currentProperty()));
 }
 
 //==============================================================================
@@ -872,7 +871,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
             || (oldParameterY != graph->parameterY())
             || (oldPen != newPen))) {
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
-                           QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
+                           SingleCellViewGraphPanelPlotGraphs() << graph);
     }
 }
 
@@ -894,7 +893,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
             graph->setSelected(pProperty->isChecked());
 
             emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
-                               QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
+                               SingleCellViewGraphPanelPlotGraphs() << graph);
         }
     } else {
         // Either the model, X or Y parameter property of the graph has changed,
@@ -1020,7 +1019,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
         // Let people know about some graphs having been updaated
 
-        QList<SingleCellViewGraphPanelPlotGraph *> graphs = QList<SingleCellViewGraphPanelPlotGraph *>();
+        SingleCellViewGraphPanelPlotGraphs graphs = SingleCellViewGraphPanelPlotGraphs();
 
         foreach (Core::Property *graphProperty, graphProperties)
             graphs << mGraphs.value(graphProperty);

@@ -101,6 +101,10 @@ private:
 
 //==============================================================================
 
+typedef QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotGraphs;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelPlotWidget;
 
 //==============================================================================
@@ -153,6 +157,14 @@ protected:
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotWidget;
+
+//==============================================================================
+
+typedef QList<SingleCellViewGraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
                                            public Core::CommonWidget
 {
@@ -166,7 +178,7 @@ public:
 
     virtual void retranslateUi();
 
-    QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
+    SingleCellViewGraphPanelPlotGraphs graphs() const;
 
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
@@ -192,6 +204,9 @@ public:
 
     void replotNow();
 
+    void addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
+    void removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -213,7 +228,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
+    SingleCellViewGraphPanelPlotGraphs mGraphs;
 
     Action mAction;
 
@@ -232,6 +247,8 @@ private:
 
     SingleCellViewGraphPanelPlotScaleDraw *mAxisX;
     SingleCellViewGraphPanelPlotScaleDraw *mAxisY;
+
+    SingleCellViewGraphPanelPlotWidgets mNeighbors;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
