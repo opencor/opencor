@@ -107,10 +107,12 @@ SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
         }
     }
 
-    // Get one of our former neighbours to realign itself with its remaining
-    // neighbours
+    // Get one of our former neighbours, if any (indeed, we won't have one after
+    // deleting the last graph panel, upon quitting OpenCOR), to realign itself
+    // with its remaining neighbours
 
-    otherPlot->forceAlignWithNeighbors();
+    if (otherPlot)
+        otherPlot->forceAlignWithNeighbors();
 }
 
 //==============================================================================
