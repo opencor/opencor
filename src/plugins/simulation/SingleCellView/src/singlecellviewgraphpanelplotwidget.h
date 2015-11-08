@@ -210,7 +210,7 @@ public:
     void addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
     void removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
 
-    void alignWithNeighbors(const bool &pCanReplot = true,
+    void alignWithNeighbors(const bool &pCanReplot,
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
 
