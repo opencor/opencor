@@ -110,7 +110,7 @@ SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
     // Get one of our former neighbours to realign itself with its remaining
     // neighbours
 
-    otherPlot->alignWithNeighbors();
+    otherPlot->forceAlignWithNeighbors();
 }
 
 //==============================================================================

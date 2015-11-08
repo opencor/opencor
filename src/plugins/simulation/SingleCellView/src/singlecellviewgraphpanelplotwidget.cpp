@@ -1406,11 +1406,12 @@ void SingleCellViewGraphPanelPlotWidget::removeNeighbor(SingleCellViewGraphPanel
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot)
+void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
+                                                            const bool &pForceAlignment)
 {
     // Align ourselves with our neighbours
 
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < 2; ++i) {
         // Note: we do the below twice because there are cases where it won't
         //       work properly otherwise. Indeed, say that you have two graph
         //       panels. By default, their Y axis will range from 0 to 1,000.
@@ -1447,7 +1448,7 @@ void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanRepl
             plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
 
             if (pCanReplot) {
-                if (newMaxExtent != oldMaxExtent) {
+                if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
                     plot->updateLayout();
                     plot->replotNow();
                 } else if (plot == this) {
@@ -1456,6 +1457,15 @@ void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanRepl
             }
         }
     }
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::forceAlignWithNeighbors()
+{
+    // Force the re-alignment with our neighbours
+
+    alignWithNeighbors(true, true);
 }
 
 //==============================================================================
