@@ -173,7 +173,8 @@ class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
     friend class SingleCellViewGraphPanelPlotOverlayWidget;
 
 public:
-    explicit SingleCellViewGraphPanelPlotWidget(QWidget *pParent);
+    explicit SingleCellViewGraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors,
+                                                QWidget *pParent);
     ~SingleCellViewGraphPanelPlotWidget();
 
     virtual void retranslateUi();
@@ -204,8 +205,14 @@ public:
 
     void replotNow();
 
+    SingleCellViewGraphPanelPlotWidgets neighbors() const;
+
     void addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
     void removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
+
+    void alignWithNeighbors(const bool &pCanReplot,
+                            const bool &pForceAlignment = false);
+    void forceAlignWithNeighbors();
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);

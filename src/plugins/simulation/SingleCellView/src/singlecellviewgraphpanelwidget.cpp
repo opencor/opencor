@@ -38,7 +38,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent) :
+SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(const SingleCellViewGraphPanelWidgets &pNeighbors,
+                                                               QWidget *pParent) :
     Widget(pParent),
     mActive(false)
 {
@@ -69,13 +70,49 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent)
 
     // Create and add a plot widget to our layout
 
-    mPlot = new SingleCellViewGraphPanelPlotWidget(this);
+    SingleCellViewGraphPanelPlotWidgets neighbors = SingleCellViewGraphPanelPlotWidgets();
+
+    foreach (SingleCellViewGraphPanelWidget *neighbor, pNeighbors)
+        neighbors << neighbor->plot();
+
+    mPlot = new SingleCellViewGraphPanelPlotWidget(neighbors, this);
 
     layout->addWidget(mPlot);
+
+    // Let our plot's neighbours know about our plot
+
+    foreach (SingleCellViewGraphPanelPlotWidget *neighbor, neighbors)
+        neighbor->addNeighbor(mPlot);
 
     // Allow the graph panel to be of any vertical size
 
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+}
+
+//==============================================================================
+
+SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
+{
+    // Let our plot's neighbours that our plot is not going to be their
+    // neighbour anymore
+
+    SingleCellViewGraphPanelPlotWidget *otherPlot = 0;
+
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlot->neighbors()) {
+        if (plot != mPlot) {
+            if (!otherPlot)
+                otherPlot = plot;
+
+            plot->removeNeighbor(mPlot);
+        }
+    }
+
+    // Get one of our former neighbours, if any (indeed, we won't have one after
+    // deleting the last graph panel, upon quitting OpenCOR), to realign itself
+    // with its remaining neighbours
+
+    if (otherPlot)
+        otherPlot->forceAlignWithNeighbors();
 }
 
 //==============================================================================
@@ -158,24 +195,6 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanel
             graphs << graph;
 
     emit graphsRemoved(mPlot, graphs);
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelWidget::addNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
-{
-    // Add the graph panel's plot as a neighbour to our plot
-
-    mPlot->addNeighbor(pGraphPanel->plot());
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelWidget::removeNeighbor(SingleCellViewGraphPanelWidget *pGraphPanel)
-{
-    // Remove the graph panel's from our plot's neighbours
-
-    mPlot->removeNeighbor(pGraphPanel->plot());
 }
 
 //==============================================================================

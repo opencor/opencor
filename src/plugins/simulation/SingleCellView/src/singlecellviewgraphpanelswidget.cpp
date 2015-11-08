@@ -42,6 +42,7 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mSplitterSizes(QIntList()),
+    mGraphPanels(SingleCellViewGraphPanelWidgets()),
     mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
     mActiveGraphPanel(0),
     mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>>())
@@ -65,8 +66,8 @@ void SingleCellViewGraphPanelsWidget::retranslateUi()
 {
     // Retranslate all our graph panels
 
-    for (int i = 0, iMax = count(); i < iMax; ++i)
-        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->retranslateUi();
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels)
+        graphPanel->retranslateUi();
 }
 
 //==============================================================================
@@ -141,8 +142,8 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
 
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName);
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->plot();
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels) {
+        SingleCellViewGraphPanelPlotWidget *plot = graphPanel->plot();
 
         QRectF dataRect = plotsRects.value(plot);
 
@@ -168,8 +169,8 @@ void SingleCellViewGraphPanelsWidget::backup(const QString &pFileName)
 
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>();
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->plot();
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels) {
+        SingleCellViewGraphPanelPlotWidget *plot = graphPanel->plot();
 
         plotsRects.insert(plot, QRectF(QPointF(plot->minX(), plot->minY()),
                                        QPointF(plot->maxX(), plot->maxY())));
@@ -193,14 +194,9 @@ void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
 
 SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelsWidget::graphPanels() const
 {
-    // Return all our graph panels
+    // Return our graph panels
 
-    SingleCellViewGraphPanelWidgets res = SingleCellViewGraphPanelWidgets();
-
-    for (int i = 0, iMax = count(); i < iMax; ++i)
-        res << qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
-    return res;
+    return mGraphPanels;
 }
 
 //==============================================================================
@@ -220,23 +216,23 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     QIntList origSizes = sizes();
 
-    // Create a new graph panel
+    // Create a new graph panel, add it to ourselves and keep track of it
 
-    SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(this);
-
-    // Add the graph panel to ourselves
+    SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(mGraphPanels, this);
 
     addWidget(res);
 
-    // Resize the graph panels, thus making sure that their size is what it
-    // should be (see issue #58)
+    mGraphPanels << res;
 
-    double scalingFactor = double(count()-1)/count();
+    // Resize the graph panels, thus making sure that their size is what it
+    // should be
+
+    double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count();
 
     for (int i = 0, iMax = origSizes.count(); i < iMax; ++i)
         origSizes[i] *= scalingFactor;
 
-    setSizes(origSizes << height()/count());
+    setSizes(origSizes << height()/mGraphPanels.count());
 
     // Keep track of whenever a graph panel gets activated
 
@@ -267,7 +263,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Let people know whether graph panels can be removed
 
-    emit removeGraphPanelsEnabled(count() > 1);
+    emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
 
     // Return our newly created graph panel
 
@@ -283,16 +279,13 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
 
     // Retrieve the index of the given graph panel
 
-    int index = indexOf(pGraphPanel);
+    int index = mGraphPanels.indexOf(pGraphPanel);
 
-    // Hide the graph panel and let people know that we have removed it (or,
-    // rather, about to remove it)
+    // Let people know that we have removed it (or, rather, about to remove it)
     // Note: we let people know before we actually delete the graph panel,
     //       because some people interested in that signal might have used the
     //       pointer to keep track of some information, as is done in
     //       SingleCellViewInformationGraphsWidget for example...
-
-    pGraphPanel->hide();
 
     emit graphPanelRemoved(pGraphPanel);
 
@@ -305,25 +298,27 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
             mActiveGraphPanels.remove(fileName);
     }
 
+    mGraphPanels.removeOne(pGraphPanel);
+
     // Now, we can delete our graph panel
 
     delete pGraphPanel;
 
     // Let people know whether graph panels can be removed
 
-    emit removeGraphPanelsEnabled(count() > 1);
+    emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
 
     // Activate the next graph panel or the last one available, if any
 
-    if (index < count()) {
+    if (index < mGraphPanels.count()) {
         // There is a next graph panel, so activate it
 
-        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(index))->setActive(true);
+        mGraphPanels[index]->setActive(true);
     } else {
         // We were dealing with the last graph panel, so just activate the new
         // last graph panel
 
-        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(count()-1))->setActive(true);
+        mGraphPanels[mGraphPanels.count()-1]->setActive(true);
     }
 
     // Keep track of our new sizes
@@ -337,7 +332,7 @@ void SingleCellViewGraphPanelsWidget::removeCurrentGraphPanel()
 {
     // Make sure that we don't have only one graph panel left
 
-    if (count() == 1)
+    if (mGraphPanels.count() == 1)
         return;
 
     // Remove the current graph panel
@@ -351,15 +346,15 @@ void SingleCellViewGraphPanelsWidget::removeAllGraphPanels()
 {
     // Make sure that we don't have only one graph panel left
 
-    if (count() == 1)
+    if (mGraphPanels.count() == 1)
         return;
 
     // Remove all the graph panels but one
     // Note: the one we keep is the very first one since it may be the user's
     //       most important graph panel...
 
-    while (count() > 1)
-        removeGraphPanel(qobject_cast<SingleCellViewGraphPanelWidget *>(widget(count()-1)));
+    while (mGraphPanels.count() > 1)
+        removeGraphPanel(mGraphPanels.last());
 }
 
 //==============================================================================
@@ -381,9 +376,7 @@ void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanel
 
     // Inactivate all the other graph panels
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels) {
         if (graphPanel != pGraphPanel) {
             // We are not dealing with the graph panel that just got activated,
             // so inactivate it
