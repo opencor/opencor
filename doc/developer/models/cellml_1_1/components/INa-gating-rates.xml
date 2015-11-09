@@ -21,7 +21,7 @@
                         <apply>
                             <plus/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">25.0</cn>
+                            <cn cellml:units="mV">25</cn>
                         </apply>
                     </apply>
                     <apply>
@@ -33,12 +33,12 @@
                                 <apply>
                                     <plus/>
                                     <ci>V</ci>
-                                    <cn cellml:units="mV">25.0</cn>
+                                    <cn cellml:units="mV">25</cn>
                                 </apply>
-                                <cn cellml:units="mV">10.0</cn>
+                                <cn cellml:units="mV">10</cn>
                             </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1.0</cn>
+                        <cn cellml:units="dimensionless">1</cn>
                     </apply>
                 </apply>
             </apply>
@@ -53,13 +53,13 @@
                 <ci>beta</ci>
                 <apply>
                     <times/>
-                    <cn cellml:units="per_ms">4.0</cn>
+                    <cn cellml:units="per_ms">4</cn>
                     <apply>
                         <exp/>
                         <apply>
                             <divide/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">18.0</cn>
+                            <cn cellml:units="mV">18</cn>
                         </apply>
                     </apply>
                 </apply>
@@ -81,7 +81,7 @@
                         <apply>
                             <divide/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">20.0</cn>
+                            <cn cellml:units="mV">20</cn>
                         </apply>
                     </apply>
                 </apply>
@@ -97,7 +97,7 @@
                 <ci>beta</ci>
                 <apply>
                     <divide/>
-                    <cn cellml:units="per_ms">1.0</cn>
+                    <cn cellml:units="per_ms">1</cn>
                     <apply>
                         <plus/>
                         <apply>
@@ -107,12 +107,12 @@
                                 <apply>
                                     <plus/>
                                     <ci>V</ci>
-                                    <cn cellml:units="mV">30.0</cn>
+                                    <cn cellml:units="mV">30</cn>
                                 </apply>
-                                <cn cellml:units="mV">10.0</cn>
+                                <cn cellml:units="mV">10</cn>
                             </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1.0</cn>
+                        <cn cellml:units="dimensionless">1</cn>
                     </apply>
                 </apply>
             </apply>

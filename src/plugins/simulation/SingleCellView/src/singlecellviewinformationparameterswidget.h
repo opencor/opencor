@@ -87,14 +87,20 @@ public:
 
     void finishEditing();
 
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
+
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;
 
     QMap<QString, QMenu *> mContextMenus;
+    QMenu *mContextMenu;
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
+    QMap<QString, QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *> mParametersMapping;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameters;
+
+    QMap<QString, QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *> mParameterActionsMapping;
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameterActions;
 
     QIntList mColumnWidths;
 

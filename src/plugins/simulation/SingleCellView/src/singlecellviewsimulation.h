@@ -48,6 +48,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewSimulation;
 class SingleCellViewWidget;
 
 //==============================================================================
@@ -58,8 +59,11 @@ class SingleCellViewSimulationData : public QObject
 
 public:
     explicit SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                          SingleCellViewSimulation *pSimulation,
                                           const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulationData();
+
+    SingleCellViewSimulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
@@ -117,6 +121,8 @@ public:
 
 private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
+
+    SingleCellViewSimulation *mSimulation;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -214,6 +220,7 @@ public:
     ~SingleCellViewSimulation();
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 

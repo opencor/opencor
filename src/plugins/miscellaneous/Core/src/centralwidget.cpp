@@ -675,7 +675,9 @@ void CentralWidget::updateFileTab(const int &pIndex)
                               QUrl(url).fileName():
                               QFileInfo(fileName).fileName();
 
-    mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?"*":QString()));
+    mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isLocalNewOrModified(fileName)?
+                                               "*":
+                                               QString()));
     mFileTabs->setTabToolTip(pIndex, fileIsNew?
                                          tabText:
                                          fileIsRemote?
@@ -970,7 +972,7 @@ void CentralWidget::duplicateFile()
     QString fileName = currentFileName();
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (fileManagerInstance->isNewOrModified(fileName))
+    if (fileManagerInstance->isLocalNewOrModified(fileName))
         return;
 
     // Ask our file manager to duplicate the current file
@@ -997,7 +999,7 @@ void CentralWidget::toggleLockedFile()
     QString fileName = currentFileName();
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (fileManagerInstance->isNewOrModified(fileName))
+    if (fileManagerInstance->isLocalNewOrModified(fileName))
         return;
 
     // Ask our file manager to toggle the locked state of the current file
@@ -1223,7 +1225,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
 
-    if (fileManagerInstance->isNewOrModified(fileName)) {
+    if (fileManagerInstance->isLocalNewOrModified(fileName)) {
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
@@ -1791,7 +1793,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (   !fileManagerInstance->isNewOrModified(pFileName)
+    if (   !fileManagerInstance->isLocalNewOrModified(pFileName)
         &&  fileManagerInstance->isDifferent(pFileName)) {
         // The given file has been changed, so ask the user whether to reload it
 
@@ -1874,13 +1876,13 @@ void CentralWidget::updateModifiedSettings()
     // Update all our file tabs and determine the number of modified files
 
     FileManager *fileManagerInstance = FileManager::instance();
-    int nbOfNewOrModifiedFiles = 0;
+    int nbOfLocalNewOrModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         updateFileTab(i);
 
-        if (fileManagerInstance->isNewOrModified(mFileNames[i]))
-            ++nbOfNewOrModifiedFiles;
+        if (fileManagerInstance->isLocalNewOrModified(mFileNames[i]))
+            ++nbOfLocalNewOrModifiedFiles;
     }
 
     // Reset the enabled state and tool tip of all our View tabs
@@ -1898,9 +1900,9 @@ void CentralWidget::updateModifiedSettings()
     QString fileName = mFileTabs->count()?
                            mFileNames[mFileTabs->currentIndex()]:
                            QString();
-    bool fileIsNewOrModified = fileManagerInstance->isNewOrModified(fileName);
+    bool fileIsLocalNewOrModified = fileManagerInstance->isLocalNewOrModified(fileName);
 
-    if (fileIsNewOrModified) {
+    if (fileIsLocalNewOrModified) {
         TabBarWidget *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
 
         viewTabs->setEnabled(false);
@@ -1911,8 +1913,8 @@ void CentralWidget::updateModifiedSettings()
 
     // Let people know whether we can save the current file and/or all files
 
-    emit canSave(fileIsNewOrModified);
-    emit canSaveAll(nbOfNewOrModifiedFiles);
+    emit canSave(fileIsLocalNewOrModified);
+    emit canSaveAll(nbOfLocalNewOrModifiedFiles);
 }
 
 //==============================================================================

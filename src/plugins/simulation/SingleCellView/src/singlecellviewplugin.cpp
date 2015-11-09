@@ -66,14 +66,9 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    // Make sure that we are dealing with a CellML file
-    // Note: we can't modify a CellML file using this view, hence the below is
-    //       only for the case where the user wants to save a CellML under a new
-    //       name...
+    // Let our view widget know that we want to save a file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
-
-    return cellmlFile?cellmlFile->save(pNewFileName):false;
+    return mViewWidget->saveFile(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -98,9 +93,9 @@ void SingleCellViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void SingleCellViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Let our view widget know that a file has been modified
 
-    // We don't handle this interface...
+    mViewWidget->fileModified(pFileName);
 }
 
 //==============================================================================

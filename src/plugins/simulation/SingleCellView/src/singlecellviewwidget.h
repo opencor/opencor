@@ -118,7 +118,10 @@ public:
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+
     void fileOpened(const QString &pFileName);
+    void fileModified(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
@@ -148,8 +151,6 @@ private:
     Core::ProgressBarWidget *mProgressBarWidget;
 
     QMap<QString, int> mProgresses;
-
-    QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
 
     Core::ToolBarWidget *mToolBarWidget;
