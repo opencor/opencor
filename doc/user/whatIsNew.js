@@ -57,6 +57,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export (either as a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
+                               { "type": "Added", "description": "Create a new or update an existing CellML file based on the results of a simulation." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." },
