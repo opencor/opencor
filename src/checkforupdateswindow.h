@@ -79,8 +79,7 @@ class CheckForUpdatesWindow : public QDialog
 public:
     explicit CheckForUpdatesWindow(const QString &pApplicationDate,
                                    QWidget *pParent);
-    explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
-                                   QWidget *pParent);
+    explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine);
     ~CheckForUpdatesWindow();
 
     void loadSettings(QSettings *pSettings);

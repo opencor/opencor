@@ -195,9 +195,8 @@ CheckForUpdatesWindow::CheckForUpdatesWindow(const QString &pApplicationDate,
 
 //==============================================================================
 
-CheckForUpdatesWindow::CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
-                                             QWidget *pParent) :
-    QDialog(pParent)
+CheckForUpdatesWindow::CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine) :
+    QDialog()
 {
     // Construct our window
 
