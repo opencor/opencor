@@ -56,6 +56,7 @@ specific language governing permissions and limitations under the License.
 #include <QFileDialog>
 #include <QFrame>
 #include <QLabel>
+#include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMetaType>
@@ -1041,11 +1042,14 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
 
     if (simulation) {
         // Retrieve all the state and constant parameters which value has
-        // changed and update our CellML object with their 'new' values
+        // changed and update our CellML object with their 'new' values, unless
+        // they are imported, in which case we let the user know that their
+        // 'new' values cannot be saved
 
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
         ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
+        QStringList importedParameters = QStringList();
 
         foreach (Core::Property *property, parameters.keys()) {
             CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
@@ -1055,14 +1059,34 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
                 ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
                 ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
                 ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-                variable->initialValue(property->value().toStdWString());
+                if (variable == sourceVariable)
+                    variable->initialValue(property->value().toStdWString());
+                else
+                    importedParameters << QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
             }
         }
 
-        // Now, we can effectively save our given file
+        // Now, we can effectively save our given file and let the user know if
+        // some parameter values couldn't be saved
 
-        return cellmlFile->save(pNewFileName);
+        bool res = cellmlFile->save(pNewFileName);
+
+        if (res && !importedParameters.isEmpty()) {
+            QString importedParametersList = QString();
+
+            foreach (const QString importedParameter, importedParameters)
+                importedParametersList += "\n - "+importedParameter;
+
+            QMessageBox::information( Core::mainWindow(),
+                                      tr("Save File"),
+                                      tr("Some parameters are imported and could not therefore be saved. They are:")
+                                     +importedParametersList,
+                                      QMessageBox::Ok);
+        }
+
+        return res;
     } else {
         return false;
     }
