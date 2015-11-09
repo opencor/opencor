@@ -169,7 +169,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // The save file already exists, so ask whether we want to overwrite
             // it
 
-            if (QMessageBox::question(qApp->activeWindow(), pCaption,
+            if (QMessageBox::question(mainWindow(), pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No ) {
@@ -207,7 +207,7 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
 
         if (pEmptyDir) {
             if (QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
-                QMessageBox::warning(qApp->activeWindow(), pCaption,
+                QMessageBox::warning(mainWindow(), pCaption,
                                      QObject::tr("Please choose an empty directory."));
 
                 return QString();

@@ -131,6 +131,18 @@
         <source>New</source>
         <translation>Nouveau</translation>
     </message>
+    <message>
+        <source>File Modified</source>
+        <translation>Fichier Modifié</translation>
+    </message>
+    <message>
+        <source>New File</source>
+        <translation>Nouveau Fichier</translation>
+    </message>
+    <message>
+        <source>File Deleted</source>
+        <translation>Fichier Supprimé</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

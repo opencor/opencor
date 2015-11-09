@@ -50,7 +50,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class MainWindow;
 class PluginManager;
 
 //==============================================================================
@@ -69,8 +68,7 @@ class PluginsWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit PluginsWindow(PluginManager *pPluginManager,
-                           MainWindow *pMainWindow = 0);
+    explicit PluginsWindow(PluginManager *pPluginManager, QWidget *pParent);
     ~PluginsWindow();
 
     void loadSettings(QSettings *pSettings);
@@ -78,8 +76,6 @@ public:
 
 private:
     Ui::PluginsWindow *mGui;
-
-    MainWindow *mMainWindow;
 
     PluginManager *mPluginManager;
 

@@ -76,8 +76,6 @@ public:
     explicit MainWindow(const QString &pApplicationDate);
     ~MainWindow();
 
-    void restart(const bool &pSaveSettings) const;
-
     void handleArguments(const QString &pArguments);
 
     bool shuttingDown() const;
@@ -135,6 +133,8 @@ private:
     void updateViewWindowsMenu(QAction *pAction);
 
     void handleAction(const QUrl &pUrl);
+
+    void restart(const bool &pSaveSettings) const;
 
     void showEnableActions(const QList<QAction *> &pActions);
 

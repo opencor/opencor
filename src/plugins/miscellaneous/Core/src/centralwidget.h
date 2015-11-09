@@ -42,7 +42,6 @@ specific language governing permissions and limitations under the License.
 class QDialog;
 class QLabel;
 class QLineEdit;
-class QMainWindow;
 class QStackedWidget;
 
 //==============================================================================
@@ -95,7 +94,7 @@ class CentralWidget : public Widget, public BusySupportWidget
     Q_OBJECT
 
 public:
-    explicit CentralWidget(QMainWindow *pMainWindow);
+    explicit CentralWidget(QWidget *pParent);
     ~CentralWidget();
 
     virtual void loadSettings(QSettings *pSettings);
@@ -138,8 +137,6 @@ private:
         UpdatingGui,
         Stopping
     };
-
-    QMainWindow *mMainWindow;
 
     State mState;
 

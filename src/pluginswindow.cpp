@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+#include "guiutils.h"
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -91,10 +92,9 @@ bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
 //==============================================================================
 
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
-                             MainWindow *pMainWindow) :
-    QDialog(pMainWindow),
+                             QWidget *pParent) :
+    QDialog(pParent),
     mGui(new Ui::PluginsWindow),
-    mMainWindow(pMainWindow),
     mPluginManager(pPluginManager),
     mMappedCategories(QMap<QString, QString>()),
     mSelectablePluginItems(QList<QStandardItem *>()),
@@ -668,7 +668,7 @@ void PluginsWindow::on_buttonBox_accepted()
 
 void PluginsWindow::on_buttonBox_rejected()
 {
-    // Simple cancel whatever was done here
+    // Simply cancel whatever was done here
 
     reject();
 }
@@ -677,7 +677,7 @@ void PluginsWindow::on_buttonBox_rejected()
 
 void PluginsWindow::apply()
 {
-    if (QMessageBox::question(this, qAppName(),
+    if (QMessageBox::question(mainWindow(), qAppName(),
                               tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
@@ -685,10 +685,10 @@ void PluginsWindow::apply()
 
         on_buttonBox_accepted();
 
-        // Exit OpenCOR with the request to restart it after having saved its
-        // settings
+        // Let people know that we are done and that we want the settings to be
+        // applied
 
-        mMainWindow->restart(true);
+        done(QMessageBox::Apply);
     }
 }
 
