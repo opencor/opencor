@@ -1049,7 +1049,7 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
         ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
-        QStringList importedParameters = QStringList();
+        QString importedParameters = QString();
 
         foreach (Core::Property *property, parameters.keys()) {
             CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
@@ -1064,7 +1064,7 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
                 if (variable == sourceVariable)
                     variable->initialValue(property->value().toStdWString());
                 else
-                    importedParameters << QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
+                    importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
             }
         }
 
@@ -1074,16 +1074,10 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
         bool res = cellmlFile->save(pNewFileName);
 
         if (res && !importedParameters.isEmpty()) {
-            QString importedParametersList = QString();
-
-            foreach (const QString importedParameter, importedParameters)
-                importedParametersList += "\n - "+importedParameter;
-
-            QMessageBox::information( Core::mainWindow(),
-                                      tr("Save File"),
-                                      tr("Some parameters are imported and could not therefore be saved. They are:")
-                                     +importedParametersList,
-                                      QMessageBox::Ok);
+            QMessageBox::information(Core::mainWindow(),
+                                     tr("Save File"),
+                                     tr("Some parameters are imported and could not therefore be saved. They are:")+importedParameters,
+                                     QMessageBox::Ok);
         }
 
         return res;
