@@ -32,8 +32,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PreferencesWindow::PreferencesWindow(MainWindow *pMainWindow) :
-    QDialog(pMainWindow),
+PreferencesWindow::PreferencesWindow(QWidget *pParent) :
+    QDialog(pParent),
     mGui(new Ui::PreferencesWindow)
 {
     // Set up the GUI

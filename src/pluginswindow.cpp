@@ -91,10 +91,9 @@ bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
 //==============================================================================
 
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
-                             MainWindow *pMainWindow) :
-    QDialog(pMainWindow),
+                             QWidget *pParent) :
+    QDialog(pParent),
     mGui(new Ui::PluginsWindow),
-    mMainWindow(pMainWindow),
     mPluginManager(pPluginManager),
     mMappedCategories(QMap<QString, QString>()),
     mSelectablePluginItems(QList<QStandardItem *>()),
@@ -668,7 +667,7 @@ void PluginsWindow::on_buttonBox_accepted()
 
 void PluginsWindow::on_buttonBox_rejected()
 {
-    // Simple cancel whatever was done here
+    // Simply cancel whatever was done here
 
     reject();
 }
@@ -685,10 +684,10 @@ void PluginsWindow::apply()
 
         on_buttonBox_accepted();
 
-        // Exit OpenCOR with the request to restart it after having saved its
-        // settings
+        // Let people know that we are done and that we want the settings to be
+        // applied
 
-        mMainWindow->restart(true);
+        done(QMessageBox::Apply);
     }
 }
 

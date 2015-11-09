@@ -1076,6 +1076,12 @@ void MainWindow::on_actionPlugins_triggered()
         mSettings->beginGroup(pluginsWindow.objectName());
             pluginsWindow.saveSettings(mSettings);
         mSettings->endGroup();
+
+        // Restart OpenCOR (after having saved its settings) in case the user
+        // asked for his/her plugin-related settings to be  applied
+
+        if (pluginsWindow.result() == QMessageBox::Apply)
+            restart(true);
     } else {
         QMessageBox::warning(this, tr("Plugins"),
                              tr("No plugin could be found."));

@@ -38,16 +38,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class MainWindow;
-
-//==============================================================================
-
 class PreferencesWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesWindow(MainWindow *pMainWindow = 0);
+    explicit PreferencesWindow(QWidget *pParent);
     ~PreferencesWindow();
 
 private:
