@@ -46,7 +46,7 @@ script:
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
-    && make -j 3
+    && make -j 4
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
