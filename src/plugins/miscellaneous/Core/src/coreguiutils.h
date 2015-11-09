@@ -71,27 +71,27 @@ QString CORE_EXPORT getExistingDirectory(const QString &pCaption,
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
-QMenu CORE_EXPORT * newMenu(const QString &pName, QWidget *pParent = 0);
-QMenu CORE_EXPORT * newMenu(const QIcon &pIcon, QWidget *pParent = 0);
+QMenu CORE_EXPORT * newMenu(const QString &pName, QWidget *pParent);
+QMenu CORE_EXPORT * newMenu(const QIcon &pIcon, QWidget *pParent);
 
 QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);
 QAction CORE_EXPORT * newAction(const bool &pCheckable,
                                 const QKeySequence &pKeySequence,
-                                QWidget *pParent = 0);
-QAction CORE_EXPORT * newAction(const bool &pCheckable, QWidget *pParent = 0);
+                                QWidget *pParent);
+QAction CORE_EXPORT * newAction(const bool &pCheckable, QWidget *pParent);
 QAction CORE_EXPORT * newAction(const QIcon &pIcon,
                                 const QList<QKeySequence> &pKeySequences,
-                                QWidget *pParent = 0);
+                                QWidget *pParent);
 QAction CORE_EXPORT * newAction(const QIcon &pIcon,
                                 const QKeySequence &pKeySequence,
-                                QWidget *pParent = 0);
-QAction CORE_EXPORT * newAction(const QIcon &pIcon, QWidget *pParent = 0);
+                                QWidget *pParent);
+QAction CORE_EXPORT * newAction(const QIcon &pIcon, QWidget *pParent);
 QAction CORE_EXPORT * newAction(const QKeySequence &pKeySequence,
-                                QWidget *pParent = 0);
+                                QWidget *pParent);
 QAction CORE_EXPORT * newAction(const QKeySequence::StandardKey &pStandardKey,
-                                QWidget *pParent = 0);
+                                QWidget *pParent);
 
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
                                    const QColor &pColor, QWidget *pParent);
