@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+#include "guiutils.h"
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -676,7 +677,7 @@ void PluginsWindow::on_buttonBox_rejected()
 
 void PluginsWindow::apply()
 {
-    if (QMessageBox::question(this, qAppName(),
+    if (QMessageBox::question(mainWindow(), qAppName(),
                               tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {

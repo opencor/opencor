@@ -697,7 +697,7 @@ void CorePlugin::reopenFile(const QString &pFileName)
         } else {
             // The file doesn't exist anymore, so let the user know about it
 
-            QMessageBox::warning(Core::mainWindow(), tr("Reopen File"),
+            QMessageBox::warning(mainWindow(), tr("Reopen File"),
                                  tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
         }
     } else {
