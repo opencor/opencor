@@ -296,6 +296,14 @@
         <source>Export the simulation data to %1</source>
         <translation>Exporter les données de la simulation vers %1</translation>
     </message>
+    <message>
+        <source>Save File</source>
+        <translation>Sauvegarder Fichier</translation>
+    </message>
+    <message>
+        <source>The following parameters are imported and cannot therefore be saved:</source>
+        <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
