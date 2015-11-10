@@ -192,10 +192,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
-/*---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT DEBUG MODE...
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionDebugMode);
-*/
+    mToolBarWidget->addAction(mGui->actionDevelopmentMode);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
@@ -1325,7 +1323,7 @@ void SingleCellViewWidget::on_actionClearSimulationData_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionDebugMode_triggered()
+void SingleCellViewWidget::on_actionDevelopmentMode_triggered()
 {
 //---GRY--- TO BE DONE...
 }

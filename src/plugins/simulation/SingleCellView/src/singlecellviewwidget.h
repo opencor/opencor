@@ -251,7 +251,7 @@ private Q_SLOTS:
     void on_actionResetModelParameters_triggered();
     void on_actionClearSimulationData_triggered();
 
-    void on_actionDebugMode_triggered();
+    void on_actionDevelopmentMode_triggered();
 
     void on_actionAddGraphPanel_triggered();
 
