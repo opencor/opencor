@@ -152,6 +152,7 @@ private:
 
     QMap<QString, int> mProgresses;
     QMap<QString, int> mDelays;
+    QMap<QString, bool> mDevelopmentModes;
 
     Core::ToolBarWidget *mToolBarWidget;
 

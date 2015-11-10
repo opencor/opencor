@@ -109,6 +109,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mStoppedSimulations(SingleCellViewSimulations()),
     mProgresses(QMap<QString, int>()),
     mDelays(QMap<QString, int>()),
+    mDevelopmentModes(QMap<QString, bool>()),
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
@@ -633,9 +634,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
         graphPanelsWidget->backup(prevFileName);
 
-        // Keep track of the status of the value of the delay widget
+        // Keep track of the simulation delay and development mode
 
         mDelays.insert(prevFileName, mDelayWidget->value());
+        mDevelopmentModes.insert(prevFileName, mGui->actionDevelopmentMode->isChecked());
     }
 
     // Stop keeping track of certain things (so that updatePlot() doesn't get
@@ -685,11 +687,13 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         mSimulations.insert(pFileName, mSimulation);
     }
 
-    // Retrieve the status of the reset action and the value of the delay widget
+    // Retrieve the status of the reset action, simulation delay and development
+    // mode
 
     mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
 
     mDelayWidget->setValue(mDelays.value(pFileName));
+    mGui->actionDevelopmentMode->setChecked(mDevelopmentModes.value(pFileName));
 
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
@@ -961,10 +965,18 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
 
     mProgresses.remove(pFileName);
 
-    if (pReloadingView)
+    if (pReloadingView) {
+        // Keep track of the simulation delay and development mode, in case they
+        // aren't already tracked (which will be the case if we haven't switched
+        // files), so that we can retrieve them after having effectively
+        // reloaded our file
+
         mDelays.insert(pFileName, mDelayWidget->value());
-    else
+        mDevelopmentModes.insert(pFileName, mGui->actionDevelopmentMode->isChecked());
+    } else {
         mDelays.remove(pFileName);
+        mDevelopmentModes.remove(pFileName);
+    }
 
     // Finalize/backup a few things in our GUI's simulation, solvers, graphs,
     // parameters and graph panels widgets
@@ -1170,18 +1182,19 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulations.remove(pOldFileName);
     }
 
-    int progress = mProgresses.value(pOldFileName, -1);
-
-    if (progress != -1) {
-        mProgresses.insert(pNewFileName, progress);
+    if (mProgresses.contains(pOldFileName)) {
+        mProgresses.insert(pNewFileName, mProgresses.value(pOldFileName));
         mProgresses.remove(pOldFileName);
     }
 
-    int delay = mDelays.value(pOldFileName, -1);
-
-    if (delay != -1) {
+    if (mDelays.contains(pOldFileName)) {
         mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
         mDelays.remove(pOldFileName);
+    }
+
+    if (mDevelopmentModes.contains(pOldFileName)) {
+        mDevelopmentModes.insert(pNewFileName, mDevelopmentModes.value(pOldFileName));
+        mDevelopmentModes.remove(pOldFileName);
     }
 
     // Let our graphs widget know that the given file has been renamed
