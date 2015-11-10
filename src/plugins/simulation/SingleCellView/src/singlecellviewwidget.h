@@ -226,7 +226,7 @@ private:
 
     QVariant value(Core::Property *pProperty) const;
 
-    void updateSimulationProperties();
+    void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
 
     void updateSolversProperties();
     void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData = 0);

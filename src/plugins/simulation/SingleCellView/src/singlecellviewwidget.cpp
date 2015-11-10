@@ -1834,15 +1834,20 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::updateSimulationProperties()
+void SingleCellViewWidget::updateSimulationProperties(Core::Property *pProperty)
 {
     // Update our simulation properties
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-    mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
-    mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
-    mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
+    if (!pProperty || (pProperty == simulationWidget->startingPointProperty()))
+        mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
+
+    if (!pProperty || (pProperty == simulationWidget->endingPointProperty()))
+        mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
+
+    if (!pProperty || (pProperty == simulationWidget->pointIntervalProperty()))
+        mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
 }
 
 //==============================================================================
@@ -2159,8 +2164,10 @@ void SingleCellViewWidget::splitterWidgetMoved()
 
 void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
-    // Update our plots, if it's not the point interval property that has been
-    // updated
+    // Update our simulation properties, as well as our plots, if it's not the
+    // point interval property that has been updated
+
+    updateSimulationProperties(pProperty);
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
