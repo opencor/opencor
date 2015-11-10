@@ -213,6 +213,8 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
     // Remove track of various information
 
+    delete mContextMenus.value(pFileName);
+
     mContextMenus.remove(pFileName);
 
     mFileNames.removeOne(pFileName);
