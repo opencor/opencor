@@ -489,18 +489,6 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
 
     recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
 
-    // Recompute our computed constants and variables in case our model needs an
-    // NLA solver
-    // Note: this is very much empiric. Indeed, we noticed that using
-    //       https://gist.github.com/agarny/b051897560031a2591a2,
-    //       x=3.0000006396753 after calling
-    //       recomputeComputedConstantsAndVariables(), but then if we call
-    //       recomputeComputedConstantsAndVariables() again, we get
-    //       x=3.00000000000007...
-
-    if (mRuntime->needNlaSolver())
-        recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
-
     // Delete our NLA solver, if any
 
     if (nlaSolver) {
