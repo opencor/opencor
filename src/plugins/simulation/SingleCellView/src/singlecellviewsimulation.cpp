@@ -62,18 +62,19 @@ SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::Cellml
     if (pRuntime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[pRuntime->constantsCount()];
-        mRates     = new double[pRuntime->ratesCount()];
-        mStates    = new double[pRuntime->statesCount()];
-        mAlgebraic = new double[pRuntime->algebraicCount()];
-        mCondVar   = new double[pRuntime->condVarCount()];
+        mConstants   = new double[pRuntime->constantsCount()];
+        mRates       = new double[pRuntime->ratesCount()];
+        mStates      = new double[pRuntime->statesCount()];
+        mDummyStates = new double[pRuntime->statesCount()];
+        mAlgebraic   = new double[pRuntime->algebraicCount()];
+        mCondVar     = new double[pRuntime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
         mInitialConstants = new double[pRuntime->constantsCount()];
         mInitialStates    = new double[pRuntime->statesCount()];
     } else {
-        mConstants = mRates = mStates = mAlgebraic = mCondVar = 0;
+        mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;
     }
 }
@@ -87,6 +88,7 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
     delete[] mConstants;
     delete[] mRates;
     delete[] mStates;
+    delete[] mDummyStates;
     delete[] mAlgebraic;
     delete[] mCondVar;
 
@@ -522,7 +524,7 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
 //==============================================================================
 
 void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                                          const bool &pFullComputeComputedConstants)
+                                                                          const bool &pInitialize)
 {
     if (!mRuntime)
         return;
@@ -532,15 +534,8 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
     if (mRuntime->isValid()) {
         // Recompute our 'computed constants'
 
-        double *realStates = mStates;
-
-        if (!pFullComputeComputedConstants)
-            realStates = new double[mRuntime->statesCount()];
-
-        mRuntime->computeComputedConstants()(mConstants, mRates, realStates);
-
-        if (!pFullComputeComputedConstants)
-            delete[] realStates;
+        mRuntime->computeComputedConstants()(mConstants, mRates,
+                                             pInitialize?mStates:mDummyStates);
 
         // Recompute some 'constant' algebraic variables
 
