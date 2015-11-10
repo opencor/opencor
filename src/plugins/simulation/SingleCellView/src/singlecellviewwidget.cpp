@@ -1865,27 +1865,30 @@ void SingleCellViewWidget::updateSimulationProperties(Core::Property *pProperty)
 
 //==============================================================================
 
-void SingleCellViewWidget::updateSolverProperties(SingleCellViewInformationSolversWidgetData *pSolverData,
-                                                  Core::Property *pProperty)
+void SingleCellViewWidget::updateSolversProperties(Core::Property *pProperty)
 {
-    // Update all the properties, or a particular property (if it exists), of
-    // the given solver, as well as update its corresponding GUI, if needed
+    // Update all of our solver(s) properties (and solvers widget) or a
+    // particular solver property (and the corresponding GUI for that solver)
 
-    bool needGuiUpdate = false;
+    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-    if (pSolverData) {
-        if (!pProperty || (pProperty == pSolverData->solversListProperty())) {
-            mSimulation->data()->setOdeSolverName(pSolverData->solversListProperty()->value());
+    // ODE solver properties
 
-            needGuiUpdate = true;
+    bool needOdeSolverGuiUpdate = false;
+
+    if (solversWidget->odeSolverData()) {
+        if (!pProperty || (pProperty == solversWidget->odeSolverData()->solversListProperty())) {
+            mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
+
+            needOdeSolverGuiUpdate = true;
         }
 
-        if (!pProperty || !needGuiUpdate) {
-            foreach (Core::Property *property, pSolverData->solversProperties().value(mSimulation->data()->odeSolverName())) {
+        if (!pProperty || !needOdeSolverGuiUpdate) {
+            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
                     mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
 
-                    needGuiUpdate = true;
+                    needOdeSolverGuiUpdate = true;
 
                     if (pProperty == property)
                         break;
@@ -1894,20 +1897,76 @@ void SingleCellViewWidget::updateSolverProperties(SingleCellViewInformationSolve
         }
     }
 
-    if (needGuiUpdate)
-        mContentsWidget->informationWidget()->solversWidget()->updateGui(pSolverData);
-}
+    if (needOdeSolverGuiUpdate) {
+        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->odeSolverData());
 
-//==============================================================================
+        if (pProperty)
+            return;
+    }
 
-void SingleCellViewWidget::updateSolversProperties(Core::Property *pProperty)
-{
-    // Update all of our solver(s) properties (and solvers widget) or a
-    // particular solver property (and the corresponding GUI for that solver)
+    // DAE solver properties
 
-    updateSolverProperties(mContentsWidget->informationWidget()->solversWidget()->odeSolverData(), pProperty);
-    updateSolverProperties(mContentsWidget->informationWidget()->solversWidget()->daeSolverData(), pProperty);
-    updateSolverProperties(mContentsWidget->informationWidget()->solversWidget()->nlaSolverData(), pProperty);
+    bool needDaeSolverGuiUpdate = false;
+
+    if (solversWidget->daeSolverData()) {
+        if (!pProperty || (pProperty == solversWidget->daeSolverData()->solversListProperty())) {
+            mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
+
+            needDaeSolverGuiUpdate = true;
+        }
+
+        if (!pProperty || !needDaeSolverGuiUpdate) {
+            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName())) {
+                if (!pProperty || (pProperty == property)) {
+                    mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+
+                    needDaeSolverGuiUpdate = true;
+
+                    if (pProperty == property)
+                        break;
+                }
+            }
+        }
+    }
+
+    if (needDaeSolverGuiUpdate) {
+        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->daeSolverData());
+
+        if (pProperty)
+            return;
+    }
+
+    // NLA solver properties
+
+    bool needNlaSolverGuiUpdate = false;
+
+    if (solversWidget->nlaSolverData()) {
+        if (!pProperty || (pProperty == solversWidget->nlaSolverData()->solversListProperty())) {
+            mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
+
+            needNlaSolverGuiUpdate = true;
+        }
+
+        if (!pProperty || !needNlaSolverGuiUpdate) {
+            foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
+                if (!pProperty || (pProperty == property)) {
+                    mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+
+                    needNlaSolverGuiUpdate = true;
+
+                    if (pProperty == property)
+                        break;
+                }
+            }
+        }
+    }
+
+    if (needNlaSolverGuiUpdate) {
+        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->nlaSolverData());
+
+        if (pProperty)
+            return;
+    }
 }
 
 //==============================================================================

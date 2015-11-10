@@ -227,9 +227,6 @@ private:
     QVariant value(Core::Property *pProperty) const;
 
     void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
-
-    void updateSolverProperties(SingleCellViewInformationSolversWidgetData *pSolverData,
-                                Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
 
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
