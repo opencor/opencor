@@ -1836,18 +1836,31 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 
 void SingleCellViewWidget::updateSimulationProperties(Core::Property *pProperty)
 {
-    // Update our simulation properties
+    // Update all the properties, or a particular property (if it exists), of
+    // our simulation
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (!pProperty || (pProperty == simulationWidget->startingPointProperty()))
+    if (!pProperty || (pProperty == simulationWidget->startingPointProperty())) {
         mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
 
-    if (!pProperty || (pProperty == simulationWidget->endingPointProperty()))
+        if (pProperty == simulationWidget->startingPointProperty())
+            return;
+    }
+
+    if (!pProperty || (pProperty == simulationWidget->endingPointProperty())) {
         mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
 
-    if (!pProperty || (pProperty == simulationWidget->pointIntervalProperty()))
+        if (pProperty == simulationWidget->endingPointProperty())
+            return;
+    }
+
+    if (!pProperty || (pProperty == simulationWidget->pointIntervalProperty())) {
         mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
+
+        if (pProperty == simulationWidget->pointIntervalProperty())
+            return;
+    }
 }
 
 //==============================================================================
