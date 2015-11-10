@@ -60,7 +60,7 @@
     <string>Development Mode</string>
    </property>
    <property name="statusTip">
-    <string>Enable the development mode</string>
+    <string>Enable/disable the development mode</string>
    </property>
   </action>
   <action name="actionAddGraphPanel">

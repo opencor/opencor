@@ -417,8 +417,8 @@
         <translation>Exporter les données de la simulation</translation>
     </message>
     <message>
-        <source>Enable the development mode</source>
-        <translation>Activer le mode développement</translation>
+        <source>Enable/disable the development mode</source>
+        <translation>Activer/désactiver le mode développement</translation>
     </message>
     <message>
         <source>Add a graph panel</source>
