@@ -2209,7 +2209,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
         return;
 
     // Check whether any of our ODE, DAE or NLA solver properties has been
-    // modified and, if so, update its visibility accordingly
+    // modified
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
