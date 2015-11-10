@@ -228,12 +228,9 @@ private:
 
     void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
 
-    void updateSolversProperties();
-    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
-
-    void checkSolversPropertyChanged(Core::Property *pProperty,
-                                     const QString &pSolverName,
-                                     SingleCellViewInformationSolversWidgetData *pSolverData);
+    void updateSolverProperties(SingleCellViewInformationSolversWidgetData *pSolverData,
+                                Core::Property *pProperty = 0);
+    void updateSolversProperties(Core::Property *pProperty = 0);
 
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
