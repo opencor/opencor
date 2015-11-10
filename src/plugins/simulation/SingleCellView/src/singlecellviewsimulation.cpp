@@ -534,9 +534,14 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
 
         recomputeVariables(pCurrentPoint);
 
-        // Let people know that our data has been updated
+        // Let people know that our data has been updated, but only if we are
+        // not initialising
+        // Note: indeed, in we are initialising then we will be coming back here
+        //       as a result of updating our simulation properties (see
+        //       SingleCellViewWidget::initialize())...
 
-        emit updated(pCurrentPoint);
+        if (!pInitialize)
+            emit updated(pCurrentPoint);
     }
 }
 
