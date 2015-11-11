@@ -1255,8 +1255,10 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
         mContentsWidget->informationWidget()->finishEditing(mSimulation->isPaused());
 
-        updateSimulationProperties();
-        updateSolversProperties();
+        if (!mSimulation->isPaused()) {
+            updateSimulationProperties();
+            updateSolversProperties();
+        }
 
         // Run or resume our simulation
 
