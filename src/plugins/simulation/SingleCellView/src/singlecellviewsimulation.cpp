@@ -505,8 +505,10 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     }
 
     // Let people know whether our data is 'cleaned', i.e. not modified
+    // Note: no point in checking if we are initialising...
 
-    emit modified(isModified());
+    if (!pInitialize)
+        emit modified(isModified());
 }
 
 //==============================================================================
