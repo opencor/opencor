@@ -1253,7 +1253,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
         // Finish any editing of our simulation information, and update our
         // simulation and solvers properties before running/resuming it
 
-        mContentsWidget->informationWidget()->finishEditing();
+        mContentsWidget->informationWidget()->finishEditing(mSimulation->isPaused());
 
         updateSimulationProperties();
         updateSolversProperties();

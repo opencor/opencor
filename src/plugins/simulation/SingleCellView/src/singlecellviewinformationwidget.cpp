@@ -226,12 +226,17 @@ SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::par
 
 //==============================================================================
 
-void SingleCellViewInformationWidget::finishEditing()
+void SingleCellViewInformationWidget::finishEditing(const bool &pPausedSimulation)
 {
     // Finish the editing of any of the information we support
+    // Note: when a simulation is paused, the simulation and solvers widgets are
+    //       disabled, so no editing to finish...
 
-    mSimulationWidget->finishEditing();
-    mSolversWidget->finishEditing();
+    if (!pPausedSimulation) {
+        mSimulationWidget->finishEditing();
+        mSolversWidget->finishEditing();
+    }
+
     mGraphsWidget->finishEditing();
     mParametersWidget->finishEditing();
 }
