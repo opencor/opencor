@@ -22,7 +22,14 @@ IF EXIST "C:\Program Files (x86)\" (
     SET ProgFilesDir=C:\Program Files
 )
 
-SET PATH=C:\Qt\5.4\msvc2013\bin;!PATH!
+FOR /F "TOKENS=1,4" %%X IN ('qmake --version') DO (
+    IF "%%X" == "Using" (
+        SET FullQtVersion=%%Y
+        SET QtVersion=!FullQtVersion:~0,3!
+    )
+)
+
+SET PATH=C:\Qt\!QtVersion!\msvc2013\bin;!PATH!
 
 CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
 
