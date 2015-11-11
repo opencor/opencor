@@ -871,6 +871,23 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // environment
 
     if (validSimulationEnvironment) {
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data), in case we are dealing with a new simulation
+
+        if (newSimulation) {
+            mSimulation->data()->reset();
+            mSimulation->results()->reset(false);
+        }
+
+        // Retrieve our simulation and solvers properties since they may have
+        // an effect on our parameter values (as well as result in some solver
+        // properties being shown/hidden)
+
+        if (newSimulation || pReloadingView) {
+            updateSimulationProperties();
+            updateSolversProperties();
+        }
+
         // Initialise our GUI's simulation, solvers, graphs, parameters and
         // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
@@ -904,27 +921,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
         mCanUpdatePlotsForUpdatedGraphs = true;
 
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data), in case we are dealing with a new simulation
-
-        if (newSimulation) {
-            mSimulation->data()->reset();
-            mSimulation->results()->reset(false);
-        }
-
-        // Retrieve our simulation and solvers properties since they may have
-        // an effect on our parameter values (as well as result in some solver
-        // properties being shown/hidden)
+        // Update our plots since our 'new' simulation properties may have
+        // affected them
 
         if (newSimulation || pReloadingView) {
-            // Update our simulation and solvers properties
-
-            updateSimulationProperties();
-            updateSolversProperties();
-
-            // Update our plots since our 'new' simulation properties may have
-            // affected them
-
             foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
                 updatePlot(plot);
         }
