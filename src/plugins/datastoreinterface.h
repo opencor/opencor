@@ -43,6 +43,8 @@ public:
     explicit DataStoreVariable(const qulonglong &pSize, double *pValue = 0);
     virtual ~DataStoreVariable();
 
+    bool isValid() const;
+
     QString uri() const;
     void setUri(const QString &pUri);
 
