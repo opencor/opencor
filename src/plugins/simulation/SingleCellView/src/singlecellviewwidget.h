@@ -240,6 +240,10 @@ private:
                                 const QString &pVariable);
     void createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
+    void checkSimulationDataModified(const bool &pCurrentSimulation,
+                                     const QString &pFileName,
+                                     const bool &pIsModified);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();

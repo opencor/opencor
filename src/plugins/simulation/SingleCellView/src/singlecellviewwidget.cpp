@@ -2238,12 +2238,11 @@ void SingleCellViewWidget::simulationError(const QString &pMessage,
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
+void SingleCellViewWidget::checkSimulationDataModified(const bool &pCurrentSimulation,
+                                                       const QString &pFileName,
+                                                       const bool &pIsModified)
 {
-    // Update the modified state of the sender's corresponding file or reset
-    // action
-
-    if (qobject_cast<SingleCellViewSimulationData *>(sender()) == mSimulation->data()) {
+    if (pCurrentSimulation) {
         // We are dealing with the current simulation
 
         if (mGui->actionDevelopmentMode->isChecked())
@@ -2253,14 +2252,25 @@ void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
     } else {
         // We are dealing with another simulation
 
-        QString fileName = qobject_cast<SingleCellViewSimulationData *>(sender())->simulation()->fileName();
-
-        if (mDevelopmentModes.value(fileName))
-            Core::FileManager::instance()->setModified(fileName, pIsModified);
+        if (mDevelopmentModes.value(pFileName))
+            Core::FileManager::instance()->setModified(pFileName, pIsModified);
         else
-            mResets.insert(fileName, pIsModified);
+            mResets.insert(pFileName, pIsModified);
     }
+}
 
+//==============================================================================
+
+void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
+{
+    // Update the modified state of the sender's corresponding file or reset
+    // action
+
+    SingleCellViewSimulationData *simulationData = qobject_cast<SingleCellViewSimulationData *>(sender());
+
+    checkSimulationDataModified(simulationData == mSimulation->data(),
+                                simulationData->simulation()->fileName(),
+                                pIsModified);
 }
 
 //==============================================================================
@@ -2618,23 +2628,9 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     //       SingleCellViewWidget::simulationDataModified()), resulting in some
     //       time overhead, so we check things here instead...
 
-    if (pSimulation == mSimulation) {
-        // We are dealing with the current simulation
-
-        if (mGui->actionDevelopmentMode->isChecked())
-            Core::FileManager::instance()->setModified(pSimulation->fileName(), pSimulation->data()->isModified());
-        else
-            mGui->actionResetModelParameters->setEnabled(pSimulation->data()->isModified());
-    } else {
-        // We are dealing with another simulation
-
-        QString fileName = pSimulation->fileName();
-
-        if (mDevelopmentModes.value(fileName))
-            Core::FileManager::instance()->setModified(fileName, pSimulation->data()->isModified());
-        else
-            mResets.insert(fileName, pSimulation->data()->isModified());
-    }
+    checkSimulationDataModified(pSimulation == mSimulation,
+                                pSimulation->fileName(),
+                                pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
 
