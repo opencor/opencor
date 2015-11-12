@@ -3,22 +3,6 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 SET Bitness=%1
 SET CMakeBuildType=%2
 
-IF NOT "!Bitness!" == "Default" (
-    IF NOT "!Bitness!" == "32" (
-        ECHO The first argument must be either 'Default' or '32'.
-
-        EXIT /B 1
-    )
-)
-
-IF NOT "!CMakeBuildType!" == "Release" (
-    IF NOT "!CMakeBuildType!" == "Tests" (
-        ECHO The second argument must be either 'Release' or 'Tests'.
-
-        EXIT /B 1
-    )
-)
-
 IF "!CMakeBuildType!" == "Release" (
     SET EnableTests=OFF
 ) ELSE (
