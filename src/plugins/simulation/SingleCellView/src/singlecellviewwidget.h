@@ -151,6 +151,7 @@ private:
     Core::ProgressBarWidget *mProgressBarWidget;
 
     QMap<QString, int> mProgresses;
+    QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
     QMap<QString, bool> mDevelopmentModes;
 
