@@ -871,25 +871,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // environment
 
     if (validSimulationEnvironment) {
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data), in case we are dealing with a new simulation
-
-        if (newSimulation) {
-            mSimulation->data()->reset();
-            mSimulation->results()->reset(false);
-        }
-
-        // Retrieve our simulation and solvers properties since they may have
-        // an effect on our parameter values (as well as result in some solver
-        // properties being shown/hidden)
-
-        if (newSimulation || pReloadingView) {
-            updateSimulationProperties();
-            updateSolversProperties();
-        }
-
-        // Initialise our GUI's simulation, solvers, graphs, parameters and
-        // graph panels widgets
+        // Initialise our GUI's simulation, solvers, graphs and graph panels
+        // widgets, but not parameters widget
         // Note #1: this will also initialise some of our simulation data (i.e.
         //          our simulation's starting point and simulation's NLA
         //          solver's properties), which is needed since we want to be
@@ -909,17 +892,43 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         //          values have been reset following the call to graphsUpdated()
         //          and another after we update our plots' axes' values. This is
         //          clearly not neat, hence the current solution...
-
-        mCanUpdatePlotsForUpdatedGraphs = false;
+        // Note #3: to initialise our parameters widget now would result in some
+        //          default (i.e. wrong) values being visible for a split second
+        //          before they get properly updated. So, instead, we initialise
+        //          whatever needs initialising (e.g. NLA solver) so that we can
+        //          safely compute our model parameters before showing their
+        //          values...
 
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation, pReloadingView);
+
+        mCanUpdatePlotsForUpdatedGraphs = false;
+            graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        mCanUpdatePlotsForUpdatedGraphs = true;
 
         graphPanelsWidget->initialize(pFileName);
 
-        mCanUpdatePlotsForUpdatedGraphs = true;
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data), in case we are dealing with a new simulation
+
+        if (newSimulation) {
+            mSimulation->data()->reset();
+            mSimulation->results()->reset(false);
+        }
+
+        // Retrieve our simulation and solvers properties since they may have
+        // an effect on our parameter values (as well as result in some solver
+        // properties being shown/hidden)
+
+        if (newSimulation || pReloadingView) {
+            updateSimulationProperties();
+            updateSolversProperties();
+        }
+
+        // Nowe, we can safely update our parameters widget since our model
+        // parameters have been computed
+
+        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation, pReloadingView);
 
         // Update our plots since our 'new' simulation properties may have
         // affected them
