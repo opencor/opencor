@@ -915,7 +915,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation, pReloadingView);
 
         graphPanelsWidget->initialize(pFileName);
 
@@ -992,7 +992,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
     }
 
     informationWidget->graphsWidget()->finalize(pFileName);
-    informationWidget->parametersWidget()->finalize(pFileName);
+    informationWidget->parametersWidget()->finalize(pFileName, pReloadingView);
 
     mContentsWidget->graphPanelsWidget()->finalize(pFileName);
 }
