@@ -60,7 +60,7 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
         auto variableEnd = variables.constEnd();
 
         for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if (!(*variable)->uri().isEmpty()) {
+            if ((*variable)->isValid()) {
                 data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
                                        (*variable)->unit());
             }
@@ -74,7 +74,7 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
             data += QString::number(voi->value(i));
 
             for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-                if (!(*variable)->uri().isEmpty())
+                if ((*variable)->isValid())
                     data += ","+QString::number((*variable)->value(i));
             }
 
