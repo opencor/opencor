@@ -977,7 +977,7 @@ double SingleCellViewSimulation::requiredMemory()
 
     if (mRuntime) {
         return  size()
-               *( 1
+               *( 1.0
                  +mRuntime->constantsCount()
                  +mRuntime->ratesCount()
                  +mRuntime->statesCount()
