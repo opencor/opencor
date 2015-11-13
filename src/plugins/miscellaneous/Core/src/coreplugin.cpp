@@ -255,7 +255,8 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mOpenReloadSeparator)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
@@ -283,6 +284,9 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
 void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions
+
+    retranslateAction(mFileNewFileAction, tr("File"),
+                      tr("Create a new file"));
 
     retranslateAction(mFileOpenAction, tr("Open..."),
                       tr("Open a file"));
@@ -340,6 +344,9 @@ void CorePlugin::initializePlugin()
     mCentralWidget = new CentralWidget(Core::mainWindow());
 
     // Create our different File actions
+
+    mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
+                                         QKeySequence::New, Core::mainWindow());
 
     mFileOpenAction = newAction(QIcon(":/oxygen/actions/document-open.png"),
                                 QKeySequence::Open, Core::mainWindow());
@@ -432,6 +439,9 @@ void CorePlugin::initializePlugin()
     mFileReopenSubMenu->addAction(mFileClearReopenSubMenuAction);
 
     // Some connections to handle our different File actions
+
+    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(newFile()));
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(openFile()));
@@ -598,6 +608,26 @@ void CorePlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // Plugin specific
+//==============================================================================
+
+void CorePlugin::newFile()
+{
+    // Ask our file manager to create a new file
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+#ifdef QT_DEBUG
+    Core::FileManager::Status createStatus =
+#endif
+    fileManagerInstance->create();
+
+#ifdef QT_DEBUG
+    // Make sure that the file has indeed been created
+
+    if (createStatus != Core::FileManager::Created)
+        qFatal("FATAL ERROR | %s:%d: the new file was not created.", __FILE__, __LINE__);
+#endif
+}
+
 //==============================================================================
 
 void CorePlugin::updateFileReopenMenu(const bool &pEnabled)

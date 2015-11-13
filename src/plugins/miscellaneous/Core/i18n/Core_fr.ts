@@ -270,6 +270,14 @@
         <source>Reopen the most recently closed file</source>
         <translation>Réouvrir le fichier qui a été le plus récemment fermé</translation>
     </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
+    <message>
+        <source>Create a new file</source>
+        <translation>Créer un nouveau fichier</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>
