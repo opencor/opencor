@@ -93,9 +93,8 @@ void CoreCellMLEditingPlugin::filePermissionsChanged(const QString &pFileName)
     // reformat action, if needed
 
     if (!pFileName.compare(mFileName)) {
-        bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(pFileName);
-
-        Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface, !pFileName.isEmpty() && fileReadableAndWritable);
+        Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface,
+                               !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
     }
 }
 
@@ -161,9 +160,8 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     Core::showEnableAction(mFileNewCellml1_0FileAction, mCellmlEditingInterface);
     Core::showEnableAction(mFileNewCellml1_1FileAction, mCellmlEditingInterface);
 
-    bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(pFileName);
-
-    Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface, !pFileName.isEmpty() && fileReadableAndWritable);
+    Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface,
+                           !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
 
     Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingInterface, !pFileName.isEmpty());
 
