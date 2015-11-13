@@ -2170,12 +2170,8 @@ void SingleCellViewWidget::resetProgressBar(SingleCellViewSimulation *pSimulatio
     if (!simulation) {
         simulation = mResetSimulations.first();
 
-        if (!simulation) {
-            // There should have been simulation to reset, but somehow there
-            // isn't one, so leave
-
+        if (!simulation)
             return;
-        }
 
         mResetSimulations.removeFirst();
     }
