@@ -11,7 +11,7 @@ fi
 
 shift
 
-if [ "`hash ninja 2>&1`" == "" ]; then
+if [ "`hash ninja 2>&1`" = "" ]; then
     ninjaFound=true
     generator="Ninja"
     cmakeGenerator="Ninja"
