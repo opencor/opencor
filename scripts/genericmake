@@ -2,7 +2,7 @@
 
 cmakeBuildType=$1
 
-if [ "$cmakeBuildType" == "Release" ]; then
+if [ "$cmakeBuildType" = "Release" ]; then
     enableTests=OFF
 else
     cmakeBuildType=Debug
@@ -11,7 +11,7 @@ fi
 
 shift
 
-if hash ninja 2> /dev/null; then
+if [ "`hash ninja 2>&1`" = "" ]; then
     ninjaFound=true
     generator="Ninja"
     cmakeGenerator="Ninja"
@@ -21,7 +21,7 @@ else
     cmakeGenerator="Unix Makefiles"
 fi
 
-if [ "$cmakeBuildType" == "Release" ]; then
+if [ "$cmakeBuildType" = "Release" ]; then
     titleTests=""
 else
     titleTests=" and its tests"
@@ -41,7 +41,7 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
-if $ninjaFound; then
+if [ $ninjaFound ]; then
     ninja
 else
     make $*
