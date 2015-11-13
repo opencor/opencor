@@ -2145,12 +2145,13 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
     //          the same time...
 
     if (!isVisible() || (simulation != mSimulation)) {
-        mStoppedSimulations << simulation;
+        if (needReloadView) {
+            resetFileTabIcon(simulation);
+        } else {
+            mStoppedSimulations << simulation;
 
-        if (needReloadView)
-            resetFileTabIcon();
-        else
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
+        }
     }
 
     // Reload ourselves, if needed (see fileReloaded())
@@ -2201,13 +2202,22 @@ void SingleCellViewWidget::resetFileTabIcon(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::resetFileTabIcon()
+void SingleCellViewWidget::resetFileTabIcon(SingleCellViewSimulation *pSimulation)
 {
-    // Reset the file tab icon of our most recently stopped simulation
+    // Retrieve our most recently stopped simulation, if none was provided
 
-    SingleCellViewSimulation *simulation = mStoppedSimulations.first();
+    SingleCellViewSimulation *simulation = pSimulation;
 
-    mStoppedSimulations.removeFirst();
+    if (!simulation) {
+        simulation = mStoppedSimulations.first();
+
+        if (!simulation)
+            return;
+
+        mStoppedSimulations.removeFirst();
+    }
+
+    // Reset our file tab icon
 
     resetFileTabIcon(simulation->fileName());
 }
