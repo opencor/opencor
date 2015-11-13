@@ -271,7 +271,7 @@ private Q_SLOTS:
     void simulationStopped(const qint64 &pElapsedTime);
 
     void resetProgressBar(SingleCellViewSimulation *pSimulation = 0);
-    void resetFileTabIcon();
+    void resetFileTabIcon(SingleCellViewSimulation *pSimulation = 0);
 
     void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);
