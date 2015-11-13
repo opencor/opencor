@@ -222,9 +222,6 @@ private:
     void checkResults(SingleCellViewSimulation *pSimulation,
                       const bool &pForceUpdateResults = false);
 
-    void resetFileTabIcon(const QString &pFileName,
-                          const bool &pRemoveProgress = true);
-
     QVariant value(Core::Property *pProperty) const;
 
     void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);

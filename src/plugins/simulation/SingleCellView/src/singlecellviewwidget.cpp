@@ -704,7 +704,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
 
-    resetFileTabIcon(pFileName);
+    resetFileTabIcon(mSimulation);
 
     mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
 
@@ -2186,22 +2186,6 @@ void SingleCellViewWidget::resetProgressBar(SingleCellViewSimulation *pSimulatio
 
 //==============================================================================
 
-void SingleCellViewWidget::resetFileTabIcon(const QString &pFileName,
-                                            const bool &pRemoveProgress)
-{
-    // Stop tracking our simulation progress and let people know that our file
-    // tab icon should be reset
-
-    static const QIcon NoIcon = QIcon();
-
-    if (pRemoveProgress)
-        mProgresses.remove(pFileName);
-
-    emit updateFileTabIcon(mPluginParent->viewName(), pFileName, NoIcon);
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::resetFileTabIcon(SingleCellViewSimulation *pSimulation)
 {
     // Retrieve our most recently stopped simulation, if none was provided
@@ -2217,9 +2201,14 @@ void SingleCellViewWidget::resetFileTabIcon(SingleCellViewSimulation *pSimulatio
         mStoppedSimulations.removeFirst();
     }
 
-    // Reset our file tab icon
+    // Stop tracking our simulation progress and let people know that our file
+    // tab icon should be reset
 
-    resetFileTabIcon(simulation->fileName());
+    static const QIcon NoIcon = QIcon();
+
+    mProgresses.remove(simulation->fileName());
+
+    emit updateFileTabIcon(mPluginParent->viewName(), simulation->fileName(), NoIcon);
 }
 
 //==============================================================================
