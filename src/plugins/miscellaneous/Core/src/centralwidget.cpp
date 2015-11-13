@@ -656,7 +656,7 @@ QString CentralWidget::currentFileName() const
 
 //==============================================================================
 
-void CentralWidget::updateFileTab(const int &pIndex)
+void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
 
@@ -666,32 +666,43 @@ void CentralWidget::updateFileTab(const int &pIndex)
 
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
-    bool fileIsNew = fileManagerInstance->isNew(fileName);
     bool fileIsRemote = fileManagerInstance->isRemote(fileName);
-    QString url = fileManagerInstance->url(fileName);
-    QString tabText = fileIsNew?
-                          tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
-                          fileIsRemote?
-                              QUrl(url).fileName():
-                              QFileInfo(fileName).fileName();
+    QIcon tabIcon = QIcon();
 
-    mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isLocalNewOrModified(fileName)?
-                                               "*":
-                                               QString()));
-    mFileTabs->setTabToolTip(pIndex, fileIsNew?
-                                         tabText:
-                                         fileIsRemote?
-                                             url:
-                                             fileName);
-    mFileTabs->setTabIcon(pIndex, fileIsRemote?
-                                      InternetIcon:
-                                      fileManagerInstance->isReadableAndWritable(fileName)?
-                                          NoIcon:
-                                          LockedIcon);
-    // Note: we really want to call isReadableAndWritable() rather than
-    //       isLocked() since no icon should be shown only if the file can be
-    //       both readable and writable (see
-    //       CorePlugin::filePermissionsChanged())...
+    if (!pIconOnly) {
+        bool fileIsNew = fileManagerInstance->isNew(fileName);
+        QString url = fileManagerInstance->url(fileName);
+        QString tabText = fileIsNew?
+                              tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
+                              fileIsRemote?
+                                  QUrl(url).fileName():
+                                  QFileInfo(fileName).fileName();
+
+        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isLocalNewOrModified(fileName)?
+                                                   "*":
+                                                   QString()));
+        mFileTabs->setTabToolTip(pIndex, fileIsNew?
+                                             tabText:
+                                             fileIsRemote?
+                                                 url:
+                                                 fileName);
+
+        tabIcon = qobject_cast<ViewInterface *>(viewPlugin(pIndex)->instance())->fileTabIcon(mFileNames[pIndex]);
+    }
+
+    if (tabIcon.isNull()) {
+        mFileTabs->setTabIcon(pIndex, fileIsRemote?
+                                          InternetIcon:
+                                          fileManagerInstance->isReadableAndWritable(fileName)?
+                                              NoIcon:
+                                              LockedIcon);
+        // Note: we really want to call isReadableAndWritable() rather than
+        //       isLocked() since no icon should be shown only if the file can
+        //       be both readable and writable (see
+        //       CorePlugin::filePermissionsChanged())...
+    } else {
+        mFileTabs->setTabIcon(pIndex, tabIcon);
+    }
 }
 
 //==============================================================================
@@ -2075,7 +2086,7 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
                 // do it and leave
 
                 if (pIcon.isNull())
-                    updateFileTab(i);
+                    updateFileTab(i, true);
                 else
                     mFileTabs->setTabIcon(i, pIcon);
 
@@ -2095,7 +2106,7 @@ void CentralWidget::updateFileTabIcons()
         QIcon tabIcon = qobject_cast<ViewInterface *>(viewPlugin(i)->instance())->fileTabIcon(mFileNames[i]);
 
         if (tabIcon.isNull())
-            updateFileTab(i);
+            updateFileTab(i, true);
         else
             mFileTabs->setTabIcon(i, tabIcon);
     }
