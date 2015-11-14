@@ -40,10 +40,6 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
     <message>
-        <source>The file is new, so switching views is not possible for now</source>
-        <translation>Le fichier est nouveau, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
-    </message>
-    <message>
         <source>The file is being edited, so switching views is not possible for now</source>
         <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
