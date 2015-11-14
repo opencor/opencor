@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellmlfile.h"
 #include "filehandlinginterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
@@ -71,9 +70,6 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QAction *mFileNewCellml1_0FileAction;
-    QAction *mFileNewCellml1_1FileAction;
-
     QAction *mEditReformatAction;
 
     QAction *mToolsCellmlValidationAction;
@@ -81,12 +77,7 @@ private:
     QString mFileName;
     CellmlEditingInterface *mCellmlEditingInterface;
 
-    void newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion);
-
 private Q_SLOTS:
-    void newCellml1_0File();
-    void newCellml1_1File();
-
     void reformat();
 
     void cellmlValidation();

@@ -10,6 +10,7 @@ RETRIEVE_LLVM_SETTINGS()
 ADD_PLUGIN(CellMLSupport
     SOURCES
         ../../filetypeinterface.cpp
+        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp

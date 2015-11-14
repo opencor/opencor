@@ -1873,7 +1873,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
 
 void CentralWidget::updateModifiedSettings()
 {
-    // Update all our file tabs and determine the number of modified files
+    // Update all our file tabs and determine the number of new/modified files
 
     FileManager *fileManagerInstance = FileManager::instance();
     int nbOfLocalNewOrModifiedFiles = 0;
@@ -1900,20 +1900,17 @@ void CentralWidget::updateModifiedSettings()
     QString fileName = mFileTabs->count()?
                            mFileNames[mFileTabs->currentIndex()]:
                            QString();
-    bool fileIsLocalNewOrModified = fileManagerInstance->isLocalNewOrModified(fileName);
 
-    if (fileIsLocalNewOrModified) {
+    if (fileManagerInstance->isModified(fileName)) {
         TabBarWidget *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
 
         viewTabs->setEnabled(false);
-        viewTabs->setToolTip(fileManagerInstance->isNew(fileName)?
-                                 tr("The file is new, so switching views is not possible for now"):
-                                 tr("The file is being edited, so switching views is not possible for now"));
+        viewTabs->setToolTip(tr("The file is being edited, so switching views is not possible for now"));
     }
 
     // Let people know whether we can save the current file and/or all files
 
-    emit canSave(fileIsLocalNewOrModified);
+    emit canSave(fileManagerInstance->isLocalNewOrModified(fileName));
     emit canSaveAll(nbOfLocalNewOrModifiedFiles);
 }
 
