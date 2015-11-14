@@ -7,6 +7,22 @@
         <source>CellML File</source>
         <translation>Fichier CellML</translation>
     </message>
+    <message>
+        <source>CellML 1.0 File</source>
+        <translation>Fichier CellML 1.0</translation>
+    </message>
+    <message>
+        <source>Create a new CellML 1.0 file</source>
+        <translation>Créer un nouveau fichier CellML 1.0</translation>
+    </message>
+    <message>
+        <source>CellML 1.1 File</source>
+        <translation>Fichier CellML 1.1</translation>
+    </message>
+    <message>
+        <source>Create a new CellML 1.1 file</source>
+        <translation>Créer un nouveau fichier CellML 1.1</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

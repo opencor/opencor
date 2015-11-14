@@ -203,8 +203,6 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the editing interface
 
-    Core::showEnableAction(mFileNewFileAction, mEditingInterface);
-
     Core::showEnableAction(mEditUndoAction, mEditingInterface, mEditor);
     Core::showEnableAction(mEditRedoAction, mEditingInterface, mEditor);
 
@@ -237,9 +235,9 @@ Gui::Menus CoreEditingPlugin::guiMenus() const
 
 Gui::MenuActions CoreEditingPlugin::guiMenuActions() const
 {
-    // Return our menu actions
+    // We don't handle this interface...
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction);
+    return Gui::MenuActions();
 }
 
 //==============================================================================
@@ -248,11 +246,6 @@ Gui::MenuActions CoreEditingPlugin::guiMenuActions() const
 
 void CoreEditingPlugin::retranslateUi()
 {
-    // Retranslate our different File|New action
-
-    retranslateAction(mFileNewFileAction, tr("File"),
-                      tr("Create a new file"));
-
     // Retranslate our Edit menu
 
     retranslateMenu(mEditMenu, tr("Edit"));
@@ -312,11 +305,6 @@ void CoreEditingPlugin::retranslateUi()
 
 void CoreEditingPlugin::initializePlugin()
 {
-    // Create our different File|New actions
-
-    mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
-                                         QKeySequence::New, Core::mainWindow());
-
     // Create our Edit menu
 
     mEditMenu = Core::newMenu("Edit", Core::mainWindow());
@@ -352,9 +340,6 @@ void CoreEditingPlugin::initializePlugin()
             this, SLOT(clipboardDataChanged()));
 
     // Some connections to handle our different editing actions
-
-    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newFile()));
 
     connect(mEditUndoAction, SIGNAL(triggered(bool)),
             this, SLOT(doUndo()));
@@ -566,26 +551,6 @@ void CoreEditingPlugin::updateSelectAllAction()
     if (mEditingInterface)
         mEditSelectAllAction->setEnabled(   mEditor
                                          && mEditor->isSelectAllAvailable());
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::newFile()
-{
-    // Ask our file manager to create a new file
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-#ifdef QT_DEBUG
-    Core::FileManager::Status createStatus =
-#endif
-    fileManagerInstance->create();
-
-#ifdef QT_DEBUG
-    // Make sure that the file has indeed been created
-
-    if (createStatus != Core::FileManager::Created)
-        qFatal("FATAL ERROR | %s:%d: the new file was not created.", __FILE__, __LINE__);
-#endif
 }
 
 //==============================================================================
