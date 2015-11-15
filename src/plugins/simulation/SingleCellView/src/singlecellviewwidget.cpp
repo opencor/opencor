@@ -1359,13 +1359,14 @@ void SingleCellViewWidget::on_actionDevelopmentMode_triggered()
     // The development mode has just been enabled/disabled, so update the
     // modified state of our current file accordingly
 
-    if (mGui->actionDevelopmentMode->isChecked()) {
-        checkSimulationDataModified(true, mSimulation->fileName(),
-                                    mSimulation->data()->isModified());
-    } else {
-        Core::FileManager::instance()->setModified(mSimulation->fileName(),
-                                                   false);
-    }
+    if (!mGui->actionDevelopmentMode->isChecked())
+        Core::FileManager::instance()->setModified(mSimulation->fileName(), false);
+
+    checkSimulationDataModified(true, mSimulation->fileName(),
+                                mSimulation->data()->isModified());
+    // Note: to call checkSimulationDataModified() will, in the case the
+    //       development mode has just been disabled, ensure that the reset
+    //       button is properly enabled/disabled...
 }
 
 //==============================================================================
