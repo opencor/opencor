@@ -431,6 +431,8 @@ void SingleCellViewInformationSolversWidget::finalize(const QString &pFileName)
 {
     // Remove track of our GUI state
 
+    delete mGuiStates.value(pFileName);
+
     mGuiStates.remove(pFileName);
 }
 

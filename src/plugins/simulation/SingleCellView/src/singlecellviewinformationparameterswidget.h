@@ -82,8 +82,9 @@ public:
 
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation);
-    void finalize(const QString &pFileName);
+                    SingleCellViewSimulation *pSimulation,
+                    const bool &pReloadingView = false);
+    void finalize(const QString &pFileName, const bool &pReloadingView = false);
 
     void finishEditing();
 

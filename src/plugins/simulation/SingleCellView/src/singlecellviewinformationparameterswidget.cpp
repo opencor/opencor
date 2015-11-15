@@ -126,7 +126,8 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
 
 void SingleCellViewInformationParametersWidget::initialize(const QString &pFileName,
                                                            CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulation *pSimulation)
+                                                           SingleCellViewSimulation *pSimulation,
+                                                           const bool &pReloadingView)
 {
     // Keep track of the file name and simulation
 
@@ -134,7 +135,8 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
     mSimulation = pSimulation;
 
     // Retrieve the property editor, context menu, parameters and parameter
-    // actions for the given file name or create some, if none exists
+    // actions for the given file name or create some, if none exists or if we
+    // are reloading ourselves
 
     mPropertyEditor = mPropertyEditors.value(pFileName);
     mContextMenu = mContextMenus.value(pFileName);
@@ -142,7 +144,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
     mParameters = mParametersMapping.value(pFileName);
     mParameterActions = mParameterActionsMapping.value(pFileName);
 
-    if (!mPropertyEditor) {
+    if (!mPropertyEditor || pReloadingView) {
         // No property editor, context menu, parameters or parameter actions
         // exists for the given file name, so create some
 
@@ -188,7 +190,12 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         addWidget(mPropertyEditor);
 
-        // Keep track of our new property editor and context menu
+        // Keep track of our new the property editor, context menu, parameters
+        // and parameter actions, after having deleted our 'old' property editor
+        // if needed (see finalize())
+
+        if (pReloadingView)
+            delete mPropertyEditors.value(pFileName);
 
         mPropertyEditors.insert(pFileName, mPropertyEditor);
         mContextMenus.insert(pFileName, mContextMenu);
@@ -219,11 +226,24 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::finalize(const QString &pFileName)
+void SingleCellViewInformationParametersWidget::finalize(const QString &pFileName,
+                                                         const bool &pReloadingView)
 {
     // Remove track of our property editor and its context menu
+    // Note: we don't want to delete our 'old' property editor straightaway when
+    //       reloading a file. Indeed, if we were to do so, the area where it
+    //       sits would become blank for a split second before our 'new'
+    //       property editor is created and becomes visible. So, instead, we
+    //       delete it in initialize()...
 
-    mPropertyEditors.remove(pFileName);
+    if (!pReloadingView) {
+        delete mPropertyEditors.value(pFileName);
+
+        mPropertyEditors.remove(pFileName);
+    }
+
+    delete mContextMenus.value(pFileName);
+
     mContextMenus.remove(pFileName);
 
     delete mParametersMapping.value(pFileName);

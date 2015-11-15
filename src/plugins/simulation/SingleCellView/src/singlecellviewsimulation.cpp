@@ -62,18 +62,19 @@ SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::Cellml
     if (pRuntime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[pRuntime->constantsCount()];
-        mRates     = new double[pRuntime->ratesCount()];
-        mStates    = new double[pRuntime->statesCount()];
-        mAlgebraic = new double[pRuntime->algebraicCount()];
-        mCondVar   = new double[pRuntime->condVarCount()];
+        mConstants   = new double[pRuntime->constantsCount()];
+        mRates       = new double[pRuntime->ratesCount()];
+        mStates      = new double[pRuntime->statesCount()];
+        mDummyStates = new double[pRuntime->statesCount()];
+        mAlgebraic   = new double[pRuntime->algebraicCount()];
+        mCondVar     = new double[pRuntime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
         mInitialConstants = new double[pRuntime->constantsCount()];
         mInitialStates    = new double[pRuntime->statesCount()];
     } else {
-        mConstants = mRates = mStates = mAlgebraic = mCondVar = 0;
+        mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;
     }
 }
@@ -87,6 +88,7 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
     delete[] mConstants;
     delete[] mRates;
     delete[] mStates;
+    delete[] mDummyStates;
     delete[] mAlgebraic;
     delete[] mCondVar;
 
@@ -487,18 +489,6 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
 
     recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
 
-    // Recompute our computed constants and variables in case our model needs an
-    // NLA solver
-    // Note: this is very much empiric. Indeed, we noticed that using
-    //       https://gist.github.com/agarny/b051897560031a2591a2,
-    //       x=3.0000006396753 after calling
-    //       recomputeComputedConstantsAndVariables(), but then if we call
-    //       recomputeComputedConstantsAndVariables() again, we get
-    //       x=3.00000000000007...
-
-    if (mRuntime->needNlaSolver())
-        recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
-
     // Delete our NLA solver, if any
 
     if (nlaSolver) {
@@ -515,14 +505,16 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     }
 
     // Let people know whether our data is 'cleaned', i.e. not modified
+    // Note: no point in checking if we are initialising...
 
-    emit modified(isModified());
+    if (!pInitialize)
+        emit modified(isModified());
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                                          const bool &pFullComputeComputedConstants)
+                                                                          const bool &pInitialize)
 {
     if (!mRuntime)
         return;
@@ -532,15 +524,8 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
     if (mRuntime->isValid()) {
         // Recompute our 'computed constants'
 
-        double *realStates = mStates;
-
-        if (!pFullComputeComputedConstants)
-            realStates = new double[mRuntime->statesCount()];
-
-        mRuntime->computeComputedConstants()(mConstants, mRates, realStates);
-
-        if (!pFullComputeComputedConstants)
-            delete[] realStates;
+        mRuntime->computeComputedConstants()(mConstants, mRates,
+                                             pInitialize?mStates:mDummyStates);
 
         // Recompute some 'constant' algebraic variables
 

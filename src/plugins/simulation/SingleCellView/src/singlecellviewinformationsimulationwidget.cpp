@@ -121,6 +121,8 @@ void SingleCellViewInformationSimulationWidget::finalize(const QString &pFileNam
 {
     // Remove track of our GUI state
 
+    delete mGuiStates.value(pFileName);
+
     mGuiStates.remove(pFileName);
 }
 

@@ -113,7 +113,7 @@ public:
     void reset(const bool &pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pFullComputeComputedConstants = true);
+                                                const bool &pInitialize = true);
     void recomputeVariables(const double &pCurrentPoint);
 
     bool isModified() const;
@@ -144,6 +144,7 @@ private:
     double *mConstants;
     double *mRates;
     double *mStates;
+    double *mDummyStates;
     double *mAlgebraic;
     double *mCondVar;
 

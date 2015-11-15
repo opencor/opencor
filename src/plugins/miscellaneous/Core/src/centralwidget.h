@@ -182,7 +182,7 @@ private:
 
     bool canCloseFile(const int &pIndex);
 
-    void updateFileTab(const int &pIndex);
+    void updateFileTab(const int &pIndex, const bool &pIconOnly = false);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
 

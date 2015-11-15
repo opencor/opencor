@@ -108,7 +108,9 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(SingleCellViewSimulations()),
     mProgresses(QMap<QString, int>()),
+    mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
+    mDevelopmentModes(QMap<QString, bool>()),
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
@@ -192,10 +194,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
-/*---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT DEBUG MODE...
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionDebugMode);
-*/
+    mToolBarWidget->addAction(mGui->actionDevelopmentMode);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
@@ -635,9 +635,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
         graphPanelsWidget->backup(prevFileName);
 
-        // Keep track of the status of the value of the delay widget
+        // Keep track of the status of the reset action (if needed), the
+        // simulation delay and the development mode
+
+        if (!mGui->actionDevelopmentMode->isChecked())
+            mResets.insert(prevFileName, mGui->actionResetModelParameters->isEnabled());
 
         mDelays.insert(prevFileName, mDelayWidget->value());
+        mDevelopmentModes.insert(prevFileName, mGui->actionDevelopmentMode->isChecked());
     }
 
     // Stop keeping track of certain things (so that updatePlot() doesn't get
@@ -687,16 +692,19 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         mSimulations.insert(pFileName, mSimulation);
     }
 
-    // Retrieve the status of the reset action and the value of the delay widget
+    // Retrieve the status of the reset action, the simulation delay and the
+    // development mode
 
-    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
+    if (!mDevelopmentModes.value(pFileName))
+        mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName));
 
     mDelayWidget->setValue(mDelays.value(pFileName));
+    mGui->actionDevelopmentMode->setChecked(mDevelopmentModes.value(pFileName));
 
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
 
-    resetFileTabIcon(pFileName);
+    resetFileTabIcon(mSimulation);
 
     mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
 
@@ -869,8 +877,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // environment
 
     if (validSimulationEnvironment) {
-        // Initialise our GUI's simulation, solvers, graphs, parameters and
-        // graph panels widgets
+        // Initialise our GUI's simulation, solvers, graphs and graph panels
+        // widgets, but not parameters widget
         // Note #1: this will also initialise some of our simulation data (i.e.
         //          our simulation's starting point and simulation's NLA
         //          solver's properties), which is needed since we want to be
@@ -890,17 +898,21 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         //          values have been reset following the call to graphsUpdated()
         //          and another after we update our plots' axes' values. This is
         //          clearly not neat, hence the current solution...
-
-        mCanUpdatePlotsForUpdatedGraphs = false;
+        // Note #3: to initialise our parameters widget now would result in some
+        //          default (in the computer science sense, i.e. wrong) values
+        //          being visible for a split second before they get properly
+        //          updated. So, instead, we initialise whatever needs
+        //          initialising (e.g. NLA solver) so that we can safely compute
+        //          our model parameters before showing their values...
 
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+
+        mCanUpdatePlotsForUpdatedGraphs = false;
+            graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        mCanUpdatePlotsForUpdatedGraphs = true;
 
         graphPanelsWidget->initialize(pFileName);
-
-        mCanUpdatePlotsForUpdatedGraphs = true;
 
         // Reset both the simulation's data and results (well, initialise in the
         // case of its data), in case we are dealing with a new simulation
@@ -915,14 +927,19 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         // properties being shown/hidden)
 
         if (newSimulation || pReloadingView) {
-            // Update our simulation and solvers properties
-
             updateSimulationProperties();
             updateSolversProperties();
+        }
 
-            // Update our plots since our 'new' simulation properties may have
-            // affected them
+        // Now, we can safely update our parameters widget since our model
+        // parameters have been computed
 
+        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation, pReloadingView);
+
+        // Update our plots since our 'new' simulation properties may have
+        // affected them
+
+        if (newSimulation || pReloadingView) {
             foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
                 updatePlot(plot);
         }
@@ -962,11 +979,20 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
     // Remove various information associated with the given file name
 
     mProgresses.remove(pFileName);
+    mResets.remove(pFileName);
 
-    if (pReloadingView)
+    if (pReloadingView) {
+        // Keep track of the simulation delay and development mode, in case they
+        // aren't already tracked (which will be the case if we haven't switched
+        // files), so that we can retrieve them after having effectively
+        // reloaded our file
+
         mDelays.insert(pFileName, mDelayWidget->value());
-    else
+        mDevelopmentModes.insert(pFileName, mGui->actionDevelopmentMode->isChecked());
+    } else {
         mDelays.remove(pFileName);
+        mDevelopmentModes.remove(pFileName);
+    }
 
     // Finalize/backup a few things in our GUI's simulation, solvers, graphs,
     // parameters and graph panels widgets
@@ -982,7 +1008,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
     }
 
     informationWidget->graphsWidget()->finalize(pFileName);
-    informationWidget->parametersWidget()->finalize(pFileName);
+    informationWidget->parametersWidget()->finalize(pFileName, pReloadingView);
 
     mContentsWidget->graphPanelsWidget()->finalize(pFileName);
 }
@@ -1172,18 +1198,19 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulations.remove(pOldFileName);
     }
 
-    int progress = mProgresses.value(pOldFileName, -1);
-
-    if (progress != -1) {
-        mProgresses.insert(pNewFileName, progress);
+    if (mProgresses.contains(pOldFileName)) {
+        mProgresses.insert(pNewFileName, mProgresses.value(pOldFileName));
         mProgresses.remove(pOldFileName);
     }
 
-    int delay = mDelays.value(pOldFileName, -1);
-
-    if (delay != -1) {
+    if (mDelays.contains(pOldFileName)) {
         mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
         mDelays.remove(pOldFileName);
+    }
+
+    if (mDevelopmentModes.contains(pOldFileName)) {
+        mDevelopmentModes.insert(pNewFileName, mDevelopmentModes.value(pOldFileName));
+        mDevelopmentModes.remove(pOldFileName);
     }
 
     // Let our graphs widget know that the given file has been renamed
@@ -1242,10 +1269,12 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
         // Finish any editing of our simulation information, and update our
         // simulation and solvers properties before running/resuming it
 
-        mContentsWidget->informationWidget()->finishEditing();
+        mContentsWidget->informationWidget()->finishEditing(mSimulation->isPaused());
 
-        updateSimulationProperties();
-        updateSolversProperties();
+        if (!mSimulation->isPaused()) {
+            updateSimulationProperties();
+            updateSolversProperties();
+        }
 
         // Run or resume our simulation
 
@@ -1325,9 +1354,19 @@ void SingleCellViewWidget::on_actionClearSimulationData_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionDebugMode_triggered()
+void SingleCellViewWidget::on_actionDevelopmentMode_triggered()
 {
-//---GRY--- TO BE DONE...
+    // The development mode has just been enabled/disabled, so update the
+    // modified state of our current file accordingly
+
+    if (!mGui->actionDevelopmentMode->isChecked())
+        Core::FileManager::instance()->setModified(mSimulation->fileName(), false);
+
+    checkSimulationDataModified(true, mSimulation->fileName(),
+                                mSimulation->data()->isModified());
+    // Note: to call checkSimulationDataModified() will, in the case the
+    //       development mode has just been disabled, ensure that the reset
+    //       button is properly enabled/disabled...
 }
 
 //==============================================================================
@@ -1823,58 +1862,139 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::updateSimulationProperties()
+void SingleCellViewWidget::updateSimulationProperties(Core::Property *pProperty)
 {
-    // Update our simulation properties
+    // Update all the properties, or a particular property (if it exists), of
+    // our simulation
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-    mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
-    mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
-    mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
+    if (!pProperty || (pProperty == simulationWidget->startingPointProperty())) {
+        mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
+
+        if (pProperty == simulationWidget->startingPointProperty())
+            return;
+    }
+
+    if (!pProperty || (pProperty == simulationWidget->endingPointProperty())) {
+        mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
+
+        if (pProperty == simulationWidget->endingPointProperty())
+            return;
+    }
+
+    if (!pProperty || (pProperty == simulationWidget->pointIntervalProperty())) {
+        mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
+
+        if (pProperty == simulationWidget->pointIntervalProperty())
+            return;
+    }
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::updateSolversProperties()
+void SingleCellViewWidget::updateSolversProperties(Core::Property *pProperty)
 {
-    // Update our solver(s) properties
+    // Update all of our solver(s) properties (and solvers widget) or a
+    // particular solver property (and the corresponding GUI for that solver)
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-    if (solversWidget->odeSolverData()) {
-        mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
+    // ODE solver properties
 
-        foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName()))
-            mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
+    bool needOdeSolverGuiUpdate = false;
+
+    if (solversWidget->odeSolverData()) {
+        if (!pProperty || (pProperty == solversWidget->odeSolverData()->solversListProperty())) {
+            mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
+
+            needOdeSolverGuiUpdate = true;
+        }
+
+        if (!pProperty || !needOdeSolverGuiUpdate) {
+            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
+                if (!pProperty || (pProperty == property)) {
+                    mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
+
+                    needOdeSolverGuiUpdate = true;
+
+                    if (pProperty == property)
+                        break;
+                }
+            }
+        }
     }
+
+    if (needOdeSolverGuiUpdate) {
+        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->odeSolverData());
+
+        if (pProperty)
+            return;
+    }
+
+    // DAE solver properties
+
+    bool needDaeSolverGuiUpdate = false;
 
     if (solversWidget->daeSolverData()) {
-        mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
+        if (!pProperty || (pProperty == solversWidget->daeSolverData()->solversListProperty())) {
+            mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
 
-        foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName()))
-            mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+            needDaeSolverGuiUpdate = true;
+        }
+
+        if (!pProperty || !needDaeSolverGuiUpdate) {
+            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName())) {
+                if (!pProperty || (pProperty == property)) {
+                    mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+
+                    needDaeSolverGuiUpdate = true;
+
+                    if (pProperty == property)
+                        break;
+                }
+            }
+        }
     }
+
+    if (needDaeSolverGuiUpdate) {
+        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->daeSolverData());
+
+        if (pProperty)
+            return;
+    }
+
+    // NLA solver properties
+
+    bool needNlaSolverGuiUpdate = false;
 
     if (solversWidget->nlaSolverData()) {
-        mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
+        if (!pProperty || (pProperty == solversWidget->nlaSolverData()->solversListProperty())) {
+            mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
 
-        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
-            mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+            needNlaSolverGuiUpdate = true;
+        }
+
+        if (!pProperty || !needNlaSolverGuiUpdate) {
+            foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
+                if (!pProperty || (pProperty == property)) {
+                    mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+
+                    needNlaSolverGuiUpdate = true;
+
+                    if (pProperty == property)
+                        break;
+                }
+            }
+        }
     }
 
-    // Update the solver(s) properties visibility
+    if (needNlaSolverGuiUpdate) {
+        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->nlaSolverData());
 
-    updateSolversPropertiesVisibility();
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData)
-{
-    // Update our solver(s) properties visibility
-
-    mContentsWidget->informationWidget()->solversWidget()->updateGui(pSolverData);
+        if (pProperty)
+            return;
+    }
 }
 
 //==============================================================================
@@ -2035,12 +2155,13 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
     //          the same time...
 
     if (!isVisible() || (simulation != mSimulation)) {
-        mStoppedSimulations << simulation;
+        if (needReloadView) {
+            resetFileTabIcon(simulation);
+        } else {
+            mStoppedSimulations << simulation;
 
-        if (needReloadView)
-            resetFileTabIcon();
-        else
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
+        }
     }
 
     // Reload ourselves, if needed (see fileReloaded())
@@ -2060,12 +2181,8 @@ void SingleCellViewWidget::resetProgressBar(SingleCellViewSimulation *pSimulatio
     if (!simulation) {
         simulation = mResetSimulations.first();
 
-        if (!simulation) {
-            // There should have been simulation to reset, but somehow there
-            // isn't one, so leave
-
+        if (!simulation)
             return;
-        }
 
         mResetSimulations.removeFirst();
     }
@@ -2079,31 +2196,29 @@ void SingleCellViewWidget::resetProgressBar(SingleCellViewSimulation *pSimulatio
 
 //==============================================================================
 
-void SingleCellViewWidget::resetFileTabIcon(const QString &pFileName,
-                                            const bool &pRemoveProgress)
+void SingleCellViewWidget::resetFileTabIcon(SingleCellViewSimulation *pSimulation)
 {
+    // Retrieve our most recently stopped simulation, if none was provided
+
+    SingleCellViewSimulation *simulation = pSimulation;
+
+    if (!simulation) {
+        simulation = mStoppedSimulations.first();
+
+        if (!simulation)
+            return;
+
+        mStoppedSimulations.removeFirst();
+    }
+
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset
 
     static const QIcon NoIcon = QIcon();
 
-    if (pRemoveProgress)
-        mProgresses.remove(pFileName);
+    mProgresses.remove(simulation->fileName());
 
-    emit updateFileTabIcon(mPluginParent->viewName(), pFileName, NoIcon);
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::resetFileTabIcon()
-{
-    // Reset the file tab icon of our most recently stopped simulation
-
-    SingleCellViewSimulation *simulation = mStoppedSimulations.first();
-
-    mStoppedSimulations.removeFirst();
-
-    resetFileTabIcon(simulation->fileName());
+    emit updateFileTabIcon(mPluginParent->viewName(), simulation->fileName(), NoIcon);
 }
 
 //==============================================================================
@@ -2128,11 +2243,39 @@ void SingleCellViewWidget::simulationError(const QString &pMessage,
 
 //==============================================================================
 
+void SingleCellViewWidget::checkSimulationDataModified(const bool &pCurrentSimulation,
+                                                       const QString &pFileName,
+                                                       const bool &pIsModified)
+{
+    if (pCurrentSimulation) {
+        // We are dealing with the current simulation
+
+        if (mGui->actionDevelopmentMode->isChecked())
+            Core::FileManager::instance()->setModified(pFileName, pIsModified);
+        else
+            mGui->actionResetModelParameters->setEnabled(pIsModified);
+    } else {
+        // We are dealing with another simulation
+
+        if (mDevelopmentModes.value(pFileName))
+            Core::FileManager::instance()->setModified(pFileName, pIsModified);
+        else
+            mResets.insert(pFileName, pIsModified);
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
 {
-    // Update the modified state of the sender's corresponding file
+    // Update the modified state of the sender's corresponding file or reset
+    // action
 
-    Core::FileManager::instance()->setModified(qobject_cast<SingleCellViewSimulationData *>(sender())->simulation()->fileName(), pIsModified);
+    SingleCellViewSimulationData *simulationData = qobject_cast<SingleCellViewSimulationData *>(sender());
+
+    checkSimulationDataModified(simulationData == mSimulation->data(),
+                                simulationData->simulation()->fileName(),
+                                pIsModified);
 }
 
 //==============================================================================
@@ -2148,36 +2291,16 @@ void SingleCellViewWidget::splitterWidgetMoved()
 
 void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
-    // Update our plots, if it's not the point interval property that has been
-    // updated
+    // Update our simulation properties, as well as our plots, if it's not the
+    // point interval property that has been updated
+
+    updateSimulationProperties(pProperty);
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (pProperty != simulationWidget->pointIntervalProperty()) {
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot);
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::checkSolversPropertyChanged(Core::Property *pProperty,
-                                                       const QString &pSolverName,
-                                                       SingleCellViewInformationSolversWidgetData *pSolverData)
-{
-    // Check whether any of the given solver properties has been modified and,
-    // if so, update its visibility accordingly
-
-    if (pSolverData) {
-        if (pProperty != pSolverData->solversListProperty()) {
-            foreach (Core::Property *property, pSolverData->solversProperties().value(pSolverName)) {
-                if (pProperty == property) {
-                    updateSolversPropertiesVisibility(pSolverData);
-
-                    return;
-                }
-            }
-        }
     }
 }
 
@@ -2190,17 +2313,9 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
     if (!mSimulation)
         return;
 
-    // Check whether any of our ODE, DAE or NLA solver properties has been
-    // modified and, if so, update its visibility accordingly
+    // Update our solvers properties
 
-    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
-
-    checkSolversPropertyChanged(pProperty, mSimulation->data()->odeSolverName(),
-                                solversWidget->odeSolverData());
-    checkSolversPropertyChanged(pProperty, mSimulation->data()->daeSolverName(),
-                                solversWidget->daeSolverData());
-    checkSolversPropertyChanged(pProperty, mSimulation->data()->nlaSolverName(),
-                                solversWidget->nlaSolverData());
+    updateSolversProperties(pProperty);
 }
 
 //==============================================================================
@@ -2518,8 +2633,9 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     //       SingleCellViewWidget::simulationDataModified()), resulting in some
     //       time overhead, so we check things here instead...
 
-    Core::FileManager::instance()->setModified(pSimulation->fileName(),
-                                               pSimulation->data()->isModified());
+    checkSimulationDataModified(pSimulation == mSimulation,
+                                pSimulation->fileName(),
+                                pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
 

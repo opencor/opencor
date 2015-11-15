@@ -48,19 +48,19 @@
     <string>Ctrl+F2</string>
    </property>
   </action>
-  <action name="actionDebugMode">
+  <action name="actionDevelopmentMode">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../res/SingleCellView.qrc">
-     <normaloff>:/oxygen/actions/tools-report-bug.png</normaloff>:/oxygen/actions/tools-report-bug.png</iconset>
+     <normaloff>:/oxygen/actions/run-build-configure.png</normaloff>:/oxygen/actions/run-build-configure.png</iconset>
    </property>
    <property name="text">
-    <string>Debug Mode</string>
+    <string>Development Mode</string>
    </property>
    <property name="statusTip">
-    <string>Enable the debug mode</string>
+    <string>Enable/disable the development mode</string>
    </property>
   </action>
   <action name="actionAddGraphPanel">

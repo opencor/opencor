@@ -71,7 +71,7 @@ public:
     SingleCellViewInformationGraphsWidget * graphsWidget();
     SingleCellViewInformationParametersWidget * parametersWidget();
 
-    void finishEditing();
+    void finishEditing(const bool &pPausedSimulation);
 
 private:
     Core::CollapsibleWidget *mCollapsibleWidget;

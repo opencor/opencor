@@ -417,8 +417,8 @@
         <translation>Exporter les données de la simulation</translation>
     </message>
     <message>
-        <source>Enable the debug mode</source>
-        <translation>Activer le mode déboguage</translation>
+        <source>Enable/disable the development mode</source>
+        <translation>Activer/désactiver le mode développement</translation>
     </message>
     <message>
         <source>Add a graph panel</source>
@@ -437,8 +437,8 @@
         <translation>Arrêter Simulation</translation>
     </message>
     <message>
-        <source>Debug Mode</source>
-        <translation>Mode Déboguage</translation>
+        <source>Development Mode</source>
+        <translation>Mode Développement</translation>
     </message>
     <message>
         <source>Add Graph Panel</source>
