@@ -231,8 +231,8 @@ void SingleCellViewInformationParametersWidget::finalize(const QString &pFileNam
 {
     // Remove track of our property editor and its context menu
     // Note: we don't want to delete our 'old' property editor straightaway when
-    //       reloading a file. Indeed, if we were to delete it, the area where
-    //       it sits would become blank for a split second before our 'new'
+    //       reloading a file. Indeed, if we were to do so, the area where it
+    //       sits would become blank for a split second before our 'new'
     //       property editor is created and becomes visible. So, instead, we
     //       delete it in initialize()...
 

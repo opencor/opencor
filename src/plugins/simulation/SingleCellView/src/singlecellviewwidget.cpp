@@ -899,11 +899,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         //          and another after we update our plots' axes' values. This is
         //          clearly not neat, hence the current solution...
         // Note #3: to initialise our parameters widget now would result in some
-        //          default (i.e. wrong) values being visible for a split second
-        //          before they get properly updated. So, instead, we initialise
-        //          whatever needs initialising (e.g. NLA solver) so that we can
-        //          safely compute our model parameters before showing their
-        //          values...
+        //          default (in the computer science sense, i.e. wrong) values
+        //          being visible for a split second before they get properly
+        //          updated. So, instead, we initialise whatever needs
+        //          initialising (e.g. NLA solver) so that we can safely compute
+        //          our model parameters before showing their values...
 
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
@@ -931,7 +931,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             updateSolversProperties();
         }
 
-        // Nowe, we can safely update our parameters widget since our model
+        // Now, we can safely update our parameters widget since our model
         // parameters have been computed
 
         informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation, pReloadingView);
