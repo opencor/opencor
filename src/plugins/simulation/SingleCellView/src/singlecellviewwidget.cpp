@@ -1356,7 +1356,16 @@ void SingleCellViewWidget::on_actionClearSimulationData_triggered()
 
 void SingleCellViewWidget::on_actionDevelopmentMode_triggered()
 {
-//---GRY--- TO BE DONE...
+    // The development mode has just been enabled/disabled, so update the
+    // modified state of our current file accordingly
+
+    if (mGui->actionDevelopmentMode->isChecked()) {
+        checkSimulationDataModified(true, mSimulation->fileName(),
+                                    mSimulation->data()->isModified());
+    } else {
+        Core::FileManager::instance()->setModified(mSimulation->fileName(),
+                                                   false);
+    }
 }
 
 //==============================================================================
