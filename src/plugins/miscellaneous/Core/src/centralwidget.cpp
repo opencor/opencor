@@ -1896,7 +1896,11 @@ void CentralWidget::updateModifiedSettings()
             ++nbOfLocalNewOrModifiedFiles;
     }
 
-    // Reset the enabled state and tool tip of all our View tabs
+    // Reset the enabled state and tool tip of our Mode tabs and of all our View
+    // tabs
+
+    mModeTabs->setEnabled(true);
+    mModeTabs->setToolTip(QString());
 
     foreach (CentralWidgetMode *mode, mModes) {
         TabBarWidget *viewTabs = mode->viewTabs();
@@ -1905,14 +1909,17 @@ void CentralWidget::updateModifiedSettings()
         viewTabs->setToolTip(QString());
     }
 
-    // Enable/disable the current mode's View tabs, in case the current file has
-    // been modified
+    // Enable/disable the Mode tabs and the current mode's View tabs, in case
+    // the current file has been modified
 
     QString fileName = mFileTabs->count()?
                            mFileNames[mFileTabs->currentIndex()]:
                            QString();
 
     if (fileManagerInstance->isModified(fileName)) {
+        mModeTabs->setEnabled(false);
+        mModeTabs->setToolTip(tr("The file is being edited, so switching modes is not possible for now"));
+
         TabBarWidget *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
 
         viewTabs->setEnabled(false);
