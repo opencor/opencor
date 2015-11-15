@@ -2250,7 +2250,7 @@ void SingleCellViewWidget::checkSimulationDataModified(const bool &pCurrentSimul
         // We are dealing with the current simulation
 
         if (mGui->actionDevelopmentMode->isChecked())
-            Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
+            Core::FileManager::instance()->setModified(pFileName, pIsModified);
         else
             mGui->actionResetModelParameters->setEnabled(pIsModified);
     } else {
