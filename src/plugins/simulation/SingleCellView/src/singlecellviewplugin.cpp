@@ -84,9 +84,9 @@ void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 
 void SingleCellViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has been un/locked, so let our view widget know about it
 
-    // We don't handle this interface...
+    mViewWidget->filePermissionsChanged(pFileName);
 }
 
 //==============================================================================

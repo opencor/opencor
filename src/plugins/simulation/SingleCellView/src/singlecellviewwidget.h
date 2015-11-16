@@ -121,6 +121,7 @@ public:
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
     void fileOpened(const QString &pFileName);
+    void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
@@ -154,6 +155,7 @@ private:
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
     QMap<QString, bool> mDevelopmentModes;
+    QMap<QString, bool> mLockedDevelopmentModes;
 
     Core::ToolBarWidget *mToolBarWidget;
 

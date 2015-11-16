@@ -111,6 +111,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
     mDevelopmentModes(QMap<QString, bool>()),
+    mLockedDevelopmentModes(QMap<QString, bool>()),
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
@@ -695,8 +696,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // Retrieve the status of the reset action, the simulation delay and the
     // development mode
 
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
     if (!mDevelopmentModes.value(pFileName))
         mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName));
+
+    mGui->actionDevelopmentMode->setEnabled(fileManagerInstance->isReadableAndWritable(pFileName));
 
     mDelayWidget->setValue(mDelays.value(pFileName));
     mGui->actionDevelopmentMode->setChecked(mDevelopmentModes.value(pFileName));
@@ -723,7 +728,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     if (!mOutputWidget->document()->isEmpty())
         information += "<hr/>\n";
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = fileManagerInstance->isNew(pFileName)?
                            tr("File")+" #"+QString::number(fileManagerInstance->newIndex(pFileName)):
                            fileManagerInstance->isRemote(pFileName)?
@@ -1119,6 +1123,26 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
     // Let our graphs widget know that the given file has been opened
 
     mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
+{
+    // The given file has been un/locked, so enable/disable the development mode
+    // and keep track of its checked status or recheck it, as necessary
+
+    if (mSimulation && !mSimulation->fileName().compare(pFileName)) {
+         if (Core::FileManager::instance()->isReadableAndWritable(pFileName)) {
+             mGui->actionDevelopmentMode->setEnabled(true);
+             mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentModes.value(pFileName));
+         } else {
+             mLockedDevelopmentModes.insert(pFileName, mGui->actionDevelopmentMode->isChecked());
+
+             mGui->actionDevelopmentMode->setChecked(false);
+             mGui->actionDevelopmentMode->setEnabled(false);
+         }
+    }
 }
 
 //==============================================================================
