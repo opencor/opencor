@@ -486,10 +486,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * Model
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -504,10 +501,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -524,9 +518,6 @@ public:
    * Copy constructor; creates a (deep) copy of the given Model object.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   Model(const Model& orig);
 
@@ -536,13 +527,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Model& operator=(const Model& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Constraint.
    *
@@ -551,6 +540,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -2861,8 +2851,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
-
  /**************************************************************
   * Conversion between levels/versions
   *
@@ -2888,7 +2876,7 @@ public:
    * writeAttributes() methods, however there are some difference between
    * L1 and L3 that require the underlying Model to be changed.
    */
-  void convertL1ToL3 ();
+  void convertL1ToL3 (bool addDefaultUnits = true);
 
 
   /*
@@ -2898,7 +2886,7 @@ public:
    * writeAttributes() methods, however there are some difference between
    * L2 and L3 that require the underlying Model to be changed.
    */
-  void convertL2ToL3 (bool strict = false);
+  void convertL2ToL3 (bool strict = false, bool addDefaultUnits = true);
 
 
   /*
@@ -3035,15 +3023,6 @@ public:
 //  void convertLayoutToAnnotation ();
 
 
-  /*
-   * Converts the model to a from SBML Level 1 to Level 2.
-   *
-   * Most of the necessary changes occur during the various
-   * writeAttributes() methods, however there are some difference between
-   * L1 and L2 that require the underlying Model to be changed.
-   */
-  void convertToL2Strict ();
-
 
   /*
    * Sets the parent SBMLDocument of this SBML object.
@@ -3175,7 +3154,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Adds a copy of the given FormulaUnitsData object to this Model.
    *
@@ -3696,7 +3674,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Subclasses should override this method to read (and store) XHTML,
    * MathML, etc. directly from the XMLInputStream.
@@ -3808,7 +3785,6 @@ protected:
   private:
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Internal function used in populateListFormulaUnitsData
    */

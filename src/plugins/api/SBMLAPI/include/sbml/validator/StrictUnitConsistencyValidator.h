@@ -1,7 +1,7 @@
 /**
  * @cond doxygenLibsbmlInternal
  *
- * @file    MathMLConsistencyValidator.h
+ * @file    StrictUnitConsistencyValidator.h
  * @brief   Performs consistency checks on an SBML model
  * @author  Ben Bornstein
  *
@@ -32,8 +32,8 @@
  * also available online as http://sbml.org/software/libsbml/license.html
  * ---------------------------------------------------------------------- -->*/
 
-#ifndef MathMLConsistencyValidator_h
-#define MathMLConsistencyValidator_h
+#ifndef StrictUnitConsistencyValidator_h
+#define StrictUnitConsistencyValidator_h
 
 
 #ifdef __cplusplus
@@ -43,14 +43,14 @@
 
 LIBSBML_CPP_NAMESPACE_BEGIN
 
-class MathMLConsistencyValidator: public Validator
+class StrictUnitConsistencyValidator: public Validator
 {
 public:
 
-  MathMLConsistencyValidator () :
-    Validator( LIBSBML_CAT_MATHML_CONSISTENCY ) { }
+  StrictUnitConsistencyValidator () :
+    Validator( LIBSBML_CAT_UNITS_CONSISTENCY ) { }
 
-  virtual ~MathMLConsistencyValidator () { }
+  virtual ~StrictUnitConsistencyValidator () { }
 
   /**
    * Initializes this Validator with a set of Constraints.
@@ -61,6 +61,6 @@ public:
 LIBSBML_CPP_NAMESPACE_END
 
 #endif  /* __cplusplus */
-#endif  /* MathMLConsistencyValidator_h */
+#endif  /* StrictUnitConsistencyValidator_h */
 /** @endcond */
 

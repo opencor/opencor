@@ -169,10 +169,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * LocalParameter.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -195,10 +192,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -215,9 +209,6 @@ public:
    * Copy constructor; creates a copy of a given LocalParameter object.
    *
    * @param orig the LocalParameter instance to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   LocalParameter(const LocalParameter& orig);
 
@@ -227,9 +218,6 @@ public:
    * the attributes of a given Parameter object.
    *
    * @param orig the Parameter instance to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   LocalParameter(const Parameter& orig);
 
@@ -239,13 +227,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   LocalParameter& operator=(const LocalParameter& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of LocalParameter.
    *
@@ -258,6 +244,7 @@ public:
    * in the enclosing KineticLaw).
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -345,7 +332,6 @@ public:
   virtual bool hasRequiredAttributes() const ;
 
   /** @cond doxygenLibsbmlInternal */
-
   /* a local Parameter does not have a constant attribute but
    * because it derives from parameter it inherits one
    * need to make sure these do the right thing
@@ -362,7 +348,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Subclasses should override this method to get the list of
    * expected attributes.
@@ -425,6 +410,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfLocalParameters (unsigned int level, unsigned int version);
 
@@ -438,6 +427,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfLocalParameters object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfLocalParameters (SBMLNamespaces* sbmlns);
 
@@ -584,7 +577,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Get the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -605,7 +597,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create a ListOfLocalParameters object corresponding to the next token in
    * the XML input stream.

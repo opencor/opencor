@@ -264,9 +264,6 @@ public:
    * Copy constructor; creates a copy of this XMLAttributes object.
    *
    * @p orig the XMLAttributes object to copy.
-   *
-   * @throws XMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   XMLAttributes(const XMLAttributes& orig);
 
@@ -276,9 +273,6 @@ public:
    *
    * @param rhs The XMLAttributes object whose values are used as the basis
    * of the assignment.
-   *
-   * @throws XMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   XMLAttributes& operator=(const XMLAttributes& rhs);
 
@@ -792,8 +786,6 @@ public:
    *
    * @param value a Boolean, the return parameter into which the value should
    * be assigned.
-   *
-   * @copydetails doc_read_methods_common_args
    *
    * @param log an XMLErrorLog object, an optional error log for reporting
    * problems.
@@ -1532,7 +1524,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Writes this XMLAttributes set to stream.
    *
@@ -1579,7 +1570,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Used by attributeTypeError().
    */

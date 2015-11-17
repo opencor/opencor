@@ -96,6 +96,7 @@ LIBSBML_CPP_NAMESPACE_BEGIN
 
 class SBMLNamespaces;
 
+
 class LIBSBML_EXTERN AlgebraicRule : public Rule
 {
 public:
@@ -108,10 +109,7 @@ public:
    *
    * @param version the SBML Version to assign to this AlgebraicRule object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -126,10 +124,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind of
-   * SBML object, are either invalid or mismatched with respect to the parent
-   * SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -150,6 +145,7 @@ public:
   virtual AlgebraicRule* clone () const;
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of AlgebraicRule.
    *
@@ -160,10 +156,10 @@ public:
    * in the list of rules within which @em the present object is embedded.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * sets the mInternalIdOnly flag
    */
@@ -190,7 +186,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   bool mInternalIdOnly;
 
   /* the validator classes need to be friends to access the

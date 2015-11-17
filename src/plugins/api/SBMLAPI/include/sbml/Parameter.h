@@ -193,10 +193,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * Parameter
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -219,10 +216,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -239,10 +233,7 @@ public:
    * Copy constructor; creates a copy of a Parameter.
    *
    * @param orig the Parameter instance to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
-   */
+     */
   Parameter(const Parameter& orig);
 
 
@@ -251,13 +242,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Parameter& operator=(const Parameter& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Parameter.
    *
@@ -269,6 +258,7 @@ public:
    * embedded.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -534,7 +524,7 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
    *
    * @see isSetConstant()
-   * @see setConstant(@if java String@endif)
+   * @see setConstant(@if java boolean@endif)
    * @see getConstant()
    */
   int unsetConstant ();
@@ -702,7 +692,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /* set a flag to indicate that a parameter should
    * calculate its units from math */
   virtual void setCalculatingUnits(bool calculatingUnits);
@@ -712,7 +701,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   Parameter (SBMLNamespaces* sbmlns, bool isLocal);
 
   /**
@@ -807,7 +795,6 @@ private:
   /** @endcond */
 
   /** @cond doxygenLibsbmlInternal */
-
   /* flag to indicate that a parameter should calculate its units from math */
   bool getCalculatingUnits() const;
 
@@ -831,6 +818,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfParameters (unsigned int level, unsigned int version);
 
@@ -844,6 +835,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfParameters object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfParameters (SBMLNamespaces* sbmlns);
 
@@ -971,7 +966,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Gets the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -992,7 +986,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create a ListOfParameters object corresponding to the next token in
    * the XML input stream.

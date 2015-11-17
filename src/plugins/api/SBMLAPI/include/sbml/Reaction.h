@@ -216,10 +216,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * Reaction
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -234,10 +231,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -254,9 +248,6 @@ public:
    * Copy constructor; creates a copy of this Reaction.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   Reaction (const Reaction& orig);
 
@@ -266,13 +257,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Reaction& operator=(const Reaction& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Reaction.
    *
@@ -281,6 +270,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -642,6 +632,36 @@ public:
    */
   int addReactant (const SpeciesReference* sr);
 
+  /**
+   * Adds the given species as a reactant with the given stoichiometry
+   *
+   * @param species the species to be added as reactant
+   *
+   * @param stoichiometry an optional parameter specifying the
+   *        stoichiometry of the product (defaulting to 1)
+   *
+   * @param id an optional id to be given to the species reference that will
+   *        be created. (defaulting to empty string, i.e. not set)
+   *
+   * @param constant an attribute specifying whether the species reference is
+   *        constant or not (defaulting to true)
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_INVALID_OBJECT, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_INVALID_ATTRIBUTE_VALUE, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_DUPLICATE_OBJECT_ID, OperationReturnValues_t}
+   *
+   * @copydetails doc_note_object_is_copied
+   *
+   * @note the Species object itself is NOT added to the model
+   *
+   * @see createProduct()
+   */
+  int addReactant(const Species* species,
+                  double stoichiometry = 1.0,
+                  const std::string& id = "",
+                  bool constant = true);
 
   /**
    * Adds a given SpeciesReference object as a product in this Reaction.
@@ -663,6 +683,36 @@ public:
    */
   int addProduct (const SpeciesReference* sr);
 
+  /**
+   * Adds the given species as a product with the given stoichiometry
+   *
+   * @param species the species to be added as product
+   *
+   * @param stoichiometry an optional parameter specifying the
+   *        stoichiometry of the product (defaulting to 1)
+   *
+   * @param id an optional id to be given to the species reference that will
+   *        be created. (defaulting to empty string, i.e. not set)
+   *
+   * @param constant an attribute specifying whether the species reference is
+   *        constant or not (defaulting to true)
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_INVALID_OBJECT, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_INVALID_ATTRIBUTE_VALUE, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_DUPLICATE_OBJECT_ID, OperationReturnValues_t}
+   *
+   * @copydetails doc_note_object_is_copied
+   *
+   * @note the Species object itself is NOT added to the model
+   *
+   * @see createProduct()
+   */
+  int addProduct(const Species* species,
+                 double stoichiometry = 1.0,
+                 const std::string& id = "",
+                 bool constant = true);
 
   /**
    * Adds a given ModifierSpeciesReference object as a product in this
@@ -687,6 +737,28 @@ public:
    */
   int addModifier (const ModifierSpeciesReference* msr);
 
+  /**
+   * Adds the given species as a modifier to this reaction
+   *
+   * @param species the species to be added as modifier
+   *
+   * @param id an optional id to be given to the species reference that will
+   *        be created. (defaulting to empty string, i.e. not set)
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_INVALID_OBJECT, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_INVALID_ATTRIBUTE_VALUE, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_DUPLICATE_OBJECT_ID, OperationReturnValues_t}
+   *
+   * @copydetails doc_note_object_is_copied
+   *
+   * @note the Species object itself is NOT added to the model
+   *
+   * @see createModifier()
+   */
+  int addModifier(const Species *species,
+                  const std::string &id = "");
 
   /**
    * Creates a new SpeciesReference, adds it to this Reaction's list of
@@ -1072,7 +1144,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Sets the parent SBMLDocument of this SBML object.
    */
@@ -1159,7 +1230,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return an SBML object of this class, if present.
    *
@@ -1257,6 +1327,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfReactions (unsigned int level, unsigned int version);
 
@@ -1270,6 +1344,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfReactions object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfReactions (SBMLNamespaces* sbmlns);
 
@@ -1388,7 +1466,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Return the position of this element.
    *
@@ -1402,7 +1479,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return an SBML object of this class, if present.
    *
@@ -1893,6 +1969,85 @@ Reaction_addProduct (Reaction_t *r, const SpeciesReference_t *sr);
 LIBSBML_EXTERN
 int
 Reaction_addModifier (Reaction_t *r, const SpeciesReference_t *msr);
+
+/**
+ * Adds a copy of the given Species_t object as a reactant to this Reaction_t.
+ *
+ * @param r the Reaction_t structure to which the reactant is added
+ * @param s the Species_t structure to be added as reactant
+ * @param stoichiometry of the product
+ * @param id be given to the species reference that will
+ *        be created.
+ * @param constant an attribute specifying whether the species reference is
+ *        constant or not
+ *
+ * @copydetails doc_returns_success_code
+ * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_LEVEL_MISMATCH, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_VERSION_MISMATCH, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+ *
+ * @note the Species_t structure itself is NOT added to the model
+ *
+ * @memberof Reaction_t
+ */
+LIBSBML_EXTERN
+int
+Reaction_addReactantBySpecies (Reaction_t *r, const Species_t *s,
+                               double stoichiometry, const char *id,
+                               int constant);
+
+
+/**
+ * Adds a copy of the given Species_t object as a product to this Reaction_t.
+ *
+ * @param r the Reaction_t structure to which the product is added
+ * @param s the Species_t structure to be added as product
+ * @param stoichiometry of the product
+ * @param id be given to the species reference that will
+ *        be created.
+ * @param constant an attribute specifying whether the species reference is
+ *        constant or not
+ *
+ * @copydetails doc_returns_success_code
+ * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_LEVEL_MISMATCH, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_VERSION_MISMATCH, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+ *
+ * @note the Species_t structure itself is NOT added to the model
+ *
+ * @memberof Reaction_t
+ */
+LIBSBML_EXTERN
+int
+Reaction_addProductBySpecies (Reaction_t *r, const Species_t *s,
+                               double stoichiometry, const char *id,
+                               int constant);
+
+
+/**
+ * Adds a copy of the given Species_t object as a modifier to this Reaction_t.
+ *
+ * @param r the Reaction_t structure to which the modifier is added
+ * @param s the Species_t structure to be added as modifier
+ * @param id be given to the species reference that will
+ *        be created.
+ *
+ * @copydetails doc_returns_success_code
+ * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_LEVEL_MISMATCH, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_VERSION_MISMATCH, OperationReturnValues_t}
+ * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+ *
+ * @note the Species_t structure itself is NOT added to the model
+ *
+ * @memberof Reaction_t
+ */
+LIBSBML_EXTERN
+int
+Reaction_addModifierBySpecies (Reaction_t *r, const Species_t *s,
+                               const char *id);
 
 
 /**

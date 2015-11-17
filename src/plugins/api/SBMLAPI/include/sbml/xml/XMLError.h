@@ -547,6 +547,7 @@ typedef enum
                                        specified in the error log. */
   , LIBSBML_OVERRIDE_DONT_LOG     /*!< All error logging is disabled. */
   , LIBSBML_OVERRIDE_WARNING      /*!< All errors will be logged as warnings */
+  , LIBSBML_OVERRIDE_ERROR        /*!< All warnings will be logged as errors */
 
 } XMLErrorSeverityOverride_t;
 
@@ -673,9 +674,6 @@ public:
    * Copy constructor; creates a copy of this XMLError.
    *
    * @p orig the XMLError object to copy.
-   *
-   * @throws XMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   XMLError(const XMLError& orig);
 
@@ -685,9 +683,6 @@ public:
    *
    * @param rhs The XMLError object whose values are used as the basis
    * of the assignment.
-   *
-   * @throws XMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   XMLError& operator=(const XMLError& rhs);
 
@@ -1113,7 +1108,6 @@ public:
 #ifndef SWIG
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Creates and returns a deep copy of this XMLError object.
    *
@@ -1138,7 +1132,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   unsigned int mErrorId;
 
   std::string  mMessage;
@@ -1170,7 +1163,6 @@ protected:
 #ifndef SWIG
 
 /** @cond doxygenLibsbmlInternal */
-
 /**
  * Outputs the given XMLError_t (or the derived class (e.g. SBMLError) ) to stream
  * by invoking the print function which is implemented as a virtual function in
@@ -1194,7 +1186,6 @@ typedef struct {
   const char*  shortMessage;
   const char*  message;
 } xmlErrorTableEntry;
-
 /** @endcond */
 
 #endif  /* !SWIG */

@@ -100,10 +100,9 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * SimpleSpeciesReference
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   SimpleSpeciesReference (unsigned int level, unsigned int version);
 
@@ -118,9 +117,6 @@ public:
    * Copy constructor; creates a copy of this SimpleSpeciesReference.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   SimpleSpeciesReference(const SimpleSpeciesReference& orig);
 
@@ -130,13 +126,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SimpleSpeciesReference& operator=(const SimpleSpeciesReference& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -145,6 +139,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -298,7 +293,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   virtual bool hasRequiredAttributes() const ;
 
   /**

@@ -88,9 +88,6 @@ public:
    * This creates a copy of an SBMLConverter object.
    *
    * @param orig the SBMLConverter object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   SBMLConverter(const SBMLConverter& orig);
 
@@ -106,9 +103,6 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SBMLConverter& operator=(const SBMLConverter& rhs);
 
@@ -294,7 +288,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   SBMLDocument *   mDocument;
   ConversionProperties *mProps;
   std::string mName;
@@ -304,8 +297,6 @@ protected:
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
-
   /** @endcond */
 };
 

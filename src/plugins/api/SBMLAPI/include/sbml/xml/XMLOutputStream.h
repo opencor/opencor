@@ -688,7 +688,7 @@ on yyyy-MM-dd HH:mm with libSBML version <libsbml version>. -->
 
 
   /** @cond doxygenLibsbmlInternal */
-  bool getStringStream()   { return mStringStream;  }
+  bool getStringStream();
   /** @endcond */
 
 
@@ -710,7 +710,6 @@ on yyyy-MM-dd HH:mm with libSBML version <libsbml version>. -->
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Copy Constructor, made private so as to notify users, that copying an input stream is not supported.
    */
@@ -727,7 +726,6 @@ private:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Unitialized XMLOutputStreams may only be created by subclasses.
    */
@@ -819,15 +817,14 @@ protected:
 
   /* this is needed for the derived classes used to create the C wrapper */
   bool mStringStream;
-  void setStringStream()   { mStringStream = true;  }
-  void unsetStringStream() { mStringStream = false; }
+  void setStringStream();
+  void unsetStringStream();
 
   /** @endcond */
 };
 
 
 /** @cond doxygenLibsbmlInternal */
-
 class LIBLAX_EXTERN XMLOutputStringStream : public XMLOutputStream
 {
 public:
@@ -843,17 +840,16 @@ public:
                          , const std::string&  programName  = ""
                          , const std::string&  programVersion = "");
 
-  std::ostringstream& getString() { return mString; }
+  std::ostringstream& getString();
 
 protected:
-
+  /** @cond doxygenLibsbmlInternal */
   std::ostringstream& mString;
+  /** @endcond */
 };
-
 /** @endcond */
 
 /** @cond doxygenLibsbmlInternal */
-
 class LIBLAX_EXTERN XMLOwningOutputStringStream : public XMLOutputStringStream
 {
 public:
@@ -871,11 +867,9 @@ public:
   virtual ~XMLOwningOutputStringStream();
 
 };
-
 /** @endcond */
 
 /** @cond doxygenLibsbmlInternal */
-
 class LIBLAX_EXTERN XMLOutputFileStream : public XMLOutputStream
 {
 public:
@@ -892,12 +886,10 @@ public:
                        , const std::string&  programVersion = "");
 
 };
-
 /** @endcond */
 
 
 /** @cond doxygenLibsbmlInternal */
-
 class LIBLAX_EXTERN XMLOwningOutputFileStream : public XMLOutputFileStream
 {
 public:
@@ -916,7 +908,6 @@ public:
   virtual ~XMLOwningOutputFileStream();
 
 };
-
 /** @endcond */
 
 

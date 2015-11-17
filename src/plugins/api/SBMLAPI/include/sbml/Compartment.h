@@ -484,10 +484,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * Compartment
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -509,10 +506,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -531,9 +525,6 @@ public:
    * This creates a copy of a Compartment object.
    *
    * @param orig the Compartment instance to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   Compartment(const Compartment& orig);
 
@@ -543,13 +534,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Compartment& operator=(const Compartment& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Compartment.
    *
@@ -561,6 +550,7 @@ public:
    * the ListOfCompartments in the parent Model).
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -1160,7 +1150,7 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
    *
    * @see isSetConstant()
-   * @see setConstant(@if java String@endif)
+   * @see setConstant(@if java bool@endif)
    * @see getConstant()
    */
   int unsetConstant ();
@@ -1353,9 +1343,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
-
-
   /**
    * Subclasses should override this method to get the list of
    * expected attributes.
@@ -1445,6 +1432,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfCompartments (unsigned int level, unsigned int version);
 
@@ -1458,6 +1449,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfCompartments object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfCompartments (SBMLNamespaces* sbmlns);
 
@@ -1583,7 +1578,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Get the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -1604,7 +1598,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return an SBML object of this class, if present.
    *

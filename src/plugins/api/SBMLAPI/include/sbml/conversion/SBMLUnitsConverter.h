@@ -82,7 +82,6 @@ class LIBSBML_EXTERN SBMLUnitsConverter : public SBMLConverter
 public:
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Register with the ConversionRegistry.
    */
@@ -122,9 +121,6 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SBMLUnitsConverter& operator=(const SBMLUnitsConverter& rhs);
 
@@ -200,7 +196,6 @@ public:
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
   bool convertUnits(SBase& sb, Model& m);
 
   bool convertUnits(SBase& sb, Model& m, std::string &modelUnitAttribute, ASTNode *ast = 0);
