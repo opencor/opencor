@@ -274,10 +274,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * UnitDefinition
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -292,10 +289,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -312,9 +306,6 @@ public:
    * Copy constructor; creates a copy of this UnitDefinition.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   UnitDefinition(const UnitDefinition& orig);
 
@@ -324,13 +315,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   UnitDefinition& operator=(const UnitDefinition& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of UnitDefinition.
    *
@@ -342,6 +331,7 @@ public:
    * the ListOfUnitDefinitions located in the enclosing Model instance).
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -822,7 +812,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   static bool areIdenticalSIUnits(const UnitDefinition * ud1,
     const UnitDefinition * ud2);
   /** @endcond */
@@ -939,7 +928,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return a unitDefinition object, if present.
    *
@@ -1022,6 +1010,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfUnitDefinitions (unsigned int level, unsigned int version);
 
@@ -1035,6 +1027,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfUnitDefinitions object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfUnitDefinitions (SBMLNamespaces* sbmlns);
 
@@ -1176,7 +1172,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Get the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -1197,7 +1192,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return a listOfUnitDefinitions object, if present.
    *

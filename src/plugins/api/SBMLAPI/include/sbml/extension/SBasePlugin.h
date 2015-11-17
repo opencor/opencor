@@ -579,6 +579,24 @@ public:
   /** @endcond */
 
 
+  /**
+   * @copydoc doc_renamesidref_common
+   */
+  virtual void renameSIdRefs(const std::string& oldid, const std::string& newid);
+
+
+  /**
+   * @copydoc doc_renamemetasidref_common
+   */
+  virtual void renameMetaIdRefs(const std::string& oldid, const std::string& newid);
+
+
+  /**
+   * @copydoc doc_renameunitsidref_common
+   */
+  virtual void renameUnitSIdRefs(const std::string& oldid, const std::string& newid);
+
+
   /** @cond doxygenLibsbmlInternal */
   virtual int transformIdentifiers(IdentifierTransformer* sidTransformer);
   /** @endcond */
@@ -665,8 +683,7 @@ public:
 
   virtual bool isValidTypeForList(SBase* item) const;
 
-    /** @cond doxygenLibsbmlInternal */
-
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -675,9 +692,13 @@ public:
    * sibling object (if available).
    */
   virtual bool accept (SBMLVisitor& v) const;
-
   /** @endcond */
 
+  /** @cond doxygenLibsbmlInternal */
+
+  const SBMLExtension* getSBMLExtension() const;
+
+  /** @endcond */
 
 protected:
   /** @cond doxygenLibsbmlInternal */

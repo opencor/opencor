@@ -52,9 +52,6 @@ public:
   ASTCnIntegerNode (int type = AST_INTEGER);
 
 
-  ASTCnIntegerNode (const XMLNode *xml);
-
-
   /**
    * Copy constructor
    */
@@ -115,7 +112,5 @@ LIBSBML_CPP_NAMESPACE_END
 #endif /* __cplusplus */
 
 #endif  /* ASTNode_h */
-
-
 /** @endcond */
 

@@ -31,9 +31,9 @@
  * ------------------------------------------------------------------------ -->
  *
  * This file contains no code; it simply defines text fragments used as
- * common documentation blocks in other libSBML files via the @copydetails
+ * common documentation blocks in other libSBML files via the @@copydetails
  * operator from Doxygen.  The use of @@class is a hack needed because
- * Doxygen's @copydetails command has limited functionality.  No classes are
+ * Doxygen's @@copydetails command has limited functionality.  No classes are
  * actually defined, and symbols beginning with "doc_" are marked as ignored
  * in our Doxygen configuration.
  *
@@ -329,6 +329,16 @@
  * may thus contain not only objects defined by SBML Level&nbsp;3 Core, but also
  * objects created by libSBML plug-ins supporting additional Level&nbsp;3
  * packages.
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_what_are_disabled_plugins
+ *
+ * @par
+ * If a plugin is <em>disabled</em>, the package information it contains is
+ * no longer considered to be part of the SBML document for the purposes of
+ * searching the document or writing out the document.  However, the information
+ * is still retained, so if the plugin is enabled again, the same information
+ * will once again be available, and will be written out to the final model.
  *
  * <!-- ------------------------------------------------------------------- -->
  * @class doc_what_are_notes
@@ -3155,4 +3165,112 @@ if (lmp != null)
  * prefix when writing out the package constructs to an XML file.  Since
  * this convention is so common, the libSBML API often uses the prefix
  * as a convenient way to refer to the package.
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_l3v2_specific_addition
+ *
+ * @par
+ * <b>The following section describes how this class or function will behave
+ * in SBML Level&nbsp;3 Version&nbsp;2, but since that specfication has not yet been
+ * released or finalized, libsbml itself might not yet implement support for
+ * this.</b>
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_throw_exception_lv
+ *
+ * @throws SBMLConstructorException
+ * Thrown if the given @p level and @p version combination are invalid
+ * or if this object is incompatible with the given level and version.
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_throw_exception_namespace
+ *
+ * @throws SBMLConstructorException
+ * Thrown if the given @p sbmlns is inconsistent or incompatible
+ * with this object.
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_note_fbcv2_annotation_replacement
+ *
+ * @note This class of objects was introduced in Version&nbsp;2 of the
+ * SBML Level&nbsp;3 Flux Balance Constraints (&ldquo;fbc&rdquo;)
+ * specification.  In Version&nbsp;1 of &ldquo;fbc&rdquo;, the information
+ * encoded by this class can be stored instead using the Association and
+ * GeneAssociation annotation classes.  Please see the Version&nbsp;1 and
+ * Version&nbsp;2 &ldquo;fbc&rdquo; specifications for more details.
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_common_intro_package_validators
+ *
+ * @par
+ * LibSBML implements facilities for verifying that a given SBML document
+ * is valid according to the SBML specifications; it also exposes the
+ * validation interface so that user programs and SBML Level&nbsp;3 package
+ * authors may use the facilities to implement new validators.  There are
+ * two main interfaces to libSBML's validation facilities, based on the
+ * classes Validator and ValidatingVisitor.
+ *
+ * <!-- ------------------------------------------------------------------- -->
+ * @class doc_section_package_validators_general_info
+ *
+ * @section general-pkg-validators General information about package-specific validators
+ *
+ * The general SBMLDocument::checkConsistency() methods that perform
+ * validation make use of the libSBML plugin mechanism to invoke the
+ * package-specific validators via the relevant document plugin.  In the case
+ * of a validator such as FbcValidator, QualValidator, and others, the
+ * package-specific validator acts on the constructs from the relevant
+ * package rather than on core SBML constructs.  (However, this does not
+ * necessarily mean it does not take into account the whole SBML
+ * model&mdash;the information needed by a given validator to do its work is
+ * up to the validator itself.)
+ *
+ * Package-specific validators are invoked when
+ * SBMLDocument::checkConsistency() is invoked on the overall SBMLDocument
+ * object.  As the main validation procedure executes, it passes control to
+ * each libSBML package plugin via the plugin's <code><span class="code"
+ * style="background-color: #ffccbb; font-style: italic">Package</span>SBMLDocumentPlugin</code>
+ * class, (where <code><span class="code" style="background-color: #ffccbb;
+ * font-style: italic">Package</span></code> is the package prefix, such as
+ * <code>Qual</code>, or <code>Fbc</code>).  These class implement their own
+ * consistency-checking functions for rules defined in the relevant SBML
+ * Level&nbsp;3 package.
+ *
+ * The package-specific validators obey the same categories of
+ * consistency/error checks as are used by the overall
+ * SBMLDocument::checkConsistency().  This means that, for example, if
+ * identifier validation is turned off, it is turned off in all SBML
+ * Level&nbsp;3 package validators too. See
+ * SBMLDocument::setConsistencyChecks(@if java int categ, boolean
+ * onoff@endif) for more information about categories and how
+ * to control them.
+ *
+ * @see SBMLDocument::checkConsistency()
+ * @see SBMLDocument::checkInternalConsistency()
+ * @see SBMLDocument::setConsistencyChecks(@if java int categ, boolean onoff@endif)
+ */
+
+/* <!-- -------------------------------------------------------------------
+ * Temporarily removed text from Lucian bout l3v2 things that are not yet
+ * official.  This came from the section on "a model must not contain
+ * algebraic loops".
+ *
+ * @copydetails doc_l3v2_specific_addition
+ *
+ * Similarly, the combined set of RateRule and Reaction objects constitute
+ * a set of definitions for the rates of change of various model entities
+ * (namely, the objects identified by the values of the 'variable' attributes
+ * of the RateRule objects, and the 'species' attributes of the SpeciesReference
+ * objects in each Reaction).  These rates of change may be referenced directly
+ * using the <em>rateOf</em> csymbol, but may not thereby contain algebraic
+ * loops---dependency chains between these statements must terminate.  More
+ * formally, consider a directed graph in which the nodes are the definitions
+ * of different variables' rates of change, and directed arcs exist for each
+ * occurrence of a variable referenced by a <em>rateOf</em> csymbol from any
+ * RateRule or KineticLaw object in the model.  Let the directed arcs point
+ * from the variable referenced by the <em>rateOf</em> csymbol (call it
+ * <em>x</em>) to the variable(s) determined by the 'math' expression in which
+ * <em>x</em> appears.  This graph must be acyclic.
+ *
+ * -->
  */

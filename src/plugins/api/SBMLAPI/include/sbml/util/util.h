@@ -40,7 +40,32 @@
 
 /** @cond doxygenLibsbmlInternal */
 
+#ifdef __cplusplus
+
+#include <string>
+
 LIBSBML_CPP_NAMESPACE_BEGIN
+
+/**
+ * Utility function that replaces all occurences of 'from' to 'to'
+ * in the given string.
+ *
+ * @param str, the string to be modified
+ * @param from, the substring to be replaced
+ * @param to, the target substring to be used instead of 'from'
+ *
+ * @return a reference to the string, so that the replace calls can be chained
+ */
+ std::string& replaceAllSubStrings(std::string& str,
+              const std::string& from, const std::string& to);
+
+LIBSBML_CPP_NAMESPACE_END
+
+
+#endif // __cplusplus
+
+LIBSBML_CPP_NAMESPACE_BEGIN
+
 BEGIN_C_DECLS
 
 /**
@@ -169,8 +194,6 @@ util_trim (const char *s);
 LIBSBML_EXTERN
 char *
 util_trim_in_place (char *s);
-
-
 /** @endcond */
 
 
@@ -319,7 +342,6 @@ LIBSBML_EXTERN
 int util_isEqual(double a, double b);
 
 /** @cond doxygenLibsbmlInternal */
-
 /*
  * Function prototypes to supress gcc compiler warnings about implicit
  * declaration of isnan and finite which occur despite the inclusion of
@@ -344,8 +366,6 @@ int util_isEqual(double a, double b);
 #endif
 
 #endif
-
-
 /** @endcond */
 
 END_C_DECLS

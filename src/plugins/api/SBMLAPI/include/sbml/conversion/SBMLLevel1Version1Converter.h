@@ -1,7 +1,7 @@
 /**
- * @file    SBMLLevelVersionConverter.h
- * @brief   Definition of SBMLLevelVersionConverter, the base class for SBML conversion.
- * @author  Sarah Keating
+ * @file    SBMLLevel1Version1Converter.h
+ * @brief   Definition of SBMLLevel1Version1Converter.
+ * @author  Frank Bergmann
  *
  * <!--------------------------------------------------------------------------
  * This file is part of libSBML.  Please visit http://sbml.org for more
@@ -30,22 +30,22 @@
  * and also available online as http://sbml.org/software/libsbml/license.html
  * ------------------------------------------------------------------------ -->
  *
- * @class SBMLLevelVersionConverter
+ * @class SBMLLevel1Version1Converter
  * @sbmlbrief{core} Whole-document SBML Level/Version converter.
  *
  * @htmlinclude libsbml-facility-only-warning.html
  *
  * This SBML converter takes an SBML document having one SBML Level+Version
  * combination, and attempts to convert it to an SBML document having a
- * different Level+Version combination.
+ * different Level+Version combination.  This converter
+ * (SBMLLevel1Version1Converter) converts models to SBML Level&nbsp;1
+ * Version&nbsp;1, to the extent possible by the limited features of
+ * that Level/Version combination of SBML.
  *
- * This class is also the basis for
- * SBMLDocument::setLevelAndVersion(@if java long, long, boolean@endif).
+ * @section SBMLLevel1Version1Converter-usage Configuration and use of SBMLLevel1Version1Converter
  *
- * @section SBMLLevelVersionConverter-usage Configuration and use of SBMLLevelVersionConverter
- *
- * SBMLLevelVersionConverter is enabled by creating a ConversionProperties
- * object with the option @c "setLevelAndVersion", and passing this
+ * SBMLLevel1Version1Converter is enabled by creating a ConversionProperties
+ * object with the option @c "convertToL1V1", and passing this
  * properties object to SBMLDocument::convert(@if java
  * ConversionProperties@endif).  The target SBML Level and Version
  * combination are determined by the value of the SBML namespace set on the
@@ -54,51 +54,34 @@
  *
  * In addition, this converter offers the following options:
  *
- * @li @c "strict": If this option has the value @c true, then the validity
- * of the SBML document will be strictly preserved.  This means that SBML
- * validation will be performed, and if the original model is not valid or
- * semantics cannot be preserved in the converted model, then conversion will
- * not be performed.  Conversely, if this option is set to @c false, model
- * conversion will always be performed; if any errors are detected related to
- * altered semantics, the errors will be logged in the usual way (i.e., the
- * error log on the SBMLDocument object).
+ * @li @c "changePow": Mathematical expressions for exponentiation of
+ * the form <code>pow(s1, 2)</code> will be converted to the expression
+ * <code>s1^2</code>.
  *
- * @li @c "addDefaultUnits": By default, a conversion from SBML Level&nbsp;2
- * to Level&nbsp;3 will explicitly add UnitDefinition objects and unit
- * attributes on the Model object to define units that are implicitly defined
- * in SBML Level&nbsp;2.  This is usually desirable because in SBML
- * Level&nbsp;3, there are no default units and a conversion from
- * Level&nbsp;2 that did @em not add unit definitions would actually result
- * in a loss of information.  However, some users or software tools may not
- * need or want this, or worse, may be fooled into thinking that libSBML has
- * somehow inferred the proper units for model quantities.  (It has not; it
- * merely adds generic predefined units.)  This option lets callers control
- * this behavior.
+ * @li @c "inlineCompartmentSizes": Back in the days of SBML Level&nbsp;1
+ * Version&nbsp;1, many software tools assumed that the "kinetic laws" of
+ * SBML were written in terms of units of
+ * <em>concentration</em>/<em>time</em>.  These tools would not expect (and
+ * thus not handle) rate expressions such as
+ * <code>CompartmentOfS1 * k * S1</code>.
+ * When the option @c "inlineCompartmentSizes" is enabled, libSBML will
+ * replace the references to compartments (such as @c "CompartmentOfS1" in
+ * this example) with their initial sizes.  This is not strictly correct in
+ * all cases; in particular, if the compartment volume varies during
+ * simulation, this conversion will not reflect the expected behavior.
+ * However, many models do not have time-varying compartment sizes, so this
+ * option makes it easy to get modern SBML rate expressions into a form that
+ * old software tools may better understand.
  *
  * @copydetails doc_section_using_sbml_converters
  */
 
-#ifndef SBMLLevelVersionConverter_h
-#define SBMLLevelVersionConverter_h
+#ifndef SBMLLEVEL1VERSION1CONVERTER_H
+#define SBMLLEVEL1VERSION1CONVERTER_H
 
 #include <sbml/SBMLNamespaces.h>
 #include <sbml/conversion/SBMLConverter.h>
 #include <sbml/conversion/SBMLConverterRegister.h>
-
-#include <sbml/validator/ConsistencyValidator.h>
-#include <sbml/validator/IdentifierConsistencyValidator.h>
-#include <sbml/validator/MathMLConsistencyValidator.h>
-#include <sbml/validator/SBOConsistencyValidator.h>
-#include <sbml/validator/UnitConsistencyValidator.h>
-#include <sbml/validator/OverdeterminedValidator.h>
-#include <sbml/validator/ModelingPracticeValidator.h>
-#include <sbml/validator/L1CompatibilityValidator.h>
-#include <sbml/validator/L2v1CompatibilityValidator.h>
-#include <sbml/validator/L2v2CompatibilityValidator.h>
-#include <sbml/validator/L2v3CompatibilityValidator.h>
-#include <sbml/validator/L2v4CompatibilityValidator.h>
-#include <sbml/validator/L3v1CompatibilityValidator.h>
-#include <sbml/validator/InternalConsistencyValidator.h>
 
 
 #ifdef __cplusplus
@@ -107,7 +90,7 @@
 LIBSBML_CPP_NAMESPACE_BEGIN
 
 
-class LIBSBML_EXTERN  SBMLLevelVersionConverter : public SBMLConverter
+class LIBSBML_EXTERN  SBMLLevel1Version1Converter : public SBMLConverter
 {
 public:
 
@@ -121,42 +104,42 @@ public:
 
 
   /**
-   * Creates a new SBMLLevelVersionConverter object.
+   * Creates a new SBMLLevel1Version1Converter object.
    */
-  SBMLLevelVersionConverter ();
+  SBMLLevel1Version1Converter ();
 
 
   /**
-   * Copy constructor; creates a copy of an SBMLLevelVersionConverter
+   * Copy constructor; creates a copy of an SBMLLevel1Version1Converter
    * object.
    *
-   * @param obj the SBMLLevelVersionConverter object to copy.
+   * @param obj the SBMLLevel1Version1Converter object to copy.
    */
-  SBMLLevelVersionConverter(const SBMLLevelVersionConverter& obj);
+  SBMLLevel1Version1Converter(const SBMLLevel1Version1Converter& obj);
 
 
   /**
    * Destroys this object.
    */
-  virtual ~SBMLLevelVersionConverter ();
+  virtual ~SBMLLevel1Version1Converter ();
 
 
   /**
-   * Assignment operator for SBMLLevelVersionConverter.
+   * Assignment operator for SBMLLevel1Version1Converter.
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
    */
-  SBMLLevelVersionConverter& operator=(const SBMLLevelVersionConverter& rhs);
+  SBMLLevel1Version1Converter& operator=(const SBMLLevel1Version1Converter& rhs);
 
 
   /**
-   * Creates and returns a deep copy of this SBMLLevelVersionConverter
+   * Creates and returns a deep copy of this SBMLLevel1Version1Converter
    * object.
    *
    * @return a (deep) copy of this converter.
    */
-  virtual SBMLLevelVersionConverter* clone() const;
+  virtual SBMLLevel1Version1Converter* clone() const;
 
 
   /**
@@ -165,7 +148,7 @@ public:
    *
    * A typical use of this method involves creating a ConversionProperties
    * object, setting the options desired, and then calling this method on
-   * an SBMLLevelVersionConverter object to find out if the object's
+   * an SBMLLevel1Version1Converter object to find out if the object's
    * property values match the given ones.  This method is also used by
    * SBMLConverterRegistry::getConverterFor(@if java ConversionProperties@endif)
    * to search across all registered converters for one matching particular
@@ -215,65 +198,19 @@ public:
 
   /* Convenience functions for this converter */
 
-  /**
-   * Returns the target SBML Level for the conversion.
-   *
-   * @return an integer indicating the SBML Level.
-   */
-  unsigned int getTargetLevel();
-
-
-  /**
-   * Returns the target SBML Version for the conversion.
-   *
-   * @return an integer indicating the Version within the SBML Level.
-   */
-  unsigned int getTargetVersion();
-
-
-  /**
-   * Returns the flag indicating whether the conversion has been set to "strict".
-   *
-   * @return @c true if strict validity has been requested, @c false
-   * otherwise.
-   */
-  bool getValidityFlag();
-
-  /**
-   * Returns the flag indicating whether default units should be added when
-   * converting to L3 or not.
-   *
-   * @return @c true if default units should be added, @c false
-   * otherwise.
-   */
-  bool getAddDefaultUnits();
-
-
-#ifndef SWIG
-
-#endif // SWIG
-
 
 private:
   /** @cond doxygenLibsbmlInternal */
-  bool conversion_errors(unsigned int errors, bool strictUnits = true);
+  /*
+   * Predicate returning true if compartment sizes in kinetic laws should
+   * be inlined with their values.
+   */
+  bool inlineCompartmentSizes();
 
   /*
-   * Predicate returning true if model has strict unit consistency.
+   * Predicate returning true if calls to pow should be replaced with the hat notation.
    */
-  bool hasStrictUnits();
-
-  /*
-   * Predicate returning true if model has strict sbo consistency.
-   */
-  bool hasStrictSBO();
-
-  /*
-   * do actual conversion
-   */
-  bool performConversion(bool strict, bool strictUnits, bool duplicateAnn);
-
-  unsigned int validateConvertedDocument();
+  bool shouldChangePow();
 
   /** @endcond */
 };
@@ -294,5 +231,5 @@ END_C_DECLS
 LIBSBML_CPP_NAMESPACE_END
 
 #endif  /* !SWIG */
-#endif  /* SBMLLevelVersionConverter_h */
+#endif  /* SBMLLEVEL1VERSION1CONVERTER_H */
 

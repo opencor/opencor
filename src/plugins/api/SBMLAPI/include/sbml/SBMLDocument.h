@@ -325,7 +325,6 @@ class SBMLInternalValidator;
 #define PracticeCheckON   0x40
 #define PracticeCheckOFF  0xbf
 #define AllChecksON       0x7f
-
 /** @endcond */
 
 
@@ -387,10 +386,7 @@ public:
    *
    * @param version an integer for the Version within the SBML Level
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @ifnot hasDefaultArgs @htmlinclude warn-default-args-in-docs.html @endif@~
    *
@@ -409,10 +405,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    */
   SBMLDocument (SBMLNamespaces* sbmlns);
 
@@ -427,9 +420,6 @@ public:
    * Copy constructor; creates a copy of this SBMLDocument.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   SBMLDocument (const SBMLDocument& orig);
 
@@ -439,13 +429,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SBMLDocument& operator=(const SBMLDocument& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of SBMLDocument.
    *
@@ -454,6 +442,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -965,6 +954,24 @@ public:
    * @see SBMLDocument::checkInternalConsistency()
    */
   unsigned int checkConsistency ();
+
+
+  /**
+   * Performs consistency checking and validation on this SBML document
+   * using the ultra strict units validator that assumes that there
+   * are no hidden numerical conversion factors.
+   *
+   * If this method returns a nonzero value (meaning, one or more
+   * consistency checks have failed for SBML document), the failures may be
+   * due to warnings @em or errors.  Callers should inspect the severity
+   * flag in the individual SBMLError objects returned by
+   * SBMLDocument::getError(@if java long@endif) to determine the nature of the failures.
+   *
+   * @return the number of failed checks (errors) encountered.
+   *
+   * @see SBMLDocument::checkInternalConsistency()
+   */
+  unsigned int checkConsistencyWithStrictUnits ();
 
 
   /**
@@ -1566,7 +1573,6 @@ public:
   /** @endcond */
 
   /** @cond doxygenLibsbmlInternal */
-
   int addUnknownPackageRequired(const std::string& pkgURI,
                                 const std::string& prefix, bool flag);
 
@@ -1582,7 +1588,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   //typedef std::map<std::string, bool>  PkgRequiredMap;
   //typedef PkgRequiredMap::iterator     PkgRequiredMapIter;
   typedef std::map<std::string, bool>  PkgUseDefaultNSMap;
@@ -1633,8 +1638,8 @@ protected:
   virtual void writeXMLNS (XMLOutputStream& stream) const;
 
 
-  int mLevel;
-  int mVersion;
+  unsigned int mLevel;
+  unsigned int mVersion;
 
   Model* mModel;
   std::string mLocationURI;
@@ -1705,16 +1710,11 @@ SBMLDocument_createWithLevelAndVersion (unsigned int level, unsigned int version
 
 /**
  * Creates a new SBMLDocument using the given SBMLNamespaces_t structure
- * @p sbmlns.
+ * @p sbmlns.  Returns NULL if the @p sbmlns is invalid.
  *
  * @copydetails doc_what_are_sbmlnamespaces
  *
  * @param sbmlns an SBMLNamespaces_t structure.
- *
- * @throws SBMLConstructorException
- * Thrown if the given @p level and @p version combination, or this kind
- * of SBML structure, are either invalid or mismatched with respect to the
- * parent SBMLDocument_t structure.
  *
  * @memberof SBMLDocument_t
  */

@@ -281,6 +281,8 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * SpeciesReference
    *
+   * @copydetails doc_throw_exception_lv
+   *
    * @copydetails doc_note_setting_lv
    */
   SpeciesReference (unsigned int level, unsigned int version);
@@ -291,6 +293,8 @@ public:
    * @p sbmlns.
    *
    * @param sbmlns an SBMLNamespaces object.
+   *
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -307,9 +311,6 @@ public:
    * Copy constructor; creates a copy of this SpeciesReference.
    *
    * @param orig the SpeciesReference instance to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   SpeciesReference (const SpeciesReference& orig);
 
@@ -319,13 +320,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SpeciesReference& operator=(const SpeciesReference& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -334,6 +333,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -867,7 +867,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return a speciesReference object, if present.
    *
@@ -980,6 +979,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfSpeciesReferences (unsigned int level, unsigned int version);
 
@@ -993,6 +996,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfSpeciesReferences object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfSpeciesReferences (SBMLNamespaces* sbmlns);
 
@@ -1118,7 +1125,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Get the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -1133,7 +1139,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   enum SpeciesType { Unknown, Reactant, Product, Modifier };
 
 
