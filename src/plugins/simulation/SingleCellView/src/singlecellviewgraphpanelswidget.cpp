@@ -265,6 +265,10 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
 
+    // Ask our first graph panel's plot to align itself against its neighbours
+
+    mGraphPanels[0]->plot()->forceAlignWithNeighbors();
+
     // Return our newly created graph panel
 
     return res;
