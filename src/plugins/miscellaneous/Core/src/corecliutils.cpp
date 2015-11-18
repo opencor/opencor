@@ -173,7 +173,6 @@ void cleanDomElement(QDomElement &pDomElement,
     if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
         QDomNamedNodeMap domElementAttributes = pDomElement.attributes();
-        QDomAttr attributeNode;
 
         while (domElementAttributes.count()) {
             // Serialise (ourselves) the element's attribute
@@ -195,7 +194,7 @@ void cleanDomElement(QDomElement &pDomElement,
             //       for the attribute is not already defined for the given DOM
             //       element...
 
-            attributeNode = domElementAttributes.item(0).toAttr();
+            QDomAttr attributeNode = domElementAttributes.item(0).toAttr();
 
             if (attributeNode.namespaceURI().isEmpty()) {
                 serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value()+"\"";
