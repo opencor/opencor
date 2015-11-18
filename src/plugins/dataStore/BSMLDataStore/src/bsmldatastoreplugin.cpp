@@ -91,11 +91,11 @@ QString BSMLDataStorePlugin::dataStoreName() const
 // Plugin interface
 //==============================================================================
 
-void BSMLDataStorePlugin::initializePlugin(QMainWindow *pMainWindow)
+void BSMLDataStorePlugin::initializePlugin()
 {
     // Create our BSML data store exporter
 
-    mExporter = new BioSignalMLExporter(pMainWindow);
+    mExporter = new BioSignalMLExporter();
 }
 
 //==============================================================================

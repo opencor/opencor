@@ -50,7 +50,7 @@ class BSMLDATASTORE_EXPORT BioSignalMLSaveDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSaveDialog(QWidget * pParent);
+    explicit BioSignalMLSaveDialog(QWidget * pParent = nullptr);
     ~BioSignalMLSaveDialog();
 
     virtual void retranslateUi();
