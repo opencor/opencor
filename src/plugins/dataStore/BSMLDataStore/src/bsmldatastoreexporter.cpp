@@ -90,8 +90,8 @@ void BioSignalMLExporter::execute(const QString &pFileName,
             double duration = voi->value(voi->size()-1) - voi->value(0);
             recording->set_duration(xsd::Duration(duration, voi->unit().toStdString()));
 
-            std::vector<const std::string> uris;
-            std::vector<const rdf::URI> units;
+            std::vector<std::string> uris;
+            std::vector<rdf::URI> units;
             std::vector<size_t> varindex;
             size_t nvars = variables.size();
             for (size_t i = 0 ;  i < nvars ;  ++i) {
