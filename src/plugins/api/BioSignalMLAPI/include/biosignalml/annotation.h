@@ -22,7 +22,7 @@
 #define BSML_ANNOTATION_H
 
 #include <biosignalml/biosignalml_export.h>
-#include <biosignalml/object.h>
+#include <biosignalml/resource.h>
 #include <biosignalml/timing.h>
 
 using namespace rdf ;
@@ -30,14 +30,22 @@ using namespace rdf ;
 
 namespace bsml {
 
-  class BIOSIGNALML_EXPORT Annotation : public Object
-  /*-----------------------------------------------*/
+  class BIOSIGNALML_EXPORT Annotation : public Resource
+  /*-------------------------------------------------*/
   {
     TYPED_OBJECT(Annotation, BSML::Annotation)
 
-    PROPERTY_URI(about, DCT::subject)
+    PROPERTY_OBJECT(about, DCT::subject, Resource)
     PROPERTY_NODE_SET(tags, BSML::tag)
-    PROPERTY_OBJECT(time, BSML::time, TemporalEntity)
+    PROPERTY_OBJECT(annotation_time, BSML::time, TemporalEntity)
+
+   public:
+    Annotation(const rdf::URI &uri, Resource::Ptr about, const std::string &text="",
+               const std::set<rdf::Node> &tags=std::set<rdf::Node>(),
+               const Annotation::Ptr &predecessor=nullptr) ;
+
+    //!< The time, if any, associated with the resource that is annotated.
+    TemporalEntity::Ptr time(void) const ;
     } ;
 
   } ;

@@ -24,7 +24,6 @@
 #include <typedobject/typedobject_export.h>
 
 #include <string>
-#include <map>
 
 namespace Unit {
 

@@ -22,6 +22,7 @@
 #define TYPEDOBJECT_RDF_H
 
 #include <typedobject/typedobject_export.h>
+#include <typedobject/common.h>
 #include <typedobject/xsd.h>
 
 //**************************************************************************//
@@ -31,6 +32,15 @@
 #include <cmath>
 #include <cinttypes>
 #include <iostream>
+#include <functional>
+#include <memory>
+#include <unordered_map>
+
+//**************************************************************************//
+
+namespace tobj {
+  class TypedObject ;                // Declare forward
+  } ;
 
 //**************************************************************************//
 
@@ -59,6 +69,7 @@ namespace rdf {
 
     bool operator==(const Node &other) const ;
     bool operator<(const Node &other) const ;
+    explicit operator std::string() const ;
     friend TYPEDOBJECT_EXPORT std::ostream & operator<<(std::ostream & os, const Node & node) ;
 
     bool is_valid(void) const ;
@@ -79,6 +90,8 @@ namespace rdf {
     friend class NodeImpl ;
     } ;
 
+  TYPEDOBJECT_EXPORT std::ostream & operator<<(std::ostream & os, const Node & node) ;
+
 
   class TYPEDOBJECT_EXPORT URI : public Node
   /*--------------------------------------*/
@@ -90,8 +103,22 @@ namespace rdf {
     URI(const Node & uri) ;
     URI(const URI & other) ;
     URI(URI && other) ;
+
     URI & operator=(const URI & other) ;
     URI & operator=(URI && other) ;
+
+    /**
+     * Generate a unique URI that starts with this URI.
+     *
+     * :param sibling: When set, replace the last component of our URI with unique text.
+     *   The default is to append unique text to our URI.
+     * :type: bool
+     * :param prefix: If set, insert between the URI and unique text.
+     * :type: str
+     * :return: A unique URI.
+     * :rtype: Uri
+     */
+    URI make_URI(bool sibling=false, const std::string &prefix="") const ;
     } ;
 
 
@@ -166,6 +193,7 @@ namespace rdf {
     Statement(const Node & s, const Node & p, const Node & o) ;
     Statement(const Statement & other) ;
     Statement(Statement && other) ;
+    Statement(StmntImpl *stmnt) ;
     virtual ~Statement() ;
     Statement & operator=(const Statement & other) ;
     Statement & operator=(Statement && other) ;
@@ -187,31 +215,67 @@ namespace rdf {
     bool end(void) const ;
     bool next(void) const ;
     StatementIter & operator++ (void) ;
+    Statement get_statement(void) const ;
     const Node get_subject(void) const ;
     const Node get_predicate(void) const ;
     const Node get_object(void) const ;
-    const Statement get_statement(void) const ;
 
    private:
     IterImpl *m_iter ;
     friend class Graph ;
     } ;
 
+  } ;
+
+//**************************************************************************//
+
+namespace std {
+
+  template <> struct hash<rdf::URI>     // Specify now since referenced below
+  /*------------------------------*/
+  {
+    size_t operator()(const rdf::URI & uri) const
+    /*-----------------------------------------*/
+    {
+      return hash<std::string>()(uri.to_string()) ;
+      }
+
+    } ;
+
+  } ;
+
+//**************************************************************************//
+
+namespace rdf {
 
   class TYPEDOBJECT_EXPORT Graph
   /*--------------------------*/
   {
+    SHARED_PTR(Graph)
+
    public:
     Graph() ;
-    Graph(const std::string & uri) ;
+    Graph(const rdf::URI & uri) ;
     virtual ~Graph() ;
 
     enum class Format {
       UNKNOWN = 0,
       RDFXML,
       TURTLE,
-      NTRIPLES
+      NTRIPLES,
+      JSON
       } ;
+
+    static const std::string format_to_mimetype(Format format) ;
+    static Format mimetype_to_format(const std::string &mimetype) ;
+
+    static Ptr create_from_resource(const std::string &resource,
+                                    const Format format=Format::RDFXML,
+                                    const std::string &base="") ;
+    static Ptr create_from_string(const rdf::URI &uri,
+                                  const std::string &source,
+                                  const Format format=Format::RDFXML,
+                                  const std::string &base="") ;
 
     void parse_resource(const std::string &resource,
                         const Format format=Format::RDFXML,
@@ -225,25 +289,28 @@ namespace rdf {
                           const std::set<Namespace> &prefixes=std::set<Namespace>()) ;
 
     void add_prefixes(const std::set<Namespace> &prefixes) ;
-
-    const URI &get_uri(void) const ;
+    const URI &uri(void) const ;
 
     bool insert(const Statement &statement) const ;
     bool insert(const rdf::Node &s, const rdf::Node &p, const rdf::Node &o) const ;
-
     void add_statements(const StatementIter &statements) const ;
-
     bool contains(const Statement &p_statement) const ;
     bool contains(const Node &s, const Node &p, const Node &o) const ;
-
     StatementIter get_statements(const Statement &pattern) const ;
     StatementIter get_statements(const Node &s, const Node &p, const Node &o) const ;
+
+// WIP **     URI type(const URI &uri) const ;  // returns (<uri> a ?type)
+
+    std::shared_ptr<tobj::TypedObject> get_resource(const URI &uri) ;
+    void add_resource(const URI &uri, std::weak_ptr<tobj::TypedObject> weakref) ;
+    void delete_resource(const URI &uri) ;
 
    private:
     const URI m_uri ;
     GraphImpl *m_graph ;
+    // Can't forward declare `tobj::TypedObject::Registry`
+    std::unordered_map<URI, std::weak_ptr<tobj::TypedObject>> m_objectregistry ;
     } ;
-
 
   } ;
 

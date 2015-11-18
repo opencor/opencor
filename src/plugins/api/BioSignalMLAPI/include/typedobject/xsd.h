@@ -22,6 +22,7 @@
 #define TYPEDOBJECT_XSD_H
 
 #include <typedobject/typedobject_export.h>
+#include <typedobject/common.h>
 
 #include <stdexcept>
 #include <string>
@@ -35,11 +36,11 @@ namespace rdf {
 
 namespace xsd {
 
-  typedef int64_t Integer ;
+  using Integer = int64_t ;
   /*---------------------*/
 
-  typedef double Decimal ;
-  /*---------------------*/
+  using Decimal = double ;
+  /*--------------------*/
 
   class DatetimeImpl ;           // Declare forward
   class DurationImpl ;           // Declare forward
@@ -91,6 +92,9 @@ namespace xsd {
     Duration & operator=(Duration && other) ;
     friend TYPEDOBJECT_EXPORT std::ostream & operator<<(std::ostream & os, const Duration & d) ;
 
+    double to_double(const std::string & units="second") const ;
+    explicit operator double() const ;
+    explicit operator float() const ;
     std::string to_string(void) const ;
     rdf::Literal to_literal(void) ;
     bool is_valid(void) const ;

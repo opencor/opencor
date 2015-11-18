@@ -18,27 +18,24 @@
  *                                                                            *
  ******************************************************************************/
 
-#ifndef BSML_EVENT_H
-#define BSML_EVENT_H
+#ifndef TYPEDOBJECT_UNITS_H
+#define TYPEDOBJECT_UNITS_H
 
-#include <biosignalml/biosignalml_export.h>
-#include <biosignalml/resource.h>
-#include <biosignalml/timing.h>
+#include <typedobject/typedobject_export.h>
 
-using namespace rdf ;
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
+namespace uuid {
 
-namespace bsml {
+  static boost::uuids::random_generator generator ;
 
-  class BIOSIGNALML_EXPORT Event : public Resource
-  /*--------------------------------------------*/
+  std::string TYPEDOBJECT_EXPORT uuid(void)
+  /*-------------------------------------*/
   {
-    TYPED_OBJECT(Event, BSML::Event)
-
-    PROPERTY_URI(recording, BSML::recording)
-    PROPERTY_URI(eventtype, BSML::eventType)
-    PROPERTY_OBJECT(time, BSML::time, TemporalEntity) // Instant or Interval
-    } ;
+    return boost::uuids::to_string(generator()) ;
+    }
 
   } ;
 

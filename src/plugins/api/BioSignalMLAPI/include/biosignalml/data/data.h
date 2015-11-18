@@ -23,6 +23,7 @@
 
 #include <biosignalml/biosignalml_export.h>
 #include <biosignalml/recording.h>
+#include <biosignalml/signal.h>
 
 #include <stdexcept>
 
@@ -38,46 +39,21 @@ namespace bsml {
       Exception(const std::string &msg) : std::runtime_error(msg) { }
       } ;
 
-    class BIOSIGNALML_EXPORT Clock : public bsml::Clock
-    /*-----------------------------------------------*/
-    {
-      TYPED_OBJECT(Clock, BSML::SampleClock)
-  
-     public:
-      virtual void extend(const double *times, const size_t length)
-      {
-        (void)times ;     // Unused parameters
-        (void)length ;
-        }
-      } ;
 
-
-    class BIOSIGNALML_EXPORT Signal : public bsml::Signal
-    /*-------------------------------------------------*/
-    {
-      TYPED_OBJECT(Signal, BSML::Signal)
-
-     public:
-      virtual void extend(const double *points, const size_t length)
-      {
-        (void)points ;    // Unused parameters
-        (void)length ;
-        }
-      } ;
-
-
-    template<class SIGNAL_TYPE = Signal>
-    class BIOSIGNALML_EXPORT SignalArray : public std::vector<SIGNAL_TYPE *>
-    /*--------------------------------------------------------------------*/
+    template<class SIGNAL_TYPE = bsml::Signal>
+    class BIOSIGNALML_EXPORT SignalArray : public std::vector<typename SIGNAL_TYPE::Ptr>
+    /*--------------------------------------------------------------------------------*/
     {
       static_assert(std::is_base_of<Signal, SIGNAL_TYPE>::value, "SIGNAL_TYPE must be derived from Signal") ;
 
      public:
+      SHARED_PTR(SignalArray)
       virtual void extend(const double *points, const size_t length)
       {
         (void)points ;     // Unused parameters
         (void)length ;
         }
+
       virtual int index(const std::string &uri) const
       {
         (void)uri ;        // Unused parameter
@@ -92,20 +68,20 @@ namespace bsml {
       TYPED_OBJECT(Recording, BSML::Recording)
 
      public:
-      template<class SIGNAL_TYPE=Signal, class CLOCK_TYPE=Clock>
-      SignalArray<SIGNAL_TYPE> *new_signalarray(const std::vector<const std::string> &uris,
-      /*---------------------------------------------------------------------------------*/
-                                                const std::vector<const rdf::URI> &units,
-                                                double rate)
+      template<class SIGNAL_TYPE=bsml::Signal, class CLOCK_TYPE=bsml::Clock>
+      SignalArray<typename SIGNAL_TYPE::Ptr> new_signalarray(const std::vector<std::string> &uris,
+      /*----------------------------------------------------------------------------------------*/
+                                                             const std::vector<rdf::URI> &units,
+                                                             double rate)
       {
         return create_signalarray<SignalArray<SIGNAL_TYPE>, SIGNAL_TYPE, CLOCK_TYPE>(uris, units, rate, nullptr) ;
         }
 
-      template<class SIGNAL_TYPE=Signal, class CLOCK_TYPE=Clock>
-      SignalArray<SIGNAL_TYPE> *new_signalarray(const std::vector<const std::string> &uris,
-      /*---------------------------------------------------------------------------------*/
-                                                const std::vector<const rdf::URI> &units,
-                                                CLOCK_TYPE *clock)
+      template<class SIGNAL_TYPE=bsml::Signal, class CLOCK_TYPE=bsml::Clock>
+      SignalArray<typename SIGNAL_TYPE::Ptr> new_signalarray(const std::vector<std::string> &uris,
+      /*----------------------------------------------------------------------------------------*/
+                                                             const std::vector<rdf::URI> &units,
+                                                             typename CLOCK_TYPE::Ptr clock)
       {
         return create_signalarray<SignalArray<SIGNAL_TYPE>, SIGNAL_TYPE, CLOCK_TYPE>(uris, units, 0.0, clock) ;
         }
@@ -113,13 +89,13 @@ namespace bsml {
 
      protected:
       template<class SIGNAL_ARRAY_TYPE, class SIGNAL_TYPE, class CLOCK_TYPE>
-      SIGNAL_ARRAY_TYPE *create_signalarray(const std::vector<const std::string> &uris,
-      /*-----------------------------------------------------------------------------*/
-                                            const std::vector<const rdf::URI> &units,
-                                            double rate, CLOCK_TYPE *clock)
+      typename SIGNAL_ARRAY_TYPE::Ptr create_signalarray(const std::vector<std::string> &uris,
+      /*------------------------------------------------------------------------------------*/
+                                                         const std::vector<rdf::URI> &units,
+                                                         double rate, typename CLOCK_TYPE::Ptr clock)
       {
         assert(uris.size() == units.size()) ;  // Lengths of `uris` and `units` are different
-        auto sigs = new SIGNAL_ARRAY_TYPE() ;
+        auto sigs = SIGNAL_ARRAY_TYPE::new_reference() ;
         for (size_t n = 0 ;  n < uris.size() ;  ++n) {
           if (clock == nullptr) sigs->push_back(this->new_signal<SIGNAL_TYPE>(uris[n], units[n], rate)) ;
           else                  sigs->push_back(this->new_signal<SIGNAL_TYPE, CLOCK_TYPE>(uris[n], units[n], clock)) ;

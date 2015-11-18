@@ -23,11 +23,12 @@
 
 #include <biosignalml/ontology.h>
 #include <biosignalml/formats.h>
-#include <biosignalml/object.h>
+#include <biosignalml/resource.h>
 #include <biosignalml/timing.h>
 #include <biosignalml/signal.h>
 #include <biosignalml/event.h>
 #include <biosignalml/recording.h>
+#include <biosignalml/segment.h>
 #include <biosignalml/annotation.h>
 
 #endif

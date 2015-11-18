@@ -23,28 +23,28 @@
 
 #include <biosignalml/biosignalml_export.h>
 #include <biosignalml/timing.h>
-#include <biosignalml/object.h>
+#include <biosignalml/resource.h>
+#include <biosignalml/data/timeseries.h>
 
 #include <string>
 #include <vector>
-#include <type_traits>
 
 using namespace rdf ;
 
 
 namespace bsml {
 
-  class BIOSIGNALML_EXPORT Signal : public Object
-  /*-------------------------------------------*/
+  class BIOSIGNALML_EXPORT Signal : public Resource
+  /*---------------------------------------------*/
   {
     TYPED_OBJECT(Signal, BSML::Signal)
-    PROPERTY_URI(recording, BSML::recording)
+    PROPERTY_URI(recording, BSML::recording)    // OBJECT
     PROPERTY_URI(units, BSML::units)
     PROPERTY_NODE(sensor, BSML::sensor)
     PROPERTY_NODE(filter, BSML::preFilter)
     PROPERTY_DECIMAL(rate, BSML::rate)
     PROPERTY_DECIMAL(period, BSML::period)
-    PROPERTY_URI(clock, BSML::clock)
+    PROPERTY_OBJECT(clock, BSML::clock, Clock)
     PROPERTY_DECIMAL(minFrequency, BSML::minFrequency)
     PROPERTY_DECIMAL(maxFrequency, BSML::maxFrequency)
     PROPERTY_DECIMAL(minValue, BSML::minValue)
@@ -56,7 +56,15 @@ namespace bsml {
 
    public:
     Signal(const rdf::URI &uri, const rdf::URI &units, double rate) ;
-    Signal(const rdf::URI &uri, const rdf::URI &units, Clock *clock) ;
+    Signal(const rdf::URI &uri, const rdf::URI &units, Clock::Ptr clock) ;
+
+    virtual void extend(const double *points, const size_t length) ;
+    void extend(const std::vector<double> &points) ;
+    
+    //! Time based
+    virtual bsml::data::TimeSeries::Ptr read(bsml::Interval::Ptr interval, intmax_t maxpoints=-1) ;
+    //! Point based
+    virtual data::TimeSeries::Ptr read(size_t pos=0, intmax_t length=0) ;
 
     } ;
 

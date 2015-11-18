@@ -22,24 +22,28 @@
 #define BSML_TIMING_H
 
 #include <biosignalml/biosignalml_export.h>
-#include <biosignalml/timing.h>
-#include <biosignalml/object.h>
+#include <biosignalml/resource.h>
 
 #include <string>
+#include <vector>
+
 
 using namespace rdf ;
 
 namespace bsml {
 
-  class BIOSIGNALML_EXPORT RelativeTimeLine : public Object
-  /*-----------------------------------------------------*/
+  class Interval ;
+  class Instant ;
+
+  class BIOSIGNALML_EXPORT RelativeTimeLine : public Resource
+  /*-------------------------------------------------------*/
   {
     TYPED_OBJECT(RelativeTimeLine, TL::RelativeTimeLine)
     } ;
 
 
-  class BIOSIGNALML_EXPORT TemporalEntity : public Object
-  /*---------------------------------------------------*/
+  class BIOSIGNALML_EXPORT TemporalEntity : public Resource
+  /*-----------------------------------------------------*/
   {
     TYPED_OBJECT(TemporalEntity, TIME::TemporalEntity)
 
@@ -56,6 +60,10 @@ namespace bsml {
 
     ASSIGN_DURATION(start, TL::start)
     ASSIGN_DURATION(duration, TL::duration)
+
+   public:
+    Interval(const rdf::URI &uri, const double start, const double duration,
+             const std::string & units = "second", RelativeTimeLine::Ptr timeline=nullptr) ;
     } ;
 
 
@@ -65,11 +73,16 @@ namespace bsml {
     TYPED_OBJECT(Instant, BSML::Instant)
 
     ASSIGN_DURATION(start, TL::at)
+
+   public:
+    Instant(const rdf::URI &uri, const double start, const std::string & units = "second",
+            RelativeTimeLine::Ptr timeline=nullptr) ;
+
     } ;
 
 
-  class BIOSIGNALML_EXPORT Clock : public Object
-  /*------------------------------------------*/
+  class BIOSIGNALML_EXPORT Clock : public Resource
+  /*--------------------------------------------*/
   {
     TYPED_OBJECT(Clock, BSML::SampleClock)
 
@@ -82,6 +95,10 @@ namespace bsml {
    public:
     Clock(const rdf::URI &uri, const rdf::URI &units) ;
 
+    virtual double time(const size_t n) const ;
+    virtual void extend(const double *times, const size_t length) ;
+    virtual std::vector<double> read(size_t pos=0, intmax_t length=-1) ;
+    void extend(const std::vector<double> &points) ;
     } ;
 
   } ;

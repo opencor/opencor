@@ -23,21 +23,25 @@
 
 #include <biosignalml/biosignalml_export.h>
 #include <biosignalml/signal.h>
+#include <biosignalml/event.h>
 #include <biosignalml/annotation.h>
+#include <biosignalml/segment.h>
 #include <biosignalml/timing.h>
-#include <biosignalml/object.h>
+#include <biosignalml/resource.h>
 
 #include <string>
 #include <vector>
 #include <cassert>
+#include <list>
 
 using namespace rdf ;
 
 
 namespace bsml {
 
-  class BIOSIGNALML_EXPORT Recording : public Object
-  /*----------------------------------------------*/
+//  template<typename SIGNAL=bsml::Signal, typename CLOCK=bsml::Clock>
+  class BIOSIGNALML_EXPORT Recording : public Resource
+  /*------------------------------------------------*/
   {
     TYPED_OBJECT(Recording, BSML::Recording)
 
@@ -46,58 +50,121 @@ namespace bsml {
     PROPERTY_NODE_SET(source, DCT::source)
 
     PROPERTY_NODE(investigation, DCT::subject)
-    PROPERTY_NODE(investigator, DCT::creator)  // Also Object::creator
-    PROPERTY_DATETIME(starttime, DCT::created) // Also Object::created
+    PROPERTY_NODE(investigator, DCT::creator)  // Also Resource::creator
+    PROPERTY_DATETIME(starttime, DCT::created) // Also Resource::created
     PROPERTY_DURATION(duration, DCT::extent)
 
     PROPERTY_OBJECT(timeline, TL::timeline, RelativeTimeLine)
-    PROPERTY_NODE(generatedBy, PROV::wasGeneratedBy)  // SUBELEMENT/AOBJECT ??
 
-    PROPERTY_OBJECT_RSET(clock_set, BSML::recording, Clock)
-    PROPERTY_OBJECT_RSET(signal_set, BSML::recording, Signal)
-    PROPERTY_OBJECT_RSET(annotation_set, DCT::subject, Annotation)
+//    PROPERTY_OBJECT(generatedBy, PROV::wasGeneratedBy, Provenace class...)
+    PROPERTY_URI(generatedBy, PROV::wasGeneratedBy)   // TODO...
+
+    // Other reources that directly refer to a Recording
+    RESOURCE(BSML::recording, Clock)    // The type of these must change to HDF5::Clock etc
+    RESOURCE(BSML::recording, Signal)
+    RESOURCE(BSML::recording, Event)
+    RESOURCE(DCT::source,     Segment)
+
+// What we want are ALL bsml::Annotation resources in recording's Graph
+//    RESOURCE(bsml::Annotation) // Is this enough to get C++ type??,    Annotation)
+//    RESOURCE(DCT::subject,    Annotation)
 
    public:
+    virtual void close(void) { }
+
+    Interval::Ptr new_interval(const double start, const double duration, const std::string & units = "second") ;
+    Instant::Ptr new_instant(const double start, const std::string & units = "second") ;
+
+    template<typename CLOCK=Clock>
+    std::list<rdf::URI> get_clock_uris(void)
+    /*------------------------------------*/
+    {
+      return get_resource_uris<CLOCK>() ;
+      }
+
+    template<typename CLOCK=Clock>
+    typename CLOCK::Ptr get_clock(const rdf::URI &uri)
+    /*----------------------------------------------*/
+    {
+      return get_resource<CLOCK>(rdf::URI(uri)) ;
+      }
+
+    template<typename CLOCK=Clock>
+    typename CLOCK::Ptr get_clock(const std::string &uri)
+    /*-------------------------------------------------*/
+    {
+      return get_clock<CLOCK>(uri) ;
+      }
+
+    template<typename SIGNAL=Signal>
+    std::list<rdf::URI> get_signal_uris(void)
+    /*-------------------------------------*/
+    {
+      return get_resource_uris<SIGNAL>() ;
+      }
+
+    template<typename SIGNAL=Signal>
+    typename SIGNAL::Ptr get_signal(const rdf::URI &uri)
+    /*------------------------------------------------*/
+    {
+      return get_resource<SIGNAL>(uri) ;
+      }
+
+    template<typename SIGNAL=Signal>
+    typename SIGNAL::Ptr get_signal(const std::string &uri)
+    /*---------------------------------------------------*/
+    {
+      return get_signal<SIGNAL>(rdf::URI(uri)) ;
+      }
+
+    Event::Ptr get_event(const rdf::URI &uri) ;
+    Event::Ptr get_event(const std::string &uri) ;
+    std::list<rdf::URI> get_event_uris(const rdf::URI &type=rdf::URI()) ;
+
+    Annotation::Ptr get_annotation(const rdf::URI &uri) ;
+    Annotation::Ptr get_annotation(const std::string &uri) ;
+    std::list<rdf::URI> get_annotation_uris(void) ;
+
     template<class CLOCK_TYPE=Clock>
-    CLOCK_TYPE *new_clock(const std::string &uri, const rdf::URI &units)
-    /*----------------------------------------------------------------*/
+    typename CLOCK_TYPE::Ptr new_clock(const std::string &uri, const rdf::URI &units)
+    /*-----------------------------------------------------------------------------*/
     {
       static_assert(std::is_base_of<Clock, CLOCK_TYPE>::value, "CLOCK_TYPE must be derived from Clock") ;
-      CLOCK_TYPE *clock = new CLOCK_TYPE(rdf::URI(uri, m_base), units) ;
+      auto clock = CLOCK_TYPE::create(rdf::URI(uri, m_base), units) ;
       clock->set_recording(this->uri()) ;
-      this->m_clock_set.insert(clock) ;
+      this->add_resource<CLOCK_TYPE>(clock) ;
       return clock ;
       }
 
     template<class SIGNAL_TYPE=Signal>
-    SIGNAL_TYPE *new_signal(const std::string &uri, const rdf::URI &units, double rate)
-    /*-------------------------------------------------------------------------------*/
+    typename SIGNAL_TYPE::Ptr new_signal(const std::string &uri, const rdf::URI &units, double rate)
+    /*---------------------------------------------------------------------------------------------*/
     {
       static_assert(std::is_base_of<Signal, SIGNAL_TYPE>::value, "SIGNAL_TYPE must be derived from Signal") ;
-      return add_signal<SIGNAL_TYPE>(new SIGNAL_TYPE(rdf::URI(uri, m_base), units, rate)) ;
+      return add_signal<SIGNAL_TYPE>(SIGNAL_TYPE::create(rdf::URI(uri, m_base), units, rate)) ;
       }
 
     template<class SIGNAL_TYPE=Signal, class CLOCK_TYPE=Clock>
-    SIGNAL_TYPE *new_signal(const std::string &uri, const rdf::URI &units, CLOCK_TYPE *clock)
-    /*----------------------------------------------------------------------------------------*/
+    typename SIGNAL_TYPE::Ptr new_signal(const std::string &uri, const rdf::URI &units, typename CLOCK_TYPE::Ptr clock)
+    /*---------------------------------------------------------------------------------------------------------------*/
     {
       static_assert(std::is_base_of<Signal, SIGNAL_TYPE>::value, "SIGNAL_TYPE must be derived from Signal") ;
-      return add_signal<SIGNAL_TYPE>(new SIGNAL_TYPE(rdf::URI(uri, m_base), units, clock)) ;
+      return add_signal<SIGNAL_TYPE>(SIGNAL_TYPE::create(rdf::URI(uri, m_base), units, clock)) ;
       }
 
    protected:
     std::string m_base ;
-    INITIALISE(                                 \
-      m_base = this->uri().to_string() + "/" ;  \
+    INITIALISE(                                                                 \
+      m_base = this->uri().is_valid() ? (this->uri().to_string() + "/") : "" ;  \
       )
 
    private:
     template<class SIGNAL_TYPE>
-    SIGNAL_TYPE *add_signal(SIGNAL_TYPE *signal)
-    /*----------------------------------------*/
+    typename SIGNAL_TYPE::Ptr add_signal(typename SIGNAL_TYPE::Ptr signal)
+    /*------------------------------------------------------------------*/
     {
       signal->set_recording(this->uri()) ;
-      this->m_signal_set.insert(signal) ;
+      add_resource<SIGNAL_TYPE>(signal) ;
       return signal ;
       }
 

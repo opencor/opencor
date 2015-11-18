@@ -22,21 +22,39 @@
 #define TYPEDOBJECT_TYPEDOBJECT_H
 
 #include <typedobject/typedobject_export.h>
+#include <typedobject/common.h>
 #include <typedobject/rdf.h>
 #include <typedobject/rdfdefs.h>
 #include <typedobject/xsd.h>
 
 #include <string>
+#include <memory>
+#include <unordered_map>
 #include <map>
 #include <set>
+#include <list>
+#include <typeinfo>
+#include <typeindex>
+
+
+namespace tobj
+/*==========*/
+{
+  const std::string VERSION = "1.1.0a" ;
+  } ;
 
 
 #ifdef TYPED_OBJECT_COMPILE
 
+#define REFERENCE(CLASS)
+
 int _PARAMETERS_(const char *params, ...) { return 0 ; }
-#define TYPED_OBJECT(CLASS, TYPE)         \
-  static int _OBJECT_DEFINITION = 0 ;     \
-  static int _PROPERTY_TYPE = _PARAMETERS_("1", #TYPE) ;
+
+#define _FORWARD_OBJECT(CLASS, TYPE)      \
+  static int _FORWARD_##CLASS##  = _PARAMETERS_("1", #TYPE) ;
+
+#define _TYPED_OBJECT(CLASS, TYPE)        \
+  static int _OBJECT_##CLASS##   = _PARAMETERS_("1", #TYPE) ;
 
 #define _PROPERTY(NAME, P, T, ...)        \
   static int _PROPERTY_##NAME##  = _PARAMETERS_("2", #T, #P, #__VA_ARGS__) ;
@@ -50,12 +68,6 @@ int _PARAMETERS_(const char *params, ...) { return 0 ; }
 #define _PROPERTY_OBJ_SET(NAME, P, T, ...)\
   static int _PROPERTY_##NAME##  = _PARAMETERS_("4", #T, #P, "SET",  "OBJ", #__VA_ARGS__) ;
 
-#define _PROPERTY_RSET(NAME, P, T, ...)   \
-  static int _PROPERTY_##NAME##  = _PARAMETERS_("3", #T, #P, "RSET", #__VA_ARGS__) ;
-
-#define _PROPERTY_OBJ_RSET(NAME, P, T, ...) \
-  static int _PROPERTY_##NAME##  = _PARAMETERS_("4", #T, #P, "RSET", "OBJ", #__VA_ARGS__) ;
-
 #define _ASSIGN(NAME, P, T, ...)          \
   static int _ASSIGN_##NAME##    = _PARAMETERS_("2", #T, #P, #__VA_ARGS__) ;
 
@@ -68,67 +80,73 @@ int _PARAMETERS_(const char *params, ...) { return 0 ; }
 #define _PREFIXES(LIST, ...)              \
   static int _PREFIXES_          = _PARAMETERS_("1", #LIST, #__VA_ARGS__) ;
 
+#define _RESOURCE(P, T, ...)              \
+  static int _RESOURCE_##T##     = _PARAMETERS_("1", #P, #__VA_ARGS__) ;
+
 #else
 
-#define TYPED_OBJECT(CLASS, TYPE)                                           \
- private:                                                                   \
-  static std::map<std::string, rdf::Node> s_properties ;                    \
-  static const std::set<rdf::Namespace> s_prefixes ;                        \
-  std::set<rdf::Namespace> m_prefixes ;                                     \
- protected:                                                                 \
-  bool satisfies_restrictions(const rdf::Graph &graph) ;                    \
-  static rdf::Node get_property(const std::string &name) ;                  \
-  void assign_from_rdf(const rdf::Graph &graph, const rdf::Node &property,  \
-                       const rdf::Node &value,  const bool reverse) ;       \
-  void save_as_rdf(rdf::Graph & graph) ;                                    \
+#define _FORWARD_OBJECT(CLASS, TYPE)                                        \
+  class CLASS ;
+
+#define _TYPED_OBJECT(CLASS, TYPE)                                          \
  public:                                                                    \
-  CLASS() { }                                                               \
+  CLASS() = default ;                                                       \
   CLASS(const rdf::URI &uri) ;                                              \
-  CLASS(const rdf::URI &uri, const rdf::Graph &graph) ;                     \
-  ~CLASS() ;                                                                \
-  const rdf::URI &type(void) const ;                                        \
-  static std::set<rdf::URI> &subtypes(void) ;                               \
-  static int add_subtype(const rdf::URI &T) ;                               \
-  void add_prefix(const rdf::Namespace &prefix) ;
+  SHARED_PTR(CLASS)                                                         \
+  static std::set<rdf::URI> &m_subtypes(void) ;                             \
+  static int add_subtype(const rdf::URI &type) ;                            \
+  static std::set<std::type_index> &m_subclasses(void) ;                    \
+  static int add_subclass(const std::type_index &cls) ;                     \
+  void add_prefix(const rdf::Namespace &prefix) ;                           \
+  static Ptr create_from_graph(const rdf::URI &uri, rdf::Graph::Ptr &graph) \
+  { return TypedObject::create_from_graph<CLASS>(uri, graph) ; }            \
+ protected:                                                                 \
+  bool satisfies_restrictions(rdf::Graph::Ptr &graph) override ;            \
+  static rdf::Node get_property(const std::string &name) ;                  \
+  void assign_from_rdf(rdf::Graph::Ptr &graph, const rdf::Node &property,   \
+               const rdf::Node &value, const bool reverse) override ;       \
+  void save_as_rdf(rdf::Graph::Ptr &graph) override ;                       \
+ private:                                                                   \
+  static std::unordered_map<std::string, rdf::Node> s_properties ;          \
+  static const std::set<rdf::Namespace> s_prefixes ;                        \
+  std::set<rdf::Namespace> m_prefixes ;
 
 #define _PROPERTY(NAME, P, T, ...)        \
  public:                                  \
   inline const T & NAME(void) const       \
-    { return m_##NAME ; }                 \
+    { return p_##NAME ; }                 \
   inline void set_##NAME(const T & value) \
-    { m_##NAME = value ; }                \
+    { p_##NAME = value ; }                \
  protected:                               \
-  T m_##NAME ;
+  T p_##NAME ;
 
 #define _PROPERTY_OBJ(NAME, P, T, ...)    \
  public:                                  \
-  inline const T * NAME(void) const       \
-    { return m_##NAME ; }                 \
-  inline void set_##NAME(T * value)       \
-    { m_##NAME = value ; }                \
+  inline const std::shared_ptr<T> & NAME(void) const \
+    { return p_##NAME ; }                 \
+  inline void set_##NAME(std::shared_ptr<T> value) \
+    { p_##NAME = value ; }                \
  private:                                 \
-  T * m_##NAME ;
+  std::shared_ptr<T> p_##NAME ;
 
 #define _PROPERTY_SET(NAME, P, T, ...)    \
  public:                                  \
   inline const std::set<T> & NAME(void) const \
-    { return m_##NAME ; }                 \
+    { return p_##NAME ; }                 \
   inline void add_##NAME(const T & value) \
-    { m_##NAME.insert(value) ; }          \
+    { p_##NAME.insert(value) ; }          \
  private:                                 \
-  std::set<T> m_##NAME ;
+  std::set<T> p_##NAME ;
 
 #define _PROPERTY_OBJ_SET(NAME, P, T, ...)\
  public:                                  \
-  inline const std::set<T *> & NAME(void) const \
-    { return m_##NAME ; }                 \
-  inline void add_##NAME(T * value)       \
-    { m_##NAME.insert(value) ; }          \
+  inline const std::set<T::Ptr> & NAME(void) const \
+    { return p_##NAME ; }                 \
+  inline void add_##NAME(T::Ptr value)    \
+    { p_##NAME.insert(value) ; }          \
  private:                                 \
-  std::set<T *> m_##NAME ;
+  std::set<T::Ptr> p_##NAME ;
 
-#define _PROPERTY_RSET(NAME, P, T, ...)      _PROPERTY_SET(NAME, P, T)
-#define _PROPERTY_OBJ_RSET(NAME, P, T, ...)  _PROPERTY_OBJ_SET(NAME, P, T)
 
 #define _ASSIGN(NAME, P, T, ...)
 #define _RESTRICTION(NAME, VALUE, T, ...)
@@ -136,7 +154,12 @@ int _PARAMETERS_(const char *params, ...) { return 0 ; }
 #define _INITIALISE(CODE, ...)
 #define _PREFIXES(CODE, ...)
 
+#define _RESOURCE(P, T)
+
 #endif
+
+#define TYPED_OBJECT(CLASS, TYPE)        _TYPED_OBJECT(CLASS, TYPE)
+#define FORWARD_OBJECT(CLASS, TYPE)      _FORWARD_OBJECT(CLASS, TYPE)
 
 #define PROPERTY_STRING(NAME, P)         _PROPERTY(NAME, P, std::string)
 #define PROPERTY_INTEGER(NAME, P)        _PROPERTY(NAME, P, xsd::Integer)
@@ -155,9 +178,6 @@ int _PARAMETERS_(const char *params, ...) { return 0 ; }
 #define PROPERTY_URI_SET(NAME, P)        _PROPERTY_SET(NAME, P, rdf::URI)
 #define PROPERTY_OBJECT_SET(NAME, P, T)  _PROPERTY_OBJ_SET(NAME, P, T, OBJ)
 
-#define PROPERTY_URI_RSET(NAME, P)       _PROPERTY_RSET(NAME, P, rdf::URI)
-#define PROPERTY_OBJECT_RSET(NAME, P, T) _PROPERTY_OBJ_RSET(NAME, P, T, OBJ)
-
 #define ASSIGN_DATETIME(NAME, P)         _ASSIGN(NAME, P, xsd::Datetime)
 #define ASSIGN_DURATION(NAME, P)         _ASSIGN(NAME, P, xsd::Duration)
 
@@ -170,12 +190,12 @@ int _PARAMETERS_(const char *params, ...) { return 0 ; }
 #define INITIALISE(CODE, ...)            _INITIALISE(CODE, #__VA_ARGS__)
 #define PREFIXES(LIST, ...)              _PREFIXES(LIST, #__VA_ARGS__)
 
+#define RESOURCE(P, T)                   _RESOURCE(P, T)
 
-namespace TypedObject
-/*=================*/
+
+namespace tobj
+/*==========*/
 {
-
-  const std::string VERSION = "0.9.5" ;
 
 #ifdef TYPED_OBJECT_COMPILE
 
@@ -189,68 +209,60 @@ namespace TypedObject
   /*---------------------------------------*/
   {
    public:
-    virtual TypedObject *create(const std::string &uri) = 0 ;
+    virtual std::shared_ptr<TypedObject> create(const std::string &uri) = 0 ;
+    virtual bool assign_metadata(std::shared_ptr<TypedObject> &object,
+                                 rdf::Graph::Ptr &graph) = 0 ;
     } ;
 
-#define REGISTER_TYPE(T, CLS)                                 \
-  class CLS##Factory : public TypedObject::TypedObjectFactory {       \
-   public:                                                    \
-    inline CLS##Factory() { TypedObject::TypedObject::register_type(T, this) ; } \
-    virtual TypedObject::TypedObject *create(const std::string &uri) { return new CLS(uri) ; } \
-    } ;                                                       \
-  static CLS##Factory _global_##CLS##Factory ;                \
-  static int _global_##CLS##_type = CLS::add_subtype(T) ;
 
-#define REGISTER_SUBTYPE(T, CLS, BASE)                        \
-  static int _global_##CLS##supertype = BASE::add_subtype(T) ;
+#define REGISTER_TYPES(T, CLS, BASE)                            \
+  class CLS##Factory : public tobj::TypedObjectFactory {        \
+   public:                                                      \
+    inline CLS##Factory() { tobj::TypedObject::register_type(T, this) ; }  \
+    std::shared_ptr<tobj::TypedObject> create(const std::string &uri)      \
+    { return std::make_shared<CLS>(uri) ; }                                \
+    bool assign_metadata(std::shared_ptr<tobj::TypedObject> &object,       \
+                                 rdf::Graph::Ptr &graph)        \
+    { return object->template assign_metadata<CLS>(graph) ; }   \
+    } ;                                                         \
+  static auto _global_##CLS##Factory = CLS##Factory{} ;         \
+  static int _global_##CLS##_type = CLS::add_subtype(T) ;       \
+  static int _global_##CLS##_supertype = BASE::add_subtype(T) ; \
+  static int _global_##CLS##_class = CLS::add_subclass(std::type_index(typeid(CLS))) ; \
+  static int _global_##CLS##_superclass = BASE::add_subclass(std::type_index(typeid(CLS))) ;
 
 
   class TYPEDOBJECT_EXPORT TypedObject
   /*--------------------------------*/
   {
-   protected:
-    virtual void assign_from_rdf(const rdf::Graph &graph, const rdf::Node &property,
-                                 const rdf::Node &value,  const bool reverse) = 0 ;
-    virtual void save_as_rdf(rdf::Graph &graph) = 0 ;
-    virtual bool satisfies_restrictions(const rdf::Graph &graph) ;
-    static rdf::Node get_property(const std::string &name) ;
-
    public:
     TypedObject() ;
     TypedObject(const rdf::URI &uri) ;
-    TypedObject(const rdf::URI &uri, const rdf::Graph &graph) ;
-    virtual ~TypedObject() ;
+    virtual ~TypedObject() = default ;
 
-    static TypedObject *create(const rdf::URI &T, const std::string &uri) ;
+    using Ptr = std::shared_ptr<TypedObject> ;
+    using WeakPtr = std::weak_ptr<TypedObject> ;
+    using Registry = std::unordered_map<rdf::URI, WeakPtr> ;
+    using ResourceInfo = std::pair<Ptr, std::type_index> ;
+    using ResourceMap = std::map<rdf::URI, ResourceInfo> ;
 
     template <class T>
-    static T *create(std::set<rdf::URI> &subtypes, const rdf::Node &uri, const rdf::Graph &graph)
-    /*-----------------------------------------------------------------------------------------*/
-    {
-      rdf::StatementIter types = graph.get_statements(uri, rdf::RDF::type, rdf::Node()) ;
-      if (!types.end()) {
-        do {
-          rdf::URI type = rdf::URI(types.get_object()) ;
-          if (subtypes.find(type) != subtypes.end()) {
-            TypedObject *obj = create(type, uri.to_string()) ;
-            if (obj->add_metadata(graph)) return dynamic_cast<T *>(obj) ;
-            else delete obj ;
-            }
-          } while (!types.next()) ;
-        }
-      return nullptr ;
-      }
+    static typename T::Ptr create_from_graph(const rdf::URI &uri, rdf::Graph::Ptr &graph) ;
 
     bool operator==(const TypedObject &other) const ;
     bool operator<(const TypedObject &other) const ;
 
-    inline const rdf::URI &uri() const { return m_uri ; }
+    inline const rdf::URI &uri(void) const { return m_uri ; }
+    inline void set_uri(const rdf::URI &uri) { m_uri = uri ; }
+    const rdf::URI &rdf_type(void) const { return m_rdf_type ; }
     bool is_valid(void) const ;
     std::string to_string(void) const ;
 
-    virtual const rdf::URI &type(void) const = 0 ;
     static void register_type(const rdf::URI &T, TypedObjectFactory *factory) ;
-    static inline int add_subtype(const rdf::URI &T) { (void)T ; return 0 ; } // Unused parameter
+    static std::set<rdf::URI> &m_subtypes(void) ;
+    static int add_subtype(const rdf::URI &type) ;
+    static std::set<std::type_index> &m_subclasses(void) ;
+    static int add_subclass(const std::type_index &cls) ;
 
     /**
     Set attributes from RDF triples in a graph.
@@ -258,7 +270,7 @@ namespace TypedObject
     :param graph: A graph of RDF statements.
     :type graph: :class:`~biosignalml.rdf.Graph`
     **/
-    bool add_metadata(const rdf::Graph &p_graph) ;
+    template <typename T> bool add_metadata(rdf::Graph::Ptr &graph) ;
 
     /**
     Save attributes as RDF triples in a graph.
@@ -266,16 +278,136 @@ namespace TypedObject
     :param graph: A graph of RDF statements.
     :type graph: :class:`~biosignalml.rdf.Graph`
     **/
-    void save_metadata(rdf::Graph &p_graph) ;
+    void save_metadata(rdf::Graph::Ptr &graph) ;
 
     std::string serialise_metadata(const rdf::Graph::Format format=rdf::Graph::Format::RDFXML,
-                                   const std::string &base="",
+                                   const std::string &base="", bool append=false,
                                    const std::set<rdf::Namespace> &prefixes=std::set<rdf::Namespace>()) ;
+
+    template<class T> void add_resource(typename T::Ptr resource) ;
+    template<class T> typename T::Ptr get_resource(const rdf::URI &uri) ;
+    void delete_resource(const rdf::URI &uri) ;
+
+    template<class T> std::list<rdf::URI> get_resource_uris(void) ;
+
+    template <typename T> bool assign_metadata(rdf::Graph::Ptr &graph) ;
+
+   protected:
+    friend class rdf::Graph ;
+
+    virtual void assign_from_rdf(rdf::Graph::Ptr &graph, const rdf::Node &property,
+                                 const rdf::Node &value, const bool reverse) = 0 ;
+    virtual void save_as_rdf(rdf::Graph::Ptr &graph) = 0 ;
+    virtual bool satisfies_restrictions(rdf::Graph::Ptr &graph) ;
+
+    static rdf::Node get_property(const std::string &name) ;
+    static Ptr get_resource(const rdf::URI &uri, Registry &registry) ;
+    static void add_resource(const rdf::URI &uri, WeakPtr weakptr, Registry &registry) ;
+    static void delete_resource(const rdf::URI &uri, Registry &registry) ;
+
+    rdf::Graph::Ptr m_graph ;
+
+    inline void set_rdf_type(const rdf::URI &type) { m_rdf_type = type ; }
 
    private:
     rdf::URI m_uri ;
-    static std::map<rdf::URI, TypedObjectFactory *> &m_factories(void) ;
+    rdf::URI m_rdf_type ;
+    ResourceMap m_resources ;
+    static std::unordered_map<rdf::URI, TypedObjectFactory *> &m_factories(void) ;
     } ;
+
+
+  template <typename T>
+  bool TypedObject::add_metadata(rdf::Graph::Ptr &graph)
+  /*--------------------------------------------------*/
+  {
+    if (m_uri.is_valid()
+     && graph->contains(m_uri, rdf::RDF::type, rdf_type()))   // Needs to be sub-classes
+      return assign_metadata<T>(graph) ;
+    return false ;
+    }
+
+  template <typename T>
+  bool TypedObject::assign_metadata(rdf::Graph::Ptr &graph)
+  /*-----------------------------------------------------*/
+  {
+    if (!satisfies_restrictions(graph)) return false ;
+    rdf::StatementIter statements = graph->get_statements(m_uri, rdf::Node(), rdf::Node()) ;
+    if (!statements.end()) {
+      do {
+        assign_from_rdf(graph, statements.get_predicate(), statements.get_object(), false) ;
+        } while (!statements.next()) ;
+      }
+    rdf::StatementIter rstatements = graph->get_statements(rdf::Node(), rdf::Node(), m_uri) ;
+    if (!rstatements.end()) {
+      do {
+        assign_from_rdf(graph, rstatements.get_predicate(), rstatements.get_subject(), true) ;
+        } while (!rstatements.next()) ;
+      }
+    if (m_graph == nullptr) { m_graph = graph ; }
+    return true ;
+    }
+
+  template <class T>
+  typename T::Ptr TypedObject::create_from_graph(const rdf::URI &uri, rdf::Graph::Ptr &graph)
+  /*---------------------------------------------------------------------------------------*/
+  {
+    rdf::StatementIter types = graph->get_statements(uri, rdf::RDF::type, rdf::Node()) ;
+    if (!types.end()) {
+      do {
+        rdf::URI type = rdf::URI(types.get_object()) ;
+        if (T::m_subtypes().find(type) != T::m_subtypes().end()) {
+          auto object = graph->get_resource(uri) ;
+          if (object)
+            return std::static_pointer_cast<T>(object) ;
+          else {
+            auto object = TypedObject::m_factories()[type]->create((std::string)uri) ;
+            graph->add_resource(uri, object) ;
+            if (TypedObject::m_factories()[type]->assign_metadata(object, graph)) {
+              object->m_graph = graph ;
+              return std::static_pointer_cast<T>(object) ;
+              }
+            else {
+              graph->delete_resource(uri) ;
+              object.reset() ;
+              }
+            }
+          }
+        } while (!types.next()) ;
+      }
+    return T::create(rdf::URI()) ;
+    }
+
+
+  template<class T>
+  void TypedObject::add_resource(typename T::Ptr resource)
+  /*----------------------------------------------------*/
+  {
+    if (resource && resource->is_valid())
+      m_resources.emplace(resource->uri(), ResourceInfo(resource, std::type_index(typeid(T)))) ;
+    }
+
+  template<class T>
+  typename T::Ptr TypedObject::get_resource(const rdf::URI &uri)
+  /*----------------------------------------------------------*/
+  {
+    auto ref = m_resources.find(uri) ;
+    if (ref != m_resources.end()
+     && T::m_subclasses().find(ref->second.second) != T::m_subclasses().end())
+      return std::static_pointer_cast<T>(ref->second.first) ;
+    return create_from_graph<T>(uri, m_graph) ;
+    }
+
+  template<class T>
+  std::list<rdf::URI> TypedObject::get_resource_uris(void)
+  /*----------------------------------------------------*/
+  {
+    std::list<rdf::URI> uris ;
+    for (const auto ref : m_resources)
+      if (T::m_subclasses().find(ref.second.second) != T::m_subclasses().end())
+        uris.push_back(ref.first) ;
+    return uris ;
+    }
 
 #endif
 

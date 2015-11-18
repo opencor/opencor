@@ -26,6 +26,8 @@
 #include <biosignalml/biosignalml.h>
 
 #include <string>
+#include <memory>
+#include <list>
 
 
 namespace bsml {
@@ -65,33 +67,39 @@ namespace bsml {
       } ;
 
 
-    class BIOSIGNALML_EXPORT Clock : public data::Clock
+    class BIOSIGNALML_EXPORT Clock : public bsml::Clock
     /*-----------------------------------------------*/
     {
       TYPED_OBJECT(Clock, BSML::SampleClock)
 
      public:
       Clock(const rdf::URI &uri, const rdf::URI &units) ;
-      void extend(const double *times, const size_t length) ;
+      double time(const size_t n) const override ;
+      void extend(const double *times, const size_t length) override ;
+      std::vector<double> read(size_t pos=0, intmax_t length=-1) override ;
 
      private:
-      ClockData *m_data ;
+      std::shared_ptr<ClockData> m_data ;
+      friend class Signal ;
       friend class Recording ;
       } ;
 
 
-    class BIOSIGNALML_EXPORT Signal : public data::Signal
+    class BIOSIGNALML_EXPORT Signal : public bsml::Signal
     /*-------------------------------------------------*/
     {
       TYPED_OBJECT(Signal, BSML::Signal)
+      PROPERTY_OBJECT(clock, BSML::clock, Clock)                     // Override class
 
      public:
       Signal(const rdf::URI &uri, const rdf::URI &units, double rate) ;
-      Signal(const rdf::URI &uri, const rdf::URI &units, Clock *clock) ;
-      void extend(const double *points, const size_t length) ;
+      Signal(const rdf::URI &uri, const rdf::URI &units, Clock::Ptr clock) ;
+      void extend(const double *points, const size_t length) override ;
+      data::TimeSeries::Ptr read(Interval::Ptr interval, intmax_t maxpoints=-1) override ;
+      data::TimeSeries::Ptr read(size_t pos=0, intmax_t length=-1) override ;
 
      private:
-      SignalData *m_data ;
+      std::shared_ptr<SignalData> m_data ;
       friend class Recording ;
       } ;
 
@@ -100,11 +108,19 @@ namespace bsml {
     /*-------------------------------------------------------------------------*/
     {
      public:
+      typedef std::shared_ptr<SignalArray> Ptr ;
+
+      template<typename... Args>
+      inline static Ptr new_reference(Args... args)
+      {
+        return std::make_shared<SignalArray>(args...) ;
+        }
+
       void extend(const double *points, const size_t length) ;
       int index(const std::string &uri) const ;
 
      private:
-      SignalData *m_data ;
+      std::shared_ptr<SignalData> m_data ;
       friend class Recording ;
       } ;
 
@@ -115,32 +131,39 @@ namespace bsml {
       TYPED_OBJECT(Recording, BSML::Recording)
       RESTRICT_NODE(format, Format::HDF5)
 
-      PROPERTY_OBJECT_RSET(signal_set, BSML::recording, Signal) // Override...
-      PROPERTY_OBJECT_RSET(clock_set,  BSML::recording, Clock)  // Override...
+      RESOURCE(BSML::recording, Clock)    // The type of these must change to HDF5::Clock etc
+      RESOURCE(BSML::recording, Signal)
 
      public:
       Recording(const rdf::URI &uri, const std::string &filename, bool create=false) ;
+      Recording(const std::string &filename, bool readonly=false) ;
 
-      void close(void) ;
+      void close(void) override ;
 
-      Clock *new_clock(const std::string &uri, const rdf::URI &units,
-                       double *times = nullptr, size_t datasize=0) ;
+      Clock::Ptr get_clock(const rdf::URI &uri) ;
+      Clock::Ptr get_clock(const std::string &uri) ;
+      std::list<rdf::URI> get_clock_uris(void) ;
 
-      Signal *new_signal(const std::string &uri, const rdf::URI &units, double rate) ;
-      Signal *new_signal(const std::string &uri, const rdf::URI &units, Clock *clock) ;
+      Signal::Ptr get_signal(const rdf::URI &uri) ;
+      Signal::Ptr get_signal(const std::string &uri) ;
+      std::list<rdf::URI> get_signal_uris(void) ;
 
-      SignalArray *new_signalarray(const std::vector<const std::string> &uris,
-                                   const std::vector<const rdf::URI> &units,
-                                   double rate) ;
-      SignalArray *new_signalarray(const std::vector<const std::string> &uris,
-                                   const std::vector<const rdf::URI> &units,
-                                   Clock *clock) ;
+      Clock::Ptr new_clock(const std::string &uri, const rdf::URI &units,
+                                 double *times = nullptr, size_t datasize=0) ;
 
+      Signal::Ptr new_signal(const std::string &uri, const rdf::URI &units, double rate) ;
+      Signal::Ptr new_signal(const std::string &uri, const rdf::URI &units, Clock::Ptr clock) ;
+
+      SignalArray::Ptr new_signalarray(const std::vector<std::string> &uris,
+                                       const std::vector<rdf::URI> &units, double rate) ;
+      SignalArray::Ptr new_signalarray(const std::vector<std::string> &uris,
+                                       const std::vector<rdf::URI> &units, Clock::Ptr clock) ;
 // Variants of new_signal() with rate/period (== regular Clock)
 
      private:
       File *m_file ;
-      std::set<Dataset *> datasets ;
+      bool m_readonly ;
+      std::set<std::shared_ptr<Dataset>> datasets ;
       } ;
 
     } ;
