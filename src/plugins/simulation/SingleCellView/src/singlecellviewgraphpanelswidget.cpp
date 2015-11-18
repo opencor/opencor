@@ -321,6 +321,12 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
         mGraphPanels[mGraphPanels.count()-1]->setActive(true);
     }
 
+    // Ask our first graph panel's plot, if any, to align itself against its
+    // neighbours
+
+    if (!mGraphPanels.isEmpty())
+        mGraphPanels[0]->plot()->forceAlignWithNeighbors();
+
     // Keep track of our new sizes
 
     splitterMoved();
