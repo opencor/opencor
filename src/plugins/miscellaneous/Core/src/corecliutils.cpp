@@ -197,9 +197,9 @@ void cleanDomElement(QDomElement &pDomElement,
             QDomAttr attributeNode = domElementAttributes.item(0).toAttr();
 
             if (attributeNode.namespaceURI().isEmpty()) {
-                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value()+"\"";
+                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
             } else {
-                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value()+"\"";
+                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
 
                 if (   attributeNode.prefix().compare(pDomElement.prefix())
                     && attributeNode.namespaceURI().compare(pDomElement.namespaceURI())) {
