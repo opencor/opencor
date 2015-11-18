@@ -38,6 +38,7 @@ ADD_PLUGIN(Core
         src/coreplugin.cpp
         src/file.cpp
         src/filemanager.cpp
+        src/mathmlconverter.cpp
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
@@ -64,6 +65,7 @@ ADD_PLUGIN(Core
         src/corecliutils.h
         src/coreplugin.h
         src/filemanager.h
+        src/mathmlconverter.h
         src/organisationwidget.h
         src/progressbarwidget.h
         src/propertyeditorwidget.h
@@ -85,5 +87,6 @@ ADD_PLUGIN(Core
         Xml
         XmlPatterns
     TESTS
-        tests
+        generaltests
+        mathmltests
 )

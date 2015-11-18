@@ -53,11 +53,14 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     // Customise ourselves
 
     setAutoIndent(true);
+    setBraceMatching(QsciScintilla::SloppyBraceMatch);
     setCaretLineVisible(true);
     setFolding(QsciScintilla::BoxedTreeFoldStyle);
     setFrameShape(QFrame::NoFrame);
     setIndentationsUseTabs(false);
     setMarginWidth(SC_MARGIN_NUMBER, 0);
+    setMatchedBraceBackgroundColor(Qt::white);
+    setMatchedBraceForegroundColor(Qt::red);
     setTabWidth(4);
     setUtf8(true);
 

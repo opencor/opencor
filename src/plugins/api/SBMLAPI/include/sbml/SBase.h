@@ -194,13 +194,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SBase& operator=(const SBase& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this SBase object.
    *
@@ -209,6 +207,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const = 0;
+  /** @endcond */
 
 
   /**
@@ -230,6 +229,16 @@ public:
    */
   virtual SBase* getElementBySId(const std::string& id);
 
+  /**
+   * Returns the first child element found that has the given @p id in the
+   * model-wide @c SId namespace, or @c NULL if no such object is found.
+   *
+   * @param id string representing the "id" attribute value of the object
+   * to find.
+   *
+   * @return pointer to the first element found with the given identifier.
+   */
+  const SBase* getElementBySId(const std::string& id) const;
 
   /**
    * Returns the first child element it can find with a specific "metaid"
@@ -244,6 +253,18 @@ public:
    */
   virtual SBase* getElementByMetaId(const std::string& metaid);
 
+  /**
+   * Returns the first child element it can find with a specific "metaid"
+   * attribute value, or @c NULL if no such object is found.
+   *
+   * @copydetails doc_what_is_metaid
+   *
+   * @param metaid string representing the "metaid" attribute value of the
+   * object to find.
+   *
+   * @return pointer to the first element found with the given meta-identifier.
+   */
+  const SBase* getElementByMetaId(const std::string& metaid) const;
 
   /**
    * Returns a List of all child SBase objects, including those nested to
@@ -347,7 +368,7 @@ public:
 
   /** @cond doxygenLibsbmlInternal */
   /**
-   * Add the given string to all identifiers in the object.  If the string
+   * Add the given string to all identifiers (but not identifier references) in the object.  If the string
    * is added to anything other than an id or a metaid, this code is
    * responsible for tracking down and renaming all *idRefs in the package
    * extention that identifier comes from.
@@ -961,10 +982,12 @@ public:
 
 
   /**
-   * Returns the line number on which this object first appears in the XML
+   * Returns the line number where this object first appears in the XML
    * representation of the SBML document.
    *
-   * @return the line number of this SBML object.
+   * @return the line number of this SBML object.  If this object was
+   * created programmatically and not read from a file, this method will
+   * return the value @c 0.
    *
    * @note The line number for each construct in an SBML model is set upon
    * reading the model.  The accuracy of the line number depends on the
@@ -987,10 +1010,12 @@ public:
 
 
   /**
-   * Returns the column number on which this object first appears in the XML
+   * Returns the column number where this object first appears in the XML
    * representation of the SBML document.
    *
-   * @return the column number of this SBML object.
+   * @return the column number of this SBML object.  If this object was
+   * created programmatically and not read from a file, this method will
+   * return the value @c 0.
    *
    * @note The column number for each construct in an SBML model is set
    * upon reading the model.  The accuracy of the column number depends on
@@ -1595,7 +1620,7 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_INVALID_OBJECT, OperationReturnValues_t}
    *
-   * @see removeTopLevelAnnotationElement(const std::string elementName, const std::string elementURI)
+   * @see removeTopLevelAnnotationElement(const std::string elementName, const std::string elementURI, bool removeEmpty)
    * @see replaceTopLevelAnnotationElement(const std::string&)
    */
   int replaceTopLevelAnnotationElement(const XMLNode* annotation);
@@ -2502,6 +2527,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * <li> Level&nbsp;2 Version&nbsp;2: &quot;<code style='margin-right:0; padding-right:0'>http</code><code style='margin-left:0; padding-left:0'>://www.sbml.org/sbml/level2/version2</code>&quot;
    * <li> Level&nbsp;2 Version&nbsp;3: &quot;<code style='margin-right:0; padding-right:0'>http</code><code style='margin-left:0; padding-left:0'>://www.sbml.org/sbml/level2/version3</code>&quot;
    * <li> Level&nbsp;2 Version&nbsp;4: &quot;<code style='margin-right:0; padding-right:0'>http</code><code style='margin-left:0; padding-left:0'>://www.sbml.org/sbml/level2/version4</code>&quot;
+   * <li> Level&nbsp;2 Version&nbsp;5: &quot;<code style='margin-right:0; padding-right:0'>http</code><code style='margin-left:0; padding-left:0'>://www.sbml.org/sbml/level2/version5</code>&quot;
    * <li> Level&nbsp;3 Version&nbsp;1 Core: &quot;<code style='margin-right:0; padding-right:0'>http</code><code style='margin-left:0; padding-left:0'>://www.sbml.org/sbml/level3/version1/core</code>&quot;
    * </ul>
    *
@@ -2644,6 +2670,8 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    *
    * @copydetails doc_what_are_plugins
    *
+   * @copydetails doc_what_are_disabled_plugins
+   *
    * @param n the index of the disabled plug-in to return
    *
    * @return the nth disabled plug-in object (the libSBML extension interface) of a
@@ -2660,6 +2688,8 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * package extension.
    *
    * @copydetails doc_what_are_plugins
+   *
+   * @copydetails doc_what_are_disabled_plugins
    *
    * @param n the index of the disabled plug-in to return
    *
@@ -2687,10 +2717,12 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
 
 
   /**
-   * Returns the number of disabled plug-in objects (extenstion interfaces)
+   * Returns the number of disabled plug-in objects (extension interfaces)
    * for SBML Level&nbsp;3 package extensions known.
    *
    * @copydetails doc_what_are_plugins
+   *
+   * @copydetails doc_what_are_disabled_plugins
    *
    * @return the number of disabled plug-in objects (extension interfaces)
    * of package extensions known by this instance of libSBML.
@@ -2700,7 +2732,12 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
 
 
   /**
-   * Deletes all information stored in disabled plugins.
+   * Deletes all information stored in disabled plugins.  If the plugin is
+   * re-enabled later, it will then not have any previously-stored information.
+   *
+   * @copydetails doc_what_are_plugins
+   *
+   * @copydetails doc_what_are_disabled_plugins
    *
    * @param recursive if @c true, the disabled information will be deleted
    * also from all child elements, otherwise only from this SBase element.
@@ -3214,14 +3251,13 @@ newModel.addSpecies(s1);
    *
    * This function first returns the URI for this element by looking into the
    * SBMLNamespaces object of the document with the its package name.  If not
-   * found, it will @if clike return the result of getElementNamespace()@else
-   * return the XML namespace to which this element belongs@endif.
+   * found, it will then look for the namespace associated with the element
+   * itself.
    *
-   * @return the URI of this element
+   * @return the URI of this element, as a text string
    *
    * @see getSBMLDocument()
    * @see getPackageName()
-   * @if clike @see getElementNamespace() @endif
    */
   std::string getURI() const;
 
@@ -3253,7 +3289,6 @@ protected:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   bool matchesCoreSBMLNamespace(const SBase * sb);
 
   bool matchesCoreSBMLNamespace(const SBase * sb) const;
@@ -3275,9 +3310,6 @@ protected:
   * Copy constructor. Creates a copy of this SBase object.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
   */
   SBase(const SBase& orig);
 
@@ -3306,6 +3338,7 @@ protected:
    * <li> Level&nbsp;2 Version&nbsp;2: <code>"http://www.sbml.org/sbml/level2/version2"</code>
    * <li> Level&nbsp;2 Version&nbsp;3: <code>"http://www.sbml.org/sbml/level2/version3"</code>
    * <li> Level&nbsp;2 Version&nbsp;4: <code>"http://www.sbml.org/sbml/level2/version4"</code>
+   * <li> Level&nbsp;2 Version&nbsp;5: <code>"http://www.sbml.org/sbml/level2/version5"</code>
    * <li> Level&nbsp;3 Version&nbsp;1 Core: <code>"http://www.sbml.org/sbml/level3/version1/core"</code>
    * </ul>
    *
@@ -3372,9 +3405,9 @@ protected:
    * Helper to log a common type of error.
    */
   void logUnknownAttribute( const std::string& attribute,
-			    const unsigned int level,
-			    const unsigned int version,
-			    const std::string& element,
+          const unsigned int level,
+          const unsigned int version,
+          const std::string& element,
           const std::string& prefix="");
 
 
@@ -3382,8 +3415,8 @@ protected:
    * Helper to log a common type of error.
    */
   void logUnknownElement( const std::string& element,
-			  const unsigned int level,
-			  const unsigned int version );
+        const unsigned int level,
+        const unsigned int version );
 
 
   /**
@@ -3757,7 +3790,6 @@ SBase.readExtensionAttributes(attributes, expectedAttributes);
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Stores the location (line and column) and any XML namespaces (for
    * roundtripping) declared on this SBML (XML) element.
@@ -3943,11 +3975,12 @@ SBase_getSBOTermAsURL (const SBase_t *sb);
 
 /**
  * Returns the line number on which the given structure first appears in the
- * XML representation of the SBML document.
+ * XML representation of the SBML document, or <code>0</code> if the object was created,
+ * not read from a file.
  *
  * @param sb the SBase_t structure
  *
- * @return the line number of the given structure
+ * @return the line number of the given structure, or <code>0</code> if no such value.
  *
  * @see getColumn().
  *
@@ -3960,11 +3993,12 @@ SBase_getLine (const SBase_t *sb);
 
 /**
  * Returns the column number on which the given structure first appears in the
- * XML representation of the SBML document.
+ * XML representation of the SBML document, or <code>0</code> if the object was created,
+ * not read from a file.
  *
  * @param sb the SBase_t structure
  *
- * @return the column number of this SBML structure.
+ * @return the column number of this SBML structure, or <code>0</code> if no such value.
  *
  * @see getLine().
  *
@@ -4884,6 +4918,7 @@ SBase_getElementName (const SBase_t *sb);
  * <li> Level&nbsp;2 Version&nbsp;2 "http://www.sbml.org/sbml/level2/version2"
  * <li> Level&nbsp;2 Version&nbsp;3 "http://www.sbml.org/sbml/level2/version3"
  * <li> Level&nbsp;2 Version&nbsp;4 "http://www.sbml.org/sbml/level2/version4"
+ * <li> Level&nbsp;2 Version&nbsp;5 "http://www.sbml.org/sbml/level2/version5"
  * </ul>
  *
  * @param sb the SBase_t structure

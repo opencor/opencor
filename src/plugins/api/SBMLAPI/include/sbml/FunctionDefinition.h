@@ -141,10 +141,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * FunctionDefinition
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -159,10 +156,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -179,9 +173,6 @@ public:
    * Copy constructor; creates a copy of this FunctionDefinition.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   FunctionDefinition (const FunctionDefinition& orig);
 
@@ -191,13 +182,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   FunctionDefinition& operator=(const FunctionDefinition& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of FunctionDefinition.
    *
@@ -208,6 +197,7 @@ public:
    * the list of function definitions.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -476,7 +466,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Subclasses should override this method to read (and store) XHTML,
    * MathML, etc. directly from the XMLInputStream.
@@ -556,6 +545,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfFunctionDefinitions(unsigned int level, unsigned int version);
 
@@ -569,6 +562,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfFunctionDefinitions object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfFunctionDefinitions(SBMLNamespaces* sbmlns);
 
@@ -694,7 +691,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Get the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -715,7 +711,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return an SBML object of this class, if present.
    *

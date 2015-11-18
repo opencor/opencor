@@ -1,12 +1,16 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 7, "month": 9, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 15, "month": 11, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
-                           { "type": "Added", "description": "<a href=\"https://groups.google.com/forum/#!forum/opencor-users\">Users</a> and <a href=\"https://groups.google.com/forum/#!forum/opencor-developers\">developers</a> mailing lists." },
-                           { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
+                           { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
+                           { "type": "Improved", "description": "Text-based editing." },
+                           { "type": "Improved", "description": "Equation rendering." },
+                           { "type": "Improved", "description": "Reopening of the most recent file." },
+                           { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
                          ]
                        },
                        { "name": "API",
@@ -22,13 +26,15 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "Added", "description": "Support for the <code>min()</code> and <code>max()</code> functions." },
+                               { "type": "Added", "description": "Support for the <code>gcd()</code> and <code>lcm()</code> functions." },
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
@@ -48,12 +54,14 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
-                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export." },
+                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export (either as a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
+                               { "type": "Added", "description": "Create a new or update an existing CellML file based on the results of a simulation." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
-                               { "type": "Improved", "description": "Support for CellML models." }
+                               { "type": "Improved", "description": "Support for CellML models." },
+                               { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." }
                              ]
                            }
                          ]
@@ -110,9 +118,9 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
-                               { "type": "Fixed", "description": "Mac <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.7 and <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.8 issue with models that need to compute 10<sup>x</sup>." }
+                               { "type": "Fixed", "description": "Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and <a href=\"https://en.wikipedia.org/wiki/OS_X_Mountain_Lion\">OS X 10.8</a> (Mountain Lion) issue with models that need to compute 10<sup>x</sup>." }
                              ]
                            }
                          ]
@@ -126,12 +134,13 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Checking for updates." },
                            { "type": "Added", "description": "<a href=\"howToGetStarted.html\">How to get started</a> section." },
                            { "type": "Added", "description": "Support for 64-bit <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
-                           { "type": "Added", "description": "Support for <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.10 (Yosemite)." },
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_Yosemite\">OS X 10.10</a> (Yosemite)." },
                            { "type": "Improved", "description": "OpenCOR logo." },
                            { "type": "Improved", "description": "Binaries on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "File handling." },
+                           { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Display of numbers." },
                            { "type": "Improved", "description": "Opening and reopening of files." }
                          ]
@@ -143,7 +152,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Added", "description": "Two new <a href=\"http://biomodels.net/qualifiers/\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked CellML files." },
@@ -169,7 +178,6 @@ var jsonData = { "versions": [
                                { "type": "Added", "description": "Reformatting the contents of the editor." },
                                { "type": "Improved", "description": "Context menu." },
                                { "type": "Improved", "description": "CellML validation." },
-                               { "type": "Improved", "description": "Equation rendering." },
                                { "type": "Improved", "description": "File permissions changes." },
                                { "type": "Fixed", "description": "Retrieval of view settings." }
                              ]
@@ -198,7 +206,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for the parameters section." },
@@ -257,7 +265,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Improved", "description": "Retrieval of possible ontological terms." },
                                { "type": "Fixed", "description": "Listing of some unrecognisable metadata." },
@@ -303,7 +311,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "View settings upon reloading a CellML file." },
                                { "type": "Improved", "description": "Delay between two data points." },
@@ -336,7 +344,7 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "<a href=\"licensing.html\">Open source license</a>." },
-                           { "type": "Added", "description": "Support for Mac <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.7 (Lion) and later." },
+                           { "type": "Added", "description": "Support for Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and later." },
                            { "type": "Added", "description": "Reload a file (either as a result of a direct action or because it got modified outside OpenCOR)." },
                            { "type": "Added", "description": "Show/hide all the recent/current docked widgets at once." },
                            { "type": "Added", "description": "<a href=\"http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the CellML file examples." },
@@ -348,7 +356,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
-                           { "type": "subCategory", "name": "CellML annotation view",
+                           { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Added", "description": "Open an imported CellML file." }
                              ]
@@ -371,7 +379,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Added", "description": "Have several graph panels." },
                                { "type": "Added", "description": "Plot any model parameter against any other." },
@@ -398,7 +406,7 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Fixed", "description": "Runtime generation of some CellML files." }
                              ]
@@ -416,7 +424,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "Editing of property values." },
                                { "type": "Fixed", "description": "Plotting of property values." }

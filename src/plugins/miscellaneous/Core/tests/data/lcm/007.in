@@ -1,0 +1,17 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <lcm/>
+            <apply>
+                <abs/>
+                <ci>b</ci>
+            </apply>
+            <apply>
+                <abs/>
+                <ci>c</ci>
+            </apply>
+        </apply>
+    </apply>
+</math>

@@ -93,6 +93,8 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * ModifierSpeciesReference
    *
+   * @copydetails doc_throw_exception_lv
+   *
    * @copydetails doc_note_setting_lv
    */
   ModifierSpeciesReference (unsigned int level, unsigned int version);
@@ -103,6 +105,8 @@ public:
    * object @p sbmlns.
    *
    * @param sbmlns an SBMLNamespaces object.
+   *
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -115,6 +119,7 @@ public:
   virtual ~ModifierSpeciesReference();
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -123,6 +128,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -174,7 +180,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /* the validator classes need to be friends to access the
    * protected constructor that takes no arguments
    */

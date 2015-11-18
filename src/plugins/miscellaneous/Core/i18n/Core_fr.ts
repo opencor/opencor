@@ -40,8 +40,8 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
     <message>
-        <source>The file is new, so switching views is not possible for now</source>
-        <translation>Le fichier est nouveau, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
+        <source>The file is being edited, so switching modes is not possible for now</source>
+        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
     </message>
     <message>
         <source>The file is being edited, so switching views is not possible for now</source>
@@ -130,6 +130,18 @@
     <message>
         <source>New</source>
         <translation>Nouveau</translation>
+    </message>
+    <message>
+        <source>File Modified</source>
+        <translation>Fichier Modifié</translation>
+    </message>
+    <message>
+        <source>New File</source>
+        <translation>Nouveau Fichier</translation>
+    </message>
+    <message>
+        <source>File Deleted</source>
+        <translation>Fichier Supprimé</translation>
     </message>
 </context>
 <context>
@@ -257,6 +269,14 @@
     <message>
         <source>Reopen the most recently closed file</source>
         <translation>Réouvrir le fichier qui a été le plus récemment fermé</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
+    <message>
+        <source>Create a new file</source>
+        <translation>Créer un nouveau fichier</translation>
     </message>
 </context>
 <context>

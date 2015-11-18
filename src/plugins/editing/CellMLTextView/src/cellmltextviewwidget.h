@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
 #include "corecliutils.h"
+#include "mathmlconverter.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -37,12 +38,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class XslTransformer;
-}   // namespace Core
 
 //==============================================================================
 
@@ -149,7 +144,7 @@ private:
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
-    Core::XslTransformer *mXslTransformer;
+    Core::MathmlConverter mMathmlConverter;
 
     QString mContentMathmlEquation;
 
@@ -172,7 +167,8 @@ private Q_SLOTS:
 
     void selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList = 0);
 
-    void xslTransformationDone(const QString &pInput, const QString &pOutput);
+    void mathmlConversionDone(const QString &pContentMathml,
+                              const QString &pPresentationMathml);
 };
 
 //==============================================================================

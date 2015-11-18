@@ -21,9 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "commonwidget.h"
-#include "coresettings.h"
 #include "coreguiutils.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -42,10 +40,10 @@ specific language governing permissions and limitations under the License.
 #include <QFrame>
 #include <QIODevice>
 #include <QLabel>
+#include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPalette>
-#include <QSettings>
 #include <QSizePolicy>
 #include <QStackedWidget>
 
@@ -66,9 +64,10 @@ QString allFilters(const QString &pFilters)
            + QObject::tr("All Files")
            +" (*"
 #ifdef Q_OS_WIN
-           +".*"
+            ".*"
 #endif
-           +")";
+            ")"
+           +(pFilters.isEmpty()?QString():";;"+pFilters);
 }
 
 //==============================================================================
@@ -145,14 +144,14 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     // Retrieve and return a save file name
 
     QFileInfo fileInfo = pFileName;
-    QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
-                                                                        pCaption,
-                                                                        !fileInfo.canonicalPath().compare(".")?
-                                                                            activeDirectory()+QDir::separator()+fileInfo.fileName():
-                                                                            pFileName,
-                                                                        allFilters(pFilters),
-                                                                        pSelectedFilter,
-                                                                        QFileDialog::DontConfirmOverwrite));
+    QString res = Core::nativeCanonicalFileName(QFileDialog::getSaveFileName(qApp->activeWindow(),
+                                                                             pCaption,
+                                                                             !fileInfo.canonicalPath().compare(".")?
+                                                                                 activeDirectory()+QDir::separator()+fileInfo.fileName():
+                                                                                 pFileName,
+                                                                             allFilters(pFilters),
+                                                                             pSelectedFilter,
+                                                                             QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we have got a save file name
 
@@ -171,7 +170,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // The save file already exists, so ask whether we want to overwrite
             // it
 
-            if (QMessageBox::question(qApp->activeWindow(), pCaption,
+            if (QMessageBox::question(mainWindow(), pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No ) {
@@ -192,11 +191,11 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
 {
     // Retrieve and return a save file name
 
-    QString res = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(qApp->activeWindow(),
-                                                                             pCaption,
-                                                                             pDirName.isEmpty()?
-                                                                                 activeDirectory():
-                                                                                 pDirName));
+    QString res = Core::nativeCanonicalDirName(QFileDialog::getExistingDirectory(qApp->activeWindow(),
+                                                                                 pCaption,
+                                                                                 pDirName.isEmpty()?
+                                                                                     activeDirectory():
+                                                                                     pDirName));
 
     // Make sure that we have got a directory
 
@@ -209,7 +208,7 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
 
         if (pEmptyDir) {
             if (QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
-                QMessageBox::warning(qApp->activeWindow(), pCaption,
+                QMessageBox::warning(mainWindow(), pCaption,
                                      QObject::tr("Please choose an empty directory."));
 
                 return QString();

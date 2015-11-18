@@ -131,10 +131,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * RateRule
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -149,13 +146,9 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
-   *
    */
   RateRule (SBMLNamespaces* sbmlns);
 
@@ -173,6 +166,7 @@ public:
   virtual RateRule* clone () const;
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -183,6 +177,7 @@ public:
    * in the list of rules within which @em the present object is embedded.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -210,7 +205,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /* the validator classes need to be friends to access the
    * protected constructor that takes no arguments
    */

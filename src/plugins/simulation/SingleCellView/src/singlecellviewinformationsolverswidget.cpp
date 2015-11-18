@@ -148,11 +148,12 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
             Descriptions descriptions = mDescriptions.value(property);
             QString description = descriptions.value(Core::locale());
 
-            if (description.isEmpty())
-                // No description exists for the current locale, so  retrieve
-                // the english description (which, hopefully, should exist)
+            if (description.isEmpty()) {
+                // No description exists for the current locale, so retrieve the
+                // English description (which, hopefully, exists)
 
                 description = descriptions.value("en");
+            }
 
             // Set the name of the property to the description
 
@@ -429,6 +430,8 @@ void SingleCellViewInformationSolversWidget::backup(const QString &pFileName)
 void SingleCellViewInformationSolversWidget::finalize(const QString &pFileName)
 {
     // Remove track of our GUI state
+
+    delete mGuiStates.value(pFileName);
 
     mGuiStates.remove(pFileName);
 }

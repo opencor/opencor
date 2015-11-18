@@ -21,14 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cliapplication.h"
 #include "cliutils.h"
-#include "coresettings.h"
-#include "settings.h"
 
 //==============================================================================
 
 #include <QCoreApplication>
 #include <QDir>
-#include <QFile>
 #include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
@@ -38,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <QResource>
 #include <QSettings>
 #include <QTemporaryFile>
+#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -54,9 +52,9 @@ void initQtMessagePattern()
     // We don't want to see debug/warning messages when not in debug mode
 
 #ifndef QT_DEBUG
-    qSetMessagePattern("%{if-debug}%{endif}"              \
-                       "%{if-warning}%{endif}"            \
-                       "%{if-critical}%{message}%{endif}" \
+    qSetMessagePattern("%{if-debug}%{endif}"
+                       "%{if-warning}%{endif}"
+                       "%{if-critical}%{message}%{endif}"
                        "%{if-fatal}%{message}%{endif}");
 #endif
 }
@@ -83,7 +81,7 @@ void initPluginsPath(const QString &pAppFileName)
     }
 #endif
 
-    appDir = QDir::toNativeSeparators(appFileInfo.canonicalPath());
+    appDir = nativeCanonicalDirName(appFileInfo.canonicalPath());
 
     QString pluginsDir = QString();
 
@@ -107,20 +105,13 @@ void initPluginsPath(const QString &pAppFileName)
     #error Unsupported platform
 #endif
 
-    pluginsDir = QDir::toNativeSeparators(QDir(pluginsDir).canonicalPath());
-
-    QCoreApplication::setLibraryPaths(QStringList() << pluginsDir);
+    QCoreApplication::setLibraryPaths(QStringList() << nativeCanonicalDirName(pluginsDir));
 }
 
 //==============================================================================
 
-void initApplication(QCoreApplication *pApp, QString *pAppDate)
+void initApplication(QString *pAppDate)
 {
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    OpenCOR::removeGlobalInstances();
-
     // Ignore SSL-related warnings
     // Note #1: this is to address an issue with QSslSocket not being able to
     //          resolve some methods...
@@ -128,9 +119,10 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
     qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
 
-    // Set the name of the application
+    // Set the organisation and application names of our application
 
-    pApp->setApplicationName(QFileInfo(pApp->applicationFilePath()).baseName());
+    qApp->setOrganizationName("Physiome");
+    qApp->setApplicationName("OpenCOR");
 
     // Retrieve and set the version of the application
 
@@ -140,7 +132,7 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
     QStringList versionDataList = versionData.split(eolString());
 
-    pApp->setApplicationVersion(versionDataList.first());
+    qApp->setApplicationVersion(versionDataList.first());
 
     if (pAppDate)
         *pAppDate = versionDataList.last();
@@ -148,11 +140,11 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
 //==============================================================================
 
-bool cliApplication(QCoreApplication *pApp, int *pRes)
+bool cliApplication(int *pRes)
 {
     // Create and run our CLI application object
 
-    CliApplication *cliApp = new CliApplication(pApp);
+    CliApplication *cliApp = new CliApplication();
 
     bool res = cliApp->run(pRes);
 
@@ -163,12 +155,20 @@ bool cliApplication(QCoreApplication *pApp, int *pRes)
 
 //==============================================================================
 
-void removeGlobalInstances()
+QString applicationDescription(const bool &pGuiMode)
 {
-    // Remove all the 'global' information shared between OpenCOR and its
-    // different plugins
+    QString res = QObject::tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>");
 
-    QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
+    return pGuiMode?res:plainString(res);
+}
+
+//==============================================================================
+
+QString applicationBuildInformation(const bool &pGuiMode)
+{
+    QString res = QObject::tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>", qVersion());
+
+    return pGuiMode?res:plainString(res);
 }
 
 //==============================================================================

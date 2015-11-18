@@ -1,0 +1,12 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+        <mi mathvariant="italic">a</mi>
+        <mo>=</mo>
+        <mroot>
+            <mi mathvariant="italic">b</mi>
+            <mrow>
+                <mn>3</mn>
+            </mrow>
+        </mroot>
+    </mrow>
+</math>

@@ -52,9 +52,9 @@
  * ConversionProperties object (using
  * ConversionProperties::setTargetNamespaces(SBMLNamespaces *targetNS)).
  *
- * In addition, this converter offers one option:
+ * In addition, this converter offers the following options:
  *
- * @li @c "strict": if this option has the value @c true, then the validity
+ * @li @c "strict": If this option has the value @c true, then the validity
  * of the SBML document will be strictly preserved.  This means that SBML
  * validation will be performed, and if the original model is not valid or
  * semantics cannot be preserved in the converted model, then conversion will
@@ -62,6 +62,18 @@
  * conversion will always be performed; if any errors are detected related to
  * altered semantics, the errors will be logged in the usual way (i.e., the
  * error log on the SBMLDocument object).
+ *
+ * @li @c "addDefaultUnits": By default, a conversion from SBML Level&nbsp;2
+ * to Level&nbsp;3 will explicitly add UnitDefinition objects and unit
+ * attributes on the Model object to define units that are implicitly defined
+ * in SBML Level&nbsp;2.  This is usually desirable because in SBML
+ * Level&nbsp;3, there are no default units and a conversion from
+ * Level&nbsp;2 that did @em not add unit definitions would actually result
+ * in a loss of information.  However, some users or software tools may not
+ * need or want this, or worse, may be fooled into thinking that libSBML has
+ * somehow inferred the proper units for model quantities.  (It has not; it
+ * merely adds generic predefined units.)  This option lets callers control
+ * this behavior.
  *
  * @copydetails doc_section_using_sbml_converters
  */
@@ -100,7 +112,6 @@ class LIBSBML_EXTERN  SBMLLevelVersionConverter : public SBMLConverter
 public:
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Register with the ConversionRegistry.
    */
@@ -135,9 +146,6 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SBMLLevelVersionConverter& operator=(const SBMLLevelVersionConverter& rhs);
 
@@ -231,6 +239,15 @@ public:
    */
   bool getValidityFlag();
 
+  /**
+   * Returns the flag indicating whether default units should be added when
+   * converting to L3 or not.
+   *
+   * @return @c true if default units should be added, @c false
+   * otherwise.
+   */
+  bool getAddDefaultUnits();
+
 
 #ifndef SWIG
 
@@ -239,7 +256,6 @@ public:
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
   bool conversion_errors(unsigned int errors, bool strictUnits = true);
 
   /*

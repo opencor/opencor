@@ -69,6 +69,35 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     // Populate our table of Greek symbols, if needed
 
     if (GreekSymbols.isEmpty()) {
+        // Upper case
+
+        GreekSymbols.insert("ALPHA", "Α");
+        GreekSymbols.insert("BETA", "Β");
+        GreekSymbols.insert("GAMMA", "Γ");
+        GreekSymbols.insert("DELTA", "Δ");
+        GreekSymbols.insert("EPSILON", "Ε");
+        GreekSymbols.insert("ZETA", "Ζ");
+        GreekSymbols.insert("ETA", "Η");
+        GreekSymbols.insert("THETA", "Θ");
+        GreekSymbols.insert("IOTA", "Ι");
+        GreekSymbols.insert("KAPPA", "Κ");
+        GreekSymbols.insert("LAMBDA", "Λ");
+        GreekSymbols.insert("MU", "Μ");
+        GreekSymbols.insert("NU", "Ν");
+        GreekSymbols.insert("XI", "Ξ");
+        GreekSymbols.insert("OMICRON", "Ο");
+        GreekSymbols.insert("PI", "Π");
+        GreekSymbols.insert("RHO", "Ρ");
+        GreekSymbols.insert("SIGMA", "Σ");
+        GreekSymbols.insert("TAU", "Τ");
+        GreekSymbols.insert("UPSILON", "Υ");
+        GreekSymbols.insert("PHI", "Φ");
+        GreekSymbols.insert("CHI", "Χ");
+        GreekSymbols.insert("PSI", "Ψ");
+        GreekSymbols.insert("OMEGA", "Ω");
+
+        // Lower case
+
         GreekSymbols.insert("alpha", "α");
         GreekSymbols.insert("beta", "β");
         GreekSymbols.insert("gamma", "γ");
@@ -506,7 +535,7 @@ QString ViewerWidget::greekSymbolize(const QString &pValue) const
 {
     // Convert the given value into a Greek symbol, if possible
 
-    return GreekSymbols.value(pValue.toLower(), pValue);
+    return GreekSymbols.value(pValue, pValue);
 }
 
 //==============================================================================
@@ -532,9 +561,17 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 {
     // Go through the node's children and process them
 
+    static const QString MiElement = "mi";
+    static const QString MnElement = "mn";
+    static const QString MoElement = "mo";
+
     static const QRegularExpression LeadingAndTrailingUnderscoresRegEx = QRegularExpression("(^_+|_+$)");
     static const QRegularExpression MultipleUnderscoresRegEx = QRegularExpression("_+");
     static const QRegularExpression NotUnderscoreRegEx = QRegularExpression("[^_]");
+
+    bool processSubscripts = subscripts();
+    bool processGreekSymbols = greekSymbols();
+    bool processDigitGrouping = digitGrouping();
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
@@ -546,18 +583,19 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
         if ((domNode.childNodes().count() == 1) && (childNode.isText())) {
             // Check whether we want to use subscripts and/or Greek symbols and
-            // the current node is an mi element, or whether we want to do digit
-            // grouping and the current node is an mn element
+            // the current node is an mi element, whether we want to do digit
+            // grouping and the current node is an mn element, or whether we
+            // are dealing with an mo element
 
-            if (    (subscripts() || greekSymbols())
-                && !domNode.nodeName().compare("mi")) {
+            if (    (processSubscripts || processGreekSymbols)
+                && !domNode.nodeName().compare(MiElement)) {
                 // We want to use subscripts and/or Greek symbols and the
                 // current node is an mi element, so check whether we want to
                 // use subscripts
 
                 QString childNodeValue = childNode.nodeValue();
 
-                if (subscripts()) {
+                if (processSubscripts) {
                     // We want to use subscripts (and maybe also Greek symbols),
                     // so remove leading, trailing and duplicate underscores
 
@@ -582,7 +620,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-2]));
                         newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-1]));
 
-                        if (domChildNodeSubValuesCount > 2)
+                        if (domChildNodeSubValuesCount > 2) {
                             for (int j = domChildNodeSubValuesCount-3; j >= 0; --j) {
                                 QDomElement newerDomElement = domNode.ownerDocument().createElement("msub");
 
@@ -591,18 +629,21 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
                                 newDomElement = newerDomElement;
                             }
+                        }
 
                         // Replace the current node with our new one
 
                         domNode.parentNode().replaceChild(newDomElement, domNode);
-                    } else if (greekSymbols()) {
+
+                        domNode = newDomElement;
+                    } else if (processGreekSymbols) {
                         // There are no subscripts to be processed, but we want
                         // to use Greek symbols, so try to Greek symbolise our
                         // child node value
 
                         childNode.setNodeValue(greekSymbolize(childNodeValue));
                     }
-                } else if (greekSymbols()) {
+                } else if (processGreekSymbols) {
                     // We want to use Greek symbols, so go through the value of
                     // the child node (from the end) and replace whatever can be
                     // replaced with Greek symbols
@@ -636,12 +677,17 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 }
 
                 processDomNode = false;
-            } else if (    digitGrouping()
-                       && !domNode.nodeName().compare("mn")) {
+            } else if (    processDigitGrouping
+                       && !domNode.nodeName().compare(MnElement)) {
                 // We want to do digit grouping and the current node is an mn
                 // element, so we can go ahead
 
                 childNode.setNodeValue(Core::digitGroupNumber(childNode.nodeValue()));
+
+                processDomNode = false;
+            } else if (!domNode.nodeName().compare(MoElement)) {
+                // The current node is an mo element, so no need to process it
+                // further
 
                 processDomNode = false;
             }
@@ -706,11 +752,13 @@ void ViewerWidget::copyToClipboard()
     // Copy our contents to the clipboard
 
     QSizeF mathmlDocumentSize = mMathmlDocument.size();
+    int contentsWidth = qCeil(mathmlDocumentSize.width());
+    int contentsHeight = qCeil(mathmlDocumentSize.height());
+    QPixmap pixmap(contentsWidth, contentsHeight);
 
-    QApplication::clipboard()->setPixmap(grab().copy(qFloor(0.5*(width()-mathmlDocumentSize.width())),
-                                                     qFloor(0.5*(height()-mathmlDocumentSize.height())),
-                                                     qCeil(mathmlDocumentSize.width()),
-                                                     qCeil(mathmlDocumentSize.height())));
+    render(&pixmap, QPoint(), QRegion(0, 0, contentsWidth, contentsHeight));
+
+    QApplication::clipboard()->setPixmap(pixmap);
 }
 
 //==============================================================================

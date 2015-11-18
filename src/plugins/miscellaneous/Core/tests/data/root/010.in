@@ -1,0 +1,17 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <root/>
+            <degree>
+                <apply>
+                    <plus/>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                </apply>
+            </degree>
+            <ci>b</ci>
+        </apply>
+    </apply>
+</math>

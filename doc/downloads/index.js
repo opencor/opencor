@@ -20,7 +20,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 7, "month": 9, "year": 2015, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 0, "month": 0, "year": 0, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -39,6 +39,10 @@ var jsonData = { "versions": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
                        }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Single Cell (simulation) view:</strong> disabled the development mode when using a read-only file (see issue <a href=\"https://github.com/opencor/opencor/issues/817\">#817</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.12.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/812\">#812</a>) and <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.23.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/816\">#816</a>)." }
                      ],
                      "information": "<strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable."
                    },

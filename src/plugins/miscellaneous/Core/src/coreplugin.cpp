@@ -96,9 +96,10 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
     //       files since if they are not then CentralWidget::openRemoteFile()
     //       will open them as normal files...
 
-    foreach (const QString &argument, pArguments)
+    foreach (const QString &argument, pArguments) {
         if (!argument.isEmpty())
             mCentralWidget->openRemoteFile(argument);
+    }
 }
 
 //==============================================================================
@@ -134,12 +135,11 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (fileManagerInstance->isRemote(pFileName))
-        mRecentFileNamesOrUrls.removeOne(fileManagerInstance->url(pFileName));
-    else
-        mRecentFileNamesOrUrls.removeOne(pFileName);
-
-    updateFileReopenMenu();
+    if (fileManagerInstance->isRemote(pFileName)?
+            mRecentFileNamesOrUrls.removeOne(fileManagerInstance->url(pFileName)):
+            mRecentFileNamesOrUrls.removeOne(pFileName)) {
+        updateFileReopenMenu();
+    }
 }
 
 //==============================================================================
@@ -149,11 +149,7 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
     // Update the checked state of our Locked menu, if needed
 
     if (!pFileName.compare(mCentralWidget->currentFileName()))
-        mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(pFileName));
-        // Note: we really want to call isReadableAndWritable() rather than
-        //       isLocked() since from the GUI perspective a file should only be
-        //       considered unlocked if it can be both readable and writable
-        //       (see CentralWidget::updateFileTab())...
+        updateNewModifiedSensitiveActions();
 }
 
 //==============================================================================
@@ -185,7 +181,8 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
     //       done in that case (thus avoiding us having to test for its
     //       presence)...
 
-    mRecentFileNamesOrUrls.removeOne(pNewFileName);
+    if (mRecentFileNamesOrUrls.removeOne(pNewFileName))
+        updateFileReopenMenu();
 
     // A file has been created or saved under a new name, so we want the old
     // file name to be added to our list of recent files, i.e. as if it had been
@@ -258,7 +255,8 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mOpenReloadSeparator)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
@@ -286,6 +284,9 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
 void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions
+
+    retranslateAction(mFileNewFileAction, tr("File"),
+                      tr("Create a new file"));
 
     retranslateAction(mFileOpenAction, tr("Open..."),
                       tr("Open a file"));
@@ -336,38 +337,37 @@ void CorePlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
+void CorePlugin::initializePlugin()
 {
-    // Keep track of our main window
-
-    mMainWindow = pMainWindow;
-
     // Create our central widget
 
-    mCentralWidget = new CentralWidget(pMainWindow);
+    mCentralWidget = new CentralWidget(Core::mainWindow());
 
     // Create our different File actions
 
+    mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
+                                         QKeySequence::New, Core::mainWindow());
+
     mFileOpenAction = newAction(QIcon(":/oxygen/actions/document-open.png"),
-                                QKeySequence::Open, pMainWindow);
+                                QKeySequence::Open, Core::mainWindow());
     mFileOpenRemoteAction = newAction(QIcon(":/oxygen/actions/document-open-remote.png"),
                                       QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O),
-                                      pMainWindow);
+                                      Core::mainWindow());
 
-    mFileReloadAction = new QAction(pMainWindow);
+    mFileReloadAction = new QAction(Core::mainWindow());
 
     mFileDuplicateAction = newAction(QKeySequence(Qt::CTRL|Qt::Key_D),
-                                     pMainWindow);
+                                     Core::mainWindow());
 
     mFileLockedAction = newAction(true, QKeySequence(Qt::CTRL|Qt::Key_L),
-                                  pMainWindow);
+                                  Core::mainWindow());
 
     mFileSaveAction    = newAction(QIcon(":/oxygen/actions/document-save.png"),
-                                   QKeySequence::Save, pMainWindow);
+                                   QKeySequence::Save, Core::mainWindow());
     mFileSaveAsAction  = newAction(QIcon(":/oxygen/actions/document-save-as.png"),
-                                   QKeySequence::SaveAs, pMainWindow);
+                                   QKeySequence::SaveAs, Core::mainWindow());
     mFileSaveAllAction = newAction(QIcon(":/oxygen/actions/document-save-all.png"),
-                                   pMainWindow);
+                                   Core::mainWindow());
 
     // Note: for mFilePreviousAction and mFileNextAction, we would normally use
     //       QKeySequence::PreviousChild and QKeySequence::NextChild,
@@ -391,7 +391,7 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 #else
     #error Unsupported platform
 #endif
-                                    pMainWindow);
+                                    Core::mainWindow());
     mFileNextAction     = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                                     QKeySequence(Qt::CTRL|Qt::Key_Tab),
@@ -400,7 +400,7 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 #else
     #error Unsupported platform
 #endif
-                                    pMainWindow);
+                                    Core::mainWindow());
 
     mFileCloseAction    = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
@@ -410,25 +410,25 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 #else
     #error Unsupported platform
 #endif
-                                    pMainWindow);
-    mFileCloseAllAction = new QAction(pMainWindow);
+                                    Core::mainWindow());
+    mFileCloseAllAction = new QAction(Core::mainWindow());
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    mOpenReloadSeparator = new QAction(pMainWindow);
+    mOpenReloadSeparator = new QAction(Core::mainWindow());
 
     mOpenReloadSeparator->setSeparator(true);
 
     // Create our Reopen sub-menu
 
     mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
-                                 pMainWindow);
+                                 Core::mainWindow());
 
     mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
-                                                pMainWindow);
-    mFileReopenSubMenuSeparator1 = new QAction(pMainWindow);
-    mFileReopenSubMenuSeparator2 = new QAction(pMainWindow);
-    mFileClearReopenSubMenuAction = new QAction(pMainWindow);
+                                                Core::mainWindow());
+    mFileReopenSubMenuSeparator1 = new QAction(Core::mainWindow());
+    mFileReopenSubMenuSeparator2 = new QAction(Core::mainWindow());
+    mFileClearReopenSubMenuAction = new QAction(Core::mainWindow());
 
     mFileReopenSubMenuSeparator1->setSeparator(true);
     mFileReopenSubMenuSeparator2->setSeparator(true);
@@ -439,6 +439,9 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
     mFileReopenSubMenu->addAction(mFileClearReopenSubMenuAction);
 
     // Some connections to handle our different File actions
+
+    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(newFile()));
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(openFile()));
@@ -524,14 +527,16 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
-        if (fileTypeInterface)
+        if (fileTypeInterface) {
             // The plugin implements our file type interface, so add the
             // supported file types, but only if they are not already in our
             // list
 
-            foreach (FileType *fileType, fileTypeInterface->fileTypes())
+            foreach (FileType *fileType, fileTypeInterface->fileTypes()) {
                 if (!supportedFileTypes.contains(fileType))
                     supportedFileTypes << fileType;
+            }
+        }
     }
 
     mCentralWidget->setSupportedFileTypes(supportedFileTypes);
@@ -542,11 +547,12 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     foreach (Plugin *plugin, pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (viewInterface)
+        if (viewInterface) {
             // The plugin implements our View interface, so add it to our
             // central widget
 
             mCentralWidget->addView(plugin);
+        }
     }
 }
 
@@ -604,6 +610,26 @@ void CorePlugin::handleAction(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
+void CorePlugin::newFile()
+{
+    // Ask our file manager to create a new file
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+#ifdef QT_DEBUG
+    Core::FileManager::Status createStatus =
+#endif
+    fileManagerInstance->create();
+
+#ifdef QT_DEBUG
+    // Make sure that the file has indeed been created
+
+    if (createStatus != Core::FileManager::Created)
+        qFatal("FATAL ERROR | %s:%d: the new file was not created.", __FILE__, __LINE__);
+#endif
+}
+
+//==============================================================================
+
 void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
@@ -626,7 +652,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Add the recent files to our Reopen sub-menu
 
     foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
-        QAction *action = new QAction(mMainWindow);
+        QAction *action = new QAction(Core::mainWindow());
 
         action->setEnabled(pEnabled);
         action->setText(recentFile);
@@ -669,12 +695,24 @@ void CorePlugin::updateNewModifiedSensitiveActions()
         mFileDuplicateAction->setEnabled(false);
         mFileLockedAction->setEnabled(false);
     }
+
+    mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(fileName));
+    // Note: we really want to call isReadableAndWritable() rather than
+    //       isLocked() since from the GUI perspective a file should only be
+    //       considered unlocked if it can be both readable and writable
+    //       (see CentralWidget::updateFileTab())...
 }
 
 //==============================================================================
 
 void CorePlugin::reopenFile(const QString &pFileName)
 {
+    // Remove the file from our list of recent files and update our Reopen
+    // sub-menu, if needed
+
+    if (mRecentFileNamesOrUrls.removeOne(pFileName))
+        updateFileReopenMenu();
+
     // Check that the recent file still exists
 
     bool isLocalFile;
@@ -683,28 +721,21 @@ void CorePlugin::reopenFile(const QString &pFileName)
     checkFileNameOrUrl(pFileName, isLocalFile, fileNameOrUrl);
 
     if (isLocalFile) {
-        if (QFile::exists(fileNameOrUrl))
+        if (QFile::exists(fileNameOrUrl)) {
             // Open the recent file
 
             mCentralWidget->openFile(fileNameOrUrl);
-        else
+        } else {
             // The file doesn't exist anymore, so let the user know about it
 
-            QMessageBox::warning(mMainWindow, tr("Reopen File"),
+            QMessageBox::warning(mainWindow(), tr("Reopen File"),
                                  tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+        }
     } else {
         // Open the recent remote file
 
         mCentralWidget->openRemoteFile(fileNameOrUrl);
     }
-
-    // Try to remove the file from our list of recent files and update our
-    // Reopen sub-menu, if needed
-    // Note: if the file was successfully opened, then it will have already been
-    //       removed from our list of recent files...
-
-    if (mRecentFileNamesOrUrls.removeOne(pFileName))
-        updateFileReopenMenu();
 }
 
 //==============================================================================
@@ -721,8 +752,13 @@ void CorePlugin::reopenRecentFile()
 void CorePlugin::reopenMostRecentFile()
 {
     // Reopen the most recently closed file
+    // Note: we don't want to get a reference to mRecentFileNamesOrUrls' first
+    //       item, hence we construct a new string from it. Indeed, reopenFile()
+    //       is going to remove that item from mRecentFileNamesOrUrls, so if we
+    //       were to use the reference, it would eventually become an empty
+    //       string...
 
-    reopenFile(mRecentFileNamesOrUrls.first());
+    reopenFile(QString(mRecentFileNamesOrUrls.first()));
 }
 
 //==============================================================================

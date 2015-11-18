@@ -130,7 +130,6 @@ public:
 #ifndef SWIG
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Subclasses should override this method to get the list of
    * expected attributes.
@@ -236,7 +235,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -245,14 +243,15 @@ public:
    * sibling object (if available).
    */
   virtual bool accept (SBMLVisitor& v) const;
-
   /** @endcond */
 
 protected:
   /*-- data members --*/
 
+  /** @cond doxygenLibsbmlInternal */
   bool mRequired;
   bool mIsSetRequired;
+  /** @endcond */
 };
 
 LIBSBML_CPP_NAMESPACE_END

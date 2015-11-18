@@ -48,6 +48,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewSimulation;
 class SingleCellViewWidget;
 
 //==============================================================================
@@ -58,8 +59,11 @@ class SingleCellViewSimulationData : public QObject
 
 public:
     explicit SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                          SingleCellViewSimulation *pSimulation,
                                           const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulationData();
+
+    SingleCellViewSimulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
@@ -109,7 +113,7 @@ public:
     void reset(const bool &pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pFullComputeComputedConstants = true);
+                                                const bool &pInitialize = true);
     void recomputeVariables(const double &pCurrentPoint);
 
     bool isModified() const;
@@ -117,6 +121,8 @@ public:
 
 private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
+
+    SingleCellViewSimulation *mSimulation;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -138,6 +144,7 @@ private:
     double *mConstants;
     double *mRates;
     double *mStates;
+    double *mDummyStates;
     double *mAlgebraic;
     double *mCondVar;
 
@@ -214,6 +221,7 @@ public:
     ~SingleCellViewSimulation();
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
@@ -260,6 +268,10 @@ Q_SIGNALS:
 
     void error(const QString &pMessage);
 };
+
+//==============================================================================
+
+typedef QList<SingleCellViewSimulation *> SingleCellViewSimulations;
 
 //==============================================================================
 

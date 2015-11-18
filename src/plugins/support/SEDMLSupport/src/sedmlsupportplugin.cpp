@@ -101,10 +101,8 @@ void SEDMLSupportPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SEDMLSupportPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SEDMLSupportPlugin::initializePlugin()
 {
-    Q_UNUSED(pMainWindow);
-
     // We don't handle this interface...
 }
 

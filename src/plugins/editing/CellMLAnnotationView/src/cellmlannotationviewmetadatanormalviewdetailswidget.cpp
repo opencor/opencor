@@ -302,23 +302,23 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
     QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
 
-    QString ontologicalTerm =  "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
-                              +"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
-                              +"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
-                              +"    </td>\n"
-                              +"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
-                              +"        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->resource()+"</a>\n"
-                              +"    </td>\n"
-                              +"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
-                              +"        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->id()+"</a>\n"
-                              +"    </td>\n"
-                              +"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
-                              +"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
-                              +"    </td>\n"
-                              +"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
-                              +"        <img class=\"disabledButton\"/>\n"
-                              +"    </td>\n"
-                              +"</tr>\n";
+    QString ontologicalTerm = "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
+                              "    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
+                              "        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
+                              "    </td>\n"
+                              "    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
+                              "        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->resource()+"</a>\n"
+                              "    </td>\n"
+                              "    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
+                              "        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->id()+"</a>\n"
+                              "    </td>\n"
+                              "    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
+                              "        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
+                              "    </td>\n"
+                              "    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
+                              "        <img class=\"disabledButton\"/>\n"
+                              "    </td>\n"
+                              "</tr>\n";
 
     if (mItemsCount == 1)
         mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerm);

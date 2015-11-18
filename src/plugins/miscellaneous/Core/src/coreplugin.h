@@ -74,9 +74,9 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QMainWindow *mMainWindow;
-
     CentralWidget *mCentralWidget;
+
+    QAction *mFileNewFileAction;
 
     QAction *mFileOpenAction;
     QAction *mFileOpenRemoteAction;
@@ -113,6 +113,8 @@ private:
     void reopenFile(const QString &pFileName);
 
 private Q_SLOTS:
+    void newFile();
+
     void updateFileReopenMenu(const bool &pEnabled = true);
 
     void reopenRecentFile();

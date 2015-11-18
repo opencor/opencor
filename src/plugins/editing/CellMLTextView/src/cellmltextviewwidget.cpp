@@ -33,19 +33,14 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "qscintillawidget.h"
-#include "settings.h"
 #include "viewerwidget.h"
-#include "xsltransformer.h"
 
 //==============================================================================
 
-#include <QLabel>
 #include <QKeyEvent>
-#include <QMetaType>
-#include <QRegularExpression>
+#include <QLabel>
 #include <QSettings>
 #include <QTimer>
-#include <QVariant>
 #include <QVBoxLayout>
 
 //==============================================================================
@@ -149,13 +144,11 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
 
     setLayout(layout);
 
-    // Create our XSL transformer and create a connection to retrieve the result
-    // of its XSL transformations
+    // Create our MathML converter and create a connection to retrieve the
+    // result of its MathML conversions
 
-    mXslTransformer = new Core::XslTransformer();
-
-    connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(xslTransformationDone(const QString &, const QString &)));
+    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
+            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -279,10 +272,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // Keep track of our editing widget (and of whether the conversion was
         // successful) and add it to ourselves
 
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
-                                                               CellMLSupport::CellmlFile::version(cellmlFile);
+                                                               CellMLSupport::CellmlFile::version(pFileName);
 
         data = CellmlTextViewWidgetData(newEditingWidget,
                                         Core::sha1(newEditingWidget->editor()->contents()),
@@ -311,7 +303,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // 'old' one
 
         if (mNeedLoadingSettings) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 newEditingWidget->loadSettings(&settings);
@@ -374,7 +366,7 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
         // needed
 
         if (mEditingWidget == editingWidget) {
-            QSettings settings(SettingsOrganization, SettingsApplication);
+            QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
                 editingWidget->saveSettings(&settings);
@@ -518,11 +510,12 @@ QList<QWidget *> CellmlTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditingWidget)
+    if (mEditingWidget) {
         return QList<QWidget *>() << mEditingWidget->editor()->cursorPositionWidget()
                                   << mEditingWidget->editor()->editingModeWidget();
-    else
+    } else {
         return QList<QWidget *>();
+    }
 }
 
 //==============================================================================
@@ -1025,7 +1018,7 @@ void CellmlTextViewWidget::updateViewer()
             // previous one
 
             QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"
-                                            +Core::cleanMathml(qDomDocumentToString(mParser.domDocument()))
+                                            +Core::cleanContentMathml(qDomDocumentToString(mParser.domDocument()))
                                             +"</math>";
 
             if (contentMathmlEquation.compare(mContentMathmlEquation)) {
@@ -1036,16 +1029,10 @@ void CellmlTextViewWidget::updateViewer()
 
                 QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
-                if (!presentationMathmlEquation.isEmpty()) {
+                if (!presentationMathmlEquation.isEmpty())
                     mEditingWidget->viewer()->setContents(presentationMathmlEquation);
-                } else {
-                    // We haven't already retrieved its Presentation MathML
-                    // version, so do it now
-
-                    static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
-
-                    mXslTransformer->transform(contentMathmlEquation, CtopXsl);
-                }
+                else
+                    mMathmlConverter.convert(contentMathmlEquation);
             }
         } else {
             // The parsing wasn't successful
@@ -1087,8 +1074,8 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWid
 
 //==============================================================================
 
-void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
-                                                 const QString &pOutput)
+void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
+                                                const QString &pPresentationMathml)
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
@@ -1107,10 +1094,10 @@ void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
 
-    if (!pInput.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(pOutput);
+    if (!pContentMathml.compare(mContentMathmlEquation))
+        mEditingWidget->viewer()->setContents(pPresentationMathml);
 
-    mPresentationMathmlEquations.insert(pInput, pOutput);
+    mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }
 
 //==============================================================================

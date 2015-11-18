@@ -14,6 +14,7 @@ ADD_PLUGIN(SampleTools
     INCLUDE_DIRS
         src
     PLUGINS
+        Core
         Sample
     QT_MODULES
         Widgets

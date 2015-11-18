@@ -399,6 +399,14 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
 
                 "ode|"
 
+                // MathML min/max operators
+
+                "min|max|"
+
+                // MathML gcd/lcm operators
+
+                "gcd|lcm|"
+
                 // MathML trigonometric operators
 
                 "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|sech|csch|coth|asin|"

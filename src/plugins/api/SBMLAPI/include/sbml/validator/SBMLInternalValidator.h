@@ -440,9 +440,6 @@ public:
    * Copy constructor; creates a copy of an SBMLInternalValidator object.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   SBMLInternalValidator(const SBMLInternalValidator& orig);
 
@@ -475,7 +472,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   unsigned char mApplicableValidators;
   unsigned char mApplicableValidatorsForConversion;
 
@@ -484,7 +480,6 @@ protected:
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
   /** @endcond */
 
 

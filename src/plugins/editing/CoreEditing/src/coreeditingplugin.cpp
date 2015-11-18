@@ -203,8 +203,6 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the editing interface
 
-    Core::showEnableAction(mFileNewFileAction, mEditingInterface);
-
     Core::showEnableAction(mEditUndoAction, mEditingInterface, mEditor);
     Core::showEnableAction(mEditRedoAction, mEditingInterface, mEditor);
 
@@ -237,9 +235,9 @@ Gui::Menus CoreEditingPlugin::guiMenus() const
 
 Gui::MenuActions CoreEditingPlugin::guiMenuActions() const
 {
-    // Return our menu actions
+    // We don't handle this interface...
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction);
+    return Gui::MenuActions();
 }
 
 //==============================================================================
@@ -248,11 +246,6 @@ Gui::MenuActions CoreEditingPlugin::guiMenuActions() const
 
 void CoreEditingPlugin::retranslateUi()
 {
-    // Retranslate our different File|New action
-
-    retranslateAction(mFileNewFileAction, tr("File"),
-                      tr("Create a new file"));
-
     // Retranslate our Edit menu
 
     retranslateMenu(mEditMenu, tr("Edit"));
@@ -310,39 +303,34 @@ void CoreEditingPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CoreEditingPlugin::initializePlugin()
 {
-    // Create our different File|New actions
-
-    mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
-                                         QKeySequence::New, pMainWindow);
-
     // Create our Edit menu
 
-    mEditMenu = Core::newMenu("Edit", pMainWindow);
+    mEditMenu = Core::newMenu("Edit", Core::mainWindow());
 
     // Create our different Edit actions, and add them to our Edit menu
 
     mEditUndoAction = Core::newAction(QIcon(":/oxygen/actions/edit-undo.png"),
-                                      QKeySequence::Undo, pMainWindow);
+                                      QKeySequence::Undo, Core::mainWindow());
     mEditRedoAction = Core::newAction(QIcon(":/oxygen/actions/edit-redo.png"),
-                                      QKeySequence::Redo, pMainWindow);
+                                      QKeySequence::Redo, Core::mainWindow());
 
     mEditCutAction    = Core::newAction(QIcon(":/oxygen/actions/edit-cut.png"),
-                                        QKeySequence::Cut, pMainWindow);
+                                        QKeySequence::Cut, Core::mainWindow());
     mEditCopyAction   = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                        QKeySequence::Copy, pMainWindow);
+                                        QKeySequence::Copy, Core::mainWindow());
     mEditPasteAction  = Core::newAction(QIcon(":/oxygen/actions/edit-paste.png"),
-                                        QKeySequence::Paste, pMainWindow);
+                                        QKeySequence::Paste, Core::mainWindow());
     mEditDeleteAction = Core::newAction(QIcon(":/oxygen/actions/edit-delete.png"),
-                                        QKeySequence::Delete, pMainWindow);
+                                        QKeySequence::Delete, Core::mainWindow());
 
     mEditFindReplaceAction  = Core::newAction(QIcon(":/oxygen/actions/edit-find.png"),
-                                              QKeySequence::Find, pMainWindow);
-    mEditFindNextAction     = Core::newAction(QKeySequence::FindNext, pMainWindow);
-    mEditFindPreviousAction = Core::newAction(QKeySequence::FindPrevious, pMainWindow);
+                                              QKeySequence::Find, Core::mainWindow());
+    mEditFindNextAction     = Core::newAction(QKeySequence::FindNext, Core::mainWindow());
+    mEditFindPreviousAction = Core::newAction(QKeySequence::FindPrevious, Core::mainWindow());
 
-    mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, pMainWindow);
+    mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, Core::mainWindow());
 
     populateEditMenu();
 
@@ -352,9 +340,6 @@ void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
             this, SLOT(clipboardDataChanged()));
 
     // Some connections to handle our different editing actions
-
-    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newFile()));
 
     connect(mEditUndoAction, SIGNAL(triggered(bool)),
             this, SLOT(doUndo()));
@@ -566,26 +551,6 @@ void CoreEditingPlugin::updateSelectAllAction()
     if (mEditingInterface)
         mEditSelectAllAction->setEnabled(   mEditor
                                          && mEditor->isSelectAllAvailable());
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::newFile()
-{
-    // Ask our file manager to create a new file
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-#ifdef QT_DEBUG
-    Core::FileManager::Status createStatus =
-#endif
-    fileManagerInstance->create();
-
-#ifdef QT_DEBUG
-    // Make sure that the file has indeed been created
-
-    if (createStatus != Core::FileManager::Created)
-        qFatal("FATAL ERROR | %s:%d: the new file was not created.", __FILE__, __LINE__);
-#endif
 }
 
 //==============================================================================

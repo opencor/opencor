@@ -88,10 +88,8 @@ QString CSVDataStorePlugin::dataStoreName() const
 // Plugin interface
 //==============================================================================
 
-void CSVDataStorePlugin::initializePlugin(QMainWindow *pMainWindow)
+void CSVDataStorePlugin::initializePlugin()
 {
-    Q_UNUSED(pMainWindow);
-
     // Create our CSV data store explorer instance
 
     mCsvDataStoreExporter = new CsvDataStoreExporter();

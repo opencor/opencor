@@ -36,10 +36,12 @@ specific language governing permissions and limitations under the License.
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMainWindow>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QTimer>
 
 //==============================================================================
 
@@ -229,8 +231,7 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspa
         if (res) {
             const git_error *gitError = giterr_last();
 
-            QMessageBox::warning(qApp->activeWindow(),
-                                 tr("Clone Workspace"),
+            QMessageBox::warning(Core::mainWindow(), tr("Clone Workspace"),
                                  gitError?
                                      tr("Error %1: %2.").arg(QString::number(gitError->klass),
                                                              Core::formatMessage(gitError->message)):
@@ -290,7 +291,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     if (pNetworkReply) {
         if (pNetworkReply->error() == QNetworkReply::NoError) {
-            // Retrieve an uncompress our JSON data
+            // Retrieve and uncompress our JSON data
 
             QByteArray compressedData = pNetworkReply->readAll();
             QByteArray uncompressedData = QByteArray();
@@ -385,11 +386,10 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         if (bookmarkUrls.isEmpty()) {
             QString url = pNetworkReply->url().toString();
 
-            QMessageBox::information(qApp->activeWindow(),
-                                     tr("Bookmark URLs"),
+            QMessageBox::information( Core::mainWindow(), tr("Bookmark URLs"),
                                       tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
                                      +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
-                                     QMessageBox::Ok);
+                                      QMessageBox::Ok);
         } else {
             QString url = pNetworkReply->url().toString();
 
@@ -418,11 +418,13 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         //       the first and last exposure file...
 
         if (!mNumberOfExposureFilesLeft) {
+            static const QRegularExpression RawFileInfoRegEx = QRegularExpression("/rawfile/.*$");
+
             QStringList exposureFiles = mExposureFiles.values(url);
 
             std::sort(exposureFiles.begin(), exposureFiles.end(), sortExposureFiles);
 
-            mWorkspaces.insert(url, exposureFile.remove(QRegularExpression("/rawfile/.*$")));
+            mWorkspaces.insert(url, exposureFile.remove(RawFileInfoRegEx));
             mPhysiomeModelRepositoryWidget->addExposureFiles(url, exposureFiles);
 
             if (pmrRequest == ExposureFileForExposureFiles)
@@ -484,14 +486,16 @@ void PhysiomeModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply
 void PhysiomeModelRepositoryWindowWindow::retrieveExposuresList(const bool &pVisible)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
-    // of exposures has never been requested before
+    // of exposures has never been requested before (through a single shot, this
+    // to allow other events, such as the one asking OpenCOR's main window to
+    // resize itself, to be handled properly)
 
     static bool firstTime = true;
 
     if (pVisible && firstTime) {
         firstTime = false;
 
-        on_refreshButton_clicked();
+        QTimer::singleShot(0, this, SLOT(on_refreshButton_clicked()));
     }
 }
 

@@ -17,11 +17,9 @@
 #include "llvm-c/Support.h"
 #include "llvm/ADT/Twine.h"
 #include "llvm/Support/CBindingWrapping.h"
-#include "llvm/Support/Compiler.h"
 #include "llvm/Support/DataTypes.h"
 #include "llvm/Support/ErrorOr.h"
 #include <memory>
-#include <system_error>
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
 //---OPENCOR--- END
@@ -48,8 +46,8 @@ class LLVM_EXPORT MemoryBuffer {
   const char *BufferStart; // Start of the buffer.
   const char *BufferEnd;   // End of the buffer.
 
-  MemoryBuffer(const MemoryBuffer &) LLVM_DELETED_FUNCTION;
-  MemoryBuffer &operator=(const MemoryBuffer &) LLVM_DELETED_FUNCTION;
+  MemoryBuffer(const MemoryBuffer &) = delete;
+  MemoryBuffer &operator=(const MemoryBuffer &) = delete;
 protected:
   MemoryBuffer() {}
   void init(const char *BufStart, const char *BufEnd,
@@ -134,7 +132,7 @@ public:
   static ErrorOr<std::unique_ptr<MemoryBuffer>>
   getFileOrSTDIN(const Twine &Filename, int64_t FileSize = -1);
 
-  /// Map a subrange of the the specified file as a MemoryBuffer.
+  /// Map a subrange of the specified file as a MemoryBuffer.
   static ErrorOr<std::unique_ptr<MemoryBuffer>>
   getFileSlice(const Twine &Filename, uint64_t MapSize, uint64_t Offset);
 

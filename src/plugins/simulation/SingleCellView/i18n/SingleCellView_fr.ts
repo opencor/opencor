@@ -296,12 +296,24 @@
         <source>Export the simulation data to %1</source>
         <translation>Exporter les données de la simulation vers %1</translation>
     </message>
+    <message>
+        <source>Save File</source>
+        <translation>Sauvegarder Fichier</translation>
+    </message>
+    <message>
+        <source>The following parameters are imported and cannot therefore be saved:</source>
+        <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Export To SED-ML File</source>
         <translation>Exporter Vers Fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>Export To COMBINE Archive</source>
+        <translation>Exporter Vers Archive COMBINE</translation>
     </message>
 </context>
 <context>
@@ -405,8 +417,8 @@
         <translation>Exporter les données de la simulation</translation>
     </message>
     <message>
-        <source>Enable the debug mode</source>
-        <translation>Activer le mode déboguage</translation>
+        <source>Enable/disable the development mode</source>
+        <translation>Activer/désactiver le mode développement</translation>
     </message>
     <message>
         <source>Add a graph panel</source>
@@ -425,8 +437,8 @@
         <translation>Arrêter Simulation</translation>
     </message>
     <message>
-        <source>Debug Mode</source>
-        <translation>Mode Déboguage</translation>
+        <source>Development Mode</source>
+        <translation>Mode Développement</translation>
     </message>
     <message>
         <source>Add Graph Panel</source>
@@ -479,6 +491,30 @@
     <message>
         <source>Export the simulation to SED-ML</source>
         <translation>Exporter la simulation vers SED-ML</translation>
+    </message>
+    <message>
+        <source>SED-ML File...</source>
+        <translation>Fichier SED-ML...</translation>
+    </message>
+    <message>
+        <source>SED-ML File</source>
+        <translation>Fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML using a SED-ML file</source>
+        <translation>Exporter la simulation vers SED-ML en utilisant un fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>COMBINE Archive...</source>
+        <translation>Archive COMBINE...</translation>
+    </message>
+    <message>
+        <source>COMBINE Archive</source>
+        <translation>Archive COMBINE</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML using a COMBINE archive</source>
+        <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
     </message>
 </context>
 </TS>

@@ -34,12 +34,28 @@ specific language governing permissions and limitations under the License.
 
 extern "C" double COMPILER_EXPORT factorial(double pNb);
 
+extern "C" double COMPILER_EXPORT sec(double pNb);
+extern "C" double COMPILER_EXPORT sech(double pNb);
+extern "C" double COMPILER_EXPORT asec(double pNb);
+extern "C" double COMPILER_EXPORT asech(double pNb);
+
+extern "C" double COMPILER_EXPORT csc(double pNb);
+extern "C" double COMPILER_EXPORT csch(double pNb);
+extern "C" double COMPILER_EXPORT acsc(double pNb);
+extern "C" double COMPILER_EXPORT acsch(double pNb);
+
+extern "C" double COMPILER_EXPORT cot(double pNb);
+extern "C" double COMPILER_EXPORT coth(double pNb);
+extern "C" double COMPILER_EXPORT acot(double pNb);
+extern "C" double COMPILER_EXPORT acoth(double pNb);
+
 extern "C" double COMPILER_EXPORT arbitrary_log(double pNb, double pBase);
+
+extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
+extern "C" double COMPILER_EXPORT multi_max(int pCount, ...);
 
 extern "C" double COMPILER_EXPORT gcd_multi(int pCount, ...);
 extern "C" double COMPILER_EXPORT lcm_multi(int pCount, ...);
-extern "C" double COMPILER_EXPORT multi_max(int pCount, ...);
-extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
 
 //==============================================================================
 

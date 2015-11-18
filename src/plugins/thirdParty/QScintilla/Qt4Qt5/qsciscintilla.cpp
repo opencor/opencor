@@ -245,13 +245,10 @@ void QsciScintilla::handleCharAdded(int ch)
     // start character.  If it is then create a new list which will be a subset
     // of the current one.  The case where it isn't a start character seems to
     // be handled correctly elsewhere.
-    if (isListActive())
+    if (isListActive() && isStartChar(ch))
     {
-        if (isStartChar(ch))
-        {
-            cancelList();
-            startAutoCompletion(acSource, false, use_single == AcusAlways);
-        }
+        cancelList();
+        startAutoCompletion(acSource, false, use_single == AcusAlways);
 
         return;
     }
@@ -3233,7 +3230,6 @@ void QsciScintilla::detachLexer()
 
         SendScintilla(SCI_STYLERESETDEFAULT);
         SendScintilla(SCI_STYLECLEARALL);
-        SendScintilla(SCI_CLEARDOCUMENTSTYLE);
     }
 }
 
@@ -3249,6 +3245,8 @@ void QsciScintilla::setLexer(QsciLexer *lexer)
 
     if (lex)
     {
+        SendScintilla(SCI_CLEARDOCUMENTSTYLE);
+
         if (lex->lexer())
             SendScintilla(SCI_SETLEXERLANGUAGE, lex->lexer());
         else
@@ -4231,7 +4229,7 @@ bool QsciScintilla::event(QEvent *e)
             }
 
             // We want any key that is bound.
-            QsciCommand *cmd = stdCmds->boundTo(ke->key() | ke->modifiers());
+            QsciCommand *cmd = stdCmds->boundTo(ke->key() | (ke->modifiers() & ~Qt::KeypadModifier));
 
             if (cmd)
             {

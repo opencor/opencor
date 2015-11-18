@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "coreinterface.h"
 #include "plugin.h"
 #include "pluginmanager.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -334,14 +333,8 @@ static const auto SettingsLoad = QStringLiteral("Load");
 bool Plugin::load(const QString &pName)
 {
     // Retrieve the plugin's loading requirement
-    // Note: the plugin's loading requirement information is always located
-    //       under ~/Plugins/<PluginName>, so to be on the safe side we use our
-    //       own QSettings rather than that of MainWindow since the latter might
-    //       not point to ~ when reaching this point. Indeed, we may come here
-    //       from PluginManager::PluginManager (which points to ~) or
-    //       PluginsWindow::PluginsWindow (which points to ~/PluginsWindow)...
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
+    QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
         settings.beginGroup(pName);
@@ -359,7 +352,7 @@ void Plugin::setLoad(const QString &pName, const bool &pToBeLoaded)
     // Keep track of the plugin's loading requirement
     // Note: see the Plugin::load's note...
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
+    QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
         settings.beginGroup(pName);

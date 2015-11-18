@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "coreguiutils.h"
 #include "datastoreinterface.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
@@ -46,14 +47,15 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
     return new PluginInfo("Simulation", true, false,
-                          QStringList() << "CellMLSupport" << "Qwt" << "SEDMLSupport",
+                          QStringList() << "CellMLSupport" << "COMBINESupport"<< "Qwt" << "SEDMLSupport",
                           descriptions);
 }
 
 //==============================================================================
 
 SingleCellViewPlugin::SingleCellViewPlugin() :
-    mSedmlFileTypes(FileTypes())
+    mSedmlFileTypes(FileTypes()),
+    mCombineFileTypes(FileTypes())
 {
 }
 
@@ -64,14 +66,9 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    // Make sure that we are dealing with a CellML file
-    // Note: we can't modify a CellML file using this view, hence the below is
-    //       only for the case where the user wants to save a CellML under a new
-    //       name...
+    // Let our view widget know that we want to save a file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
-
-    return cellmlFile?cellmlFile->save(pNewFileName):false;
+    return mViewWidget->saveFile(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -87,18 +84,18 @@ void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 
 void SingleCellViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has been un/locked, so let our view widget know about it
 
-    // We don't handle this interface...
+    mViewWidget->filePermissionsChanged(pFileName);
 }
 
 //==============================================================================
 
 void SingleCellViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Let our view widget know that a file has been modified
 
-    // We don't handle this interface...
+    mViewWidget->fileModified(pFileName);
 }
 
 //==============================================================================
@@ -155,11 +152,11 @@ void SingleCellViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SingleCellViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SingleCellViewPlugin::initializePlugin()
 {
     // Create our single view widget
 
-    mViewWidget = new SingleCellViewWidget(this, pMainWindow);
+    mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
     // Hide our single view widget since it may not initially be shown in our
     // central widget
@@ -199,12 +196,16 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (dataStoreInterface)
             dataStoreInterfaces << dataStoreInterface;
 
-        // File types supported by the SEDMLSupport plugin
+        // File types supported by the SEDMLSupport and COMBINESupport plugins
 
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
-        if (!plugin->name().compare("SEDMLSupport") && fileTypeInterface)
-            mSedmlFileTypes << fileTypeInterface->fileTypes();
+        if (fileTypeInterface) {
+            if (!plugin->name().compare("SEDMLSupport"))
+                mSedmlFileTypes << fileTypeInterface->fileTypes();
+            else if (!plugin->name().compare("COMBINESupport"))
+                mCombineFileTypes << fileTypeInterface->fileTypes();
+        }
     }
 
     // Initialise our view widget with the different solvers and data stores
@@ -344,6 +345,15 @@ FileTypes SingleCellViewPlugin::sedmlFileTypes() const
     // Return our SED-ML file types
 
     return mSedmlFileTypes;
+}
+
+//==============================================================================
+
+FileTypes SingleCellViewPlugin::combineFileTypes() const
+{
+    // Return our COMBINE file types
+
+    return mCombineFileTypes;
 }
 
 //==============================================================================

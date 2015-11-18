@@ -73,15 +73,15 @@ void PhysiomeModelRepositoryWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
+void PhysiomeModelRepositoryWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our PMR window
 
-    mPhysiomeModelRepositoryWindowAction = Core::newAction(true, pMainWindow);
+    mPhysiomeModelRepositoryWindowAction = Core::newAction(true, Core::mainWindow());
 
     // Create our PMR window
 
-    mPhysiomeModelRepositoryWindowWindow = new PhysiomeModelRepositoryWindowWindow(pMainWindow);
+    mPhysiomeModelRepositoryWindowWindow = new PhysiomeModelRepositoryWindowWindow(Core::mainWindow());
 }
 
 //==============================================================================

@@ -224,10 +224,7 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * Delay
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
    *
    * @copydetails doc_note_setting_lv
    */
@@ -242,10 +239,7 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
    *
    * @copydetails doc_note_setting_lv
    */
@@ -262,9 +256,6 @@ public:
    * Copy constructor; creates a copy of this Delay.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   Delay (const Delay& orig);
 
@@ -274,13 +265,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Delay& operator=(const Delay& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Delay.
    *
@@ -289,6 +278,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -523,7 +513,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Subclasses should override this method to read (and store) XHTML,
    * MathML, etc. directly from the XMLInputStream.

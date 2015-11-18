@@ -65,6 +65,7 @@ function versions(downloads) {
         var versionYear        = version.year;
         var versionType        = version.type;
         var versionPlatforms   = version.platforms;
+        var versionChanges     = version.changes;
         var versionInformation = version.information;
 
         if (versionMajor || versionMinor || versionPatch) {
@@ -256,9 +257,31 @@ function versions(downloads) {
         document.write("            </tr>\n");
         document.write("        </tbody>\n");
         document.write("    </table>\n");
+
+        // Add the changes, if any
+
+        if (typeof versionChanges !== "undefined") {
+            if (versionChanges.length) {
+                document.write("    <table class=\"changes\">\n");
+                document.write("        <tbody>\n");
+                document.write("            <tr>\n");
+                document.write("                <td class=\"topSeparator\">\n");
+                document.write("                    <ul>\n");
+
+                for (var changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex)
+                    document.write("                        <li><span class=\"changes\">"+versionChanges[changeIndex].change+"</span></li>");
+
+                document.write("                    </ul>\n");
+                document.write("                </td>\n");
+                document.write("            </tr>\n");
+                document.write("        </tbody>\n");
+                document.write("    </table>\n");
+            }
+        }
+
         document.write("</div>\n");
 
-        // Add some information, if needed
+        // Add some information, if any
 
         if (typeof versionInformation !== "undefined") {
             var versionClass;

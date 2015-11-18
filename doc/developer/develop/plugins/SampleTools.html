@@ -90,13 +90,14 @@ ADD_PLUGIN(SampleTools
     INCLUDE_DIRS
         src
     PLUGINS
+        Core
         Sample
     QT_MODULES
         Widgets
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, our plugin needs the <a href="Sample.html"><strong>Sample</strong></a> plugin (to be able to use its <code>add()</code> function), so it is referenced (line 17) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://www.qt.io/">Qt</a> module (line 19) and libraries (lines 21-23) needed by our plugin.
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://www.qt.io/">Qt</a> module (line 20) needed by our plugin.
         </p>
 
         <div class="section">
@@ -149,8 +150,6 @@ public:
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl"><code>plugininterface.inl</code></a>"
 
 private:
-    QMainWindow *mMainWindow;
-
     QAction *mAddTwoNumbersAction;
 
     void runHelpCommand();
@@ -177,7 +176,7 @@ private Q_SLOTS:
             The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic information">basic information</a> about our plugin can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:43">PLUGININFO_FUNC SampleToolsPluginInfo()
+        <pre class="prettyprint linenums:44">PLUGININFO_FUNC SampleToolsPluginInfo()
 {
     Descriptions descriptions;
 
@@ -185,12 +184,12 @@ private Q_SLOTS:
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un outil d'addition."));
 
     return new PluginInfo(PluginInfo::Sample, true, true,
-                          QStringList() << "Sample",
+                          QStringList() << "Core" << "Sample",
                           descriptions);
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user and it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 50). It also has a direct dependency on the <a href="Sample.html"><strong>Sample</strong></a> plugin (line 51).
+            As can be seen, our plugin is selectable by the user and it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 51). It also has a direct dependency on the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 52).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -207,7 +206,7 @@ private Q_SLOTS:
             We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl">CLI</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:55">//==============================================================================
+        <pre class="prettyprint linenums:56">//==============================================================================
 // CLI interface
 //==============================================================================
 
@@ -238,14 +237,14 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 //==============================================================================</pre>
 
         <p>
-            As can be seen, our plugin handles both the <code>help</code> and <code>add</code> commands (lines 64-70 and 70-74, respectively).
+            As can be seen, our plugin handles both the <code>help</code> and <code>add</code> commands (lines 65-71 and 71-75, respectively).
         </p>
 
         <p>
             Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:83">//==============================================================================
+        <pre class="prettyprint linenums:84">//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -279,14 +278,14 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
 //==============================================================================</pre>
 
         <p>
-            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 87-93). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 97-102). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 106-112). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
+            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 88-94). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 98-103). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 107-113). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
         </p>
 
         <p>
             After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:114">//==============================================================================
+        <pre class="prettyprint linenums:115">//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -307,19 +306,15 @@ void SampleToolsPlugin::retranslateUi()
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:125">//==============================================================================
+        <pre class="prettyprint linenums:126">//==============================================================================
 // Plugin interface
 //==============================================================================
 
-void SampleToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SampleToolsPlugin::initializePlugin()
 {
-    // Keep track of our main window
-
-    mMainWindow = pMainWindow;
-
     // Create our Add Two Numbers action
 
-    mAddTwoNumbersAction = new QAction(pMainWindow);
+    mAddTwoNumbersAction = new QAction(Core::mainWindow());
 
     // A connection to handle our Add Two Numbers action
 
@@ -373,7 +368,7 @@ void SampleToolsPlugin::handleAction(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 130-140), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>
@@ -387,8 +382,6 @@ void SampleToolsPlugin::handleAction(const QUrl &pUrl)
         </p>
 
         <pre class="prettyprint linenums:63">private:
-    QMainWindow *mMainWindow;
-
     QAction *mAddTwoNumbersAction;
 
     void runHelpCommand();
@@ -401,7 +394,7 @@ private Q_SLOTS:
             Their implementation can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:188">//==============================================================================
+        <pre class="prettyprint linenums:185">//==============================================================================
 // Plugin specific
 //==============================================================================
 
@@ -460,27 +453,27 @@ int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
 void SampleToolsPlugin::addTwoNumbers()
 {
     bool ok;
-    double nb1 = QInputDialog::getDouble(mMainWindow, tr("Add Two Numbers"), tr("First number:"),
+    double nb1 = QInputDialog::getDouble(Core::mainWindow(), tr("Add Two Numbers"), tr("First number:"),
                                          0, -2147483647, 2147483647, 1, &ok);
     double nb2;
 
     if (ok) {
-        nb2 = QInputDialog::getDouble(mMainWindow, tr("Add Two Numbers"), tr("Second number:"),
+        nb2 = QInputDialog::getDouble(Core::mainWindow(), tr("Add Two Numbers"), tr("Second number:"),
                                       0, -2147483647, 2147483647, 1, &ok);
 
         if (ok)
-            QMessageBox::information(mMainWindow, tr("Add Two Numbers"), QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
+            QMessageBox::information(Core::mainWindow(), tr("Add Two Numbers"), QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
     }
 }
 
 //==============================================================================</pre>
 
         <p>
-            <code>runHelpCommand()</code> (lines 192-201) is the method that is executed whenever our plugin is asked to handle the <code>help</code> command. It provides the user with some information about the commands it supports. In a similar way, <code>runAddCommand()</code> (lines 205-240) is executed whenever our plugin is asked to handle the <code>add</code> command. It checks that two numbers have been passed to the command and, if so, returns their sum to the user.
+            <code>runHelpCommand()</code> (lines 189-198) is the method that is executed whenever our plugin is asked to handle the <code>help</code> command. It provides the user with some information about the commands it supports. In a similar way, <code>runAddCommand()</code> (lines 202-237) is executed whenever our plugin is asked to handle the <code>add</code> command. It checks that two numbers have been passed to the command and, if so, returns their sum to the user.
         </p>
 
         <p>
-            <code>addTwoNumbers()</code> (lines 244-260) is a <a href="http://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
+            <code>addTwoNumbers()</code> (lines 241-255) is a <a href="http://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
         </p>
 
         <script type="text/javascript">

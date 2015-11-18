@@ -128,8 +128,6 @@ public:
     assert(isSink() == IsSink);
   }
 
-  ~ExplodedNode() {}
-
   /// getLocation - Returns the edge associated with the given node.
   ProgramPoint getLocation() const { return Location; }
 

@@ -220,6 +220,8 @@ private:
     void retrieveOdeCodeInformation(iface::cellml_api::Model *pModel);
     void retrieveDaeCodeInformation(iface::cellml_api::Model *pModel);
 
+    QString cleanCode(const std::wstring &pCode);
+
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,
                          const bool &pHasDefines = false);

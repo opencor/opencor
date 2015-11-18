@@ -107,7 +107,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Logs a constraint failure to the validator for the given SBML object.
    */
@@ -133,7 +132,6 @@ protected:
 
 
 /** @cond doxygenLibsbmlInternal */
-
 template <typename T>
 class TConstraint : public VConstraint
 {
@@ -160,15 +158,13 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * The check method delegates to this virtual method.
    */
-  virtual void check_ (const Model& m, const T& object) { };
+  virtual void check_ (const Model&, const T&) { };
 
   /** @endcond */
 };
-
 /** @endcond */
 
 LIBSBML_CPP_NAMESPACE_END

@@ -28,7 +28,7 @@
                         </apply>
                     </piece>
                     <otherwise>
-                        <cn cellml:units="uA_per_cmsq">0.0</cn>
+                        <cn cellml:units="uA_per_cmsq">0</cn>
                     </otherwise>
                 </piecewise>
             </apply>

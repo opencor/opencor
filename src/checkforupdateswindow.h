@@ -48,10 +48,6 @@ static const auto SettingsIncludeSnapshots         = QStringLiteral("IncludeSnap
 
 //==============================================================================
 
-class MainWindow;
-
-//==============================================================================
-
 class CheckForUpdatesEngine
 {
 public:
@@ -82,9 +78,8 @@ class CheckForUpdatesWindow : public QDialog
 
 public:
     explicit CheckForUpdatesWindow(const QString &pApplicationDate,
-                                   MainWindow *pMainWindow = 0);
-    explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
-                                   MainWindow *pMainWindow = 0);
+                                   QWidget *pParent);
+    explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine);
     ~CheckForUpdatesWindow();
 
     void loadSettings(QSettings *pSettings);

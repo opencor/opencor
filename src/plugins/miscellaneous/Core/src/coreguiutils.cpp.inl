@@ -19,6 +19,32 @@ specific language governing permissions and limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
+QMainWindow * mainWindow()
+{
+    // Retrieve and return our main window
+
+    static bool firstTime = true;
+    static QMainWindow *res = 0;
+
+    if (firstTime) {
+        foreach (QWidget *widget, qApp->topLevelWidgets()) {
+            if (widget->inherits("QMainWindow")) {
+                res = qobject_cast<QMainWindow *>(widget);
+
+                break;
+            }
+        }
+
+        firstTime = false;
+    }
+
+    Q_ASSERT(res);
+
+    return res;
+}
+
+//==============================================================================
+
 void showEnableAction(QAction *pAction, const bool &pVisible,
                       const bool &pEnabled)
 {
@@ -30,94 +56,28 @@ void showEnableAction(QAction *pAction, const bool &pVisible,
 
 //==============================================================================
 
-void updateColors()
-{
-    // Retrieve the colour used for a 'normal' border
-    // Note #1: we use a QStackedWidget object and retrieve the colour of the
-    //          pixel which is in the middle of the right border...
-    // Note #2: we don't rely on the top border because it may be rendered in a
-    //          special way. Also, we don't rely on a corner as such in case
-    //          it's rendered as a rounded corner...
-    // Note #3: on OS X, our widget must be shown otherwise, the retrieved
-    //          border colour will be black. So we show it off screen, even on
-    //          Windows and Linux, in case their behaviour was to change in the
-    //          future...
-
-    // Create our widget and show it off screen
-
-    QStackedWidget stackedWidget;
-
-    stackedWidget.setFrameShape(QFrame::StyledPanel);
-
-    stackedWidget.move(-2*stackedWidget.width(), -2*stackedWidget.height());
-    stackedWidget.show();
-
-    // Render the widget to an image
-
-    QImage image = QImage(stackedWidget.size(),
-                          QImage::Format_ARGB32_Premultiplied);
-
-    stackedWidget.render(&image);
-
-    // Retrieve the colour we are after
-
-    QColor borderColor = QColor(image.pixel(image.width()-1, 0.5*image.height()));
-
-    // Use our settings to keep track of the colour
-
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsBorderColor, borderColor);
-    settings.endGroup();
-
-    // Retrieve some other colours
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));
-        settings.setValue(SettingsHighlightColor, qApp->palette().color(QPalette::Highlight));
-        settings.setValue(SettingsLinkColor, qApp->palette().color(QPalette::Link));
-        settings.setValue(SettingsShadowColor, qApp->palette().color(QPalette::Shadow));
-        settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
-    settings.endGroup();
-}
-
-//==============================================================================
-
-QColor specificColor(const QString &pColor)
-{
-    // Return a specific colour
-
-    QColor res;
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(pColor).value<QColor>();
-    settings.endGroup();
-
-    return res;
-}
-
-//==============================================================================
-
 QColor baseColor()
 {
     // Return the base colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
 
-    return specificColor(SettingsBaseColor);
+    return qApp->palette().color(QPalette::Base);
 }
 
 //==============================================================================
 
 QColor borderColor()
 {
-    // Return the border colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::retrieveBorderColor())...
+    // Return the mid colour, which we consider as the colour to be used for a
+    // 'normal' border
+    // Note: this is not quite the correct colour, but nonetheless the one that
+    //       is closest to it. Indeed, to use a hidden widget of sorts to
+    //       retrieve the colour of a border works fine on all our supported
+    //       operating systems except Windows 10 (while it works fine on
+    //       previous versions of Windows) where it has a side effect that
+    //       prevents OpenCOR from retrieving the size of its main window. Not
+    //       only that, but we can still see the 'hidden' widget...
 
-    return specificColor(SettingsBorderColor);
+    return qApp->palette().color(QPalette::Mid);
 }
 
 //==============================================================================
@@ -125,21 +85,8 @@ QColor borderColor()
 QColor highlightColor()
 {
     // Return the highlight colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
 
-    return specificColor(SettingsHighlightColor);
-}
-
-//==============================================================================
-
-QColor linkColor()
-{
-    // Return the link colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
-
-    return specificColor(SettingsLinkColor);
+    return qApp->palette().color(QPalette::Highlight);
 }
 
 //==============================================================================
@@ -147,10 +94,8 @@ QColor linkColor()
 QColor shadowColor()
 {
     // Return the shadow colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
 
-    return specificColor(SettingsShadowColor);
+    return qApp->palette().color(QPalette::Shadow);
 }
 
 //==============================================================================
@@ -158,10 +103,8 @@ QColor shadowColor()
 QColor windowColor()
 {
     // Return the window colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
 
-    return specificColor(SettingsWindowColor);
+    return qApp->palette().color(QPalette::Window);
 }
 
 //==============================================================================

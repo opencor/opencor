@@ -84,26 +84,45 @@ private Q_SLOTS:
     void ceilFunctionTests();
     void floorFunctionTests();
     void factorialFunctionTests();
+
     void sinFunctionTests();
-    void cosFunctionTests();
-    void tanFunctionTests();
     void sinhFunctionTests();
-    void coshFunctionTests();
-    void tanhFunctionTests();
     void asinFunctionTests();
-    void acosFunctionTests();
-    void atanFunctionTests();
     void asinhFunctionTests();
+
+    void cosFunctionTests();
+    void coshFunctionTests();
+    void acosFunctionTests();
     void acoshFunctionTests();
+
+    void tanFunctionTests();
+    void tanhFunctionTests();
+    void atanFunctionTests();
     void atanhFunctionTests();
 
-    void arbitraryLogFunctionTests();
+    void secFunctionTests();
+    void sechFunctionTests();
+    void asecFunctionTests();
+    void asechFunctionTests();
+
+    void cscFunctionTests();
+    void cschFunctionTests();
+    void acscFunctionTests();
+    void acschFunctionTests();
+
+    void cotFunctionTests();
+    void cothFunctionTests();
+    void acotFunctionTests();
+    void acothFunctionTests();
+
     void powFunctionTests();
+    void arbitraryLogFunctionTests();
+
+    void minFunctionTests();
+    void maxFunctionTests();
 
     void gcdFunctionTests();
     void lcmFunctionTests();
-    void maxFunctionTests();
-    void minFunctionTests();
 };
 
 //==============================================================================

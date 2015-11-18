@@ -212,7 +212,7 @@ QString CellmlFileRuntime::address() const
 {
     // Return our address as a string
 
-    return QString("%1").arg(qulonglong(this));
+    return QString::number(qulonglong(this));
 }
 
 //==============================================================================
@@ -597,8 +597,8 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
         res += "    return 0;\n";
     } else {
         res += "    int ret = 0;\n"
-                     "    int *pret = &ret;\n"
-                     "\n";
+               "    int *pret = &ret;\n"
+               "\n";
 
         if (pHasDefines)
             res += "#define VOI 0.0\n"
@@ -660,7 +660,6 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     // here through recursion)
 
     ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
-
     ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
@@ -671,42 +670,31 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
         return QStringList();
     }
 
-    // Check whether this is an imported component and, if so, retrieve its
-    // imported name
-
-    QString componentName = QString::fromStdWString(component?component->name():parentComponent->name());
-
-    ObjRef<iface::cellml_api::CellMLElement> componentParent = component?component->parentElement():parentComponent->parentElement();
-    ObjRef<iface::cellml_api::CellMLElement> componentParentParent = componentParent->parentElement();
-
-    if (componentParentParent) {
-        // The given element comes from or is an imported component, so go
-        // through our different imported components and look for the one we are
-        // after
-
-        ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(componentParentParent);
-        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
-        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
-
-        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
-             importComponent; importComponent = importComponentsIter->nextImportComponent()) {
-            if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
-                // This is the imported component we are after, so retrieve its
-                // imported name
-
-                componentName = QString::fromStdWString(importComponent->name());
-
-                break;
-            }
-        }
-    }
-
     // Recursively retrieve the component hierarchy of the given element's
     // encapsulation parent, if any
 
     ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
 
-    return componentHierarchy(componentEncapsulationParent) << componentName;
+    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
+{
+    // Remove all the comments from the given code and return the resulting
+    // cleaned up code
+
+    static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
+
+    QString res = QString();
+
+    foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
+        if (!CommentRegEx.match(code).hasMatch())
+            res += (res.isEmpty()?QString():"\n")+code;
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -783,15 +771,54 @@ void CellmlFileRuntime::update()
         mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
+    // In the case of a CellML 1.1 file, retrieve all the variables defined or
+    // referenced in our main CellML file
+    // Note: indeed, when it comes to CellML 1.1 files, we only want to list the
+    //       parameters that are either defined or referenced in our main CellML
+    //       file. Not only does it make sense, but also only the variables
+    //       listed in a main CellML file can be referenced by SED-ML...
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(model);
+    QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
+
+    if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
+        ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
+        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
+
+        for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
+             component; component = localComponentsIter->nextComponent()) {
+            ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
+            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
+
+            for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
+                 variable; variable = variablesIter->nextVariable()) {
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+
+                mainVariables.insert(sourceVariable, variable);
+            }
+        }
+    }
+
     // Retrieve all the parameters and sort them by component/variable name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = genericCodeInformation->iterateTargets();
 
     for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
          computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
-        // Determine the type of the parameter
+        // Make sure that the parameter is defined or referenced in our main
+        // CellML file
 
         ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+        iface::cellml_api::CellMLVariable *mainVariable = variable;
+
+        if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            mainVariable = mainVariables.value(variable);
+
+        if (!mainVariable)
+            continue;
+
+        // Determine the type of the parameter
+
         CellmlFileRuntimeParameter::ParameterType parameterType;
 
         switch (computationTarget->type()) {
@@ -859,17 +886,17 @@ void CellmlFileRuntime::update()
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
+            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(mainVariable->name()),
                                                                                    computationTarget->degree(),
-                                                                                   QString::fromStdWString(variable->unitsName()),
-                                                                                   componentHierarchy(variable),
+                                                                                   QString::fromStdWString(mainVariable->unitsName()),
+                                                                                   componentHierarchy(mainVariable),
                                                                                    parameterType,
                                                                                    computationTarget->assignedIndex());
 
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            mParameters.append(parameter);
+            mParameters << parameter;
         }
     }
 
@@ -884,35 +911,53 @@ void CellmlFileRuntime::update()
 
     QString modelCode = "extern double fabs(double);\n"
                         "\n"
-                        "extern double exp(double);\n"
                         "extern double log(double);\n"
+                        "extern double exp(double);\n"
                         "\n"
-                        "extern double ceil(double);\n"
                         "extern double floor(double);\n"
+                        "extern double ceil(double);\n"
                         "\n"
                         "extern double factorial(double);\n"
                         "\n"
                         "extern double sin(double);\n"
-                        "extern double cos(double);\n"
-                        "extern double tan(double);\n"
                         "extern double sinh(double);\n"
-                        "extern double cosh(double);\n"
-                        "extern double tanh(double);\n"
                         "extern double asin(double);\n"
-                        "extern double acos(double);\n"
-                        "extern double atan(double);\n"
                         "extern double asinh(double);\n"
+                        "\n"
+                        "extern double cos(double);\n"
+                        "extern double cosh(double);\n"
+                        "extern double acos(double);\n"
                         "extern double acosh(double);\n"
+                        "\n"
+                        "extern double tan(double);\n"
+                        "extern double tanh(double);\n"
+                        "extern double atan(double);\n"
                         "extern double atanh(double);\n"
+                        "\n"
+                        "extern double sec(double);\n"
+                        "extern double sech(double);\n"
+                        "extern double asec(double);\n"
+                        "extern double asech(double);\n"
+                        "\n"
+                        "extern double csc(double);\n"
+                        "extern double csch(double);\n"
+                        "extern double acsc(double);\n"
+                        "extern double acsch(double);\n"
+                        "\n"
+                        "extern double cot(double);\n"
+                        "extern double coth(double);\n"
+                        "extern double acot(double);\n"
+                        "extern double acoth(double);\n"
                         "\n"
                         "extern double arbitrary_log(double, double);\n"
                         "\n"
                         "extern double pow(double, double);\n"
                         "\n"
+                        "extern double multi_min(int, ...);\n"
+                        "extern double multi_max(int, ...);\n"
+                        "\n"
                         "extern double gcd_multi(int, ...);\n"
                         "extern double lcm_multi(int, ...);\n"
-                        "extern double multi_max(int, ...);\n"
-                        "extern double multi_min(int, ...);\n"
                         "\n";
 
     QString functionsString = QString::fromStdWString(genericCodeInformation->functionsString());
@@ -922,22 +967,22 @@ void CellmlFileRuntime::update()
 
         mAtLeastOneNlaSystem = true;
 
-        modelCode += "struct rootfind_info\n"
-                     "{\n"
-                     "    double aVOI;\n"
-                     "\n"
-                     "    double *aCONSTANTS;\n"
-                     "    double *aRATES;\n"
-                     "    double *aSTATES;\n"
-                     "    double *aALGEBRAIC;\n"
-                     "\n"
-                     "    int *aPRET;\n"
-                     "};\n"
-                     "\n"
-                     "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n";
-        modelCode += "\n";
-        modelCode += functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
-        modelCode += "\n";
+        modelCode +=  "struct rootfind_info\n"
+                      "{\n"
+                      "    double aVOI;\n"
+                      "\n"
+                      "    double *aCONSTANTS;\n"
+                      "    double *aRATES;\n"
+                      "    double *aSTATES;\n"
+                      "    double *aALGEBRAIC;\n"
+                      "\n"
+                      "    int *aPRET;\n"
+                      "};\n"
+                      "\n"
+                      "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n"
+                      "\n"
+                     +functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()))
+                     +"\n";
 
         // Note: we rename do_nonlinearsolve() to doNonLinearSolve() because
         //       CellML's CIS service already defines do_nonlinearsolve(), yet
@@ -956,7 +1001,7 @@ void CellmlFileRuntime::update()
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$");
 
-    QStringList initConstsList = QString::fromStdWString(genericCodeInformation->initConstsString()).split("\r\n");
+    QStringList initConstsList = cleanCode(genericCodeInformation->initConstsString()).split("\n");
     QString initConsts = QString();
     QString compCompConsts = QString();
 
@@ -964,21 +1009,10 @@ void CellmlFileRuntime::update()
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (InitializationStatementRegEx.match(initConst).hasMatch()) {
-            // We are dealing with a 'proper' constant (or a rate or a state)
-
-            if (!initConsts.isEmpty())
-                initConsts += "\n";
-
-            initConsts += initConst;
-        } else {
-            // We are dealing with a 'computed' constant
-
-            if (!compCompConsts.isEmpty())
-                compCompConsts += "\n";
-
-            compCompConsts += initConst;
-        }
+        if (InitializationStatementRegEx.match(initConst).hasMatch())
+            initConsts += (initConsts.isEmpty()?QString():"\n")+initConst;
+        else
+            compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
     }
 
     modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
@@ -992,24 +1026,24 @@ void CellmlFileRuntime::update()
 
     if (mModelType == CellmlFileRuntime::Ode) {
         modelCode += functionCode("int computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  QString::fromStdWString(mOdeCodeInformation->ratesString()));
+                                  cleanCode(mOdeCodeInformation->ratesString()));
         modelCode += "\n";
         modelCode += functionCode("int computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  QString::fromStdWString(genericCodeInformation->variablesString()));
+                                  cleanCode(genericCodeInformation->variablesString()));
     } else {
         modelCode += functionCode("int computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()));
+                                  cleanCode(mDaeCodeInformation->essentialVariablesString()));
         modelCode += "\n";
         modelCode += functionCode("int computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
-                                  QString::fromStdWString(mDaeCodeInformation->ratesString()));
+                                  cleanCode(mDaeCodeInformation->ratesString()));
         modelCode += "\n";
         modelCode += functionCode("int computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  QString::fromStdWString(mDaeCodeInformation->rootInformationString()));
+                                  cleanCode(mDaeCodeInformation->rootInformationString()));
         modelCode += functionCode("int computeDaeStateInformation(double *SI)",
-                                  QString::fromStdWString(mDaeCodeInformation->stateInformationString()));
+                                  cleanCode(mDaeCodeInformation->stateInformationString()));
         modelCode += "\n";
         modelCode += functionCode("int computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  QString::fromStdWString(genericCodeInformation->variablesString()));
+                                  cleanCode(genericCodeInformation->variablesString()));
     }
 
     // Check whether the model code contains a definite integral, otherwise

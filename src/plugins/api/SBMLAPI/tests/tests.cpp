@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// libSBML tests
+// SBML API tests
 //==============================================================================
 
 #include "tests.h"
@@ -27,8 +27,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sbml/common/libsbml-version.h"
-#include "sbml/SBMLDocument.h"
+#include "sbmlapidisablewarnings.h"
+    #include "sbml/common/libsbml-version.h"
+    #include "sbml/SBMLDocument.h"
+#include "sbmlapienablewarnings.h"
 
 //==============================================================================
 
@@ -38,7 +40,7 @@ void Tests::basicTests()
 
     // Check the version of libSBML
 
-    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.11.4");
+    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.12.0");
 
     // Check against which libraries libSBML has been compiled
 

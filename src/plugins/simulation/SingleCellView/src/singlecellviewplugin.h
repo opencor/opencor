@@ -68,11 +68,13 @@ public:
 #include "viewinterface.inl"
 
     FileTypes sedmlFileTypes() const;
+    FileTypes combineFileTypes() const;
 
 private:
     SingleCellViewWidget *mViewWidget;
 
     FileTypes mSedmlFileTypes;
+    FileTypes mCombineFileTypes;
 };
 
 //==============================================================================

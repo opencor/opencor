@@ -213,6 +213,7 @@ IF(ENABLE_TESTS)
 
     TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}
         Qt5::Core
+        Qt5::Network
     )
 
     # Copy our main test program to our tests directory
@@ -273,6 +274,12 @@ SET(PLUGINS
     support/CellMLSupport
     support/QScintillaSupport
     support/SEDMLSupport
+    support/ZIPSupport
+
+    # Plugins that provide support for some third-party libraries that have
+    # dependencies on others
+
+    support/COMBINESupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
@@ -387,8 +394,7 @@ IF(WIN32)
 
     TARGET_LINK_LIBRARIES(${WINDOWS_CLI_PROJECT_NAME}
         Qt5::Core
-        Qt5::Xml
-        Qt5::XmlPatterns
+        Qt5::Network
     )
 ENDIF()
 

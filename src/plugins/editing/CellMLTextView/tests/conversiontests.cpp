@@ -19,15 +19,15 @@ specific language governing permissions and limitations under the License.
 // CellML Text view conversion tests
 //==============================================================================
 
+#include "../../../../tests/src/testsutils.h"
+
+//==============================================================================
+
 #include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
 #include "conversiontests.h"
 #include "corecliutils.h"
-
-//==============================================================================
-
-#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
@@ -75,10 +75,10 @@ void ConversionTests::successfulConversionTests()
     for (int i = 1;; ++i) {
         currentLine = cellmlCorCellmlContents[i];
 
-        cellmlCorWithCommentsCellmlContents.append(currentLine);
+        cellmlCorWithCommentsCellmlContents << currentLine;
 
         if (currentLine.compare("</model>"))
-            cellmlCorWithCommentsCellmlContents.append(comment.arg(++commentNumber));
+            cellmlCorWithCommentsCellmlContents << comment.arg(++commentNumber);
         else
             break;
     }
@@ -372,6 +372,30 @@ void ConversionTests::failingConversionTests()
     QCOMPARE(converter.errorLine(), 9);
     QCOMPARE(converter.errorMessage(),
              QString("The second child element of a 'bvar' element with two child elements must be a 'degree' element."));
+
+    // MathML min/max operators
+
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_min.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'min' element must have at least two siblings."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_max.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'max' element must have at least two siblings."));
+
+    // MathML gcd/lcm operators
+
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_gcd.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'gcd' element must have at least two siblings."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_lcm.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'lcm' element must have at least two siblings."));
 
     // MathML trigonometric operators
 

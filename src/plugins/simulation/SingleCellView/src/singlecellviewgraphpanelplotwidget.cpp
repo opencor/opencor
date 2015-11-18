@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -49,7 +50,9 @@ specific language governing permissions and limitations under the License.
 #include "qwt_plot_directpainter.h"
 #include "qwt_plot_grid.h"
 #include "qwt_plot_layout.h"
+#include "qwt_scale_draw.h"
 #include "qwt_scale_engine.h"
+#include "qwt_scale_widget.h"
 
 //==============================================================================
 
@@ -199,7 +202,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     pEvent->accept();
 
-    // Check whether a action is to be carried out
+    // Check whether an action is to be carried out
 
     if (mOwner->action() == SingleCellViewGraphPanelPlotWidget::None)
         return;
@@ -468,11 +471,11 @@ static const double MinAxisRange = 1.0e-5;
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
+SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors, QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
-    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
+    mGraphs(SingleCellViewGraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -480,7 +483,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mCanZoomOutX(true),
     mCanZoomInY(true),
     mCanZoomOutY(true),
-    mNeedContextMenu(false)
+    mNeedContextMenu(false),
+    mNeighbors(pNeighbors)
 {
     // Set up the GUI
 
@@ -511,7 +515,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
     // Set our axes' values
-    // Note: we are not all initialised yet, so we don't want to setAxes() to
+    // Note: we are not all initialised yet, so we don't want setAxes() to
     //       replot ourselves...
 
     setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false);
@@ -794,7 +798,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
 
@@ -938,17 +942,16 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
         axesValuesChanged = true;
     }
 
-    // Update our actions in case the axes' values have changed
+    // Update our actions and align ourselves with our neighbours (which will
+    // result in ourselves, and maybe its neighbours, bein replotted, if
+    // allowed), in case the axes' values have changed
 
-    if (axesValuesChanged)
+    if (axesValuesChanged) {
         updateActions();
 
-    // Replot ourselves, if needed and allowed
+        alignWithNeighbors(pCanReplot);
 
-    if (axesValuesChanged && pCanReplot) {
-        replotNow();
-
-        return true;
+        return pCanReplot;
     } else {
         return false;
     }
@@ -1044,14 +1047,6 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
 //==============================================================================
 
-static const double NoScalingFactor     = 1.0;
-static const double ScalingInFactor     = 0.9;
-static const double ScalingOutFactor    = 1.0/ScalingInFactor;
-static const double BigScalingInFactor  = 0.5*ScalingInFactor;
-static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
-
-//==============================================================================
-
 QPointF SingleCellViewGraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
                                                         const bool pNeedOffset) const
 {
@@ -1066,6 +1061,14 @@ QPointF SingleCellViewGraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
     return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
                    qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
 }
+
+//==============================================================================
+
+static const double NoScalingFactor     = 1.0;
+static const double ScalingInFactor     = 0.9;
+static const double ScalingOutFactor    = 1.0/ScalingInFactor;
+static const double BigScalingInFactor  = 0.5*ScalingInFactor;
+static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
 //==============================================================================
 
@@ -1371,6 +1374,98 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelP
     // Draw our graph from the given point
 
     mDirectPainter->drawSeries(pGraph, pFrom, -1);
+}
+
+//==============================================================================
+
+SingleCellViewGraphPanelPlotWidgets SingleCellViewGraphPanelPlotWidget::neighbors() const
+{
+    // Return our neighbours
+
+    return mNeighbors;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot)
+{
+    // Add the plot as a neighbour
+
+    if ((pPlot != this) && !mNeighbors.contains(pPlot))
+        mNeighbors << pPlot;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot)
+{
+    // Remove the plot from our neighbours
+
+    mNeighbors.removeOne(pPlot);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
+                                                            const bool &pForceAlignment)
+{
+    // Align ourselves with our neighbours
+
+    for (int i = 0; i < 2; ++i) {
+        // Note: we do the below twice because there are cases where it won't
+        //       work properly otherwise. Indeed, say that you have two graph
+        //       panels. By default, their Y axis will range from 0 to 1,000.
+        //       Now, say that you zoom out one of the first graph panel and end
+        //       up with somewhat wide labels for the Y axis, e.g. from
+        //       -1,000,000 to 1,000. While doing this, the second graph will
+        //       have kept aligning itself with the first graph panel, as
+        //       expected. Now, say that you reset the zoom of the first graph
+        //       panel. At this point, you would expect the Y axis to range from
+        //       0 to 1,000 and it is the case, but we can see loads of empty
+        //       space to the left of the Y axis and this on both graph panels.
+        //       However, that empty space disappears if we do the below twice.
+        //       It clearly has something to do with the internals of QwtPlot,
+        //       yet it's not clear how to get it 'right' without doing the
+        //       below twice, so...
+
+        SingleCellViewGraphPanelPlotWidgets selfPlusNeighbors = SingleCellViewGraphPanelPlotWidgets() << this << mNeighbors;
+        double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
+        double newMaxExtent = 0;
+
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, selfPlusNeighbors) {
+            QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
+            QwtScaleDraw *scaleDraw = scaleWidget->scaleDraw();
+
+            scaleDraw->setMinimumExtent(0.0);
+
+            double extent = scaleDraw->extent(scaleWidget->font());
+
+            if (extent > newMaxExtent)
+                newMaxExtent = extent;
+        }
+
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, selfPlusNeighbors) {
+            plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
+
+            if (pCanReplot) {
+                if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
+                    plot->updateLayout();
+                    plot->replotNow();
+                } else if (plot == this) {
+                    replotNow();
+                }
+            }
+        }
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::forceAlignWithNeighbors()
+{
+    // Force the re-alignment with our neighbours
+
+    alignWithNeighbors(true, true);
 }
 
 //==============================================================================

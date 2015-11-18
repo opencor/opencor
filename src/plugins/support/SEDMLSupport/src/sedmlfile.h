@@ -57,6 +57,7 @@ public:
     explicit SedmlFile(const QString &pFileName);
 
     virtual bool load();
+    virtual bool save(const QString &pNewFileName = QString());
 };
 
 //==============================================================================

@@ -18,7 +18,6 @@ static const qreal   g_mfrac_spacing          = 0.05;
 static const qreal   g_mroot_base_margin      = 0.1;
 static const qreal   g_mroot_base_line        = 0.5;
 static const qreal   g_script_size_multiplier = 0.5;
-static const qreal   g_sup_shift_multiplier   = 0.5;
 static const char *  g_subsup_spacing         = "veryverythinmathspace";
 static const qreal   g_min_font_point_size    = 8.0;
 static const ushort  g_radical                = ( 0x22 << 8 ) | 0x1B;
@@ -467,6 +466,7 @@ protected:
 
 private:
     const QwtMmlOperSpec *m_oper_spec;
+    bool unaryMinus() const;
 };
 
 class QwtMmlMstyleNode : public QwtMmlNode
@@ -718,8 +718,8 @@ static const QwtMmlOperSpec g_oper_spec_data[] =
 {
 //                                                                accent   fence    largeop  lspace               minsize movablelimits rspace                   separator stretchy
 //                                                                -------- -------- -------- -------------------- ------- ------------- ------------------------ --------- --------
-    { "!!",                                QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!!"
     { "!",                                 QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!"
+    { "!!",                                QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!!"
     { "!=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "!="
     { "&And;",                             QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&And;"
     { "&ApplyFunction;",                   QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&ApplyFunction;"
@@ -1048,7 +1048,7 @@ static const QwtMmlOperSpec g_oper_spec_data[] =
     { "max",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "max"
     { "min",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "min"
     { "{",                                 QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "{"
-    { "|",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "|"
+    { "|",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "|"
     { "||",                                QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        0        }, QwtMmlOperSpec::NoStretch }, // "||"
     { "}",                                 QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "}"
     { "~",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "~"
@@ -1202,10 +1202,10 @@ QwtMmlDocument::QwtMmlDocument()
     m_monospace_font_name = "Luxi Mono";
     m_doublestruck_font_name = "Doublestruck";
     m_base_font_point_size = 16;
-
-#ifdef MML_TEST
     m_foreground_color = Qt::black;
     m_background_color = Qt::white;
+
+#ifdef MML_TEST
     m_draw_frames = false;
 #endif
 }
@@ -2478,20 +2478,30 @@ void QwtMmlMsupNode::layoutSymbol()
 {
     QwtMmlNode *b = base();
     QwtMmlNode *s = sscript();
+    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
+    qreal threshold = b->myRect().top() + 0.5 * ( b->myRect().height() - subsup_spacing );
+    qreal shift = 0.0;
+
+    if ( b->myRect().top() + s->myRect().bottom() > threshold )
+        shift = threshold - ( b->myRect().top() + s->myRect().bottom() );
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    s->setRelOrigin( QPointF( interpretSpacing( g_subsup_spacing, 0 ),
-                              -g_sup_shift_multiplier * s->myRect().height() ) );
+    s->setRelOrigin( QPointF( subsup_spacing, b->myRect().top() + shift ) );
 }
 
 void QwtMmlMsubNode::layoutSymbol()
 {
     QwtMmlNode *b = base();
     QwtMmlNode *s = sscript();
+    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
+    qreal threshold = b->myRect().top() + 0.5 * ( b->myRect().height() + subsup_spacing );
+    qreal sub_shift = 0.0;
+
+    if ( b->myRect().bottom() + s->myRect().top() < threshold )
+        sub_shift = threshold - ( b->myRect().bottom() + s->myRect().top() );
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    s->setRelOrigin( QPointF( interpretSpacing( g_subsup_spacing, 0 ),
-                              s->myRect().height() ) );
+    s->setRelOrigin( QPointF( subsup_spacing, b->myRect().bottom() + sub_shift ) );
 }
 
 QwtMmlNode *QwtMmlMsubsupNode::base() const
@@ -2519,24 +2529,21 @@ void QwtMmlMsubsupNode::layoutSymbol()
     QwtMmlNode *b = base();
     QwtMmlNode *sub = subscript();
     QwtMmlNode *sup = superscript();
+    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
+    qreal sub_threshold = b->myRect().top() + 0.5 * ( b->myRect().height() + subsup_spacing );
+    qreal sup_threshold = sub_threshold - subsup_spacing;
+    qreal sub_shift = 0.0;
+    qreal sup_shift = 0.0;
+
+    if ( b->myRect().bottom() + sub->myRect().top() < sub_threshold )
+        sub_shift = sub_threshold - ( b->myRect().bottom() + sub->myRect().top() );
+
+    if ( b->myRect().top() + sup->myRect().bottom() > sup_threshold )
+        sup_shift = sup_threshold - ( b->myRect().top() + sup->myRect().bottom() );
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-
-    QRectF sub_rect = sub->myRect();
-    QRectF sup_rect = sup->myRect();
-    qreal subsup_spacing = interpretSpacing( g_subsup_spacing, 0 );
-    qreal shift = 0.0;
-
-    sub_rect.moveTo( QPointF( 0.0, sub->myRect().height() ) );
-    sup_rect.moveTo( QPointF( 0.0, -g_sup_shift_multiplier * sup->myRect().height() ) );
-
-    qreal subsup_diff = sub_rect.top() - sup_rect.bottom();
-
-    if ( subsup_diff < subsup_spacing )
-        shift = 0.5 * ( subsup_spacing - subsup_diff );
-
-    sub->setRelOrigin( QPointF( subsup_spacing, sub_rect.top() + shift ) );
-    sup->setRelOrigin( QPointF( subsup_spacing, sup_rect.top() - shift ) );
+    sub->setRelOrigin( QPointF( subsup_spacing, b->myRect().bottom() + sub_shift ) );
+    sup->setRelOrigin( QPointF( subsup_spacing, b->myRect().top() + sup_shift ) );
 }
 
 int QwtMmlMsubsupNode::scriptlevel( const QwtMmlNode *child ) const
@@ -2565,7 +2572,7 @@ void QwtMmlMoNode::layoutSymbol()
     firstChild()->setRelOrigin( QPointF( 0.0, 0.0 ) );
 
     if ( m_oper_spec == 0 )
-        m_oper_spec = mmlFindOperSpec( text(), form() );
+        m_oper_spec = mmlFindOperSpec( !text().compare( "−" )?"-":text(), form() );
 }
 
 QwtMmlMoNode::QwtMmlMoNode( QwtMmlDocument *document,
@@ -2591,6 +2598,19 @@ QString QwtMmlMoNode::dictionaryAttribute( const QString &name ) const
     return mmlDictAttribute( name, m_oper_spec );
 }
 
+bool QwtMmlMoNode::unaryMinus() const
+{
+    return !text().compare( "−" )
+            && previousSibling() != 0
+            && previousSibling()->nodeType() == MoNode
+            && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "(" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "|" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌊" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "⌈" )
+                 || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "," ) );
+}
+
 QwtMml::FormType QwtMmlMoNode::form() const
 {
     QString value_str = inheritAttributeFromMrow( "form" );
@@ -2609,6 +2629,8 @@ QwtMml::FormType QwtMmlMoNode::form() const
         return PrefixForm;
     else if ( lastSibling() == ( QwtMmlNode* )this && firstSibling() != ( QwtMmlNode* )this )
         return PostfixForm;
+    else if ( unaryMinus() )
+        return PrefixForm;
     else
         return InfixForm;
 }
@@ -2653,7 +2675,17 @@ qreal QwtMmlMoNode::lspace() const
                  && parent()->nodeType() != MfencedNode
                  && parent()->nodeType() != UnknownNode )
             || previousSibling() == 0
-            || ( previousSibling() == 0 && nextSibling() == 0 ) )
+            || ( previousSibling() == 0 && nextSibling() == 0 )
+            || ( previousSibling() != 0
+                 && previousSibling()->nodeType() == MoNode
+                 && !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( text() ) )
+            || unaryMinus()
+            || ( !text().compare( "|" )
+                 && previousSibling() != 0
+                 && previousSibling()->nodeType() == MoNode
+                 && ( !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "=" )
+                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "−" )
+                      || !( ( QwtMmlMoNode* ) previousSibling() )->text().compare( "," ) ) ) )
         return 0.0;
     else
         return interpretSpacing( dictionaryAttribute( "lspace" ), 0 );
@@ -3895,6 +3927,8 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
 {
     OperSpecSearchResult result;
 
+    const QwtMmlOperSpec *firstSpec = 0;
+
     QStringList::const_iterator it = name_list.begin();
     for ( ; it != name_list.end(); ++it )
     {
@@ -3909,6 +3943,11 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
         while ( spec > g_oper_spec_data && ( spec - 1 )->name.compare( name ) == 0 )
             --spec;
 
+        // Keep track of the first intance, if we haven't already done so
+
+        if ( !firstSpec )
+            firstSpec = spec;
+
         // iterate over instances of name until the instances are exhausted or until we
         // find an instance in the specified form.
         do
@@ -3921,6 +3960,22 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
 
         if ( result.haveForm( form ) )
             break;
+    }
+
+    // Check whether we have found an instance in the specified form for one of
+    // the different names in the given list. If not, and if there is more than
+    // one name in the given list, then use our first instance, if any.
+
+    if ( !result.haveForm( form ) && name_list.count() > 1 && firstSpec ) {
+        const QString &name = firstSpec->name;
+
+        do
+        {
+            result.addForm( firstSpec++ );
+            if ( result.haveForm( form ) )
+                break;
+        }
+        while ( firstSpec->name.compare( name ) == 0 );
     }
 
     return result;

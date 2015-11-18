@@ -136,10 +136,10 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
     QUrl url = pRequest.url();
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
-                          QByteArray(mErrorMessageTemplate.arg(tr("Error"),
-                                                               tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
-                                                               tr("Please <a href=\"contactUs.html\">contact us</a> about this error."),
-                                                               Core::copyright()).toUtf8());
+                          mErrorMessageTemplate.arg(tr("Error"),
+                                                    tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
+                                                    tr("Please <a href=\"contactUs.html\">contact us</a> about this error."),
+                                                    Core::copyright()).toUtf8();
 
     // Return the requested document or an error message
 

@@ -44,8 +44,6 @@ public:
                    llvm::ImmutableSet<const VarDecl *> LiveDecls)
       : liveStmts(LiveStmts), liveDecls(LiveDecls) {}
 
-    ~LivenessValues() {}
-
     bool isLive(const Stmt *S) const;
     bool isLive(const VarDecl *D) const;
 
@@ -68,8 +66,7 @@ public:
     virtual void observerKill(const DeclRefExpr *DR) {}
   };
 
-
-  virtual ~LiveVariables();
+  ~LiveVariables() override;
 
   /// Compute the liveness information for a given CFG.
   static LiveVariables *computeLiveness(AnalysisDeclContext &analysisContext,

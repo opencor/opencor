@@ -174,10 +174,9 @@ public:
    * @param version an unsigned int, the SBML Version to assign to this
    * Trigger
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   Trigger (unsigned int level, unsigned int version);
 
@@ -190,10 +189,9 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object.
    *
-   * @throws SBMLConstructorException
-   * Thrown if the given @p level and @p version combination, or this kind
-   * of SBML object, are either invalid or mismatched with respect to the
-   * parent SBMLDocument object.
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   Trigger (SBMLNamespaces* sbmlns);
 
@@ -208,9 +206,6 @@ public:
    * Copy constructor; creates a copy of this Trigger.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   Trigger (const Trigger& orig);
 
@@ -220,13 +215,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Trigger& operator=(const Trigger& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Trigger.
    *
@@ -235,6 +228,7 @@ public:
    * @return the result of calling <code>v.visit()</code>.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -362,8 +356,6 @@ public:
    * (SBML Level&nbsp;3 only) Unsets the "initialValue" attribute of this
    * Trigger instance.
    *
-   * @param initialValue a boolean representing the initialValue to be set.
-   *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_UNEXPECTED_ATTRIBUTE, OperationReturnValues_t}
@@ -378,8 +370,6 @@ public:
    * (SBML Level&nbsp;3 only) Unsets the "persistent" attribute of this
    * Trigger instance.
    *
-   * @param persistent a boolean representing the persistent value to be set.
-   *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_UNEXPECTED_ATTRIBUTE, OperationReturnValues_t}
@@ -391,7 +381,6 @@ public:
 
 #if (0)
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Sets the parent SBMLDocument of this SBML object.
    *
@@ -517,7 +506,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Subclasses should override this method to read (and store) XHTML,
    * MathML, etc. directly from the XMLInputStream.

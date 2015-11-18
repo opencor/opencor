@@ -20,9 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coresettings.h"
 #include "filemanager.h"
-#include "settings.h"
 
 //==============================================================================
 
@@ -33,10 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QChar>
 #include <QCryptographicHash>
-#include <QDate>
 #include <QDir>
-#include <QEventLoop>
-#include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
 #include <QLocale>
@@ -51,9 +46,9 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QString>
 #include <QStringList>
-#include <QSysInfo>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -66,6 +61,20 @@ specific language governing permissions and limitations under the License.
     #include <mach/mach_host.h>
     #include <sys/sysctl.h>
 #endif
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace Core {
+
+//==============================================================================
+
+#include "corecliutils.cpp.inl"
+
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
 
 //==============================================================================
 
@@ -281,10 +290,6 @@ namespace Core {
 
 //==============================================================================
 
-#include "corecliutils.cpp.inl"
-
-//==============================================================================
-
 void DummyMessageHandler::handleMessage(QtMsgType pType,
                                         const QString &pDescription,
                                         const QUrl &pIdentifier,
@@ -296,23 +301,6 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
     Q_UNUSED(pSourceLocation);
 
     // We ignore the message...
-}
-
-//==============================================================================
-
-QString locale()
-{
-    // Return our current locale
-    // Note: this gets set in MainWindow::setLocale()...
-
-    QString res;
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(SettingsLocale).toString();
-    settings.endGroup();
-
-    return res;
 }
 
 //==============================================================================
@@ -498,7 +486,7 @@ void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
 
 void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 {
-    // Retrieve the 'global' instance of an object
+    // Retrieve and return the 'global' instance of an object
     // Note: initially, the plan was to have a static instance of an object and
     //       return its address. However, this approach doesn't work on Windows
     //       and Linux (but does on OS X). Indeed, say that the Core plugin is
@@ -507,33 +495,26 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       its own address space. (This is not the case on OS X, (most likely)
     //       because of the way applications are bundled on that platform.) So,
     //       to address this issue, we keep track of the address of a 'global'
-    //       instance using QSettings...
+    //       instance as a qApp property...
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
-    qulonglong globalInstance;
+    QByteArray objectName = pObjectName.toUtf8();
+    QVariant res = qApp->property(objectName.constData());
 
-    settings.beginGroup(SettingsGlobal);
-        globalInstance = settings.value(pObjectName, 0).toULongLong();
+    if (!res.isValid()) {
+        // There is no 'global' instance associated with the given object, so
+        // use the object's default 'global' instance we were given
 
-        if (!globalInstance) {
-            // There is no 'global' instance associated with the given object,
-            // so use the object's default 'global' instance we were given
+        res = qulonglong(pDefaultGlobalInstance);
 
-            globalInstance = qulonglong(pDefaultGlobalInstance);
+        qApp->setProperty(objectName.constData(), res);
+    }
 
-            settings.setValue(pObjectName, QString::number(globalInstance));
-            // Note #1: for some reasons, on OS X, QSettings doesn't handle
-            //          qulonglong values properly, so we do it through a
-            //          QString value instead...
-            // Note #2: see https://bugreports.qt.io/browse/QTBUG-29681 for
-            //          more information...
-        }
-    settings.endGroup();
-
-    // Return the class's 'global' instance
-
-    return (void *) globalInstance;
+    return (void *) res.toULongLong();
 }
+
+//==============================================================================
+
+static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
 
 //==============================================================================
 
@@ -541,14 +522,7 @@ QString CORE_EXPORT activeDirectory()
 {
     // Retrieve and return the active directory
 
-    QString res;
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(SettingsActiveDirectory).toString();
-    settings.endGroup();
-
-    return res;
+    return QSettings().value(SettingsActiveDirectory, QDir::homePath()).toString();
 }
 
 //==============================================================================
@@ -557,24 +531,7 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName)
 {
     // Keep track of the active directory
 
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsActiveDirectory, pDirName);
-    settings.endGroup();
-}
-
-//==============================================================================
-
-QString nativeCanonicalFileName(const QString &pFileName)
-{
-    // Return a native and canonical version of the given file name or the given
-    // file name, the native and canonical version is empty (i.e. the file
-    // doesn't exist (anymore?))
-
-    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
-
-    return res.isEmpty()?pFileName:res;
+    QSettings().setValue(SettingsActiveDirectory, pDirName);
 }
 
 //==============================================================================
@@ -654,7 +611,21 @@ QString stringFromPercentEncoding(const QString &pString)
 
 //==============================================================================
 
-void cleanMathml(QDomElement pElement)
+QString formatXml(const QString &pXml)
+{
+    // Format the given XML
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(pXml))
+        return qDomDocumentToString(domDocument);
+    else
+        return QString();
+}
+
+//==============================================================================
+
+void cleanContentMathml(QDomElement pDomElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
@@ -663,7 +634,7 @@ void cleanMathml(QDomElement pElement)
 
     static const QString MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
 
-    QDomNamedNodeMap attributes = pElement.attributes();
+    QDomNamedNodeMap attributes = pDomElement.attributes();
     QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
 
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
@@ -674,26 +645,122 @@ void cleanMathml(QDomElement pElement)
     }
 
     foreach (QDomNode nonMathmlAttribute, nonMathmlAttributes)
-        pElement.removeAttributeNode(nonMathmlAttribute.toAttr());
+        pDomElement.removeAttributeNode(nonMathmlAttribute.toAttr());
 
     // Go through the element's child elements, if any, and clean them up
 
-    for (QDomElement childElement = pElement.firstChildElement();
+    for (QDomElement childElement = pDomElement.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanMathml(childElement);
+        cleanContentMathml(childElement);
     }
 }
 
 //==============================================================================
 
-QString cleanMathml(const QString &pMathml)
+QString cleanContentMathml(const QString &pContentMathml)
 {
     // Clean up and return the given MathML string
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pMathml, true)) {
-        cleanMathml(domDocument.documentElement());
+    if (domDocument.setContent(pContentMathml, true)) {
+        cleanContentMathml(domDocument.documentElement());
+
+        return domDocument.toString(-1);
+    } else {
+        return QString();
+    }
+}
+
+//==============================================================================
+
+void cleanPresentationMathml(QDomElement pDomElement)
+{
+    // Merge successive child mrow elements, as long as their parent is not an
+    // element that requires a specific number of arguments (which could become
+    // wrong if we were to merge two successive mrow elements)
+    // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
+    //       list of the elements to check...
+
+    if (   pDomElement.nodeName().compare("mfrac")
+        && pDomElement.nodeName().compare("mroot")
+        && pDomElement.nodeName().compare("msub")
+        && pDomElement.nodeName().compare("msup")
+        && pDomElement.nodeName().compare("msubsup")
+        && pDomElement.nodeName().compare("munder")
+        && pDomElement.nodeName().compare("mover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")
+        && pDomElement.nodeName().compare("munderover")) {
+        for (QDomElement childElement = pDomElement.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            QDomElement nextChildElement = childElement.nextSiblingElement();
+
+            if (   !nextChildElement.isNull()
+                && !childElement.nodeName().compare("mrow")
+                && !childElement.nodeName().compare(nextChildElement.nodeName())) {
+                // The current and next child elements are both mrow's, so merge
+                // them together
+
+                for (QDomElement nextChildChildElement = nextChildElement.firstChildElement();
+                     !nextChildChildElement.isNull(); nextChildChildElement = nextChildElement.firstChildElement()) {
+                    childElement.appendChild(nextChildChildElement);
+                }
+
+                pDomElement.removeChild(nextChildElement);
+            }
+        }
+    }
+
+    // Recursively clean ourselves
+
+    for (QDomElement childElement = pDomElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanPresentationMathml(childElement);
+    }
+
+    // Move the contents of child mrow elements to their parent, should it also
+    // be an mrow element
+    // Note: we do this after having recursively cleaned ourselves to make sure
+    //       that we also take into account the root element, in case it's an
+    //       mrow element and the contents of its mrow child elements have been
+    //       moved to it...
+
+    if (!pDomElement.nodeName().compare("mrow")) {
+        for (QDomElement childElement = pDomElement.firstChildElement();
+             !childElement.isNull(); ) {
+            QDomElement nextChildElement = childElement.nextSiblingElement();
+
+            if (!childElement.nodeName().compare("mrow")) {
+                // The current child element is an mrow, so move its contents to
+                // its parent
+
+                for (QDomElement childChildElement = childElement.firstChildElement();
+                     !childChildElement.isNull(); childChildElement = childElement.firstChildElement()) {
+                    pDomElement.insertBefore(childChildElement, childElement);
+                }
+
+                pDomElement.removeChild(childElement);
+            }
+
+            childElement = nextChildElement;
+        }
+    }
+}
+
+//==============================================================================
+
+QString cleanPresentationMathml(const QString &pPresentationMathml)
+{
+    // Clean the given Presentation MathML
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(pPresentationMathml)) {
+        cleanPresentationMathml(domDocument.documentElement());
 
         return domDocument.toString(-1);
     } else {

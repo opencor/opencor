@@ -19,10 +19,46 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
-QString shortVersion(QCoreApplication *pApp)
+QString locale()
+{
+    // Retrieve and return the locale
+
+    QString res = rawLocale();
+
+    if (res.isEmpty())
+        return QLocale::system().name().left(2);
+    else
+        return res;
+}
+
+//==============================================================================
+
+static const auto RawSettingsLocale = QStringLiteral("RawLocale");
+
+//==============================================================================
+
+QString rawLocale()
+{
+    // Retrieve and return the raw locale
+
+    return QSettings().value(RawSettingsLocale).toString();
+}
+
+//==============================================================================
+
+void setRawLocale(const QString &pRawLocale)
+{
+    // Keep track of the raw locale
+
+    QSettings().setValue(RawSettingsLocale, pRawLocale);
+}
+
+//==============================================================================
+
+QString shortVersion()
 {
     QString res = QString();
-    QString appVersion = pApp->applicationVersion();
+    QString appVersion = qApp->applicationVersion();
     QString bitVersion;
 
     enum {
@@ -51,9 +87,35 @@ QString shortVersion(QCoreApplication *pApp)
 
 //==============================================================================
 
-QString version(QCoreApplication *pApp)
+QString version()
 {
-    return  pApp->applicationName()+" "+shortVersion(pApp);
+    return qAppName()+" "+shortVersion();
+}
+
+//==============================================================================
+
+QString nativeCanonicalDirName(const QString &pDirName)
+{
+    // Return a native and canonical version of the given directory name or a
+    // native version, if the native and canonical version is empty (i.e. the
+    // directory doesn't exist (anymore?))
+
+    QString res = QDir::toNativeSeparators(QDir(pDirName).canonicalPath());
+
+    return res.isEmpty()?QDir::toNativeSeparators(pDirName):res;
+}
+
+//==============================================================================
+
+QString nativeCanonicalFileName(const QString &pFileName)
+{
+    // Return a native and canonical version of the given file name or a native
+    // version, if the native and canonical version is empty (i.e. the file
+    // doesn't exist (anymore?))
+
+    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+
+    return res.isEmpty()?QDir::toNativeSeparators(pFileName):res;
 }
 
 //==============================================================================
@@ -138,76 +200,6 @@ QString exec(const QString &pProgram, const QStringList &pArgs = QStringList())
     process.waitForFinished();
 
     return process.readAll().trimmed();
-}
-
-//==============================================================================
-
-QString osName()
-{
-#if defined(Q_OS_WIN)
-    switch (QSysInfo::WindowsVersion) {
-    case QSysInfo::WV_NT:
-        return "Microsoft Windows NT";
-    case QSysInfo::WV_2000:
-        return "Microsoft Windows 2000";
-    case QSysInfo::WV_XP:
-        return "Microsoft Windows XP";
-    case QSysInfo::WV_2003:
-        return "Microsoft Windows 2003";
-    case QSysInfo::WV_VISTA:
-        return "Microsoft Windows Vista";
-    case QSysInfo::WV_WINDOWS7:
-        return "Microsoft Windows 7";
-    case QSysInfo::WV_WINDOWS8:
-        return "Microsoft Windows 8";
-    default:
-        return "Microsoft Windows";
-    }
-#elif defined(Q_OS_LINUX)
-    QString os = exec("uname", QStringList() << "-o");
-
-    if (os.isEmpty()) {
-        // We couldn't find uname or something went wrong, so simply return
-        // "Linux" as the OS name
-
-        return "Linux";
-    } else {
-        return os+" "+exec("uname", QStringList() << "-r");
-    }
-#elif defined(Q_OS_MAC)
-    switch (QSysInfo::MacintoshVersion) {
-    case QSysInfo::MV_9:
-        return "Mac OS 9";
-    case QSysInfo::MV_10_0:
-        return "Mac OS X 10.0 (Cheetah)";
-    case QSysInfo::MV_10_1:
-        return "Mac OS X 10.1 (Puma)";
-    case QSysInfo::MV_10_2:
-        return "Mac OS X 10.2 (Jaguar)";
-    case QSysInfo::MV_10_3:
-        return "Mac OS X 10.3 (Panther)";
-    case QSysInfo::MV_10_4:
-        return "Mac OS X 10.4 (Tiger)";
-    case QSysInfo::MV_10_5:
-        return "Mac OS X 10.5 (Leopard)";
-    case QSysInfo::MV_10_6:
-        return "Mac OS X 10.6 (Snow Leopard)";
-    case QSysInfo::MV_10_7:
-        return "Mac OS X 10.7 (Lion)";
-    case QSysInfo::MV_10_8:
-        return "OS X 10.8 (Mountain Lion)";
-    case QSysInfo::MV_10_9:
-        return "OS X 10.9 (Mavericks)";
-    case QSysInfo::MV_10_10:
-        return "OS X 10.10 (Yosemite)";
-    default:
-        return "Mac OS";
-        // Note: we return "Mac OS" rather than "Mac OS X" or even "OS X" since
-        //       only versions prior to (Mac) OS X are not recognised...
-    }
-#else
-    #error Unsupported platform
-#endif
 }
 
 //==============================================================================
@@ -457,6 +449,26 @@ QString nonDiacriticString(const QString &pString)
         int index = diacriticLetters.indexOf(letter);
 
         res.append((index < 0)?letter:nonDiacriticLetters[index]);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QString plainString(const QString &pString)
+{
+    // Return the given string after stripping out all its HTML code (should it
+    // have some)
+    // Note: we enclose the given string within an HTML tag so that its
+    //       stripping out can proceed without any problem...
+
+    QXmlStreamReader string("<html>"+pString+"</html>");
+    QString res = QString();
+
+    while (!string.atEnd()) {
+        if (string.readNext() == QXmlStreamReader::Characters)
+            res += string.text();
     }
 
     return res;

@@ -39,6 +39,20 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace OpenCOR {
+namespace Core {
+
+//==============================================================================
+
+#include "corecliutils.h.inl"
+
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+
 typedef QList<bool> QBoolList;
 typedef QList<int> QIntList;
 
@@ -60,10 +74,6 @@ class QNetworkReply;
 
 namespace OpenCOR {
 namespace Core {
-
-//==============================================================================
-
-#include "corecliutils.h.inl"
 
 //==============================================================================
 
@@ -97,8 +107,6 @@ private Q_SLOTS:
 
 //==============================================================================
 
-QString CORE_EXPORT locale();
-
 qulonglong CORE_EXPORT totalMemory();
 qulonglong CORE_EXPORT freeMemory();
 
@@ -124,8 +132,6 @@ void CORE_EXPORT * globalInstance(const QString &pObjectName,
 QString CORE_EXPORT activeDirectory();
 void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 
-QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
-
 void CORE_EXPORT doNothing(const int &pMax);
 
 void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
@@ -135,7 +141,10 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
 QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
-QString CORE_EXPORT cleanMathml(const QString &pMathml);
+QString CORE_EXPORT formatXml(const QString &pXml);
+
+QString CORE_EXPORT cleanContentMathml(const QString &pContentMathml);
+QString CORE_EXPORT cleanPresentationMathml(const QString &pPresentationMathml);
 
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pExtra,

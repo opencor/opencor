@@ -51,6 +51,19 @@ DataStoreVariable::~DataStoreVariable()
 
 //==============================================================================
 
+bool DataStoreVariable::isValid() const
+{
+    // Return whether we are valid, i.e. we have a non-empty URI
+    // Note: this applies to CellML 1.1 file where we keep track of all the
+    //       model parameters (including imported ones), but should only export
+    //       those that the user can see in the GUI (e.g. in the Single Cell
+    //       view). See issues #568 and #808 for some background on this...
+
+    return !mUri.isEmpty();
+}
+
+//==============================================================================
+
 QString DataStoreVariable::uri() const
 {
     // Return our URI

@@ -94,11 +94,11 @@ class SBMLVisitor;
 template<class CNAME>
 struct IdEq : public std::unary_function<SBase*, bool>
 {
-  const std::string& id;
+  const std::string& mId;
 
-  IdEq (const std::string& id) : id(id) { }
+  IdEq (const std::string& id) : mId(id) { }
   bool operator() (SBase* sb)
-       { return static_cast <CNAME*> (sb)->getId() == id; }
+       { return static_cast <CNAME*> (sb)->getId() == mId; }
 };
 #endif /* SWIG */
 /** @endcond */
@@ -160,6 +160,8 @@ public:
   ListOf& operator=(const ListOf& rhs);
 
 
+
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor.
    *
@@ -170,6 +172,7 @@ public:
    * list.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -550,7 +553,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   typedef std::vector<SBase*>           ListItem;
   typedef std::vector<SBase*>::iterator ListItemIter;
 

@@ -97,9 +97,6 @@ public:
    * Copy constructor; creates a copy of this XMLNamespaces list.
    *
    * @param orig the XMLNamespaces object to copy
-   *
-   * @throws XMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   XMLNamespaces(const XMLNamespaces& orig);
 
@@ -109,9 +106,6 @@ public:
    *
    * @param rhs The XMLNamespaces object whose values are used as the basis
    * of the assignment.
-   *
-   * @throws XMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   XMLNamespaces& operator=(const XMLNamespaces& rhs);
 
@@ -376,7 +370,6 @@ public:
 #ifndef SWIG
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Writes this XMLNamespaces list to stream.
    *
@@ -404,14 +397,12 @@ public:
 #endif  /* !SWIG */
 
   /** @cond doxygenLibsbmlInternal */
-
   friend class SBase;
 
   /** @endcond */
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Removes the default XML namespace.
    */

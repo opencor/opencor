@@ -163,9 +163,6 @@ public:
    * Copy constructor; creates a copy of this Rule.
    *
    * @param orig the object to copy.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p orig is @c NULL.
    */
   Rule (const Rule& orig);
 
@@ -175,13 +172,11 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   Rule& operator=(const Rule& rhs);
 
 
+  /** @cond doxygenLibsbmlInternal */
   /**
    * Accepts the given SBMLVisitor for this instance of Rule.
    *
@@ -192,6 +187,7 @@ public:
    * list of rules within which @em the present object is embedded.
    */
   virtual bool accept (SBMLVisitor& v) const;
+  /** @endcond */
 
 
   /**
@@ -733,7 +729,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /* function to set/get an identifier for unit checking */
   std::string getInternalId() const { return mInternalId; };
   void setInternalId(std::string id) { mInternalId = id; };
@@ -781,7 +776,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Only subclasses may create Rules.
    */
@@ -866,6 +860,10 @@ public:
    * @param level the SBML Level
    *
    * @param version the Version within the SBML Level
+   *
+   * @copydetails doc_throw_exception_lv
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfRules (unsigned int level, unsigned int version);
 
@@ -879,6 +877,10 @@ public:
    *
    * @param sbmlns an SBMLNamespaces object that is used to determine the
    * characteristics of the ListOfRules object to be created.
+   *
+   * @copydetails doc_throw_exception_namespace
+   *
+   * @copydetails doc_note_setting_lv
    */
   ListOfRules (SBMLNamespaces* sbmlns);
 
@@ -1012,7 +1014,6 @@ public:
 
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Get the ordinal position of this element in the containing object
    * (which in this case is the Model object).
@@ -1030,7 +1031,6 @@ public:
 
 protected:
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Create and return a listOfRules object, if present.
    *

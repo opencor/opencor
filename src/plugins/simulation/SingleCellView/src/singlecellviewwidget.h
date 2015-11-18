@@ -27,6 +27,8 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "datastoreinterface.h"
+#include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewsimulation.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
 
@@ -85,12 +87,9 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelPlotGraph;
-class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewInformationSolversWidgetData;
 class SingleCellViewPlugin;
-class SingleCellViewSimulation;
 
 //==============================================================================
 
@@ -119,7 +118,11 @@ public:
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+
     void fileOpened(const QString &pFileName);
+    void filePermissionsChanged(const QString &pFileName);
+    void fileModified(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
@@ -144,14 +147,15 @@ private:
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
-    QList<SingleCellViewSimulation *> mStoppedSimulations;
+    SingleCellViewSimulations mStoppedSimulations;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
     QMap<QString, int> mProgresses;
-
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
+    QMap<QString, bool> mDevelopmentModes;
+    QMap<QString, bool> mLockedDevelopmentModes;
 
     Core::ToolBarWidget *mToolBarWidget;
 
@@ -177,12 +181,12 @@ private:
     ErrorType mErrorType;
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
-    QList<SingleCellViewSimulation *> mCheckResultsSimulations;
+    SingleCellViewSimulations mCheckResultsSimulations;
 
-    QList<SingleCellViewSimulation *> mResetSimulations;
+    SingleCellViewSimulations mResetSimulations;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
-    QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
+    SingleCellViewGraphPanelPlotWidgets mPlots;
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
@@ -220,19 +224,10 @@ private:
     void checkResults(SingleCellViewSimulation *pSimulation,
                       const bool &pForceUpdateResults = false);
 
-    void resetFileTabIcon(const QString &pFileName,
-                          const bool &pRemoveProgress = true);
-
     QVariant value(Core::Property *pProperty) const;
 
-    void updateSimulationProperties();
-
-    void updateSolversProperties();
-    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
-
-    void checkSolversPropertyChanged(Core::Property *pProperty,
-                                     const QString &pSolverName,
-                                     SingleCellViewInformationSolversWidgetData *pSolverData);
+    void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
+    void updateSolversProperties(Core::Property *pProperty = 0);
 
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
@@ -242,6 +237,11 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
+    void createSedmlFile(const QString &pFileName, const QString &pModelSource);
+
+    void checkSimulationDataModified(const bool &pCurrentSimulation,
+                                     const QString &pFileName,
+                                     const bool &pIsModified);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
@@ -250,7 +250,7 @@ private Q_SLOTS:
     void on_actionResetModelParameters_triggered();
     void on_actionClearSimulationData_triggered();
 
-    void on_actionDebugMode_triggered();
+    void on_actionDevelopmentMode_triggered();
 
     void on_actionAddGraphPanel_triggered();
 
@@ -258,7 +258,8 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
-    void on_actionSedmlExport_triggered();
+    void on_actionSedmlExportSedmlFile_triggered();
+    void on_actionSedmlExportCombineArchive_triggered();
 
     void simulationDataExport();
 
@@ -269,7 +270,7 @@ private Q_SLOTS:
     void simulationStopped(const qint64 &pElapsedTime);
 
     void resetProgressBar(SingleCellViewSimulation *pSimulation = 0);
-    void resetFileTabIcon();
+    void resetFileTabIcon(SingleCellViewSimulation *pSimulation = 0);
 
     void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);
@@ -290,10 +291,10 @@ private Q_SLOTS:
     void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
     void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void callCheckResults();
 };

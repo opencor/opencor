@@ -15,16 +15,16 @@ MACRO(INITIALISE_PROJECT)
     IF(WIN32)
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
            OR NOT ${MSVC_VERSION} EQUAL 1800)
-            MESSAGE(FATAL_ERROR "OpenCOR can only be built using MSVC 2013 on Windows...")
+            MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built using MSVC 2013 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
         IF(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
            AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-            MESSAGE(FATAL_ERROR "OpenCOR can only be built using (Apple) Clang on OS X...")
+            MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built using (Apple) Clang on OS X...")
         ENDIF()
     ELSE()
         IF(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-            MESSAGE(FATAL_ERROR "OpenCOR can only be built using GCC on Linux...")
+            MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built using GCC on Linux...")
         ENDIF()
     ENDIF()
 
@@ -38,15 +38,15 @@ MACRO(INITIALISE_PROJECT)
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ARCHITECTURE_COMPILE)
-        MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your OpenCOR environment and try again...")
+        MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your ${PROJECT_NAME} environment and try again...")
     ELSE()
         IF(APPLE)
             IF(NOT ${ARCHITECTURE} EQUAL 64)
-                MESSAGE(FATAL_ERROR "OpenCOR can only be built in 64-bit mode...")
+                MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 64-bit mode...")
             ENDIF()
         ELSE()
             IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
-                MESSAGE(FATAL_ERROR "OpenCOR can only be built in 32-bit or 64-bit mode...")
+                MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 32-bit or 64-bit mode...")
             ENDIF()
         ENDIF()
     ENDIF()
@@ -56,13 +56,13 @@ MACRO(INITIALISE_PROJECT)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         IF(SHOW_INFORMATION_MESSAGE)
-            MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+            SET(BUILD_INFORMATION "Building a ${ARCHITECTURE}-bit debug version of ${PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
         IF(SHOW_INFORMATION_MESSAGE)
-            MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+            SET(BUILD_INFORMATION "Building a ${ARCHITECTURE}-bit release version of ${PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE TRUE)
@@ -77,27 +77,13 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     SET(REQUIRED_QT_MODULES
-        Concurrent
-        Core
-        Gui
-        Help
-        ${MAC_EXTRAS}
         Network
-        OpenGL
-        PrintSupport
-        Svg
-        UiTools
         WebKit
-        WebKitWidgets
         Widgets
-        Xml
-        XmlPatterns
     )
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
-
-        SET(Qt5${REQUIRED_QT_MODULE}_DIR ${Qt5${REQUIRED_QT_MODULE}_DIR} CACHE INTERNAL "${Qt5${REQUIRED_QT_MODULE}_DIR}" FORCE)
     ENDFOREACH()
 
     IF(ENABLE_TESTS)
@@ -109,6 +95,7 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_BINARY_DIR ${_qt5Widgets_install_prefix}/bin)
     SET(QT_LIBRARY_DIR ${_qt5Widgets_install_prefix}/lib)
     SET(QT_PLUGINS_DIR ${_qt5Widgets_install_prefix}/plugins)
+    SET(QT_VERSION ${Qt5Widgets_VERSION})
     SET(QT_VERSION_MAJOR ${Qt5Widgets_VERSION_MAJOR})
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
@@ -129,7 +116,6 @@ MACRO(INITIALISE_PROJECT)
             QtCLucene
             QtConcurrent
             QtCore
-            QtDBus
             QtGui
             QtHelp
             QtMacExtras
@@ -289,7 +275,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
 
         IF(SHOW_INFORMATION_MESSAGE)
-            MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+            SET(BUILD_INFORMATION "${BUILD_INFORMATION} for (Mac) OS X ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
         ENDIF()
     ENDIF()
 
@@ -338,6 +324,12 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${PROJECT_NAME}")
     ELSEIF(NOT WIN32)
         SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
+    ENDIF()
+
+    # Show the build information, if allowed
+
+    IF(SHOW_INFORMATION_MESSAGE)
+        MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
     ENDIF()
 ENDMACRO()
 
@@ -718,18 +710,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       build...
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
-                    ../../plugin.h
-                    ../../pluginmanager.h
-
                     ${TEST_HEADER_MOC}
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
-
-                    ../../plugin.cpp
-                    ../../plugininfo.cpp
-                    ../../pluginmanager.cpp
 
                     ${SOURCES}
                     ${SOURCES_MOC}

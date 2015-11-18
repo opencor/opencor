@@ -19,14 +19,13 @@ specific language governing permissions and limitations under the License.
 // GUI utilities
 //==============================================================================
 
-#include "coresettings.h"
 #include "guiutils.h"
-#include "settings.h"
 
 //==============================================================================
 
+#include <QAction>
 #include <QApplication>
-#include <QSettings>
+#include <QMainWindow>
 #include <QStackedWidget>
 
 //==============================================================================

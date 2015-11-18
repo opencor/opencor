@@ -237,31 +237,31 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
         QString exposureUrl = pExposures[i].url();
         QString exposureName = pExposures[i].name();
 
-        tbodyElement.appendInside( "<tr id=\"exposure_"+QString::number(i)+"\">\n"
-                                  +"    <td class=\"exposure\">\n"
-                                  +"        <table class=\"fullWidth\">\n"
-                                  +"            <tbody>\n"
-                                  +"                <tr>\n"
-                                  +"                    <td class=\"fullWidth\">\n"
-                                  +"                        <ul>\n"
-                                  +"                            <li class=\"exposure\">\n"
-                                  +"                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
-                                  +"                            </li>\n"
-                                  +"                        </ul>\n"
-                                  +"                    </td>\n"
-                                  +"                    <td class=\"button\">\n"
-                                  +"                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"|"+exposureName+"\"><img class=\"button clone\"/></a>\n"
-                                  +"                    </td>\n"
-                                  +"                    <td class=\"button\">\n"
-                                  +"                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"|"+exposureName+"\"><img id=\"exposure_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
-                                  +"                    </td>\n"
-                                  +"                </tr>\n"
-                                  +"            </tbody>\n"
-                                  +"        </table>\n"
-                                  +"        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                                  +"        </ul>\n"
-                                  +"    </td>\n"
-                                  +"</tr>\n");
+        tbodyElement.appendInside("<tr id=\"exposure_"+QString::number(i)+"\">\n"
+                                  "    <td class=\"exposure\">\n"
+                                  "        <table class=\"fullWidth\">\n"
+                                  "            <tbody>\n"
+                                  "                <tr>\n"
+                                  "                    <td class=\"fullWidth\">\n"
+                                  "                        <ul>\n"
+                                  "                            <li class=\"exposure\">\n"
+                                  "                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
+                                  "                            </li>\n"
+                                  "                        </ul>\n"
+                                  "                    </td>\n"
+                                  "                    <td class=\"button\">\n"
+                                  "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"|"+exposureName+"\"><img class=\"button clone\"/></a>\n"
+                                  "                    </td>\n"
+                                  "                    <td class=\"button\">\n"
+                                  "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"|"+exposureName+"\"><img id=\"exposure_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                                  "                    </td>\n"
+                                  "                </tr>\n"
+                                  "            </tbody>\n"
+                                  "        </table>\n"
+                                  "        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+                                  "        </ul>\n"
+                                  "    </td>\n"
+                                  "</tr>\n");
 
         mExposureNames << exposureName;
         mExposureDisplayed << true;
@@ -318,12 +318,14 @@ void PhysiomeModelRepositoryWindowWidget::addExposureFiles(const QString &pUrl,
 {
     // Add the given exposure files to the exposure
 
+    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
+
     QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
 
     foreach (const QString &exposureFile, pExposureFiles) {
         ulElement.appendInside(QString("<li class=\"exposureFile\">"
                                        "    <a href=\"%1\">%2</a>"
-                                       "</li>").arg(exposureFile, QString(exposureFile).remove(QRegularExpression(".*/"))));
+                                       "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
     }
 }
 

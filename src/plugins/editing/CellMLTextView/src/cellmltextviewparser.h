@@ -135,8 +135,7 @@ private:
     QDomElement newNumberElement(const QString &pNumber, const QString &pUnit);
     QDomElement newMathematicalConstantElement(const CellmlTextViewScanner::TokenType &pTokenType);
     QDomElement newMathematicalFunctionElement(const CellmlTextViewScanner::TokenType &pTokenType,
-                                               QDomElement &pFirstArgumentElement,
-                                               QDomElement &pSecondArgumentElement);
+                                               const QList<QDomElement> &pArgumentElements);
 
     CellmlTextViewScanner::TokenTypes rangeOfTokenTypes(const CellmlTextViewScanner::TokenType &pFromTokenType,
                                                         const CellmlTextViewScanner::TokenType &pToTokenType);
@@ -196,7 +195,8 @@ private:
     QDomElement parseNumber(QDomNode &pDomNode);
     QDomElement parseMathematicalFunction(QDomNode &pDomNode,
                                           const bool &pOneArgument,
-                                          const bool &pTwoArguments);
+                                          const bool &pTwoArguments,
+                                          const bool &pMoreArguments);
     QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,

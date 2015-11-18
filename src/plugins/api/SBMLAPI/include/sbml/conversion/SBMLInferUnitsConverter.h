@@ -69,7 +69,6 @@ class LIBSBML_EXTERN  SBMLInferUnitsConverter : public SBMLConverter
 public:
 
   /** @cond doxygenLibsbmlInternal */
-
   /**
    * Register with the ConversionRegistry.
    */
@@ -104,9 +103,6 @@ public:
    *
    * @param rhs The object whose values are used as the basis of the
    * assignment.
-   *
-   * @throws SBMLConstructorException
-   * Thrown if the argument @p rhs is @c NULL.
    */
   SBMLInferUnitsConverter& operator=(const SBMLInferUnitsConverter& rhs);
 
@@ -183,7 +179,6 @@ public:
 
 private:
   /** @cond doxygenLibsbmlInternal */
-
   std::string existsAlready(Model& m, UnitDefinition *newUD);
 
   unsigned int newIdCount;

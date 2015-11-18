@@ -78,8 +78,6 @@ public:
 private:
     EditingInterface *mEditingInterface;
 
-    QAction *mFileNewFileAction;
-
     QMenu *mEditMenu;
 
     QAction *mEditUndoAction;
@@ -112,8 +110,6 @@ private Q_SLOTS:
     void updateEditingActions();
     void updateFindPreviousNextActions();
     void updateSelectAllAction();
-
-    void newFile();
 
     void doUndo();
     void doRedo();

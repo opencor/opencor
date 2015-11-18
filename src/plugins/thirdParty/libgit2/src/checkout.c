@@ -18,6 +18,7 @@
 #include "git2/submodule.h"
 #include "git2/sys/index.h"
 #include "git2/sys/filter.h"
+#include "git2/merge.h"
 
 #include "refs.h"
 #include "repository.h"
@@ -27,7 +28,7 @@
 #include "diff.h"
 #include "pathspec.h"
 #include "buf_text.h"
-#include "merge_file.h"
+#include "diff_xdiff.h"
 #include "path.h"
 #include "attr.h"
 #include "pool.h"
@@ -242,6 +243,12 @@ static int checkout_action_common(
 		/* to "update" a symlink, we must remove the old one first */
 		if (delta->new_file.mode == GIT_FILEMODE_LINK && wd != NULL)
 			*action |= CHECKOUT_ACTION__REMOVE;
+
+		/* if the file is on disk and doesn't match our mode, force update */
+		if (wd &&
+			GIT_PERMS_IS_EXEC(wd->mode) !=
+			GIT_PERMS_IS_EXEC(delta->new_file.mode))
+				*action |= CHECKOUT_ACTION__REMOVE;
 
 		notify = GIT_CHECKOUT_NOTIFY_UPDATED;
 	}
@@ -1499,15 +1506,6 @@ static int blob_content_to_file(
 
 	if (error < 0)
 		return error;
-
-	if (GIT_PERMS_IS_EXEC(mode)) {
-		data->perfdata.chmod_calls++;
-
-		if ((error = p_chmod(path, mode)) < 0) {
-			giterr_set(GITERR_OS, "Failed to set permissions on '%s'", path);
-			return error;
-		}
-	}
 
 	if (st) {
 		data->perfdata.stat_calls++;
