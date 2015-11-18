@@ -31,6 +31,11 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
+                           { "type": "subCategory", "name": "Raw CellML view",
+                             "entries": [
+                               { "type": "Fixed", "description": "Reformatting unescaping HTML entities." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "Added", "description": "Support for the <code>min()</code> and <code>max()</code> functions." },
