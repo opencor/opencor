@@ -42,6 +42,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>CellML support:</strong> don't distinguish between CellML 1.0 and CellML 1.1 anymore when creating a new CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/827\">#827</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> made it possible to create a new SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/826\">#826</a>)." },
                        { "change": "<strong>Raw CellML view:</strong> fixed a problem with reformatting unescaping HTML entities (see issue <a href=\"https://github.com/opencor/opencor/issues/822\">#822</a>)." },
                        { "change": "<strong>Single Cell (simulation) view:</strong> disabled the development mode when using a read-only file (see issue <a href=\"https://github.com/opencor/opencor/issues/817\">#817</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.12.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/812\">#812</a>) and <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.23.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/816\">#816</a>)." }
