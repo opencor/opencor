@@ -20,12 +20,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 
 //==============================================================================
 
+#include <QAction>
 #include <QMainWindow>
 
 //==============================================================================
@@ -86,15 +88,45 @@ QString SEDMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 }
 
 //==============================================================================
+// GUI interface
+//==============================================================================
+
+void SEDMLSupportPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+Gui::Menus SEDMLSupportPlugin::guiMenus() const
+{
+    // We don't handle this interface...
+
+    return Gui::Menus();
+}
+
+//==============================================================================
+
+Gui::MenuActions SEDMLSupportPlugin::guiMenuActions() const
+{
+    // Return our menu actions
+
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewSedmlFileAction);
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 
 void SEDMLSupportPlugin::retranslateUi()
 {
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
+    // Retranslate our different actions
+
+    retranslateAction(mFileNewSedmlFileAction, tr("SED-ML File"),
+                      tr("Create a new SED-ML file"));
 }
 
 //==============================================================================
@@ -103,7 +135,14 @@ void SEDMLSupportPlugin::retranslateUi()
 
 void SEDMLSupportPlugin::initializePlugin()
 {
-    // We don't handle this interface...
+    // Create our different actions
+
+    mFileNewSedmlFileAction = new QAction(Core::mainWindow());
+
+    // Some connections to handle our different actions
+
+    connect(mFileNewSedmlFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(newSedmlFile()));
 }
 
 //==============================================================================
@@ -154,6 +193,32 @@ void SEDMLSupportPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void SEDMLSupportPlugin::newSedmlFile()
+{
+    // Create a new SED-ML file by asking our file manager to create one
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+#ifdef QT_DEBUG
+    Core::FileManager::Status createStatus =
+#endif
+    fileManagerInstance->create(QString(),
+                                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                                "<sedML xmlns=\"http://sed-ml.org/sed-ml/level1/version2\" level=\"1\" version=\"2\">\n"
+                                "    <!-- Your code goes here-->\n"
+                                "</sedML>\n");
+
+#ifdef QT_DEBUG
+    // Make sure that the file has indeed been created
+
+    if (createStatus != Core::FileManager::Created)
+        qFatal("FATAL ERROR | %s:%d: the file was not created.", __FILE__, __LINE__);
+#endif
 }
 
 //==============================================================================
