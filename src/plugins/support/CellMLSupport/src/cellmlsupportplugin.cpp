@@ -114,8 +114,7 @@ Gui::MenuActions CellMLSupportPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_0FileAction)
-                              << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_1FileAction);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellmlFileAction);
 }
 
 //==============================================================================
@@ -126,10 +125,8 @@ void CellMLSupportPlugin::retranslateUi()
 {
     // Retranslate our different actions
 
-    retranslateAction(mFileNewCellml1_0FileAction, tr("CellML 1.0 File"),
-                      tr("Create a new CellML 1.0 file"));
-    retranslateAction(mFileNewCellml1_1FileAction, tr("CellML 1.1 File"),
-                      tr("Create a new CellML 1.1 file"));
+    retranslateAction(mFileNewCellmlFileAction, tr("CellML File"),
+                      tr("Create a new CellML file"));
 }
 
 //==============================================================================
@@ -140,15 +137,12 @@ void CellMLSupportPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mFileNewCellml1_0FileAction = new QAction(Core::mainWindow());
-    mFileNewCellml1_1FileAction = new QAction(Core::mainWindow());
+    mFileNewCellmlFileAction = new QAction(Core::mainWindow());
 
     // Some connections to handle our different actions
 
-    connect(mFileNewCellml1_0FileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newCellml1_0File()));
-    connect(mFileNewCellml1_1FileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newCellml1_1File()));
+    connect(mFileNewCellmlFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(newCellmlFile()));
 }
 
 //==============================================================================
@@ -205,38 +199,19 @@ void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void CellMLSupportPlugin::newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion)
+void CellMLSupportPlugin::newCellmlFile()
 {
-    // Determine some version-specific information
-
-    QString version = QString();
-    QString modelName = QString();
-
-    switch (pVersion) {
-    case CellMLSupport::CellmlFile::Cellml_1_1:
-        version = "1.1";
-
-        modelName = "new_cellml_1_1_model";
-
-        break;
-    default:   // CellMLSupport::CellmlFile::Cellml_1_0
-        version = "1.0";
-
-        modelName = "new_cellml_1_0_model";
-    }
-
     // Ask our file manager to create a new file
-
-    static const QString fileContents = "<?xml version=\"1.0\"?>\n"
-                                        "<model xmlns=\"http://www.cellml.org/cellml/%1#\" name=\"%2\">\n"
-                                        "    <!-- Your code goes here-->\n"
-                                        "</model>\n";
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 #ifdef QT_DEBUG
     Core::FileManager::Status createStatus =
 #endif
-    fileManagerInstance->create(QString(), fileContents.arg(version, modelName));
+    fileManagerInstance->create(QString(),
+                                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                                "<model xmlns=\"http://www.cellml.org/cellml/1.0#\" name=\"my_model\">\n"
+                                "    <!-- Your code goes here-->\n"
+                                "</model>\n");
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
@@ -244,24 +219,6 @@ void CellMLSupportPlugin::newCellmlFile(const CellMLSupport::CellmlFile::Version
     if (createStatus != Core::FileManager::Created)
         qFatal("FATAL ERROR | %s:%d: the file was not created.", __FILE__, __LINE__);
 #endif
-}
-
-//==============================================================================
-
-void CellMLSupportPlugin::newCellml1_0File()
-{
-    // Create a new CellML 1.0 file
-
-    newCellmlFile(CellMLSupport::CellmlFile::Cellml_1_0);
-}
-
-//==============================================================================
-
-void CellMLSupportPlugin::newCellml1_1File()
-{
-    // Create a new CellML 1.1 file
-
-    newCellmlFile(CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================
