@@ -1,5 +1,11 @@
 PROJECT(SingleCellViewPlugin)
 
+# Retrieve the CellML, SBML and SED-ML APIs' external binaries
+
+RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
+RETRIEVE_SBML_API_EXTERNAL_BINARIES()
+RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
+
 # Apply LLVM's, Qwt's and zlib's build settings
 
 APPLY_LLVM_BUILD_SETTINGS()

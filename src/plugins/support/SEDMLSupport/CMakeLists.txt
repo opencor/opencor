@@ -1,5 +1,9 @@
 PROJECT(SEDMLSupportPlugin)
 
+# Retrieve the SED-ML API external binaries
+
+RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
+
 # Add the plugin
 
 ADD_PLUGIN(SEDMLSupport
