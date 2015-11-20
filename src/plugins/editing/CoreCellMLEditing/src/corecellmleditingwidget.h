@@ -58,7 +58,7 @@ namespace EditorList {
 
 namespace Viewer {
     class ViewerWidget;
-}   // namespace QScintillaSupport
+}   // namespace Viewer
 
 //==============================================================================
 
