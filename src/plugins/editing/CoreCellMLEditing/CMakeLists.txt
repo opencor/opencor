@@ -1,6 +1,6 @@
 PROJECT(CoreCellMLEditingPlugin)
 
-# Retrieve some CellML API and LLVM settings
+# Retrieve some CellML API, LLVM and Qwt settings
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
