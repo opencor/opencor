@@ -1,10 +1,9 @@
 PROJECT(LLVMPlugin)
 
-MACRO(RETRIEVE_LLVM_SETTINGS)
+MACRO(APPLY_LLVM_BUILD_SETTINGS)
+    # Apply LLVM's build settings
     # Note: check the calls to the add_llvm_definitions() macro in the original
     #       [LLVM]/cmake/modules/HandleLLVMOptions.cmake file...
-
-    # Retrieve some LLVM settings
 
     SET(LLVM_DEFINITIONS
         __STDC_CONSTANT_MACROS
@@ -105,9 +104,9 @@ ELSE()
                        COPYONLY)
     ENDFOREACH()
 
-    # Retrieve some LLVM settings
+    # Apply LLVM's build settings
 
-    RETRIEVE_LLVM_SETTINGS()
+    APPLY_LLVM_BUILD_SETTINGS()
 
     # Ignore some warnings on Windows, as well as allow for big objects
 

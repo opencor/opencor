@@ -1,23 +1,5 @@
 PROJECT(SEDMLAPIPlugin)
 
-MACRO(RETRIEVE_SEDML_API_SETTINGS)
-    # Retrieve some SED-ML API settings
-
-    IF(WIN32)
-        SET(SEDML_API_EXTERNAL_BINARIES
-            libsedml${CMAKE_IMPORT_LIBRARY_SUFFIX}
-        )
-    ELSEIF(APPLE)
-        SET(SEDML_API_EXTERNAL_BINARIES
-            libsedml.0${CMAKE_SHARED_LIBRARY_SUFFIX}
-        )
-    ELSE()
-        SET(SEDML_API_EXTERNAL_BINARIES
-            libsedml${CMAKE_SHARED_LIBRARY_SUFFIX}.0
-        )
-    ENDIF()
-ENDMACRO()
-
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
@@ -58,7 +40,19 @@ ENDIF()
 
 # Retrieve some SED-ML API settings
 
-RETRIEVE_SEDML_API_SETTINGS()
+IF(WIN32)
+    SET(SEDML_API_EXTERNAL_BINARIES
+        libsedml${CMAKE_IMPORT_LIBRARY_SUFFIX}
+    )
+ELSEIF(APPLE)
+    SET(SEDML_API_EXTERNAL_BINARIES
+        libsedml.0${CMAKE_SHARED_LIBRARY_SUFFIX}
+    )
+ELSE()
+    SET(SEDML_API_EXTERNAL_BINARIES
+        libsedml${CMAKE_SHARED_LIBRARY_SUFFIX}.0
+    )
+ENDIF()
 
 # Add the plugin
 

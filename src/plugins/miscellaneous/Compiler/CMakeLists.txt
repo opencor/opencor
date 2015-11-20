@@ -1,8 +1,8 @@
 PROJECT(CompilerPlugin)
 
-# Retrieve some LLVM settings
+# Apply LLVM's build settings
 
-RETRIEVE_LLVM_SETTINGS()
+APPLY_LLVM_BUILD_SETTINGS()
 
 # Add the plugin
 

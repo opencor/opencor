@@ -1,8 +1,8 @@
 PROJECT(COMBINESupportPlugin)
 
-# Retrieve some zlib settings
+# Apply zlib's build settings
 
-RETRIEVE_ZLIB_SETTINGS()
+APPLY_ZLIB_BUILD_SETTINGS()
 
 # Add the plugin
 

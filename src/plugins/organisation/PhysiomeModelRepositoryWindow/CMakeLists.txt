@@ -1,9 +1,9 @@
 PROJECT(PhysiomeModelRepositoryWindowPlugin)
 
-# Retrieve some libgit2 and zlib settings
+# Apply libgit2's and zlib's build settings
 
-RETRIEVE_LIBGIT2_SETTINGS()
-RETRIEVE_ZLIB_SETTINGS()
+APPLY_LIBGIT2_BUILD_SETTINGS()
+APPLY_ZLIB_BUILD_SETTINGS()
 
 # Add the plugin
 

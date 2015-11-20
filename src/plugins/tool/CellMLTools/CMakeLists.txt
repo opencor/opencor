@@ -1,9 +1,8 @@
 PROJECT(CellMLToolsPlugin)
 
-# Retrieve some CellML API and LLVM settings
+# Apply LLVM's build settings
 
-RETRIEVE_CELLML_API_SETTINGS()
-RETRIEVE_LLVM_SETTINGS()
+APPLY_LLVM_BUILD_SETTINGS()
 
 # Add the plugin
 

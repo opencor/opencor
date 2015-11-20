@@ -1,23 +1,5 @@
 PROJECT(SBMLAPIPlugin)
 
-MACRO(RETRIEVE_SBML_API_SETTINGS)
-    # Retrieve some SBML API settings
-
-    IF(WIN32)
-        SET(SBML_API_EXTERNAL_BINARIES
-            libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX}
-        )
-    ELSEIF(APPLE)
-        SET(SBML_API_EXTERNAL_BINARIES
-            libsbml.5${CMAKE_SHARED_LIBRARY_SUFFIX}
-        )
-    ELSE()
-        SET(SBML_API_EXTERNAL_BINARIES
-            libsbml${CMAKE_SHARED_LIBRARY_SUFFIX}.5
-        )
-    ENDIF()
-ENDMACRO()
-
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
@@ -58,7 +40,19 @@ ENDIF()
 
 # Retrieve some SBML API settings
 
-RETRIEVE_SBML_API_SETTINGS()
+IF(WIN32)
+    SET(SBML_API_EXTERNAL_BINARIES
+        libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX}
+    )
+ELSEIF(APPLE)
+    SET(SBML_API_EXTERNAL_BINARIES
+        libsbml.5${CMAKE_SHARED_LIBRARY_SUFFIX}
+    )
+ELSE()
+    SET(SBML_API_EXTERNAL_BINARIES
+        libsbml${CMAKE_SHARED_LIBRARY_SUFFIX}.5
+    )
+ENDIF()
 
 # Add the plugin
 
