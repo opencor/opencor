@@ -19,7 +19,4 @@ ADD_PLUGIN(SampleView
         src
     PLUGINS
         Core
-    QT_MODULES
-        Widgets
-        XmlPatterns
 )

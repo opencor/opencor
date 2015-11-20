@@ -32,5 +32,4 @@ ADD_PLUGIN(HelpWindow
     QT_MODULES
         Help
         PrintSupport
-        WebKitWidgets
 )

@@ -34,6 +34,4 @@ ADD_PLUGIN(PhysiomeModelRepositoryWindow
     PLUGIN_BINARIES
         ${LIBGIT2_PLUGIN_BINARY}
         ${ZLIB_PLUGIN_BINARY}
-    QT_MODULES
-        WebKitWidgets
 )

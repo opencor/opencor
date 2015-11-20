@@ -19,6 +19,4 @@ ADD_PLUGIN(SampleWindow
     PLUGINS
         Core
         Sample
-    QT_MODULES
-        Widgets
 )

@@ -43,8 +43,6 @@ ADD_PLUGIN(CellMLSupport
         StandardSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    QT_MODULES
-        Xml
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
 )

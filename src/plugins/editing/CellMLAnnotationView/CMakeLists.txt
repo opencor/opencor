@@ -52,8 +52,6 @@ ADD_PLUGIN(CellMLAnnotationView
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    QT_MODULES
-        WebKitWidgets
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
 )

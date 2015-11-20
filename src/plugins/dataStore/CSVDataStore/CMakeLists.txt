@@ -16,6 +16,4 @@ ADD_PLUGIN(CSVDataStore
         src
     PLUGINS
         Core
-    QT_MODULES
-        Widgets
 )

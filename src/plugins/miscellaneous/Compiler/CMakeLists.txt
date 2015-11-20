@@ -26,8 +26,6 @@ ADD_PLUGIN(Compiler
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    QT_MODULES
-        Widgets
     TESTS
         tests
 )
