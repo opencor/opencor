@@ -70,14 +70,15 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
-    IF(APPLE)
-        SET(MAC_EXTRAS MacExtras)
+    IF(WIN32)
+        SET(WEBKIT WebKit)
     ELSE()
-        SET(MAC_EXTRAS)
+        SET(WEBKIT)
     ENDIF()
 
     SET(REQUIRED_QT_MODULES
         Network
+        ${WEBKIT}
         Widgets
     )
 
