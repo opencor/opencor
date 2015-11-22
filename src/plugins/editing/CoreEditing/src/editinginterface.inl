@@ -5,6 +5,7 @@
 #endif
 
     virtual Editor::EditorWidget * editor(const QString &pFileName) const PURE;
+
     virtual bool isEditorUseable(const QString &pFileName) const PURE;
     virtual bool isEditorContentsModified(const QString &pFileName) const PURE;
 
