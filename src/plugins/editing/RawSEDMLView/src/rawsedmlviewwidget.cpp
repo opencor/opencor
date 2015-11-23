@@ -323,6 +323,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
     CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
+Q_UNUSED(pOnlyErrors);
 return true;
 //        // Clear the list of SED-ML issues
 
