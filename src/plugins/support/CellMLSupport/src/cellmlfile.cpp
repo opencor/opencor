@@ -112,13 +112,10 @@ void CellmlFile::reset()
 
     mRdfTriples.clear();
 
-    mValid = true;
-
     mIssues.clear();
 
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
-    mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
 
     mImportContents.clear();
@@ -665,38 +662,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::isValid()
-{
-    // Check whether the file has already been validated
-
-    if (!mValidNeeded)
-        return mValid;
-
-    // Load (but not reload!) the file, if needed
-
-    if (load()) {
-        // The file was properly loaded (or was already loaded), so make sure
-        // that its imports, if any, are fully instantiated
-
-        if (fullyInstantiateImports(mModel, mIssues)) {
-            // Now, we can check whether the file is CellML valid
-
-            mValid = doIsValid(mModel, mIssues);
-
-            mValidNeeded = false;
-
-            return mValid;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
+bool CellmlFile::isValid(const QString &pFileContents,
                          CellmlFileIssues &pIssues)
 {
     // Check whether the given file contents is CellML valid, so first create a
@@ -704,7 +670,7 @@ bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
 
     ObjRef<iface::cellml_api::Model> model;
 
-    if (doLoad(pFileName, pFileContents, &model, pIssues)) {
+    if (doLoad(mFileName, pFileContents, &model, pIssues)) {
         // The file contents was properly loaded, so make sure that its imports,
         // if any, are fully instantiated
 
