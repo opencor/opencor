@@ -179,7 +179,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
     Version cellmlVersion = version(pModel);
 
-    if (   mFullInstantiationNeeded
+    if (   ((pModel != mModel) || mFullInstantiationNeeded)
         && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
@@ -269,7 +269,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                 }
             }
 
-            mFullInstantiationNeeded = false;
+            if (pModel == mModel)
+                mFullInstantiationNeeded = false;
         } catch (...) {
             // Something went wrong with the full instantiation of the imports
 
