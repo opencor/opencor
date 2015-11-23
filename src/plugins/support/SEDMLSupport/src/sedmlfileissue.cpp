@@ -16,20 +16,14 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// SED-ML file issue
 //==============================================================================
 
-#include "corecliutils.h"
-#include "filemanager.h"
-#include "sedmlfilemanager.h"
-#include "sedmlsupportplugin.h"
+#include "sedmlfileissue.h"
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/SedDocument.h"
-    #include "sedml/SedReader.h"
-#include "sedmlapienablewarnings.h"
+#include <Qt>
 
 //==============================================================================
 
@@ -38,53 +32,80 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-SedmlFileManager * SedmlFileManager::instance()
+SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage) :
+    mType(pType),
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
 {
-    // Return the 'global' instance of our SED-ML file manager class
-
-    static SedmlFileManager instance;
-
-    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager",
-                                                                &instance));
 }
 
 //==============================================================================
 
-bool SedmlFileManager::isSedmlFile(const QString &pFileName) const
+bool SedmlFileIssue::operator<(const SedmlFileIssue &pIssue) const
 {
-    // Return whether the given file is a SED-ML file
+    // Return whether the current issue is lower than the given one
 
-    return instance()->isFile(pFileName);
+    return (mLine < pIssue.line())?
+               true:
+               (mLine > pIssue.line())?
+                   false:
+                   (mColumn < pIssue.column())?
+                       true:
+                       (mColumn > pIssue.column())?
+                           false:
+                            (mType < pIssue.type())?
+                                true:
+                                (mType > pIssue.type())?
+                                    false:
+                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
 
-SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
+SedmlFileIssue::Type SedmlFileIssue::type() const
 {
-    // Return the SedmlFile object, if any, associated with the given file
+    // Return the issue's type
 
-    return static_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
+    return mType;
 }
 
 //==============================================================================
 
-bool SedmlFileManager::canLoadFile(const QString &pFileName) const
+int SedmlFileIssue::line() const
 {
-    // Try to load the SED-ML file
+    // Return the issue's line
 
-    QByteArray fileNameByteArray = pFileName.toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
-
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    return mLine;
 }
 
 //==============================================================================
 
-QObject * SedmlFileManager::newFile(const QString &pFileName) const
+int SedmlFileIssue::column() const
 {
-    // Create and return a new SED-ML file
+    // Return the issue's column
 
-    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
+    return mColumn;
+}
+
+//==============================================================================
+
+QString SedmlFileIssue::message() const
+{
+    // Return the issue's message
+
+    return mMessage;
+}
+
+//==============================================================================
+
+QString SedmlFileIssue::formattedMessage() const
+{
+    // Return the issue's message fully formatted (i.e. the beginning of the
+    // message is capitalised and its end consists of a full stop)
+
+    return mMessage[0].toUpper()+mMessage.right(mMessage.size()-1)+".";
 }
 
 //==============================================================================

@@ -16,20 +16,20 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// SED-ML file issue
 //==============================================================================
 
-#include "corecliutils.h"
-#include "filemanager.h"
-#include "sedmlfilemanager.h"
-#include "sedmlsupportplugin.h"
+#ifndef SEDMLFILEISSUE_H
+#define SEDMLFILEISSUE_H
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/SedDocument.h"
-    #include "sedml/SedReader.h"
-#include "sedmlapienablewarnings.h"
+#include "sedmlsupportglobal.h"
+
+//==============================================================================
+
+#include <QList>
+#include <QString>
 
 //==============================================================================
 
@@ -38,59 +38,46 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-SedmlFileManager * SedmlFileManager::instance()
+class SEDMLSUPPORT_EXPORT SedmlFileIssue
 {
-    // Return the 'global' instance of our SED-ML file manager class
+public:
+    enum Type {
+        Information,
+        Error,
+        Warning,
+        Fatal
+    };
 
-    static SedmlFileManager instance;
+    explicit SedmlFileIssue(const Type &pType, const int &pLine,
+                            const int &pColumn, const QString &pMessage);
 
-    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager",
-                                                                &instance));
-}
+    bool operator<(const SedmlFileIssue &pIssue) const;
+
+    Type type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
+    QString formattedMessage() const;
+
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
+};
 
 //==============================================================================
 
-bool SedmlFileManager::isSedmlFile(const QString &pFileName) const
-{
-    // Return whether the given file is a SED-ML file
-
-    return instance()->isFile(pFileName);
-}
-
-//==============================================================================
-
-SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
-{
-    // Return the SedmlFile object, if any, associated with the given file
-
-    return static_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
-}
-
-//==============================================================================
-
-bool SedmlFileManager::canLoadFile(const QString &pFileName) const
-{
-    // Try to load the SED-ML file
-
-    QByteArray fileNameByteArray = pFileName.toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
-
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
-}
-
-//==============================================================================
-
-QObject * SedmlFileManager::newFile(const QString &pFileName) const
-{
-    // Create and return a new SED-ML file
-
-    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
-}
+typedef QList<SedmlFileIssue> SedmlFileIssues;
 
 //==============================================================================
 
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sedmlfileissue.h"
 #include "sedmlsupportglobal.h"
 #include "standardfile.h"
 
@@ -58,6 +59,8 @@ public:
 
     virtual bool load();
     virtual bool save(const QString &pNewFileName = QString());
+
+    bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
 };
 
 //==============================================================================

@@ -24,6 +24,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedReader.h"
+#include "sedmlapienablewarnings.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SEDMLSupport {
 
@@ -47,10 +54,57 @@ bool SedmlFile::load()
 
 bool SedmlFile::save(const QString &pNewFileName)
 {
-Q_UNUSED(pNewFileName);
+    Q_UNUSED(pNewFileName);
+
     // Consider the file saved
 
     return true;
+}
+
+//==============================================================================
+
+bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
+{
+    // Check whether the given file contents is SED-ML valid and, if not,
+    // populate pIssues with the problems found (after having emptied its
+    // contents)
+
+    pIssues.clear();
+
+    QByteArray fileContentsByteArray = pFileContents.toUtf8();
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedMLFromString(fileContentsByteArray.constData());
+    libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
+
+    for (unsigned int i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
+        const libsedml::SedError *error = errorLog->getError(i);
+        SedmlFileIssue::Type issueType;
+
+        switch (error->getSeverity()) {
+        case LIBSBML_SEV_INFO:
+            issueType = SedmlFileIssue::Information;
+
+            break;
+        case LIBSBML_SEV_ERROR:
+            issueType = SedmlFileIssue::Error;
+
+            break;
+        case LIBSBML_SEV_WARNING:
+            issueType = SedmlFileIssue::Warning;
+
+            break;
+        default:
+            // LIBSBML_SEV_FATAL
+
+            issueType = SedmlFileIssue::Fatal;
+        }
+
+        pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(),
+                                  QString::fromStdString(error->getMessage()));
+    }
+
+    // Only consider the given file contents SED-ML valid if it has no errors
+
+    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }
 
 //==============================================================================
