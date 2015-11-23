@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "mathmlconverter.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -89,21 +88,6 @@ private:
 
     CoreSEDMLEditing::CoreSedmlEditingWidget *mEditingWidget;
     QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *> mEditingWidgets;
-
-    QMap<QString, QString> mPresentationMathmlEquations;
-
-    Core::MathmlConverter mMathmlConverter;
-
-    QString mContentMathmlEquation;
-
-    QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
-                                          const int &pPosition) const;
-
-private Q_SLOTS:
-    void updateViewer();
-
-    void mathmlConversionDone(const QString &pContentMathml,
-                              const QString &pPresentationMathml);
 };
 
 //==============================================================================

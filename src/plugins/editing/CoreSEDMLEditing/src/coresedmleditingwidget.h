@@ -56,12 +56,6 @@ namespace EditorList {
 
 //==============================================================================
 
-namespace Viewer {
-    class ViewerWidget;
-}   // namespace Viewer
-
-//==============================================================================
-
 namespace CoreSEDMLEditing {
 
 //==============================================================================
@@ -83,14 +77,12 @@ public:
 
     void updateSettings(CoreSedmlEditingWidget *pCoreSedmlEditingWidget);
 
-    Viewer::ViewerWidget * viewer() const;
     Editor::EditorWidget * editor() const;
     EditorList::EditorListWidget * editorList() const;
 
     QIntList editingWidgetSizes() const;
 
 private:
-    Viewer::ViewerWidget *mViewer;
     Editor::EditorWidget *mEditor;
     EditorList::EditorListWidget *mEditorList;
 

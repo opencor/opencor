@@ -26,7 +26,6 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -58,18 +57,16 @@ CoreSedmlEditingWidget::CoreSedmlEditingWidget(const QString &pContents,
     connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
 
-    // Create our viewer, editor and editor list
+    // Create our editor and editor list
 
-    mViewer = new Viewer::ViewerWidget(this);
     mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorList = new EditorList::EditorListWidget(this);
 
     connect(mEditorList, SIGNAL(itemRequested(EditorList::EditorListItem *)),
             this, SLOT(itemRequested(EditorList::EditorListItem *)));
 
-    // Add the bordered viewer, editor and editor list to ourselves
+    // Add the bordered editor and editor list to ourselves
 
-    addWidget(new Core::BorderedWidget(mViewer, false, false, true, false));
     addWidget(new Core::BorderedWidget(mEditor, true, false, true, false));
     addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
 
@@ -87,25 +84,23 @@ static const auto SettingsCoreSedmlEditingWidgetSizes = QStringLiteral("EditingW
 void CoreSedmlEditingWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set our sizes
-    // Note #1: the viewer's and editor list's default height is 19% and 13%,
-    //          respectively, of the desktop's height while that of the editor
+    // Note #1: the editor list's default height is 13% of the desktop's height
+    //          while that of the editor
     //          is as big as it can be...
     // Note #2: because the editor's default height is much bigger than that of
-    //          our widget, the viewer's and editor list's default height will
-    //          effectively be less than 19% and 13%, respectively, of the
-    //          desktop's height, but that doesn't matter at all...
+    //          our widget, the editor list's default height will effectively be
+    //          less than 13% of the desktop's height, but that doesn't matter
+    //          at all...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                            << qApp->desktop()->screenGeometry().height()
+    QVariantList defaultEditingWidgetSizes = QVariantList() << qApp->desktop()->screenGeometry().height()
                                                             << 0.13*qApp->desktop()->screenGeometry().height();
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCoreSedmlEditingWidgetSizes, defaultEditingWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 
-    // Retrieve our viewer's and editor's settings
+    // Retrieve our editor's settings
 
-    mViewer->loadSettings(pSettings);
     mEditor->loadSettings(pSettings);
 }
 
@@ -117,9 +112,8 @@ void CoreSedmlEditingWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsCoreSedmlEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
-    // Keep track of our viewer's and editor's settings
+    // Keep track of our editor's settings
 
-    mViewer->saveSettings(pSettings);
     mEditor->saveSettings(pSettings);
 }
 
@@ -127,9 +121,8 @@ void CoreSedmlEditingWidget::saveSettings(QSettings *pSettings) const
 
 void CoreSedmlEditingWidget::retranslateUi()
 {
-    // Retranslate our viewer, editor and editor list
+    // Retranslate our editor and editor list
 
-    mViewer->retranslateUi();
     mEditor->retranslateUi();
     mEditorList->retranslateUi();
 }
@@ -143,23 +136,13 @@ void CoreSedmlEditingWidget::updateSettings(CoreSedmlEditingWidget *pCoreSedmlEd
     if (!pCoreSedmlEditingWidget || (pCoreSedmlEditingWidget == this))
         return;
 
-    // Update our sizes, viewer settings and editor settings
+    // Update our sizes and editor settings
 
     mEditingWidgetSizes = pCoreSedmlEditingWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mViewer->updateSettings(pCoreSedmlEditingWidget->viewer());
     mEditor->updateSettings(pCoreSedmlEditingWidget->editor());
-}
-
-//==============================================================================
-
-Viewer::ViewerWidget * CoreSedmlEditingWidget::viewer() const
-{
-    // Return our viewer
-
-    return mViewer;
 }
 
 //==============================================================================

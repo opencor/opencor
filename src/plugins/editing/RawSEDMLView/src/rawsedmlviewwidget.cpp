@@ -26,7 +26,6 @@ specific language governing permissions and limitations under the License.
 #include "filemanager.h"
 #include "rawsedmlviewwidget.h"
 #include "sedmlfilemanager.h"
-#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -53,9 +52,7 @@ RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
-    mEditingWidgets(QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *>()),
-    mPresentationMathmlEquations(QMap<QString, QString>()),
-    mContentMathmlEquation(QString())
+    mEditingWidgets(QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *>())
 {
     // Create and set our vertical layout
 
@@ -65,12 +62,6 @@ RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
     layout->setSpacing(0);
 
     setLayout(layout);
-
-    // Create our MathML converter and create a connection to retrieve the
-    // result of its MathML conversions
-
-    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -134,13 +125,6 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
 
-        // Update our viewer whenever necessary
-
-        connect(newEditingWidget->editor(), SIGNAL(textChanged()),
-                this, SLOT(updateViewer()));
-        connect(newEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
-                this, SLOT(updateViewer()));
-
         // Keep track of our editing widget and add it to ourselves
 
         mEditingWidgets.insert(pFileName, newEditingWidget);
@@ -169,10 +153,6 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
         } else {
             newEditingWidget->updateSettings(oldEditingWidget);
         }
-
-        // Update our viewer
-
-        updateViewer();
 
         // Show/hide our editing widgets
 
@@ -361,222 +341,6 @@ return true;
 
         return false;
     }
-}
-
-//==============================================================================
-
-QString RawSedmlViewWidget::retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
-                                                          const int &pPosition) const
-{
-    // Retrieve a DOM representation of the given Content MathML block
-
-    QDomDocument domDocument;
-
-    if (domDocument.setContent(pContentMathmlBlock, true)) {
-        // Look for the child node within which our position is located, if any
-
-        QDomElement domElement = domDocument.documentElement();
-        QDomElement foundChildElement = QDomElement();
-
-        for (QDomElement childElement = domElement.firstChildElement();
-             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-            // Retrieve the start position of the current child node
-            // Note: it needs to be corrected since the line and column numbers
-            //       we are getting for the current child node correspond to the
-            //       position of ">" in, say, "<apply ...>", while we need the
-            //       position of "<"...
-
-            int childNodeStartPosition;
-
-            Core::stringLineColumnAsPosition(pContentMathmlBlock,
-                                             mEditingWidget->editor()->eolString(),
-                                             childElement.lineNumber(),
-                                             childElement.columnNumber(),
-                                             childNodeStartPosition);
-
-            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.localName(), childNodeStartPosition);
-
-            // Retrieve the end position of the current child node
-
-            int childNodeEndPosition = -1;
-
-            if (childElement != domElement.lastChildElement()) {
-                // We are not dealing with the last child node, so update the
-                // position from which we are to look for the closing tag, which
-                // here must be the start position of the next child node and
-                // not the end of the given Content MathML block
-
-                QDomElement nextChildElement = childElement.nextSiblingElement();
-
-                Core::stringLineColumnAsPosition(pContentMathmlBlock,
-                                                 mEditingWidget->editor()->eolString(),
-                                                 nextChildElement.lineNumber(),
-                                                 nextChildElement.columnNumber(),
-                                                 childNodeEndPosition);
-            }
-
-            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.localName()+">", childNodeEndPosition)+2+childElement.localName().length();
-
-            // Check whether our position is within the start and end positions
-            // of the current child node
-
-            if ((pPosition >= childNodeStartPosition) && (pPosition <= childNodeEndPosition)) {
-                foundChildElement = childElement;
-
-                break;
-            }
-        }
-
-        // Check whether our position is within a child node
-
-        if (!foundChildElement.isNull()) {
-            // We are within a childe node, so remove all the other child nodes
-            // and return the string representation of the resulting DOM
-            // document
-
-            for (QDomElement childElement = domElement.firstChildElement();
-                 childElement != foundChildElement;
-                 childElement = domElement.firstChildElement()) {
-                domElement.removeChild(childElement);
-            }
-
-            for (QDomElement childElement = domElement.lastChildElement();
-                 childElement != foundChildElement;
-                 childElement = domElement.lastChildElement()) {
-                domElement.removeChild(childElement);
-            }
-
-            return domDocument.toString(-1);
-        } else {
-            // We are not within a child node
-
-            return QString();
-        }
-    } else {
-        // No DOM representation of the given Content MathML block could be
-        // retrieved
-
-        return QString();
-    }
-}
-
-//==============================================================================
-
-void RawSedmlViewWidget::updateViewer()
-{
-    // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
-
-    if (!mEditingWidget)
-        return;
-
-    // Retrieve the Content MathML block around our current position, if any
-
-    static const QString StartMathTag = "<math ";
-    static const QString EndMathTag = "</math>";
-
-    Editor::EditorWidget *editor = mEditingWidget->editor();
-    int crtPosition = editor->currentPosition();
-
-    int crtStartMathTagPos = editor->findTextInRange(crtPosition+StartMathTag.length(), 0, StartMathTag, false, true, false);
-    int prevEndMathTagPos = editor->findTextInRange(crtPosition, 0, EndMathTag, false, true, false);
-    int crtEndMathTagPos = editor->findTextInRange(crtPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag, false, true, false);
-
-    bool foundMathmlBlock = true;
-
-    if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
-        && (crtStartMathTagPos <= crtPosition)
-        && (crtPosition <= crtEndMathTagPos+EndMathTag.length()-1)) {
-        if (   (prevEndMathTagPos >= 0)
-            && (prevEndMathTagPos > crtStartMathTagPos)
-            && (prevEndMathTagPos < crtPosition)) {
-            foundMathmlBlock = false;
-        }
-    } else {
-        foundMathmlBlock = false;
-    }
-
-    if (foundMathmlBlock) {
-        // Retrieve the Content MathML block
-
-        QString contentMathmlBlock = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
-
-        // Make sure that we have a valid Content MathML block
-        // Note: indeed, our Content MathML block may not be valid, in which
-        //       case cleaning it up will result in an empty string...
-
-        if (Core::cleanContentMathml(contentMathmlBlock).isEmpty()) {
-            mContentMathmlEquation = QString();
-
-            mEditingWidget->viewer()->setError(true);
-        } else {
-            // A Content MathML block contains 0+ child nodes, so extract and
-            // clean up the one, if any, at our current position
-
-            QString contentMathmlEquation = Core::cleanContentMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
-
-            // Check whether we have got a Content MathML equation
-
-            if (!contentMathmlEquation.isEmpty()) {
-                // Now, check whether our Content MathML equation is the same as
-                // our previous one
-
-                if (contentMathmlEquation.compare(mContentMathmlEquation)) {
-                    // It's a different one, so check whether we have already
-                    // retrieved its Presentation MathML version
-
-                    mContentMathmlEquation = contentMathmlEquation;
-
-                    QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
-
-                    if (!presentationMathmlEquation.isEmpty())
-                        mEditingWidget->viewer()->setContents(presentationMathmlEquation);
-                    else
-                        mMathmlConverter.convert(contentMathmlEquation);
-                }
-            } else {
-                // Our current position is not within a Content MathML equation
-
-                mContentMathmlEquation = QString();
-
-                mEditingWidget->viewer()->setContents(QString());
-            }
-        }
-    } else {
-        // We couldn't find any Content MathML block
-
-        mContentMathmlEquation = QString();
-
-        mEditingWidget->viewer()->setContents(QString());
-    }
-}
-
-//==============================================================================
-
-void RawSedmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
-                                              const QString &pPresentationMathml)
-{
-    // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
-
-    if (!mEditingWidget)
-        return;
-
-    // The XSL transformation is done, so update our viewer and keep track of
-    // the mapping between the Content and Presentation MathML
-    // Note: before setting the contents of our viewer, we need to make sure
-    //       that pInput is still our current Content MathML equation. Indeed,
-    //       say that updateViewer() gets called many times in a short period of
-    //       time (e.g. as a result of replacing all the occurences of a
-    //       particular string with another one) and that some of those calls
-    //       don't require an XSL transformation, then we may end up in a case
-    //       where pInput is not our current Content MathML equation anymore, in
-    //       which case the contents of our viewer shouldn't be updated...
-
-    if (!pContentMathml.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(pPresentationMathml);
-
-    mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }
 
 //==============================================================================
