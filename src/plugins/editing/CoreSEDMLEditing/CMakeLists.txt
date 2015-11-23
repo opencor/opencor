@@ -1,7 +1,8 @@
 PROJECT(CoreSEDMLEditingPlugin)
 
-# Retrieve the SED-ML API external binaries
+# Retrieve the SBML and SED-ML APIs' external binaries
 
+RETRIEVE_SBML_API_EXTERNAL_BINARIES()
 RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
 
 # Add the plugin
@@ -31,10 +32,12 @@ ADD_PLUGIN(CoreSEDMLEditing
         EditorList
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
+        SBMLAPI
         SEDMLAPI
         SEDMLSupport
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
     EXTERNAL_BINARIES
+        ${SBML_API_EXTERNAL_BINARIES}
         ${SEDML_API_EXTERNAL_BINARIES}
 )
