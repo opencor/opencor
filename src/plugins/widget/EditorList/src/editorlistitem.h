@@ -45,7 +45,8 @@ public:
         Error       = QStandardItem::UserType,
         Warning     = QStandardItem::UserType+1,
         Hint        = QStandardItem::UserType+2,
-        Information = QStandardItem::UserType+3
+        Information = QStandardItem::UserType+3,
+        Fatal       = QStandardItem::UserType+4
     };
 
     explicit EditorListItem(const Type &pType, const int &pLine,

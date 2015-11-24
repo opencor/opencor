@@ -100,16 +100,6 @@ QString SedmlFileIssue::message() const
 
 //==============================================================================
 
-QString SedmlFileIssue::formattedMessage() const
-{
-    // Return the issue's message fully formatted (i.e. the beginning of the
-    // message is capitalised and its end consists of a full stop)
-
-    return mMessage[0].toUpper()+mMessage.right(mMessage.size()-1)+".";
-}
-
-//==============================================================================
-
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
 

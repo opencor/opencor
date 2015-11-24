@@ -25,7 +25,9 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawsedmlviewwidget.h"
+#include "sedmlfile.h"
 #include "sedmlfilemanager.h"
+#include "sedmlfileissue.h"
 
 //==============================================================================
 
@@ -303,39 +305,54 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
     CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
-Q_UNUSED(pOnlyErrors);
-return true;
-//        // Clear the list of SED-ML issues
+        // Clear the list of SED-ML issues
 
-//        EditorList::EditorListWidget *editorList = editingWidget->editorList();
+        EditorList::EditorListWidget *editorList = editingWidget->editorList();
 
-//        editorList->clear();
+        editorList->clear();
 
-//        // Retrieve the list of SED-ML issues, if any
+        // Retrieve the list of SED-ML issues, if any
 
-//        SEDMLSupport::SedmlFile *sedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
-//        SEDMLSupport::SedmlFileIssues sedmlFileIssues;
+        SEDMLSupport::SedmlFile *sedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
+        SEDMLSupport::SedmlFileIssues sedmlFileIssues;
 
-//        bool res = sedmlFile->isValid(pFileName, editingWidget->editor()->contents(), sedmlFileIssues);
+        bool res = sedmlFile->isValid(editingWidget->editor()->contents(), sedmlFileIssues);
 
-//        // Add whatever issue there may be to our list and select the first one
-//        // of them
+        // Add whatever issue there may be to our list and select the first one
+        // of them
 
-//        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
-//            if (   !pOnlyErrors
-//                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
-//                editorList->addItem((sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)?
-//                                        EditorList::EditorListItem::Error:
-//                                        EditorList::EditorListItem::Warning,
-//                                    sedmlFileIssue.line(),
-//                                    sedmlFileIssue.column(),
-//                                    qPrintable(sedmlFileIssue.formattedMessage()));
-//            }
-//        }
+        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
+            if (   !pOnlyErrors
+                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
+                EditorList::EditorListItem::Type issueType;
 
-//        editorList->selectFirstItem();
+                switch (sedmlFileIssue.type()) {
+                case SEDMLSupport::SedmlFileIssue::Information:
+                    issueType = EditorList::EditorListItem::Information;
 
-//        return res;
+                    break;
+                    case SEDMLSupport::SedmlFileIssue::Error:
+                    issueType = EditorList::EditorListItem::Error;
+
+                    break;
+                    case SEDMLSupport::SedmlFileIssue::Warning:
+                    issueType = EditorList::EditorListItem::Warning;
+
+                    break;
+                    case SEDMLSupport::SedmlFileIssue::Fatal:
+                    issueType = EditorList::EditorListItem::Fatal;
+
+                    break;
+                }
+
+                editorList->addItem(issueType, sedmlFileIssue.line(), sedmlFileIssue.column(),
+                                    qPrintable(sedmlFileIssue.message()));
+            }
+        }
+
+        editorList->selectFirstItem();
+
+        return res;
     } else {
         // The file doesn't exist, so it can't be validated
 

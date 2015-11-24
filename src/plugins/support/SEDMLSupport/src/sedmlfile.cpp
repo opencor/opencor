@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QRegularExpression>
+
+//==============================================================================
+
 #include "sedmlapidisablewarnings.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedReader.h"
@@ -92,14 +96,17 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
             issueType = SedmlFileIssue::Warning;
 
             break;
-        default:
-            // LIBSBML_SEV_FATAL
-
+        case LIBSBML_SEV_FATAL:
             issueType = SedmlFileIssue::Fatal;
+
+            break;
         }
 
-        pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(),
-                                  QString::fromStdString(error->getMessage()));
+        static const QRegularExpression TrailingEmptyLinesRegEx = QRegularExpression("[\\n]*$");
+
+        QString errorMessage = QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx);
+
+        pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
     }
 
     // Only consider the given file contents SED-ML valid if it has no errors

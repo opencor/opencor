@@ -57,7 +57,6 @@ public:
     int line() const;
     int column() const;
     QString message() const;
-    QString formattedMessage() const;
 
 private:
     Type mType;
