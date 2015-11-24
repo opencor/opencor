@@ -34,6 +34,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace libsedml {
+    class SedDocument;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SEDMLSupport {
 
@@ -55,12 +61,20 @@ class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
     Q_OBJECT
 
 public:
-    explicit SedmlFile(const QString &pFileName);
+    explicit SedmlFile(const QString &pFileName, const bool &pNew = false);
+    ~SedmlFile();
+
+    libsedml::SedDocument * sedmlDocument() const;
 
     virtual bool load();
     virtual bool save(const QString &pNewFileName = QString());
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
+
+private:
+    libsedml::SedDocument *mSedmlDocument;
+
+    virtual void reset();
 };
 
 //==============================================================================

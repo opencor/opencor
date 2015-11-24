@@ -151,7 +151,7 @@ private:
 
     QStringList mUsedCmetaIds;
 
-    void reset();
+    virtual void reset();
 
     void retrieveImports(const QString &pXmlBase,
                          iface::cellml_api::Model *pModel,

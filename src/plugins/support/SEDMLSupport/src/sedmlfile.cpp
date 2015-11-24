@@ -41,9 +41,43 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-SedmlFile::SedmlFile(const QString &pFileName) :
-    StandardSupport::StandardFile(pFileName)
+SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
+    StandardSupport::StandardFile(pFileName),
+    mSedmlDocument(0)
 {
+    // Create a new SED-ML document, if this is what we want
+
+    if (pNew)
+        mSedmlDocument = new libsedml::SedDocument();
+}
+
+//==============================================================================
+
+SedmlFile::~SedmlFile()
+{
+    // Delete some internal objects
+
+    reset();
+}
+
+//==============================================================================
+
+void SedmlFile::reset()
+{
+    // Reset all of the file's properties
+
+    delete mSedmlDocument;
+
+    mSedmlDocument = 0;
+}
+
+//==============================================================================
+
+libsedml::SedDocument * SedmlFile::sedmlDocument() const
+{
+    // Return the SED-ML document associated with our SED-ML file
+
+    return mSedmlDocument;
 }
 
 //==============================================================================
