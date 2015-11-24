@@ -1707,9 +1707,14 @@ void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
         }
     }
 
-    // Our SED-ML document is ready, so write it to our SED-ML file
+    // Our SED-ML document is ready, so write it to our SED-ML file, after
+    // having reformatted it
 
-    Core::writeTextToFile(pFileName, writeSedMLToString(sedmlDocument));
+    QDomDocument domDocument;
+
+    domDocument.setContent(QString(libsedml::writeSedMLToString(sedmlDocument)));
+
+    Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
 
     delete sedmlDocument;
 }
