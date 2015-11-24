@@ -16,45 +16,68 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// RawSEDMLView plugin
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
+#ifndef RAWSEDMLVIEWPLUGIN_H
+#define RAWSEDMLVIEWPLUGIN_H
 
 //==============================================================================
 
-#include "sedmlfile.h"
-#include "sedmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "editinginterface.h"
+#include "filehandlinginterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
+#include "sedmleditinginterface.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SEDMLSupport {
+namespace RawSEDMLView {
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
+PLUGININFO_FUNC RawSEDMLViewPluginInfo();
+
+//==============================================================================
+
+class RawSedmlViewWidget;
+
+//==============================================================================
+
+class RawSEDMLViewPlugin : public QObject, public SedmlEditingInterface,
+                           public EditingInterface,
+                           public FileHandlingInterface, public I18nInterface,
+                           public PluginInterface, public ViewInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.RawSEDMLViewPlugin" FILE "rawsedmlviewplugin.json")
+
+    Q_INTERFACES(OpenCOR::SedmlEditingInterface)
+    Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::ViewInterface)
+
 public:
-    static SedmlFileManager * instance();
+#include "editinginterface.inl"
+#include "filehandlinginterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "sedmleditinginterface.inl"
+#include "viewinterface.inl"
 
-    bool isSedmlFile(const QString &pFileName) const;
-
-    SedmlFile * sedmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
+private:
+    RawSedmlViewWidget *mViewWidget;
 };
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
+}   // namespace RawSEDMLView
 }   // namespace OpenCOR
 
 //==============================================================================

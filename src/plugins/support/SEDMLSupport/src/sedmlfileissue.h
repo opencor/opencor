@@ -16,17 +16,20 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// SED-ML file issue
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
+#ifndef SEDMLFILEISSUE_H
+#define SEDMLFILEISSUE_H
 
 //==============================================================================
 
-#include "sedmlfile.h"
 #include "sedmlsupportglobal.h"
-#include "standardfilemanager.h"
+
+//==============================================================================
+
+#include <QList>
+#include <QString>
 
 //==============================================================================
 
@@ -35,22 +38,36 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
+class SEDMLSUPPORT_EXPORT SedmlFileIssue
 {
-    Q_OBJECT
-
 public:
-    static SedmlFileManager * instance();
+    enum Type {
+        Information,
+        Error,
+        Warning,
+        Fatal
+    };
 
-    bool isSedmlFile(const QString &pFileName) const;
+    explicit SedmlFileIssue(const Type &pType, const int &pLine,
+                            const int &pColumn, const QString &pMessage);
 
-    SedmlFile * sedmlFile(const QString &pFileName);
+    bool operator<(const SedmlFileIssue &pIssue) const;
 
-protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
+    Type type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
 
-    virtual QObject * newFile(const QString &pFileName) const;
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
 };
+
+//==============================================================================
+
+typedef QList<SedmlFileIssue> SedmlFileIssues;
 
 //==============================================================================
 

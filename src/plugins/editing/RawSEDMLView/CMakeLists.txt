@@ -1,4 +1,4 @@
-PROJECT(SEDMLSupportPlugin)
+PROJECT(RawSEDMLViewPlugin)
 
 # Retrieve the SBML and SED-ML APIs' external binaries
 
@@ -7,28 +7,32 @@ RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
 
 # Add the plugin
 
-ADD_PLUGIN(SEDMLSupport
+ADD_PLUGIN(RawSEDMLView
     SOURCES
-        ../../filetypeinterface.cpp
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../viewinterface.cpp
 
-        src/sedmlfile.cpp
-        src/sedmlfileissue.cpp
-        src/sedmlfilemanager.cpp
-        src/sedmlsupportplugin.cpp
+        src/rawsedmlviewplugin.cpp
+        src/rawsedmlviewwidget.cpp
     HEADERS_MOC
-        src/sedmlfile.h
-        src/sedmlfilemanager.h
-        src/sedmlsupportplugin.h
+        src/rawsedmlviewplugin.h
+        src/rawsedmlviewwidget.h
     INCLUDE_DIRS
         src
     PLUGINS
         Core
+        CoreEditing
+        CoreSEDMLEditing
+        Editor
+        EditorList
+        ${QSCINTILLA_PLUGIN}
+        QScintillaSupport
         SBMLAPI
         SEDMLAPI
-        StandardSupport
+        SEDMLSupport
+    PLUGIN_BINARIES
+        ${QSCINTILLA_PLUGIN_BINARY}
     EXTERNAL_BINARIES
         ${SBML_API_EXTERNAL_BINARIES}
         ${SEDML_API_EXTERNAL_BINARIES}

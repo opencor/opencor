@@ -58,7 +58,7 @@ protected:
     explicit StandardFileManager();
     ~StandardFileManager();
 
-    virtual bool canLoadFileContents(const QString &pFileContents) const = 0;
+    virtual bool canLoadFile(const QString &pFileName) const = 0;
 
     virtual QObject * newFile(const QString &pFileName) const = 0;
 

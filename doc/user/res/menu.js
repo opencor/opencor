@@ -18,6 +18,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 2, "label": "CellMLAnnotationView", "link": "user/plugins/editing/CellMLAnnotationView.html", "subMenuItem": true },
                                 { "level": 2, "label": "CellMLTextView", "link": "user/plugins/editing/CellMLTextView.html", "subMenuItem": true },
                                 { "level": 2, "label": "RawCellMLView", "link": "user/plugins/editing/RawCellMLView.html", "subMenuItem": true },
+                                { "level": 2, "label": "RawSEDMLView", "link": "user/plugins/editing/RawSEDMLView.html", "subMenuItem": true },
                                 { "level": 2, "label": "RawView", "link": "user/plugins/editing/RawView.html", "subMenuItem": true },
                                 { "level": 1, "label": "Miscellaneous", "subMenuHeader": true },
                                 { "level": 2, "label": "HelpWindow", "link": "user/plugins/miscellaneous/HelpWindow.html", "subMenuItem": true },

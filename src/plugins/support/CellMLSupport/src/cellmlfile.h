@@ -77,9 +77,7 @@ public:
     virtual bool load();
     virtual bool save(const QString &pNewFileName = QString());
 
-    bool isValid();
-    bool isValid(const QString &pFileName, const QString &pFileContents,
-                 CellmlFileIssues &pIssues);
+    bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues);
 
     bool isModified() const;
     void setModified(const bool &pModified) const;
@@ -141,15 +139,12 @@ private:
 
     CellmlFileRdfTriples mRdfTriples;
 
-    bool mValid;
-
     CellmlFileIssues mIssues;
 
     CellmlFileRuntime *mRuntime;
 
     bool mLoadingNeeded;
     bool mFullInstantiationNeeded;
-    bool mValidNeeded;
     bool mRuntimeUpdateNeeded;
 
     QMap<QString, QString> mImportContents;

@@ -16,85 +16,91 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML file issue
 //==============================================================================
 
-#include "cellmlfilemanager.h"
-#include "corecliutils.h"
-#include "filemanager.h"
+#include "sedmlfileissue.h"
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
-    #include "CellMLBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
+#include <Qt>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-CellmlFileManager * CellmlFileManager::instance()
+SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage) :
+    mType(pType),
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
 {
-    // Return the 'global' instance of our CellML file manager class
-
-    static CellmlFileManager instance;
-
-    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager",
-                                                                 &instance));
 }
 
 //==============================================================================
 
-bool CellmlFileManager::isCellmlFile(const QString &pFileName) const
+bool SedmlFileIssue::operator<(const SedmlFileIssue &pIssue) const
 {
-    // Return whether the given file is a CellML file
+    // Return whether the current issue is lower than the given one
 
-    return instance()->isFile(pFileName);
+    return (mLine < pIssue.line())?
+               true:
+               (mLine > pIssue.line())?
+                   false:
+                   (mColumn < pIssue.column())?
+                       true:
+                       (mColumn > pIssue.column())?
+                           false:
+                            (mType < pIssue.type())?
+                                true:
+                                (mType > pIssue.type())?
+                                    false:
+                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
 
-CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
+SedmlFileIssue::Type SedmlFileIssue::type() const
 {
-    // Return the CellmlFile object, if any, associated with the given file
+    // Return the issue's type
 
-    return static_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
+    return mType;
 }
 
 //==============================================================================
 
-bool CellmlFileManager::canLoadFile(const QString &pFileName) const
+int SedmlFileIssue::line() const
 {
-    // Try to load the CellML file
+    // Return the issue's line
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-    ObjRef<iface::cellml_api::Model> model;
-
-    try {
-        model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
-
-        return true;
-    } catch (iface::cellml_api::CellMLException &) {
-        return false;
-    }
+    return mLine;
 }
 
 //==============================================================================
 
-QObject * CellmlFileManager::newFile(const QString &pFileName) const
+int SedmlFileIssue::column() const
 {
-    // Create and return a new CellML file
+    // Return the issue's column
 
-    return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
+    return mColumn;
 }
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+QString SedmlFileIssue::message() const
+{
+    // Return the issue's message
+
+    return mMessage;
+}
+
+//==============================================================================
+
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

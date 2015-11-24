@@ -44,7 +44,8 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
                              ]
-                           }
+                           },
+                           { "type": "Added", "description": "<a href=\"plugins/editing/RawSEDMLView.html\">Raw SED-ML view</a>." }
                          ]
                        },
                        { "name": "Organisation",

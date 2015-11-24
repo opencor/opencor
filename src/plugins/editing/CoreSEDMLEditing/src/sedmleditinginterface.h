@@ -16,46 +16,37 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// SED-ML editing interface
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
+#ifndef SEDMLEDITINGINTERFACE_H
+#define SEDMLEDITINGINTERFACE_H
 
 //==============================================================================
 
-#include "sedmlfile.h"
-#include "sedmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SEDMLSupport {
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
+class SedmlEditingInterface
 {
-    Q_OBJECT
-
 public:
-    static SedmlFileManager * instance();
-
-    bool isSedmlFile(const QString &pFileName) const;
-
-    SedmlFile * sedmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
+#define INTERFACE_DEFINITION
+    #include "sedmleditinginterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::SedmlEditingInterface, "OpenCOR::SedmlEditingInterface")
 
 //==============================================================================
 

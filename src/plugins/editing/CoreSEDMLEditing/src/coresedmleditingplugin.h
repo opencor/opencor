@@ -16,45 +16,76 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// CoreSEDMLEditing plugin
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
+#ifndef CORESEDMLEDITINGPLUGIN_H
+#define CORESEDMLEDITINGPLUGIN_H
 
 //==============================================================================
 
-#include "sedmlfile.h"
-#include "sedmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "filehandlinginterface.h"
+#include "guiinterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SEDMLSupport {
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
+class SedmlEditingInterface;
+
+//==============================================================================
+
+namespace CoreSEDMLEditing {
+
+//==============================================================================
+
+PLUGININFO_FUNC CoreSEDMLEditingPluginInfo();
+
+//==============================================================================
+
+class CoreSEDMLEditingPlugin : public QObject, public FileHandlingInterface,
+                               public GuiInterface, public I18nInterface,
+                               public PluginInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreSEDMLEditingPlugin" FILE "coresedmleditingplugin.json")
+
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
 public:
-    static SedmlFileManager * instance();
+    explicit CoreSEDMLEditingPlugin();
 
-    bool isSedmlFile(const QString &pFileName) const;
+#include "filehandlinginterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
 
-    SedmlFile * sedmlFile(const QString &pFileName);
+private:
+    QAction *mEditReformatAction;
 
-protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
+    QAction *mToolsSedmlValidationAction;
 
-    virtual QObject * newFile(const QString &pFileName) const;
+    QString mFileName;
+    SedmlEditingInterface *mSedmlEditingInterface;
+
+private Q_SLOTS:
+    void reformat();
+
+    void sedmlValidation();
 };
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
+}   // namespace CoreSEDMLEditing
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,45 +16,83 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// Raw SED-ML view widget
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
+#ifndef RAWSEDMLVIEWWIDGET_H
+#define RAWSEDMLVIEWWIDGET_H
 
 //==============================================================================
 
-#include "sedmlfile.h"
-#include "sedmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "corecliutils.h"
+#include "viewwidget.h"
+
+//==============================================================================
+
+#include <QMap>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SEDMLSupport {
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
+namespace CoreSEDMLEditing {
+    class CoreSedmlEditingWidget;
+}   // namespace CoreSEDMLEditing
+
+//==============================================================================
+
+namespace Editor {
+    class EditorWidget;
+}   // namespace Editor
+
+//==============================================================================
+
+namespace RawSEDMLView {
+
+//==============================================================================
+
+class RawSedmlViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
 public:
-    static SedmlFileManager * instance();
+    explicit RawSedmlViewWidget(QWidget *pParent);
 
-    bool isSedmlFile(const QString &pFileName) const;
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    SedmlFile * sedmlFile(const QString &pFileName);
+    virtual void retranslateUi();
 
-protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
+    bool contains(const QString &pFileName) const;
 
-    virtual QObject * newFile(const QString &pFileName) const;
+    void initialize(const QString &pFileName, const bool &pUpdate = true);
+    void finalize(const QString &pFileName);
+
+    void fileReloaded(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+
+    Editor::EditorWidget * editor(const QString &pFileName) const;
+
+    virtual QList<QWidget *> statusBarWidgets() const;
+
+    void reformat(const QString &pFileName);
+
+    bool validate(const QString &pFileName,
+                  const bool &pOnlyErrors = false) const;
+
+private:
+    bool mNeedLoadingSettings;
+    QString mSettingsGroup;
+
+    CoreSEDMLEditing::CoreSedmlEditingWidget *mEditingWidget;
+    QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *> mEditingWidgets;
 };
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
+}   // namespace RawSEDMLView
 }   // namespace OpenCOR
 
 //==============================================================================

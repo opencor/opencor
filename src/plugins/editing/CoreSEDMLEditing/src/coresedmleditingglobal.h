@@ -16,46 +16,23 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML file manager
+// CoreSEDMLEditing global
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
-
-//==============================================================================
-
-#include "sedmlfile.h"
-#include "sedmlsupportglobal.h"
-#include "standardfilemanager.h"
+#ifndef CORESEDMLEDITINGGLOBAL_H
+#define CORESEDMLEDITINGGLOBAL_H
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace SEDMLSupport {
-
-//==============================================================================
-
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
-{
-    Q_OBJECT
-
-public:
-    static SedmlFileManager * instance();
-
-    bool isSedmlFile(const QString &pFileName) const;
-
-    SedmlFile * sedmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
-
-//==============================================================================
-
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef CoreSEDMLEditing_PLUGIN
+        #define CORESEDMLEDITING_EXPORT __declspec(dllexport)
+    #else
+        #define CORESEDMLEDITING_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define CORESEDMLEDITING_EXPORT
+#endif
 
 //==============================================================================
 

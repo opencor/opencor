@@ -112,13 +112,10 @@ void CellmlFile::reset()
 
     mRdfTriples.clear();
 
-    mValid = true;
-
     mIssues.clear();
 
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
-    mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
 
     mImportContents.clear();
@@ -182,7 +179,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
     Version cellmlVersion = version(pModel);
 
-    if (   mFullInstantiationNeeded
+    if (   ((pModel != mModel) || mFullInstantiationNeeded)
         && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
@@ -227,11 +224,11 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                     Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
 
-                    if (!fileNameOrUrl.compare(mFileName))
+                    if (!fileNameOrUrl.compare(mFileName)) {
                         // We want to import ourselves, so...
 
                         throw(std::exception());
-                    else if (mImportContents.contains(fileNameOrUrl)) {
+                    } else if (mImportContents.contains(fileNameOrUrl)) {
                         // We have already loaded the import contents, so
                         // directly instantiate the import with it
 
@@ -272,7 +269,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                 }
             }
 
-            mFullInstantiationNeeded = false;
+            if (pModel == mModel)
+                mFullInstantiationNeeded = false;
         } catch (...) {
             // Something went wrong with the full instantiation of the imports
 
@@ -665,38 +663,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::isValid()
-{
-    // Check whether the file has already been validated
-
-    if (!mValidNeeded)
-        return mValid;
-
-    // Load (but not reload!) the file, if needed
-
-    if (load()) {
-        // The file was properly loaded (or was already loaded), so make sure
-        // that its imports, if any, are fully instantiated
-
-        if (fullyInstantiateImports(mModel, mIssues)) {
-            // Now, we can check whether the file is CellML valid
-
-            mValid = doIsValid(mModel, mIssues);
-
-            mValidNeeded = false;
-
-            return mValid;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
+bool CellmlFile::isValid(const QString &pFileContents,
                          CellmlFileIssues &pIssues)
 {
     // Check whether the given file contents is CellML valid, so first create a
@@ -704,7 +671,7 @@ bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
 
     ObjRef<iface::cellml_api::Model> model;
 
-    if (doLoad(pFileName, pFileContents, &model, pIssues)) {
+    if (doLoad(mFileName, pFileContents, &model, pIssues)) {
         // The file contents was properly loaded, so make sure that its imports,
         // if any, are fully instantiated
 

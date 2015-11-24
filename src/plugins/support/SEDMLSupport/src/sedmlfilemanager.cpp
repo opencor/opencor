@@ -68,13 +68,12 @@ SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
 
 //==============================================================================
 
-bool SedmlFileManager::canLoadFileContents(const QString &pFileContents) const
+bool SedmlFileManager::canLoadFile(const QString &pFileName) const
 {
-    // Try to load the SED-ML file contents
+    // Try to load the SED-ML file
 
-    QByteArray fileContentsByteArray = pFileContents.toUtf8();
-
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileContentsByteArray.constData());
+    QByteArray fileNameByteArray = pFileName.toUtf8();
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
 
     return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }

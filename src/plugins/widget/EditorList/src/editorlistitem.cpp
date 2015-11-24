@@ -42,6 +42,7 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
     static const QIcon WarningIcon     = QIcon(":/oxygen/status/task-attention.png");
     static const QIcon HintIcon        = QIcon(":/oxygen/actions/help-hint.png");
     static const QIcon InformationIcon = QIcon(":/oxygen/status/dialog-information.png");
+    static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
 
     if ((pLine == -1) && (pColumn == -1))
         setText(QString("%1").arg(pMessage));
@@ -67,6 +68,10 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
         break;
     case Information:
         setIcon(InformationIcon);
+
+        break;
+    case Fatal:
+        setIcon(FatalIcon);
 
         break;
     }

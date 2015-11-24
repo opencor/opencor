@@ -16,61 +16,86 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Editor list item
+// Core SED-ML editing widget
 //==============================================================================
 
-#ifndef EDITORLISTITEM_H
-#define EDITORLISTITEM_H
-
-//==============================================================================
-
-#include "editorlistglobal.h"
+#ifndef CORESEDMLEDITINGWIDGET_H
+#define CORESEDMLEDITINGWIDGET_H
 
 //==============================================================================
 
-#include <QStandardItem>
+#include "commonwidget.h"
+#include "corecliutils.h"
+#include "coresedmleditingglobal.h"
+
+//==============================================================================
+
+#include <QSplitter>
 #include <QString>
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace EditorList {
+class QsciLexer;
 
 //==============================================================================
 
-class EDITORLIST_EXPORT EditorListItem : public QStandardItem
+namespace OpenCOR {
+
+//==============================================================================
+
+namespace Editor {
+    class EditorWidget;
+}   // namespace Editor
+
+//==============================================================================
+
+namespace EditorList {
+    class EditorListItem;
+    class EditorListWidget;
+}   // namespace EditorList
+
+//==============================================================================
+
+namespace CoreSEDMLEditing {
+
+//==============================================================================
+
+class CORESEDMLEDITING_EXPORT CoreSedmlEditingWidget : public QSplitter,
+                                                       public Core::CommonWidget
 {
+    Q_OBJECT
+
 public:
-    enum Type {
-        Error       = QStandardItem::UserType,
-        Warning     = QStandardItem::UserType+1,
-        Hint        = QStandardItem::UserType+2,
-        Information = QStandardItem::UserType+3,
-        Fatal       = QStandardItem::UserType+4
-    };
+    explicit CoreSedmlEditingWidget(const QString &pContents,
+                                    const bool &pReadOnly, QsciLexer *pLexer,
+                                    QWidget *pParent);
 
-    explicit EditorListItem(const Type &pType, const int &pLine,
-                            const int &pColumn, const QString &pMessage);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual int type() const;
-    int line() const;
-    int column() const;
-    QString message() const;
+    virtual void retranslateUi();
+
+    void updateSettings(CoreSedmlEditingWidget *pCoreSedmlEditingWidget);
+
+    Editor::EditorWidget * editor() const;
+    EditorList::EditorListWidget * editorList() const;
+
+    QIntList editingWidgetSizes() const;
 
 private:
-    Type mType;
-    int mLine;
-    int mColumn;
-    QString mMessage;
+    Editor::EditorWidget *mEditor;
+    EditorList::EditorListWidget *mEditorList;
+
+    QIntList mEditingWidgetSizes;
+
+private Q_SLOTS:
+    void splitterMoved();
+    void itemRequested(EditorList::EditorListItem *pItem);
 };
 
 //==============================================================================
 
-typedef QList<EditorListItem> EditorListItems;
-
-//==============================================================================
-
-}   // namespace EditorList
+}   // namespace CoreSEDMLEditing
 }   // namespace OpenCOR
 
 //==============================================================================
