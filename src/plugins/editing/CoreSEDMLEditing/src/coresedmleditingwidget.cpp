@@ -67,7 +67,7 @@ CoreSedmlEditingWidget::CoreSedmlEditingWidget(const QString &pContents,
 
     // Add the bordered editor and editor list to ourselves
 
-    addWidget(new Core::BorderedWidget(mEditor, true, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditor, false, false, true, false));
     addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
 
     // Set our focus proxy to our editor
