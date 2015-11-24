@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QRegularExpression>
+#include <QTemporaryFile>
 
 //==============================================================================
 
@@ -72,11 +73,27 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     // Check whether the given file contents is SED-ML valid and, if not,
     // populate pIssues with the problems found (after having emptied its
     // contents)
+    // Note: normally, we would create a temporary SED-ML document using
+    //       libsedml::readSedMLFromString(), but if the given file contents
+    //       doesn't start with:
+    //           <?xml version='1.0' encoding='UTF-8'?>
+    //       then libsedml::readSedMLFromString() will prepend it to our given
+    //       file contents, which is not what we want. So, instead, we create a
+    //       temporary file which contents is that of our given file contents,
+    //       and simply call libsedml::readSedML()...
 
     pIssues.clear();
 
+    QTemporaryFile file;
     QByteArray fileContentsByteArray = pFileContents.toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedMLFromString(fileContentsByteArray.constData());
+
+    file.open();
+
+    file.write(fileContentsByteArray);
+    file.flush();
+
+    QByteArray fileNameByteArray = file.fileName().toUtf8();
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
     libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
 
     for (unsigned int i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
@@ -108,6 +125,8 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
         pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
     }
+
+    file.close();
 
     // Only consider the given file contents SED-ML valid if it has no errors
 
