@@ -216,7 +216,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     if (pFullParsing) {
         // Parse a mathematical expression
 
-        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierOrCmetaIdToken
                                                                                                         << CellmlTextViewScanner::OdeToken;
 
         if (tokenType(mDomDocument, QObject::tr("An identifier or '%1'").arg("ode"),
@@ -235,7 +235,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     } else {
         // Partially parse a mathematical expression
 
-        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierOrCmetaIdToken
                                                                                                         << CellmlTextViewScanner::OdeToken
                                                                                                         << CellmlTextViewScanner::CaseToken
                                                                                                         << CellmlTextViewScanner::OtherwiseToken
@@ -738,7 +738,7 @@ bool CellmlTextViewParser::identifierOrSiUnitToken(QDomNode &pDomNode)
 
     if (needInitializeTokenTypes) {
         tokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstUnitToken,
-                                       CellmlTextViewScanner::LastUnitToken) << CellmlTextViewScanner::IdentifierToken;
+                                       CellmlTextViewScanner::LastUnitToken) << CellmlTextViewScanner::IdentifierOrCmetaIdToken;
 
         needInitializeTokenTypes = false;
     }
@@ -754,7 +754,20 @@ bool CellmlTextViewParser::identifierToken(QDomNode &pDomNode)
     // Expect an identifier
 
     return tokenType(pDomNode, QObject::tr("An identifier"),
-                     CellmlTextViewScanner::IdentifierToken);
+                     CellmlTextViewScanner::IdentifierOrCmetaIdToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::cmetaIdToken(QDomNode &pDomNode)
+{
+    // Expect a cmeta:id
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierOrCmetaIdToken
+                                                                                                    << CellmlTextViewScanner::ProperCmetaIdToken;
+
+    return tokenType(pDomNode, QObject::tr("A cmeta:id"),
+                     tokenTypes);
 }
 
 //==============================================================================
@@ -973,14 +986,12 @@ bool CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
         return true;
     }
 
-    // Expect an identifier
+    // Expect a cmeta:id
 
     mScanner.getNextToken();
 
-    if (!identifierToken(pDomElement))
+    if (!cmetaIdToken(pDomElement))
         return false;
-
-    // The identifier is our cmeta:id
 
     cmetaId = mScanner.tokenString();
 
@@ -1571,7 +1582,7 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 
     static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
                                                                                                     << CellmlTextViewScanner::VarToken
-                                                                                                    << CellmlTextViewScanner::IdentifierToken
+                                                                                                    << CellmlTextViewScanner::IdentifierOrCmetaIdToken
                                                                                                     << CellmlTextViewScanner::OdeToken
                                                                                                     << CellmlTextViewScanner::EndDefToken;
 
@@ -1590,7 +1601,7 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
         //       rather than to the math block...
 
         if (   hasMathElement
-            && (mScanner.tokenType() != CellmlTextViewScanner::IdentifierToken)
+            && (mScanner.tokenType() != CellmlTextViewScanner::IdentifierOrCmetaIdToken)
             && (mScanner.tokenType() != CellmlTextViewScanner::OdeToken)) {
             moveTrailingComments(mathElement, componentElement);
         }
@@ -1610,7 +1621,7 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                 return false;
 
             hasMathElement = false;
-        } else if (   (mScanner.tokenType() == CellmlTextViewScanner::IdentifierToken)
+        } else if (   (mScanner.tokenType() == CellmlTextViewScanner::IdentifierOrCmetaIdToken)
                    || (mScanner.tokenType() == CellmlTextViewScanner::OdeToken)) {
             if (!hasMathElement) {
                 mathElement = newDomElement(componentElement, "math");
@@ -1759,7 +1770,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                         // Expect a number or an identifier
 
                         static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken
-                                                                                                                        << CellmlTextViewScanner::IdentifierToken;
+                                                                                                                        << CellmlTextViewScanner::IdentifierOrCmetaIdToken;
 
                         if (!tokenType(variableElement, QObject::tr("A number or an identifier"),
                                        tokenTypes)) {
@@ -1769,7 +1780,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                         // If we got an identifier, then we need to kept track
                         // of the fact that we need CellML 1.1
 
-                        if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierToken)
+                        if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierOrCmetaIdToken)
                             mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
                     }
                 } else {
@@ -1838,7 +1849,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
 
     QDomElement lhsElement = QDomElement();
 
-    if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierToken)
+    if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierOrCmetaIdToken)
         lhsElement = newIdentifierElement(mScanner.tokenString());
     else if (mScanner.tokenType() == CellmlTextViewScanner::OdeToken)
         lhsElement = parseDerivativeIdentifier(pDomNode);
@@ -1944,7 +1955,7 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
             // Expect an identifier, "and" or "for"
 
-            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierOrCmetaIdToken
                                                                                                             << CellmlTextViewScanner::AndToken
                                                                                                             << CellmlTextViewScanner::ForToken;
 
@@ -1955,7 +1966,7 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
             // Check what we got exactly
 
-            if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierToken) {
+            if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierOrCmetaIdToken) {
                 // Set the name of the containment
 
                 relationshipRefElement.setAttribute("name", mScanner.tokenString());
@@ -2865,7 +2876,7 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
         needInitializeTokenTypes = false;
     }
 
-    if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierToken) {
+    if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierOrCmetaIdToken) {
         // Create an identifier element
 
         res = newIdentifierElement(mScanner.tokenString());

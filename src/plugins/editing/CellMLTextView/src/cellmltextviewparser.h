@@ -165,6 +165,7 @@ private:
     bool forToken(QDomNode &pDomNode);
     bool identifierOrSiUnitToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
+    bool cmetaIdToken(QDomNode &pDomNode);
     bool modelToken(QDomNode &pDomNode);
     bool numberToken(QDomNode &pDomNode);
     bool numberValueToken(QDomNode &pDomNode, int &pSign);

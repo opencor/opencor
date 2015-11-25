@@ -1,4 +1,4 @@
-def model{my_model_cmeta_id} my_model as
+def model{my_model_cmeta_id_with-hyphens-and.periods.} my_model as
     // A comment can fit on one line...
 
     // A comment can also fit
