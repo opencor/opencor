@@ -1,8 +1,8 @@
 PROJECT(CompilerPlugin)
 
-# Retrieve some LLVM settings
+# Apply LLVM's build settings
 
-RETRIEVE_LLVM_SETTINGS()
+APPLY_LLVM_BUILD_SETTINGS()
 
 # Add the plugin
 
@@ -26,8 +26,6 @@ ADD_PLUGIN(Compiler
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    QT_MODULES
-        Widgets
     TESTS
         tests
 )

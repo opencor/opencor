@@ -51,7 +51,7 @@ public:
     CellmlFile * cellmlFile(const QString &pFileName);
 
 protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
+    virtual bool canLoadFile(const QString &pFileName) const;
 
     virtual QObject * newFile(const QString &pFileName) const;
 };

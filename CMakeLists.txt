@@ -294,6 +294,7 @@ SET(PLUGINS
     # Plugins that have dependencies on others
 
     editing/CoreCellMLEditing
+    editing/CoreSEDMLEditing
 
     # Selectable plugins
 
@@ -303,6 +304,7 @@ SET(PLUGINS
     editing/CellMLAnnotationView
     editing/CellMLTextView
     editing/RawCellMLView
+    editing/RawSEDMLView
     editing/RawView
 
     miscellaneous/HelpWindow

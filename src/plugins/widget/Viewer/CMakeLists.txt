@@ -1,8 +1,8 @@
 PROJECT(ViewerPlugin)
 
-# Retrieve some Qwt settings
+# Apply Qwt's build settings
 
-RETRIEVE_QWT_SETTINGS()
+APPLY_QWT_BUILD_SETTINGS()
 
 # Add the plugin
 

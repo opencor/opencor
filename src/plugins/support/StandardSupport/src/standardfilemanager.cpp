@@ -83,8 +83,8 @@ bool StandardFileManager::isFile(const QString &pFileName)
         return true;
 
     // Check whether we are dealing with an empty file or a file that contains
-    // spaces of sorts and, if not, whether we can load the file contents using
-    // the standard and thus determine whether it is of the right type
+    // spaces of sorts and, if not, whether we can load the file using the
+    // standard and thus determine whether it is of the right type
 
     QString fileContents;
 
@@ -92,7 +92,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
         if (fileContents.trimmed().isEmpty())
             return true;
 
-        return canLoadFileContents(fileContents);
+        return canLoadFile(nativeFileName);
     } else {
         return false;
     }

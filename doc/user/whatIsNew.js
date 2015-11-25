@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 15, "month": 11, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 25, "month": 11, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -31,15 +31,22 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
+                           { "type": "subCategory", "name": "Raw CellML view",
+                             "entries": [
+                               { "type": "Fixed", "description": "Reformatting unescaping HTML entities." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "Added", "description": "Support for the <code>min()</code> and <code>max()</code> functions." },
                                { "type": "Added", "description": "Support for the <code>gcd()</code> and <code>lcm()</code> functions." },
                                { "type": "Improved", "description": "Syntax highlighting." },
+                               { "type": "Improved", "description": "cmeta:id's support by allowing hyphens and periods." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
                              ]
-                           }
+                           },
+                           { "type": "Added", "description": "<a href=\"plugins/editing/RawSEDMLView.html\">Raw SED-ML view</a>." }
                          ]
                        },
                        { "name": "Organisation",

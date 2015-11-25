@@ -1,7 +1,7 @@
 PROJECT(SEDMLAPIPlugin)
 
-MACRO(RETRIEVE_SEDML_API_SETTINGS)
-    # Retrieve some SED-ML API settings
+MACRO(RETRIEVE_SEDML_API_EXTERNAL_BINARIES)
+    # Retrieve the SED-ML API external binaries
 
     IF(WIN32)
         SET(SEDML_API_EXTERNAL_BINARIES
@@ -56,9 +56,9 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some SED-ML API settings
+# Retrieve the SED-ML API external binaries
 
-RETRIEVE_SEDML_API_SETTINGS()
+RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
 
 # Add the plugin
 

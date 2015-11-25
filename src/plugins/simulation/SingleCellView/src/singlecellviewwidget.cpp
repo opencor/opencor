@@ -1547,7 +1547,8 @@ void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
 {
     // Create a SED-ML document and add the CellML namespace to it
 
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+    SEDMLSupport::SedmlFile *sedmlFile = new SEDMLSupport::SedmlFile(pFileName, true);
+    libsedml::SedDocument *sedmlDocument = sedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
     QString fileName = mSimulation->fileName();
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(fileName);
@@ -1707,11 +1708,16 @@ void SingleCellViewWidget::createSedmlFile(const QString &pFileName,
         }
     }
 
-    // Our SED-ML document is ready, so write it to our SED-ML file
+    // Our SED-ML document is ready, so write it to our SED-ML file, after
+    // having reformatted it
 
-    Core::writeTextToFile(pFileName, writeSedMLToString(sedmlDocument));
+    QDomDocument domDocument;
 
-    delete sedmlDocument;
+    domDocument.setContent(QString(libsedml::writeSedMLToString(sedmlDocument)));
+
+    Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
+
+    delete sedmlFile;
 }
 
 //==============================================================================

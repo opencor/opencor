@@ -96,23 +96,10 @@ SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
     // Let our plot's neighbours that our plot is not going to be their
     // neighbour anymore
 
-    SingleCellViewGraphPanelPlotWidget *otherPlot = 0;
-
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlot->neighbors()) {
-        if (plot != mPlot) {
-            if (!otherPlot)
-                otherPlot = plot;
-
+        if (plot != mPlot)
             plot->removeNeighbor(mPlot);
-        }
     }
-
-    // Get one of our former neighbours, if any (indeed, we won't have one after
-    // deleting the last graph panel, upon quitting OpenCOR), to realign itself
-    // with its remaining neighbours
-
-    if (otherPlot)
-        otherPlot->forceAlignWithNeighbors();
 }
 
 //==============================================================================

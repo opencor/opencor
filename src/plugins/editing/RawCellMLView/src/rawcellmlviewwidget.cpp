@@ -337,7 +337,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-        bool res = cellmlFile->isValid(pFileName, editingWidget->editor()->contents(), cellmlFileIssues);
+        bool res = cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues);
 
         // Add whatever issue there may be to our list and select the first one
         // of them

@@ -1,7 +1,7 @@
 PROJECT(CellMLAPIPlugin)
 
-MACRO(RETRIEVE_CELLML_API_SETTINGS)
-    # Retrieve some CellML API settings
+MACRO(RETRIEVE_CELLML_API_EXTERNAL_BINARIES)
+    # Retrieve the CellML API external binaries
 
     IF(WIN32)
         SET(CELLML_API_EXTERNAL_BINARIES
@@ -162,9 +162,9 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some CellML API settings
+# Retrieve the CellML API external binaries
 
-RETRIEVE_CELLML_API_SETTINGS()
+RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
 
 # Ignore some warnings on Windows
 

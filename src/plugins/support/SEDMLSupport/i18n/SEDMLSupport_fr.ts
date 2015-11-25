@@ -7,5 +7,9 @@
         <source>SED-ML File</source>
         <translation>Fichier SED-ML</translation>
     </message>
+    <message>
+        <source>Create a new SED-ML file</source>
+        <translation>Créer un nouveau fichier SED-ML</translation>
+    </message>
 </context>
 </TS>

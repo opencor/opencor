@@ -1,7 +1,7 @@
 PROJECT(zlibPlugin)
 
-MACRO(RETRIEVE_ZLIB_SETTINGS)
-    # Retrieve some zlib settings
+MACRO(APPLY_ZLIB_BUILD_SETTINGS)
+    # Apply zlib's build settings
 
     IF(WIN32)
         SET(ZLIB_DEFINITIONS
@@ -69,9 +69,9 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
             src
     )
 ELSE()
-    # Retrieve some zlib settings
+    # Apply zlib's build settings
 
-    RETRIEVE_ZLIB_SETTINGS()
+    APPLY_ZLIB_BUILD_SETTINGS()
 
     # Ignore some warnings on Windows and OS X
 

@@ -1,7 +1,7 @@
 PROJECT(SBMLAPIPlugin)
 
-MACRO(RETRIEVE_SBML_API_SETTINGS)
-    # Retrieve some SBML API settings
+MACRO(RETRIEVE_SBML_API_EXTERNAL_BINARIES)
+    # Retrieve the SBML API external binaries
 
     IF(WIN32)
         SET(SBML_API_EXTERNAL_BINARIES
@@ -56,9 +56,9 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some SBML API settings
+# Retrieve the SBML API external binaries
 
-RETRIEVE_SBML_API_SETTINGS()
+RETRIEVE_SBML_API_EXTERNAL_BINARIES()
 
 # Add the plugin
 

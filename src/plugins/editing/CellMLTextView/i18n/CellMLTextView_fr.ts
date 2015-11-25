@@ -369,5 +369,9 @@
         <source>Some character data was found%1, but it is not known and cannot therefore be processed.</source>
         <translation>Des données de caractères ont été trouvées%1, mais elles n&apos;ont pas été traitées.</translation>
     </message>
+    <message>
+        <source>A cmeta:id</source>
+        <translation>Un cmeta:id</translation>
+    </message>
 </context>
 </TS>

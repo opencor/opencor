@@ -1,7 +1,7 @@
 PROJECT(QwtPlugin)
 
-MACRO(RETRIEVE_QWT_SETTINGS)
-    # Retrieve some Qwt settings
+MACRO(APPLY_QWT_BUILD_SETTINGS)
+    # Apply Qwt's build settings
 
     SET(QWT_DEFINITIONS
         MML_TEST
@@ -68,9 +68,9 @@ IF(USE_PREBUILT_QWT_PLUGIN)
             textengines/mathml
     )
 ELSE()
-    # Retrieve some Qwt settings
+    # Apply Qwt's build settings
 
-    RETRIEVE_QWT_SETTINGS()
+    APPLY_QWT_BUILD_SETTINGS()
 
     # Add the plugin
 

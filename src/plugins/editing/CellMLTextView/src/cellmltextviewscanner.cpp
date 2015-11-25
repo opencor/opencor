@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QObject>
+#include <QRegularExpression>
 
 //==============================================================================
 
@@ -473,17 +474,19 @@ void CellmlTextViewScanner::getMultilineComment()
 
 //==============================================================================
 
-void CellmlTextViewScanner::getWord()
+void CellmlTextViewScanner::getWord(const bool &pMaybeCmetaId)
 {
     // Retrieve a word from our text
 
     forever {
         getNextChar();
 
-        if ((mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar))
+        if (   (mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar)
+            || (pMaybeCmetaId && ((mCharType == MinusChar) || (mCharType == FullStopChar)))) {
             mTokenString += *mChar;
-        else
+        } else {
             break;
+        }
     }
 
     // Check what kind of word we are dealing with, i.e. a keyword, an SI unit
@@ -499,10 +502,18 @@ void CellmlTextViewScanner::getWord()
 
     if (mTokenType == UnknownToken) {
         // We are not dealing with a keyword, but it might still be an
-        // identifier, as long as it doesn't only consist of underscores
+        // identifier or cmeta:id, as long as it doesn't only consist of
+        // underscores, hyphens and periods
 
-        if (!QString(mTokenString).remove(QChar('_')).isEmpty())
-            mTokenType = IdentifierToken;
+        static const QRegularExpression UnderscoresHyphensOrPeriodsRegEx = QRegularExpression("_|-|\\.");
+        static const QRegularExpression HyphensOrPeriodsRegEx = QRegularExpression("-|\\.");
+
+        if (!QString(mTokenString).remove(UnderscoresHyphensOrPeriodsRegEx).isEmpty()) {
+            if (mTokenString.contains(HyphensOrPeriodsRegEx))
+                mTokenType = ProperCmetaIdToken;
+            else
+                mTokenType = IdentifierOrCmetaIdToken;
+        }
     }
 }
 
@@ -666,7 +677,7 @@ void CellmlTextViewScanner::getNextToken()
 
     switch (mCharType) {
     case LetterChar: case UnderscoreChar:
-        getWord();
+        getWord(mTokenType == OpeningCurlyBracketToken);
 
         break;
     case DigitChar:

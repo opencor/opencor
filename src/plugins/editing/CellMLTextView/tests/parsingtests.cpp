@@ -82,12 +82,47 @@ void ParsingTests::basicTests()
     QVERIFY(!parser.execute("def model{",
                             OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("A cmeta:id is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute("def model{123",
                             OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but '123' was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("A cmeta:id is expected, but '123' was found instead."));
+
+    QVERIFY(!parser.execute("def model{text",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model{text123",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model{text_with_underscores",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model{text-with-hyphens",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model{text.with.periods",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model{text123_with_underscores.periods.and-hyphens",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model{_.-__..--___...---",
+                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("A cmeta:id is expected, but '_.-__..--___...---' was found instead."));
 
     QVERIFY(!parser.execute("def model{my_cmeta_id",
                             OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
@@ -130,11 +165,6 @@ void ParsingTests::fileTests()
     QVERIFY(!parser.domDocument().isNull());
 
     // ... and back
-    // Note: there are some in between comments that, upon being converted back
-    //       to OpenCOR text, are not in their original location. This is
-    //       completely normal, but they will fail the test, so we remove those
-    //       comments from both the conversion output and the original
-    //       version...
 
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 

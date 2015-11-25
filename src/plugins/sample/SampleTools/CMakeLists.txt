@@ -16,6 +16,4 @@ ADD_PLUGIN(SampleTools
     PLUGINS
         Core
         Sample
-    QT_MODULES
-        Widgets
 )
