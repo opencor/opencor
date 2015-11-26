@@ -13,9 +13,11 @@ ADD_PLUGIN(COMBINESupport
         ../../plugininfo.cpp
 
         src/combinearchive.cpp
+        src/combinefilemanager.cpp
         src/combinesupportplugin.cpp
     HEADERS_MOC
         src/combinearchive.h
+        src/combinefilemanager.h
         src/combinesupportplugin.h
     INCLUDE_DIRS
         src

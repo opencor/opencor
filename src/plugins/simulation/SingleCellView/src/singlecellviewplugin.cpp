@@ -21,8 +21,10 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "combinefilemanager.h"
 #include "coreguiutils.h"
 #include "datastoreinterface.h"
+#include "sedmlfilemanager.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
 #include "solverinterface.h"
@@ -293,7 +295,13 @@ bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
 
 QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML file, a SED-ML file or a
+    // COMBINE archive
+qDebug("---------");
+qDebug(">>> File name:       %s", qPrintable(pFileName));
+qDebug(">>> CellML file:     %s", CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)?"YES":"NO");
+qDebug(">>> SED-ML file:     %s", SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)?"YES":"NO");
+qDebug(">>> COMBINE archive: %s", COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)?"YES":"NO");
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
