@@ -58,15 +58,13 @@ QString CellmlFileExporter::errorMessage() const
 bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
                                    const QString &pFileName)
 {
-    // Save the given model, adding an empty line at the end, if needed (i.e.
-    // what is expected from various tools, e.g. GitHub)
+    // Save the given model, after having reformatted it
 
-    QString serialisedText = QString::fromStdWString(pModel->serialisedText());
+    QDomDocument domDocument;
 
-    if (!serialisedText.endsWith("\n"))
-        serialisedText += "\n";
+    domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
 
-    return Core::writeTextToFile(pFileName, serialisedText);
+    return Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
 }
 
 //==============================================================================
