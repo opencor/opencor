@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QProcess>
 #include <QResource>
 #include <QSettings>
+#include <QTemporaryDir>
 #include <QTemporaryFile>
 #include <QXmlStreamReader>
 

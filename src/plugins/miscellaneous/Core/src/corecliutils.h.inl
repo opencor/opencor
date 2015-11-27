@@ -41,6 +41,7 @@ QString CORE_EXPORT formatMessage(const QString &pMessage,
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 
+QString CORE_EXPORT temporaryDirName();
 QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
 
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,

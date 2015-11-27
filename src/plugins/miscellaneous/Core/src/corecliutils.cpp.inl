@@ -305,6 +305,21 @@ QByteArray resourceAsByteArray(const QString &pResource)
 
 //==============================================================================
 
+QString temporaryDirName()
+{
+    // Get and return a temporary directory name
+
+    QTemporaryDir dir;
+
+    dir.setAutoRemove(false);
+    // Note: by default, a temporary directory is to autoremove itself, but we
+    //       clearly don't want that here...
+
+    return dir.path();
+}
+
+//==============================================================================
+
 QString temporaryFileName(const QString &pExtension)
 {
     // Get and return a temporary file name

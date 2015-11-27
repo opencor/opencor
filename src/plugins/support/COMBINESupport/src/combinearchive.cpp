@@ -91,8 +91,18 @@ bool CombineArchiveFile::isMaster() const
 
 CombineArchive::CombineArchive(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
+    mDirName(Core::temporaryDirName()),
     mCombineArchiveFiles(CombineArchiveFiles())
 {
+}
+
+//==============================================================================
+
+CombineArchive::~CombineArchive()
+{
+    // Delete our temporary directory
+
+    QDir(mDirName).removeRecursively();
 }
 
 //==============================================================================
