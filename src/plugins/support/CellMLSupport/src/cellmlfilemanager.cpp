@@ -70,17 +70,9 @@ bool CellmlFileManager::canLoadFile(const QString &pFileName) const
 {
     // Try to load the CellML file
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-    ObjRef<iface::cellml_api::Model> model;
+    CellmlFile cellmlFile(pFileName);
 
-    try {
-        model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
-
-        return true;
-    } catch (iface::cellml_api::CellMLException &) {
-        return false;
-    }
+    return cellmlFile.load();
 }
 
 //==============================================================================
