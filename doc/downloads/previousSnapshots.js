@@ -1,4 +1,34 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 11, "year": 2015, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe", "bitness": 32 }, { "extension": ".zip", "bitness": 32 },
+                           { "extension": ".exe", "bitness": 64 }, { "extension": ".zip", "bitness": 64 }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz", "bitness": 32 },
+                           { "extension": ".tar.gz", "bitness": 64 }
+                         ]
+                       },
+                       { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>CellML support:</strong> don't distinguish between CellML 1.0 and CellML 1.1 anymore when creating a new CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/827\">#827</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> made it possible to create a new SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/826\">#826</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> hyphens and periods are now allowed in cmeta:id's (see issue <a href=\"https://github.com/opencor/opencor/issues/830\">#830</a>)." },
+                       { "change": "<strong>Raw CellML view:</strong> fixed a problem with reformatting unescaping HTML entities (see issue <a href=\"https://github.com/opencor/opencor/issues/822\">#822</a>)." },
+                       { "change": "<strong>Raw SED-ML view:</strong> this view has been added so that we can quickly edit and validate SED-ML files (see issue <a href=\"https://github.com/opencor/opencor/issues/682\">#682</a>)." },
+                       { "change": "<strong>Single Cell (simulation) view:</strong> disabled the development mode when using a read-only file (see issue <a href=\"https://github.com/opencor/opencor/issues/817\">#817</a>). Fixed a problem with the X axis sometimes not lining up when adding a new graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/820\">#820</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.12.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/812\">#812</a>) and <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.23.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/816\">#816</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 15, "month": 11, "year": 2015, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

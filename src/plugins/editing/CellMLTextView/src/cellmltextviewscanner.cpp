@@ -474,7 +474,7 @@ void CellmlTextViewScanner::getMultilineComment()
 
 //==============================================================================
 
-void CellmlTextViewScanner::getWord(const bool &pMaybeCmetaId)
+void CellmlTextViewScanner::getWord()
 {
     // Retrieve a word from our text
 
@@ -482,7 +482,7 @@ void CellmlTextViewScanner::getWord(const bool &pMaybeCmetaId)
         getNextChar();
 
         if (   (mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar)
-            || (pMaybeCmetaId && ((mCharType == MinusChar) || (mCharType == FullStopChar)))) {
+            || (mWithinParameterBlock && ((mCharType == MinusChar) || (mCharType == FullStopChar)))) {
             mTokenString += *mChar;
         } else {
             break;
@@ -677,7 +677,7 @@ void CellmlTextViewScanner::getNextToken()
 
     switch (mCharType) {
     case LetterChar: case UnderscoreChar:
-        getWord(mTokenType == OpeningCurlyBracketToken);
+        getWord();
 
         break;
     case DigitChar:
