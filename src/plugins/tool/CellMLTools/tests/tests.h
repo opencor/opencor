@@ -33,6 +33,8 @@ class Tests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+    void cleanupTestCase();
+
     void cliHelpTests();
     void cliCellmlExportTests();
 };
