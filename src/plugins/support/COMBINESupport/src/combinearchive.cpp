@@ -99,9 +99,9 @@ CombineArchive::CombineArchive(const QString &pFileName) :
 
 bool CombineArchive::load()
 {
-    // Consider the file loaded
+    // Consider the file not loaded
 
-    return true;
+    return false;
 }
 
 //==============================================================================

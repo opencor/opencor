@@ -64,10 +64,10 @@ CombineArchive * CombineFileManager::combineArchive(const QString &pFileName)
 bool CombineFileManager::canLoadFile(const QString &pFileName) const
 {
     // Try to load the COMBINE archive
-//---GRY--- TO BE DONE...
-Q_UNUSED(pFileName);
 
-    return false;
+    CombineArchive combineArchive(pFileName);
+
+    return combineArchive.load();
 }
 
 //==============================================================================
