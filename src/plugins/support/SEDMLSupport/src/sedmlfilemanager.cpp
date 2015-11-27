@@ -72,10 +72,9 @@ bool SedmlFileManager::canLoadFile(const QString &pFileName) const
 {
     // Try to load the SED-ML file
 
-    QByteArray fileNameByteArray = pFileName.toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+    SedmlFile sedmlFile(pFileName);
 
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    return sedmlFile.load();
 }
 
 //==============================================================================

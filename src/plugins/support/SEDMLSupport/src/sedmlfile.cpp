@@ -84,9 +84,12 @@ libsedml::SedDocument * SedmlFile::sedmlDocument() const
 
 bool SedmlFile::load()
 {
-    // Consider the file loaded
+    // For now, we just check that we can load the file
 
-    return true;
+    QByteArray fileNameByteArray = mFileName.toUtf8();
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+
+    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }
 
 //==============================================================================
@@ -95,9 +98,9 @@ bool SedmlFile::save(const QString &pNewFileName)
 {
     Q_UNUSED(pNewFileName);
 
-    // Consider the file saved
+    // Consider the file not saved
 
-    return true;
+    return false;
 }
 
 //==============================================================================
