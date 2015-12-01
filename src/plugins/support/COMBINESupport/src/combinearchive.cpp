@@ -134,8 +134,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
     QDir dir;
     QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
-    QString baseDirName = QFileInfo(fileName).baseName();
-    QString dirName = mDirName+QDir::separator()+baseDirName;
+    QString dirName = mDirName+QDir::separator()+QFileInfo(fileName).baseName();
 
     dir.mkpath(dirName);
 
