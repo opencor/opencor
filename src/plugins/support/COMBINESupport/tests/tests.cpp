@@ -58,7 +58,7 @@ void Tests::basicTests()
 
     QVERIFY(QFile::exists(fileName));
 
-    // Unzip our COMBINE archive
+    // Unzip our COMBINE archive and make sure that its manifest is correct
 
     OpenCOR::ZIPSupport::QZipReader zipReader(fileName);
     QTemporaryDir temporaryDir;
@@ -67,9 +67,28 @@ void Tests::basicTests()
 
     zipReader.close();
 
-    // Make sure that our COMBINE archive's manifest is correct
-
     QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+"manifest.xml"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
+
+    // Save the COMBINE archive to a different file
+
+    QString otherFileName = OpenCOR::Core::temporaryFileName();
+
+    combineArchive.save(otherFileName);
+
+    QVERIFY(QFile::exists(otherFileName));
+
+    // Unzip our other COMBINE archive and make sure that its manifest is
+    // correct
+
+    OpenCOR::ZIPSupport::QZipReader otherZipReader(fileName);
+    QTemporaryDir otherTemporaryDir;
+
+    QVERIFY(otherZipReader.extractAll(otherTemporaryDir.path()));
+
+    otherZipReader.close();
+
+    QCOMPARE(OpenCOR::fileContents(otherTemporaryDir.path()+QDir::separator()+"manifest.xml"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
 }
 
