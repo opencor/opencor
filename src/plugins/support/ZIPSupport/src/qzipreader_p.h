@@ -1,7 +1,7 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/legal
+** Copyright (C) 2015 The Qt Company Ltd.
+** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtGui module of the Qt Toolkit.
 **
@@ -10,9 +10,9 @@
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia. For licensing terms and
-** conditions see http://qt.digia.com/licensing. For further information
-** use the contact form at http://qt.digia.com/contact-us.
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see http://www.qt.io/terms-conditions. For further
+** information use the contact form at http://www.qt.io/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -23,8 +23,8 @@
 ** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
 ** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Digia gives you certain additional
-** rights. These rights are described in the Digia Qt LGPL Exception
+** As a special exception, The Qt Company gives you certain additional
+** rights. These rights are described in The Qt Company LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ** $QT_END_LICENSE$
@@ -81,18 +81,14 @@ public:
     bool isReadable() const;
     bool exists() const;
 
-/*---OPENCOR---
-    struct Q_GUI_EXPORT FileInfo
-*/
-//---OPENCOR--- BEGIN
-    struct ZIPSUPPORT_EXPORT FileInfo
-//---OPENCOR--- END
+    struct FileInfo
     {
-        FileInfo();
-        FileInfo(const FileInfo &other);
-        ~FileInfo();
-        FileInfo &operator=(const FileInfo &other);
-        bool isValid() const;
+        FileInfo() Q_DECL_NOTHROW
+            : isDir(false), isFile(false), isSymLink(false), crc(0), size(0)
+        {}
+
+        bool isValid() const Q_DECL_NOTHROW { return isDir || isFile || isSymLink; }
+
         QString filePath;
         uint isDir : 1;
         uint isFile : 1;
@@ -101,10 +97,9 @@ public:
         uint crc;
         qint64 size;
         QDateTime lastModified;
-        void *d;
     };
 
-    QList<FileInfo> fileInfoList() const;
+    QVector<FileInfo> fileInfoList() const;
     int count() const;
 
     FileInfo entryInfoAt(int index) const;
@@ -127,11 +122,17 @@ private:
     QZipReaderPrivate *d;
     Q_DISABLE_COPY(QZipReader)
 };
+/*---OPENCOR---
+Q_DECLARE_TYPEINFO(QZipReader::FileInfo, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QZipReader::Status, Q_PRIMITIVE_TYPE);
+*/
 
 QT_END_NAMESPACE
 //---OPENCOR--- BEGIN
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
+Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::QZipReader::FileInfo, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::QZipReader::Status, Q_PRIMITIVE_TYPE);
 //---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER
