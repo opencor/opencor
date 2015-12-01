@@ -1103,9 +1103,13 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file is or has been modified, so ask the current view to save
             // it
 
-            if (!fileHandlingInterface->saveFile(oldFileName, newFileName)) {
-                QMessageBox::warning(mainWindow(), tr("Save File"),
-                                     tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
+            bool needFeedback = true;
+
+            if (!fileHandlingInterface->saveFile(oldFileName, newFileName, needFeedback)) {
+                if (needFeedback) {
+                    QMessageBox::warning(mainWindow(), tr("Save File"),
+                                         tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
+                }
 
                 fileManagerInstance->setCanCheckFiles(true);
 

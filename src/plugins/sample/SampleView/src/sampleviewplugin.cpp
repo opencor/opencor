@@ -59,10 +59,12 @@ SampleViewPlugin::SampleViewPlugin() :
 //==============================================================================
 
 bool SampleViewPlugin::saveFile(const QString &pOldFileName,
-                                const QString &pNewFileName)
+                                const QString &pNewFileName,
+                                bool &pNeedFeedback)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
+    Q_UNUSED(pNeedFeedback);
 
     // We don't handle this interface...
 

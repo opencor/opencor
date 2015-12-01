@@ -121,7 +121,8 @@ public:
     bool isEditorUseable(const QString &pFileName) const;
     bool isEditorContentsModified(const QString &pFileName) const;
 
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName,
+                  bool &pNeedFeedback);
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
