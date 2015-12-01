@@ -90,6 +90,15 @@ QString CellmlTextViewWidgetData::sha1() const
 
 //==============================================================================
 
+void CellmlTextViewWidgetData::setSha1(const QString &pSha1)
+{
+    // Set our SHA-1 value
+
+    mSha1 = pSha1;
+}
+
+//==============================================================================
+
 bool CellmlTextViewWidgetData::isValid() const
 {
     // Return whether we are valid
@@ -108,20 +117,20 @@ CellMLSupport::CellmlFile::Version CellmlTextViewWidgetData::cellmlVersion() con
 
 //==============================================================================
 
+void CellmlTextViewWidgetData::setCellmlVersion(const CellMLSupport::CellmlFile::Version &pCellmlVersion)
+{
+    // Set our CellML version value
+
+    mCellmlVersion = pCellmlVersion;
+}
+
+//==============================================================================
+
 QDomDocument CellmlTextViewWidgetData::rdfNodes() const
 {
     // Return our RDF nodes
 
     return mRdfNodes;
-}
-
-//==============================================================================
-
-void CellmlTextViewWidgetData::setSha1(const QString &pSha1)
-{
-    // Set our SHA-1 value
-
-    mSha1 = pSha1;
 }
 
 //==============================================================================
@@ -486,6 +495,8 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
                 return false;
             }
+
+            data.setCellmlVersion(mParser.cellmlVersion());
 
             // Add the metadata to our DOM document
 
