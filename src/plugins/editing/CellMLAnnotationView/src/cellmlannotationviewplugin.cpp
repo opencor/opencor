@@ -55,8 +55,11 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 //==============================================================================
 
 bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
-                                          const QString &pNewFileName)
+                                          const QString &pNewFileName,
+                                          bool &pNeedFeedback)
 {
+    Q_UNUSED(pNeedFeedback);
+
     // Ask our CellML annotation view widget to save the given file
 
     CellmlAnnotationViewEditingWidget *editingWidget = mViewWidget->editingWidget(pOldFileName);
