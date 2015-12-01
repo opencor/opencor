@@ -115,8 +115,11 @@ bool RawSEDMLViewPlugin::isEditorContentsModified(const QString &pFileName) cons
 //==============================================================================
 
 bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
-                                  const QString &pNewFileName)
+                                  const QString &pNewFileName,
+                                  bool &pNeedFeedback)
 {
+    Q_UNUSED(pNeedFeedback);
+
     // Save the given file
 
     Editor::EditorWidget *crtEditor = editor(pOldFileName);

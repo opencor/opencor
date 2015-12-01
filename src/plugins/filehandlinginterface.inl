@@ -5,7 +5,8 @@
 #endif
 
     virtual bool saveFile(const QString &pOldFileName,
-                          const QString &pNewFileName) PURE;
+                          const QString &pNewFileName,
+                          bool &pNeedFeedback) PURE;
 
     virtual void fileOpened(const QString &pFileName) PURE;
     virtual void filePermissionsChanged(const QString &pFileName) PURE;

@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmltextviewparser.h"
 #include "cellmltextviewwidget.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
@@ -39,6 +40,8 @@ specific language governing permissions and limitations under the License.
 
 #include <QKeyEvent>
 #include <QLabel>
+#include <QMainWindow>
+#include <QMessageBox>
 #include <QSettings>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -87,6 +90,15 @@ QString CellmlTextViewWidgetData::sha1() const
 
 //==============================================================================
 
+void CellmlTextViewWidgetData::setSha1(const QString &pSha1)
+{
+    // Set our SHA-1 value
+
+    mSha1 = pSha1;
+}
+
+//==============================================================================
+
 bool CellmlTextViewWidgetData::isValid() const
 {
     // Return whether we are valid
@@ -105,20 +117,20 @@ CellMLSupport::CellmlFile::Version CellmlTextViewWidgetData::cellmlVersion() con
 
 //==============================================================================
 
+void CellmlTextViewWidgetData::setCellmlVersion(const CellMLSupport::CellmlFile::Version &pCellmlVersion)
+{
+    // Set our CellML version value
+
+    mCellmlVersion = pCellmlVersion;
+}
+
+//==============================================================================
+
 QDomDocument CellmlTextViewWidgetData::rdfNodes() const
 {
     // Return our RDF nodes
 
     return mRdfNodes;
-}
-
-//==============================================================================
-
-void CellmlTextViewWidgetData::setSha1(const QString &pSha1)
-{
-    // Set our SHA-1 value
-
-    mSha1 = pSha1;
 }
 
 //==============================================================================
@@ -454,7 +466,8 @@ bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) co
 //==============================================================================
 
 bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
-                                    const QString &pNewFileName)
+                                    const QString &pNewFileName,
+                                    bool &pNeedFeedback)
 {
     // Save the given file
 
@@ -467,14 +480,23 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
         // that was in the original CellML file
 
         if (parse(pOldFileName)) {
-            // Let the user know if we had to use a higher version of CellML
+            // Check whether we need a higher version of CellML to save the file
+            // and, if so, ask the user whether it's OK to use that higher
+            // version
 
-            if (mParser.cellmlVersion() > data.cellmlVersion()) {
-                editingWidget->editorList()->addItem(EditorList::EditorListItem::Information,
-                                                     -1, -1,
-                                                     tr("The CellML file requires features that are not present in %1 and was therefore saved as a %2 file.").arg(CellMLSupport::CellmlFile::versionAsString(data.cellmlVersion()),
-                                                                                                                                                                   CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion())));
+            if (   (mParser.cellmlVersion() > data.cellmlVersion())
+                && (QMessageBox::question(Core::mainWindow(), tr("Save File"),
+                                          tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
+                                                                                                                                                                                         CellMLSupport::CellmlFile::versionAsString(data.cellmlVersion()),
+                                                                                                                                                                                         CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion())),
+                                          QMessageBox::Yes|QMessageBox::No,
+                                          QMessageBox::Yes) == QMessageBox::No)) {
+                pNeedFeedback = false;
+
+                return false;
             }
+
+            data.setCellmlVersion(mParser.cellmlVersion());
 
             // Add the metadata to our DOM document
 
