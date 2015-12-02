@@ -108,6 +108,10 @@ CombineArchive::~CombineArchive()
 
 //==============================================================================
 
+static const auto ManifestFile = QStringLiteral("manifest.xml");
+
+//==============================================================================
+
 bool CombineArchive::load()
 {
     // Make sure that our file exists
@@ -115,28 +119,16 @@ bool CombineArchive::load()
     if (!QFile::exists(mFileName))
         return false;
 
-    // Make sure that our file starts with 0x04034b50, which is the signature of
-    // a ZIP file and should therefore be that of our file
-
-    static const int SignatureSize = 4;
+    // Our file is effectively a ZIP file, so extract all of our contents
 
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
-    uchar signatureData[SignatureSize];
-
-    if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize)
-        return false;
-
-    uint signature =   signatureData[0]
-                     +(signatureData[1] <<  8)
-                     +(signatureData[2] << 16)
-                     +(signatureData[3] << 24);
-
-    if (signature != 0x04034b50)
-        return false;
-
-    // Try to extract all of our contents
 
     if (!zipReader.extractAll(mDirName))
+        return false;
+
+    // A COMBINE archive must contain a manifest file in its root
+
+    if (!QFile::exists(mDirName+QDir::separator()+ManifestFile))
         return false;
 
     return true;
@@ -199,7 +191,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
     OpenCOR::ZIPSupport::QZipWriter zipWriter(pNewFileName.isEmpty()?mFileName:pNewFileName);
 
-    zipWriter.addFile("manifest.xml",
+    zipWriter.addFile(ManifestFile,
                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                        "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
                        "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
