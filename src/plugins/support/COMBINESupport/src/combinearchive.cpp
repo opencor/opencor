@@ -216,8 +216,6 @@ bool CombineArchive::save(const QString &pNewFileName)
                           combineArchiveFileContents.toUtf8());
     }
 
-    zipWriter.close();
-
     // Go back to our original path
 
     QDir::setCurrent(origPath);

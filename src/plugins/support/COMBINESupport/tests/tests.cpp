@@ -55,8 +55,6 @@ void Tests::doBasicTests(OpenCOR::COMBINESupport::CombineArchive &pCombineArchiv
 
     QVERIFY(zipReader.extractAll(temporaryDir.path()));
 
-    zipReader.close();
-
     QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+"manifest.xml"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
 

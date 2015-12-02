@@ -80,8 +80,6 @@ void Tests::compressTests()
     zipWriter.addFile(CppFileName, OpenCOR::rawFileContents(CppFileName));
     zipWriter.addFile(HFileName, OpenCOR::rawFileContents(HFileName));
     zipWriter.addFile(TxtFileName, OpenCOR::rawFileContents(TxtFileName));
-
-    zipWriter.close();
 }
 
 //==============================================================================
@@ -94,8 +92,6 @@ void Tests::uncompressTests()
     QTemporaryDir temporaryDir;
 
     QVERIFY(zipReader.extractAll(temporaryDir.path()));
-
-    zipReader.close();
 
     // Make sure that its contents is what we expect
 
