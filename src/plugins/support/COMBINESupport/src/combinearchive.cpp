@@ -125,20 +125,11 @@ static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/com
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-    // Keep track of our current directory
+    // Keep track of our current directory and go to our own directory
 
     QString origPath = QDir::currentPath();
 
-    // Create and go to a sub-directory where we are effecitvely going to put
-    // ourselves
-
-    QDir dir;
-    QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
-    QString dirName = mDirName+QDir::separator()+QFileInfo(fileName).baseName();
-
-    dir.mkpath(dirName);
-
-    QDir::setCurrent(dirName);
+    QDir::setCurrent(mDirName);
 
     // Generate the contents our manifest file
 
@@ -192,34 +183,30 @@ bool CombineArchive::save(const QString &pNewFileName)
     #error Unsupported platform
 #endif
 
+    QDir dir;
+
     foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-        QString destFileName = Core::nativeCanonicalFileName(dirName+QDir::separator()+combineArchiveFile.location());
+        QString destFileName = Core::nativeCanonicalFileName(combineArchiveFile.location());
         QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
-        if (!QDir(destDirName).exists()) {
-            if (!dir.mkpath(destDirName))
-                return false;
-        }
+        if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
+            return false;
 
         if (!QFile::copy(combineArchiveFile.fileName(), destFileName))
             return false;
     }
 
-    // Go back to our original path
-
-    QDir::setCurrent(origPath);
-
     // Save ourselves to either the given file, which name is given, or to our
     // current file
 
-    OpenCOR::ZIPSupport::QZipWriter zipWriter(fileName);
+    OpenCOR::ZIPSupport::QZipWriter zipWriter(pNewFileName.isEmpty()?mFileName:pNewFileName);
 
     zipWriter.addFile("manifest.xml", manifestFileContents);
 
     foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
         QString combineArchiveFileContents;
 
-        if (!Core::readTextFromFile(dirName+QDir::separator()+combineArchiveFile.location(), combineArchiveFileContents))
+        if (!Core::readTextFromFile(combineArchiveFile.location(), combineArchiveFileContents))
             return false;
 
         zipWriter.addFile(combineArchiveFile.location(),
@@ -227,6 +214,10 @@ bool CombineArchive::save(const QString &pNewFileName)
     }
 
     zipWriter.close();
+
+    // Go back to our original path
+
+    QDir::setCurrent(origPath);
 
     return true;
 }

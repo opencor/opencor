@@ -81,7 +81,7 @@ void Tests::basicTests()
     // Unzip our other COMBINE archive and make sure that its manifest is
     // correct
 
-    OpenCOR::ZIPSupport::QZipReader otherZipReader(fileName);
+    OpenCOR::ZIPSupport::QZipReader otherZipReader(otherFileName);
     QTemporaryDir otherTemporaryDir;
 
     QVERIFY(otherZipReader.extractAll(otherTemporaryDir.path()));
