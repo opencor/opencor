@@ -402,11 +402,6 @@ bool CellmlFile::load()
     if (!mLoadingNeeded)
         return mIssues.isEmpty();
 
-    // Consider the file loaded
-    // Note: even when we can't load the file, we still consider it 'loaded'
-    //       since we at least tried to load it, so unless the file gets
-    //       modified (and we are to reload it), we are 'fine'...
-
     mLoadingNeeded = false;
 
     // Try to load the model
