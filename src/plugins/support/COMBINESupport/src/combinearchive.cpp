@@ -144,40 +144,9 @@ bool CombineArchive::load()
         return false;
     }
 
-    // Make sure that our file starts with 0x04034b50, which is the signature of
-    // a ZIP file and should therefore be that of our file
-    // Note: we don't strictly need to check this since loading our file will
-    //       eventually if our file is not a ZIP file. Still, if it's not a ZIP
-    //       file, then trying to extract its context will result in a warning
-    //       message from QZip (when in a debug mode), which is not 'neat',
-    //       hence we prevent this by checking whether our file starts with the
-    //       ZIP signature...
-
-    static const int SignatureSize = 4;
+    // We assume our file to be a ZIP file, so extract all of its contents
 
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
-    uchar signatureData[SignatureSize];
-
-    if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize) {
-        mIssue = QObject::tr("the archive is not signed");
-
-        return false;
-    }
-
-    uint signature =   signatureData[0]
-                     +(signatureData[1] <<  8)
-                     +(signatureData[2] << 16)
-                     +(signatureData[3] << 24);
-
-    if (signature != 0x04034b50) {
-        mIssue = QObject::tr("the archive does not have the correct signature");
-
-        return false;
-    }
-
-    // Our file is effectively a ZIP file, so extract all of our contents
-
-    zipReader.device()->reset();
 
     if (!zipReader.extractAll(mDirName)) {
         mIssue = QObject::tr("the contents of the archive could not be extracted");

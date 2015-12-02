@@ -42,6 +42,7 @@ private:
 
 private Q_SLOTS:
     void basicTests();
+    void loadingErrorTests();
 };
 
 //==============================================================================
