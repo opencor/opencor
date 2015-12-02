@@ -75,10 +75,8 @@ bool CombineFileManager::canLoadFile(const QString &pFileName) const
 QObject * CombineFileManager::newFile(const QString &pFileName) const
 {
     // Create and return a new COMBINE archive
-//---GRY--- TO BE DONE...
-Q_UNUSED(pFileName);
 
-    return 0;
+    return new CombineArchive(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================

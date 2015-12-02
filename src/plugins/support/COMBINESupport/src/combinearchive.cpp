@@ -109,9 +109,12 @@ CombineArchive::~CombineArchive()
 
 bool CombineArchive::load()
 {
-    // Consider the file not loaded
+    // Check that the file exists
 
-    return false;
+    if (!QFile::exists(mFileName))
+        return false;
+
+    return true;
 }
 
 //==============================================================================
