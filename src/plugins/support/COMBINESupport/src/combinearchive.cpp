@@ -166,42 +166,17 @@ bool CombineArchive::save(const QString &pNewFileName)
         fileList += "/>\n";
     }
 
-    QByteArray manifestFileContents =  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                                       "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
-                                       "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
-                                      +fileList.toUtf8()
-                                      +"</omexManifest>\n";
-
-    // Get a copy of our various files, if any, after creating the sub-folder(s)
-    // in which they are
-
-#if defined(Q_OS_WIN)
-    static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
-#endif
-
-    QDir dir;
-
-    foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-        QString destFileName = Core::nativeCanonicalFileName(combineArchiveFile.location());
-        QString destDirName = QString(destFileName).remove(FileNameRegEx);
-
-        if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
-            return false;
-
-        if (!QFile::copy(combineArchiveFile.fileName(), destFileName))
-            return false;
-    }
-
     // Save ourselves to either the given file, which name is given, or to our
     // current file
 
     OpenCOR::ZIPSupport::QZipWriter zipWriter(pNewFileName.isEmpty()?mFileName:pNewFileName);
 
-    zipWriter.addFile("manifest.xml", manifestFileContents);
+    zipWriter.addFile("manifest.xml",
+                       "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                       "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
+                       "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
+                      +fileList.toUtf8()
+                      +"</omexManifest>\n");
 
     foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
         QString combineArchiveFileContents;
@@ -236,6 +211,28 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
     // Add the given file to our list
 
     mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat, pMaster);
+
+    // Get a copy of the given file, after creating the sub-folder(s) in which
+    // it is, if necessary
+
+#if defined(Q_OS_WIN)
+    static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+#else
+    #error Unsupported platform
+#endif
+
+    static QDir dir;
+
+    QString destFileName = Core::nativeCanonicalFileName(mDirName+QDir::separator()+pLocation);
+    QString destDirName = QString(destFileName).remove(FileNameRegEx);
+
+    if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
+        return false;
+
+    if (!QFile::copy(pFileName, destFileName))
+        return false;
 
     return true;
 }
