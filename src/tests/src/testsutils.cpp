@@ -140,9 +140,9 @@ QStringList runCli(const QStringList pArguments)
     // Note: see main()...
 
 #ifdef Q_OS_WIN
-    QString crtPath = QDir::currentPath();
+    QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(crtPath+"/../../bin");
+    QDir::setCurrent(origPath+"/../../bin");
 #endif
 
     // Execute the CLI version of OpenCOR (passing to it the given arguments)
@@ -174,7 +174,7 @@ QStringList runCli(const QStringList pArguments)
     // Go back to our original directory
 
 #ifdef Q_OS_WIN
-    QDir::setCurrent(crtPath);
+    QDir::setCurrent(origPath);
 #endif
 
     return output.remove("\r").split("\n");
