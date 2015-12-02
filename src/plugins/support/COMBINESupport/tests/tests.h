@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "combinearchive.h"
+
+//==============================================================================
+
 #include <QObject>
 
 //==============================================================================
@@ -31,6 +35,10 @@ specific language governing permissions and limitations under the License.
 class Tests : public QObject
 {
     Q_OBJECT
+
+private:
+    void doBasicTests(OpenCOR::COMBINESupport::CombineArchive &pCombineArchive,
+                      const QString &pFileName = QString());
 
 private Q_SLOTS:
     void basicTests();
