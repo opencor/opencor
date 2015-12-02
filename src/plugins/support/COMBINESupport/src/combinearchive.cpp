@@ -140,9 +140,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
     QDir::setCurrent(dirName);
 
-    // Create our manifest file
-
-    static const QString ManifestFileName = "manifest.xml";
+    // Generate the contents our manifest file
 
     QString fileList = QString();
     QString fileFormat;
@@ -183,9 +181,6 @@ bool CombineArchive::save(const QString &pNewFileName)
                                       +fileList.toUtf8()
                                       +"</omexManifest>\n";
 
-    if (!Core::writeTextToFile(ManifestFileName, manifestFileContents))
-        return false;
-
     // Get a copy of our various files, if any, after creating the sub-folder(s)
     // in which they are
 
@@ -219,7 +214,7 @@ bool CombineArchive::save(const QString &pNewFileName)
 
     OpenCOR::ZIPSupport::QZipWriter zipWriter(fileName);
 
-    zipWriter.addFile(ManifestFileName, manifestFileContents);
+    zipWriter.addFile("manifest.xml", manifestFileContents);
 
     foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
         QString combineArchiveFileContents;
