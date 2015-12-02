@@ -56,7 +56,7 @@ public:
 protected:
     QString mFileName;
 
-    virtual void reset();
+    virtual void reset() = 0;
 };
 
 //==============================================================================

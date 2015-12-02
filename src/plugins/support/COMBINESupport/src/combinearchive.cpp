@@ -92,9 +92,11 @@ bool CombineArchiveFile::isMaster() const
 
 CombineArchive::CombineArchive(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mDirName(Core::temporaryDirName()),
-    mCombineArchiveFiles(CombineArchiveFiles())
+    mDirName(Core::temporaryDirName())
 {
+    // Reset ourselves
+
+    reset();
 }
 
 //==============================================================================
@@ -108,16 +110,39 @@ CombineArchive::~CombineArchive()
 
 //==============================================================================
 
-static const auto ManifestFile = QStringLiteral("manifest.xml");
+void CombineArchive::reset()
+{
+    // Reset all of our properties
+
+    mLoadingNeeded = true;
+
+    mFiles.clear();
+
+    mIssue = QString();
+}
+
+//==============================================================================
+
+static const auto ManifestFileName = QStringLiteral("manifest.xml");
 
 //==============================================================================
 
 bool CombineArchive::load()
 {
+    // Check whether the file is already loaded and without an issue
+
+    if (!mLoadingNeeded)
+        return mIssue.isEmpty();
+
+    mLoadingNeeded = false;
+
     // Make sure that our file exists
 
-    if (!QFile::exists(mFileName))
+    if (!QFile::exists(mFileName)) {
+        mIssue = QObject::tr("the archive does not exist");
+
         return false;
+    }
 
     // Make sure that our file starts with 0x04034b50, which is the signature of
     // a ZIP file and should therefore be that of our file
@@ -133,28 +158,40 @@ bool CombineArchive::load()
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
     uchar signatureData[SignatureSize];
 
-    if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize)
+    if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize) {
+        mIssue = QObject::tr("the archive is not signed");
+
         return false;
+    }
 
     uint signature =   signatureData[0]
                      +(signatureData[1] <<  8)
                      +(signatureData[2] << 16)
                      +(signatureData[3] << 24);
 
-    if (signature != 0x04034b50)
+    if (signature != 0x04034b50) {
+        mIssue = QObject::tr("the archive does not have the correct signature");
+
         return false;
+    }
 
     // Our file is effectively a ZIP file, so extract all of our contents
 
     zipReader.device()->reset();
 
-    if (!zipReader.extractAll(mDirName))
+    if (!zipReader.extractAll(mDirName)) {
+        mIssue = QObject::tr("the contents of the archive could not be extracted");
+
         return false;
+    }
 
     // A COMBINE archive must contain a manifest file in its root
 
-    if (!QFile::exists(mDirName+QDir::separator()+ManifestFile))
+    if (!QFile::exists(mDirName+QDir::separator()+ManifestFileName)) {
+        mIssue = QObject::tr("the archive does not have a manifest");
+
         return false;
+    }
 
     return true;
 }
@@ -170,13 +207,13 @@ static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/com
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-    // Generate the contents our manifest file
+    // Generate the contents our manifest
 
     QString fileList = QString();
     QString fileFormat;
 
-    foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
-        switch (combineArchiveFile.format()) {
+    foreach (const CombineArchiveFile &file, mFiles) {
+        switch (file.format()) {
         case CombineArchiveFile::Cellml:
             fileFormat = CellmlFormat;
 
@@ -197,9 +234,9 @@ bool CombineArchive::save(const QString &pNewFileName)
             return false;
         }
 
-        fileList += "    <content location=\""+combineArchiveFile.location()+"\" format=\""+fileFormat+"\"";
+        fileList += "    <content location=\""+file.location()+"\" format=\""+fileFormat+"\"";
 
-        if (combineArchiveFile.isMaster())
+        if (file.isMaster())
             fileList += " master=\"true\"";
 
         fileList += "/>\n";
@@ -210,22 +247,22 @@ bool CombineArchive::save(const QString &pNewFileName)
 
     OpenCOR::ZIPSupport::QZipWriter zipWriter(pNewFileName.isEmpty()?mFileName:pNewFileName);
 
-    zipWriter.addFile(ManifestFile,
+    zipWriter.addFile(ManifestFileName,
                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                        "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
                        "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
                       +fileList.toUtf8()
                       +"</omexManifest>\n");
 
-    foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
+    foreach (const CombineArchiveFile &file, mFiles) {
         QString combineArchiveFileContents;
 
-        if (!Core::readTextFromFile(mDirName+QDir::separator()+combineArchiveFile.location(),
+        if (!Core::readTextFromFile(mDirName+QDir::separator()+file.location(),
                                     combineArchiveFileContents)) {
             return false;
         }
 
-        zipWriter.addFile(combineArchiveFile.location(),
+        zipWriter.addFile(file.location(),
                           combineArchiveFileContents.toUtf8());
     }
 
@@ -245,7 +282,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     // Add the given file to our list
 
-    mCombineArchiveFiles << CombineArchiveFile(pFileName, pLocation, pFormat, pMaster);
+    mFiles << CombineArchiveFile(pFileName, pLocation, pFormat, pMaster);
 
     // Get a copy of the given file, after creating the sub-folder(s) in which
     // it is, if necessary
@@ -270,6 +307,15 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
         return false;
 
     return true;
+}
+
+//==============================================================================
+
+QString CombineArchive::issue() const
+{
+    // Return our archive's issue
+
+    return mIssue;
 }
 
 //==============================================================================

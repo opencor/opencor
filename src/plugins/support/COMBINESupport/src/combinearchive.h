@@ -88,10 +88,18 @@ public:
                  const CombineArchiveFile::Format &pFormat,
                  const bool &pMaster = false);
 
+    QString issue() const;
+
 private:
     QString mDirName;
 
-    CombineArchiveFiles mCombineArchiveFiles;
+    bool mLoadingNeeded;
+
+    CombineArchiveFiles mFiles;
+
+    QString mIssue;
+
+    virtual void reset();
 };
 
 //==============================================================================
