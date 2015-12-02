@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QZipReader>
 #include <QZipWriter>
 
 //==============================================================================
@@ -109,9 +110,33 @@ CombineArchive::~CombineArchive()
 
 bool CombineArchive::load()
 {
-    // Check that the file exists
+    // Make sure that our file exists
 
     if (!QFile::exists(mFileName))
+        return false;
+
+    // Make sure that our file starts with 0x04034b50, which is the signature of
+    // a ZIP file and should therefore be that of our file
+
+    static const int SignatureSize = 4;
+
+    OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
+    uchar signatureData[SignatureSize];
+
+    if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize)
+        return false;
+
+    uint signature =   signatureData[0]
+                     +(signatureData[1] <<  8)
+                     +(signatureData[2] << 16)
+                     +(signatureData[3] << 24);
+
+    if (signature != 0x04034b50)
+        return false;
+
+    // Try to extract all of our contents
+
+    if (!zipReader.extractAll(mDirName))
         return false;
 
     return true;
