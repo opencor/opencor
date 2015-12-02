@@ -145,12 +145,6 @@ static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/com
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-    // Keep track of our current directory and go to our own directory
-
-    QString origPath = QDir::currentPath();
-
-    QDir::setCurrent(mDirName);
-
     // Generate the contents our manifest file
 
     QString fileList = QString();
@@ -201,16 +195,14 @@ bool CombineArchive::save(const QString &pNewFileName)
     foreach (const CombineArchiveFile &combineArchiveFile, mCombineArchiveFiles) {
         QString combineArchiveFileContents;
 
-        if (!Core::readTextFromFile(combineArchiveFile.location(), combineArchiveFileContents))
+        if (!Core::readTextFromFile(mDirName+QDir::separator()+combineArchiveFile.location(),
+                                    combineArchiveFileContents)) {
             return false;
+        }
 
         zipWriter.addFile(combineArchiveFile.location(),
                           combineArchiveFileContents.toUtf8());
     }
-
-    // Go back to our original path
-
-    QDir::setCurrent(origPath);
 
     return true;
 }
