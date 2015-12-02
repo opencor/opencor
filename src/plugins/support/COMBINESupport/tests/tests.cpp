@@ -101,6 +101,11 @@ void Tests::basicTests()
         for (int j = 1; j <= 3; ++j, ++counter)
             QVERIFY(QFile::exists(otherTemporaryDir.path()+QDir::separator()+QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j))));
     }
+
+    // Clean up after ourselves
+
+    QFile::remove(fileName);
+    QFile::remove(otherFileName);
 }
 
 //==============================================================================
