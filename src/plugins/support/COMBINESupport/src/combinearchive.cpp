@@ -127,6 +127,18 @@ static const auto ManifestFileName = QStringLiteral("manifest.xml");
 
 //==============================================================================
 
+static const auto OmexNamespace         = QStringLiteral("http://identifiers.org/combine.specifications/omex");
+static const auto OmexManifestNamespace = QStringLiteral("http://identifiers.org/combine.specifications/omex-manifest");
+
+//==============================================================================
+
+static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
+static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
+static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
+static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
+
+//==============================================================================
+
 bool CombineArchive::load()
 {
     // Check whether the file is already loaded and without an issue
@@ -171,21 +183,25 @@ bool CombineArchive::load()
 
     Core::readTextFromFile(manifestFileName, fileContents);
 
-    if (!domDocument.setContent(fileContents)) {
+    if (!domDocument.setContent(fileContents, true)) {
         mIssue = QObject::tr("the manifest is not a valid XML file");
+
+        return false;
+    }
+
+    // Retrieve the COMBINE archive files from the manifest
+
+    QDomElement omexElement = domDocument.documentElement();
+
+    if (   omexElement.localName().compare("omexManifest")
+        || omexElement.namespaceURI().compare(OmexManifestNamespace)) {
+        mIssue = QObject::tr("the manifest is not a valid OMEX file");
 
         return false;
     }
 
     return true;
 }
-
-//==============================================================================
-
-static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
-static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
-static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
-static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
 
 //==============================================================================
 

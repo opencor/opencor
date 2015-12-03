@@ -136,12 +136,19 @@ void Tests::loadingErrorTests()
     QVERIFY(!combineArchive.reload());
     QCOMPARE(combineArchive.issue(), QString("the archive does not have a manifest"));
 
-    // Try to load a non-extractable COMBINE archive
+    // Try to load a COMBINE archive which manifest is not a valid XML file
 
-    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nonvalidmanifestarchive.omex"));
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/notvalidxmlarchive.omex"));
 
     QVERIFY(!combineArchive.reload());
     QCOMPARE(combineArchive.issue(), QString("the manifest is not a valid XML file"));
+
+    // Try to load a COMBINE archive which manifest is not a valid OMEX file
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/notvalidomexarchive.omex"));
+
+    QVERIFY(!combineArchive.reload());
+    QCOMPARE(combineArchive.issue(), QString("the manifest is not a valid OMEX file"));
 }
 
 //==============================================================================
