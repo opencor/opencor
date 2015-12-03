@@ -154,10 +154,25 @@ bool CombineArchive::load()
         return false;
     }
 
-    // A COMBINE archive must contain a manifest file in its root
+    // A COMBINE archive must contain a manifest in its root
 
-    if (!QFile::exists(mDirName+QDir::separator()+ManifestFileName)) {
+    QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
+
+    if (!QFile::exists(manifestFileName)) {
         mIssue = QObject::tr("the archive does not have a manifest");
+
+        return false;
+    }
+
+    // Make sure that the manifest is a valid XML file
+
+    QString fileContents;
+    QDomDocument domDocument;
+
+    Core::readTextFromFile(manifestFileName, fileContents);
+
+    if (!domDocument.setContent(fileContents)) {
+        mIssue = QObject::tr("the manifest is not a valid XML file");
 
         return false;
     }

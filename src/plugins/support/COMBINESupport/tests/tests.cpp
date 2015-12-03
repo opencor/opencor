@@ -127,14 +127,21 @@ void Tests::loadingErrorTests()
     OpenCOR::COMBINESupport::CombineArchive combineArchive(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nonexistentarchive.omex"));
 
     QVERIFY(!combineArchive.load());
-    QVERIFY(!combineArchive.issue().compare("the archive does not exist"));
+    QCOMPARE(combineArchive.issue(), QString("the archive does not exist"));
 
     // Try to load a non-extractable COMBINE archive
 
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nomanifestarchive.omex"));
 
     QVERIFY(!combineArchive.reload());
-    QVERIFY(!combineArchive.issue().compare("the archive does not have a manifest"));
+    QCOMPARE(combineArchive.issue(), QString("the archive does not have a manifest"));
+
+    // Try to load a non-extractable COMBINE archive
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nonvalidmanifestarchive.omex"));
+
+    QVERIFY(!combineArchive.reload());
+    QCOMPARE(combineArchive.issue(), QString("the manifest is not a valid XML file"));
 }
 
 //==============================================================================
