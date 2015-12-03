@@ -154,7 +154,7 @@ bool CombineArchive::load()
         return false;
     }
 
-    // A COMBINE archive must contain a manifest in its root
+    // A COMBINE archive must contain a manifest at its root
 
     QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
 

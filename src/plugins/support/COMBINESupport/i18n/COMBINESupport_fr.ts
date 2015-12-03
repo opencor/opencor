@@ -22,5 +22,9 @@
         <source>the archive does not have a manifest</source>
         <translation>l&apos;archive ne contient n&apos;a pas de manifeste</translation>
     </message>
+    <message>
+        <source>the manifest is not a valid XML file</source>
+        <translation>le manifeste n&apos;est pas un fichier XML valide</translation>
+    </message>
 </context>
 </TS>
