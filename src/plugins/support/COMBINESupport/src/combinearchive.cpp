@@ -93,6 +93,7 @@ bool CombineArchiveFile::isMaster() const
 static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
 static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
 static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
+static const auto OmexFormat        = QStringLiteral("http://identifiers.org/combine.specifications/omex");
 static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
 
 //==============================================================================
@@ -107,6 +108,8 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
         return Cellml_1_0;
     else if (!pFormat.compare(Cellml_1_1_Format))
         return Cellml_1_1;
+    else if (!pFormat.compare(OmexFormat))
+        return Omex;
     else if (!pFormat.compare(SedmlFormat))
         return Sedml;
     else
@@ -228,6 +231,29 @@ bool CombineArchive::load()
         }
     }
 
+    // Make sure that one of our COMBINE archive files represents our COMBINE
+    // archive itself
+
+    bool combineArchiveReferenceFound = false;
+
+    foreach (const CombineArchiveFile &file, mFiles) {
+        if (   !file.location().compare(".")
+            &&  (file.format() == CombineArchiveFile::Omex)
+            && !file.isMaster()) {
+            combineArchiveReferenceFound = true;
+
+            break;
+        }
+    }
+
+    if (!combineArchiveReferenceFound) {
+        mIssue = QObject::tr("no reference to the COMBINE archive itself could be found");
+
+        mFiles.clear();
+
+        return false;
+    }
+
     return true;
 }
 
@@ -254,6 +280,10 @@ bool CombineArchive::save(const QString &pNewFileName)
             fileFormat = Cellml_1_1_Format;
 
             break;
+        case CombineArchiveFile::Omex:
+            fileFormat = OmexFormat;
+
+            break;
         case CombineArchiveFile::Sedml:
             fileFormat = SedmlFormat;
 
@@ -278,7 +308,7 @@ bool CombineArchive::save(const QString &pNewFileName)
     zipWriter.addFile(ManifestFileName,
                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                        "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
-                       "    <content location=\".\" format=\"http://identifiers.org/combine.specifications/omex\"/>\n"
+                       "    <content location=\".\" format=\""+OmexFormat.toUtf8()+"\"/>\n"
                       +fileList.toUtf8()
                       +"</omexManifest>\n");
 

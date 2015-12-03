@@ -46,6 +46,7 @@ public:
         Cellml,
         Cellml_1_0,
         Cellml_1_1,
+        Omex,
         Sedml
     };
 

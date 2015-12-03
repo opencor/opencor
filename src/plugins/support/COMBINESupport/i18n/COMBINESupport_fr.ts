@@ -30,5 +30,9 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be found</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être trouvé</translation>
     </message>
+    <message>
+        <source>no reference to the COMBINE archive itself could be found</source>
+        <translation>aucune référence à l&apos;archive COMBINE elle-même n&apos;a pu être trouvée</translation>
+    </message>
 </context>
 </TS>

@@ -49,7 +49,7 @@ void Tests::initTestCase()
         for (int j = 1; j <= 3; ++j, ++counter) {
             mCombineArchive->addFile(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
                                      QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
-                                     OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%4),
+                                     OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%5),
                                      !(counter%2));
         }
     }
@@ -149,6 +149,14 @@ void Tests::loadingErrorTests()
 
     QVERIFY(!combineArchive.reload());
     QCOMPARE(combineArchive.issue(), QString("<strong>nonexistentfile.txt</strong> could not be found"));
+
+    // Try to load a COMBINE archive which manifest doesn't reference the
+    // COMBINE archive itself
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nocombinearchivereferencearchive.omex"));
+
+    QVERIFY(!combineArchive.reload());
+    QCOMPARE(combineArchive.issue(), QString("no reference to the COMBINE archive itself could be found"));
 }
 
 //==============================================================================
