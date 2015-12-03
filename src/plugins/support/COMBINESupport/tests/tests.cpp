@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "combinearchive.h"
 #include "corecliutils.h"
 #include "tests.h"
 
@@ -36,14 +37,46 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void Tests::doBasicTests(OpenCOR::COMBINESupport::CombineArchive &pCombineArchive,
-                         const QString &pFileName)
+void Tests::initTestCase()
+{
+    // Create a simple COMBINE archive that contains various files
+
+    mCombineArchive = new OpenCOR::COMBINESupport::CombineArchive(OpenCOR::Core::temporaryFileName());
+
+    int counter = 0;
+
+    for (int i = 1; i <= 3; ++i) {
+        for (int j = 1; j <= 3; ++j, ++counter) {
+            mCombineArchive->addFile(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
+                                     QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
+                                     OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%4),
+                                     !(counter%2));
+        }
+    }
+}
+
+//==============================================================================
+
+void Tests::cleanupTestCase()
+{
+    // Clean up after ourselves
+
+    QFile::remove(mCombineArchive->fileName());
+
+    // Delete some internal objects
+
+    delete mCombineArchive;
+}
+
+//==============================================================================
+
+void Tests::doBasicTests(const QString &pFileName)
 {
     // Save the given COMBINE archive to the given file
 
-    QString fileName = pFileName.isEmpty()?pCombineArchive.fileName():pFileName;
+    QString fileName = pFileName.isEmpty()?mCombineArchive->fileName():pFileName;
 
-    pCombineArchive.save(fileName);
+    mCombineArchive->save(fileName);
 
     QVERIFY(QFile::exists(fileName));
 
@@ -68,32 +101,16 @@ void Tests::doBasicTests(OpenCOR::COMBINESupport::CombineArchive &pCombineArchiv
 
 void Tests::basicTests()
 {
-    // Create a simple COMBINE archive that contains various files
-
-    QString fileName = OpenCOR::Core::temporaryFileName();
-    OpenCOR::COMBINESupport::CombineArchive combineArchive(fileName);
-    int counter = 0;
-
-    for (int i = 1; i <= 3; ++i) {
-        for (int j = 1; j <= 3; ++j, ++counter) {
-            combineArchive.addFile(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
-                                   QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
-                                   OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%4),
-                                   !(counter%2));
-        }
-    }
-
     // Some testing when saving the COMBINE archive either directly or to a
     // different file
 
     QString otherFileName = OpenCOR::Core::temporaryFileName();
 
-    doBasicTests(combineArchive);
-    doBasicTests(combineArchive, otherFileName);
+    doBasicTests();
+    doBasicTests(otherFileName);
 
     // Clean up after ourselves
 
-    QFile::remove(fileName);
     QFile::remove(otherFileName);
 }
 
