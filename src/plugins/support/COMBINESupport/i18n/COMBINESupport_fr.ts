@@ -23,8 +23,12 @@
         <translation>l&apos;archive ne contient n&apos;a pas de manifeste</translation>
     </message>
     <message>
-        <source>the manifest is not a valid XML file</source>
-        <translation>le manifeste n&apos;est pas un fichier XML valide</translation>
+        <source>the manifest is not a valid OMEX file</source>
+        <translation>le manifeste n&apos;est pas un fichier OMEX valide</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be found</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être trouvé</translation>
     </message>
 </context>
 </TS>

@@ -90,6 +90,31 @@ bool CombineArchiveFile::isMaster() const
 
 //==============================================================================
 
+static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
+static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
+static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
+static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
+
+//==============================================================================
+
+CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
+{
+    // Return the effective format associated with the given format
+
+    if (!pFormat.compare(CellmlFormat))
+        return Cellml;
+    else if (!pFormat.compare(Cellml_1_0_Format))
+        return Cellml_1_0;
+    else if (!pFormat.compare(Cellml_1_1_Format))
+        return Cellml_1_1;
+    else if (!pFormat.compare(SedmlFormat))
+        return Sedml;
+    else
+        return Unknown;
+}
+
+//==============================================================================
+
 CombineArchive::CombineArchive(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName())
@@ -124,18 +149,6 @@ void CombineArchive::reset()
 //==============================================================================
 
 static const auto ManifestFileName = QStringLiteral("manifest.xml");
-
-//==============================================================================
-
-static const auto OmexNamespace         = QStringLiteral("http://identifiers.org/combine.specifications/omex");
-static const auto OmexManifestNamespace = QStringLiteral("http://identifiers.org/combine.specifications/omex-manifest");
-
-//==============================================================================
-
-static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
-static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
-static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
-static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
 
 //==============================================================================
 
@@ -176,28 +189,43 @@ bool CombineArchive::load()
         return false;
     }
 
-    // Make sure that the manifest is a valid XML file
+    // Make sure that the manifest is a valid OMEX file
 
     QString fileContents;
-    QDomDocument domDocument;
+    QString schemaContents;
 
     Core::readTextFromFile(manifestFileName, fileContents);
+    Core::readTextFromFile(":omex.xsd", schemaContents);
 
-    if (!domDocument.setContent(fileContents, true)) {
-        mIssue = QObject::tr("the manifest is not a valid XML file");
+    if (!Core::validXml(fileContents, schemaContents)) {
+        mIssue = QObject::tr("the manifest is not a valid OMEX file");
 
         return false;
     }
 
-    // Retrieve the COMBINE archive files from the manifest
+    // Retrieve the COMBINE archive files from the manifest, making sure that
+    // they have been physically extracted
 
-    QDomElement omexElement = domDocument.documentElement();
+    QDomDocument domDocument;
 
-    if (   omexElement.localName().compare("omexManifest")
-        || omexElement.namespaceURI().compare(OmexManifestNamespace)) {
-        mIssue = QObject::tr("the manifest is not a valid OMEX file");
+    domDocument.setContent(fileContents, true);
 
-        return false;
+    for (QDomElement childElement = domDocument.documentElement().firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        QString location = childElement.attribute("location");
+        QString fileName = mDirName+QDir::separator()+location;
+
+        if (!QFile::exists(fileName)) {
+            mIssue = QObject::tr("<strong>%1</strong> could not be found").arg(location);
+
+            mFiles.clear();
+
+            return false;
+        } else {
+            mFiles << CombineArchiveFile(fileName, location,
+                                         CombineArchiveFile::format(childElement.attribute("format")),
+                                         !childElement.attribute("master").compare("true"));
+        }
     }
 
     return true;

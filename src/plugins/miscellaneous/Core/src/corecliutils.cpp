@@ -49,6 +49,8 @@ specific language governing permissions and limitations under the License.
 #include <QTemporaryDir>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QXmlSchema>
+#include <QXmlSchemaValidator>
 #include <QXmlStreamReader>
 
 //==============================================================================
@@ -844,6 +846,42 @@ QString newFileName(const QString &pFileName, const QString &pFileExtension)
     // Return the name of a 'new' file
 
     return newFileName(pFileName, QString(), true, pFileExtension);
+}
+
+//==============================================================================
+
+bool validXml(const QString &pXml, const QString &pSchema)
+{
+    // Validate the given XML against the given schema
+
+    QByteArray xmlByteArray = pXml.toUtf8();
+    QByteArray schemaByteArray = pSchema.toUtf8();
+
+    QXmlSchema schema;
+    DummyMessageHandler dummyMessageHandler;
+
+    schema.setMessageHandler(&dummyMessageHandler);
+
+    schema.load(schemaByteArray);
+
+    QXmlSchemaValidator validator(schema);
+
+    return validator.validate(xmlByteArray);
+}
+
+//==============================================================================
+
+bool validXmlFile(const QString &pXmlFileName, const QString &pSchemaFileName)
+{
+    // Validate the given XML file against the given schema file
+
+    QString xmlContents;
+    QString schemaContents;
+
+    readTextFromFile(pXmlFileName, xmlContents);
+    readTextFromFile(pSchemaFileName, schemaContents);
+
+    return validXml(xmlContents, schemaContents);
 }
 
 //==============================================================================

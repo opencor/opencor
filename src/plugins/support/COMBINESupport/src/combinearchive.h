@@ -59,6 +59,8 @@ public:
     Format format() const;
     bool isMaster() const;
 
+    static Format format(const QString &pFormat);
+
 private:
     QString mFileName;
 
