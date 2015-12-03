@@ -101,8 +101,8 @@ void Tests::doBasicTests(const QString &pFileName)
 
 void Tests::basicTests()
 {
-    // Some testing when saving the COMBINE archive either directly or to a
-    // different file
+    // Some basic tests to save our COMBINE archive either directly or to a
+    // different file and checking that its contents is sound
 
     QString otherFileName = OpenCOR::Core::temporaryFileName();
 
@@ -112,6 +112,10 @@ void Tests::basicTests()
     // Clean up after ourselves
 
     QFile::remove(otherFileName);
+
+    // Check that we can load our COMBINE archive
+
+    QVERIFY(mCombineArchive->load());
 }
 
 //==============================================================================
