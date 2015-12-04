@@ -130,6 +130,13 @@ public:
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
+    enum FileType {
+        Unknown,
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     enum ErrorType {
         General,
         InvalidCellmlFile,
@@ -143,6 +150,9 @@ private:
     SolverInterfaces mSolverInterfaces;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
+
+    FileType mFileType;
+    QMap<QString, FileType> mFileTypes;
 
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;

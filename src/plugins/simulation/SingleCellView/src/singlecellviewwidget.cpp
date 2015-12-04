@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "combinearchive.h"
+#include "combinefilemanager.h"
 #include "combinesupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -30,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
 #include "sedmlfile.h"
+#include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelswidget.h"
@@ -104,6 +106,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mPluginParent(pPluginParent),
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
+    mFileType(Unknown),
+    mFileTypes(QMap<QString, FileType>()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(SingleCellViewSimulations()),
@@ -653,12 +657,30 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
 
+    // Determine the type of our file
+
+    mFileType = mFileTypes.value(pFileName);
+
+    if (mFileType == Unknown) {
+        // No file type exists for the file, so determine it
+
+        if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+            mFileType = CellmlFile;
+        else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+            mFileType = SedmlFile;
+        else
+            mFileType = CombineArchive;
+
+        // Keep track of our file type
+
+        mFileTypes.insert(pFileName, mFileType);
+    }
+
     // Retrieve our simulation object for the current model, if any
 
     bool newSimulation = false;
-    bool isCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile *cellmlFile = isCellmlFile?CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName):0;
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = isCellmlFile?cellmlFile->runtime():0;
+    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName):0;
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = (mFileType == CellmlFile)?cellmlFile->runtime():0;
 
     mSimulation = mSimulations.value(pFileName);
 
@@ -713,11 +735,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
     mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
 
-    // Determine whether the CellML file has a valid runtime
+    // Retrieve our variable of integration, if possible
 
     bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
-
-    // Retrieve our variable of integration, if possible
 
     CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
@@ -769,7 +789,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             // means that the model doesn't contain any ODE or DAE
 
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
-        } else if (isCellmlFile) {
+        } else if (mFileType == CellmlFile) {
             // We don't have a valid runtime, so either there are some problems
             // with the CellML file or its runtime
 
@@ -971,13 +991,16 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
 
         delete simulation;
 
+        mFileTypes.remove(pFileName);
         mSimulations.remove(pFileName);
 
         // Reset our memory of the current simulation object, but only if it's
         // the same as our simulation object
 
-        if (simulation == mSimulation)
+        if (simulation == mSimulation) {
+            mFileType = Unknown;
             mSimulation = 0;
+        }
     }
 
     // Remove various information associated with the given file name
@@ -1213,6 +1236,11 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 {
     // Replace the old file name with the new one in our various trackers
 
+    if (mFileTypes.contains(pOldFileName)) {
+        mFileTypes.insert(pNewFileName, mFileTypes.value(pOldFileName));
+        mFileTypes.remove(pOldFileName);
+    }
+
     SingleCellViewSimulation *simulation = mSimulations.value(pOldFileName);
 
     if (simulation) {
@@ -1227,6 +1255,11 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
         mProgresses.remove(pOldFileName);
     }
 
+    if (mResets.contains(pOldFileName)) {
+        mResets.insert(pNewFileName, mResets.value(pOldFileName));
+        mResets.remove(pOldFileName);
+    }
+
     if (mDelays.contains(pOldFileName)) {
         mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
         mDelays.remove(pOldFileName);
@@ -1235,6 +1268,11 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
     if (mDevelopmentModes.contains(pOldFileName)) {
         mDevelopmentModes.insert(pNewFileName, mDevelopmentModes.value(pOldFileName));
         mDevelopmentModes.remove(pOldFileName);
+    }
+
+    if (mLockedDevelopmentModes.contains(pOldFileName)) {
+        mLockedDevelopmentModes.insert(pNewFileName, mLockedDevelopmentModes.value(pOldFileName));
+        mLockedDevelopmentModes.remove(pOldFileName);
     }
 
     // Let our graphs widget know that the given file has been renamed
