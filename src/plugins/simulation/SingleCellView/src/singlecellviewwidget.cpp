@@ -659,12 +659,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
     // Determine the type of our file
 
+    CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
+
     mFileType = mFileTypes.value(pFileName);
 
     if (mFileType == Unknown) {
         // No file type exists for the file, so determine it
 
-        if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        if (cellmlFileManager->cellmlFile(pFileName))
             mFileType = CellmlFile;
         else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
             mFileType = SedmlFile;
@@ -676,10 +678,42 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         mFileTypes.insert(pFileName, mFileType);
     }
 
+    // Check whether we are to deal with a CellML or a SED-ML file
+
+    QString sedmlFileName = QString();
+    QString combineIssue = QString();
+
+    if (mFileType == SedmlFile) {
+        sedmlFileName = pFileName;
+    } else if (mFileType == CombineArchive) {
+        // We are dealing with a COMBINE archive, so its master file should be
+        // the SED-ML file we are after
+
+        COMBINESupport::CombineArchive *combineArchive = COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName);
+        COMBINESupport::CombineArchiveFiles masterFiles = combineArchive->masterFiles();
+
+        foreach (const COMBINESupport::CombineArchiveFile &masterFile, masterFiles) {
+            if (masterFile.format() == COMBINESupport::CombineArchiveFile::Sedml) {
+                if (sedmlFileName.isEmpty()) {
+                    sedmlFileName = combineArchive->location(masterFile);
+                } else {
+                    sedmlFileName = QString();
+
+                    combineIssue = tr("more than one master SED-ML file was found");
+
+                    break;
+                }
+            }
+        }
+
+        if (sedmlFileName.isEmpty())
+            combineIssue = tr("no master SED-ML file could be found");
+    }
+
     // Retrieve our simulation object for the current model, if any
 
     bool newSimulation = false;
-    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName):0;
+    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?cellmlFileManager->cellmlFile(pFileName):0;
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = (mFileType == CellmlFile)?cellmlFile->runtime():0;
 
     mSimulation = mSimulations.value(pFileName);
@@ -795,9 +829,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
             foreach (const CellMLSupport::CellmlFileIssue &issue,
                      cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues()) {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                      issue.message());
             }
+        } else if ((mFileType == CombineArchive) && !combineIssue.isEmpty()) {
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+combineIssue+".</span>");
         }
     }
 

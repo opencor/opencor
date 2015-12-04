@@ -87,6 +87,10 @@ public:
     virtual bool load();
     virtual bool save(const QString &pNewFileName = QString());
 
+    QString location(const CombineArchiveFile &pFile) const;
+
+    CombineArchiveFiles masterFiles();
+
     bool addFile(const QString &pFileName, const QString &pLocation,
                  const CombineArchiveFile::Format &pFormat,
                  const bool &pMaster = false);

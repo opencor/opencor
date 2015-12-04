@@ -345,6 +345,36 @@ bool CombineArchive::save(const QString &pNewFileName)
 
 //==============================================================================
 
+QString CombineArchive::location(const CombineArchiveFile &pFile) const
+{
+    // Return the (full) location of the given file
+
+    return mDirName+QDir::separator()+pFile.location();
+}
+
+//==============================================================================
+
+CombineArchiveFiles CombineArchive::masterFiles()
+{
+    // Make sure that the file has been properly loaded
+
+    if (!load())
+        return CombineArchiveFiles();
+
+    // Return a list of our master files
+
+    CombineArchiveFiles res = CombineArchiveFiles();
+
+    foreach (const CombineArchiveFile &file, mFiles) {
+        if (file.isMaster())
+            res << file;
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat,
                              const bool &pMaster)
