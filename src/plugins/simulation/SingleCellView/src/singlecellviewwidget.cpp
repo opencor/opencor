@@ -834,19 +834,21 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         if (cellmlFileRuntime->needNlaSolver()) {
             if (solversWidget->nlaSolvers().isEmpty()) {
                 if (cellmlFileRuntime->needOdeSolver()) {
-                    if (solversWidget->odeSolvers().isEmpty())
+                    if (solversWidget->odeSolvers().isEmpty()) {
                         simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
                                         InvalidSimulationEnvironment);
-                    else
+                    } else {
                         simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
                                         InvalidSimulationEnvironment);
+                    }
                 } else {
-                    if (solversWidget->daeSolvers().isEmpty())
+                    if (solversWidget->daeSolvers().isEmpty()) {
                         simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
                                         InvalidSimulationEnvironment);
-                    else
+                    } else {
                         simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
                                         InvalidSimulationEnvironment);
+                    }
                 }
             } else if (   cellmlFileRuntime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
