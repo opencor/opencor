@@ -270,6 +270,11 @@ bool CombineArchive::load()
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
+    // Make sure that the file has been properly loaded
+
+    if (!load())
+        return false;
+
     // Generate the contents our manifest
 
     QString fileList = QString();
@@ -322,15 +327,17 @@ bool CombineArchive::save(const QString &pNewFileName)
                       +"</omexManifest>\n");
 
     foreach (const CombineArchiveFile &file, mFiles) {
-        QString combineArchiveFileContents;
+        if (file.location().compare(".")) {
+            QString combineArchiveFileContents;
 
-        if (!Core::readTextFromFile(mDirName+QDir::separator()+file.location(),
-                                    combineArchiveFileContents)) {
-            return false;
+            if (!Core::readTextFromFile(mDirName+QDir::separator()+file.location(),
+                                        combineArchiveFileContents)) {
+                return false;
+            }
+
+            zipWriter.addFile(file.location(),
+                              combineArchiveFileContents.toUtf8());
         }
-
-        zipWriter.addFile(file.location(),
-                          combineArchiveFileContents.toUtf8());
     }
 
     return true;
@@ -342,7 +349,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat,
                              const bool &pMaster)
 {
-    // Make sure that the file is properly loaded
+    // Make sure that the file has been properly loaded
 
     if (!load())
         return false;

@@ -137,13 +137,29 @@ void Tests::basicTests()
     doBasicTests();
     doBasicTests(otherFileName);
 
+    // Check that we can load our other COMBINE archive and save it in yet
+    // another file, and make sure that the SHA-1 of the two files is the same
+
+    OpenCOR::COMBINESupport::CombineArchive otherCombineArchive(otherFileName);
+
+    QString yetAnotherFileName = OpenCOR::Core::temporaryFileName();
+
+    QVERIFY(otherCombineArchive.load());
+    QVERIFY(otherCombineArchive.save(yetAnotherFileName));
+
+    QString otherFileContents;
+    QString yetAnotherFileContents;
+
+    QVERIFY(OpenCOR::Core::readTextFromFile(otherFileName, otherFileContents));
+    QVERIFY(OpenCOR::Core::readTextFromFile(yetAnotherFileName, yetAnotherFileContents));
+
+    QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
+             OpenCOR::Core::sha1(yetAnotherFileContents));
+
     // Clean up after ourselves
 
     QFile::remove(otherFileName);
-
-    // Check that we can load our COMBINE archive
-
-    QVERIFY(mCombineArchive->load());
+    QFile::remove(yetAnotherFileName);
 }
 
 //==============================================================================
