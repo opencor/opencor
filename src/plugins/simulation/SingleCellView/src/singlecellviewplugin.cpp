@@ -300,16 +300,15 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file, a SED-ML file or a
     // COMBINE archive
-qDebug("---------");
-qDebug(">>> File name:       %s", qPrintable(pFileName));
-qDebug(">>> CellML file:     %s", CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)?"YES":"NO");
-qDebug(">>> SED-ML file:     %s", SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)?"YES":"NO");
-qDebug(">>> COMBINE archive: %s", COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)?"YES":"NO");
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (   !CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)
+        && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
+        && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)) {
         return 0;
+    }
 
-    // Update and return our simulation view widget using the given CellML file
+    // Update and return our simulation view widget using the given CellML file,
+    // SED-ML file or COMBINE archive
     // Note: we temporarily disable updates for our simulation view widget, so
     //       as to avoid any risk of known/unknown/potential flickering...
 

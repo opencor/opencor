@@ -656,9 +656,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // Retrieve our simulation object for the current model, if any
 
     bool newSimulation = false;
-
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
+    bool isCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFile *cellmlFile = isCellmlFile?CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName):0;
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = isCellmlFile?cellmlFile->runtime():0;
 
     mSimulation = mSimulations.value(pFileName);
 
@@ -769,7 +769,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             // means that the model doesn't contain any ODE or DAE
 
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
-        } else {
+        } else if (isCellmlFile) {
             // We don't have a valid runtime, so either there are some problems
             // with the CellML file or its runtime
 
