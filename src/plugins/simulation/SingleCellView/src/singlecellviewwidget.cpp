@@ -706,7 +706,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             }
         }
 
-        if (sedmlFileName.isEmpty())
+        if (sedmlFileName.isEmpty() && combineIssue.isEmpty())
             combineIssue = tr("no master SED-ML file could be found");
     }
 
