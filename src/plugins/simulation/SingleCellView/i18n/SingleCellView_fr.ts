@@ -304,6 +304,14 @@
         <source>The following parameters are imported and cannot therefore be saved:</source>
         <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
     </message>
+    <message>
+        <source>more than one master SED-ML file was found</source>
+        <translation>plus d&apos;un fichier SED-ML principal a été trouvé</translation>
+    </message>
+    <message>
+        <source>no master SED-ML file could be found</source>
+        <translation>aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
