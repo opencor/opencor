@@ -33,12 +33,40 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QXmlSchema>
 #include <QZipReader>
+
+//==============================================================================
+
+void dummyMessageHandler(QtMsgType pType, const QMessageLogContext &pContext,
+                         const QString &pMessage)
+{
+    Q_UNUSED(pType);
+    Q_UNUSED(pContext);
+    Q_UNUSED(pMessage);
+}
 
 //==============================================================================
 
 void Tests::initTestCase()
 {
+    // Quick trick to prevent warnings from Qt
+    // Note: indeed, to call CombineArchive::load() calls Core::validXml(),
+    //       which creates a QXmlSchema object. The first time a QXmlSchema
+    //       object is created, Qt generates some warnings about the current
+    //       thread not being the object's thread and therefore not being able
+    //       to move to the target thread. We clearly have nothing to do with
+    //       those warnings and, if anything, they just pollute our test output,
+    //       so...
+
+    qInstallMessageHandler(dummyMessageHandler);
+
+    QXmlSchema schema;
+
+    Q_UNUSED(schema);
+
+    qInstallMessageHandler(0);
+
     // Create a simple COMBINE archive that contains various files
 
     mCombineArchive = new OpenCOR::COMBINESupport::CombineArchive(OpenCOR::Core::temporaryFileName());
@@ -99,16 +127,6 @@ void Tests::doBasicTests(const QString &pFileName)
 
 //==============================================================================
 
-void dummyMessageHandler(QtMsgType pType, const QMessageLogContext &pContext,
-                         const QString &pMessage)
-{
-    Q_UNUSED(pType);
-    Q_UNUSED(pContext);
-    Q_UNUSED(pMessage);
-}
-
-//==============================================================================
-
 void Tests::basicTests()
 {
     // Some basic tests to save our COMBINE archive either directly or to a
@@ -124,18 +142,8 @@ void Tests::basicTests()
     QFile::remove(otherFileName);
 
     // Check that we can load our COMBINE archive
-    // Note: we temporarily disable message handling because calling
-    //       CombineArchive::load() will call Core::validXml(), which creates a
-    //       QXmlSchema object, which generates some warnings about the current
-    //       not being the object's thread and therefore not being able to move
-    //       to the target thread. We clearly have nothing to do with those
-    //       warnings and, if anything, they just pollute our test output, so...
-
-    qInstallMessageHandler(dummyMessageHandler);
 
     QVERIFY(mCombineArchive->load());
-
-    qInstallMessageHandler(0);
 }
 
 //==============================================================================

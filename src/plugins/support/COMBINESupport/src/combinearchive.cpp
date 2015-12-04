@@ -172,6 +172,15 @@ bool CombineArchive::load()
         return false;
     }
 
+    // Consider the file loaded if it is empty (i.e. new)
+
+    QString fileContents;
+
+    Core::readTextFromFile(mFileName, fileContents);
+
+    if (fileContents.isEmpty())
+        return true;
+
     // We assume our file to be a ZIP file, so extract all of its contents
 
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
@@ -194,13 +203,13 @@ bool CombineArchive::load()
 
     // Make sure that the manifest is a valid OMEX file
 
-    QString fileContents;
+    QString manifestContents;
     QString schemaContents;
 
-    Core::readTextFromFile(manifestFileName, fileContents);
+    Core::readTextFromFile(manifestFileName, manifestContents);
     Core::readTextFromFile(":omex.xsd", schemaContents);
 
-    if (!Core::validXml(fileContents, schemaContents)) {
+    if (!Core::validXml(manifestContents, schemaContents)) {
         mIssue = QObject::tr("the manifest is not a valid OMEX file");
 
         return false;
@@ -211,7 +220,7 @@ bool CombineArchive::load()
 
     QDomDocument domDocument;
 
-    domDocument.setContent(fileContents, true);
+    domDocument.setContent(manifestContents, true);
 
     for (QDomElement childElement = domDocument.documentElement().firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
@@ -333,7 +342,12 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat,
                              const bool &pMaster)
 {
-    // Make sure the format is known
+    // Make sure that the file is properly loaded
+
+    if (!load())
+        return false;
+
+    // Make sure that the format is known
 
     if (pFormat == CombineArchiveFile::Unknown)
         return false;
