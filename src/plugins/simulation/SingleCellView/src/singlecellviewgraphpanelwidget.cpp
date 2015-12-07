@@ -199,14 +199,9 @@ void SingleCellViewGraphPanelWidget::updateMarkerColor()
 {
     // Update the marker's colour based on whether the graph panel is active
 
-    QPalette newPalette = palette();
-
-    newPalette.setColor(QPalette::WindowText,
-                        mActive?
-                            Core::highlightColor():
-                            Core::windowColor());
-
-    mMarker->setPalette(newPalette);
+    mMarker->setStyleSheet("QFrame {"
+                           "    color: "+QString(mActive?Core::highlightColor().name():Core::windowColor().name())+";"
+                           "}");
 }
 
 //==============================================================================
