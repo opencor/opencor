@@ -68,6 +68,7 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
     setContextMenuPolicy(Qt::NoContextMenu);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setTextInteractionFlags(Qt::NoTextInteraction);
     setWordWrap(true);
 
     // 'Initialise' our message

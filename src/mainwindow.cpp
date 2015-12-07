@@ -255,9 +255,18 @@ showEnableAction(mGui->actionPreferences, false);
 
     // Keep track of the showing/hiding of the different window widgets
 
-    foreach (Plugin *plugin, mLoadedWindowPlugins)
+    foreach (Plugin *plugin, mLoadedWindowPlugins) {
         connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), SIGNAL(visibilityChanged(bool)),
                 this, SLOT(updateDockWidgetsVisibility()));
+    }
+
+    // Allow links, in message boxes, to be clickable using the mouse, but not
+    // using the keyboard since it would allow messages to be selected, which we
+    // don't want to allow at all
+
+    qApp->setStyleSheet("QMessageBox {"
+                        "    messagebox-text-interaction-flags: 4;"
+                        "}");
 
     // Show/hide and enable/disable the windows action depending on whether
     // there are window widgets
@@ -337,10 +346,11 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
     bool canClose = true;
 
-    if (mPluginManager->corePlugin())
+    if (mPluginManager->corePlugin()) {
         canClose = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->canClose();
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
+    }
 
     // Close ourselves, if possible
 
@@ -463,7 +473,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         foreach (const Gui::Menu &menu, guiInterface->guiMenus()) {
             // Insert the menu before a menu item / separator
 
-            if (menu.action())
+            if (menu.action()) {
                 switch (menu.type()) {
                 case Gui::Menu::File:
                     mGui->menuFile->insertMenu(menu.action(), menu.menu());
@@ -474,6 +484,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                     ;
                 }
+            }
         }
 
         // Add some actions to some sub-menus and keep track of them
@@ -625,10 +636,11 @@ void MainWindow::loadSettings()
     // settings
     // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
 
-    if (mPluginManager->corePlugin())
+    if (mPluginManager->corePlugin()) {
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->settingsLoaded(mPluginManager->loadedPlugins());
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
+    }
 
     // Remove the File menu when on OS X, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on OS X
@@ -787,9 +799,10 @@ void MainWindow::reorderViewWindowsMenu()
 
             QString menuItemTitle = menuItemAction->text().remove("&").normalized(QString::NormalizationForm_KD);
 
-            for (int i = menuItemTitle.length()-1; i >= 0; --i)
+            for (int i = menuItemTitle.length()-1; i >= 0; --i) {
                 if (menuItemTitle[i].category() == QChar::Mark_NonSpacing)
                     menuItemTitle.remove(i, 1);
+            }
 
             // Keep track of the menu item title and the action to which it is
             // associated
@@ -919,10 +932,11 @@ void MainWindow::handleArguments(const QString &pArguments)
     // Handle the arguments that were passed to OpenCOR by passing them to the
     // Core plugin, should it be loaded
 
-    if (mPluginManager->corePlugin())
+    if (mPluginManager->corePlugin()) {
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(pArguments.split("|"));
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
+    }
 }
 
 //==============================================================================
@@ -973,7 +987,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
 
         QString host = pUrl.host();
 
-        foreach (Plugin *plugin, mLoadedPluginPlugins)
+        foreach (Plugin *plugin, mLoadedPluginPlugins) {
             if (!plugin->name().toLower().compare(host)) {
                 // This is an action for the current plugin, so forward the
                 // action to it, should it support the Plugin interface
@@ -982,6 +996,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
 
                 break;
             }
+        }
     }
 }
 
@@ -1174,13 +1189,14 @@ void MainWindow::showEnableActions(const QList<QAction *> &pActions)
 
             bool showEnable = false;
 
-            foreach (QAction *actionMenuAction, actionMenuActions)
+            foreach (QAction *actionMenuAction, actionMenuActions) {
                 if (   !actionMenuAction->isSeparator()
                     &&  actionMenuAction->isVisible()) {
                     showEnable = true;
 
                     break;
                 }
+            }
 
             showEnableAction(action, showEnable);
         }
