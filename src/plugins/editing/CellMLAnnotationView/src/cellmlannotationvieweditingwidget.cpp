@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
@@ -99,6 +98,15 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
             mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
+
+    // Some connections to keep track of what our details widget wants
+
+    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(QWebView *, const QString &)),
+            this, SLOT(updateWebViewerWithQualifierDetails(QWebView *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(QWebView *, const QString &)),
+            this, SLOT(updateWebViewerWithResourceDetails(QWebView *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(idDetailsRequested(QWebView *, const QString &, const QString &)),
+            this, SLOT(updateWebViewerWithIdDetails(QWebView *, const QString &, const QString &)));
 
     // Make our CellML list widget our focus proxy
 

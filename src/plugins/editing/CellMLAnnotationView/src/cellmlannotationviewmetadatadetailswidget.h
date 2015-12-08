@@ -100,6 +100,13 @@ private:
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
+
+    void qualifierDetailsRequested(QWebView *pWebView,
+                                   const QString &pQualifier);
+    void resourceDetailsRequested(QWebView *pWebView, const QString &pResource);
+    void idDetailsRequested(QWebView *pWebView, const QString &pResource,
+                            const QString &pId);
+
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement);
 

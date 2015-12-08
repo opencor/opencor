@@ -75,14 +75,6 @@ public:
     CellmlAnnotationViewCellmlListWidget * cellmlList() const;
     CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
-    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
-                                             const QString &pQualifier);
-    void updateWebViewerWithResourceDetails(QWebView *pWebView,
-                                            const QString &pResource);
-    void updateWebViewerWithIdDetails(QWebView *pWebView,
-                                      const QString &pResource,
-                                      const QString &pId);
-
     void filePermissionsChanged();
 
 private:
@@ -104,6 +96,14 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
+
+    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
+                                             const QString &pQualifier);
+    void updateWebViewerWithResourceDetails(QWebView *pWebView,
+                                            const QString &pResource);
+    void updateWebViewerWithIdDetails(QWebView *pWebView,
+                                      const QString &pResource,
+                                      const QString &pId);
 };
 
 //==============================================================================

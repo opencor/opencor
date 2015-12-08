@@ -43,7 +43,6 @@ specific language governing permissions and limitations under the License.
 #include <QMenu>
 #include <QRegularExpression>
 #include <QScrollArea>
-#include <QStackedWidget>
 #include <QString>
 #include <QTimer>
 #include <QWebElement>
