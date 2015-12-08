@@ -33,7 +33,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class QStackedWidget;
 
 //==============================================================================
 
@@ -73,8 +72,6 @@ public:
 
 private:
     CellMLAnnotationViewPlugin *mPluginParent;
-
-    QStackedWidget *mContents;
 
     CellmlAnnotationViewEditingWidget *mEditingWidget;
     QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;
