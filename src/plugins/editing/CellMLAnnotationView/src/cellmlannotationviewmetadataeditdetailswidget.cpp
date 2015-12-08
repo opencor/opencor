@@ -149,9 +149,13 @@ bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotati
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
+CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
+                                                                                             CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                                                             CellMLSupport::CellmlFile *pCellmlFile,
+                                                                                             QWidget *pParent) :
     Core::Widget(pParent),
-    mParent(pParent),
+    mViewWidget(pViewWidget),
+    mViewEditingWidget(pViewEditingWidget),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
     mTermValue(0),
     mAddTermButton(0),
@@ -165,7 +169,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookUpInformation(false),
     mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
     mEnabledItems(QMap<QString, bool>()),
-    mCellmlFile(pParent->cellmlFile()),
+    mCellmlFile(pCellmlFile),
     mElement(0),
     mUrls(QMap<QString, QString>()),
     mItemInformationSha1s(QStringList()),
@@ -305,7 +309,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     //       mParent, but this wouldn't work here since updateGui() gets called
     //       as part of the creation of this metadata details widget...
 
-    setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeViewWidget()),
+    setTabOrder(qobject_cast<QWidget *>(mViewEditingWidget->cellmlList()->treeViewWidget()),
                 mQualifierValue);
     setTabOrder(mQualifierValue, mLookUpQualifierButton);
     setTabOrder(mLookUpQualifierButton, mTermValue);
@@ -453,7 +457,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     //       we were then our busy widget would get 'reset' every time, which
     //       doesn't look nice...
 
-    if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
+    if (   (pResetItemsGui && !mViewWidget->isBusyWidgetVisible())
         || termIsDirect) {
         updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
                        !termIsDirect && !pFilePermissionsChanged);
@@ -657,7 +661,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     // Hide our busy widget (just to be on the safe side)
 
-    mParent->parent()->hideBusyWidget();
+    mViewWidget->hideBusyWidget();
 
     // Show/hide our output message and output for ontological terms
 
@@ -667,7 +671,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     // Show our busy widget instead, if needed
 
     if (showBusyWidget)
-        mParent->parent()->showBusyWidget(mOutput);
+        mViewWidget->showBusyWidget(mOutput);
 }
 
 //==============================================================================
@@ -869,7 +873,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         // Ask our parent to update its GUI with the added RDF triple
 
-        mParent->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
+        mViewEditingWidget->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
     } else {
         // We have clicked on a resource/id link, so start by enabling the
         // looking up of information
@@ -1106,7 +1110,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     // Ask our parent to update its GUI with the added RDF triple
 
-    mParent->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
+    mViewEditingWidget->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
 }
 
 //==============================================================================
@@ -1143,7 +1147,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
 {
     // Recenter our busy widget
 
-    mParent->parent()->centerBusyWidget();
+    mViewWidget->centerBusyWidget();
 }
 
 //==============================================================================

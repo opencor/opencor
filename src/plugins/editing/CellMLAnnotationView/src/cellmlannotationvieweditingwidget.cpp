@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
@@ -47,13 +46,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
+CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                                      const QString &pFileName,
-                                                                     CellmlAnnotationViewWidget *pParent) :
+                                                                     CellmlAnnotationViewWidget *pViewWidget,
+                                                                     QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(pParent),
-    mPluginParent(pPluginParent),
-    mParent(pParent)
+    Core::CommonWidget(pParent)
 {
     // Retrieve some SVG diagrams
 
@@ -81,7 +79,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     // Create our two main parts
 
     mCellmlList      = new CellmlAnnotationViewCellmlListWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(this);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pViewWidget, this, mCellmlFile, this);
 
     // Populate ourselves
 
@@ -99,6 +97,15 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
             mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
+
+    // Some connections to keep track of what our details widget wants
+
+    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(QWebView *, const QString &)),
+            this, SLOT(updateWebViewerWithQualifierDetails(QWebView *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(QWebView *, const QString &)),
+            this, SLOT(updateWebViewerWithResourceDetails(QWebView *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(idDetailsRequested(QWebView *, const QString &, const QString &)),
+            this, SLOT(updateWebViewerWithIdDetails(QWebView *, const QString &, const QString &)));
 
     // Make our CellML list widget our focus proxy
 
@@ -120,24 +127,6 @@ void CellmlAnnotationViewEditingWidget::retranslateUi()
 
     mCellmlList->retranslateUi();
     mMetadataDetails->retranslateUi();
-}
-
-//==============================================================================
-
-CellMLAnnotationViewPlugin * CellmlAnnotationViewEditingWidget::pluginParent() const
-{
-    // Return our plugin parent
-
-    return mPluginParent;
-}
-
-//==============================================================================
-
-CellmlAnnotationViewWidget * CellmlAnnotationViewEditingWidget::parent() const
-{
-    // Return our parent
-
-    return mParent;
 }
 
 //==============================================================================

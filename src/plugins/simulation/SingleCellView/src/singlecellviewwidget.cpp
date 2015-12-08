@@ -99,11 +99,11 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
+SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                            QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::SingleCellViewWidget),
-    mPluginParent(pPluginParent),
+    mPlugin(pPlugin),
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mFileType(Unknown),
@@ -589,8 +589,8 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
     // Update our invalid model message
 
     mInvalidModelMessageWidget->setMessage((mErrorType == InvalidCellmlFile)?
-                                               tr("The <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
-                                               tr("The <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName()),
+                                               tr("The <strong>%1</strong> view requires a valid CellML file to work...").arg(mPlugin->viewName()):
+                                               tr("The <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPlugin->viewName()),
                                            tr("See below for more information."));
 }
 
@@ -1818,7 +1818,7 @@ void SingleCellViewWidget::on_actionSedmlExportSedmlFile_triggered()
 
     sedmlFileName = Core::getSaveFileName(QObject::tr("Export To SED-ML File"),
                                           sedmlFileName,
-                                          Core::fileTypes(mPluginParent->sedmlFileTypes()));
+                                          Core::fileTypes(mPlugin->sedmlFileTypes()));
 
     // Create a SED-ML file using the SED-ML file name that has been provided
 
@@ -1865,7 +1865,7 @@ void SingleCellViewWidget::on_actionSedmlExportCombineArchive_triggered()
 
     combineArchiveName = Core::getSaveFileName(QObject::tr("Export To COMBINE Archive"),
                                                combineArchiveName,
-                                               Core::fileTypes(mPluginParent->combineFileTypes()));
+                                               Core::fileTypes(mPlugin->combineFileTypes()));
 
     // Effectively export ourselves to a COMBINE archive, if a COMBINE archive
     // name has been provided
@@ -2324,7 +2324,7 @@ void SingleCellViewWidget::resetFileTabIcon(SingleCellViewSimulation *pSimulatio
 
     mProgresses.remove(simulation->fileName());
 
-    emit updateFileTabIcon(mPluginParent->viewName(), simulation->fileName(), NoIcon);
+    emit updateFileTabIcon(mPlugin->viewName(), simulation->fileName(), NoIcon);
 }
 
 //==============================================================================
@@ -2871,7 +2871,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
             // Let people know about the file tab icon to be used for the model
 
-            emit updateFileTabIcon(mPluginParent->viewName(),
+            emit updateFileTabIcon(mPlugin->viewName(),
                                    pSimulation->fileName(),
                                    fileTabIcon(pSimulation->fileName()));
         }

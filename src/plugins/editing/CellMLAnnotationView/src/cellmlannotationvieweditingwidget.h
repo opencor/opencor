@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellmlfile.h"
 #include "commonwidget.h"
 #include "corecliutils.h"
 
@@ -44,6 +43,15 @@ class QWebView;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFile;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -61,34 +69,21 @@ class CellmlAnnotationViewEditingWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
+    explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                const QString &pFileName,
-                                               CellmlAnnotationViewWidget *pParent);
+                                               CellmlAnnotationViewWidget *pViewWidget,
+                                               QWidget *pParent);
 
     virtual void retranslateUi();
-
-    CellMLAnnotationViewPlugin * pluginParent() const;
-    CellmlAnnotationViewWidget * parent() const;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 
     CellmlAnnotationViewCellmlListWidget * cellmlList() const;
     CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
-    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
-                                             const QString &pQualifier);
-    void updateWebViewerWithResourceDetails(QWebView *pWebView,
-                                            const QString &pResource);
-    void updateWebViewerWithIdDetails(QWebView *pWebView,
-                                      const QString &pResource,
-                                      const QString &pId);
-
     void filePermissionsChanged();
 
 private:
-    CellMLAnnotationViewPlugin *mPluginParent;
-    CellmlAnnotationViewWidget *mParent;
-
     CellMLSupport::CellmlFile *mCellmlFile;
 
     CellmlAnnotationViewCellmlListWidget *mCellmlList;
@@ -104,6 +99,14 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
+
+    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
+                                             const QString &pQualifier);
+    void updateWebViewerWithResourceDetails(QWebView *pWebView,
+                                            const QString &pResource);
+    void updateWebViewerWithIdDetails(QWebView *pWebView,
+                                      const QString &pResource,
+                                      const QString &pId);
 };
 
 //==============================================================================

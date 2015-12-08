@@ -60,10 +60,6 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewEditingWidget;
-
-//==============================================================================
-
 class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public Core::Widget
 {
     Q_OBJECT
@@ -84,7 +80,8 @@ private:
     };
 
 public:
-    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
+    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
+                                                                 QWidget *pParent);
     ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();

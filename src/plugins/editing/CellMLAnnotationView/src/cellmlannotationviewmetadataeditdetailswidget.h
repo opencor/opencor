@@ -72,6 +72,7 @@ namespace CellMLAnnotationView {
 
 class CellmlAnnotationViewEditingWidget;
 class CellmlAnnotationViewMetadataWebViewWidget;
+class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -105,7 +106,10 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
+    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
+                                                           CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                           CellMLSupport::CellmlFile *pCellmlFile,
+                                                           QWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
@@ -120,7 +124,8 @@ private:
         Id
     };
 
-    CellmlAnnotationViewEditingWidget *mParent;
+    CellmlAnnotationViewWidget *mViewWidget;
+    CellmlAnnotationViewEditingWidget *mViewEditingWidget;
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
