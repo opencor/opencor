@@ -45,7 +45,6 @@ specific language governing permissions and limitations under the License.
 #include <QMessageBox>
 #include <QPalette>
 #include <QSizePolicy>
-#include <QStackedWidget>
 
 //==============================================================================
 
