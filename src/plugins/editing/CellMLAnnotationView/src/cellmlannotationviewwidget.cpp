@@ -42,10 +42,10 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                        QWidget *pParent) :
     ViewWidget(pParent),
-    mPluginParent(pPluginParent),
+    mPlugin(pPlugin),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CellmlAnnotationViewEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
@@ -128,7 +128,7 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
     if (!mEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new CellmlAnnotationViewEditingWidget(mPluginParent, pFileName, this);
+        mEditingWidget = new CellmlAnnotationViewEditingWidget(mPlugin, pFileName, this, this);
 
         // Keep track of the sizes of our editing widget and those of its
         // metadata details

@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QLabel>
 #include <QVBoxLayout>
 #include <QWebView>
 
@@ -46,10 +45,14 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
+CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
+                                                                                     CellmlAnnotationViewWidget *pViewWidget,
+                                                                                     CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                                                     CellMLSupport::CellmlFile *pCellmlFile,
+                                                                                     QWidget *pParent) :
     Widget(pParent),
-    mParent(pParent),
-    mCellmlFile(pParent->cellmlFile()),
+    mPlugin(pPlugin),
+    mCellmlFile(pCellmlFile),
     mElement(0)
 {
     // Create and set our vertical layout
@@ -83,8 +86,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, this);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
     mWebView             = new QWebView(this);
 
     mWebView->setAcceptDrops(false);
@@ -206,7 +209,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUnsupportedMetadataMe
 {
     // Retranslate our unsupported metadata message
 
-    mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()),
+    mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mPlugin->viewName()),
                                             Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
                                                 tr("Click <a href=\"here\">here</a> if you want to remove the existing metadata."):
                                                 QString());

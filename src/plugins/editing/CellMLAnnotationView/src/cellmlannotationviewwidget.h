@@ -51,7 +51,7 @@ class CellmlAnnotationViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+    explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                         QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -71,7 +71,7 @@ public:
     CellmlAnnotationViewEditingWidget * editingWidget(const QString &pFileName) const;
 
 private:
-    CellMLAnnotationViewPlugin *mPluginParent;
+    CellMLAnnotationViewPlugin *mPlugin;
 
     CellmlAnnotationViewEditingWidget *mEditingWidget;
     QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;

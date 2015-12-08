@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellmlfile.h"
 #include "commonwidget.h"
 #include "corecliutils.h"
 
@@ -44,6 +43,15 @@ class QWebView;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFile;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -61,14 +69,12 @@ class CellmlAnnotationViewEditingWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
+    explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                const QString &pFileName,
-                                               CellmlAnnotationViewWidget *pParent);
+                                               CellmlAnnotationViewWidget *pViewWidget,
+                                               QWidget *pParent);
 
     virtual void retranslateUi();
-
-    CellMLAnnotationViewPlugin * pluginParent() const;
-    CellmlAnnotationViewWidget * parent() const;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 
@@ -78,9 +84,6 @@ public:
     void filePermissionsChanged();
 
 private:
-    CellMLAnnotationViewPlugin *mPluginParent;
-    CellmlAnnotationViewWidget *mParent;
-
     CellMLSupport::CellmlFile *mCellmlFile;
 
     CellmlAnnotationViewCellmlListWidget *mCellmlList;

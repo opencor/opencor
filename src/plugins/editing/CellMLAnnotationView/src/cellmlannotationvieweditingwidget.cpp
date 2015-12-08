@@ -46,13 +46,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
+CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                                      const QString &pFileName,
-                                                                     CellmlAnnotationViewWidget *pParent) :
+                                                                     CellmlAnnotationViewWidget *pViewWidget,
+                                                                     QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(pParent),
-    mPluginParent(pPluginParent),
-    mParent(pParent)
+    Core::CommonWidget(pParent)
 {
     // Retrieve some SVG diagrams
 
@@ -80,7 +79,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     // Create our two main parts
 
     mCellmlList      = new CellmlAnnotationViewCellmlListWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(this);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pViewWidget, this, mCellmlFile, this);
 
     // Populate ourselves
 
@@ -128,24 +127,6 @@ void CellmlAnnotationViewEditingWidget::retranslateUi()
 
     mCellmlList->retranslateUi();
     mMetadataDetails->retranslateUi();
-}
-
-//==============================================================================
-
-CellMLAnnotationViewPlugin * CellmlAnnotationViewEditingWidget::pluginParent() const
-{
-    // Return our plugin parent
-
-    return mPluginParent;
-}
-
-//==============================================================================
-
-CellmlAnnotationViewWidget * CellmlAnnotationViewEditingWidget::parent() const
-{
-    // Return our parent
-
-    return mParent;
 }
 
 //==============================================================================
