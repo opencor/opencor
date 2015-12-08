@@ -2795,8 +2795,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
             // Let people know about the file tab icon to be used for the model
 
-            emit updateFileTabIcon(mPlugin->viewName(),
-                                   pSimulation->fileName(),
+            emit updateFileTabIcon(mPlugin->viewName(), pSimulation->fileName(),
                                    fileTabIcon(pSimulation->fileName()));
         }
     }
