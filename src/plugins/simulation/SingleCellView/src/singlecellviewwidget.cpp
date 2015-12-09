@@ -64,14 +64,6 @@ bool SingleCellViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-static const auto OutputTab  = QStringLiteral("&nbsp;&nbsp;&nbsp;&nbsp;");
-static const auto OutputGood = QStringLiteral(" style=\"color: green;\"");
-static const auto OutputInfo = QStringLiteral(" style=\"color: navy;\"");
-static const auto OutputBad  = QStringLiteral(" style=\"color: maroon;\"");
-static const auto OutputBrLn = QStringLiteral("<br/>\n");
-
-//==============================================================================
-
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the simulation widget associated with the given file, if any
