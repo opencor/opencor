@@ -36,19 +36,11 @@ namespace SingleCellView {
 
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                            QWidget *pParent) :
-    ViewWidget(pParent),
+    ViewWidget(pParent, false),
     mPlugin(pPlugin),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
 {
-    // Create and set our vertical layout
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    setLayout(layout);
 }
 
 //==============================================================================

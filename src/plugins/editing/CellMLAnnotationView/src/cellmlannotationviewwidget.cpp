@@ -30,10 +30,10 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QLayout>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
-#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -51,14 +51,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     mEditingWidgetSizes(QIntList()),
     mMetadataDetailsWidgetSizes(QIntList())
 {
-    // Create and set our vertical layout
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    setLayout(layout);
 }
 
 //==============================================================================
@@ -152,7 +144,7 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
     mEditingWidget->setSizes(mEditingWidgetSizes);
     mEditingWidget->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
 
-    // Remove our previous editing widget and add our new one
+    // Hide our previous editing widget and show our new one
 
     mEditingWidget->show();
 
