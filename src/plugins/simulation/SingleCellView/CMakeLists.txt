@@ -61,7 +61,6 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewgraphpanelplotwidget.ui
         src/singlecellviewinformationgraphswidget.ui
         src/singlecellviewsimulationwidget.ui
-        src/singlecellviewwidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

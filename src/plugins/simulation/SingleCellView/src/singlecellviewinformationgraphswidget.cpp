@@ -713,18 +713,24 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 
         // Add the current parameter to the 'current' component menu
 
+/*---GRY---
         QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
+*/
 
         // Create a connection to handle the parameter value update
 
+/*---GRY---
         connect(parameterAction, SIGNAL(triggered(bool)),
                 this, SLOT(updateParameterValue()));
+*/
 
         // Keep track of the parameter associated with our model parameter
         // action
 
+/*---GRY---
         mParameterActions.insert(parameterAction, parameter);
+*/
     }
 }
 

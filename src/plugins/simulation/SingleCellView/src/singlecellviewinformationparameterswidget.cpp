@@ -501,7 +501,9 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
+/*---GRY---
         property->setIcon(SingleCellViewWidget::parameterIcon(parameter->type()));
+*/
 
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
@@ -630,19 +632,25 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
         // Add the current parameter to the 'current' component menu
 
+/*---GRY---
         QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
+*/
 
         // Create a connection to handle the graph requirement against our
         // parameter
 
+/*---GRY---
         connect(parameterAction, SIGNAL(triggered(bool)),
                 this, SLOT(emitGraphRequired()));
+*/
 
         // Keep track of the parameter associated with our model parameter
         // action
 
+/*---GRY---
         mParameterActions->insert(parameterAction, parameter);
+*/
     }
 }
 

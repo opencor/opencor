@@ -1127,11 +1127,12 @@ void SingleCellViewSimulationWidget::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::filePermissionsChanged(const QString &pFileName)
+void SingleCellViewSimulationWidget::filePermissionsChanged(/*const QString &pFileName*/)
 {
     // The given file has been un/locked, so enable/disable the development mode
     // and keep track of its checked status or recheck it, as necessary
 
+/*---GRY---
     if (mSimulation && !mSimulation->fileName().compare(pFileName)) {
          if (Core::FileManager::instance()->isReadableAndWritable(pFileName)) {
              mGui->actionDevelopmentMode->setEnabled(true);
@@ -1143,6 +1144,7 @@ void SingleCellViewSimulationWidget::filePermissionsChanged(const QString &pFile
              mGui->actionDevelopmentMode->setEnabled(false);
          }
     }
+*/
 }
 
 //==============================================================================

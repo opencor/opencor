@@ -71,7 +71,12 @@ bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
 
     // Let our view widget know that we want to save a file
 
+/*---GRY---
     return mViewWidget->saveFile(pOldFileName, pNewFileName);
+*/
+Q_UNUSED(pOldFileName);
+Q_UNUSED(pNewFileName);
+return false;
 }
 
 //==============================================================================
@@ -80,7 +85,10 @@ void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 {
     // Let our view widget know that a file has been opened
 
+/*---GRY---
     mViewWidget->fileOpened(pFileName);
+*/
+Q_UNUSED(pFileName);
 }
 
 //==============================================================================
@@ -98,7 +106,10 @@ void SingleCellViewPlugin::fileModified(const QString &pFileName)
 {
     // Let our view widget know that a file has been modified
 
+/*---GRY---
     mViewWidget->fileModified(pFileName);
+*/
+Q_UNUSED(pFileName);
 }
 
 //==============================================================================
@@ -137,7 +148,10 @@ void SingleCellViewPlugin::fileClosed(const QString &pFileName)
 {
     // Let our view widget know that a file has been closed
 
+/*---GRY---
     mViewWidget->fileClosed(pFileName);
+*/
+Q_UNUSED(pFileName);
 }
 
 //==============================================================================
@@ -214,8 +228,10 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Initialise our view widget with the different solvers and data stores
     // that are available to us
 
+/*---GRY---
     mViewWidget->setSolverInterfaces(solverInterfaces);
     mViewWidget->setDataStoreInterfaces(dataStoreInterfaces);
+*/
 }
 
 //==============================================================================
@@ -336,7 +352,11 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 {
     // Return the requested file tab icon
 
+/*---GRY---
     return mViewWidget->fileTabIcon(pFileName);
+*/
+Q_UNUSED(pFileName);
+return QIcon();
 }
 
 //==============================================================================
