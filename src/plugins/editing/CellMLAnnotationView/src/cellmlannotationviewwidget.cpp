@@ -152,7 +152,7 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
     mEditingWidget->setSizes(mEditingWidgetSizes);
     mEditingWidget->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
 
-    // Remove our previous editing widget and add our new one
+    // Hide our previous editing widget and show our new one
 
     mEditingWidget->show();
 
