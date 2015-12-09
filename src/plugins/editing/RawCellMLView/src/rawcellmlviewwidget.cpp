@@ -35,10 +35,10 @@ specific language governing permissions and limitations under the License.
 
 #include <QDomDocument>
 #include <QLabel>
+#include <QLayout>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
-#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -60,15 +60,6 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
-    // Create and set our vertical layout
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    setLayout(layout);
-
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
 

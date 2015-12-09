@@ -101,7 +101,7 @@ namespace SingleCellView {
 
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                            QWidget *pParent) :
-    ViewWidget(pParent),
+    ViewWidget(pParent, false),
     mGui(new Ui::SingleCellViewWidget),
     mPlugin(pPlugin),
     mSolverInterfaces(SolverInterfaces()),

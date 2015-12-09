@@ -27,8 +27,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QLabel>
+#include <QLayout>
 #include <QSettings>
-#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -44,14 +44,6 @@ RawViewWidget::RawViewWidget(QWidget *pParent) :
     mEditor(0),
     mEditors(QMap<QString, Editor::EditorWidget *>())
 {
-    // Create and set our vertical layout
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    setLayout(layout);
 }
 
 //==============================================================================
