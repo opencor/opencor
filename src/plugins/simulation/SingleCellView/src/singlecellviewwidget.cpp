@@ -36,7 +36,7 @@ namespace SingleCellView {
 
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                            QWidget *pParent) :
-    ViewWidget(pParent, false),
+    ViewWidget(pParent),
     mPlugin(pPlugin),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
