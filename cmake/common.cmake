@@ -231,10 +231,10 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DQT_DEBUG)
     ENDIF()
 
-    # Disable a warning that occurs on (64-bit) Windows
-    # Note: the warning occurs in (at least) MSVC's algorithm header file (and
-    #       on 64-bit Windows). To disable it here means that we disable it for
-    #       everything, but is there another solution?...
+    # Disable a warning that occurs on (the 64-bit version of) Windows
+    # Note: the warning occurs in (at least) MSVC's algorithm header file. To
+    #       disable it here means that we disable it for everything, but is
+    #       there another solution?...
 
     IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
@@ -921,10 +921,6 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
         # Copy the Qt library to both the build and build/bin folders, so we can
         # test things both from within Qt Creator and without first having to
         # deploy OpenCOR
-        # Note: this is particularly useful on 64-bit Windows where we might
-        #       want to be able to test both the 32-bit and 64-bit versions of
-        #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
-        #       indirectly referenced in the PATH)...
 
         SET(LIBRARY_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
         SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}d${CMAKE_SHARED_LIBRARY_SUFFIX})

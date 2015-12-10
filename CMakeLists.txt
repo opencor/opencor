@@ -469,8 +469,8 @@ ELSE()
         # Additional files required by OpenCOR
         # Note: these files may or not be needed in order to test OpenCOR
         #       locally. It all depends on the way the user's computer is set
-        #       up. So, by copying them over, we are sure that the 32-bit/64-bit
-        #       release/debug version of OpenCOR will work fine...
+        #       up. So, by copying them over, we are sure that the release/debug
+        #       version of OpenCOR will work fine...
 
         SET(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/redist")
 
