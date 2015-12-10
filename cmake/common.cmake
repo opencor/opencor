@@ -39,16 +39,8 @@ MACRO(INITIALISE_PROJECT)
 
     IF(NOT ARCHITECTURE_COMPILE)
         MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your ${PROJECT_NAME} environment and try again...")
-    ELSE()
-        IF(APPLE)
-            IF(NOT ${ARCHITECTURE} EQUAL 64)
-                MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 64-bit mode...")
-            ENDIF()
-        ELSE()
-            IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
-                MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 32-bit or 64-bit mode...")
-            ENDIF()
-        ENDIF()
+    ELSEIF(NOT ${ARCHITECTURE} EQUAL 64)
+        MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 64-bit mode...")
     ENDIF()
 
     # By default, we are building a release version of OpenCOR, unless we are
@@ -56,13 +48,13 @@ MACRO(INITIALISE_PROJECT)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a ${ARCHITECTURE}-bit debug version of ${PROJECT_NAME}")
+            SET(BUILD_INFORMATION "Building a debug version of ${PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
         IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a ${ARCHITECTURE}-bit release version of ${PROJECT_NAME}")
+            SET(BUILD_INFORMATION "Building a release version of ${PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE TRUE)
@@ -239,12 +231,12 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DQT_DEBUG)
     ENDIF()
 
-    # Disable a warning that occurs on 64-bit Windows
-    # Note: the warning occurs in (at least) MSVC's algorithm header file and on
-    #       64-bit Windows. To disable it here means that we disable it for
+    # Disable a warning that occurs on (64-bit) Windows
+    # Note: the warning occurs in (at least) MSVC's algorithm header file (and
+    #       on 64-bit Windows). To disable it here means that we disable it for
     #       everything, but is there another solution?...
 
-    IF(WIN32 AND ${ARCHITECTURE} EQUAL 64)
+    IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
     ENDIF()
 
@@ -291,19 +283,11 @@ MACRO(INITIALISE_PROJECT)
     # Default location of external dependencies
 
     IF(WIN32)
-        IF(${ARCHITECTURE} EQUAL 32)
-            SET(DISTRIB_DIR windows/x86)
-        ELSE()
-            SET(DISTRIB_DIR windows/x64)
-        ENDIF()
+        SET(DISTRIB_DIR windows)
     ELSEIF(APPLE)
         SET(DISTRIB_DIR osx)
     ELSE()
-        IF(${ARCHITECTURE} EQUAL 32)
-            SET(DISTRIB_DIR linux/x86)
-        ELSE()
-            SET(DISTRIB_DIR linux/x64)
-        ENDIF()
+        SET(DISTRIB_DIR linux)
     ENDIF()
 
     IF(WIN32)

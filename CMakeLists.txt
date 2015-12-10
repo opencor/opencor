@@ -148,10 +148,10 @@ SET(PROJECT_DESCRIPTION "A cross-platform modelling environment")
 
 IF(SNAPSHOT)
     SET(FILE_VERSION 0)
-    SET(PRODUCT_VERSION "Snapshot ${VERSION} (${ARCHITECTURE}-bit)")
+    SET(PRODUCT_VERSION "Snapshot ${VERSION}")
 ELSE()
     STRING(REPLACE "." "," FILE_VERSION "${VERSION}")
-    SET(PRODUCT_VERSION "Version ${VERSION} (${ARCHITECTURE}-bit)")
+    SET(PRODUCT_VERSION "Version ${VERSION}")
 ENDIF()
 
 STRING(TIMESTAMP YEAR "%Y")
@@ -478,11 +478,7 @@ ELSE()
             SET(MSVC_DIRNAME "${MSVC_DIRNAME}/Debug_NonRedist")
         ENDIF()
 
-        IF(${ARCHITECTURE} EQUAL 32)
-            SET(MSVC_DIRNAME "${MSVC_DIRNAME}/x86")
-        ELSE()
-            SET(MSVC_DIRNAME "${MSVC_DIRNAME}/x64")
-        ENDIF()
+        SET(MSVC_DIRNAME "${MSVC_DIRNAME}/x64")
 
         IF(RELEASE_MODE)
             SET(ADDITIONAL_FILES
@@ -496,17 +492,12 @@ ELSE()
             )
         ENDIF()
 
-        IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 21fc38157ac375741709147ffa9cde4ee19ed737)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 0eaffe577bc67b2d7fd70011eb2a3a422182965a)
-        ELSE()
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll ce3841a3a14c6201c7f391787e40b68b1607c0c8)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll faeddfc25ac09fc0b54298a72213b709054c6580)
-        ENDIF()
+        RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll ce3841a3a14c6201c7f391787e40b68b1607c0c8)
+        RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll faeddfc25ac09fc0b54298a72213b709054c6580)
 
         LIST(APPEND ADDITIONAL_FILES
-            ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR}/libeay32.dll
-            ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR}/ssleay32.dll
+            ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR}/bin/libeay32.dll
+            ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR}/bin/ssleay32.dll
         )
 
         FOREACH(ADDITIONAL_FILE ${ADDITIONAL_FILES})
@@ -572,20 +563,13 @@ IF(WIN32)
     ENDIF()
 
     SET(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
-
-    SET(CPACK_SYSTEM_NAME "Windows${ARCHITECTURE}")
-
+    SET(CPACK_SYSTEM_NAME "Windows")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
     # Specify the default installation directory
 
     IF(NSIS_FOUND)
-        IF(${ARCHITECTURE} EQUAL 32)
-            SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
-        ELSE()
-            SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
-        ENDIF()
-
+        SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
         SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\${PROJECT_NAME}.exe")
     ENDIF()
 
@@ -679,8 +663,7 @@ ELSE()
     # Select TGZ as the packager on Linux
 
     SET(CPACK_GENERATOR TGZ)
-
-    SET(CPACK_SYSTEM_NAME "Linux${ARCHITECTURE}")
+    SET(CPACK_SYSTEM_NAME "Linux")
 
     # OpenCOR itself
 
