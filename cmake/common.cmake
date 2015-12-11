@@ -845,7 +845,8 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     # Location of our plugins
 
-    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin)
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${DISTRIB_BINARY_DIR})
+    STRING(REGEX REPLACE "${DISTRIB_DIR}" "bin" PLUGIN_BINARY_DIR "${PLUGIN_BINARY_DIR}")
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
