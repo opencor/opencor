@@ -300,7 +300,8 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    SET(DISTRIB_BINARY_DIR ${PLATFORM_DIR}/${BUILD_TYPE_DIR})
+    SET(ORIG_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/${BUILD_TYPE_DIR})
+    SET(DEST_EXTERNAL_BINARIES_DIR bin/${BUILD_TYPE_DIR})
 
     # Set the RPATH information on Linux and OS X
 
@@ -847,8 +848,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     # Location of our plugins
 
-    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${DISTRIB_BINARY_DIR})
-    STRING(REPLACE "${PLATFORM_DIR}" "bin" PLUGIN_BINARY_DIR "${PLUGIN_BINARY_DIR}")
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
