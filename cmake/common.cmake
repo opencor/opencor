@@ -283,22 +283,24 @@ MACRO(INITIALISE_PROJECT)
     # Default location of external dependencies
 
     IF(WIN32)
-        SET(PLATFORM windows)
+        SET(PLATFORM_DIR windows)
     ELSEIF(APPLE)
-        SET(PLATFORM osx)
+        SET(PLATFORM_DIR osx)
     ELSE()
-        SET(PLATFORM linux)
+        SET(PLATFORM_DIR linux)
     ENDIF()
 
-    SET(DISTRIB_BINARY_DIR ${PLATFORM})
+    SET(BUILD_TYPE_DIR .)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            SET(DISTRIB_BINARY_DIR ${PLATFORM}/release)
+            SET(BUILD_TYPE_DIR release)
         ELSE()
-            SET(DISTRIB_BINARY_DIR ${PLATFORM}/debug)
+            SET(BUILD_TYPE_DIR debug)
         ENDIF()
     ENDIF()
+
+    SET(DISTRIB_BINARY_DIR ${PLATFORM_DIR}/${BUILD_TYPE_DIR})
 
     # Set the RPATH information on Linux and OS X
 
@@ -846,7 +848,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # Location of our plugins
 
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${DISTRIB_BINARY_DIR})
-    STRING(REPLACE "${PLATFORM}" "bin" PLUGIN_BINARY_DIR "${PLUGIN_BINARY_DIR}")
+    STRING(REPLACE "${PLATFORM_DIR}" "bin" PLUGIN_BINARY_DIR "${PLUGIN_BINARY_DIR}")
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -871,8 +873,8 @@ ENDMACRO()
 
 MACRO(RETRIEVE_CONFIG_FILES)
     FOREACH(CONFIG_FILE ${ARGN})
-        STRING(REPLACE "PLATFORM/" "${PLATFORM}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
-        STRING(REPLACE "PLATFORM/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
 
         CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
                        ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
@@ -1164,7 +1166,7 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     # Create the destination folder, if needed
 
     SET(REAL_DIRNAME ${CMAKE_SOURCE_DIR}/${DIRNAME})
-    STRING(REPLACE "${PLATFORM}" "bin" REAL_DIRNAME "${REAL_DIRNAME}")
+    STRING(REPLACE "${PLATFORM_DIR}" "bin" REAL_DIRNAME "${REAL_DIRNAME}")
 
     IF(NOT EXISTS ${REAL_DIRNAME})
         FILE(MAKE_DIRECTORY ${REAL_DIRNAME})

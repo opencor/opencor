@@ -26,12 +26,12 @@ ENDMACRO()
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
-    include/llvm/Config/PLATFORM/config.h
-    include/llvm/Config/PLATFORM/llvm-config.h
+    include/llvm/Config/PLATFORM_DIR/config.h
+    include/llvm/Config/PLATFORM_DIR/llvm-config.h
 
-    include/llvm/Support/PLATFORM/DataTypes.h
+    include/llvm/Support/PLATFORM_DIR/DataTypes.h
 
-    tools/clang/include/clang/Config/PLATFORM/config.h
+    tools/clang/include/clang/Config/PLATFORM_DIR/config.h
 )
 
 # Use our pre-built version unless instructed otherwise
@@ -66,7 +66,7 @@ IF(USE_PREBUILT_LLVM_PLUGIN)
         SET(LLVM_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}LLVM${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDIF()
 
-    STRING(REPLACE "${PLATFORM}" "bin" LLVM_PLUGIN_BINARY "${LLVM_PLUGIN_BINARY}")
+    STRING(REPLACE "${PLATFORM_DIR}" "bin" LLVM_PLUGIN_BINARY "${LLVM_PLUGIN_BINARY}")
 
     SET(LLVM_PLUGIN_BINARY ${LLVM_PLUGIN_BINARY} PARENT_SCOPE)
 
@@ -82,12 +82,12 @@ ELSE()
     # platforms
 
     SET(CONFIG_FILES
-        lib/Target/X86/PLATFORM/X86GenAsmMatcher.inc
+        lib/Target/X86/PLATFORM_DIR/X86GenAsmMatcher.inc
     )
 
     FOREACH(CONFIG_FILE ${CONFIG_FILES})
-        STRING(REPLACE "PLATFORM/" "${PLATFORM}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
-        STRING(REPLACE "PLATFORM/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
 
         CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
                        ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}

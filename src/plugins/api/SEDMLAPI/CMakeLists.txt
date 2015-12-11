@@ -21,7 +21,7 @@ ENDMACRO()
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
-    include/sedml/common/PLATFORM/libsedml-config-common.h
+    include/sedml/common/PLATFORM_DIR/libsedml-config-common.h
 )
 
 # Retrieve the plugin's binary file(s)
@@ -50,7 +50,7 @@ RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
 
 SET(SEDML_API_EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${DISTRIB_BINARY_DIR})
 
-STRING(REPLACE "${PLATFORM}" "bin" SEDML_API_EXTERNAL_BINARIES_DIR "${SEDML_API_EXTERNAL_BINARIES_DIR}")
+STRING(REPLACE "${PLATFORM_DIR}" "bin" SEDML_API_EXTERNAL_BINARIES_DIR "${SEDML_API_EXTERNAL_BINARIES_DIR}")
 
 ADD_PLUGIN(SEDMLAPI
     SOURCES
