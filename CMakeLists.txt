@@ -496,8 +496,8 @@ ELSE()
         RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll faeddfc25ac09fc0b54298a72213b709054c6580)
 
         LIST(APPEND ADDITIONAL_FILES
-            ${CMAKE_SOURCE_DIR}/distrib/windows/bin/libeay32.dll
-            ${CMAKE_SOURCE_DIR}/distrib/windows/bin/ssleay32.dll
+            ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
+            ${CMAKE_SOURCE_DIR}/distrib/bin/ssleay32.dll
         )
 
         FOREACH(ADDITIONAL_FILE ${ADDITIONAL_FILES})
