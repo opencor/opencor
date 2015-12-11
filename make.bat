@@ -1,3 +1,3 @@
 @ECHO OFF
 
-CALL scripts\genericmake Default Release
+CALL scripts\genericmake Release

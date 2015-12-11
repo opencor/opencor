@@ -1,15 +1,15 @@
 # Files that make up QtSingleApplication
 
 IF(WIN32)
-    SET(PLATFORM win)
+    SET(PLATFORM_SPECIFIC_CPP qtlockedfile_win.cpp)
 ELSE()
-    SET(PLATFORM unix)
+    SET(PLATFORM_SPECIFIC_CPP qtlockedfile_unix.cpp)
 ENDIF()
 
 SET(SOURCES ${SOURCES}
     src/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
     src/3rdparty/QtSingleApplication/src/qtlockedfile.cpp
-    src/3rdparty/QtSingleApplication/src/qtlockedfile_${PLATFORM}.cpp
+    src/3rdparty/QtSingleApplication/src/${PLATFORM_SPECIFIC_CPP}
     src/3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
 )
 
