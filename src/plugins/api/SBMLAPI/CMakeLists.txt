@@ -21,7 +21,7 @@ ENDMACRO()
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
-    include/sbml/common/DISTRIB_DIR/libsbml-config-common.h
+    include/sbml/common/PLATFORM/libsbml-config-common.h
 )
 
 # Retrieve the plugin's binary file(s)
@@ -50,7 +50,7 @@ RETRIEVE_SBML_API_EXTERNAL_BINARIES()
 
 SET(SBML_API_EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${DISTRIB_BINARY_DIR})
 
-STRING(REPLACE "${DISTRIB_DIR}" "bin" SBML_API_EXTERNAL_BINARIES_DIR "${SBML_API_EXTERNAL_BINARIES_DIR}")
+STRING(REPLACE "${PLATFORM}" "bin" SBML_API_EXTERNAL_BINARIES_DIR "${SBML_API_EXTERNAL_BINARIES_DIR}")
 
 ADD_PLUGIN(SBMLAPI
     SOURCES

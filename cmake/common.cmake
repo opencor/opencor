@@ -283,20 +283,20 @@ MACRO(INITIALISE_PROJECT)
     # Default location of external dependencies
 
     IF(WIN32)
-        SET(DISTRIB_DIR windows)
+        SET(PLATFORM windows)
     ELSEIF(APPLE)
-        SET(DISTRIB_DIR osx)
+        SET(PLATFORM osx)
     ELSE()
-        SET(DISTRIB_DIR linux)
+        SET(PLATFORM linux)
     ENDIF()
 
-    SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR})
+    SET(DISTRIB_BINARY_DIR ${PLATFORM})
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/release)
+            SET(DISTRIB_BINARY_DIR ${PLATFORM}/release)
         ELSE()
-            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/debug)
+            SET(DISTRIB_BINARY_DIR ${PLATFORM}/debug)
         ENDIF()
     ENDIF()
 
@@ -846,7 +846,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # Location of our plugins
 
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${DISTRIB_BINARY_DIR})
-    STRING(REPLACE "${DISTRIB_DIR}" "bin" PLUGIN_BINARY_DIR "${PLUGIN_BINARY_DIR}")
+    STRING(REPLACE "${PLATFORM}" "bin" PLUGIN_BINARY_DIR "${PLUGIN_BINARY_DIR}")
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -871,8 +871,8 @@ ENDMACRO()
 
 MACRO(RETRIEVE_CONFIG_FILES)
     FOREACH(CONFIG_FILE ${ARGN})
-        STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
-        STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM/" "${PLATFORM}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
 
         CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
                        ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}

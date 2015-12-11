@@ -15,7 +15,7 @@ ENDMACRO()
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
-    src/DISTRIB_DIR/zconf.h
+    src/PLATFORM/zconf.h
 )
 
 # Use our pre-built version unless instructed otherwise
@@ -50,7 +50,7 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
         SET(ZLIB_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}zlib${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDIF()
 
-    STRING(REPLACE "${DISTRIB_DIR}" "bin" ZLIB_PLUGIN_BINARY "${ZLIB_PLUGIN_BINARY}")
+    STRING(REPLACE "${PLATFORM}" "bin" ZLIB_PLUGIN_BINARY "${ZLIB_PLUGIN_BINARY}")
 
     SET(ZLIB_PLUGIN_BINARY ${ZLIB_PLUGIN_BINARY} PARENT_SCOPE)
 
