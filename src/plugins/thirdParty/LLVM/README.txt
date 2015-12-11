@@ -14,5 +14,5 @@ In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to O
            cmake -G "Ninja" ..   OR   cmake -G "Unix Makefiles" ..   OR   cmake -G "NMake Makefiles JOM" ..
            ninja                 OR   make                           OR   jom
        From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders.
- - To keep the LLVM build as simple as possible (and this without removing any of LLVM's features), [LLVM]/include/llvm/Config/[DISTRIB_DIR]/config.h must be edited so that neither HAVE_LIBEDIT nor HAVE_TERMINFO are set, and LLVM_ENABLE_ZLIB is set to 0. To do anything else would require a more complicated build process and it is not worth it.
+ - To keep the LLVM build as simple as possible (and this without removing any of LLVM's features), [LLVM]/include/llvm/Config/[PLATFORM_DIR]/config.h must be edited so that neither HAVE_LIBEDIT nor HAVE_TERMINFO are set, and LLVM_ENABLE_ZLIB is set to 0. To do anything else would require a more complicated build process and it is not worth it.
  - OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.

@@ -39,16 +39,8 @@ MACRO(INITIALISE_PROJECT)
 
     IF(NOT ARCHITECTURE_COMPILE)
         MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your ${PROJECT_NAME} environment and try again...")
-    ELSE()
-        IF(APPLE)
-            IF(NOT ${ARCHITECTURE} EQUAL 64)
-                MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 64-bit mode...")
-            ENDIF()
-        ELSE()
-            IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
-                MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 32-bit or 64-bit mode...")
-            ENDIF()
-        ENDIF()
+    ELSEIF(NOT ${ARCHITECTURE} EQUAL 64)
+        MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 64-bit mode...")
     ENDIF()
 
     # By default, we are building a release version of OpenCOR, unless we are
@@ -56,13 +48,13 @@ MACRO(INITIALISE_PROJECT)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a ${ARCHITECTURE}-bit debug version of ${PROJECT_NAME}")
+            SET(BUILD_INFORMATION "Building a debug version of ${PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
         IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a ${ARCHITECTURE}-bit release version of ${PROJECT_NAME}")
+            SET(BUILD_INFORMATION "Building a release version of ${PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE TRUE)
@@ -239,12 +231,12 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DQT_DEBUG)
     ENDIF()
 
-    # Disable a warning that occurs on 64-bit Windows
-    # Note: the warning occurs in (at least) MSVC's algorithm header file and on
-    #       64-bit Windows. To disable it here means that we disable it for
-    #       everything, but is there another solution?...
+    # Disable a warning that occurs on (the 64-bit version of) Windows
+    # Note: the warning occurs in (at least) MSVC's algorithm header file. To
+    #       disable it here means that we disable it for everything, but is
+    #       there another solution?...
 
-    IF(WIN32 AND ${ARCHITECTURE} EQUAL 64)
+    IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
     ENDIF()
 
@@ -291,29 +283,24 @@ MACRO(INITIALISE_PROJECT)
     # Default location of external dependencies
 
     IF(WIN32)
-        IF(${ARCHITECTURE} EQUAL 32)
-            SET(DISTRIB_DIR windows/x86)
-        ELSE()
-            SET(DISTRIB_DIR windows/x64)
-        ENDIF()
+        SET(PLATFORM_DIR windows)
     ELSEIF(APPLE)
-        SET(DISTRIB_DIR osx)
+        SET(PLATFORM_DIR osx)
     ELSE()
-        IF(${ARCHITECTURE} EQUAL 32)
-            SET(DISTRIB_DIR linux/x86)
-        ELSE()
-            SET(DISTRIB_DIR linux/x64)
-        ENDIF()
+        SET(PLATFORM_DIR linux)
     ENDIF()
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/release)
+            SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
+            SET(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
         ELSE()
-            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/debug)
+            SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
+            SET(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
         ENDIF()
     ELSE()
-        SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR})
+        SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
+        SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
     ENDIF()
 
     # Set the RPATH information on Linux and OS X
@@ -626,7 +613,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(XCODE)
         SET(PLUGIN_BUILD_DIR ${PROJECT_BUILD_DIR})
     ELSE()
-        STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+        STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR "${PROJECT_SOURCE_DIR}")
         SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
 
         IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
@@ -861,7 +848,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     # Location of our plugins
 
-    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -886,8 +873,8 @@ ENDMACRO()
 
 MACRO(RETRIEVE_CONFIG_FILES)
     FOREACH(CONFIG_FILE ${ARGN})
-        STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
-        STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+        STRING(REPLACE "PLATFORM_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
 
         CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
                        ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
@@ -937,10 +924,6 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
         # Copy the Qt library to both the build and build/bin folders, so we can
         # test things both from within Qt Creator and without first having to
         # deploy OpenCOR
-        # Note: this is particularly useful on 64-bit Windows where we might
-        #       want to be able to test both the 32-bit and 64-bit versions of
-        #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
-        #       indirectly referenced in the PATH)...
 
         SET(LIBRARY_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
         SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}d${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -1182,7 +1165,7 @@ ENDMACRO()
 MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     # Create the destination folder, if needed
 
-    SET(REAL_DIRNAME ${CMAKE_SOURCE_DIR}/${DIRNAME})
+    STRING(REPLACE "${PLATFORM_DIR}" "bin" REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
 
     IF(NOT EXISTS ${REAL_DIRNAME})
         FILE(MAKE_DIRECTORY ${REAL_DIRNAME})
