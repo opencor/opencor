@@ -7,16 +7,16 @@ PROJECT(CorePlugin)
 #       the plugin rather than as a dependency (it's easier that way)...
 
 IF(WIN32)
-    SET(PLATFORM win)
+    SET(PLATFORM_SPECIFIC_CPP qtlockedfile_win.cpp)
 ELSE()
-    SET(PLATFORM unix)
+    SET(PLATFORM_SPECIFIC_CPP qtlockedfile_unix.cpp)
 ENDIF()
 
 ADD_PLUGIN(Core
     SOURCES
         ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
         ../../../3rdparty/QtSingleApplication/src/qtlockedfile.cpp
-        ../../../3rdparty/QtSingleApplication/src/qtlockedfile_${PLATFORM}.cpp
+        ../../../3rdparty/QtSingleApplication/src/${PLATFORM_SPECIFIC_CPP}
         ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
 
         ../../filetypeinterface.cpp

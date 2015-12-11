@@ -59,18 +59,6 @@ QString shortVersion()
 {
     QString res = QString();
     QString appVersion = qApp->applicationVersion();
-    QString bitVersion;
-
-    enum {
-        SizeOfPointer = sizeof(void *)
-    };
-
-    if (SizeOfPointer == 4)
-        bitVersion = "32-bit";
-    else if (SizeOfPointer == 8)
-        bitVersion = "64-bit";
-    else
-        bitVersion = QString();
 
     if (!appVersion.contains("-"))
         res += "Version ";
@@ -78,9 +66,6 @@ QString shortVersion()
         res += "Snapshot ";
 
     res += appVersion;
-
-    if (!bitVersion.isEmpty())
-        res += " ("+bitVersion+")";
 
     return res;
 }

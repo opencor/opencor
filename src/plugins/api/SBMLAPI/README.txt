@@ -2,12 +2,8 @@ We build our own copy of libSBML, which requires the following:
  - libSBML's core source code (see http://sourceforge.net/projects/sbml/files/libsbml/):
     - Linux: replace "isnan" with "std::isnan" in src/sbml/math/ASTNumber.cpp (lines 1732 and 1741)
  - libSBML dependencies (Windows only; the contents of which is to be located under [libSBML]/dependencies):
-    - Windows 32-bit:
-       - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x86.zip
-       - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x86.zip
-    - Windows 64-bit:
-       - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x64.zip
-       - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x64.zip
+    - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x64.zip
+    - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x64.zip
 
 From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Customise libSBML:
