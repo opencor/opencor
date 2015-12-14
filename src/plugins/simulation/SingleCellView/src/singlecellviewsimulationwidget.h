@@ -236,8 +236,7 @@ private:
                                 const QString &pVariable);
     void createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
-    void checkSimulationDataModified(const bool &pCurrentSimulation,
-                                     const QString &pFileName,
+    void checkSimulationDataModified(const QString &pFileName,
                                      const bool &pIsModified);
 
 private Q_SLOTS:

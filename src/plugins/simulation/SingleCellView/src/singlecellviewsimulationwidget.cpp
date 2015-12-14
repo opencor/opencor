@@ -107,7 +107,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mSimulation(0),
     mStoppedSimulations(SingleCellViewSimulations()),
     mProgress(-1),
-    mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
     mDevelopmentModes(QMap<QString, bool>()),
     mLockedDevelopmentModes(QMap<QString, bool>()),
@@ -633,9 +632,6 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
         // Keep track of the status of the reset action (if needed), the
         // simulation delay and the development mode
 
-        if (!mGui->actionDevelopmentMode->isChecked())
-            mResets.insert(prevFileName, mGui->actionResetModelParameters->isEnabled());
-
         mDelays.insert(prevFileName, mDelayWidget->value());
         mDevelopmentModes.insert(prevFileName, mGui->actionDevelopmentMode->isChecked());
     }
@@ -685,9 +681,6 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
     // development mode
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-    if (!mDevelopmentModes.value(pFileName))
-        mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName));
 
     mGui->actionDevelopmentMode->setEnabled(fileManagerInstance->isReadableAndWritable(pFileName));
 
@@ -963,7 +956,6 @@ void SingleCellViewSimulationWidget::finalize(const QString &pFileName,
     // Remove various information associated with the given file name
 
     mProgress = -1;
-    mResets.remove(pFileName);
 
     if (pReloadingView) {
         // Keep track of the simulation delay and development mode, in case they
@@ -1348,7 +1340,7 @@ void SingleCellViewSimulationWidget::on_actionDevelopmentMode_triggered()
     if (!mGui->actionDevelopmentMode->isChecked())
         Core::FileManager::instance()->setModified(mSimulation->fileName(), false);
 
-    checkSimulationDataModified(true, mSimulation->fileName(),
+    checkSimulationDataModified(mSimulation->fileName(),
                                 mSimulation->data()->isModified());
     // Note: to call checkSimulationDataModified() will, in the case the
     //       development mode has just been disabled, ensure that the reset
@@ -2235,25 +2227,15 @@ void SingleCellViewSimulationWidget::simulationError(const QString &pMessage,
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::checkSimulationDataModified(const bool &pCurrentSimulation,
-                                                                 const QString &pFileName,
+void SingleCellViewSimulationWidget::checkSimulationDataModified(const QString &pFileName,
                                                                  const bool &pIsModified)
 {
-    if (pCurrentSimulation) {
-        // We are dealing with the current simulation
+    // We are dealing with the current simulation
 
-        if (mGui->actionDevelopmentMode->isChecked())
-            Core::FileManager::instance()->setModified(pFileName, pIsModified);
-        else
-            mGui->actionResetModelParameters->setEnabled(pIsModified);
-    } else {
-        // We are dealing with another simulation
-
-        if (mDevelopmentModes.value(pFileName))
-            Core::FileManager::instance()->setModified(pFileName, pIsModified);
-        else
-            mResets.insert(pFileName, pIsModified);
-    }
+    if (mGui->actionDevelopmentMode->isChecked())
+        Core::FileManager::instance()->setModified(pFileName, pIsModified);
+    else
+        mGui->actionResetModelParameters->setEnabled(pIsModified);
 }
 
 //==============================================================================
@@ -2265,8 +2247,7 @@ void SingleCellViewSimulationWidget::simulationDataModified(const bool &pIsModif
 
     SingleCellViewSimulationData *simulationData = qobject_cast<SingleCellViewSimulationData *>(sender());
 
-    checkSimulationDataModified(simulationData == mSimulation->data(),
-                                simulationData->simulation()->fileName(),
+    checkSimulationDataModified(simulationData->simulation()->fileName(),
                                 pIsModified);
 }
 
@@ -2620,8 +2601,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
     //       resulting in some time overhead, so we check things here
     //       instead...
 
-    checkSimulationDataModified(pSimulation == mSimulation,
-                                pSimulation->fileName(),
+    checkSimulationDataModified(pSimulation->fileName(),
                                 pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
