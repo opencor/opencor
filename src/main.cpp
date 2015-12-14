@@ -45,9 +45,15 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
-    // Initialise Qt's message pattern
+    // Initialise Qt's message pattern by not showing debug/warning messages
+    // when not in debug mode
 
-    OpenCOR::initQtMessagePattern();
+#ifndef QT_DEBUG
+    qSetMessagePattern("%{if-debug}%{endif}"
+                       "%{if-warning}%{endif}"
+                       "%{if-critical}%{message}%{endif}"
+                       "%{if-fatal}%{message}%{endif}");
+#endif
 
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
