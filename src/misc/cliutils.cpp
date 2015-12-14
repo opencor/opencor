@@ -47,6 +47,20 @@ namespace OpenCOR {
 
 //==============================================================================
 
+void initQtMessagePattern()
+{
+    // We don't want to see debug/warning messages when not in debug mode
+
+#ifndef QT_DEBUG
+    qSetMessagePattern("%{if-debug}%{endif}"
+                       "%{if-warning}%{endif}"
+                       "%{if-critical}%{message}%{endif}"
+                       "%{if-fatal}%{message}%{endif}");
+#endif
+}
+
+//==============================================================================
+
 void initPluginsPath(const QString &pAppFileName)
 {
     // Initialise the plugins path
