@@ -110,18 +110,16 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    bool contains(const QString &pFileName) const;
-
     void initialize(const QString &pFileName,
                     const bool &pReloadingView = false);
     void finalize(const QString &pFileName, const bool &pReloadingView = false);
 
-    QIcon fileTabIcon(const QString &pFileName) const;
+    QIcon fileTabIcon() const;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
     void fileOpened(const QString &pFileName);
-    void filePermissionsChanged(/*const QString &pFileName*/);
+    void filePermissionsChanged();
     void fileModified(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
@@ -145,13 +143,12 @@ private:
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
     SingleCellViewSimulation *mSimulation;
-    QMap<QString, SingleCellViewSimulation *> mSimulations;
 
     SingleCellViewSimulations mStoppedSimulations;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
-    QMap<QString, int> mProgresses;
+    int mProgress;
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
     QMap<QString, bool> mDevelopmentModes;

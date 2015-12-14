@@ -105,9 +105,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
-    mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(SingleCellViewSimulations()),
-    mProgresses(QMap<QString, int>()),
+    mProgress(-1),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
     mDevelopmentModes(QMap<QString, bool>()),
@@ -362,10 +361,9 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
 SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
 {
-    // Delete our simulation objects
+    // Delete some internal objects
 
-    foreach (SingleCellViewSimulation *simulation, mSimulations)
-        delete simulation;
+    delete mSimulation;
 
     // Delete the GUI
 
@@ -597,15 +595,6 @@ void SingleCellViewSimulationWidget::updateInvalidModelMessageWidget()
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given CellML file
-
-    return mSimulations.contains(pFileName);
-}
-
-//==============================================================================
-
 static const auto OutputTab  = QStringLiteral("&nbsp;&nbsp;&nbsp;&nbsp;");
 static const auto OutputGood = QStringLiteral(" style=\"color: green;\"");
 static const auto OutputInfo = QStringLiteral(" style=\"color: navy;\"");
@@ -665,8 +654,6 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
-    mSimulation = mSimulations.value(pFileName);
-
     if (!mSimulation) {
         // No simulation object currently exists for the model, so create one
 
@@ -692,10 +679,6 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
 
         connect(mSimulation->data(), SIGNAL(modified(const bool &)),
                 this, SLOT(simulationDataModified(const bool &)));
-
-        // Keep track of our simulation object
-
-        mSimulations.insert(pFileName, mSimulation);
     }
 
     // Retrieve the status of the reset action, the simulation delay and the
@@ -968,26 +951,18 @@ void SingleCellViewSimulationWidget::finalize(const QString &pFileName,
 {
     // Remove our simulation object, should there be one for the given file name
 
-    SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
-
-    if (simulation) {
+    if (mSimulation) {
         // There is a simulation object for the given file name, so delete it
-        // and remove it from our list
+        // and reset our memory of the current simulation object
 
-        delete simulation;
+        delete mSimulation;
 
-        mSimulations.remove(pFileName);
-
-        // Reset our memory of the current simulation object, but only if it's
-        // the same as our simulation object
-
-        if (simulation == mSimulation)
-            mSimulation = 0;
+        mSimulation = 0;
     }
 
     // Remove various information associated with the given file name
 
-    mProgresses.remove(pFileName);
+    mProgress = -1;
     mResets.remove(pFileName);
 
     if (pReloadingView) {
@@ -1033,14 +1008,11 @@ int SingleCellViewSimulationWidget::tabBarPixmapSize() const
 
 //==============================================================================
 
-QIcon SingleCellViewSimulationWidget::fileTabIcon(const QString &pFileName) const
+QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 {
     // Return a file tab icon that shows the given file's simulation progress
 
-    SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
-    int progress = simulation?mProgresses.value(simulation->fileName(), -1):-1;
-
-    if (simulation && (progress != -1)) {
+    if (mSimulation && (mProgress != -1)) {
         // Create an image that shows the progress of our simulation
 
         QPixmap tabBarPixmap = QPixmap(tabBarPixmapSize(),
@@ -1051,7 +1023,7 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon(const QString &pFileName) cons
         tabBarPixmapPainter.setPen(QPen(Core::borderColor()));
 
         tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
-        tabBarPixmapPainter.fillRect(1, 1, progress, tabBarPixmap.height()-2,
+        tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
                                     Core::highlightColor());
 
         return QIcon(tabBarPixmap);
@@ -1073,9 +1045,7 @@ bool SingleCellViewSimulationWidget::saveFile(const QString &pOldFileName,
     // Save the given file, but first retrieve the simulation associated with
     // the given (old) file name
 
-    SingleCellViewSimulation *simulation = mSimulations.value(pOldFileName);
-
-    if (simulation) {
+    if (mSimulation) {
         // Retrieve all the state and constant parameters which value has
         // changed and update our CellML object with their 'new' values, unless
         // they are imported, in which case we let the user know that their
@@ -1132,7 +1102,7 @@ void SingleCellViewSimulationWidget::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::filePermissionsChanged(/*const QString &pFileName*/)
+void SingleCellViewSimulationWidget::filePermissionsChanged()
 {
     // The given file has been un/locked, so enable/disable the development mode
     // and keep track of its checked status or recheck it, as necessary
@@ -1191,12 +1161,11 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
     //       a simulation associated with it...
 
     bool needReloadView = CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName);
-    SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
 
     mNeedReloadViews << pFileName;
 
-    if (simulation) {
-        if (simulation->stop()) {
+    if (mSimulation) {
+        if (mSimulation->stop()) {
             needReloadView = false;
             // Note: we don't need to reload ourselves since stopping the
             //       simulation will result in the stopped() signal being
@@ -1219,20 +1188,6 @@ void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
                                                  const QString &pNewFileName)
 {
     // Replace the old file name with the new one in our various trackers
-
-    SingleCellViewSimulation *simulation = mSimulations.value(pOldFileName);
-
-    if (simulation) {
-        simulation->setFileName(pNewFileName);
-
-        mSimulations.insert(pNewFileName, simulation);
-        mSimulations.remove(pOldFileName);
-    }
-
-    if (mProgresses.contains(pOldFileName)) {
-        mProgresses.insert(pNewFileName, mProgresses.value(pOldFileName));
-        mProgresses.remove(pOldFileName);
-    }
 
     if (mDelays.contains(pOldFileName)) {
         mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
@@ -2179,7 +2134,7 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
 
     // Stop keeping track of our simulation progress
 
-    mProgresses.remove(simulationFileName);
+    mProgress = -1;
 
     // Reset our tab icon in case we are not visible or not dealing with the
     // active simulation
@@ -2253,7 +2208,7 @@ void SingleCellViewSimulationWidget::resetFileTabIcon(SingleCellViewSimulation *
 
     static const QIcon NoIcon = QIcon();
 
-    mProgresses.remove(simulation->fileName());
+    mProgress = -1;
 
     emit updateFileTabIcon(mPlugin->viewName(), simulation->fileName(), NoIcon);
 }
@@ -2396,7 +2351,7 @@ void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelPlotWidg
     //       hand, if the plot's axes don't get updated, we need to draw our new
     //       graph...
 
-    updateGraphData(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
+    updateGraphData(pGraph, mSimulation->results()->size());
 
     if (!updatePlot(pPlot))
         pPlot->drawGraphFrom(pGraph, 0);
@@ -2452,10 +2407,8 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
         //       this case, for example, there won't be a simulation associated
         //       with the file and therefore the graph...
 
-        SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
-
-        if (simulation)
-            updateGraphData(graph, simulation->results()->size());
+        if (mSimulation)
+            updateGraphData(graph, mSimulation->results()->size());
 
         // Keep track of the plot that needs to be updated and replotted
 
@@ -2534,10 +2487,8 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
-            SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
-
-            double startingPoint = simulation->data()->startingPoint();
-            double endingPoint = simulation->data()->endingPoint();
+            double startingPoint = mSimulation->data()->startingPoint();
+            double endingPoint = mSimulation->data()->endingPoint();
 
             startingPoints << startingPoint;
             endingPoints << endingPoint;
@@ -2546,8 +2497,8 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
                 // The starting point is greater than the ending point, so swap
                 // the two of them
 
-                startingPoint = simulation->data()->endingPoint();
-                endingPoint = simulation->data()->startingPoint();
+                startingPoint = mSimulation->data()->endingPoint();
+                endingPoint = mSimulation->data()->startingPoint();
             }
 
             if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
@@ -2650,10 +2601,8 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
-
-        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
-                              dataPoints(simulation, pGraph->parameterY()),
+        pGraph->setRawSamples(dataPoints(mSimulation, pGraph->parameterX()),
+                              dataPoints(mSimulation, pGraph->parameterY()),
                               pSize);
     }
 }
@@ -2791,20 +2740,19 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
         //       signal (e.g. CentralWidget) won't be able to tell for which
         //       simulation the update is...
 
-        int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
         int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
         // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
 
-        if (newProgress != oldProgress) {
+        if (newProgress != mProgress) {
             // The progress has changed, so keep track of its new value and
             // update our file tab icon
 
-            mProgresses.insert(pSimulation->fileName(), newProgress);
+            mProgress = newProgress;
 
             // Let people know about the file tab icon to be used for the model
 
             emit updateFileTabIcon(mPlugin->viewName(), pSimulation->fileName(),
-                                   fileTabIcon(pSimulation->fileName()));
+                                   fileTabIcon());
         }
     }
 }
@@ -2817,7 +2765,7 @@ void SingleCellViewSimulationWidget::checkResults(SingleCellViewSimulation *pSim
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
 
-    if (!mSimulations.values().contains(pSimulation))
+    if (!mSimulation)
         return;
 
     // Update our results, but only if needed
