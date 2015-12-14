@@ -351,6 +351,11 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     // Make our contents widget our focus proxy
 
     setFocusProxy(mContentsWidget);
+
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
