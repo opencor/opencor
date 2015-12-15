@@ -73,25 +73,40 @@ QString allFilters(const QString &pFilters)
 QString getOpenFileName(const QString &pCaption, const QString &pFilters,
                         QString *pSelectedFilter)
 {
-    // Retrieve and return one open file name
+    // Retrieve and return an open file name
+    // Note: normally, we would rely on QFileDialog::getOpenFileName() to
+    //       retrieve an open file name, but then we wouldn't be able to handle
+    //       the case where the user cancels his/her action, so instead we
+    //       create and execute our own QFileDialog object...
 
-    QString res = QFileDialog::getOpenFileName(qApp->activeWindow(),
-                                               pCaption, activeDirectory(),
-                                               allFilters(pFilters),
-                                               pSelectedFilter);
+    QFileDialog dialog(qApp->activeWindow(), pCaption, activeDirectory(),
+                       allFilters(pFilters));
 
-    if (!res.isEmpty()) {
-        // We have retrieved a file name, so keep track of the folder in which
-        // it is
-        // Note: normally, we would use QFileInfo::canonicalPath(), but this
-        //       requires an existing file, so use QFileInfo::path() instead...
+    dialog.setFileMode(QFileDialog::ExistingFile);
 
-        setActiveDirectory(QFileInfo(res).path());
+    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        dialog.selectNameFilter(*pSelectedFilter);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        if (pSelectedFilter)
+            *pSelectedFilter = dialog.selectedNameFilter();
+
+        QString res = dialog.selectedFiles().first();
+
+        if (!res.isEmpty()) {
+            // We have retrieved a file name, so keep track of the folder in
+            // which it is
+            // Note: normally, we would use QFileInfo::canonicalPath(), but this
+            //       requires an existing file, so instead we use
+            //       QFileInfo::path()...
+
+            setActiveDirectory(QFileInfo(res).path());
+        }
+
+        return res;
+    } else {
+        return QString();
     }
-
-    // Return the file name
-
-    return res;
 }
 
 //==============================================================================
