@@ -107,8 +107,8 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
                                                     pSelectedFilter);
 
     if (!res.isEmpty()) {
-        // We have retrieved at least one file name, so keep track of the folder
-        // in which it is
+        // We have retrieved at least one open file name, so keep track of the
+        // folder in which it is
         // Note #1: we use the last open file name to determine the folder that
         //          is to be remembered since on Windows 7, at least, it's
         //          possible to search for files from within the file dialog
@@ -168,7 +168,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // The save file already exists, so ask whether we want to overwrite
             // it
 
-            if (QMessageBox::question(mainWindow(), pCaption,
+            if (QMessageBox::question(qApp->activeWindow(), pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No) {
