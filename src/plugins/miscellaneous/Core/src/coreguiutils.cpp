@@ -196,6 +196,7 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
     QFileDialog dialog(qApp->activeWindow(), pCaption,
                        pDirName.isEmpty()?activeDirectory():pDirName);
 
+    dialog.setFileMode(QFileDialog::DirectoryOnly);
     dialog.setOption(QFileDialog::ShowDirsOnly);
 
     if (dialog.exec() == QDialog::Accepted) {
