@@ -187,36 +187,40 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
                              const bool &pEmptyDir)
 {
-    // Retrieve and return a save file name
+    // Retrieve and return an existing directory path
+    // Note: normally, we would rely on QFileDialog::getExistingDirectory() to
+    //       retrieve the path of an existing directory, but then we wouldn't be
+    //       able to handle the case where the user cancels his/her action, so
+    //       instead we create and execute our own QFileDialog object...
 
-    QString res = Core::nativeCanonicalDirName(QFileDialog::getExistingDirectory(qApp->activeWindow(),
-                                                                                 pCaption,
-                                                                                 pDirName.isEmpty()?
-                                                                                     activeDirectory():
-                                                                                     pDirName));
+    QFileDialog dialog(qApp->activeWindow(), pCaption,
+                       pDirName.isEmpty()?activeDirectory():pDirName);
 
-    // Make sure that we have got a directory
+    dialog.setOption(QFileDialog::ShowDirsOnly);
 
-    if (!res.isEmpty()) {
-        // Update our active directory
+    if (dialog.exec() == QDialog::Accepted) {
+        QString res = dialog.selectedFiles().first();
 
-        setActiveDirectory(res);
+        if (!res.isEmpty()) {
+            // We have retrieved a file name, so update our active directory
 
-        // Check whether the directory should be empty
+            setActiveDirectory(res);
 
-        if (pEmptyDir) {
-            if (QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
-                QMessageBox::warning(mainWindow(), pCaption,
+            // Check whether the directory should be empty
+
+            if (   pEmptyDir
+                && QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
+                QMessageBox::warning(qApp->activeWindow(), pCaption,
                                      QObject::tr("Please choose an empty directory."));
 
                 return QString();
             }
         }
+
+        return res;
+    } else {
+        return QString();
     }
-
-    // Everything went fine,so return the directory
-
-    return res;
 }
 
 //==============================================================================
