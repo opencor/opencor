@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
+#include <QNetworkProxyFactory>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
@@ -112,6 +113,10 @@ void initPluginsPath(const QString &pAppFileName)
 
 void initApplication(QString *pAppDate)
 {
+    // Use the system's proxy settings
+
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
+
     // Ignore SSL-related warnings
     // Note #1: this is to address an issue with QSslSocket not being able to
     //          resolve some methods...
