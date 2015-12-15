@@ -231,14 +231,14 @@ QString copyright()
 QString formatMessage(const QString &pMessage, const bool &pLowerCase,
                       const bool &pDotDotDot)
 {
+    // Trim the message and make sure that we don't end up with an empty string
+
     static const QString DotDotDot = "...";
 
-    if (pMessage.isEmpty())
+    QString message = pMessage.trimmed();
+
+    if (message.isEmpty())
         return pDotDotDot?DotDotDot:QString();
-
-    // Format and return the message
-
-    QString message = pMessage;
 
     // Upper/lower the case of the first character, unless the message is one
     // character long (!!) or unless its second character is in lower case
