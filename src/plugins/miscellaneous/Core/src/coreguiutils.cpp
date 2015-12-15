@@ -115,38 +115,44 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
                              QString *pSelectedFilter)
 {
     // Retrieve and return one or several open file names
+    // Note: normally, we would rely on QFileDialog::getOpenFileNames() to
+    //       retrieve one or several open file names, but then we wouldn't be
+    //       able to handle the case where the user cancels his/her action, so
+    //       instead we create and execute our own QFileDialog object...
 
-    QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
-                                                    pCaption, activeDirectory(),
-                                                    allFilters(pFilters),
-                                                    pSelectedFilter);
+    QFileDialog dialog(qApp->activeWindow(), pCaption, activeDirectory(),
+                       allFilters(pFilters));
 
-    if (!res.isEmpty()) {
-        // We have retrieved at least one open file name, so keep track of the
-        // folder in which it is
-        // Note #1: we use the last open file name to determine the folder that
-        //          is to be remembered since on Windows 7, at least, it's
-        //          possible to search for files from within the file dialog
-        //          box, and the last file name should be the one we are most
-        //          'interested' in...
-        // Note #2: this doesn't, unfortunately, address the case where the user
-        //          goes to a directory and then closes the file dialog box
-        //          without selecting any open file name. There might be a way
-        //          to get it to work, but that would involve using the exec()
-        //          method rather than the static getOpenFilesNames() method,
-        //          which would result in a non-native looking file dialog box
-        //          (on Windows 7 at least), so it's not an option
-        //          unfortunately...
-        // Note #3: normally, we would use QFileInfo::canonicalPath(), but this
-        //          requires an existing file, so use QFileInfo::path()
-        //          instead...
+    dialog.setFileMode(QFileDialog::ExistingFiles);
 
-        setActiveDirectory(QFileInfo(res[res.count()-1]).path());
+    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        dialog.selectNameFilter(*pSelectedFilter);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        if (pSelectedFilter)
+            *pSelectedFilter = dialog.selectedNameFilter();
+
+        QStringList res = dialog.selectedFiles();
+
+        if (!res.isEmpty()) {
+            // We have retrieved at least one open file name, so keep track of
+            // the folder in which it is
+            // Note #1: we use the last open file name to determine the folder
+            //          that is to be remembered since on Windows 7, at least,
+            //          it's possible to search for files from within the file
+            //          dialog box, and the last file name should be the one we
+            //          are most 'interested' in...
+            // Note #2: normally, we would use QFileInfo::canonicalPath(), but
+            //          this requires an existing file, so instead we use
+            //          QFileInfo::path()...
+
+            setActiveDirectory(QFileInfo(res.last()).path());
+        }
+
+        return res;
+    } else {
+        return QStringList();
     }
-
-    // Return the file name(s)
-
-    return res;
 }
 
 //==============================================================================
