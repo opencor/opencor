@@ -105,6 +105,22 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
+QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
+{
+    // Return a native and canonical version of the given file names or a native
+    // version, if the native and canonical version of a given file name is
+    // empty (i.e. the file doesn't exist (anymore?))
+
+    QStringList res = QStringList();
+
+    foreach (const QString &fileName, pFileNames)
+        res << nativeCanonicalFileName(fileName);
+
+    return res;
+}
+
+//==============================================================================
+
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
                                                     QString *pErrorMessage) const

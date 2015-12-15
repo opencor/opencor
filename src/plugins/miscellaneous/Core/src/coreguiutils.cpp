@@ -91,7 +91,7 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters,
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
-        QString res = dialog.selectedFiles().first();
+        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so keep track of the folder in
@@ -132,7 +132,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
-        QStringList res = dialog.selectedFiles();
+        QStringList res = Core::nativeCanonicalFileNames(dialog.selectedFiles());
 
         if (!res.isEmpty()) {
             // We have retrieved at least one open file name, so keep track of
@@ -221,7 +221,7 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
     dialog.setOption(QFileDialog::ShowDirsOnly);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString res = dialog.selectedFiles().first();
+        QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so update our active directory
