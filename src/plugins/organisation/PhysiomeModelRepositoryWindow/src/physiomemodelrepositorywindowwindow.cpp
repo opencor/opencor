@@ -216,6 +216,13 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspa
                                                  QString(), true);
 
     if (!dirName.isEmpty()) {
+        // We have got a directory name, so before cloning the workspace, make
+        // sure that the dialog box has gone (indeed, otherwise, on OS X at
+        // least, we will see a blank area where the dialog box used to be)
+        // Note: this is a temporary solution until we implement issue #848...
+
+        QCoreApplication::processEvents();
+
         // We have got a directory name where we can clone the workspace, so
         // clone it
 
