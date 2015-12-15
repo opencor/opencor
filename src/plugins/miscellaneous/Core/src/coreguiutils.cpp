@@ -94,8 +94,8 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters,
         QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
-            // We have retrieved a file name, so keep track of the folder in
-            // which it is
+            // We have retrieved an open file name, so keep track of the folder
+            // in which it is
             // Note: normally, we would use QFileInfo::canonicalPath(), but this
             //       requires an existing file, so instead we use
             //       QFileInfo::path()...
@@ -163,44 +163,57 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     // Retrieve and return a save file name
 
     QFileInfo fileInfo = pFileName;
-    QString res = Core::nativeCanonicalFileName(QFileDialog::getSaveFileName(qApp->activeWindow(),
-                                                                             pCaption,
-                                                                             !fileInfo.canonicalPath().compare(".")?
-                                                                                 activeDirectory()+QDir::separator()+fileInfo.fileName():
-                                                                                 pFileName,
-                                                                             allFilters(pFilters),
-                                                                             pSelectedFilter,
-                                                                             QFileDialog::DontConfirmOverwrite));
+    QFileDialog dialog(qApp->activeWindow(), pCaption,
+                       !fileInfo.canonicalPath().compare(".")?
+                           activeDirectory()+QDir::separator()+fileInfo.fileName():
+                           pFileName,
+                       allFilters(pFilters));
 
-    // Make sure that we have got a save file name
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setOption(QFileDialog::DontConfirmOverwrite);
 
-    if (!res.isEmpty()) {
-        // Update our active directory
-        // Note: normally, we would use QFileInfo::canonicalPath(), but this
-        //       requires an existing file, so use QFileInfo::path() instead...
+    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        dialog.selectNameFilter(*pSelectedFilter);
 
-        QFileInfo resInfo = res;
+    if (dialog.exec() == QDialog::Accepted) {
+        if (pSelectedFilter)
+            *pSelectedFilter = dialog.selectedNameFilter();
 
-        setActiveDirectory(resInfo.path());
+        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
 
-        // Check whether the save file already exists
+        // Make sure that we have got a save file name
 
-        if (resInfo.exists()) {
-            // The save file already exists, so ask whether we want to overwrite
-            // it
+        if (!res.isEmpty()) {
+            // We have retrieved a save file name, so keep track of the folder
+            // in which it is or it is to be
+            // Note: normally, we would use QFileInfo::canonicalPath(), but this
+            //       requires an existing file, so instead we use
+            //       QFileInfo::path()...
 
-            if (QMessageBox::question(qApp->activeWindow(), pCaption,
-                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
-                                      QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::No) {
-                return QString();
+            QFileInfo resInfo = res;
+
+            setActiveDirectory(resInfo.path());
+
+            // Check whether the save file already exists
+
+            if (resInfo.exists()) {
+                // The save file already exists, so ask whether we want to
+                // overwrite it
+
+                if (QMessageBox::question(qApp->activeWindow(), pCaption,
+                                          QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
+                                          QMessageBox::Yes|QMessageBox::No,
+                                          QMessageBox::Yes) == QMessageBox::No) {
+                    return QString();
+                }
             }
         }
+
+        return res;
+    } else {
+        return QString();
     }
-
-    // Everything went fine,so return the save file name
-
-    return res;
 }
 
 //==============================================================================
