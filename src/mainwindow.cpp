@@ -55,7 +55,6 @@ specific language governing permissions and limitations under the License.
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDesktopWidget>
-#include <QFileDialog>
 #include <QLocale>
 #include <QMenu>
 #include <QMenuBar>

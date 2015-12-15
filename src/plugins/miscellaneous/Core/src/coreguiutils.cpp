@@ -73,25 +73,40 @@ QString allFilters(const QString &pFilters)
 QString getOpenFileName(const QString &pCaption, const QString &pFilters,
                         QString *pSelectedFilter)
 {
-    // Retrieve and return one open file name
+    // Retrieve and return an open file name
+    // Note: normally, we would rely on QFileDialog::getOpenFileName() to
+    //       retrieve an open file name, but then we wouldn't be able to handle
+    //       the case where the user cancels his/her action, so instead we
+    //       create and execute our own QFileDialog object...
 
-    QString res = QFileDialog::getOpenFileName(qApp->activeWindow(),
-                                               pCaption, activeDirectory(),
-                                               allFilters(pFilters),
-                                               pSelectedFilter);
+    QFileDialog dialog(qApp->activeWindow(), pCaption, activeDirectory(),
+                       allFilters(pFilters));
 
-    if (!res.isEmpty()) {
-        // We have retrieved a file name, so keep track of the folder in which
-        // it is
-        // Note: normally, we would use QFileInfo::canonicalPath(), but this
-        //       requires an existing file, so use QFileInfo::path() instead...
+    dialog.setFileMode(QFileDialog::ExistingFile);
 
-        setActiveDirectory(QFileInfo(res).path());
+    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        dialog.selectNameFilter(*pSelectedFilter);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        if (pSelectedFilter)
+            *pSelectedFilter = dialog.selectedNameFilter();
+
+        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
+
+        if (!res.isEmpty()) {
+            // We have retrieved an open file name, so keep track of the folder
+            // in which it is
+            // Note: normally, we would use QFileInfo::canonicalPath(), but this
+            //       requires an existing file, so instead we use
+            //       QFileInfo::path()...
+
+            setActiveDirectory(QFileInfo(res).path());
+        }
+
+        return res;
+    } else {
+        return QString();
     }
-
-    // Return the file name
-
-    return res;
 }
 
 //==============================================================================
@@ -100,38 +115,44 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
                              QString *pSelectedFilter)
 {
     // Retrieve and return one or several open file names
+    // Note: normally, we would rely on QFileDialog::getOpenFileNames() to
+    //       retrieve one or several open file names, but then we wouldn't be
+    //       able to handle the case where the user cancels his/her action, so
+    //       instead we create and execute our own QFileDialog object...
 
-    QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
-                                                    pCaption, activeDirectory(),
-                                                    allFilters(pFilters),
-                                                    pSelectedFilter);
+    QFileDialog dialog(qApp->activeWindow(), pCaption, activeDirectory(),
+                       allFilters(pFilters));
 
-    if (!res.isEmpty()) {
-        // We have retrieved at least one file name, so keep track of the folder
-        // in which it is
-        // Note #1: we use the last open file name to determine the folder that
-        //          is to be remembered since on Windows 7, at least, it's
-        //          possible to search for files from within the file dialog
-        //          box, and the last file name should be the one we are most
-        //          'interested' in...
-        // Note #2: this doesn't, unfortunately, address the case where the user
-        //          goes to a directory and then closes the file dialog box
-        //          without selecting any open file name. There might be a way
-        //          to get it to work, but that would involve using the exec()
-        //          method rather than the static getOpenFilesNames() method,
-        //          which would result in a non-native looking file dialog box
-        //          (on Windows 7 at least), so it's not an option
-        //          unfortunately...
-        // Note #3: normally, we would use QFileInfo::canonicalPath(), but this
-        //          requires an existing file, so use QFileInfo::path()
-        //          instead...
+    dialog.setFileMode(QFileDialog::ExistingFiles);
 
-        setActiveDirectory(QFileInfo(res[res.count()-1]).path());
+    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        dialog.selectNameFilter(*pSelectedFilter);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        if (pSelectedFilter)
+            *pSelectedFilter = dialog.selectedNameFilter();
+
+        QStringList res = Core::nativeCanonicalFileNames(dialog.selectedFiles());
+
+        if (!res.isEmpty()) {
+            // We have retrieved at least one open file name, so keep track of
+            // the folder in which it is
+            // Note #1: we use the last open file name to determine the folder
+            //          that is to be remembered since on Windows 7, at least,
+            //          it's possible to search for files from within the file
+            //          dialog box, and the last file name should be the one we
+            //          are most 'interested' in...
+            // Note #2: normally, we would use QFileInfo::canonicalPath(), but
+            //          this requires an existing file, so instead we use
+            //          QFileInfo::path()...
+
+            setActiveDirectory(QFileInfo(res.last()).path());
+        }
+
+        return res;
+    } else {
+        return QStringList();
     }
-
-    // Return the file name(s)
-
-    return res;
 }
 
 //==============================================================================
@@ -140,46 +161,63 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
                         const QString &pFilters, QString *pSelectedFilter)
 {
     // Retrieve and return a save file name
+    // Note: normally, we would rely on QFileDialog::getSaveFileName() to
+    //       retrieve a save file name, but then we wouldn't be able to handle
+    //       the case where the user cancels his/her action, so instead we
+    //       create and execute our own QFileDialog object...
 
     QFileInfo fileInfo = pFileName;
-    QString res = Core::nativeCanonicalFileName(QFileDialog::getSaveFileName(qApp->activeWindow(),
-                                                                             pCaption,
-                                                                             !fileInfo.canonicalPath().compare(".")?
-                                                                                 activeDirectory()+QDir::separator()+fileInfo.fileName():
-                                                                                 pFileName,
-                                                                             allFilters(pFilters),
-                                                                             pSelectedFilter,
-                                                                             QFileDialog::DontConfirmOverwrite));
+    QFileDialog dialog(qApp->activeWindow(), pCaption,
+                       !fileInfo.canonicalPath().compare(".")?
+                           activeDirectory()+QDir::separator()+fileInfo.fileName():
+                           pFileName,
+                       allFilters(pFilters));
 
-    // Make sure that we have got a save file name
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setOption(QFileDialog::DontConfirmOverwrite);
 
-    if (!res.isEmpty()) {
-        // Update our active directory
-        // Note: normally, we would use QFileInfo::canonicalPath(), but this
-        //       requires an existing file, so use QFileInfo::path() instead...
+    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        dialog.selectNameFilter(*pSelectedFilter);
 
-        QFileInfo resInfo = res;
+    if (dialog.exec() == QDialog::Accepted) {
+        if (pSelectedFilter)
+            *pSelectedFilter = dialog.selectedNameFilter();
 
-        setActiveDirectory(resInfo.path());
+        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
 
-        // Check whether the save file already exists
+        // Make sure that we have got a save file name
 
-        if (resInfo.exists()) {
-            // The save file already exists, so ask whether we want to overwrite
-            // it
+        if (!res.isEmpty()) {
+            // We have retrieved a save file name, so keep track of the folder
+            // in which it is or it is to be
+            // Note: normally, we would use QFileInfo::canonicalPath(), but this
+            //       requires an existing file, so instead we use
+            //       QFileInfo::path()...
 
-            if (QMessageBox::question(mainWindow(), pCaption,
-                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
-                                      QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::No) {
-                return QString();
+            QFileInfo resInfo = res;
+
+            setActiveDirectory(resInfo.path());
+
+            // Check whether the save file already exists
+
+            if (resInfo.exists()) {
+                // The save file already exists, so ask whether we want to
+                // overwrite it
+
+                if (QMessageBox::question(qApp->activeWindow(), pCaption,
+                                          QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
+                                          QMessageBox::Yes|QMessageBox::No,
+                                          QMessageBox::Yes) == QMessageBox::No) {
+                    return QString();
+                }
             }
         }
+
+        return res;
+    } else {
+        return QString();
     }
-
-    // Everything went fine,so return the save file name
-
-    return res;
 }
 
 //==============================================================================
@@ -187,36 +225,41 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
                              const bool &pEmptyDir)
 {
-    // Retrieve and return a save file name
+    // Retrieve and return an existing directory path
+    // Note: normally, we would rely on QFileDialog::getExistingDirectory() to
+    //       retrieve the path of an existing directory, but then we wouldn't be
+    //       able to handle the case where the user cancels his/her action, so
+    //       instead we create and execute our own QFileDialog object...
 
-    QString res = Core::nativeCanonicalDirName(QFileDialog::getExistingDirectory(qApp->activeWindow(),
-                                                                                 pCaption,
-                                                                                 pDirName.isEmpty()?
-                                                                                     activeDirectory():
-                                                                                     pDirName));
+    QFileDialog dialog(qApp->activeWindow(), pCaption,
+                       pDirName.isEmpty()?activeDirectory():pDirName);
 
-    // Make sure that we have got a directory
+    dialog.setFileMode(QFileDialog::DirectoryOnly);
+    dialog.setOption(QFileDialog::ShowDirsOnly);
 
-    if (!res.isEmpty()) {
-        // Update our active directory
+    if (dialog.exec() == QDialog::Accepted) {
+        QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
 
-        setActiveDirectory(res);
+        if (!res.isEmpty()) {
+            // We have retrieved a file name, so update our active directory
 
-        // Check whether the directory should be empty
+            setActiveDirectory(res);
 
-        if (pEmptyDir) {
-            if (QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
-                QMessageBox::warning(mainWindow(), pCaption,
+            // Check whether the directory should be empty
+
+            if (   pEmptyDir
+                && QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
+                QMessageBox::warning(qApp->activeWindow(), pCaption,
                                      QObject::tr("Please choose an empty directory."));
 
                 return QString();
             }
         }
+
+        return res;
+    } else {
+        return QString();
     }
-
-    // Everything went fine,so return the directory
-
-    return res;
 }
 
 //==============================================================================
