@@ -46,6 +46,11 @@ FILE(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 KEEP_TRACK_OF_FILE(${VERSION_DATE_FILENAME})
 
+# Configure our QRC files
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${PROJECT_BUILD_DIR}/res/common.qrc)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/ui.qrc.in ${PROJECT_BUILD_DIR}/res/ui.qrc)
+
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
@@ -90,8 +95,8 @@ SET(UIS
 )
 
 SET(RESOURCES
-    res/common.qrc
-    res/ui.qrc
+    ${PROJECT_BUILD_DIR}/res/common.qrc
+    ${PROJECT_BUILD_DIR}/res/ui.qrc
 )
 
 # Files that make up the CLI version of OpenCOR (Windows specific)
