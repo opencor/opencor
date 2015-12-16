@@ -33,10 +33,10 @@ specific language governing permissions and limitations under the License.
 
 #include <QDomDocument>
 #include <QLabel>
+#include <QLayout>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
-#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -56,14 +56,6 @@ RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *>())
 {
-    // Create and set our vertical layout
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    setLayout(layout);
 }
 
 //==============================================================================

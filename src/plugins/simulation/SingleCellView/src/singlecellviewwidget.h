@@ -98,7 +98,7 @@ class SingleCellViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
+    explicit SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                   QWidget *pParent);
     ~SingleCellViewWidget();
 
@@ -138,7 +138,7 @@ private:
 
     Ui::SingleCellViewWidget *mGui;
 
-    SingleCellViewPlugin *mPluginParent;
+    SingleCellViewPlugin *mPlugin;
 
     SolverInterfaces mSolverInterfaces;
 

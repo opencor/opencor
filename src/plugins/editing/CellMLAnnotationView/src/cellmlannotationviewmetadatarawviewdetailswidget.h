@@ -38,16 +38,13 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewEditingWidget;
-
-//==============================================================================
-
 class CellmlAnnotationViewMetadataRawViewDetailsWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
+    explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
+                                                              QWidget *pParent);
 
     virtual void retranslateUi();
 

@@ -34,9 +34,10 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
+CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
+                                                                                                   QWidget *pParent) :
     TreeViewWidget(pParent),
-    mCellmlFile(pParent->cellmlFile())
+    mCellmlFile(pCellmlFile)
 {
     // Customise ourselves
 

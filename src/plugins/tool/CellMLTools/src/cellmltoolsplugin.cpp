@@ -275,10 +275,11 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 
-        if (issues.count())
+        if (issues.count()) {
             errorMessage = " ("+issues.first().message()+")";
             // Note: if there are 'issues', then there can be only one of them
             //       following a CellML export...
+        }
 
         QMessageBox::warning(Core::mainWindow(),
                              tr("Export CellML File To %1").arg(format),
@@ -402,11 +403,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
                             CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();
 
-                            if (issues.count())
+                            if (issues.count()) {
                                 errorMessage += " ("+issues.first().message()+")";
                                 // Note: if there are 'issues', then there can
                                 //       be only one of them following a CellML
                                 //       export...
+                            }
 
                             errorMessage += ".";
                         }
@@ -485,10 +487,11 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 
-        if (issues.count())
+        if (issues.count()) {
             errorMessage = " ("+issues.first().message()+")";
             // Note: if there are 'issues', then there can be only one of them
             //       following a CellML export...
+        }
 
         QMessageBox::warning(Core::mainWindow(),
                              tr("Export CellML File To User-Defined Format"),

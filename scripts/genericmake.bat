@@ -1,7 +1,6 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-SET Bitness=%1
-SET CMakeBuildType=%2
+SET CMakeBuildType=%1
 
 IF "!CMakeBuildType!" == "Release" (
     SET EnableTests=OFF
@@ -28,16 +27,6 @@ IF "!CMakeBuildType!" == "Release" (
 
 TITLE Making OpenCOR!TitleTests! (using !Generator!)...
 
-IF "!Bitness!" == "32" (
-    SET OLDPATH=!PATH!
-)
-
-IF EXIST "C:\Program Files (x86)\" (
-    SET ProgFilesDir=C:\Program Files ^(x86^)
-) ELSE (
-    SET ProgFilesDir=C:\Program Files
-)
-
 FOR /F "TOKENS=1,4" %%X IN ('qmake --version') DO (
     IF "%%X" == "Using" (
         SET FullQtVersion=%%Y
@@ -45,17 +34,7 @@ FOR /F "TOKENS=1,4" %%X IN ('qmake --version') DO (
     )
 )
 
-IF "!Bitness!" == "Default" (
-    IF EXIST "C:\Qt\!QtVersion!\msvc2013_64\bin\" (
-        CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
-    ) ELSE (
-        CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
-    )
-) ELSE (
-    SET PATH=C:\Qt\!QtVersion!\msvc2013\bin;!PATH!
-
-    CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
-)
+CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
 
 CD build
 
@@ -82,9 +61,5 @@ IF !ExitCode! EQU 0 (
 )
 
 CD ..
-
-IF "!Bitness!" == "32" (
-    SET PATH=!OLDPATH!
-)
 
 EXIT /B !ExitCode!

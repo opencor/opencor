@@ -23,8 +23,12 @@
         <translation>dans le fichier CellML d&apos;origine</translation>
     </message>
     <message>
-        <source>The CellML file requires features that are not present in %1 and was therefore saved as a %2 file.</source>
-        <translation>Le fichier CellML nécessite des fonctionnalités qui ne sont pas présentes dans %1 et a donc été sauvegardé en tant que fichier %2.</translation>
+        <source>Save File</source>
+        <translation>Sauvegarder Fichier</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; nécessite des fonctionnalités qui ne sont pas présentes dans %2 et devrait donc être sauvegardé comme fichier %3. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>

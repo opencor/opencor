@@ -33,10 +33,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class QStackedWidget;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -52,7 +48,7 @@ class CellmlAnnotationViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+    explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                         QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -72,9 +68,7 @@ public:
     CellmlAnnotationViewEditingWidget * editingWidget(const QString &pFileName) const;
 
 private:
-    CellMLAnnotationViewPlugin *mPluginParent;
-
-    QStackedWidget *mContents;
+    CellMLAnnotationViewPlugin *mPlugin;
 
     CellmlAnnotationViewEditingWidget *mEditingWidget;
     QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;

@@ -103,8 +103,12 @@ function versions(downloads) {
         document.write("                </td>\n");
         document.write("                <td class=\"date\">\n");
 
-        if (downloads)
-            document.write("                    ("+versionDay+" "+month(versionMonth)+" "+versionYear+")\n");
+        if (downloads) {
+            if (versionDay && versionMonth && versionYear)
+                document.write("                    ("+versionDay+" "+month(versionMonth)+" "+versionYear+")\n");
+            else
+                document.write("                    (???)\n");
+        }
 
         document.write("                </td>\n");
         document.write("            </tr>\n");

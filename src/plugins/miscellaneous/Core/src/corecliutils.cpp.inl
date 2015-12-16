@@ -59,18 +59,6 @@ QString shortVersion()
 {
     QString res = QString();
     QString appVersion = qApp->applicationVersion();
-    QString bitVersion;
-
-    enum {
-        SizeOfPointer = sizeof(void *)
-    };
-
-    if (SizeOfPointer == 4)
-        bitVersion = "32-bit";
-    else if (SizeOfPointer == 8)
-        bitVersion = "64-bit";
-    else
-        bitVersion = QString();
 
     if (!appVersion.contains("-"))
         res += "Version ";
@@ -78,9 +66,6 @@ QString shortVersion()
         res += "Snapshot ";
 
     res += appVersion;
-
-    if (!bitVersion.isEmpty())
-        res += " ("+bitVersion+")";
 
     return res;
 }
@@ -116,6 +101,22 @@ QString nativeCanonicalFileName(const QString &pFileName)
     QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
 
     return res.isEmpty()?QDir::toNativeSeparators(pFileName):res;
+}
+
+//==============================================================================
+
+QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
+{
+    // Return a native and canonical version of the given file names or a native
+    // version, if the native and canonical version of a given file name is
+    // empty (i.e. the file doesn't exist (anymore?))
+
+    QStringList res = QStringList();
+
+    foreach (const QString &fileName, pFileNames)
+        res << nativeCanonicalFileName(fileName);
+
+    return res;
 }
 
 //==============================================================================
@@ -246,14 +247,14 @@ QString copyright()
 QString formatMessage(const QString &pMessage, const bool &pLowerCase,
                       const bool &pDotDotDot)
 {
+    // Trim the message and make sure that we don't end up with an empty string
+
     static const QString DotDotDot = "...";
 
-    if (pMessage.isEmpty())
+    QString message = pMessage.trimmed();
+
+    if (message.isEmpty())
         return pDotDotDot?DotDotDot:QString();
-
-    // Format and return the message
-
-    QString message = pMessage;
 
     // Upper/lower the case of the first character, unless the message is one
     // character long (!!) or unless its second character is in lower case

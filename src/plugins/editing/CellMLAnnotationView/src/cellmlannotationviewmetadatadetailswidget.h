@@ -53,6 +53,8 @@ namespace CellMLAnnotationView {
 class CellmlAnnotationViewEditingWidget;
 class CellmlAnnotationViewMetadataEditDetailsWidget;
 class CellmlAnnotationViewMetadataViewDetailsWidget;
+class CellMLAnnotationViewPlugin;
+class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -61,7 +63,11 @@ class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
+    explicit CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
+                                                       CellmlAnnotationViewWidget *pViewWidget,
+                                                       CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                       CellMLSupport::CellmlFile *pCellmlFile,
+                                                       QWidget *pParent);
 
     virtual void retranslateUi();
 
@@ -73,7 +79,7 @@ public:
     void filePermissionsChanged();
 
 private:
-    CellmlAnnotationViewEditingWidget *mParent;
+    CellMLAnnotationViewPlugin *mPlugin;
 
     Core::BorderedWidget *mBorderedCategoryMessage;
     Core::UserMessageWidget *mCategoryMessage;
@@ -99,6 +105,13 @@ private:
 
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
+
+
+    void qualifierDetailsRequested(QWebView *pWebView,
+                                   const QString &pQualifier);
+    void resourceDetailsRequested(QWebView *pWebView, const QString &pResource);
+    void idDetailsRequested(QWebView *pWebView, const QString &pResource,
+                            const QString &pId);
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement);

@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QLabel>
 #include <QVBoxLayout>
 #include <QWebView>
 
@@ -46,10 +45,14 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
+CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
+                                                                                     CellmlAnnotationViewWidget *pViewWidget,
+                                                                                     CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                                                     CellMLSupport::CellmlFile *pCellmlFile,
+                                                                                     QWidget *pParent) :
     Widget(pParent),
-    mParent(pParent),
-    mCellmlFile(pParent->cellmlFile()),
+    mPlugin(pPlugin),
+    mCellmlFile(pCellmlFile),
     mElement(0)
 {
     // Create and set our vertical layout
@@ -83,8 +86,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, this);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
     mWebView             = new QWebView(this);
 
     mWebView->setAcceptDrops(false);
@@ -206,7 +209,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUnsupportedMetadataMe
 {
     // Retranslate our unsupported metadata message
 
-    mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()),
+    mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mPlugin->viewName()),
                                             Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
                                                 tr("Click <a href=\"here\">here</a> if you want to remove the existing metadata."):
                                                 QString());
@@ -292,18 +295,20 @@ CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDeta
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &pQualifier)
 {
-    // Ask our parent to update our web viewer for us
+    // Let people know that we want our web view to be updated with the some
+    // details about the given qualifier
 
-    mParent->updateWebViewerWithQualifierDetails(mWebView, pQualifier);
+    emit qualifierDetailsRequested(mWebView, pQualifier);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pResource)
 {
-    // Ask our parent to update our web viewer for us
+    // Let people know that we want our web view to be updated with the some
+    // details about the given resource
 
-    mParent->updateWebViewerWithResourceDetails(mWebView, pResource);
+    emit resourceDetailsRequested(mWebView, pResource);
 }
 
 //==============================================================================
@@ -311,9 +316,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pR
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResource,
                                                          const QString &pId)
 {
-    // Ask our parent to update our web viewer for us
+    // Let people know that we want our web view to be updated with the some
+    // details about the given id
 
-    mParent->updateWebViewerWithIdDetails(mWebView, pResource, pId);
+    emit idDetailsRequested(mWebView, pResource, pId);
 }
 
 //==============================================================================

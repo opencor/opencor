@@ -181,7 +181,7 @@ private:
 
     void getSingleLineComment();
     void getMultilineComment();
-    void getWord(const bool &pMaybeCmetaId);
+    void getWord();
     void getNumber();
     void getString();
 };

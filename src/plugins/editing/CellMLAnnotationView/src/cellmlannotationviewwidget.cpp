@@ -30,11 +30,10 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QLayout>
 #include <QMetaType>
 #include <QSettings>
-#include <QStackedWidget>
 #include <QVariant>
-#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -43,29 +42,15 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                        QWidget *pParent) :
     ViewWidget(pParent),
-    mPluginParent(pPluginParent),
+    mPlugin(pPlugin),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CellmlAnnotationViewEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mMetadataDetailsWidgetSizes(QIntList())
 {
-    // Create and set our vertical layout
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    setLayout(layout);
-
-    // Add a stacked widget to our layout
-
-    mContents = new QStackedWidget(this);
-
-    layout->addWidget(mContents);
 }
 
 //==============================================================================
@@ -128,12 +113,14 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editing widget associated with the given file, if any
 
+    CellmlAnnotationViewEditingWidget *oldEditingWidget = mEditingWidget;
+
     mEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!mEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new CellmlAnnotationViewEditingWidget(mPluginParent, pFileName, this);
+        mEditingWidget = new CellmlAnnotationViewEditingWidget(mPlugin, pFileName, this, this);
 
         // Keep track of the sizes of our editing widget and those of its
         // metadata details
@@ -157,10 +144,12 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
     mEditingWidget->setSizes(mEditingWidgetSizes);
     mEditingWidget->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
 
-    // Remove our previous editing widget and add ouew new one
+    // Hide our previous editing widget and show our new one
 
-    mContents->removeWidget(mContents->currentWidget());
-    mContents->addWidget(mEditingWidget);
+    mEditingWidget->show();
+
+    if (oldEditingWidget && (mEditingWidget != oldEditingWidget))
+        oldEditingWidget->hide();
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus

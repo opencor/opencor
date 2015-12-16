@@ -72,19 +72,25 @@ namespace CellMLTextView {
 class CellmlTextViewWidgetData
 {
 public:
-    explicit CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
-                                      const QString &pSha1 = QString(),
-                                      const bool &pValid = false,
-                                      const CellMLSupport::CellmlFile::Version &pCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0,
-                                      QDomDocument pRdfNodes = QDomDocument());
+    explicit CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
+                                      const QString &pSha1, const bool &pValid,
+                                      const CellMLSupport::CellmlFile::Version &pCellmlVersion,
+                                      QDomDocument pRdfNodes);
+    ~CellmlTextViewWidgetData();
+
+    void retranslateUi();
 
     CoreCellMLEditing::CoreCellmlEditingWidget * editingWidget() const;
-    QString sha1() const;
-    bool isValid() const;
-    CellMLSupport::CellmlFile::Version cellmlVersion() const;
-    QDomDocument rdfNodes() const;
 
+    QString sha1() const;
     void setSha1(const QString &pSha1);
+
+    bool isValid() const;
+
+    CellMLSupport::CellmlFile::Version cellmlVersion() const;
+    void setCellmlVersion(const CellMLSupport::CellmlFile::Version &pCellmlVersion);
+
+    QDomDocument rdfNodes() const;
 
 private:
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
@@ -121,7 +127,8 @@ public:
     bool isEditorUseable(const QString &pFileName) const;
     bool isEditorContentsModified(const QString &pFileName) const;
 
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName,
+                  bool &pNeedFeedback);
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -135,7 +142,7 @@ private:
 
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
 
-    QMap<QString, CellmlTextViewWidgetData> mData;
+    QMap<QString, CellmlTextViewWidgetData *> mData;
 
     CellMLTextViewConverter mConverter;
     CellmlTextViewParser mParser;

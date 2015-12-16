@@ -110,11 +110,12 @@ bool CellMLTextViewPlugin::isEditorContentsModified(const QString &pFileName) co
 //==============================================================================
 
 bool CellMLTextViewPlugin::saveFile(const QString &pOldFileName,
-                                      const QString &pNewFileName)
+                                    const QString &pNewFileName,
+                                    bool &pNeedFeedback)
 {
     // Save the given file
 
-    return mViewWidget->saveFile(pOldFileName, pNewFileName);
+    return mViewWidget->saveFile(pOldFileName, pNewFileName, pNeedFeedback);
 }
 
 //==============================================================================
