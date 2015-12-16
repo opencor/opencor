@@ -43,10 +43,6 @@ int main(int pArgC, char *pArgV[])
     for (int i = 1; i < pArgC; ++i)
         args << pArgV[i];
 
-    // Retrieve the location of our build directory
-
-    QString buildDir = OpenCOR::fileContents(":build_directory").first();
-
     // The different groups of tests that are to be run
 
     QString tests = OpenCOR::fileContents(":tests").first();
@@ -64,13 +60,6 @@ int main(int pArgC, char *pArgV[])
 
     // Run the different tests
 
-#ifdef Q_OS_WIN
-    QString exePath = QString(pArgV[0]).endsWith(".exe")?
-                          QFileInfo(pArgV[0]).canonicalPath():
-                          QFileInfo(QString(pArgV[0])+".exe").canonicalPath();
-#else
-    QString exePath = QFileInfo(pArgV[0]).canonicalPath();
-#endif
     QStringList failedTests = QStringList();
     int res = 0;
 
@@ -93,23 +82,21 @@ int main(int pArgC, char *pArgV[])
             // Go to the directory that contains our plugins, so that we can
             // load them without any problem
 
+            QString buildDir = OpenCOR::fileContents(":build_directory").first();
+
 #ifdef Q_OS_WIN
-            QString pluginsDir = exePath+QDir::separator()+QString("..")+QDir::separator()+"plugins/OpenCOR";
-
-            if (!QDir(pluginsDir).exists()) {
-                // The plugins directory doesn't exist, which should only happen
-                // if we are trying to run the tests from the build folder (as
-                // opposed to the build/bin folder), so skip the "../" bit...
-
-                pluginsDir = exePath+QDir::separator()+"plugins/OpenCOR";
-            }
-
-            QDir::setCurrent(pluginsDir);
+            QDir::setCurrent(buildDir+"/plugins/OpenCOR");
 #endif
 
             // Execute the test itself
 
-            int testRes = QProcess::execute(exePath+QDir::separator()+fullTestName, args);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+            int testRes = QProcess::execute(buildDir+"/bin/"+fullTestName, args);
+#elif defined(Q_OS_MAC)
+            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+fullTestName, args);
+#else
+    #error Unsupported platform
+#endif
 
             if (testRes)
                 failedTests << fullTestName;
