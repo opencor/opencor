@@ -327,7 +327,7 @@ MACRO(KEEP_TRACK_OF_FILE FILE_NAME)
     # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
     #       and then used to build other files. Now, the 'problem' is that
     #       Ninja needs to know about those files (see CMake policy CMP0058),
-    #       which we do through the below...
+    #       which we ensure it does through the below...
 
     ADD_CUSTOM_COMMAND(OUTPUT ${FILE_NAME}
                        COMMAND ${CMAKE_COMMAND} -E sleep 0)
