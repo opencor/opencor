@@ -39,19 +39,19 @@
 //**************************************************************************//
 
 namespace tobj {
-  class TypedObject ;                // Declare forward
+  class TYPEDOBJECT_EXPORT TypedObject ; // Declare forward
   } ;
 
 //**************************************************************************//
 
 namespace rdf {
 
-  class NodeImpl ;                   // Declare forward
-  class StmntImpl ;                  // Declare forward
-  class IterImpl ;                   // Declare forward
-  class GraphImpl ;                  // Declare forward
+  class NodeImpl ;                       // Declare forward
+  class StmntImpl ;                      // Declare forward
+  class IterImpl ;                       // Declare forward
+  class GraphImpl ;                      // Declare forward
 
-  class Graph ;                      // Declare forward for VS2013
+  class TYPEDOBJECT_EXPORT Graph ;       // Declare forward for VS2013
 
   class TYPEDOBJECT_EXPORT Node
   /*-------------------------*/
@@ -298,8 +298,6 @@ namespace rdf {
     bool contains(const Node &s, const Node &p, const Node &o) const ;
     StatementIter get_statements(const Statement &pattern) const ;
     StatementIter get_statements(const Node &s, const Node &p, const Node &o) const ;
-
-// WIP **     URI type(const URI &uri) const ;  // returns (<uri> a ?type)
 
     std::shared_ptr<tobj::TypedObject> get_resource(const URI &uri) ;
     void add_resource(const URI &uri, std::weak_ptr<tobj::TypedObject> weakref) ;

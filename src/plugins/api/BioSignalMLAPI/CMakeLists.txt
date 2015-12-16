@@ -1,12 +1,13 @@
 PROJECT(BioSignalMLAPIPlugin)
 
 MACRO(RETRIEVE_BioSignalML_API_SETTINGS)
-    # Retrieve some BioSignalML API settings
-
     IF(WIN32)
+        if(CMAKE_BUILD_TYPE MATCHES Debug)
+            set(DEBUG_POSTFIX "_d")
+        endif()
         SET(BioSignalML_API_EXTERNAL_BINARIES
-            biosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX}
-            typedobject${CMAKE_IMPORT_LIBRARY_SUFFIX}
+            biosignalml${DEBUG_POSTFIX}${CMAKE_IMPORT_LIBRARY_SUFFIX}
+            typedobject${DEBUG_POSTFIX}${CMAKE_IMPORT_LIBRARY_SUFFIX}
         )
     ELSEIF(APPLE)
         SET(BioSignalML_API_EXTERNAL_BINARIES
@@ -23,45 +24,26 @@ ENDMACRO()
 
 # Retrieve the plugin's binary file(s)
 
-STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}")
+STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
 
 IF(WIN32)
-    IF(${ARCHITECTURE} EQUAL 32)
-        IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll 8)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 8)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 8)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 8)
-        ELSE()
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll 0)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib a)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 0)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib a)
-        ENDIF()
+    IF(RELEASE_MODE)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll e441a499ae510dd1d1d202d54ca61fd06e5c7972)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 62d44d40d0f5ab044973e713016ce376f0b0cad4)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 201e3d3c5c135a4c8b506cbd5fade12f1b2c1583)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib e1e13ce39fd699f37c9036044472984005cfa18a)
     ELSE()
-        IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll 7ba0678ea3592f509c8b496b88dc4c54873ffe39)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 438165f7821f1077255ff0f9e5cdb8cee6993a14)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 1fda2b9d04db15aec9411ed144b1b95dc434d247)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib fb5197701a3d20c60064e2df9793e8eca224fb67)
-        ELSE()
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll d)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 3)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll d)
-            RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 3)
-        ENDIF()
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml_d.dll 0810a7d8bc7cedfd79fa617983be5f4e50aacb75)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml_d.lib 4fa1c9f7df1ac2dc4f325517a1b2f41e5d214c3f)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject_d.dll 65938812d4b6ccec3f008a6afe51dae974903a60)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject_d.lib 650acf146eb221db86d42e8d764da4d3c8bbdcad)
     ENDIF()
 ELSEIF(APPLE)
-    RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.0.dylib 1e35eaf9ac6ef72ecde02dba299be57379ca7c09)
-    RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.1.dylib f5293ba3fa729bd5bdbbec3719215580041b1830)
+    RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.0.dylib 08c77f2e5ff4a983674b4a014f9394505a8314f7)
+    RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.1.dylib 616459ae337435e8dae5c075049d981f4354431d)
 ELSE()
-    IF(${ARCHITECTURE} EQUAL 32)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.so.0 5)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.so.1 5)
-    ELSE()
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.so.0 9)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.so.1 9)
-    ENDIF()
+    RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.so.0 00a6e77a7d968c588db6863eef87888bd8fc63b6)
+    RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.so.1 db203b41a098529958a6bf05b2eac2db11342304)
 ENDIF()
 
 # Retrieve some BioSignalML API settings
@@ -70,7 +52,7 @@ RETRIEVE_BioSignalML_API_SETTINGS()
 
 # Add the plugin
 
-SET(BioSignalML_API_EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
+SET(BioSignalML_API_EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
 
 ADD_PLUGIN(BioSignalMLAPI
     SOURCES

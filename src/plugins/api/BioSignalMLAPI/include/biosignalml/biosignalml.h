@@ -21,6 +21,12 @@
 #ifndef BIOSIGNALML_H
 #define BIOSIGNALML_H
 
+namespace bsml
+/*==========*/
+{
+  const std::string VERSION = "0.8.0" ;
+  } ;
+
 #include <biosignalml/ontology.h>
 #include <biosignalml/formats.h>
 #include <biosignalml/resource.h>

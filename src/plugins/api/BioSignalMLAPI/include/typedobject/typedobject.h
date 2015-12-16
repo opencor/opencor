@@ -40,7 +40,7 @@
 namespace tobj
 /*==========*/
 {
-  const std::string VERSION = "1.1.0a" ;
+  const std::string VERSION = "1.1.0" ;
   } ;
 
 

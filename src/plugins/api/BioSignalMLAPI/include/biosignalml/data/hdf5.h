@@ -77,11 +77,11 @@ namespace bsml {
       double time(const size_t n) const override ;
       void extend(const double *times, const size_t length) override ;
       std::vector<double> read(size_t pos=0, intmax_t length=-1) override ;
-
-     private:
-      std::shared_ptr<ClockData> m_data ;
       friend class Signal ;
       friend class Recording ;
+
+     public:
+      std::shared_ptr<ClockData> m_data ;
       } ;
 
 
