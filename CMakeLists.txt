@@ -205,7 +205,11 @@ IF(ENABLE_TESTS)
 
     SET(RUNTESTS_NAME runtests)
 
-    QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS src/tests/res/tests.qrc)
+    SET(TESTS_QRC_FILENAME ${PROJECT_BUILD_DIR}/src/tests/res/tests.qrc)
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in ${TESTS_QRC_FILENAME})
+
+    QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
     ADD_EXECUTABLE(${RUNTESTS_NAME}
         src/tests/src/main.cpp
