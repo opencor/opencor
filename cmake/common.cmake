@@ -704,6 +704,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_HEADER_MOC}
                 )
 
+                QT5_ADD_RESOURCES(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
+
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
 
@@ -714,6 +716,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                     ${TEST_SOURCE}
                     ${TEST_SOURCES_MOC}
+                    ${TEST_SOURCES_RCS}
                 )
 
                 SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES

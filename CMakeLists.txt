@@ -24,6 +24,17 @@ OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" O
 
 INITIALISE_PROJECT()
 
+# Keep track of our source and build directories
+
+SET(SOURCE_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/sourcedirectory.txt)
+SET(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
+
+FILE(WRITE ${SOURCE_DIRECTORY_FILENAME} "${CMAKE_SOURCE_DIR}")
+FILE(WRITE ${BUILD_DIRECTORY_FILENAME} "${PROJECT_BUILD_DIR}")
+
+KEEP_TRACK_OF_FILE(${SOURCE_DIRECTORY_FILENAME})
+KEEP_TRACK_OF_FILE(${BUILD_DIRECTORY_FILENAME})
+
 # Version/snapshot of OpenCOR
 
 IF ("${PROJECT_VERSION}" STREQUAL "")
@@ -213,6 +224,7 @@ IF(ENABLE_TESTS)
 
     ADD_EXECUTABLE(${RUNTESTS_NAME}
         src/tests/src/main.cpp
+        src/tests/src/testsutils.cpp
 
         ${RUNTESTS_SOURCES_RCS}
     )

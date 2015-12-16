@@ -19,6 +19,10 @@ specific language governing permissions and limitations under the License.
 // Main source file
 //==============================================================================
 
+#include "testsutils.h"
+
+//==============================================================================
+
 #include <QDir>
 #include <QMap>
 #include <QProcess>
@@ -39,16 +43,13 @@ int main(int pArgC, char *pArgV[])
     for (int i = 1; i < pArgC; ++i)
         args << pArgV[i];
 
+    // Retrieve the location of our build directory
+
+    QString buildDir = OpenCOR::fileContents(":build_directory").first();
+
     // The different groups of tests that are to be run
 
-    QFile testsFile(":tests");
-
-    testsFile.open(QIODevice::ReadOnly);
-
-    QString tests = testsFile.readAll();
-
-    testsFile.close();
-
+    QString tests = OpenCOR::fileContents(":tests").first();
     QMap<QString, QStringList> testsGroups;
     QStringList testItems = tests.split("|");
     QString testGroup;
