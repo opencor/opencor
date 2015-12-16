@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="CoreCellMLEditing_fr">../../../../../build/CoreCellMLEditing_fr.qm</file>
-    </qresource>
-</RCC>

@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="CellMLSupport_errorNode">${PROJECT_SOURCE_DIR}/res/oxygen/emblems/emblem-important.png</file>
+        <file alias="CellMLSupport_warningNode">${PROJECT_SOURCE_DIR}/res/oxygen/status/task-attention.png</file>
+        <file alias="CellMLSupport_modelNode">${PROJECT_SOURCE_DIR}/res/modelNode.png</file>
+        <file alias="CellMLSupport_importNode">${PROJECT_SOURCE_DIR}/res/importNode.png</file>
+        <file alias="CellMLSupport_unitNode">${PROJECT_SOURCE_DIR}/res/unitNode.png</file>
+        <file alias="CellMLSupport_unitElementNode">${PROJECT_SOURCE_DIR}/res/unitElementNode.png</file>
+        <file alias="CellMLSupport_componentNode">${PROJECT_SOURCE_DIR}/res/componentNode.png</file>
+        <file alias="CellMLSupport_variableNode">${PROJECT_SOURCE_DIR}/res/variableNode.png</file>
+        <file alias="CellMLSupport_modifiableVariableNode">${PROJECT_SOURCE_DIR}/res/modifiableVariableNode.png</file>
+        <file alias="CellMLSupport_mathmlElementNode">${PROJECT_SOURCE_DIR}/res/mathmlElementNode.png</file>
+        <file alias="CellMLSupport_groupNode">${PROJECT_SOURCE_DIR}/res/groupNode.png</file>
+        <file alias="CellMLSupport_relationshipNode">${PROJECT_SOURCE_DIR}/res/relationshipNode.png</file>
+        <file alias="CellMLSupport_connectionNode">${PROJECT_SOURCE_DIR}/res/connectionNode.png</file>
+        <file alias="CellMLSupport_metadataNode">${PROJECT_SOURCE_DIR}/res/metadataNode.png</file>
+        <file alias="CellMLSupport_fr">${PROJECT_BUILD_DIR}/CellMLSupport_fr.qm</file>
+    </qresource>
+</RCC>

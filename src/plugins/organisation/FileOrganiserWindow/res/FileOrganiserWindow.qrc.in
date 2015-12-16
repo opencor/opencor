@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-open-folder.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/edit-delete.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/folder-new.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/mimetypes/application-x-zerosize.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/places/folder.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/status/image-missing.png</file>
+        <file alias="FileOrganiserWindow_fr">${PROJECT_BUILD_DIR}/FileOrganiserWindow_fr.qm</file>
+    </qresource>
+</RCC>

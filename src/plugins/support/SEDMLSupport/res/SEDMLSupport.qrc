@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>sedmlLogo.png</file>
-        <file alias="SEDMLSupport_fr">../../../../../build/SEDMLSupport_fr.qm</file>
-    </qresource>
-</RCC>

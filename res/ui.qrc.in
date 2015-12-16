@@ -1,23 +1,23 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="app_splashscreen">${CMAKE_SOURCE_DIR}/res/splashscreen.png</file>
-        <file alias="app_icon">${CMAKE_SOURCE_DIR}/res/OpenCOR.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/flags/en.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/flags/fr.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/application-exit.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/dialog-ok-apply.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/edit-delete.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/help-about.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/system-reboot.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/system-software-update.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/view-fullscreen.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/actions/view-refresh.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/apps/preferences-plugin.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/categories/applications-education-language.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/categories/applications-internet.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/categories/preferences-system.png</file>
-        <file>${CMAKE_SOURCE_DIR}/res/oxygen/mimetypes/application-x-zerosize.png</file>
-        <file alias="qt_fr">${CMAKE_SOURCE_DIR}/res/qt_fr.qm</file>
+        <file alias="app_splashscreen">${PROJECT_SOURCE_DIR}/res/splashscreen.png</file>
+        <file alias="app_icon">${PROJECT_SOURCE_DIR}/res/OpenCOR.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/flags/en.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/flags/fr.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/application-exit.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/dialog-ok-apply.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/edit-delete.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/help-about.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/system-reboot.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/system-software-update.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/view-fullscreen.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/view-refresh.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/apps/preferences-plugin.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/categories/applications-education-language.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/categories/applications-internet.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/categories/preferences-system.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/mimetypes/application-x-zerosize.png</file>
+        <file alias="qt_fr">${PROJECT_SOURCE_DIR}/res/qt_fr.qm</file>
         <file alias="app_fr">${PROJECT_BUILD_DIR}/OpenCOR_fr.qm</file>
     </qresource>
 </RCC>

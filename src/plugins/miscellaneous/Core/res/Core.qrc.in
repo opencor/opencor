@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/arrow-down.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/arrow-right.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-close.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-new.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-open.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-open-recent.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-open-remote.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-save.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-save-all.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-save-as.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/go-next.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/go-previous.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/help-about.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/categories/applications-internet.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/mimetypes/application-x-zerosize.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/places/document-multiple.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/status/object-locked.png</file>
+        <file alias="ctop.xsl">${PROJECT_SOURCE_DIR}/res/web-xslt/ctopff.xsl</file>
+        <file>${PROJECT_SOURCE_DIR}/res/logo.png</file>
+        <file alias="Core_fr">${PROJECT_BUILD_DIR}/Core_fr.qm</file>
+    </qresource>
+</RCC>

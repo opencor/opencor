@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/document-export.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/help-about.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/list-add.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/list-remove.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/media-playback-pause.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/media-playback-start.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/media-playback-stop.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/run-build-configure.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/trash-empty.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/view-refresh.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/status/object-locked.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/status/object-unlocked.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/status/task-attention.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/algebraic.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/blank.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/computedConstant.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/constant.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/rate.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/state.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/voi.png</file>
+        <file alias="SingleCellView_fr">${PROJECT_BUILD_DIR}/SingleCellView_fr.qm</file>
+    </qresource>
+</RCC>

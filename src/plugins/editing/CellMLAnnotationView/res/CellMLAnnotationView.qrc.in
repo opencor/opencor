@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/edit-copy.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/help-about.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/help-hint.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/list-add.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/list-remove.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/emblems/emblem-important.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/oxygen/categories/applications-internet.png</file>
+        <file>${PROJECT_SOURCE_DIR}/res/ontologicalTerms.html</file>
+        <file>${PROJECT_SOURCE_DIR}/res/qualifierInformation.html</file>
+        <file>${PROJECT_SOURCE_DIR}/res/modelQualifier.svg</file>
+        <file>${PROJECT_SOURCE_DIR}/res/biologyQualifier.svg</file>
+        <file alias="CellMLAnnotationView_fr">${PROJECT_BUILD_DIR}/CellMLAnnotationView_fr.qm</file>
+    </qresource>
+</RCC>

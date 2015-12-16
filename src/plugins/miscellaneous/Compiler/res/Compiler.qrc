@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="Compiler_fr">../../../../../build/Compiler_fr.qm</file>
-    </qresource>
-</RCC>

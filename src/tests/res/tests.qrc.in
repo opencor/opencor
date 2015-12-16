@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="tests">${PROJECT_BUILD_DIR}/tests.txt</file>
+    </qresource>
+</RCC>
