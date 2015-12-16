@@ -59,7 +59,8 @@ namespace Core {
 
 QString allFilters(const QString &pFilters)
 {
-    return  QObject::tr("All Files")
+    return (pFilters.isEmpty()?QString():pFilters+";;")
+           + QObject::tr("All Files")
            +" (*"
 #ifdef Q_OS_WIN
             ".*"

@@ -252,6 +252,7 @@ SET(PLUGINS
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
+    api/BioSignalMLAPI
 
     miscellaneous/Core
 
@@ -298,6 +299,7 @@ SET(PLUGINS
     # Selectable plugins
 
     dataStore/CSVDataStore
+    dataStore/BSMLDataStore
 
     editing/CellMLAnnotationView
     editing/CellMLTextView

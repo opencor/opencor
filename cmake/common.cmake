@@ -1162,7 +1162,7 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
+MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
     # Create the destination folder, if needed
 
     STRING(REPLACE "${PLATFORM_DIR}" "bin" REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
@@ -1203,7 +1203,7 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
         SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "http://www.opencor.ws/binaries/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the file, should we have managed
@@ -1240,4 +1240,10 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
             MESSAGE(FATAL_ERROR "${FILENAME} could not be uncompressed...")
         ENDIF()
     ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
+    RETRIEVE_BINARY_FILE_FROM("http://www.opencor.ws/binaries" ${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 ENDMACRO()
