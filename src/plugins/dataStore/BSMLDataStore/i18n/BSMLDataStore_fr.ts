@@ -51,15 +51,15 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>BioSignalMLSelectVariables</name>
     <message>
-        <source>Select variables to export:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All variables</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select variables to export</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
