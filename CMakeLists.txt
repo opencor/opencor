@@ -48,8 +48,11 @@ KEEP_TRACK_OF_FILE(${VERSION_DATE_FILENAME})
 
 # Configure our QRC files
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${PROJECT_BUILD_DIR}/res/common.qrc)
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/ui.qrc.in ${PROJECT_BUILD_DIR}/res/ui.qrc)
+SET(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
+SET(UI_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/ui.qrc)
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/ui.qrc.in ${UI_QRC_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -95,8 +98,8 @@ SET(UIS
 )
 
 SET(RESOURCES
-    ${PROJECT_BUILD_DIR}/res/common.qrc
-    ${PROJECT_BUILD_DIR}/res/ui.qrc
+    ${COMMON_QRC_FILENAME}
+    ${UI_QRC_FILENAME}
 )
 
 # Files that make up the CLI version of OpenCOR (Windows specific)
@@ -169,7 +172,6 @@ IF(WIN32)
     LIST(APPEND SOURCES ${RC_FILENAME})
 ELSEIF(APPLE)
     SET(ICNS_FILENAME ${PROJECT_NAME}.icns)
-
     SET(MACOSX_BUNDLE_ICON_FILE ${ICNS_FILENAME})
 
     SET_SOURCE_FILES_PROPERTIES(res/${ICNS_FILENAME} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -427,12 +429,12 @@ IF(APPLE)
     #       some information about associating .cellml files to OpenCOR,
     #       something that can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
+    SET(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${INFO_PLIST_FILENAME})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
+        MACOSX_BUNDLE_INFO_PLIST ${INFO_PLIST_FILENAME}
     )
 
     # Note: ideally, what follows would be done using macdeployqt, but it has
@@ -610,15 +612,15 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
-    SET(VbsFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
+    SET(BAT_FILENAME "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
+    SET(VBS_FILENAME "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BAT_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VBS_FILENAME})
 
-    INSTALL(FILES ${BatFile}
+    INSTALL(FILES ${BAT_FILENAME}
             DESTINATION .)
-    INSTALL(FILES ${VbsFile}
+    INSTALL(FILES ${VBS_FILENAME}
             DESTINATION .)
 
     # File type association
@@ -658,11 +660,11 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
+    SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SH_FILENAME})
 
-    INSTALL(FILES ${SHELL_FILENAME}
+    INSTALL(FILES ${SH_FILENAME}
             DESTINATION .
             RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -709,11 +711,11 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
+    SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${SH_FILENAME})
 
-    INSTALL(FILES ${ShellFile}
+    INSTALL(FILES ${SH_FILENAME}
             DESTINATION .
             RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
