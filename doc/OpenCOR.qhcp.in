@@ -3,12 +3,12 @@
     <docFiles>
         <generate>
             <file>
-                <input>OpenCOR.qhp</input>
-                <output>../build/OpenCOR.qch</output>
+                <input>${CMAKE_SOURCE_DIR}/doc/OpenCOR.qhp</input>
+                <output>${PROJECT_BUILD_DIR}/OpenCOR.qch</output>
             </file>
         </generate>
         <register>
-            <file>../build/OpenCOR.qch</file>
+            <file>${PROJECT_BUILD_DIR}/OpenCOR.qch</file>
         </register>
     </docFiles>
 </QHelpCollectionProject>
