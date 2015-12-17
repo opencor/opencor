@@ -57,6 +57,12 @@ FILE(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 KEEP_TRACK_OF_FILE(${VERSION_DATE_FILENAME})
 
+# Configure our help file
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+
 # Configure our QRC files
 
 SET(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
