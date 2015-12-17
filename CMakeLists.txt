@@ -68,8 +68,10 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
 SET(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
 SET(UI_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/ui.qrc)
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/ui.qrc.in ${UI_QRC_FILENAME})
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in
+               ${COMMON_QRC_FILENAME})
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/ui.qrc.in
+               ${UI_QRC_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -184,7 +186,8 @@ STRING(TIMESTAMP YEAR "%Y")
 IF(WIN32)
     SET(RC_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.rc)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in ${RC_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in
+                   ${RC_FILENAME})
 
     LIST(APPEND SOURCES ${RC_FILENAME})
 ELSEIF(APPLE)
@@ -224,7 +227,8 @@ IF(ENABLE_TESTS)
 
     SET(TESTS_QRC_FILENAME ${PROJECT_BUILD_DIR}/src/tests/res/tests.qrc)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in ${TESTS_QRC_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in
+                   ${TESTS_QRC_FILENAME})
 
     QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
@@ -453,7 +457,8 @@ IF(APPLE)
 
     SET(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${INFO_PLIST_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in
+                   ${INFO_PLIST_FILENAME})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${INFO_PLIST_FILENAME}
@@ -637,8 +642,10 @@ IF(WIN32)
     SET(BAT_FILENAME "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
     SET(VBS_FILENAME "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BAT_FILENAME})
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VBS_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
+                   ${BAT_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
+                   ${VBS_FILENAME})
 
     INSTALL(FILES ${BAT_FILENAME}
             DESTINATION .)
@@ -684,7 +691,8 @@ ELSEIF(APPLE)
 
     SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SH_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in
+                   ${SH_FILENAME})
 
     INSTALL(FILES ${SH_FILENAME}
             DESTINATION .
@@ -735,7 +743,8 @@ ELSE()
 
     SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${SH_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
+                   ${SH_FILENAME})
 
     INSTALL(FILES ${SH_FILENAME}
             DESTINATION .
