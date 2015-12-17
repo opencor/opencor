@@ -85,9 +85,8 @@ ELSE()
         STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
         STRING(REPLACE "PLATFORM_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
 
-        CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
-                       ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
-                       COPYONLY)
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
+                                                         ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST})
     ENDFOREACH()
 
     # Apply LLVM's build settings
