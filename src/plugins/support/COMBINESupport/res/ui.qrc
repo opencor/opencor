@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="omex.xsd">omex.xsd</file>
+    </qresource>
+</RCC>
