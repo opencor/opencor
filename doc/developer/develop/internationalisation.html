@@ -34,7 +34,7 @@
 
         <ol>
             <li>
-                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[CompilerVersion]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). For every language supported by OpenCOR (except for English, which is natively supported by Qt), we need to add the corresponding Qt-specific translation file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc.in"><code>[OpenCOR]/res/ui.qrc</code></a>:
+                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[CompilerVersion]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). For every language supported by OpenCOR (except for English, which is natively supported by Qt), we need to add the corresponding Qt-specific translation file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;qt_xx&quot;&gt;qt_xx.qm&lt;/file&gt;</pre>
             </li>
             <li>
