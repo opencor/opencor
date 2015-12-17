@@ -65,12 +65,12 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
 # Configure our QRC files
 
 SET(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
-SET(UI_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/ui.qrc)
+SET(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in
                ${COMMON_QRC_FILENAME})
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/ui.qrc.in
-               ${UI_QRC_FILENAME})
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
+               ${I18N_QRC_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -117,7 +117,8 @@ SET(UIS
 
 SET(RESOURCES
     ${COMMON_QRC_FILENAME}
-    ${UI_QRC_FILENAME}
+    ${I18N_QRC_FILENAME}
+    res/ui.qrc
 )
 
 # Files that make up the CLI version of OpenCOR (Windows specific)
@@ -142,7 +143,7 @@ IF(WIN32)
     )
 
     SET(WINDOWS_CLI_RESOURCES
-        res/common.qrc
+        ${COMMON_QRC_FILENAME}
     )
 ENDIF()
 
