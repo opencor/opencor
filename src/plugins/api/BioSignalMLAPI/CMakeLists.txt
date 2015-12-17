@@ -2,12 +2,9 @@ PROJECT(BioSignalMLAPIPlugin)
 
 MACRO(RETRIEVE_BioSignalML_API_SETTINGS)
     IF(WIN32)
-        if(CMAKE_BUILD_TYPE MATCHES Debug)
-            set(DEBUG_POSTFIX "_d")
-        endif()
         SET(BioSignalML_API_EXTERNAL_BINARIES
-            biosignalml${DEBUG_POSTFIX}${CMAKE_IMPORT_LIBRARY_SUFFIX}
-            typedobject${DEBUG_POSTFIX}${CMAKE_IMPORT_LIBRARY_SUFFIX}
+            biosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX}
+            typedobject${CMAKE_IMPORT_LIBRARY_SUFFIX}
         )
     ELSEIF(APPLE)
         SET(BioSignalML_API_EXTERNAL_BINARIES
@@ -30,13 +27,13 @@ IF(WIN32)
     IF(RELEASE_MODE)
         RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll e441a499ae510dd1d1d202d54ca61fd06e5c7972)
         RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 62d44d40d0f5ab044973e713016ce376f0b0cad4)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 201e3d3c5c135a4c8b506cbd5fade12f1b2c1583)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib e1e13ce39fd699f37c9036044472984005cfa18a)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 94345a2e65536c57a020e3d97fa402abc5ca32f2)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 845408aeb7508baa7698fc77f26f1c2d80550be3)
     ELSE()
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml_d.dll 0810a7d8bc7cedfd79fa617983be5f4e50aacb75)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml_d.lib 4fa1c9f7df1ac2dc4f325517a1b2f41e5d214c3f)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject_d.dll 65938812d4b6ccec3f008a6afe51dae974903a60)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject_d.lib 650acf146eb221db86d42e8d764da4d3c8bbdcad)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll 0810a7d8bc7cedfd79fa617983be5f4e50aacb75)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 4fa1c9f7df1ac2dc4f325517a1b2f41e5d214c3f)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 65938812d4b6ccec3f008a6afe51dae974903a60)
+        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 650acf146eb221db86d42e8d764da4d3c8bbdcad)
     ENDIF()
 ELSEIF(APPLE)
     RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.0.dylib 08c77f2e5ff4a983674b4a014f9394505a8314f7)
