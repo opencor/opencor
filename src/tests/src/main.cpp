@@ -58,8 +58,16 @@ int main(int pArgC, char *pArgV[])
         testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems[i+1]);
     }
 
+    // Go to the directory that contains our plugins, so that we can load them
+    // without any problem
+
+#ifdef Q_OS_WIN
+    QDir::setCurrent(buildDir+"/plugins/OpenCOR");
+#endif
+
     // Run the different tests
 
+    QString buildDir = OpenCOR::fileContents(":build_directory").first();
     QStringList failedTests = QStringList();
     int res = 0;
 
@@ -77,29 +85,18 @@ int main(int pArgC, char *pArgV[])
         std::cout << std::endl;
 
         foreach (const QString &testName, testsGroup.value()) {
-            QString fullTestName = QString("%1_%2").arg(testsGroup.key(), testName);
-
-            // Go to the directory that contains our plugins, so that we can
-            // load them without any problem
-
-            QString buildDir = OpenCOR::fileContents(":build_directory").first();
-
-#ifdef Q_OS_WIN
-            QDir::setCurrent(buildDir+"/plugins/OpenCOR");
-#endif
-
             // Execute the test itself
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-            int testRes = QProcess::execute(buildDir+"/bin/"+fullTestName, args);
+            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, args);
 #elif defined(Q_OS_MAC)
-            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+fullTestName, args);
+            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, args);
 #else
     #error Unsupported platform
 #endif
 
             if (testRes)
-                failedTests << fullTestName;
+                failedTests << testsGroup.key()+"::"+testName;
 
             res = res?res:testRes;
 
