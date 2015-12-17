@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="RawCellMLView_fr">${PROJECT_BUILD_DIR}/RawCellMLView_fr.qm</file>
+    </qresource>
+</RCC>

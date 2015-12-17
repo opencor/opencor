@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="CellMLTextView_fr">${PROJECT_BUILD_DIR}/CellMLTextView_fr.qm</file>
+    </qresource>
+</RCC>

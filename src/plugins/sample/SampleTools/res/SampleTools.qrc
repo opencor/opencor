@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="SampleTools_fr">../../../../../build/SampleTools_fr.qm</file>
-    </qresource>
-</RCC>

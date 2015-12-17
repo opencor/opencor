@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="HelpWindow_fr">${PROJECT_BUILD_DIR}/HelpWindow_fr.qm</file>
+        <file alias="HelpWindow_qchFile">${PROJECT_BUILD_DIR}/OpenCOR.qch</file>
+        <file alias="HelpWindow_qhcFile">${PROJECT_BUILD_DIR}/OpenCOR.qhc</file>
+    </qresource>
+</RCC>

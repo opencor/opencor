@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="CoreSEDMLEditing_fr">../../../../../build/CoreSEDMLEditing_fr.qm</file>
-    </qresource>
-</RCC>

@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>oxygen/actions/document-print.png</file>
+        <file>oxygen/actions/edit-copy.png</file>
+        <file>oxygen/actions/go-home.png</file>
+        <file>oxygen/actions/go-next.png</file>
+        <file>oxygen/actions/go-previous.png</file>
+        <file>oxygen/actions/zoom-in.png</file>
+        <file>oxygen/actions/zoom-original.png</file>
+        <file>oxygen/actions/zoom-out.png</file>
+        <file>oxygen/apps/help-browser.png</file>
+        <file>helpWindowWidgetError.html</file>
+    </qresource>
+</RCC>

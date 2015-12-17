@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>oxygen/actions/edit-bomb.png</file>
+        <file>oxygen/actions/help-hint.png</file>
+        <file>oxygen/emblems/emblem-important.png</file>
+        <file>oxygen/status/dialog-information.png</file>
+        <file>oxygen/status/task-attention.png</file>
+    </qresource>
+</RCC>
