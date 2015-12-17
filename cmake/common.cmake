@@ -469,20 +469,24 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
-    # Resource file, if any
+    # Resource files, if any
 
-    SET(QRC_IN_FILENAME ${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}.qrc.in)
+    SET(RESOURCES)
+    SET(I18N_QRC_IN_FILENAME ${PROJECT_SOURCE_DIR}/res/i18n.qrc.in)
+    SET(UI_QRC_FILENAME ${PROJECT_SOURCE_DIR}/res/ui.qrc)
 
-    IF(EXISTS ${QRC_IN_FILENAME})
+    IF(EXISTS ${I18N_QRC_IN_FILENAME})
         STRING(REPLACE "${CMAKE_SOURCE_DIR}" "${PROJECT_BUILD_DIR}"
-               QRC_FILENAME "${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}.qrc")
+               I18N_QRC_FILENAME "${PROJECT_SOURCE_DIR}/res/i18n.qrc")
 
-        CONFIGURE_FILE(${QRC_IN_FILENAME}
-                       ${QRC_FILENAME})
+        CONFIGURE_FILE(${I18N_QRC_IN_FILENAME}
+                       ${I18N_QRC_FILENAME})
 
-        SET(RESOURCES ${QRC_FILENAME})
-    ELSE()
-        SET(RESOURCES)
+        LIST(APPEND RESOURCES ${I18N_QRC_FILENAME})
+    ENDIF()
+
+    IF(EXISTS ${UI_QRC_FILENAME})
+        LIST(APPEND RESOURCES ${UI_QRC_FILENAME})
     ENDIF()
 
     # Update the translation (.ts) files and generate the language (.qm) files,

@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/go-next.png</file>
-        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/go-previous.png</file>
-        <file>${PROJECT_SOURCE_DIR}/res/oxygen/actions/go-up.png</file>
-        <file>${PROJECT_SOURCE_DIR}/res/oxygen/places/user-home.png</file>
-        <file alias="FileBrowserWindow_fr">${PROJECT_BUILD_DIR}/FileBrowserWindow_fr.qm</file>
-    </qresource>
-</RCC>

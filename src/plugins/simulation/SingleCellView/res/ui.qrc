@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>oxygen/actions/document-export.png</file>
+        <file>oxygen/actions/help-about.png</file>
+        <file>oxygen/actions/list-add.png</file>
+        <file>oxygen/actions/list-remove.png</file>
+        <file>oxygen/actions/media-playback-pause.png</file>
+        <file>oxygen/actions/media-playback-start.png</file>
+        <file>oxygen/actions/media-playback-stop.png</file>
+        <file>oxygen/actions/run-build-configure.png</file>
+        <file>oxygen/actions/trash-empty.png</file>
+        <file>oxygen/actions/view-refresh.png</file>
+        <file>oxygen/status/object-locked.png</file>
+        <file>oxygen/status/object-unlocked.png</file>
+        <file>oxygen/status/task-attention.png</file>
+        <file>algebraic.png</file>
+        <file>blank.png</file>
+        <file>computedConstant.png</file>
+        <file>constant.png</file>
+        <file>rate.png</file>
+        <file>state.png</file>
+        <file>voi.png</file>
+    </qresource>
+</RCC>

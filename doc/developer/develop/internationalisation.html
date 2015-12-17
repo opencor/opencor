@@ -34,22 +34,18 @@
 
         <ol>
             <li>
-                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[CompilerVersion]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). For every language supported by OpenCOR (except for English, which is natively supported by Qt), we need to add the corresponding Qt-specific translation file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
+                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[CompilerVersion]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). For every language supported by OpenCOR (except for English, which is natively supported by Qt), we need to add the corresponding Qt-specific translation file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc.in"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;qt_xx&quot;&gt;qt_xx.qm&lt;/file&gt;</pre>
             </li>
             <li>
                 <strong>OpenCOR-specific translation files:</strong> for each supported language (again, except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about it is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
                 <pre class="prettyprint">&lt;TS version=&quot;2.0&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
-                and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific translation file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
-                <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;../build/OpenCOR_xx.qm&lt;/file&gt;</pre>
+                and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific translation file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/i18n.qrc.in"><code>[OpenCOR]/res/i18n.qrc.in</code></a>:
+                <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;${PROJECT_BUILD_DIR}/OpenCOR_xx.qm&lt;/file&gt;</pre>
                 <code>OpenCOR_xx.qm</code> gets automatically generated from <code>OpenCOR_xx.ts</code> when <a href="../buildTestAndRun.html">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> as follows:
                 <pre class="prettyprint">MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     ...
-    SET(LANGUAGE_FILES
-        ...
-        ${TARGET_NAME}_xx
-        ...
-    )
+    SET(LANGUAGES ... xx ...)
     ...
 )</pre>
             </li>
@@ -64,7 +60,7 @@
         </div>
 
         <p>
-            A file called <code>&lt;PluginName&gt;_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[PluginName]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/miscellaneous/Core/i18n/Core_fr.ts</code></a>). A <code>&lt;PluginName&gt;.qrc.in</code> file must also be created in <code>[PluginName]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/res/Core.qrc.in"><code>[OpenCOR]/src/plugins/miscellaneous/Core/res/Core.qrc.in</code></a>) and an entry for the translation file added to it, e.g.:
+            A file called <code>&lt;PluginName&gt;_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[PluginName]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/miscellaneous/Core/i18n/Core_fr.ts</code></a>). An <code>i18n.qrc.in</code> file must also be created in <code>[PluginName]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/res/i18n.qrc.in"><code>[OpenCOR]/src/plugins/miscellaneous/Core/res/i18n.qrc.in</code></a>) and an entry for the translation file added to it, e.g.:
             <pre class="prettyprint">&lt;file alias=&quot;Core_fr&quot;&gt;${PROJECT_BUILD_DIR}/Core_fr.qm&lt;/file&gt;</pre>
         </p>
 
