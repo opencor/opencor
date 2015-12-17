@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>oxygen/actions/document-open-folder.png</file>
+        <file>oxygen/actions/edit-delete.png</file>
+        <file>oxygen/actions/folder-new.png</file>
+        <file>oxygen/mimetypes/application-x-zerosize.png</file>
+        <file>oxygen/places/folder.png</file>
+        <file>oxygen/status/image-missing.png</file>
+    </qresource>
+</RCC>

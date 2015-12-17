@@ -47,7 +47,7 @@ void Tests::basicTests()
 
     for (int i = 1; i <= 3; ++i) {
         for (int j = 1; j <= 3; ++j, ++counter) {
-            combineArchive.addFile(QDir::currentPath()+QDir::separator()+OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
+            combineArchive.addFile(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
                                    QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
                                    OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%4),
                                    !(counter%2));

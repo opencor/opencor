@@ -32,7 +32,11 @@ class Tests : public QObject
 {
     Q_OBJECT
 
+private:
+    QString mFileName;
+
 private Q_SLOTS:
+    void initTestCase();
     void cleanupTestCase();
 
     void cliHelpTests();

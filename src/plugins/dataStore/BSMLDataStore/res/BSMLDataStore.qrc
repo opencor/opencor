@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="BSMLDataStore_fr">../../../../../build/BSMLDataStore_fr.qm</file>
-    </qresource>
-</RCC>

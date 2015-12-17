@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Editor_fr">${PROJECT_BUILD_DIR}/Editor_fr.qm</file>
+    </qresource>
+</RCC>

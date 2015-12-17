@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="PhysiomeModelRepositoryWindow_fr">${PROJECT_BUILD_DIR}/PhysiomeModelRepositoryWindow_fr.qm</file>
+    </qresource>
+</RCC>

@@ -19,6 +19,10 @@ specific language governing permissions and limitations under the License.
 // Main source file
 //==============================================================================
 
+#include "testsutils.h"
+
+//==============================================================================
+
 #include <QDir>
 #include <QMap>
 #include <QProcess>
@@ -41,14 +45,7 @@ int main(int pArgC, char *pArgV[])
 
     // The different groups of tests that are to be run
 
-    QFile testsFile(":tests");
-
-    testsFile.open(QIODevice::ReadOnly);
-
-    QString tests = testsFile.readAll();
-
-    testsFile.close();
-
+    QString tests = OpenCOR::fileContents(":tests").first();
     QMap<QString, QStringList> testsGroups;
     QStringList testItems = tests.split("|");
     QString testGroup;
@@ -63,13 +60,6 @@ int main(int pArgC, char *pArgV[])
 
     // Run the different tests
 
-#ifdef Q_OS_WIN
-    QString exePath = QString(pArgV[0]).endsWith(".exe")?
-                          QFileInfo(pArgV[0]).canonicalPath():
-                          QFileInfo(QString(pArgV[0])+".exe").canonicalPath();
-#else
-    QString exePath = QFileInfo(pArgV[0]).canonicalPath();
-#endif
     QStringList failedTests = QStringList();
     int res = 0;
 
@@ -92,23 +82,21 @@ int main(int pArgC, char *pArgV[])
             // Go to the directory that contains our plugins, so that we can
             // load them without any problem
 
+            QString buildDir = OpenCOR::fileContents(":build_directory").first();
+
 #ifdef Q_OS_WIN
-            QString pluginsDir = exePath+QDir::separator()+QString("..")+QDir::separator()+"plugins/OpenCOR";
-
-            if (!QDir(pluginsDir).exists()) {
-                // The plugins directory doesn't exist, which should only happen
-                // if we are trying to run the tests from the build folder (as
-                // opposed to the build/bin folder), so skip the "../" bit...
-
-                pluginsDir = exePath+QDir::separator()+"plugins/OpenCOR";
-            }
-
-            QDir::setCurrent(pluginsDir);
+            QDir::setCurrent(buildDir+"/plugins/OpenCOR");
 #endif
 
             // Execute the test itself
 
-            int testRes = QProcess::execute(exePath+QDir::separator()+fullTestName, args);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+            int testRes = QProcess::execute(buildDir+"/bin/"+fullTestName, args);
+#elif defined(Q_OS_MAC)
+            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+fullTestName, args);
+#else
+    #error Unsupported platform
+#endif
 
             if (testRes)
                 failedTests << fullTestName;

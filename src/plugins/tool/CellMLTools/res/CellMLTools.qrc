@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="CellMLTools_fr">../../../../../build/CellMLTools_fr.qm</file>
-    </qresource>
-</RCC>

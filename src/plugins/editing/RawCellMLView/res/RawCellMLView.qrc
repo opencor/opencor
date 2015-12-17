@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="RawCellMLView_fr">../../../../../build/RawCellMLView_fr.qm</file>
-    </qresource>
-</RCC>

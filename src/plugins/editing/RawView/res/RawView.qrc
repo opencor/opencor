@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="RawView_fr">../../../../../build/RawView_fr.qm</file>
-    </qresource>
-</RCC>

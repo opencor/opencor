@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="COMBINESupport_fr">../../../../../build/COMBINESupport_fr.qm</file>
-    </qresource>
-</RCC>

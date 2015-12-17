@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="CSVDataStore_fr">${PROJECT_BUILD_DIR}/CSVDataStore_fr.qm</file>
+    </qresource>
+</RCC>
