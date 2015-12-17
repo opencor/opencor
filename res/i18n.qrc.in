@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="app_fr">${PROJECT_BUILD_DIR}/OpenCOR_fr.qm</file>
+    </qresource>
+</RCC>

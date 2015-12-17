@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="tests">../../../build/tests.txt</file>
-    </qresource>
-</RCC>

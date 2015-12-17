@@ -24,6 +24,17 @@ OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" O
 
 INITIALISE_PROJECT()
 
+# Keep track of our source and build directories
+
+SET(SOURCE_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/sourcedirectory.txt)
+SET(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
+
+FILE(WRITE ${SOURCE_DIRECTORY_FILENAME} "${CMAKE_SOURCE_DIR}")
+FILE(WRITE ${BUILD_DIRECTORY_FILENAME} "${PROJECT_BUILD_DIR}")
+
+KEEP_TRACK_OF_FILE(${SOURCE_DIRECTORY_FILENAME})
+KEEP_TRACK_OF_FILE(${BUILD_DIRECTORY_FILENAME})
+
 # Version/snapshot of OpenCOR
 
 IF ("${PROJECT_VERSION}" STREQUAL "")
@@ -45,6 +56,21 @@ SET(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 FILE(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 KEEP_TRACK_OF_FILE(${VERSION_DATE_FILENAME})
+
+# Configure our help file
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+# Configure our QRC files
+
+SET(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
+SET(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/common.qrc.in
+               ${COMMON_QRC_FILENAME})
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
+               ${I18N_QRC_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -90,7 +116,8 @@ SET(UIS
 )
 
 SET(RESOURCES
-    res/common.qrc
+    ${COMMON_QRC_FILENAME}
+    ${I18N_QRC_FILENAME}
     res/ui.qrc
 )
 
@@ -116,7 +143,7 @@ IF(WIN32)
     )
 
     SET(WINDOWS_CLI_RESOURCES
-        res/common.qrc
+        ${COMMON_QRC_FILENAME}
     )
 ENDIF()
 
@@ -150,26 +177,28 @@ IF(SNAPSHOT)
     SET(FILE_VERSION 0)
     SET(PRODUCT_VERSION "Snapshot ${VERSION}")
 ELSE()
-    STRING(REPLACE "." "," FILE_VERSION "${VERSION}")
+    STRING(REPLACE "." ","
+           FILE_VERSION "${VERSION}")
+
     SET(PRODUCT_VERSION "Version ${VERSION}")
 ENDIF()
 
 STRING(TIMESTAMP YEAR "%Y")
 
 IF(WIN32)
-    SET(RcFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.rc)
+    SET(RC_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.rc)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in ${RcFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in
+                   ${RC_FILENAME})
 
-    LIST(APPEND SOURCES ${RcFile})
+    LIST(APPEND SOURCES ${RC_FILENAME})
 ELSEIF(APPLE)
-    SET(IconFile ${PROJECT_NAME}.icns)
+    SET(ICNS_FILENAME ${PROJECT_NAME}.icns)
+    SET(MACOSX_BUNDLE_ICON_FILE ${ICNS_FILENAME})
 
-    SET(MACOSX_BUNDLE_ICON_FILE ${IconFile})
+    SET_SOURCE_FILES_PROPERTIES(res/${ICNS_FILENAME} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    SET_SOURCE_FILES_PROPERTIES(res/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-
-    LIST(APPEND SOURCES res/${IconFile})
+    LIST(APPEND SOURCES res/${ICNS_FILENAME})
 ENDIF()
 
 # Check whether tests are required and, if so, 'reset' our list of tests and set
@@ -198,10 +227,16 @@ IF(ENABLE_TESTS)
 
     SET(RUNTESTS_NAME runtests)
 
-    QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS src/tests/res/tests.qrc)
+    SET(TESTS_QRC_FILENAME ${PROJECT_BUILD_DIR}/src/tests/res/tests.qrc)
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in
+                   ${TESTS_QRC_FILENAME})
+
+    QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
     ADD_EXECUTABLE(${RUNTESTS_NAME}
         src/tests/src/main.cpp
+        src/tests/src/testsutils.cpp
 
         ${RUNTESTS_SOURCES_RCS}
     )
@@ -249,6 +284,7 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
@@ -297,6 +333,7 @@ SET(PLUGINS
 
     # Selectable plugins
 
+#    dataStore/BSMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
@@ -340,7 +377,7 @@ FOREACH(PLUGIN ${PLUGINS})
         INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
     ENDFOREACH()
 
-    INCLUDE_DIRECTORIES(build/${PLUGIN_DIR})
+    INCLUDE_DIRECTORIES(${PROJECT_BUILD_DIR}/${PLUGIN_DIR})
 ENDFOREACH()
 
 # Build the GUI version of OpenCOR
@@ -420,12 +457,13 @@ IF(APPLE)
     #       some information about associating .cellml files to OpenCOR,
     #       something that can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
+    SET(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in
+                   ${INFO_PLIST_FILENAME})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
+        MACOSX_BUNDLE_INFO_PLIST ${INFO_PLIST_FILENAME}
     )
 
     # Note: ideally, what follows would be done using macdeployqt, but it has
@@ -603,15 +641,17 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
-    SET(VbsFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
+    SET(BAT_FILENAME "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
+    SET(VBS_FILENAME "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
+                   ${BAT_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
+                   ${VBS_FILENAME})
 
-    INSTALL(FILES ${BatFile}
+    INSTALL(FILES ${BAT_FILENAME}
             DESTINATION .)
-    INSTALL(FILES ${VbsFile}
+    INSTALL(FILES ${VBS_FILENAME}
             DESTINATION .)
 
     # File type association
@@ -651,11 +691,12 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
+    SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in
+                   ${SH_FILENAME})
 
-    INSTALL(FILES ${SHELL_FILENAME}
+    INSTALL(FILES ${SH_FILENAME}
             DESTINATION .
             RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -702,11 +743,12 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
+    SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
+                   ${SH_FILENAME})
 
-    INSTALL(FILES ${ShellFile}
+    INSTALL(FILES ${SH_FILENAME}
             DESTINATION .
             RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

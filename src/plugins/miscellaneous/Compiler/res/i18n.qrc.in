@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Compiler_fr">${PROJECT_BUILD_DIR}/Compiler_fr.qm</file>
+    </qresource>
+</RCC>

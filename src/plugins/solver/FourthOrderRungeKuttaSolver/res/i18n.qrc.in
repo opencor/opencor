@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="FourthOrderRungeKuttaSolver_fr">${PROJECT_BUILD_DIR}/FourthOrderRungeKuttaSolver_fr.qm</file>
+    </qresource>
+</RCC>

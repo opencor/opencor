@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="RawSEDMLView_fr">../../../../../build/RawSEDMLView_fr.qm</file>
-    </qresource>
-</RCC>

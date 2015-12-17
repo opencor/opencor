@@ -18,6 +18,5 @@
         <file>oxygen/categories/preferences-system.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file alias="qt_fr">qt_fr.qm</file>
-        <file alias="app_fr">../build/OpenCOR_fr.qm</file>
     </qresource>
 </RCC>

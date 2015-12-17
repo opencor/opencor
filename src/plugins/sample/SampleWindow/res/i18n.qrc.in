@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="SampleWindow_fr">${PROJECT_BUILD_DIR}/SampleWindow_fr.qm</file>
+    </qresource>
+</RCC>

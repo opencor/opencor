@@ -38,13 +38,9 @@ QString dirOrFileName(const QString &pDirOrFileName)
     // Format and return the given directory or file name, so that it can be
     // used on all our supported platforms
 
-#if defined(Q_OS_WIN)
-    return "..\\..\\..\\"+QString(pDirOrFileName).replace("/", "\\");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    return pDirOrFileName;
-#else
-    #error Unsupported platform
-#endif
+    static const QString sourceDir = OpenCOR::fileContents(":source_directory").first();
+
+    return QDir::toNativeSeparators(sourceDir+QDir::separator()+QString(pDirOrFileName));
 }
 
 //==============================================================================
@@ -65,22 +61,6 @@ QString fileName(const QString &pFileName)
     // supported platforms
 
     return dirOrFileName(pFileName);
-}
-
-//==============================================================================
-
-QString cliFileName(const QString &pFileName)
-{
-    // Format and return the given file name, so that it can be used on all our
-    // supported platforms through the CLI version of OpenCOR
-
-#if defined(Q_OS_WIN)
-    return "..\\..\\"+QString(pFileName).replace("/", "\\");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    return pFileName;
-#else
-    #error Unsupported platform
-#endif
 }
 
 //==============================================================================
@@ -139,10 +119,12 @@ QStringList runCli(const QStringList pArguments)
     // Go to the directory where our tests are located
     // Note: see main()...
 
+    static const QString buildDir = OpenCOR::fileContents(":build_directory").first();
+
 #ifdef Q_OS_WIN
     QString crtPath = QDir::currentPath();
 
-    QDir::setCurrent(crtPath+"/../../bin");
+    QDir::setCurrent(buildDir+"/bin");
 #endif
 
     // Execute the CLI version of OpenCOR (passing to it the given arguments)
@@ -151,9 +133,9 @@ QStringList runCli(const QStringList pArguments)
 #if defined(Q_OS_WIN)
     QString program = "OpenCOR.com";
 #elif defined(Q_OS_LINUX)
-    QString program = "build/bin/OpenCOR";
+    QString program = buildDir+"/bin/OpenCOR";
 #elif defined(Q_OS_MAC)
-    QString program = "build/OpenCOR.app/Contents/MacOS/OpenCOR";
+    QString program = buildDir+"/OpenCOR.app/Contents/MacOS/OpenCOR";
 #else
     #error Unsupported platform
 #endif
