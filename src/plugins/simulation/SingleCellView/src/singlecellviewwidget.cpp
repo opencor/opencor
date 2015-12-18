@@ -204,6 +204,18 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
+void SingleCellViewWidget::fileClosed(const QString &pFileName)
+{
+    // Keep track, if possible, of the fact that a file has been closed
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget)
+        simulationWidget->fileClosed(pFileName);
+}
+
+//==============================================================================
+
 }   // namespace SingleCellView
 }   // namespace OpenCOR
 

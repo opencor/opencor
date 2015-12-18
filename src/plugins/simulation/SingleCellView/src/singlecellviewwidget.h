@@ -64,6 +64,7 @@ public:
     void fileModified(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+    void fileClosed(const QString &pFileName);
 
 private:
     SingleCellViewPlugin *mPlugin;
