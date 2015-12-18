@@ -43,6 +43,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
 //==============================================================================
@@ -78,12 +79,11 @@ class SingleCellViewInformationSolversWidget : public Core::PropertyEditorWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationSolversWidget(QWidget *pParent);
+    explicit SingleCellViewInformationSolversWidget(SingleCellViewPlugin *pPlugin,
+                                                    QWidget *pParent);
     ~SingleCellViewInformationSolversWidget();
 
     virtual void retranslateUi();
-
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
 
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,

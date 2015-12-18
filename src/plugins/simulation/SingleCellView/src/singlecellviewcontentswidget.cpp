@@ -39,7 +39,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewContentsWidget::SingleCellViewContentsWidget(QWidget *pParent) :
+SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
+                                                           QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mSplitterSizes(QIntList())
@@ -54,7 +55,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(QWidget *pParent) :
 
     // Create our information widget
 
-    mInformationWidget = new SingleCellViewInformationWidget(this);
+    mInformationWidget = new SingleCellViewInformationWidget(pPlugin, this);
 
     mInformationWidget->setObjectName("Information");
 

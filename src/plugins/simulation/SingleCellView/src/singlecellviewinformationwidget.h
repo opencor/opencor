@@ -50,6 +50,7 @@ class SingleCellViewInformationGraphsWidget;
 class SingleCellViewInformationParametersWidget;
 class SingleCellViewInformationSimulationWidget;
 class SingleCellViewInformationSolversWidget;
+class SingleCellViewPlugin;
 
 //==============================================================================
 
@@ -59,7 +60,8 @@ class SingleCellViewInformationWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationWidget(QWidget *pParent);
+    explicit SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                             QWidget *pParent);
 
     virtual void retranslateUi();
 

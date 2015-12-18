@@ -40,6 +40,7 @@ namespace SingleCellView {
 
 class SingleCellViewGraphPanelsWidget;
 class SingleCellViewInformationWidget;
+class SingleCellViewPlugin;
 
 //==============================================================================
 
@@ -48,7 +49,8 @@ class SingleCellViewContentsWidget : public QSplitter, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewContentsWidget(QWidget *pParent);
+    explicit SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
+                                          QWidget *pParent);
 
     virtual void retranslateUi();
 

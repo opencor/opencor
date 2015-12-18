@@ -103,7 +103,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     ViewWidget(pParent, false),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
-    mSolverInterfaces(SolverInterfaces()),
+    mSolverInterfaces(pPlugin->solverInterfaces()),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
     mStoppedSimulations(SingleCellViewSimulations()),
@@ -209,6 +209,26 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mGui->layout->addWidget(mToolBarWidget);
     mGui->layout->addWidget(mTopSeparator);
 
+    // Populate our simulation data export drop-down menu with the given data
+    // store interfaces
+
+    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
+        QString dataStoreName = dataStoreInterface->dataStoreName();
+
+        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
+
+        action->setToolTip(dataStoreName);
+
+        mDataStoreInterfaces.insert(action, dataStoreInterface);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(simulationDataExport()));
+    }
+
+    // Update our data store actions
+
+    updateDataStoreActions();
+
     // Create and add our invalid simulation message widget
 
     mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
@@ -227,7 +247,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our contents widget
 
-    mContentsWidget = new SingleCellViewContentsWidget(this);
+    mContentsWidget = new SingleCellViewContentsWidget(pPlugin, this);
 
     mContentsWidget->setObjectName("Contents");
 
@@ -446,50 +466,12 @@ void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::setSolverInterfaces(const SolverInterfaces &pSolverInterfaces)
-{
-    // Let our solvers widget know about the solver interfaces
-
-    mContentsWidget->informationWidget()->solversWidget()->setSolverInterfaces(pSolverInterfaces);
-
-    // Keep track of the solver interfaces
-
-    mSolverInterfaces = pSolverInterfaces;
-}
-
-//==============================================================================
-
 void SingleCellViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions
 
     foreach (QAction *action, mDataStoreInterfaces.keys())
         action->setStatusTip(tr("Export the simulation data to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces)
-{
-    // Populate our simulation data export drop-down menu with the given data
-    // store interfaces
-
-    foreach (DataStoreInterface *dataStoreInterface, pDataStoreInterfaces) {
-        QString dataStoreName = dataStoreInterface->dataStoreName();
-
-        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
-
-        action->setToolTip(dataStoreName);
-
-        mDataStoreInterfaces.insert(action, dataStoreInterface);
-
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(simulationDataExport()));
-    }
-
-    // Update our data store actions
-
-    updateDataStoreActions();
 }
 
 //==============================================================================

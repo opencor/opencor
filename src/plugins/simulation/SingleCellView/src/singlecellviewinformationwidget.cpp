@@ -39,7 +39,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParent) :
+SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                                                 QWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent)
 {
@@ -70,7 +71,7 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
 
     // Create our solvers widget
 
-    mSolversWidget = new SingleCellViewInformationSolversWidget(mCollapsibleWidget);
+    mSolversWidget = new SingleCellViewInformationSolversWidget(pPlugin, mCollapsibleWidget);
 
     mSolversWidget->setObjectName("Solvers");
 

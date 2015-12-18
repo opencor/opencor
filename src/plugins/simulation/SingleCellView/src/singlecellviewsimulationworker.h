@@ -24,10 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "solverinterface.h"
-
-//==============================================================================
-
 #include <QObject>
 #include <QWaitCondition>
 
@@ -56,8 +52,7 @@ class SingleCellViewSimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
-                                            CellMLSupport::CellmlFileRuntime *pRuntime,
+    explicit SingleCellViewSimulationWorker(CellMLSupport::CellmlFileRuntime *pRuntime,
                                             SingleCellViewSimulation *pSimulation,
                                             SingleCellViewSimulationWorker **pSelf);
 
@@ -75,8 +70,6 @@ public:
 
 private:
     QThread *mThread;
-
-    SolverInterfaces mSolverInterfaces;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 

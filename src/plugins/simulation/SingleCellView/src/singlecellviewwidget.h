@@ -24,8 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "datastoreinterface.h"
-#include "solverinterface.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -53,9 +51,6 @@ public:
                                   QWidget *pParent);
 
     virtual void retranslateUi();
-
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
-    void setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces);
 
     bool contains(const QString &pFileName) const;
 

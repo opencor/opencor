@@ -1040,7 +1040,7 @@ bool SingleCellViewSimulation::run()
 
         // Create our worker
 
-        mWorker = new SingleCellViewSimulationWorker(mSolverInterfaces, mRuntime, this, &mWorker);
+        mWorker = new SingleCellViewSimulationWorker(mRuntime, this, &mWorker);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));
