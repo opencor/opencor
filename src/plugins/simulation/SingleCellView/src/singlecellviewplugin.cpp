@@ -85,10 +85,7 @@ void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 {
     // Let our view widget know that a file has been opened
 
-/*---GRY---
     mViewWidget->fileOpened(pFileName);
-*/
-Q_UNUSED(pFileName);
 }
 
 //==============================================================================

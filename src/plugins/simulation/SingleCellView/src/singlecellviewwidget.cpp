@@ -124,6 +124,19 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
+void SingleCellViewWidget::fileOpened(const QString &pFileName)
+{
+    // The given file has been opened, so enable/disable parts of our GUI,
+    // should the given file be managed
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget)
+        simulationWidget->fileOpened(pFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 {
     // The given file has been un/locked, so enable/disable parts of our GUI,
