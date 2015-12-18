@@ -163,6 +163,18 @@ void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
+void SingleCellViewWidget::fileModified(const QString &pFileName)
+{
+    // Keep track, if possible, of the fact that a file has been un/locked
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget)
+        simulationWidget->fileModified(pFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 {
     // Keep track, if possible, of the fact that a file has been reloaded

@@ -1119,11 +1119,9 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
 
 void SingleCellViewSimulationWidget::fileModified(const QString &pFileName)
 {
-    // Update our reset action, but only if we are dealing with the active
-    // simulation
+    // Update our reset action
 
-    if (mSimulation && !mSimulation->fileName().compare(pFileName))
-        mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
+    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
 }
 
 //==============================================================================

@@ -98,10 +98,7 @@ void SingleCellViewPlugin::fileModified(const QString &pFileName)
 {
     // Let our view widget know that a file has been modified
 
-/*---GRY---
     mViewWidget->fileModified(pFileName);
-*/
-Q_UNUSED(pFileName);
 }
 
 //==============================================================================

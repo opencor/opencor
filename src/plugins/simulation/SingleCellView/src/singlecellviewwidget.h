@@ -61,6 +61,7 @@ public:
 
     void fileOpened(const QString &pFileName);
     void filePermissionsChanged(const QString &pFileName);
+    void fileModified(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
