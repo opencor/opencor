@@ -103,7 +103,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     ViewWidget(pParent, false),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
-    mSolverInterfaces(pPlugin->solverInterfaces()),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
     mStoppedSimulations(SingleCellViewSimulations()),
@@ -636,7 +635,8 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
     if (!mSimulation) {
         // No simulation object currently exists for the model, so create one
 
-        mSimulation = new SingleCellViewSimulation(pFileName, cellmlFileRuntime, mSolverInterfaces);
+        mSimulation = new SingleCellViewSimulation(pFileName, cellmlFileRuntime,
+                                                   mPlugin->solverInterfaces());
 
         newSimulation = true;
 

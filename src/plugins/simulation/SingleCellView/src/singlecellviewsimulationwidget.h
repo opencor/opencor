@@ -26,10 +26,8 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
-#include "datastoreinterface.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewsimulation.h"
-#include "solverinterface.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -134,8 +132,6 @@ private:
     Ui::SingleCellViewSimulationWidget *mGui;
 
     SingleCellViewPlugin *mPlugin;
-
-    SolverInterfaces mSolverInterfaces;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
