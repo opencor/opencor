@@ -58,23 +58,16 @@
         <ul>
             <li>Start <a href="http://www.qt.io/ide/">Qt Creator</a>;</li>
             <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu, by pressing <code>Ctrl</code>+<code>O</code> or by dragging and dropping the file onto Qt Creator);</li>
-            <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
-            <li>Click on the <code>Next</code> button;</li>
-            <li>Click on the <code>Run CMake</code> button;</li>
-            <li>Click on the <code>Finish</code> button; and</li>
-            <li>
-                Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl</code>+<code>R</code>).
+            <li>Configure the project as you see fit and click on the <code>Configure Project</code> button;</li>
+            <li>Provide additional arguments to CMake, if needed (e.g. <code>-DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON</code>);
 
-                <p class="nomargins note note1">
-                    because of our use of CMake, debugging with Qt Creator currently requires an extra build step that can be set by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, set the <code>Command</code> field to <code>cmake</code> and the <code>Arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes <em>before</em> the default <code>Make</code> build step.
-                </p>
-                <p class="nomargins note note2">
-                    to build OpenCOR's tests, you need to add <code>-DENABLE_TESTS=ON</code> to the CMake command (see Note #1). Then, if you want the tests to be run every time you build OpenCOR, you need to create a new build step (see Note #1) with <code>bin/runtests</code> as the <code>Command</code>, if on <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> / <a href="http://en.wikipedia.org/wiki/Linux">Linux</a>, or <code>OpenCOR.app/Contents/MacOS/runtests</code>, if on <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>. Now, unlike in Note #1, this new build step must come <em>after</em> the default <code>Make</code> build step.
-                </p>
-                <p class="nomargins note note3">
-                    if you don't have <a href="http://martine.github.io/ninja/">Ninja</a> installed on your system, then Qt Creator will by default, on <a href="http://en.wikipedia.org/wiki/Linux">Linux</a> / <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>, compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (if none is provided, then Qt Creator will run as many jobs as possible).
+                <p class="nomargins note note">
+                    OpenCOR-specific build options can be found in <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>.
                 </p>
             </li>
+            <li>Click on the <code>Run CMake</code> button;</li>
+            <li>Click on the <code>Done</code> button; and</li>
+            <li>Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl</code>+<code>R</code>).</li>
         </ul>
 
         <script type="text/javascript">

@@ -61,13 +61,14 @@ int main(int pArgC, char *pArgV[])
     // Go to the directory that contains our plugins, so that we can load them
     // without any problem
 
+    QString buildDir = OpenCOR::fileContents(":build_directory").first();
+
 #ifdef Q_OS_WIN
     QDir::setCurrent(buildDir+"/plugins/OpenCOR");
 #endif
 
     // Run the different tests
 
-    QString buildDir = OpenCOR::fileContents(":build_directory").first();
     QStringList failedTests = QStringList();
     int res = 0;
 
