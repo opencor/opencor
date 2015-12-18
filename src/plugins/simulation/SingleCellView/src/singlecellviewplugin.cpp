@@ -336,11 +336,7 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 {
     // Return the requested file tab icon
 
-/*---GRY---
     return mViewWidget->fileTabIcon(pFileName);
-*/
-Q_UNUSED(pFileName);
-return QIcon();
 }
 
 //==============================================================================

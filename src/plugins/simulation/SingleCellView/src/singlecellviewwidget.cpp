@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QIcon>
 #include <QLayout>
 
 //==============================================================================
@@ -139,6 +140,23 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
         if (simulationWidget == mSimulationWidget)
             mSimulationWidget = 0;
+    }
+}
+
+//==============================================================================
+
+QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
+{
+    // Return, if possible, the tab icon for the given file
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget) {
+        return simulationWidget->fileTabIcon();
+    } else {
+        static const QIcon NoIcon = QIcon();
+
+        return NoIcon;
     }
 }
 

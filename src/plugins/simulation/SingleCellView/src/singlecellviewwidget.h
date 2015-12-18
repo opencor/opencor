@@ -62,6 +62,8 @@ public:
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
+    QIcon fileTabIcon(const QString &pFileName) const;
+
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
     void fileOpened(const QString &pFileName);
