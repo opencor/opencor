@@ -57,6 +57,8 @@ public:
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+
     void fileOpened(const QString &pFileName);
     void filePermissionsChanged(const QString &pFileName);
     void fileReloaded(const QString &pFileName);

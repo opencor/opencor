@@ -124,10 +124,24 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
+bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
+                                    const QString &pNewFileName)
+{
+    // Save the given file, if possible
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
+
+    if (simulationWidget)
+        return simulationWidget->saveFile(pOldFileName, pNewFileName);
+    else
+        return false;
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::fileOpened(const QString &pFileName)
 {
-    // The given file has been opened, so enable/disable parts of our GUI,
-    // should the given file be managed
+    // Keep track, if possible, of the fact that a file has been opened
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -139,8 +153,7 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
 void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 {
-    // The given file has been un/locked, so enable/disable parts of our GUI,
-    // should the given file be managed
+    // Keep track, if possible, of the fact that a file has been un/locked
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -152,7 +165,7 @@ void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 
 void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so reload it, should it be managed
+    // Keep track, if possible, of the fact that a file has been reloaded
 
     if (contains(pFileName)) {
         finalize(pFileName);
@@ -167,7 +180,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
-    // The given file has been renamed, so update our simulating widgets mapping
+    // Keep track, if possible, of the fact that a file has been renamed
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 

@@ -71,12 +71,7 @@ bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
 
     // Let our view widget know that we want to save a file
 
-/*---GRY---
     return mViewWidget->saveFile(pOldFileName, pNewFileName);
-*/
-Q_UNUSED(pOldFileName);
-Q_UNUSED(pNewFileName);
-return false;
 }
 
 //==============================================================================
