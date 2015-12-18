@@ -55,6 +55,26 @@ void SingleCellViewWidget::retranslateUi()
 
 //==============================================================================
 
+void SingleCellViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverInterfaces)
+{
+    // Initialise our simulation widgets with the given solvers
+
+    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        simulationWidget->setSolverInterfaces(pSolverInterfaces);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces)
+{
+    // Initialise our simulation widgets with the given data stores
+
+    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        simulationWidget->setDataStoreInterfaces(pDataStoreInterfaces);
+}
+
+//==============================================================================
+
 bool SingleCellViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file

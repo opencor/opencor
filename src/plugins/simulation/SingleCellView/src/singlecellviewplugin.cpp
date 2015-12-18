@@ -214,10 +214,8 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Initialise our view widget with the different solvers and data stores
     // that are available to us
 
-/*---GRY---
     mViewWidget->setSolverInterfaces(solverInterfaces);
     mViewWidget->setDataStoreInterfaces(dataStoreInterfaces);
-*/
 }
 
 //==============================================================================
