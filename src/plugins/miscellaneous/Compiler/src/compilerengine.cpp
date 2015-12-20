@@ -132,17 +132,9 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Get a driver to compile our code
 
-#ifdef QT_DEBUG
-    llvm::raw_ostream &outputStream = llvm::outs();
-#else
-    llvm::raw_ostream &outputStream = llvm::nulls();
-#endif
     llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
-
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
-                                               &*diagnosticOptions,
-                                               new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-
+                                               &*diagnosticOptions);
     clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
 
     driver.setCheckInputsExist(false);
@@ -150,7 +142,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Get a compilation object to which we pass some arguments
 
     llvm::StringRef dummyFileName("dummyFile.c");
-
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back("clang");
@@ -231,7 +222,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
 
-    if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
+    if (!compilerInstance.ExecuteAction(*codeGenerationAction, llvm::outs())) {
         mError = tr("the code could not be compiled");
 
         reset(false);
