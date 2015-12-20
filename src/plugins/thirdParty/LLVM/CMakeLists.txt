@@ -1474,6 +1474,7 @@ ELSE()
             tools/clang/include
         DEFINITIONS
             ${LLVM_DEFINITIONS}
+            OPENCOR_BUILD
         QT_MODULES
             Core
     )

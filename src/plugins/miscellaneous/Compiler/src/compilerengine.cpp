@@ -215,14 +215,10 @@ bool CompilerEngine::compileCode(const QString &pCode)
     }
 
     // Create and execute the frontend to generate an LLVM bitcode module
-    // Note: the LLVM team has been meaning to modify
-    //       CompilerInstance::ExecuteAction() so that we could specify the
-    //       output stream we want to use (rather than always use llvm::errs()),
-    //       but they have yet to actually do it, so we modified it ourselves...
 
     std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
 
-    if (!compilerInstance.ExecuteAction(*codeGenerationAction, llvm::outs())) {
+    if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");
 
         reset(false);
