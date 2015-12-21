@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// BSMLDataStore plugin
+// BioSignalMLDataStore plugin
 //==============================================================================
 
-#include "bsmldatastoreexporter.h"
-#include "bsmldatastoreplugin.h"
+#include "biosignalmldatastoreexporter.h"
+#include "biosignalmldatastoreplugin.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace BSMLDataStore {
+namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-PLUGININFO_FUNC BSMLDataStorePluginInfo()
+PLUGININFO_FUNC BioSignalMLDataStorePluginInfo()
 {
     Descriptions descriptions;
 
@@ -50,7 +50,7 @@ PLUGININFO_FUNC BSMLDataStorePluginInfo()
 // I18n interface
 //==============================================================================
 
-void BSMLDataStorePlugin::retranslateUi()
+void BioSignalMLDataStorePlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
@@ -62,7 +62,7 @@ void BSMLDataStorePlugin::retranslateUi()
 // Data store interface
 //==============================================================================
 
-DataStore::DataStoreExporter * BSMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
+DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
 {
     Q_UNUSED(pId);
 
@@ -71,7 +71,7 @@ DataStore::DataStoreExporter * BSMLDataStorePlugin::newDataStoreExporterInstance
 
 //==============================================================================
 
-void BSMLDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance)
+void BioSignalMLDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance)
 {
     Q_UNUSED(pDataStoreExporterInstance);
 
@@ -80,7 +80,7 @@ void BSMLDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreEx
 
 //==============================================================================
 
-QString BSMLDataStorePlugin::dataStoreName() const
+QString BioSignalMLDataStorePlugin::dataStoreName() const
 {
     // Return the name of the data store
 
@@ -91,25 +91,25 @@ QString BSMLDataStorePlugin::dataStoreName() const
 // Plugin interface
 //==============================================================================
 
-void BSMLDataStorePlugin::initializePlugin()
+void BioSignalMLDataStorePlugin::initializePlugin()
 {
-    // Create our BSML data store exporter
+    // Create our BioSignalML data store exporter
 
     mExporter = new BioSignalMLExporter();
 }
 
 //==============================================================================
 
-void BSMLDataStorePlugin::finalizePlugin()
+void BioSignalMLDataStorePlugin::finalizePlugin()
 {
-    // Delete our BSML data store exporter
+    // Delete our BioSignalML data store exporter
 
     delete mExporter;
 }
 
 //==============================================================================
 
-void BSMLDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void BioSignalMLDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins)
 
@@ -120,7 +120,7 @@ void BSMLDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void BSMLDataStorePlugin::loadSettings(QSettings *pSettings)
+void BioSignalMLDataStorePlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -129,7 +129,7 @@ void BSMLDataStorePlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void BSMLDataStorePlugin::saveSettings(QSettings *pSettings) const
+void BioSignalMLDataStorePlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -138,7 +138,7 @@ void BSMLDataStorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void BSMLDataStorePlugin::handleAction(const QUrl &pUrl)
+void BioSignalMLDataStorePlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -147,7 +147,7 @@ void BSMLDataStorePlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace BSMLDataStore
+}   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
 
 //==============================================================================

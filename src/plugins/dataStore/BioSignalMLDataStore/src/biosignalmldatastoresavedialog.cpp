@@ -20,19 +20,19 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "bsmldatastoresavedialog.h"
-#include "bsmldatastoreselectvars.h"
+#include "biosignalmldatastoresavedialog.h"
+#include "biosignalmldatastoreselectvars.h"
 #include "i18ninterface.h"
 #include "filemanager.h"
 
 //==============================================================================
 
-#include "ui_bsmldatastoresavedialog.h"
+#include "ui_biosignalmldatastoresavedialog.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace BSMLDataStore {
+namespace BioSignalMLDataStore {
 
 //==============================================================================
 
@@ -133,10 +133,10 @@ void BioSignalMLSaveDialog::setFileName(bool checked)
 {
     Q_UNUSED(checked)
 
-    QString bsmlFiles = QObject::tr("BioSignalML")+" (*.bsml)";
+    QString biosignalmlFiles = QObject::tr("BioSignalML")+" (*.biosignalml)";
     QString name = Core::getSaveFileName(QObject::tr("Enter BioSignalML file name"),
                                          mDefaultFileName,
-                                         bsmlFiles, &bsmlFiles);
+                                         biosignalmlFiles, &biosignalmlFiles);
     if (!name.isEmpty()) {
         mGui->fileNameValue->setText(name);
         mGui->fileNameValue->setCursorPosition(name.length());
@@ -233,7 +233,7 @@ void BioSignalMLSaveDialog::setComment(const QString & pComment)
 
 //==============================================================================
 
-}   // namespace BSMLDataStore
+}   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
 
 //==============================================================================

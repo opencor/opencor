@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="BioSignalMLDataStore_fr">${PROJECT_BUILD_DIR}/BioSignalMLDataStore_fr.qm</file>
+    </qresource>
+</RCC>

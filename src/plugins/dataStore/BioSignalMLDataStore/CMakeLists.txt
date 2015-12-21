@@ -1,24 +1,24 @@
-PROJECT(BSMLDataStorePlugin)
+PROJECT(BioSignalMLDataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(BSMLDataStore
+ADD_PLUGIN(BioSignalMLDataStore
     SOURCES
         ../../datastoreinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/bsmldatastoreplugin.cpp
-        src/bsmldatastoreexporter.cpp
-        src/bsmldatastoresavedialog.cpp
-        src/bsmldatastoreselectvars.cpp
+        src/biosignalmldatastoreplugin.cpp
+        src/biosignalmldatastoreexporter.cpp
+        src/biosignalmldatastoresavedialog.cpp
+        src/biosignalmldatastoreselectvars.cpp
     HEADERS_MOC
-        src/bsmldatastoreplugin.h
-        src/bsmldatastoresavedialog.h
-        src/bsmldatastoreselectvars.h
+        src/biosignalmldatastoreplugin.h
+        src/biosignalmldatastoresavedialog.h
+        src/biosignalmldatastoreselectvars.h
     UIS
-        src/bsmldatastoresavedialog.ui
-        src/bsmldatastoreselectvars.ui
+        src/biosignalmldatastoresavedialog.ui
+        src/biosignalmldatastoreselectvars.ui
     INCLUDE_DIRS
         src
         ${biosignalml_INCLUDE_DIR}

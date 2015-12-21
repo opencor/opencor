@@ -16,44 +16,76 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// BioSignalML data store exporter class
+// Save as BioSignalML widget
 //==============================================================================
 
-#ifndef BSMLDATASTOREEXPORTER_H
-#define BSMLDATASTOREEXPORTER_H
+#ifndef BioSignalMLDATASTORESAVEDIALOG_H
+#define BioSignalMLDATASTORESAVEDIALOG_H
 
 //==============================================================================
 
-#include "bsmldatastoreglobal.h"
-#include "bsmldatastoresavedialog.h"
+#include "biosignalmldatastoreglobal.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
 
-#include <QMainWindow>
+#include <QDialog>
+#include <QVector>
+
+//==============================================================================
+
+namespace Ui {
+    class BioSignalMLSaveDialog;
+}
 
 //==============================================================================
 
 namespace OpenCOR {
-
-namespace BSMLDataStore {
+namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BSMLDATASTORE_EXPORT BioSignalMLExporter : public DataStore::DataStoreExporter
+class BioSignalMLDATASTORE_EXPORT BioSignalMLSaveDialog : public QDialog
 {
+    Q_OBJECT
+
 public:
-    BioSignalMLExporter(const QString &pId = QString());
-    virtual void execute(const QString &pFileName,
-                         DataStore::DataStore *pDataStore) const;
+    explicit BioSignalMLSaveDialog(QWidget * pParent = nullptr);
+    ~BioSignalMLSaveDialog();
+
+    virtual void retranslateUi();
+
+    bool run(void);
+
+    void setDefaultFileName(const QString &pFileName);
+    QString fileName(void) const;
+    QString shortName(void) const;
+    QString description(void) const;
+    QString author(void) const;
+    void setComment(const QString & pComment);
+    void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
+    bool selectedVariable(const size_t pIndex) const;
+
+private slots:
+    void accepted(void);
+    void setFileName(bool checked = false);
+    void selectVariables(bool checked = false);
 
 private:
-    BioSignalMLSaveDialog *mSaveDialog;
+    void setButtonStates(void) const;
+
+    Ui::BioSignalMLSaveDialog *mGui;
+
+    QString mDefaultFileName;
+    QVector<QString> mVariableLabels;
+    QVector<bool> mSelectedVariables;
+    bool mGotSignals;
+    bool mAccepted;
 };
 
 //==============================================================================
 
-}   // namespace BSMLDataStore
+}   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
 
 //==============================================================================

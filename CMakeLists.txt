@@ -333,7 +333,7 @@ SET(PLUGINS
 
     # Selectable plugins
 
-    dataStore/BSMLDataStore
+    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
