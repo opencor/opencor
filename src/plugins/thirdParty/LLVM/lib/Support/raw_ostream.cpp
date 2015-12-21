@@ -718,18 +718,34 @@ raw_ostream &llvm::outs() {
   // Set buffer settings to model stdout behavior.
   // Delete the file descriptor when the program exits, forcing error
   // detection. If you don't want this behavior, don't use outs().
+//---OPENCOR--- BEGIN
+#ifdef OPENCOR_BUILD
+  return nulls();
+#else
+//---OPENCOR--- END
   std::error_code EC;
   static raw_fd_ostream S("-", EC, sys::fs::F_None);
   assert(!EC);
   return S;
+//---OPENCOR--- BEGIN
+#endif
+//---OPENCOR--- END
 }
 
 /// errs() - This returns a reference to a raw_ostream for standard error.
 /// Use it like: errs() << "foo" << "bar";
 raw_ostream &llvm::errs() {
   // Set standard error to be unbuffered by default.
+//---OPENCOR--- BEGIN
+#ifdef OPENCOR_BUILD
+  return nulls();
+#else
+//---OPENCOR--- END
   static raw_fd_ostream S(STDERR_FILENO, false, true);
   return S;
+//---OPENCOR--- BEGIN
+#endif
+//---OPENCOR--- END
 }
 
 /// nulls() - This returns a reference to a raw_ostream which discards output.
