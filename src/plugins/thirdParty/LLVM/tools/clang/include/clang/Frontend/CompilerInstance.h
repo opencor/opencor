@@ -228,12 +228,7 @@ public:
   //
   // FIXME: Eliminate the llvm_shutdown requirement, that should either be part
   // of the context or else not CompilerInstance specific.
-/*---OPENCOR---
   bool ExecuteAction(FrontendAction &Act);
-*/
-//---OPENCOR--- BEGIN
-  bool ExecuteAction(FrontendAction &Act, raw_ostream &OS = llvm::errs());
-//---OPENCOR--- END
 
   /// }
   /// @name Compiler Invocation and Options
