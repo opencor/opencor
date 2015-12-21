@@ -1314,12 +1314,7 @@ public:
 
 /// \brief Abstract interface, implemented by clients of the front-end, which
 /// formats and prints fully processed diagnostics.
-/*---OPENCOR---
 class DiagnosticConsumer {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT DiagnosticConsumer {
-//---OPENCOR--- END
 protected:
   unsigned NumWarnings;       ///< Number of warnings reported
   unsigned NumErrors;         ///< Number of errors reported
