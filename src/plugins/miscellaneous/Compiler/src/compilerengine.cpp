@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-//#include "llvmdisablewarnings.h"
+#include "llvmdisablewarnings.h"
     #include "llvm/IR/LLVMContext.h"
     #include "llvm/Support/TargetSelect.h"
 
@@ -35,7 +35,7 @@ specific language governing permissions and limitations under the License.
     #include "clang/Driver/Driver.h"
     #include "clang/Driver/Tool.h"
     #include "clang/Frontend/CompilerInstance.h"
-//#include "llvmenablewarnings.h"
+#include "llvmenablewarnings.h"
 
 //==============================================================================
 
