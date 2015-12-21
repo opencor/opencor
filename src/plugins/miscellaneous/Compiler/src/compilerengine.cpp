@@ -27,9 +27,7 @@ specific language governing permissions and limitations under the License.
 
 #include "llvmdisablewarnings.h"
     #include "llvm/IR/LLVMContext.h"
-    #include "llvm/IR/Module.h"
     #include "llvm/Support/TargetSelect.h"
-    #include "llvm/Support/Host.h"
 
     #include "clang/Basic/DiagnosticOptions.h"
     #include "clang/CodeGen/CodeGenAction.h"
@@ -37,7 +35,6 @@ specific language governing permissions and limitations under the License.
     #include "clang/Driver/Driver.h"
     #include "clang/Driver/Tool.h"
     #include "clang/Frontend/CompilerInstance.h"
-    #include "clang/Frontend/TextDiagnosticPrinter.h"
 #include "llvmenablewarnings.h"
 
 //==============================================================================
@@ -132,17 +129,9 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Get a driver to compile our code
 
-#ifdef QT_DEBUG
-    llvm::raw_ostream &outputStream = llvm::outs();
-#else
-    llvm::raw_ostream &outputStream = llvm::nulls();
-#endif
     llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
-
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
-                                               &*diagnosticOptions,
-                                               new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-
+                                               &*diagnosticOptions);
     clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
 
     driver.setCheckInputsExist(false);
@@ -150,7 +139,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Get a compilation object to which we pass some arguments
 
     llvm::StringRef dummyFileName("dummyFile.c");
-
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back("clang");
@@ -224,14 +212,10 @@ bool CompilerEngine::compileCode(const QString &pCode)
     }
 
     // Create and execute the frontend to generate an LLVM bitcode module
-    // Note: the LLVM team has been meaning to modify
-    //       CompilerInstance::ExecuteAction() so that we could specify the
-    //       output stream we want to use (rather than always use llvm::errs()),
-    //       but they have yet to actually do it, so we modified it ourselves...
 
     std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
 
-    if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
+    if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");
 
         reset(false);
