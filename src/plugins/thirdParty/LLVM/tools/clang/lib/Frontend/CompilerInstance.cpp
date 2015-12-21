@@ -199,15 +199,7 @@ CompilerInstance::createDiagnostics(DiagnosticOptions *Opts,
   if (Client) {
     Diags->setClient(Client, ShouldOwnClient);
   } else
-//---OPENCOR--- BEGIN
-#ifdef OPENCOR_BUILD
-    Diags->setClient(new TextDiagnosticPrinter(llvm::nulls(), Opts));
-#else
-//---OPENCOR--- END
     Diags->setClient(new TextDiagnosticPrinter(llvm::errs(), Opts));
-//---OPENCOR--- BEGIN
-#endif
-//---OPENCOR--- END
 
   // Chain in -verify checker, if requested.
   if (Opts->VerifyDiagnostics)
@@ -788,15 +780,7 @@ bool CompilerInstance::ExecuteAction(FrontendAction &Act) {
 
   // FIXME: Take this as an argument, once all the APIs we used have moved to
   // taking it as an input instead of hard-coding llvm::errs.
-//---OPENCOR--- BEGIN
-#ifdef OPENCOR_BUILD
-  raw_ostream &OS = llvm::nulls();
-#else
-//---OPENCOR--- END
   raw_ostream &OS = llvm::errs();
-//---OPENCOR--- BEGIN
-#endif
-//---OPENCOR--- END
 
   // Create the target instance.
   setTarget(TargetInfo::CreateTargetInfo(getDiagnostics(),
