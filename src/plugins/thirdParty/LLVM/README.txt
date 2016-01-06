@@ -18,6 +18,7 @@ In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to O
         - CLANG_INCLUDE_DOCS:             OFF
         - CLANG_INCLUDE_TESTS:            OFF
         - CLANG_PLUGIN_SUPPORT:           OFF
+        - LLVM_BUILD_RUNTIME:             OFF
         - LLVM_BUILD_TOOLS:               OFF
         - LLVM_ENABLE_TERMINFO:           OFF
         - LLVM_ENABLE_ZLIB:               OFF
@@ -25,7 +26,6 @@ In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to O
         - LLVM_INCLUDE_DOCS:              OFF
         - LLVM_INCLUDE_EXAMPLES:          OFF
         - LLVM_INCLUDE_TESTS:             OFF
-        - LLVM_INCLUDE_TOOLS:             OFF
         - LLVM_INCLUDE_UTILS:             OFF
         - LLVM_TARGETS_TO_BUILD:          X86
        Note that to enable TERMINFO and ZLIB would require a more complicated build process and it is not worth it.
