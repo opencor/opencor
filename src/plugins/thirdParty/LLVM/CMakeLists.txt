@@ -816,7 +816,9 @@ ELSE()
 
             lib/Target/X86/Utils/X86ShuffleDecode.cpp
 
-            lib/Transforms/Hello/Hello.cpp
+#            lib/Transforms/Hello/Hello.cpp
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM...
 
             lib/Transforms/InstCombine/InstCombineAddSub.cpp
             lib/Transforms/InstCombine/InstCombineAndOrXor.cpp
