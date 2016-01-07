@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "propertyeditorwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
+#include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
@@ -713,24 +714,18 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 
         // Add the current parameter to the 'current' component menu
 
-/*---GRY---
-        QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(SingleCellViewSimulationWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
-*/
 
         // Create a connection to handle the parameter value update
 
-/*---GRY---
         connect(parameterAction, SIGNAL(triggered(bool)),
                 this, SLOT(updateParameterValue()));
-*/
 
         // Keep track of the parameter associated with our model parameter
         // action
 
-/*---GRY---
         mParameterActions.insert(parameterAction, parameter);
-*/
     }
 }
 
