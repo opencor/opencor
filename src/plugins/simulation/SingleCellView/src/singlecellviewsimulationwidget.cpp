@@ -1317,10 +1317,9 @@ void SingleCellViewSimulationWidget::on_actionDevelopmentMode_triggered()
     // modified state of our current file accordingly
 
     if (!mGui->actionDevelopmentMode->isChecked())
-        Core::FileManager::instance()->setModified(mSimulation->fileName(), false);
+        Core::FileManager::instance()->setModified(mFileName, false);
 
-    checkSimulationDataModified(mSimulation->fileName(),
-                                mSimulation->data()->isModified());
+    checkSimulationDataModified(mFileName, mSimulation->data()->isModified());
     // Note: to call checkSimulationDataModified() will, in the case the
     //       development mode has just been disabled, ensure that the reset
     //       button is properly enabled/disabled...
@@ -1483,8 +1482,7 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     SEDMLSupport::SedmlFile *sedmlFile = new SEDMLSupport::SedmlFile(pFileName, true);
     libsedml::SedDocument *sedmlDocument = sedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    QString fileName = mSimulation->fileName();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(fileName);
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mFileName);
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
@@ -1571,7 +1569,7 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
 
     foreach (SingleCellViewGraphPanelWidget *graphPanel,
              mContentsWidget->graphPanelsWidget()->graphPanels()) {
-        Core::Properties graphs = graphsWidget->graphProperties(graphPanel, fileName);
+        Core::Properties graphs = graphsWidget->graphProperties(graphPanel, mFileName);
 
         if (!graphs.isEmpty())
             graphsList << graphs;
@@ -1660,9 +1658,8 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportSedmlFile_triggered()
     // Export ourselves to SED-ML using a SED-ML file, but first get a file name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString fileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(fileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
+    bool remoteFile = fileManagerInstance->isRemote(mFileName);
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
 
@@ -1707,9 +1704,8 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
     // name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString fileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(fileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
+    bool remoteFile = fileManagerInstance->isRemote(mFileName);
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
 
@@ -1740,10 +1736,10 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
     #error Unsupported platform
 #endif
 
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(fileName);
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
-                                 QFileInfo(fileName).canonicalPath()+QDir::separator();
+                                 QFileInfo(mFileName).canonicalPath()+QDir::separator();
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
@@ -1780,7 +1776,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
 
         QString modelSource = remoteFile?
                                   QString(cellmlFileName).remove(commonPath):
-                                  QString(fileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
+                                  QString(mFileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
@@ -1801,7 +1797,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                COMBINESupport::CombineArchiveFile::Sedml, true);
 
-        combineArchive.addFile(fileName, modelSource,
+        combineArchive.addFile(mFileName, modelSource,
                                (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                    COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                    COMBINESupport::CombineArchiveFile::Cellml_1_0);
@@ -1972,8 +1968,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
 
-    dataStoreExporter->execute(mSimulation->fileName(),
-                               mSimulation->results()->dataStore());
+    dataStoreExporter->execute(mFileName, mSimulation->results()->dataStore());
 
     dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
@@ -2580,8 +2575,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
     //       resulting in some time overhead, so we check things here
     //       instead...
 
-    checkSimulationDataModified(pSimulation->fileName(),
-                                pSimulation->data()->isModified());
+    checkSimulationDataModified(mFileName, pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
 
@@ -2597,7 +2591,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
                                      plotMaxX-plotMinX, plotMaxY-plotMinY);
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
-            if (!graph->fileName().compare(pSimulation->fileName())) {
+            if (!graph->fileName().compare(mFileName)) {
                 // Keep track of our graph's old size
 
                 qulonglong oldDataSize = graph->dataSize();
