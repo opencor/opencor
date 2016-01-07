@@ -76,7 +76,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     if (!mSimulationWidget) {
         // No simulation widget exists for the given file, so create one
 
-        mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, this);
+        mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
 
         // Keep track of our editing widget and add it to ourselves
 

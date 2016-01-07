@@ -99,17 +99,19 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlugin *pPlugin,
+                                                               const QString &pFileName,
                                                                QWidget *pParent) :
     ViewWidget(pParent, false),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
+    mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
     mStoppedSimulations(SingleCellViewSimulations()),
     mProgress(-1),
     mDelays(QMap<QString, int>()),
     mDevelopmentModes(QMap<QString, bool>()),
-    mLockedDevelopmentModes(QMap<QString, bool>()),
+    mLockedDevelopmentMode(false),
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
@@ -1082,19 +1084,17 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
     // The given file has been un/locked, so enable/disable the development mode
     // and keep track of its checked status or recheck it, as necessary
 
-/*---GRY---
-    if (mSimulation && !mSimulation->fileName().compare(pFileName)) {
-         if (Core::FileManager::instance()->isReadableAndWritable(pFileName)) {
+    if (mSimulation) {
+         if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
              mGui->actionDevelopmentMode->setEnabled(true);
-             mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentModes.value(pFileName));
+             mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentMode);
          } else {
-             mLockedDevelopmentModes.insert(pFileName, mGui->actionDevelopmentMode->isChecked());
+             mLockedDevelopmentMode = mGui->actionDevelopmentMode->isChecked();
 
              mGui->actionDevelopmentMode->setChecked(false);
              mGui->actionDevelopmentMode->setEnabled(false);
          }
     }
-*/
 }
 
 //==============================================================================

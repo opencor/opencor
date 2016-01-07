@@ -97,6 +97,7 @@ class SingleCellViewSimulationWidget : public Core::ViewWidget
 
 public:
     explicit SingleCellViewSimulationWidget(SingleCellViewPlugin *pPlugin,
+                                            const QString &pFileName,
                                             QWidget *pParent);
     ~SingleCellViewSimulationWidget();
 
@@ -133,6 +134,8 @@ private:
 
     SingleCellViewPlugin *mPlugin;
 
+    QString mFileName;
+
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
     SingleCellViewSimulation *mSimulation;
@@ -145,7 +148,7 @@ private:
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
     QMap<QString, bool> mDevelopmentModes;
-    QMap<QString, bool> mLockedDevelopmentModes;
+    bool mLockedDevelopmentMode;
 
     Core::ToolBarWidget *mToolBarWidget;
 
