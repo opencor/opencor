@@ -30,7 +30,7 @@
 #define CLANG_HAVE_LIBXML 1
 
 /* The LLVM product name and version */
-#define BACKEND_PACKAGE_STRING "LLVM 3.7.0"
+#define BACKEND_PACKAGE_STRING "LLVM 3.7.1"
 
 /* Linker version detected at compile time. */
 /* #undef HOST_LINK_VERSION */

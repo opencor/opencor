@@ -11,8 +11,24 @@ In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to O
            cd [LLVM]
            mkdir build
            cd build
-           cmake -G "Ninja" ..   OR   cmake -G "Unix Makefiles" ..   OR   cmake -G "NMake Makefiles JOM" ..
-           ninja                 OR   make                           OR   jom
-       From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders.
- - To keep the LLVM build as simple as possible (and this without removing any of LLVM's features), [LLVM]/include/llvm/Config/[PLATFORM_DIR]/config.h must be edited so that neither HAVE_LIBEDIT nor HAVE_TERMINFO are set, and LLVM_ENABLE_ZLIB is set to 0. To do anything else would require a more complicated build process and it is not worth it.
- - OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.
+           ccmake -G "Ninja" ..   OR   ccmake -G "Unix Makefiles" ..   OR   ccmake -G "NMake Makefiles JOM" ..
+    5) Configure the build with the following options:
+        - CLANG_ENABLE_ARCMT:             OFF
+        - CLANG_ENABLE_STATIC_ANALYZER:   OFF
+        - CLANG_INCLUDE_DOCS:             OFF
+        - CLANG_INCLUDE_TESTS:            OFF
+        - CLANG_PLUGIN_SUPPORT:           OFF
+        - LLVM_BUILD_RUNTIME:             OFF
+        - LLVM_BUILD_TOOLS:               OFF
+        - LLVM_ENABLE_TERMINFO:           OFF
+        - LLVM_ENABLE_ZLIB:               OFF
+        - LLVM_EXTERNAL_MSBUILD_BUILD:    OFF
+        - LLVM_INCLUDE_DOCS:              OFF
+        - LLVM_INCLUDE_EXAMPLES:          OFF
+        - LLVM_INCLUDE_TESTS:             OFF
+        - LLVM_INCLUDE_UTILS:             OFF
+        - LLVM_TARGETS_TO_BUILD:          X86
+       Note that to enable TERMINFO and ZLIB would require a more complicated build process and it is not worth it.
+    6) From the command line:
+           cmake --build .
+   From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders. When it comes to [LLVM]/include/llvm/Config/[PLATFORM_DIR]/config.h, we should make sure that HAVE_LIBEDIT is not set (this is part of keeping the LLVM build as simple as possible).

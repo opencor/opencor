@@ -44,16 +44,16 @@ IF(USE_PREBUILT_LLVM_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 5e3fc2eea804bd35d944538a5c0d626e4d495e5a)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 45bea061d2063aa971a0c5679b427f7a6c86a21e)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll bdb5d62b8223d242dcc5bf0516021069315b0b40)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib d213dadb95fff5183be68a15e364896fbe70e54c)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 61244ddd5a36b73636839042de56c97f7cf905d1)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 690db8d7103c02d3dc1aa971831c2ccf7877d4ad)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 7f37ec3ecf8b91df2981043aa4d7b6844de3e1f5)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 98526913488d2e9c27aa89e00f63ac6e4cfdd156)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.dylib 5e2e7daa1999e6f44714038cf5ff631268f49818)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.dylib 1dad0d6e0118bdc027436c02c16d0cf317b15c03)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.so 7f27cee334ee61d39aef7b72a050c60070375992)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.so 366e041f137b2d28aa7e1facc19cc8141e1d966a)
     ENDIF()
 
     # Add the plugin as a binary
@@ -816,7 +816,9 @@ ELSE()
 
             lib/Target/X86/Utils/X86ShuffleDecode.cpp
 
-            lib/Transforms/Hello/Hello.cpp
+#            lib/Transforms/Hello/Hello.cpp
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM...
 
             lib/Transforms/InstCombine/InstCombineAddSub.cpp
             lib/Transforms/InstCombine/InstCombineAndOrXor.cpp
@@ -1002,26 +1004,28 @@ ELSE()
             tools/clang/lib/Analysis/ThreadSafetyTIL.cpp
             tools/clang/lib/Analysis/UninitializedValues.cpp
 
-            tools/clang/lib/ARCMigrate/ARCMT.cpp
-            tools/clang/lib/ARCMigrate/ARCMTActions.cpp
-            tools/clang/lib/ARCMigrate/FileRemapper.cpp
-            tools/clang/lib/ARCMigrate/ObjCMT.cpp
-            tools/clang/lib/ARCMigrate/PlistReporter.cpp
-            tools/clang/lib/ARCMigrate/TransAPIUses.cpp
-            tools/clang/lib/ARCMigrate/TransARCAssign.cpp
-            tools/clang/lib/ARCMigrate/TransAutoreleasePool.cpp
-            tools/clang/lib/ARCMigrate/TransBlockObjCVariable.cpp
-            tools/clang/lib/ARCMigrate/TransEmptyStatementsAndDealloc.cpp
-            tools/clang/lib/ARCMigrate/TransformActions.cpp
-            tools/clang/lib/ARCMigrate/Transforms.cpp
-            tools/clang/lib/ARCMigrate/TransGCAttrs.cpp
-            tools/clang/lib/ARCMigrate/TransGCCalls.cpp
-            tools/clang/lib/ARCMigrate/TransProperties.cpp
-            tools/clang/lib/ARCMigrate/TransProtectedScope.cpp
-            tools/clang/lib/ARCMigrate/TransRetainReleaseDealloc.cpp
-            tools/clang/lib/ARCMigrate/TransUnbridgedCasts.cpp
-            tools/clang/lib/ARCMigrate/TransUnusedInitDelegate.cpp
-            tools/clang/lib/ARCMigrate/TransZeroOutPropsInDealloc.cpp
+#            tools/clang/lib/ARCMigrate/ARCMT.cpp
+#            tools/clang/lib/ARCMigrate/ARCMTActions.cpp
+#            tools/clang/lib/ARCMigrate/FileRemapper.cpp
+#            tools/clang/lib/ARCMigrate/ObjCMT.cpp
+#            tools/clang/lib/ARCMigrate/PlistReporter.cpp
+#            tools/clang/lib/ARCMigrate/TransAPIUses.cpp
+#            tools/clang/lib/ARCMigrate/TransARCAssign.cpp
+#            tools/clang/lib/ARCMigrate/TransAutoreleasePool.cpp
+#            tools/clang/lib/ARCMigrate/TransBlockObjCVariable.cpp
+#            tools/clang/lib/ARCMigrate/TransEmptyStatementsAndDealloc.cpp
+#            tools/clang/lib/ARCMigrate/TransformActions.cpp
+#            tools/clang/lib/ARCMigrate/Transforms.cpp
+#            tools/clang/lib/ARCMigrate/TransGCAttrs.cpp
+#            tools/clang/lib/ARCMigrate/TransGCCalls.cpp
+#            tools/clang/lib/ARCMigrate/TransProperties.cpp
+#            tools/clang/lib/ARCMigrate/TransProtectedScope.cpp
+#            tools/clang/lib/ARCMigrate/TransRetainReleaseDealloc.cpp
+#            tools/clang/lib/ARCMigrate/TransUnbridgedCasts.cpp
+#            tools/clang/lib/ARCMigrate/TransUnusedInitDelegate.cpp
+#            tools/clang/lib/ARCMigrate/TransZeroOutPropsInDealloc.cpp
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM...
 
             tools/clang/lib/AST/APValue.cpp
             tools/clang/lib/AST/ASTConsumer.cpp
@@ -1342,118 +1346,124 @@ ELSE()
             tools/clang/lib/Serialization/Module.cpp
             tools/clang/lib/Serialization/ModuleManager.cpp
 
-            tools/clang/lib/StaticAnalyzer/Checkers/AllocationDiagnostics.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/AnalyzerStatsChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ArrayBoundChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ArrayBoundCheckerV2.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/BasicObjCFoundationChecks.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/BoolAssignmentChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/BuiltinFunctionChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CallAndMessageChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CastSizeChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CastToStructChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CheckerDocumentation.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CheckObjCDealloc.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CheckObjCInstMethSignature.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CheckSecuritySyntaxOnly.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CheckSizeofPointer.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ChrootChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ClangCheckers.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CStringChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/CStringSyntaxChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/DeadStoresChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/DebugCheckers.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/DereferenceChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/DirectIvarAssignment.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/DivZeroChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/DynamicTypePropagation.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ExprInspectionChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/FixedAddressChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/GenericTaintChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/IdenticalExprChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/IvarInvalidationChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/LLVMConventionsChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/MacOSKeychainAPIChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/MacOSXAPIChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/MallocChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/MallocOverflowSecurityChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/MallocSizeofChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/NonNullParamChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/NoReturnFunctionChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/NSAutoreleasePoolChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/NSErrorChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ObjCAtSyncChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ObjCContainersASTChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ObjCContainersChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ObjCMissingSuperCallChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ObjCSelfInitChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ObjCUnusedIVarsChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/PointerArithChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/PointerSubChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/PthreadLockChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/RetainCountChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ReturnPointerRangeChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/ReturnUndefChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/SimpleStreamChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/StackAddrEscapeChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/StreamChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/TaintTesterChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/TestAfterDivZeroChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/TraversalChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UndefBranchChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UndefCapturedBlockVarChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UndefinedArraySubscriptChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UndefinedAssignmentChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UndefResultChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UnixAPIChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/UnreachableCodeChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/VirtualCallChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/VLASizeChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/AllocationDiagnostics.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/AnalyzerStatsChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ArrayBoundChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ArrayBoundCheckerV2.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/BasicObjCFoundationChecks.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/BoolAssignmentChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/BuiltinFunctionChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CallAndMessageChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CastSizeChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CastToStructChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CheckerDocumentation.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CheckObjCDealloc.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CheckObjCInstMethSignature.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CheckSecuritySyntaxOnly.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CheckSizeofPointer.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ChrootChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ClangCheckers.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CStringChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/CStringSyntaxChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DeadStoresChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DebugCheckers.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DereferenceChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DirectIvarAssignment.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DivZeroChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DynamicTypePropagation.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ExprInspectionChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/FixedAddressChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/GenericTaintChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/IdenticalExprChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/IvarInvalidationChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/LLVMConventionsChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/MacOSKeychainAPIChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/MacOSXAPIChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/MallocChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/MallocOverflowSecurityChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/MallocSizeofChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/NonNullParamChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/NoReturnFunctionChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/NSAutoreleasePoolChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/NSErrorChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ObjCAtSyncChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ObjCContainersASTChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ObjCContainersChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ObjCMissingSuperCallChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ObjCSelfInitChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ObjCUnusedIVarsChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/PointerArithChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/PointerSubChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/PthreadLockChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/RetainCountChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ReturnPointerRangeChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/ReturnUndefChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/SimpleStreamChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/StackAddrEscapeChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/StreamChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/TaintTesterChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/TestAfterDivZeroChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/TraversalChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UndefBranchChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UndefCapturedBlockVarChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UndefinedArraySubscriptChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UndefinedAssignmentChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UndefResultChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UnixAPIChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/UnreachableCodeChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/VirtualCallChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/VLASizeChecker.cpp
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM...
 
-            tools/clang/lib/StaticAnalyzer/Core/AnalysisManager.cpp
-            tools/clang/lib/StaticAnalyzer/Core/AnalyzerOptions.cpp
-            tools/clang/lib/StaticAnalyzer/Core/APSIntType.cpp
-            tools/clang/lib/StaticAnalyzer/Core/BasicValueFactory.cpp
-            tools/clang/lib/StaticAnalyzer/Core/BlockCounter.cpp
-            tools/clang/lib/StaticAnalyzer/Core/BugReporter.cpp
-            tools/clang/lib/StaticAnalyzer/Core/BugReporterVisitors.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CallEvent.cpp
-            tools/clang/lib/StaticAnalyzer/Core/Checker.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CheckerContext.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CheckerHelpers.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CheckerManager.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CheckerRegistry.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CommonBugCategories.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ConstraintManager.cpp
-            tools/clang/lib/StaticAnalyzer/Core/CoreEngine.cpp
-            tools/clang/lib/StaticAnalyzer/Core/Environment.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ExplodedGraph.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ExprEngine.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ExprEngineC.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ExprEngineCallAndReturn.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ExprEngineCXX.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ExprEngineObjC.cpp
-            tools/clang/lib/StaticAnalyzer/Core/FunctionSummary.cpp
-            tools/clang/lib/StaticAnalyzer/Core/HTMLDiagnostics.cpp
-            tools/clang/lib/StaticAnalyzer/Core/MemRegion.cpp
-            tools/clang/lib/StaticAnalyzer/Core/PathDiagnostic.cpp
-            tools/clang/lib/StaticAnalyzer/Core/PlistDiagnostics.cpp
-            tools/clang/lib/StaticAnalyzer/Core/ProgramState.cpp
-            tools/clang/lib/StaticAnalyzer/Core/RangeConstraintManager.cpp
-            tools/clang/lib/StaticAnalyzer/Core/RegionStore.cpp
-            tools/clang/lib/StaticAnalyzer/Core/SimpleConstraintManager.cpp
-            tools/clang/lib/StaticAnalyzer/Core/SimpleSValBuilder.cpp
-            tools/clang/lib/StaticAnalyzer/Core/Store.cpp
-            tools/clang/lib/StaticAnalyzer/Core/SubEngine.cpp
-            tools/clang/lib/StaticAnalyzer/Core/SValBuilder.cpp
-            tools/clang/lib/StaticAnalyzer/Core/SVals.cpp
-            tools/clang/lib/StaticAnalyzer/Core/SymbolManager.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/AnalysisManager.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/AnalyzerOptions.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/APSIntType.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/BasicValueFactory.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/BlockCounter.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/BugReporter.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/BugReporterVisitors.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CallEvent.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/Checker.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CheckerContext.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CheckerHelpers.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CheckerManager.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CheckerRegistry.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CommonBugCategories.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ConstraintManager.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/CoreEngine.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/Environment.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ExplodedGraph.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ExprEngine.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ExprEngineC.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ExprEngineCallAndReturn.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ExprEngineCXX.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ExprEngineObjC.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/FunctionSummary.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/HTMLDiagnostics.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/MemRegion.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/PathDiagnostic.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/PlistDiagnostics.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/ProgramState.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/RangeConstraintManager.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/RegionStore.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/SimpleConstraintManager.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/SimpleSValBuilder.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/Store.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/SubEngine.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/SValBuilder.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/SVals.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/SymbolManager.cpp
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM...
 
-            tools/clang/lib/StaticAnalyzer/Frontend/AnalysisConsumer.cpp
-            tools/clang/lib/StaticAnalyzer/Frontend/CheckerRegistration.cpp
-            tools/clang/lib/StaticAnalyzer/Frontend/FrontendActions.cpp
-            tools/clang/lib/StaticAnalyzer/Frontend/ModelConsumer.cpp
-            tools/clang/lib/StaticAnalyzer/Frontend/ModelInjector.cpp
+#            tools/clang/lib/StaticAnalyzer/Frontend/AnalysisConsumer.cpp
+#            tools/clang/lib/StaticAnalyzer/Frontend/CheckerRegistration.cpp
+#            tools/clang/lib/StaticAnalyzer/Frontend/FrontendActions.cpp
+#            tools/clang/lib/StaticAnalyzer/Frontend/ModelConsumer.cpp
+#            tools/clang/lib/StaticAnalyzer/Frontend/ModelInjector.cpp
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM...
 
             tools/clang/lib/Tooling/ArgumentsAdjusters.cpp
             tools/clang/lib/Tooling/CommonOptionsParser.cpp

@@ -60,7 +60,7 @@ namespace bsml {
 
     virtual void extend(const double *points, const size_t length) ;
     void extend(const std::vector<double> &points) ;
-    
+
     //! Time based
     virtual bsml::data::TimeSeries::Ptr read(bsml::Interval::Ptr interval, intmax_t maxpoints=-1) ;
     //! Point based
