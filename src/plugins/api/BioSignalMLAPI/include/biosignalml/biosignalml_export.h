@@ -25,7 +25,7 @@
 
 #  ifndef BIOSIGNALML_NO_EXPORT
 #    ifdef WIN32
-#      define BIOSIGNALML_NO_EXPORT 
+#      define BIOSIGNALML_NO_EXPORT
 #    else
 #      define BIOSIGNALML_NO_EXPORT __attribute__((visibility("hidden")))
 #    endif
