@@ -107,16 +107,12 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
-    mStoppedSimulations(SingleCellViewSimulations()),
     mProgress(-1),
-    mDelays(QMap<QString, int>()),
-    mDevelopmentModes(QMap<QString, bool>()),
     mLockedDevelopmentMode(false),
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
-    mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
+    mSimulationResultsSize(0),
     mCheckResultsSimulations(SingleCellViewSimulations()),
-    mResetSimulations(SingleCellViewSimulations()),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
@@ -589,36 +585,10 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
                                                 const bool &pReloadingView)
 {
-    // Keep track of our simulation data for our previous model and finalise a
-    // few things, if needed
-
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
-    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
-    SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
-
-    SingleCellViewSimulation *previousSimulation = mSimulation;
-
-    if (previousSimulation) {
-        // There is a previous simulation, so backup our simulation, solvers and
-        // graph panels' settings
-
-        QString prevFileName = previousSimulation->fileName();
-
-        simulationWidget->backup(prevFileName);
-        solversWidget->backup(prevFileName);
-        graphsWidget->backup(prevFileName);
-
-        graphPanelsWidget->backup(prevFileName);
-
-        // Keep track of the status of the reset action (if needed), the
-        // simulation delay and the development mode
-
-        mDelays.insert(prevFileName, mDelayWidget->value());
-        mDevelopmentModes.insert(prevFileName, mGui->actionDevelopmentMode->isChecked());
-    }
 
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
@@ -637,7 +607,7 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
     if (!mSimulation) {
         // No simulation object currently exists for the model, so create one
 
-        mSimulation = new SingleCellViewSimulation(pFileName, cellmlFileRuntime,
+        mSimulation = new SingleCellViewSimulation(cellmlFileRuntime,
                                                    mPlugin->solverInterfaces());
 
         newSimulation = true;
@@ -669,15 +639,12 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
 
     mGui->actionDevelopmentMode->setEnabled(fileManagerInstance->isReadableAndWritable(pFileName));
 
-    mDelayWidget->setValue(mDelays.value(pFileName));
-    mGui->actionDevelopmentMode->setChecked(mDevelopmentModes.value(pFileName));
-
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
 
-    resetFileTabIcon(mSimulation);
+    resetFileTabIcon();
 
-    mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
+    mProgressBarWidget->setValue(mSimulationResultsSize/mSimulation->size());
 
     // Determine whether the CellML file has a valid runtime
 
@@ -875,14 +842,14 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
         //          initialising (e.g. NLA solver) so that we can safely compute
         //          our model parameters before showing their values...
 
-        simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        simulationWidget->initialize(cellmlFileRuntime, mSimulation);
+        solversWidget->initialize(cellmlFileRuntime, mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+            informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
-        graphPanelsWidget->initialize(pFileName);
+        mContentsWidget->graphPanelsWidget()->initialize();
 
         // Reset both the simulation's data and results (well, initialise in the
         // case of its data), in case we are dealing with a new simulation
@@ -942,36 +909,13 @@ void SingleCellViewSimulationWidget::finalize(const QString &pFileName,
 
     mProgress = -1;
 
-    if (pReloadingView) {
-        // Keep track of the simulation delay and development mode, in case they
-        // aren't already tracked (which will be the case if we haven't switched
-        // files), so that we can retrieve them after having effectively
-        // reloaded our file
-
-        mDelays.insert(pFileName, mDelayWidget->value());
-        mDevelopmentModes.insert(pFileName, mGui->actionDevelopmentMode->isChecked());
-    } else {
-        mDelays.remove(pFileName);
-        mDevelopmentModes.remove(pFileName);
-    }
-
-    // Finalize/backup a few things in our GUI's simulation, solvers, graphs,
-    // parameters and graph panels widgets
+    // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
+    // graph panels widgets
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    if (pReloadingView) {
-        informationWidget->simulationWidget()->backup(pFileName);
-        informationWidget->solversWidget()->backup(pFileName);
-    } else {
-        informationWidget->simulationWidget()->finalize(pFileName);
-        informationWidget->solversWidget()->finalize(pFileName);
-    }
-
     informationWidget->graphsWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName, pReloadingView);
-
-    mContentsWidget->graphPanelsWidget()->finalize(pFileName);
 }
 
 //==============================================================================
@@ -1158,18 +1102,6 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
 void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
                                                  const QString &pNewFileName)
 {
-    // Replace the old file name with the new one in our various trackers
-
-    if (mDelays.contains(pOldFileName)) {
-        mDelays.insert(pNewFileName, mDelays.value(pOldFileName));
-        mDelays.remove(pOldFileName);
-    }
-
-    if (mDevelopmentModes.contains(pOldFileName)) {
-        mDevelopmentModes.insert(pNewFileName, mDevelopmentModes.value(pOldFileName));
-        mDevelopmentModes.remove(pOldFileName);
-    }
-
     // Let our graphs widget know that the given file has been renamed
 
     mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
@@ -2058,117 +1990,75 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
     // Our simulation worker has stopped, so do a few things, but only if we are
     // dealing with the active simulation
 
-    SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
-    QString simulationFileName = simulation->fileName();
-    bool needReloadView = mNeedReloadViews.contains(simulationFileName);
+    bool needReloadView = mNeedReloadViews.contains(mFileName);
 
-    if (simulation == mSimulation) {
-        // Output the elapsed time, if valid, and reset our progress bar (with a
-        // short delay)
+    // Output the elapsed time, if valid, and reset our progress bar (with a
+    // short delay)
 
-        if (pElapsedTime != -1) {
-            // We have a valid elapsed time, so show our simulation time
+    if (pElapsedTime != -1) {
+        // We have a valid elapsed time, so show our simulation time
 
-            SingleCellViewSimulationData *simulationData = simulation->data();
-            QString solversInformation = QString();
+        QString solversInformation = QString();
 
-            if (!simulationData->odeSolverName().isEmpty())
-                solversInformation += simulationData->odeSolverName();
-            else
-                solversInformation += simulationData->daeSolverName();
+        if (!mSimulation->data()->odeSolverName().isEmpty())
+            solversInformation += mSimulation->data()->odeSolverName();
+        else
+            solversInformation += mSimulation->data()->daeSolverName();
 
-            if (!simulationData->nlaSolverName().isEmpty())
-                solversInformation += "+"+simulationData->nlaSolverName();
+        if (!mSimulation->data()->nlaSolverName().isEmpty())
+            solversInformation += "+"+mSimulation->data()->nlaSolverName();
 
-            output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
-        }
-
-        if (needReloadView) {
-            resetProgressBar(simulation);
-        } else {
-            mResetSimulations << simulation;
-
-            QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
-        }
-
-        // Update our parameters and simulation mode
-
-        updateSimulationMode();
-
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint(), true);
+        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
     }
+
+    if (needReloadView)
+        resetProgressBar();
+    else
+        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+
+    // Update our parameters and simulation mode
+
+    updateSimulationMode();
+
+    mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
     // Stop keeping track of our simulation progress
 
     mProgress = -1;
 
-    // Reset our tab icon in case we are not visible or not dealing with the
-    // active simulation
-    // Note #1: we check that we are not visible in case the user has selected a
-    //          file that cannot be handled by us, meaning that our central
-    //          widget would show a message rather than us...
-    // Note #2: we can't directly pass simulation to resetFileTabIcon(), so
-    //          instead we use mStoppedSimulations, which is a list of
-    //          simulations in case several simulations were to stop at around
-    //          the same time...
+    // Reset our tab icon in case we are not visible
+    // Note: we check that we are not visible in case the user has selected a
+    //       file that cannot be handled by us, meaning that our central widget
+    //       would show a message rather than us...
 
-    if (!isVisible() || (simulation != mSimulation)) {
-        if (needReloadView) {
-            resetFileTabIcon(simulation);
-        } else {
-            mStoppedSimulations << simulation;
-
+    if (!isVisible()) {
+        if (needReloadView)
+            resetFileTabIcon();
+        else
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
-        }
     }
 
     // Reload ourselves, if needed (see fileReloaded())
 
     if (needReloadView)
-        reloadView(simulationFileName);
+        reloadView(mFileName);
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::resetProgressBar(SingleCellViewSimulation *pSimulation)
+void SingleCellViewSimulationWidget::resetProgressBar()
 {
-    // Retrieve the oldest simulation to reset, if none was provided
-
-    SingleCellViewSimulation *simulation = pSimulation;
-
-    if (!simulation) {
-        simulation = mResetSimulations.first();
-
-        if (!simulation)
-            return;
-
-        mResetSimulations.removeFirst();
-    }
-
     // Reset our progress bar
 
-    mOldSimulationResultsSizes.insert(simulation, 0);
+    mSimulationResultsSize = 0;
 
     mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::resetFileTabIcon(SingleCellViewSimulation *pSimulation)
+void SingleCellViewSimulationWidget::resetFileTabIcon()
 {
-    // Retrieve our most recently stopped simulation, if none was provided
-
-    SingleCellViewSimulation *simulation = pSimulation;
-
-    if (!simulation) {
-        simulation = mStoppedSimulations.first();
-
-        if (!simulation)
-            return;
-
-        mStoppedSimulations.removeFirst();
-    }
-
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset
 
@@ -2176,7 +2066,7 @@ void SingleCellViewSimulationWidget::resetFileTabIcon(SingleCellViewSimulation *
 
     mProgress = -1;
 
-    emit updateFileTabIcon(mPlugin->viewName(), simulation->fileName(), NoIcon);
+    emit updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
 
 //==============================================================================
@@ -2216,13 +2106,9 @@ void SingleCellViewSimulationWidget::checkSimulationDataModified(const QString &
 
 void SingleCellViewSimulationWidget::simulationDataModified(const bool &pIsModified)
 {
-    // Update the modified state of the sender's corresponding file or reset
-    // action
+    // Update our modified state
 
-    SingleCellViewSimulationData *simulationData = qobject_cast<SingleCellViewSimulationData *>(sender());
-
-    checkSimulationDataModified(simulationData->simulation()->fileName(),
-                                pIsModified);
+    checkSimulationDataModified(mFileName, pIsModified);
 }
 
 //==============================================================================
@@ -2680,7 +2566,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
     //       that cannot be handled by us, meaning that our central widget would
     //       show a message rather than us...
 
-    double simulationProgress = mOldSimulationResultsSizes.value(pSimulation)/pSimulation->size();
+    double simulationProgress = mSimulationResultsSize/pSimulation->size();
 
     if (isVisible() && (pSimulation == mSimulation)) {
         mProgressBarWidget->setValue(simulationProgress);
@@ -2704,8 +2590,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
 
             // Let people know about the file tab icon to be used for the model
 
-            emit updateFileTabIcon(mPlugin->viewName(), pSimulation->fileName(),
-                                   fileTabIcon());
+            emit updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
         }
     }
 }
@@ -2726,8 +2611,8 @@ void SingleCellViewSimulationWidget::checkResults(SingleCellViewSimulation *pSim
     qulonglong simulationResultsSize = pSimulation->results()->size();
 
     if (    pForceUpdateResults
-        || (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation))) {
-        mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
+        || (simulationResultsSize != mSimulationResultsSize)) {
+        mSimulationResultsSize = simulationResultsSize;
 
         updateResults(pSimulation, simulationResultsSize);
     }

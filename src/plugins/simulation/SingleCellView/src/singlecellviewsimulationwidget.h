@@ -140,14 +140,9 @@ private:
 
     SingleCellViewSimulation *mSimulation;
 
-    SingleCellViewSimulations mStoppedSimulations;
-
     Core::ProgressBarWidget *mProgressBarWidget;
 
     int mProgress;
-    QMap<QString, bool> mResets;
-    QMap<QString, int> mDelays;
-    QMap<QString, bool> mDevelopmentModes;
     bool mLockedDevelopmentMode;
 
     Core::ToolBarWidget *mToolBarWidget;
@@ -173,10 +168,8 @@ private:
 
     ErrorType mErrorType;
 
-    QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
+    qulonglong mSimulationResultsSize;
     SingleCellViewSimulations mCheckResultsSimulations;
-
-    SingleCellViewSimulations mResetSimulations;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
@@ -261,8 +254,8 @@ private Q_SLOTS:
     void simulationPaused();
     void simulationStopped(const qint64 &pElapsedTime);
 
-    void resetProgressBar(SingleCellViewSimulation *pSimulation = 0);
-    void resetFileTabIcon(SingleCellViewSimulation *pSimulation = 0);
+    void resetProgressBar();
+    void resetFileTabIcon();
 
     void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);

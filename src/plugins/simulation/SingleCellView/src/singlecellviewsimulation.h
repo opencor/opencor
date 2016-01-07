@@ -215,13 +215,9 @@ class SingleCellViewSimulation : public QObject
     friend class SingleCellViewSimulationWorker;
 
 public:
-    explicit SingleCellViewSimulation(const QString &pFileName,
-                                      CellMLSupport::CellmlFileRuntime *pRuntime,
+    explicit SingleCellViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
                                       const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulation();
-
-    QString fileName() const;
-    void setFileName(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
@@ -249,8 +245,6 @@ public:
 
 private:
     SingleCellViewSimulationWorker *mWorker;
-
-    QString mFileName;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 

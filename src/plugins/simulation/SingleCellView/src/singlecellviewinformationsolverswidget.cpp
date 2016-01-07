@@ -84,8 +84,6 @@ QMap<QString, Core::Properties> SingleCellViewInformationSolversWidgetData::solv
 SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(SingleCellViewPlugin *pPlugin,
                                                                                QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
-    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState *>()),
-    mDefaultGuiState(0),
     mDescriptions(QMap<Core::Property *, Descriptions>())
 {
     // Remove all our properties
@@ -113,12 +111,6 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(S
 
     expandAll();
 
-    // Clear any track of previous GUI states and retrieve our default GUI state
-
-    resetAllGuiStates();
-
-    mDefaultGuiState = guiState();
-
     // Keep track of changes to list properties
 
     connect(this, SIGNAL(propertyChanged(Core::Property *)),
@@ -134,8 +126,6 @@ SingleCellViewInformationSolversWidget::~SingleCellViewInformationSolversWidget(
     delete mOdeSolverData;
     delete mDaeSolverData;
     delete mNlaSolverData;
-
-    resetAllGuiStates();
 }
 
 //==============================================================================
@@ -196,20 +186,6 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
     //       properties above...
 
     PropertyEditorWidget::retranslateUi();
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSolversWidget::resetAllGuiStates()
-{
-    // Reset all our GUI states including our default one
-
-    foreach (Core::PropertyEditorWidgetGuiState *guiState, mGuiStates)
-        delete guiState;
-
-    mGuiStates.clear();
-
-    delete mDefaultGuiState;
 }
 
 //==============================================================================
@@ -355,16 +331,9 @@ void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInf
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName,
-                                                        CellMLSupport::CellmlFileRuntime *pRuntime,
+void SingleCellViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                         SingleCellViewSimulation *pSimulation)
 {
-    // Retrieve and initialise our GUI state
-
-    setGuiState(mGuiStates.contains(pFileName)?
-                    mGuiStates.value(pFileName):
-                    mDefaultGuiState);
-
     // Make sure that the CellML file runtime is valid
 
     if (pRuntime->isValid()) {
@@ -402,26 +371,6 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
                                                       false);
         }
     }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSolversWidget::backup(const QString &pFileName)
-{
-    // Keep track of our GUI state
-
-    mGuiStates.insert(pFileName, guiState());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSolversWidget::finalize(const QString &pFileName)
-{
-    // Remove track of our GUI state
-
-    delete mGuiStates.value(pFileName);
-
-    mGuiStates.remove(pFileName);
 }
 
 //==============================================================================

@@ -827,11 +827,9 @@ double * SingleCellViewSimulationResults::algebraic(const int &pIndex) const
 
 //==============================================================================
 
-SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
-                                                   CellMLSupport::CellmlFileRuntime *pRuntime,
+SingleCellViewSimulation::SingleCellViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                    const SolverInterfaces &pSolverInterfaces) :
     mWorker(0),
-    mFileName(pFileName),
     mRuntime(pRuntime),
     mSolverInterfaces(pSolverInterfaces),
     mData(new SingleCellViewSimulationData(pRuntime, this, pSolverInterfaces)),
@@ -857,24 +855,6 @@ SingleCellViewSimulation::~SingleCellViewSimulation()
 
     delete mResults;
     delete mData;
-}
-
-//==============================================================================
-
-QString SingleCellViewSimulation::fileName() const
-{
-    // Retrieve and return our file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-void SingleCellViewSimulation::setFileName(const QString &pFileName)
-{
-    // Set our file name
-
-    mFileName = pFileName;
 }
 
 //==============================================================================

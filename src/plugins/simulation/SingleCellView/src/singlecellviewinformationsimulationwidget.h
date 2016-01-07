@@ -52,15 +52,11 @@ class SingleCellViewInformationSimulationWidget : public Core::PropertyEditorWid
 
 public:
     explicit SingleCellViewInformationSimulationWidget(QWidget *pParent);
-    ~SingleCellViewInformationSimulationWidget();
 
     virtual void retranslateUi();
 
-    void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
+    void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation);
-    void backup(const QString &pFileName);
-    void finalize(const QString &pFileName);
 
     Core::Property * startingPointProperty() const;
     Core::Property * endingPointProperty() const;
@@ -74,9 +70,6 @@ private:
     Core::Property *mStartingPointProperty;
     Core::Property *mEndingPointProperty;
     Core::Property *mPointIntervalProperty;
-
-    QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
-    Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
 
     void updateToolTips();
 };

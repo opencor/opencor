@@ -85,11 +85,8 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
+    void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation);
-    void backup(const QString &pFileName);
-    void finalize(const QString &pFileName);
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;
@@ -106,14 +103,9 @@ private:
     SingleCellViewInformationSolversWidgetData *mDaeSolverData;
     SingleCellViewInformationSolversWidgetData *mNlaSolverData;
 
-    QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
-    Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
-
     QMap<Core::Property *, Descriptions> mDescriptions;
 
     void updateSolverGui(SingleCellViewInformationSolversWidgetData *pSolverData);
-
-    void resetAllGuiStates();
 
     SingleCellViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                                                                      const Solver::Type &pSolverType);

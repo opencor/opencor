@@ -59,9 +59,7 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void initialize(const QString &pFileName);
-    void backup(const QString &pFileName);
-    void finalize(const QString &pFileName);
+    void initialize();
 
     SingleCellViewGraphPanelWidgets graphPanels() const;
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
@@ -76,10 +74,7 @@ private:
 
     SingleCellViewGraphPanelWidgets mGraphPanels;
 
-    QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
-
-    QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>> mPlotsRects;
 
     void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 

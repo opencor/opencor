@@ -68,7 +68,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
-    mGraphPropertiesSelected(QMap<QString, QMap<Core::Property *, bool>>()),
     mCanEmitGraphsUpdatedSignal(true),
     mHorizontalScrollBarValue(0)
 {
@@ -182,30 +181,6 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
     // property editors
 
     updateAllGraphsInfo(true);
-
-    // Specify which graphs should be selected
-
-    QMap<Core::Property *, bool> graphsPropertiesSelected = mGraphPropertiesSelected.value(pFileName);
-
-    foreach (Core::Property *graphProperty, mGraphProperties) {
-        graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty, true));
-        // Note: by default, we want graphs to be selected, hence our use of
-        //       true as the default value...
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::backup(const QString &pFileName)
-{
-    // Keep track of which graphs are selected
-
-    QMap<Core::Property *, bool> graphsPropertiesSelected = QMap<Core::Property *, bool>();
-
-    foreach (Core::Property *graphProperty, mGraphProperties)
-        graphsPropertiesSelected.insert(graphProperty, graphProperty->isChecked());
-
-    mGraphPropertiesSelected.insert(pFileName, graphsPropertiesSelected);
 }
 
 //==============================================================================
@@ -222,8 +197,6 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
     mRuntimes.remove(pFileName);
     mSimulations.remove(pFileName);
-
-    mGraphPropertiesSelected.remove(pFileName);
 }
 
 //==============================================================================
