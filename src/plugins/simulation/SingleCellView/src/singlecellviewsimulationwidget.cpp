@@ -1084,17 +1084,15 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
     // The given file has been un/locked, so enable/disable the development mode
     // and keep track of its checked status or recheck it, as necessary
 
-    if (mSimulation) {
-         if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
-             mGui->actionDevelopmentMode->setEnabled(true);
-             mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentMode);
-         } else {
-             mLockedDevelopmentMode = mGui->actionDevelopmentMode->isChecked();
+     if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
+         mGui->actionDevelopmentMode->setEnabled(true);
+         mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentMode);
+     } else {
+         mLockedDevelopmentMode = mGui->actionDevelopmentMode->isChecked();
 
-             mGui->actionDevelopmentMode->setChecked(false);
-             mGui->actionDevelopmentMode->setEnabled(false);
-         }
-    }
+         mGui->actionDevelopmentMode->setChecked(false);
+         mGui->actionDevelopmentMode->setEnabled(false);
+     }
 }
 
 //==============================================================================
