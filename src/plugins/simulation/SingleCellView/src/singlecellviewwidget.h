@@ -50,6 +50,9 @@ public:
     explicit SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                   QWidget *pParent);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
 
     bool contains(const QString &pFileName) const;
@@ -70,6 +73,8 @@ public:
 
 private:
     SingleCellViewPlugin *mPlugin;
+
+    QString mSettingsGroup;
 
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;

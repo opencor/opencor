@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QIcon>
 #include <QLayout>
+#include <QSettings>
 
 //==============================================================================
 
@@ -39,9 +40,31 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                            QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
+    mSettingsGroup(QString()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
 {
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::loadSettings(QSettings *pSettings)
+{
+    // Normally, we would retrieve the simulation widget's settings, but
+    // mSimulationWidget is not set at this stage. So, instead, we keep track of
+    // our settings' group and load them when initialising ourselves (see
+    // initialize())...
+
+    mSettingsGroup = pSettings->group();
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+    // Note: our view is such that our settings are actually saved when calling
+    //       finalize() on the last file...
 }
 
 //==============================================================================
@@ -83,6 +106,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulationWidgets.insert(pFileName, mSimulationWidget);
 
         layout()->addWidget(mSimulationWidget);
+
+        // Load our simulation widget's settings
+
+        QSettings settings;
+
+        settings.beginGroup(mSettingsGroup);
+            mSimulationWidget->loadSettings(&settings);
+        settings.endGroup();
     }
 
     // Hide our previous simulation widget and show our new one
@@ -109,14 +140,22 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget) {
-        // There is a simulation widget for the given file name, so delete it
-        // and remove it from our list
+        // There is a simulation widget for the given file name, so save its
+        // settings
+
+        QSettings settings;
+
+        settings.beginGroup(mSettingsGroup);
+            simulationWidget->saveSettings(&settings);
+        settings.endGroup();
+
+        // Now, we can delete it and remove it from our list
 
         delete simulationWidget;
 
         mSimulationWidgets.remove(pFileName);
 
-        // Reset our memory of the current editor, if needed
+        // Finally, reset our memory of the simulation widget, if needed
 
         if (simulationWidget == mSimulationWidget)
             mSimulationWidget = 0;
