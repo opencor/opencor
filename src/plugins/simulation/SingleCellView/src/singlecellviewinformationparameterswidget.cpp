@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "propertyeditorwidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
@@ -501,9 +502,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
-/*---GRY---
-        property->setIcon(SingleCellViewWidget::parameterIcon(parameter->type()));
-*/
+        property->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
 
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
@@ -632,25 +631,19 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
         // Add the current parameter to the 'current' component menu
 
-/*---GRY---
-        QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(SingleCellViewSimulationWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
-*/
 
         // Create a connection to handle the graph requirement against our
         // parameter
 
-/*---GRY---
         connect(parameterAction, SIGNAL(triggered(bool)),
                 this, SLOT(emitGraphRequired()));
-*/
 
         // Keep track of the parameter associated with our model parameter
         // action
 
-/*---GRY---
         mParameterActions->insert(parameterAction, parameter);
-*/
     }
 }
 
