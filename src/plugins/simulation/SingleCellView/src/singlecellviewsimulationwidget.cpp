@@ -364,6 +364,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mGui->layout->addWidget(mBottomSeparator);
     mGui->layout->addWidget(mProgressBarWidget);
 
+    // Initialise ourselves
+
+    initialize();
+
     // Make our contents widget our focus proxy
 
     setFocusProxy(mContentsWidget);
@@ -378,6 +382,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
 SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
 {
+    // Finalise ourselves
+
+    finalize();
+
     // Delete some internal objects
 
     delete mSimulation;
@@ -519,8 +527,10 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
 
+/*---GRY---
     if (!simulationModeEnabled)
         focusProxy()->setFocus();
+*/
 }
 
 //==============================================================================
@@ -582,8 +592,7 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
-                                                const bool &pReloadingView)
+void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 {
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
@@ -601,7 +610,7 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
 
     bool newSimulation = false;
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
     if (!mSimulation) {
@@ -637,7 +646,7 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    mGui->actionDevelopmentMode->setEnabled(fileManagerInstance->isReadableAndWritable(pFileName));
+    mGui->actionDevelopmentMode->setEnabled(fileManagerInstance->isReadableAndWritable(mFileName));
 
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
@@ -661,11 +670,11 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
     if (!mOutputWidget->document()->isEmpty())
         information += "<hr/>\n";
 
-    QString fileName = fileManagerInstance->isNew(pFileName)?
-                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(pFileName)):
-                           fileManagerInstance->isRemote(pFileName)?
-                               fileManagerInstance->url(pFileName):
-                               pFileName;
+    QString fileName = fileManagerInstance->isNew(mFileName)?
+                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileName)):
+                           fileManagerInstance->isRemote(mFileName)?
+                               fileManagerInstance->url(mFileName):
+                               mFileName;
 
     information += "<strong>"+fileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
@@ -846,10 +855,12 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
         solversWidget->initialize(cellmlFileRuntime, mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+            informationWidget->graphsWidget()->initialize(mFileName, cellmlFileRuntime, mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
+/*---GRY---
         mContentsWidget->graphPanelsWidget()->initialize();
+*/
 
         // Reset both the simulation's data and results (well, initialise in the
         // case of its data), in case we are dealing with a new simulation
@@ -871,7 +882,7 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
         // Now, we can safely update our parameters widget since our model
         // parameters have been computed
 
-        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation, pReloadingView);
+        informationWidget->parametersWidget()->initialize(mFileName, cellmlFileRuntime, mSimulation, pReloadingView);
 
         // Update our plots since our 'new' simulation properties may have
         // affected them
@@ -891,8 +902,7 @@ void SingleCellViewSimulationWidget::initialize(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::finalize(const QString &pFileName,
-                                              const bool &pReloadingView)
+void SingleCellViewSimulationWidget::finalize(const bool &pReloadingView)
 {
     // Remove our simulation object, should there be one for the given file name
 
@@ -914,8 +924,8 @@ void SingleCellViewSimulationWidget::finalize(const QString &pFileName,
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->graphsWidget()->finalize(pFileName);
-    informationWidget->parametersWidget()->finalize(pFileName, pReloadingView);
+    informationWidget->graphsWidget()->finalize(mFileName);
+    informationWidget->parametersWidget()->finalize(mFileName, pReloadingView);
 }
 
 //==============================================================================
@@ -1055,10 +1065,10 @@ void SingleCellViewSimulationWidget::reloadView(const QString &pFileName)
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that the given file will have effectively been closed and (re)opened
 
-    finalize(pFileName, true);
+    finalize(true);
     fileClosed(pFileName);
 
-    initialize(pFileName, true);
+    initialize(true);
     fileOpened(pFileName);
 
     // Stop keeping track of the fact that we need to reload ourselves
