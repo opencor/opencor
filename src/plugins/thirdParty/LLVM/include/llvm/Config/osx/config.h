@@ -144,7 +144,7 @@
 /* #undef HAVE_LIBZ */
 
 /* Define to 1 if you have the 'edit' library (-ledit). */
-#define HAVE_LIBEDIT 1
+/* #undef HAVE_LIBEDIT */
 
 /* Define to 1 if you have the <limits.h> header file. */
 #define HAVE_LIMITS_H 1

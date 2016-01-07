@@ -31,4 +31,4 @@ In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to O
        Note that to enable TERMINFO and ZLIB would require a more complicated build process and it is not worth it.
     6) From the command line:
            cmake --build .
-   From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders.
+   From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders. When it comes to [LLVM]/include/llvm/Config/[PLATFORM_DIR]/config.h, we should make sure that HAVE_LIBEDIT is not set (this is part of keeping the LLVM build as simple as possible).
