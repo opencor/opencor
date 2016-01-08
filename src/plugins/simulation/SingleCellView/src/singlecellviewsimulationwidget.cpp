@@ -602,38 +602,32 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Retrieve our simulation object for the current model, if any
 
-    bool newSimulation = false;
-
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
-    if (!mSimulation) {
-        // No simulation object currently exists for the model, so create one
+    // Create our simulation object
 
-        mSimulation = new SingleCellViewSimulation(cellmlFileRuntime,
-                                                   mPlugin->solverInterfaces());
+    mSimulation = new SingleCellViewSimulation(cellmlFileRuntime,
+                                               mPlugin->solverInterfaces());
 
-        newSimulation = true;
+    // Initialise our simulation object's delay
 
-        // Initialise our simulation object's delay
+    updateDelayValue(mDelayWidget->value());
 
-        updateDelayValue(mDelayWidget->value());
+    // Create a few connections
 
-        // Create a few connections
+    connect(mSimulation, SIGNAL(running(const bool &)),
+            this, SLOT(simulationRunning(const bool &)));
+    connect(mSimulation, SIGNAL(paused()),
+            this, SLOT(simulationPaused()));
+    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
+            this, SLOT(simulationStopped(const qint64 &)));
 
-        connect(mSimulation, SIGNAL(running(const bool &)),
-                this, SLOT(simulationRunning(const bool &)));
-        connect(mSimulation, SIGNAL(paused()),
-                this, SLOT(simulationPaused()));
-        connect(mSimulation, SIGNAL(stopped(const qint64 &)),
-                this, SLOT(simulationStopped(const qint64 &)));
+    connect(mSimulation, SIGNAL(error(const QString &)),
+            this, SLOT(simulationError(const QString &)));
 
-        connect(mSimulation, SIGNAL(error(const QString &)),
-                this, SLOT(simulationError(const QString &)));
-
-        connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-                this, SLOT(simulationDataModified(const bool &)));
-    }
+    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
+            this, SLOT(simulationDataModified(const bool &)));
 
     // Retrieve the status of the reset action, the simulation delay and the
     // development mode
@@ -855,21 +849,17 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         mContentsWidget->graphPanelsWidget()->initialize();
 
         // Reset both the simulation's data and results (well, initialise in the
-        // case of its data), in case we are dealing with a new simulation
+        // case of its data)
 
-        if (newSimulation) {
-            mSimulation->data()->reset();
-            mSimulation->results()->reset(false);
-        }
+        mSimulation->data()->reset();
+        mSimulation->results()->reset(false);
 
         // Retrieve our simulation and solvers properties since they may have
         // an effect on our parameter values (as well as result in some solver
         // properties being shown/hidden)
 
-        if (newSimulation || pReloadingView) {
-            updateSimulationProperties();
-            updateSolversProperties();
-        }
+        updateSimulationProperties();
+        updateSolversProperties();
 
         // Now, we can safely update our parameters widget since our model
         // parameters have been computed
@@ -879,10 +869,8 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // Update our plots since our 'new' simulation properties may have
         // affected them
 
-        if (newSimulation || pReloadingView) {
-            foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-                updatePlot(plot);
-        }
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+            updatePlot(plot);
     }
 
     // Resume the tracking of certain things
@@ -896,16 +884,11 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
 void SingleCellViewSimulationWidget::finalize(const bool &pReloadingView)
 {
-    // Remove our simulation object, should there be one for the given file name
+    // Remove our simulation object
 
-    if (mSimulation) {
-        // There is a simulation object for the given file name, so delete it
-        // and reset our memory of the current simulation object
+    delete mSimulation;
 
-        delete mSimulation;
-
-        mSimulation = 0;
-    }
+    mSimulation = 0;
 
     // Remove various information associated with the given file name
 
@@ -935,7 +918,7 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 {
     // Return a file tab icon that shows the given file's simulation progress
 
-    if (mSimulation && (mProgress != -1)) {
+    if (mProgress != -1) {
         // Create an image that shows the progress of our simulation
 
         QPixmap tabBarPixmap = QPixmap(tabBarPixmapSize(),
@@ -965,53 +948,46 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 bool SingleCellViewSimulationWidget::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName)
 {
-    // Save the given file, but first retrieve the simulation associated with
-    // the given (old) file name
+    // Retrieve all the state and constant parameters which value has changed
+    // and update our CellML object with their 'new' values, unless they are
+    // imported, in which case we let the user know that their 'new' values
+    // cannot be saved
 
-    if (mSimulation) {
-        // Retrieve all the state and constant parameters which value has
-        // changed and update our CellML object with their 'new' values, unless
-        // they are imported, in which case we let the user know that their
-        // 'new' values cannot be saved
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
+    ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
+    QString importedParameters = QString();
 
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
-        ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
-        QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
-        QString importedParameters = QString();
+    foreach (Core::Property *property, parameters.keys()) {
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
 
-        foreach (Core::Property *property, parameters.keys()) {
-            CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
+        if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+            || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
+            ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
+            ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
+            ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
+            ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-            if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-                || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
-                ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
-                ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
-                ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
-                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
-
-                if (variable == sourceVariable)
-                    variable->initialValue(property->value().toStdWString());
-                else
-                    importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
-            }
+            if (variable == sourceVariable)
+                variable->initialValue(property->value().toStdWString());
+            else
+                importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
         }
-
-        // Now, we can effectively save our given file and let the user know if
-        // some parameter values couldn't be saved
-
-        bool res = cellmlFile->save(pNewFileName);
-
-        if (res && !importedParameters.isEmpty()) {
-            QMessageBox::information(Core::mainWindow(),
-                                     tr("Save File"),
-                                     tr("The following parameters are imported and cannot therefore be saved:")+importedParameters,
-                                     QMessageBox::Ok);
-        }
-
-        return res;
-    } else {
-        return false;
     }
+
+    // Now, we can effectively save our given file and let the user know if some
+    // parameter values couldn't be saved
+
+    bool res = cellmlFile->save(pNewFileName);
+
+    if (res && !importedParameters.isEmpty()) {
+        QMessageBox::information(Core::mainWindow(),
+                                 tr("Save File"),
+                                 tr("The following parameters are imported and cannot therefore be saved:")+importedParameters,
+                                 QMessageBox::Ok);
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -1081,16 +1057,13 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
 
     mNeedReloadViews << pFileName;
 
-    if (mSimulation) {
-        if (mSimulation->stop()) {
-            needReloadView = false;
-            // Note: we don't need to reload ourselves since stopping the
-            //       simulation will result in the stopped() signal being
-            //       received and, therefore, the simulationStopped() slot being
-            //       called, which is where we should reload ourselves since we
-            //       cannot tell how long the signal/slot mechanism is going to
-            //       take...
-        }
+    if (mSimulation->stop()) {
+        needReloadView = false;
+        // Note: we don't need to reload ourselves since stopping the simulation
+        //       will result in the stopped() signal being received and,
+        //       therefore, the simulationStopped() slot being called, which is
+        //       where we should reload ourselves since we cannot tell how long
+        //       the signal/slot mechanism is going to take...
     }
 
     // Reload ourselves, if needed

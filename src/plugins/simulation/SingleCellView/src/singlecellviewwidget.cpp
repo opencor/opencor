@@ -242,14 +242,12 @@ void SingleCellViewWidget::fileModified(const QString &pFileName)
 
 void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 {
-    // Keep track, if possible, of the fact that a file has been reloaded
+    // The given file has been reloaded, so reload it, should it be managed
 
-    if (contains(pFileName)) {
-        finalize(pFileName);
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
-            initialize(pFileName);
-    }
+    if (simulationWidget)
+        simulationWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -257,7 +255,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
-    // Keep track, if possible, of the fact that a file has been renamed
+    // The given file has been renamed, so update our simulation widgets mapping
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
@@ -271,11 +269,10 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
 void SingleCellViewWidget::fileClosed(const QString &pFileName)
 {
-    // Keep track, if possible, of the fact that a file has been closed
+    // The given file has been closed, so let our our simulation widgets know
+    // about it
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
-
-    if (simulationWidget)
+    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->fileClosed(pFileName);
 }
 
