@@ -1927,18 +1927,14 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
 void SingleCellViewSimulationWidget::simulationPaused()
 {
-    // Our simulation is paused, so do a few things, but only if we are dealing
-    // with the active simulation
+    // Our simulation is paused, so update our simulation mode and parameters,
+    // and check for results
 
-    if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
-        // Update our simulation mode and parameters, and check for results
+    updateSimulationMode();
 
-        updateSimulationMode();
+    mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
-
-        checkResults();
-    }
+    checkResults();
 }
 
 //==============================================================================
@@ -2105,11 +2101,6 @@ void SingleCellViewSimulationWidget::simulationPropertyChanged(Core::Property *p
 
 void SingleCellViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
 {
-    // Make sure that we have a simulation object
-
-    if (!mSimulation)
-        return;
-
     // Update our solvers properties
 
     updateSolversProperties(pProperty);
@@ -2204,16 +2195,8 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
         graph->setVisible(graph->isValid() && graph->isSelected());
 
         // Update the graph's data
-        // Note: it may happen that we don't have a simulation associated with
-        //       the given graph, hence we must check for it. Indeed, say that
-        //       you have two files opened, but only one has been selected so
-        //       far. From there, say you create a graph and then double click
-        //       on its model property so that the other file gets selected. In
-        //       this case, for example, there won't be a simulation associated
-        //       with the file and therefore the graph...
 
-        if (mSimulation)
-            updateGraphData(graph, mSimulation->results()->size());
+        updateGraphData(graph, mSimulation->results()->size());
 
         // Keep track of the plot that needs to be updated and replotted
 
@@ -2562,12 +2545,6 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
 
 void SingleCellViewSimulationWidget::checkResults(const bool &pForceUpdateResults)
 {
-    // Make sure that we can still check results (i.e. we are not closing down
-    // with some simulations still running)
-
-    if (!mSimulation)
-        return;
-
     // Update our results, but only if needed
 
     qulonglong simulationResultsSize = mSimulation->results()->size();
