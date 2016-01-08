@@ -2346,29 +2346,24 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
 //==============================================================================
 
-double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pSimulation,
-                                                    CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SingleCellViewSimulationWidget::dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
-    // Return the array of data points associated with the given simulation and
-    // parameter
-
-    if (!pSimulation || !pParameter)
-        return 0;
+    // Return the array of data points associated with the given parameter
 
     switch (pParameter->type()) {
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return pSimulation->results()->constants(pParameter->index());
+        return mSimulation->results()->constants(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return pSimulation->results()->rates(pParameter->index());
+        return mSimulation->results()->rates(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return pSimulation->results()->states(pParameter->index());
+        return mSimulation->results()->states(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return pSimulation->results()->algebraic(pParameter->index());
+        return mSimulation->results()->algebraic(pParameter->index());
     default:
         // CellMLSupport::CellmlFileRuntimeParameter::Voi
 
-        return pSimulation->results()->points();
+        return mSimulation->results()->points();
     }
 }
 
@@ -2380,8 +2375,8 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        pGraph->setRawSamples(dataPoints(mSimulation, pGraph->parameterX()),
-                              dataPoints(mSimulation, pGraph->parameterY()),
+        pGraph->setRawSamples(dataPoints(pGraph->parameterX()),
+                              dataPoints(pGraph->parameterY()),
                               pSize);
     }
 }
