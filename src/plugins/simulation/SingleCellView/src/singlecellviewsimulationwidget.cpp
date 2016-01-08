@@ -364,13 +364,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mGui->layout->addWidget(mBottomSeparator);
     mGui->layout->addWidget(mProgressBarWidget);
 
-    // Initialise ourselves
-
-    initialize();
-
     // Make our contents widget our focus proxy
 
     setFocusProxy(mContentsWidget);
+
+    // Initialise ourselves
+
+    initialize();
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -527,10 +527,8 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
 
-/*---GRY---
     if (!simulationModeEnabled)
         focusProxy()->setFocus();
-*/
 }
 
 //==============================================================================
