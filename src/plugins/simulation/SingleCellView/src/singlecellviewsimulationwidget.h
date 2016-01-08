@@ -206,8 +206,7 @@ private:
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize);
-    void checkResults(SingleCellViewSimulation *pSimulation,
-                      const bool &pForceUpdateResults = false);
+    void checkResults(const bool &pForceUpdateResults = false);
 
     QVariant value(Core::Property *pProperty) const;
 

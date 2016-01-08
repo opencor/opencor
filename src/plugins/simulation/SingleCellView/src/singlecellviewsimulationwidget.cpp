@@ -1162,7 +1162,7 @@ void SingleCellViewSimulationWidget::on_actionRunPauseResumeSimulation_triggered
 
                 runSimulation = mSimulation->results()->reset();
 
-                checkResults(mSimulation, true);
+                checkResults(true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1213,7 +1213,7 @@ void SingleCellViewSimulationWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    checkResults(mSimulation, true);
+    checkResults(true);
 }
 
 //==============================================================================
@@ -1916,16 +1916,12 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 {
     Q_UNUSED(pIsResuming);
 
-    // Our simulation is running, so do a few things, but only if we are dealing
-    // with the active simulation
+    // Our simulation is running, so update our simulation mode and check for
+    // results
 
-    if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
-        // Update our simulation mode and check for results
+    updateSimulationMode();
 
-        updateSimulationMode();
-
-        checkResults(mSimulation);
-    }
+    checkResults(mSimulation);
 }
 
 //==============================================================================
@@ -2049,19 +2045,13 @@ void SingleCellViewSimulationWidget::resetFileTabIcon()
 void SingleCellViewSimulationWidget::simulationError(const QString &pMessage,
                                                      const ErrorType &pErrorType)
 {
-    // Output the simulation error, but only if we are dealing with the active
-    // simulation or if we came here directly (i.e. not as a result of the
-    // SingleCellViewSimulation::error() signal being emitted)
+    // Output the simulation error
 
-    SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
+    mErrorType = pErrorType;
 
-    if (!simulation || (simulation == mSimulation)) {
-        mErrorType = pErrorType;
+    updateInvalidModelMessageWidget();
 
-        updateInvalidModelMessageWidget();
-
-        output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
-    }
+    output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
 }
 
 //==============================================================================
@@ -2543,7 +2533,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
 
     double simulationProgress = mSimulationResultsSize/pSimulation->size();
 
-    if (isVisible() && (pSimulation == mSimulation)) {
+    if (isVisible()) {
         mProgressBarWidget->setValue(simulationProgress);
     } else {
         // We are not dealing with the active simulation, so create an icon that
@@ -2572,8 +2562,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::checkResults(SingleCellViewSimulation *pSimulation,
-                                                  const bool &pForceUpdateResults)
+void SingleCellViewSimulationWidget::checkResults(const bool &pForceUpdateResults)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -2583,27 +2572,27 @@ void SingleCellViewSimulationWidget::checkResults(SingleCellViewSimulation *pSim
 
     // Update our results, but only if needed
 
-    qulonglong simulationResultsSize = pSimulation->results()->size();
+    qulonglong simulationResultsSize = mSimulation->results()->size();
 
     if (    pForceUpdateResults
         || (simulationResultsSize != mSimulationResultsSize)) {
         mSimulationResultsSize = simulationResultsSize;
 
-        updateResults(pSimulation, simulationResultsSize);
+        updateResults(mSimulation, simulationResultsSize);
     }
 
     // Ask to recheck our simulation's results, but only if our simulation is
     // still running
 
-    if (   pSimulation->isRunning()
-        || (simulationResultsSize != pSimulation->results()->size())) {
+    if (   mSimulation->isRunning()
+        || (simulationResultsSize != mSimulation->results()->size())) {
         // Note: we cannot ask QTimer::singleShot() to call checkResults() since
         //       it expects a pointer to a simulation as a parameter, so instead
         //       we call a method with no arguments that will make use of our
         //       list to know which simulation should be passed as an argument
         //       to checkResults()...
 
-        mCheckResultsSimulations << pSimulation;
+        mCheckResultsSimulations << mSimulation;
 
         QTimer::singleShot(0, this, SLOT(callCheckResults()));
     }
