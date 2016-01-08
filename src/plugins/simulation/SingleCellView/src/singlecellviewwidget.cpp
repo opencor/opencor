@@ -114,6 +114,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         settings.beginGroup(mSettingsGroup);
             mSimulationWidget->loadSettings(&settings);
         settings.endGroup();
+
+        // Initialise our simulation widget
+
+        mSimulationWidget->initialize();
     }
 
     // Hide our previous simulation widget and show our new one
@@ -148,6 +152,10 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
         settings.beginGroup(mSettingsGroup);
             simulationWidget->saveSettings(&settings);
         settings.endGroup();
+
+        // Finalise our simulation widget
+
+        simulationWidget->finalize();
 
         // Now, we can delete it and remove it from our list
 

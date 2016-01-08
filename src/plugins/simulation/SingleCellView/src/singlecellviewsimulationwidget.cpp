@@ -368,10 +368,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     setFocusProxy(mContentsWidget);
 
-    // Initialise ourselves
-
-    initialize();
-
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -382,10 +378,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
 SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
 {
-    // Finalise ourselves
-
-    finalize();
-
     // Delete some internal objects
 
     delete mSimulation;
@@ -856,9 +848,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
             informationWidget->graphsWidget()->initialize(mFileName, cellmlFileRuntime, mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
-/*---GRY---
         mContentsWidget->graphPanelsWidget()->initialize();
-*/
 
         // Reset both the simulation's data and results (well, initialise in the
         // case of its data), in case we are dealing with a new simulation

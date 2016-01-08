@@ -106,6 +106,9 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void initialize(const bool &pReloadingView = false);
+    void finalize(const bool &pReloadingView = false);
+
     QIcon fileTabIcon() const;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
@@ -174,9 +177,6 @@ private:
     bool mCanUpdatePlotsForUpdatedGraphs;
 
     QList<QString> mNeedReloadViews;
-
-    void initialize(const bool &pReloadingView = false);
-    void finalize(const bool &pReloadingView = false);
 
     void reloadView(const QString &pFileName);
 
