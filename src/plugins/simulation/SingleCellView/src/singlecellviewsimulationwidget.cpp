@@ -650,13 +650,14 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
+    // Clean up our output, if needed
+
+    if (pReloadingView)
+        mOutputWidget->document()->clear();
+
     // Output some information about our CellML file
 
     QString information = QString();
-
-    if (!mOutputWidget->document()->isEmpty())
-        information += "<hr/>\n";
-
     QString fileName = fileManagerInstance->isNew(mFileName)?
                            tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileName)):
                            fileManagerInstance->isRemote(mFileName)?
