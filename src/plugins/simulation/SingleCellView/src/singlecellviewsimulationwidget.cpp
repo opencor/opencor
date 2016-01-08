@@ -149,8 +149,12 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mDelayWidget->setValue(0.0);
 
     // Create a tool bar widget with different buttons
+    // Note: not sure why, but if we create a tool bar widget with ourselves as
+    //       a parent then the first time round it will be properly styled, but
+    //       not the subsequent times while it works as expected if we use our
+    //       own parent as a parent...
 
-    mToolBarWidget = new Core::ToolBarWidget(this);
+    mToolBarWidget = new Core::ToolBarWidget(pParent);
 
     QToolButton *removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
     QMenu *removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
