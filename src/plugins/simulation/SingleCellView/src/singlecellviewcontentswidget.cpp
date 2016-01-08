@@ -93,7 +93,8 @@ static const auto SettingsContentsSizes = QStringLiteral("ContentsSizes");
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
+void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings,
+                                                const QString &pFileName)
 {
     // Retrieve and set our sizes
 
@@ -111,13 +112,14 @@ void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->loadSettings(pSettings);
+        mGraphPanelsWidget->loadSettings(pSettings, pFileName);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
+void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings,
+                                                const QString &pFileName) const
 {
     // Keep track of our sizes
 
@@ -130,7 +132,7 @@ void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
     pSettings->endGroup();
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->saveSettings(pSettings);
+        mGraphPanelsWidget->saveSettings(pSettings, pFileName);
     pSettings->endGroup();
 }
 

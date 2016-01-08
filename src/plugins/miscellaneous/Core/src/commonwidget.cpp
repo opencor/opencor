@@ -67,9 +67,29 @@ void CommonWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
+void CommonWidget::loadSettings(QSettings *pSettings, const QString &pFileName)
+{
+    Q_UNUSED(pSettings);
+    Q_UNUSED(pFileName);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
 void CommonWidget::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void CommonWidget::saveSettings(QSettings *pSettings, const QString &pFileName) const
+{
+    Q_UNUSED(pSettings);
+    Q_UNUSED(pFileName);
 
     // Nothing to do by default...
 }

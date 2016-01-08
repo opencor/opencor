@@ -445,7 +445,7 @@ void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
     // Retrieve the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->loadSettings(pSettings);
+        mContentsWidget->loadSettings(pSettings, mFileName);
     pSettings->endGroup();
 }
 
@@ -460,7 +460,7 @@ void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->saveSettings(pSettings);
+        mContentsWidget->saveSettings(pSettings, mFileName);
     pSettings->endGroup();
 }
 
