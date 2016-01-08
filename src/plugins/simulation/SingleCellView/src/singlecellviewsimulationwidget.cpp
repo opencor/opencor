@@ -1221,7 +1221,7 @@ void SingleCellViewSimulationWidget::on_actionDevelopmentMode_triggered()
     if (!mGui->actionDevelopmentMode->isChecked())
         Core::FileManager::instance()->setModified(mFileName, false);
 
-    checkSimulationDataModified(mFileName, mSimulation->data()->isModified());
+    checkSimulationDataModified(mSimulation->data()->isModified());
     // Note: to call checkSimulationDataModified() will, in the case the
     //       development mode has just been disabled, ensure that the reset
     //       button is properly enabled/disabled...
@@ -2042,13 +2042,12 @@ void SingleCellViewSimulationWidget::simulationError(const QString &pMessage,
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::checkSimulationDataModified(const QString &pFileName,
-                                                                 const bool &pIsModified)
+void SingleCellViewSimulationWidget::checkSimulationDataModified(const bool &pIsModified)
 {
     // We are dealing with the current simulation
 
     if (mGui->actionDevelopmentMode->isChecked())
-        Core::FileManager::instance()->setModified(pFileName, pIsModified);
+        Core::FileManager::instance()->setModified(mFileName, pIsModified);
     else
         mGui->actionResetModelParameters->setEnabled(pIsModified);
 }
@@ -2059,7 +2058,7 @@ void SingleCellViewSimulationWidget::simulationDataModified(const bool &pIsModif
 {
     // Update our modified state
 
-    checkSimulationDataModified(mFileName, pIsModified);
+    checkSimulationDataModified(pIsModified);
 }
 
 //==============================================================================
@@ -2393,7 +2392,7 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
     //       resulting in some time overhead, so we check things here
     //       instead...
 
-    checkSimulationDataModified(mFileName, mSimulation->data()->isModified());
+    checkSimulationDataModified(mSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
 
