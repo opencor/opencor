@@ -112,7 +112,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mSimulationResultsSize(0),
-    mCheckResultsSimulations(SingleCellViewSimulations()),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
@@ -1921,7 +1920,7 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
     updateSimulationMode();
 
-    checkResults(mSimulation);
+    checkResults();
 }
 
 //==============================================================================
@@ -1938,7 +1937,7 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
-        checkResults(mSimulation);
+        checkResults();
     }
 }
 
@@ -2586,30 +2585,8 @@ void SingleCellViewSimulationWidget::checkResults(const bool &pForceUpdateResult
 
     if (   mSimulation->isRunning()
         || (simulationResultsSize != mSimulation->results()->size())) {
-        // Note: we cannot ask QTimer::singleShot() to call checkResults() since
-        //       it expects a pointer to a simulation as a parameter, so instead
-        //       we call a method with no arguments that will make use of our
-        //       list to know which simulation should be passed as an argument
-        //       to checkResults()...
-
-        mCheckResultsSimulations << mSimulation;
-
-        QTimer::singleShot(0, this, SLOT(callCheckResults()));
+        QTimer::singleShot(0, this, SLOT(checkResults()));
     }
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::callCheckResults()
-{
-    // Retrieve the simulation for which we want to call checkResults() and then
-    // call checkResults() for it
-
-    SingleCellViewSimulation *simulation = mCheckResultsSimulations.first();
-
-    mCheckResultsSimulations.removeFirst();
-
-    checkResults(simulation);
 }
 
 //==============================================================================

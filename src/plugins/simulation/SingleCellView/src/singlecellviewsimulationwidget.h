@@ -168,7 +168,6 @@ private:
     ErrorType mErrorType;
 
     qulonglong mSimulationResultsSize;
-    SingleCellViewSimulations mCheckResultsSimulations;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
@@ -206,7 +205,6 @@ private:
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize);
-    void checkResults(const bool &pForceUpdateResults = false);
 
     QVariant value(Core::Property *pProperty) const;
 
@@ -279,7 +277,7 @@ private Q_SLOTS:
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
-    void callCheckResults();
+    void checkResults(const bool &pForceUpdateResults = false);
 };
 
 //==============================================================================
