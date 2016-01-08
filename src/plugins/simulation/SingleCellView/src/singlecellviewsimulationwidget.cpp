@@ -2414,8 +2414,7 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSimulation,
-                                                   const qulonglong &pSize)
+void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
 {
     // Update the modified state of the simulation's corresponding file
     // Note: normally, our simulation worker would, for each point interval,
@@ -2425,7 +2424,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
     //       resulting in some time overhead, so we check things here
     //       instead...
 
-    checkSimulationDataModified(mFileName, pSimulation->data()->isModified());
+    checkSimulationDataModified(mFileName, mSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
 
@@ -2530,7 +2529,7 @@ void SingleCellViewSimulationWidget::updateResults(SingleCellViewSimulation *pSi
     //       that cannot be handled by us, meaning that our central widget would
     //       show a message rather than us...
 
-    double simulationProgress = mSimulationResultsSize/pSimulation->size();
+    double simulationProgress = mSimulationResultsSize/mSimulation->size();
 
     if (isVisible()) {
         mProgressBarWidget->setValue(simulationProgress);
@@ -2577,7 +2576,7 @@ void SingleCellViewSimulationWidget::checkResults(const bool &pForceUpdateResult
         || (simulationResultsSize != mSimulationResultsSize)) {
         mSimulationResultsSize = simulationResultsSize;
 
-        updateResults(mSimulation, simulationResultsSize);
+        updateResults(simulationResultsSize);
     }
 
     // Ask to recheck our simulation's results, but only if our simulation is

@@ -203,8 +203,7 @@ private:
     void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
 
-    void updateResults(SingleCellViewSimulation *pSimulation,
-                       const qulonglong &pSize);
+    void updateResults(const qulonglong &pSize);
 
     QVariant value(Core::Property *pProperty) const;
 
