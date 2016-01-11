@@ -900,6 +900,15 @@ void SingleCellViewSimulationWidget::setSizes(const QIntList &pSizes)
 
 //==============================================================================
 
+SingleCellViewContentsWidget * SingleCellViewSimulationWidget::contentsWidget() const
+{
+    // Return our contents widget
+
+    return mContentsWidget;
+}
+
+//==============================================================================
+
 int SingleCellViewSimulationWidget::tabBarPixmapSize() const
 {
     // Return the size of a file tab icon

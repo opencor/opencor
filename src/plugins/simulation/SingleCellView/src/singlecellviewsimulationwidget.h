@@ -111,6 +111,8 @@ public:
 
     void setSizes(const QIntList &pSizes);
 
+    SingleCellViewContentsWidget * contentsWidget() const;
+
     QIcon fileTabIcon() const;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);

@@ -20,11 +20,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "singlecellviewcontentswidget.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QIcon>
 #include <QLayout>
 #include <QSettings>
@@ -42,6 +45,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mPlugin(pPlugin),
     mSettingsGroup(QString()),
     mSimulationWidgetSizes(QIntList()),
+    mContentsWidgetSizes(QIntList()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
 {
@@ -50,6 +54,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
 //==============================================================================
 
 static const auto SettingsSizes = QStringLiteral("Sizes");
+static const auto SettingsContentsSizes = QStringLiteral("ContentsSizes");
 
 //==============================================================================
 
@@ -62,18 +67,24 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 
     mSettingsGroup = pSettings->group();
 
-    // Retrieve the sizes of our simulation widget
+    // Retrieve the sizes of our simulation widget and of its contents widget
+
+    QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
+                                                       << 0.75*qApp->desktop()->screenGeometry().width();
 
     mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
+    mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our splitter sizes
+    // Keep track of the sizes of our simulation widget and those of its
+    // contents widget
 
     pSettings->setValue(SettingsSizes, qIntListToVariantList(mSimulationWidgetSizes));
+    pSettings->setValue(SettingsContentsSizes, qIntListToVariantList(mContentsWidgetSizes));
 }
 
 //==============================================================================
@@ -110,11 +121,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
 
-        // Keep track of the sizes of our editing widget and those of its
-        // metadata details
+        // Keep track of the sizes of our simulation widget and those of its
+        // contents widget
 
         connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
+
+        connect(mSimulationWidget->contentsWidget(), SIGNAL(splitterMoved(const QIntList &)),
+                this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -135,9 +149,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulationWidget->initialize();
     }
 
-    // Update the sizes of our new simualtion widget
+    // Update the sizes of our new simualtion widget and of its contents widget
 
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
+    mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
 
     // Hide our previous simulation widget and show our new one
 
@@ -303,6 +318,16 @@ void SingleCellViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
     // sizes
 
     mSimulationWidgetSizes = pSizes;
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::contentsWidgetSplitterMoved(const QIntList &pSizes)
+{
+    // The splitter of our contents widget has moved, so keep track of its new
+    // sizes
+
+    mContentsWidgetSizes = pSizes;
 }
 
 //==============================================================================

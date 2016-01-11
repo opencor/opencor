@@ -78,12 +78,14 @@ private:
     QString mSettingsGroup;
 
     QIntList mSimulationWidgetSizes;
+    QIntList mContentsWidgetSizes;
 
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
 
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
+    void contentsWidgetSplitterMoved(const QIntList &pSizes);
 };
 
 //==============================================================================
