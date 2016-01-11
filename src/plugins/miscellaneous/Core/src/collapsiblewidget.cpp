@@ -296,9 +296,10 @@ void CollapsibleWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our collapsable state
 
-    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i) {
         if (mHeaders[i]->isCollapsable())
             setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
+    }
 }
 
 //==============================================================================
