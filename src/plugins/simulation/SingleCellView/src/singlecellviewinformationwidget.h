@@ -68,10 +68,10 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    SingleCellViewInformationSimulationWidget * simulationWidget();
-    SingleCellViewInformationSolversWidget * solversWidget();
-    SingleCellViewInformationGraphsWidget * graphsWidget();
-    SingleCellViewInformationParametersWidget * parametersWidget();
+    SingleCellViewInformationSimulationWidget * simulationWidget() const;
+    SingleCellViewInformationSolversWidget * solversWidget() const;
+    SingleCellViewInformationGraphsWidget * graphsWidget() const;
+    SingleCellViewInformationParametersWidget * parametersWidget() const;
 
     void finishEditing(const bool &pPausedSimulation);
 

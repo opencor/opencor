@@ -57,8 +57,8 @@ public:
     virtual void loadSettings(QSettings *pSettings, const QString &pFileName);
     virtual void saveSettings(QSettings *pSettings, const QString &pFileName) const;
 
-    SingleCellViewInformationWidget * informationWidget();
-    SingleCellViewGraphPanelsWidget * graphPanelsWidget();
+    SingleCellViewInformationWidget * informationWidget() const;
+    SingleCellViewGraphPanelsWidget * graphPanelsWidget() const;
 
 private:
     SingleCellViewInformationWidget *mInformationWidget;

@@ -113,7 +113,7 @@ void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings,
 
 //==============================================================================
 
-SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidget()
+SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidget() const
 {
     // Return our information widget
 
@@ -122,7 +122,7 @@ SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidge
 
 //==============================================================================
 
-SingleCellViewGraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget()
+SingleCellViewGraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget() const
 {
     // Return our graph panels widget
 

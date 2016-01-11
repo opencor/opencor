@@ -191,7 +191,7 @@ void SingleCellViewInformationWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::simulationWidget()
+SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::simulationWidget() const
 {
     // Return our simulation widget
 
@@ -200,7 +200,7 @@ SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::sim
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solversWidget()
+SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solversWidget() const
 {
     // Return our solvers widget
 
@@ -209,7 +209,7 @@ SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solver
 
 //==============================================================================
 
-SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsWidget()
+SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsWidget() const
 {
     // Return our graphs widget
 
@@ -218,7 +218,7 @@ SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsW
 
 //==============================================================================
 
-SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::parametersWidget()
+SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::parametersWidget() const
 {
     // Return our parameters widget
 
