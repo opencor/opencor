@@ -109,6 +109,8 @@ public:
     void initialize(const bool &pReloadingView = false);
     void finalize(const bool &pReloadingView = false);
 
+    void setSizes(const QIntList &pSizes);
+
     QIcon fileTabIcon() const;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
@@ -155,7 +157,6 @@ private:
     QLabel *mDelayValueWidget;
 
     QSplitter *mSplitterWidget;
-    QIntList mSplitterWidgetSizes;
 
     SingleCellViewContentsWidget *mContentsWidget;
 
@@ -221,6 +222,9 @@ private:
 
     void checkSimulationDataModified(const bool &pIsModified);
 
+Q_SIGNALS:
+    void splitterMoved(const QIntList &pSizes);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();
@@ -239,6 +243,8 @@ private Q_SLOTS:
     void on_actionSedmlExportSedmlFile_triggered();
     void on_actionSedmlExportCombineArchive_triggered();
 
+    void emitSplitterMoved();
+
     void simulationDataExport();
 
     void updateDelayValue(const double &pDelayValue);
@@ -254,8 +260,6 @@ private Q_SLOTS:
                          const ErrorType &pErrorType = General);
 
     void simulationDataModified(const bool &pIsModified);
-
-    void splitterWidgetMoved();
 
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);

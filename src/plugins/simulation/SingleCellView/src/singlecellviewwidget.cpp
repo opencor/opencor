@@ -41,10 +41,15 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     ViewWidget(pParent),
     mPlugin(pPlugin),
     mSettingsGroup(QString()),
+    mSimulationWidgetSizes(QIntList()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
 {
 }
+
+//==============================================================================
+
+static const auto SettingsSizes = QStringLiteral("Sizes");
 
 //==============================================================================
 
@@ -56,15 +61,19 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
     // initialize())...
 
     mSettingsGroup = pSettings->group();
+
+    // Retrieve the sizes of our simulation widget
+
+    mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 {
-    Q_UNUSED(pSettings);
-    // Note: our view is such that our settings are actually saved when calling
-    //       finalize() on the last file...
+    // Keep track of our splitter sizes
+
+    pSettings->setValue(SettingsSizes, qIntListToVariantList(mSimulationWidgetSizes));
 }
 
 //==============================================================================
@@ -101,6 +110,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
 
+        // Keep track of the sizes of our editing widget and those of its
+        // metadata details
+
+        connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
+                this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
+
         // Keep track of our editing widget and add it to ourselves
 
         mSimulationWidgets.insert(pFileName, mSimulationWidget);
@@ -119,6 +134,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget->initialize();
     }
+
+    // Update the sizes of our new simualtion widget
+
+    mSimulationWidget->setSizes(mSimulationWidgetSizes);
 
     // Hide our previous simulation widget and show our new one
 
@@ -274,6 +293,16 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->fileClosed(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
+{
+    // The splitter of our simulation widget has moved, so keep track of its new
+    // sizes
+
+    mSimulationWidgetSizes = pSizes;
 }
 
 //==============================================================================

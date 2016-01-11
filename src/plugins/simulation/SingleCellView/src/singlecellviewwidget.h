@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "corecliutils.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -76,8 +77,13 @@ private:
 
     QString mSettingsGroup;
 
+    QIntList mSimulationWidgetSizes;
+
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
+
+private Q_SLOTS:
+    void simulationWidgetSplitterMoved(const QIntList &pSizes);
 };
 
 //==============================================================================

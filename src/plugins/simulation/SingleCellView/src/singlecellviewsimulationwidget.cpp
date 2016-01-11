@@ -109,7 +109,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mSimulation(0),
     mProgress(-1),
     mLockedDevelopmentMode(false),
-    mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mSimulationResultsSize(0),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
@@ -243,7 +242,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mSplitterWidget = new QSplitter(Qt::Vertical, this);
 
     connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterWidgetMoved()));
+            this, SLOT(emitSplitterMoved()));
 
     // Create our contents widget
 
@@ -429,19 +428,8 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsSizes = QStringLiteral("Sizes");
-
-//==============================================================================
-
 void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve and set the sizes of our splitter
-
-    mSplitterWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
-
-    if (mSplitterWidgetSizes.count())
-        mSplitterWidget->setSizes(mSplitterWidgetSizes);
-
     // Retrieve the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
@@ -453,10 +441,6 @@ void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our splitter sizes
-
-    pSettings->setValue(SettingsSizes, qIntListToVariantList(mSplitterWidgetSizes));
-
     // Keep track of the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
@@ -901,6 +885,17 @@ void SingleCellViewSimulationWidget::finalize(const bool &pReloadingView)
 
     informationWidget->graphsWidget()->finalize(mFileName);
     informationWidget->parametersWidget()->finalize(mFileName, pReloadingView);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::setSizes(const QIntList &pSizes)
+{
+    // Set the sizes of our spliter widget, but only if there effectively are
+    // some
+
+    if (pSizes.count())
+        mSplitterWidget->setSizes(pSizes);
 }
 
 //==============================================================================
@@ -1860,6 +1855,15 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 //==============================================================================
 
+void SingleCellViewSimulationWidget::emitSplitterMoved()
+{
+    // Let people know that our splitter has been moved
+
+    emit splitterMoved(mSplitterWidget->sizes());
+}
+
+//==============================================================================
+
 void SingleCellViewSimulationWidget::simulationDataExport()
 {
     // Export our simulation data results
@@ -2059,15 +2063,6 @@ void SingleCellViewSimulationWidget::simulationDataModified(const bool &pIsModif
     // Update our modified state
 
     checkSimulationDataModified(pIsModified);
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::splitterWidgetMoved()
-{
-    // Our splitter has been moved, so keep track of its new sizes
-
-    mSplitterWidgetSizes = mSplitterWidget->sizes();
 }
 
 //==============================================================================
