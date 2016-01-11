@@ -20,7 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "collapsiblewidget.h"
 #include "singlecellviewcontentswidget.h"
+#include "singlecellviewinformationwidget.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
@@ -46,6 +48,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mSettingsGroup(QString()),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
+    mCollapsibleWidgetCollapsed(QMap<int, bool>()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
 {
@@ -113,6 +116,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Retrieve the simulation widget associated with the given file, if any
 
     SingleCellViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
+    SingleCellViewContentsWidget *contentsWidget = 0;
+    Core::CollapsibleWidget *collapsibleWidget = 0;
 
     mSimulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -121,14 +126,20 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
 
-        // Keep track of the sizes of our simulation widget and those of its
-        // contents widget
+        // Keep track of various things related our simulation widget and its
+        // children
+
+        contentsWidget = mSimulationWidget->contentsWidget();
+        collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
 
         connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
 
-        connect(mSimulationWidget->contentsWidget(), SIGNAL(splitterMoved(const QIntList &)),
+        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
+
+        connect(collapsibleWidget, SIGNAL(collapsed(const int &, const bool &)),
+                this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -136,23 +147,43 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         layout()->addWidget(mSimulationWidget);
 
-        // Load our simulation widget's settings
+        // Load our simulation widget's settings and those of some of its
+        // contents' children, if needed
 
         QSettings settings;
 
         settings.beginGroup(mSettingsGroup);
             mSimulationWidget->loadSettings(&settings);
+
+            if (mSimulationWidgets.count() == 1) {
+                // This is our first simulation widget, so keep track of some of
+                // its contents' children's settings
+
+                for (int i = 0, iMax = collapsibleWidget->count(); i < iMax; ++i)
+                    mCollapsibleWidgetCollapsed.insert(i, collapsibleWidget->isCollapsed(i));
+            }
         settings.endGroup();
 
         // Initialise our simulation widget
 
         mSimulationWidget->initialize();
+    } else {
+        contentsWidget = mSimulationWidget->contentsWidget();
+        collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
     }
 
-    // Update the sizes of our new simualtion widget and of its contents widget
+    // Update our new simualtion widget and its children, if needed
 
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
-    mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
+    contentsWidget->setSizes(mContentsWidgetSizes);
+
+    if (mSimulationWidgets.count() > 1) {
+        // We are not dealing with our first (created) simulation widget, which
+        // means that we need to update it
+
+        foreach (const int &index, mCollapsibleWidgetCollapsed.keys())
+            collapsibleWidget->setCollapsed(index, mCollapsibleWidgetCollapsed.value(index));
+    }
 
     // Hide our previous simulation widget and show our new one
 
@@ -179,11 +210,24 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     if (simulationWidget) {
         // There is a simulation widget for the given file name, so save its
-        // settings
+        // settings and those of some of its contents' children, if needed
 
         QSettings settings;
 
         settings.beginGroup(mSettingsGroup);
+            if (mSimulationWidgets.count() == 1) {
+                // This is our last simulation widget, so make sure that its
+                // contents' children's settings are up to date
+                // Note: indeed, say that we are closing OpenCOR after having
+                //       modified a collapsible widget and that it's not the one
+                //       that is closed last...
+
+                Core::CollapsibleWidget *collapsibleWidget = simulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
+
+                foreach (const int &index, mCollapsibleWidgetCollapsed.keys())
+                    collapsibleWidget->setCollapsed(index, mCollapsibleWidgetCollapsed.value(index));
+            }
+
             simulationWidget->saveSettings(&settings);
         settings.endGroup();
 
@@ -328,6 +372,17 @@ void SingleCellViewWidget::contentsWidgetSplitterMoved(const QIntList &pSizes)
     // sizes
 
     mContentsWidgetSizes = pSizes;
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
+                                                      const bool &pCollapsed)
+{
+    // One of the widgets in our collapsible widget has been collapsed or
+    // expanded, so keep track of that fact
+
+    mCollapsibleWidgetCollapsed.insert(pIndex, pCollapsed);
 }
 
 //==============================================================================

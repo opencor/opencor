@@ -191,6 +191,15 @@ void SingleCellViewInformationWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+Core::CollapsibleWidget * SingleCellViewInformationWidget::collapsibleWidget() const
+{
+    // Return our collapsible widget
+
+    return mCollapsibleWidget;
+}
+
+//==============================================================================
+
 SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::simulationWidget() const
 {
     // Return our simulation widget
