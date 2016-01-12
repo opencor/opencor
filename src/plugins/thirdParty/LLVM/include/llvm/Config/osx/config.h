@@ -141,7 +141,7 @@
 /* #undef HAVE_LIBSHELL32 */
 
 /* Define to 1 if you have the 'z' library (-lz). */
-#define HAVE_LIBZ 1
+/* #undef HAVE_LIBZ */
 
 /* Define to 1 if you have the 'edit' library (-ledit). */
 /* #undef HAVE_LIBEDIT */
@@ -424,7 +424,7 @@
 /* #undef LLVM_DATADIR */
 
 /* Target triple LLVM will generate code for by default */
-#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.0.0"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.2.0"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
@@ -446,7 +446,7 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOST_TRIPLE "x86_64-apple-darwin15.0.0"
+#define LLVM_HOST_TRIPLE "x86_64-apple-darwin15.2.0"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
@@ -500,10 +500,10 @@
 #define LLVM_VERSION_MINOR 7
 
 /* Patch version of the LLVM API */
-#define LLVM_VERSION_PATCH 0
+#define LLVM_VERSION_PATCH 1
 
 /* LLVM version string */
-#define LLVM_VERSION_STRING "3.7.0"
+#define LLVM_VERSION_STRING "3.7.1"
 
 /* Define if we link Polly to the tools */
 /* #undef LINK_POLLY_INTO_TOOLS */
@@ -535,13 +535,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.7.0"
+#define PACKAGE_STRING "LLVM 3.7.1"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.7.0"
+#define PACKAGE_VERSION "3.7.1"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

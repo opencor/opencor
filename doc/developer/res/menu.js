@@ -25,6 +25,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 0, "label": "Git repository", "link": "https://github.com/opencor/opencor", "directLink": true },
                                 { "level": 0, "label": "Latest commits", "link": "https://github.com/opencor/opencor/commits", "directLink": true },
                                 { "level": 0, "label": "Current bugs, feature requests, etc.", "link": "https://github.com/opencor/opencor/issues", "directLink": true },
+                                { "level": 0, "label": "Continuous integration", "link": "https://travis-ci.org/opencor/opencor", "directLink": true },
                                 { "separator": true },
                                 { "level": 0, "label": "Published article", "link": "http://dx.doi.org/10.3389/fphys.2015.00026", "directLink": true },
                                 { "separator": true },
