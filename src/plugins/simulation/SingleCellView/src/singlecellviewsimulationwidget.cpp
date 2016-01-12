@@ -2190,7 +2190,8 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
 
         // Update the graph's data
 
-        updateGraphData(graph, mSimulation->results()->size());
+        if (mSimulation)
+            updateGraphData(graph, mSimulation->results()->size());
 
         // Keep track of the plot that needs to be updated and replotted
 
