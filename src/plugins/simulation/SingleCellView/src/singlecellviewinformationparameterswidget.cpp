@@ -130,6 +130,8 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
     // actions if none exists or if we are reloading ourselves
 
     if (!mPropertyEditor || pReloadingView) {
+        Core::PropertyEditorWidget *oldPropertyEditor = mPropertyEditor;
+
         mPropertyEditor = new Core::PropertyEditorWidget(this);
         mContextMenu = new QMenu(this);
 
@@ -172,10 +174,9 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
 
         addWidget(mPropertyEditor);
 
-        // Delete our 'old' property editor if needed (see finalize())
+        // Delete our 'old' property editor, if any (see finalize())
 
-        if (pReloadingView)
-            delete mPropertyEditor;
+        delete oldPropertyEditor;
     }
 
     // Set the value of the property editor's horizontal scroll bar
