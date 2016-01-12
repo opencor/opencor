@@ -51,8 +51,8 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     Core::CommonWidget(pParent),
     mPropertyEditor(0),
     mContextMenu(0),
-    mParameters(0),
-    mParameterActions(0),
+    mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
+    mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QIntList()),
     mSimulation(0),
     mHorizontalScrollBarValue(0)
@@ -135,9 +135,6 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
         mPropertyEditor = new Core::PropertyEditorWidget(this);
         mContextMenu = new QMenu(this);
 
-        mParameters = new QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>();
-        mParameterActions = new QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>();
-
         // Populate our property editor and context menu
 
         populateModel(pRuntime);
@@ -203,7 +200,7 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
 
 void SingleCellViewInformationParametersWidget::finalize(const bool &pReloadingView)
 {
-    // Delete our property editor, context menu, parameters and parameter
+    // Delete/clear our property editor, context menu, parameters and parameter
     // actions
     // Note: we don't want to delete our 'old' property editor straightaway when
     //       reloading a file. Indeed, if we were to do so, the area where it
@@ -216,8 +213,8 @@ void SingleCellViewInformationParametersWidget::finalize(const bool &pReloadingV
 
     delete mContextMenu;
 
-    delete mParameters;
-    delete mParameterActions;
+    mParameters.clear();
+    mParameterActions.clear();
 }
 
 //==============================================================================
@@ -233,7 +230,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
     // Update our property editor's data
 
     foreach (Core::Property *property, mPropertyEditor->properties()) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters->value(property);
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
             switch (parameter->type()) {
@@ -286,7 +283,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 {
     // Update our simulation data
 
-    CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters->value(pProperty);
+    CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(pProperty);
 
     if (parameter) {
         switch (parameter->type()) {
@@ -340,7 +337,7 @@ QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SingleCellVi
 {
     // Return our parameters
 
-    return *mParameters;
+    return mParameters;
 }
 
 //==============================================================================
@@ -475,7 +472,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
         // Keep track of the link between our property value and parameter
 
-        mParameters->insert(property, parameter);
+        mParameters.insert(property, parameter);
 
         // Keep track of our VOI property, if it is the one
 
@@ -533,7 +530,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
     // Keep track of the parameter associated with our first main menu item
 
-    mParameterActions->insert(voiAction, pRuntime->variableOfIntegration());
+    mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
 
     // Populate our context menu with the parameters
 
@@ -609,7 +606,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         // Keep track of the parameter associated with our model parameter
         // action
 
-        mParameterActions->insert(parameterAction, parameter);
+        mParameterActions.insert(parameterAction, parameter);
     }
 }
 
@@ -625,7 +622,7 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos(const bool &pUp
     // Update the extra info of all our property editor's properties
 
     foreach (Core::Property *property, mPropertyEditor->properties()) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters->value(property);
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
             QString parameterType = QString();
@@ -727,8 +724,8 @@ void SingleCellViewInformationParametersWidget::emitGraphRequired()
     // Let people know that we want to plot the current parameter against
     // another
 
-    emit graphRequired(mParameterActions->value(qobject_cast<QAction *>(sender())),
-                       mParameters->value(mPropertyEditor->currentProperty()));
+    emit graphRequired(mParameterActions.value(qobject_cast<QAction *>(sender())),
+                       mParameters.value(mPropertyEditor->currentProperty()));
 }
 
 //==============================================================================

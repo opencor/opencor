@@ -93,8 +93,8 @@ private:
     Core::PropertyEditorWidget *mPropertyEditor;
     QMenu *mContextMenu;
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameterActions;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QIntList mColumnWidths;
 
