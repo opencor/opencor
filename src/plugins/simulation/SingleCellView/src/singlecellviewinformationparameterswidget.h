@@ -103,12 +103,11 @@ private:
     int mHorizontalScrollBarValue;
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
-    void populateContextMenu(QMenu *pContextMenu,
-                             CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     void updateExtraInfos(const bool &pUpdateToolTips = true);
 
-    void retranslateContextMenu(QMenu *pContextMenu);
+    void retranslateContextMenu();
 
 Q_SIGNALS:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,

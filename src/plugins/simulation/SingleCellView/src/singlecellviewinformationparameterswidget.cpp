@@ -50,7 +50,6 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     QStackedWidget(pParent),
     Core::CommonWidget(pParent),
     mPropertyEditor(0),
-    mContextMenu(0),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QIntList()),
@@ -65,16 +64,22 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
         mColumnWidths << tempPropertyEditor->columnWidth(i);
 
     delete tempPropertyEditor;
+
+    // Create our context menu
+
+    mContextMenu = new QMenu(this);
 }
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::retranslateContextMenu(QMenu *pContextMenu)
+void SingleCellViewInformationParametersWidget::retranslateContextMenu()
 {
-    // Retranslate our context menu
+    // Retranslate our context menu, in case it has been populated
 
-    pContextMenu->actions()[0]->setText(tr("Plot Against Variable of Integration"));
-    pContextMenu->actions()[1]->setText(tr("Plot Against"));
+    if (mContextMenu->actions().count() >= 2) {
+        mContextMenu->actions()[0]->setText(tr("Plot Against Variable of Integration"));
+        mContextMenu->actions()[1]->setText(tr("Plot Against"));
+    }
 }
 
 //==============================================================================
@@ -86,8 +91,7 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
     if (mPropertyEditor)
         mPropertyEditor->retranslateUi();
 
-    if (mContextMenu)
-        retranslateContextMenu(mContextMenu);
+    retranslateContextMenu();
 
     // Retranslate the extra info of all our parameters
 
@@ -133,12 +137,11 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
         Core::PropertyEditorWidget *oldPropertyEditor = mPropertyEditor;
 
         mPropertyEditor = new Core::PropertyEditorWidget(this);
-        mContextMenu = new QMenu(this);
 
         // Populate our property editor and context menu
 
         populateModel(pRuntime);
-        populateContextMenu(mContextMenu, pRuntime);
+        populateContextMenu(pRuntime);
 
         // We want our own context menu for our property editor
 
@@ -211,7 +214,7 @@ void SingleCellViewInformationParametersWidget::finalize(const bool &pReloadingV
     if (!pReloadingView)
         delete mPropertyEditor;
 
-    delete mContextMenu;
+    mContextMenu->clear();
 
     mParameters.clear();
     mParameterActions.clear();
@@ -508,19 +511,18 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pContextMenu,
-                                                                    CellMLSupport::CellmlFileRuntime *pRuntime)
+void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Create our two main menu items
 
-    QAction *voiAction = pContextMenu->addAction(QString());
-    QMenu *plotAgainstMenu = new QMenu(pContextMenu);
+    QAction *voiAction = mContextMenu->addAction(QString());
+    QMenu *plotAgainstMenu = new QMenu(mContextMenu);
 
-    pContextMenu->addAction(plotAgainstMenu->menuAction());
+    mContextMenu->addAction(plotAgainstMenu->menuAction());
 
     // Initialise our two main menu items
 
-    retranslateContextMenu(pContextMenu);
+    retranslateContextMenu();
 
     // Create a connection to handle the graph requirement against our variable
     // of integration
