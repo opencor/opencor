@@ -77,9 +77,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation);
     void finalize();
@@ -95,11 +92,7 @@ private:
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    QIntList mColumnWidths;
-
     SingleCellViewSimulation *mSimulation;
-
-    int mHorizontalScrollBarValue;
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
@@ -118,11 +111,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void propertyEditorContextMenu(const QPoint &pPosition) const;
-
-    void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
-
-    void propertyEditorSectionResized(const int &pLogicalIndex,
-                                      const int &pOldSize, const int &pNewSize);
 
     void propertyChanged(Core::Property *pProperty);
 

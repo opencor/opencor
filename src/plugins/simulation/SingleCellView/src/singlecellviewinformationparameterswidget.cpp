@@ -51,23 +51,32 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     Core::CommonWidget(pParent),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mColumnWidths(QIntList()),
-    mSimulation(0),
-    mHorizontalScrollBarValue(0)
+    mSimulation(0)
 {
-    // Determine the default width of each column of our property editors
-
-    Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
-
-    for (int i = 0, iMax = tempPropertyEditor->header()->count(); i < iMax; ++i)
-        mColumnWidths << tempPropertyEditor->columnWidth(i);
-
-    delete tempPropertyEditor;
-
     // Create our property editor and context menu
 
     mPropertyEditor = new Core::PropertyEditorWidget(this);
     mContextMenu = new QMenu(this);
+
+    // We want our own context menu for our property editor
+
+    mPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(propertyEditorContextMenu(const QPoint &)));
+
+    // Keep track of when the user changes a property value
+
+    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(propertyChanged(Core::Property *)));
+
+    // Add our new property editor to ourselves
+
+    addWidget(mPropertyEditor);
+
+    // Set our retrieved property editor as our current widget
+
+    setCurrentWidget(mPropertyEditor);
 }
 
 //==============================================================================
@@ -99,28 +108,6 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsColumnWidths = QStringLiteral("ColumnWidths");
-
-//==============================================================================
-
-void SingleCellViewInformationParametersWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the width of each column of our property editors
-
-    mColumnWidths = qVariantListToIntList(pSettings->value(SettingsColumnWidths, qIntListToVariantList(mColumnWidths)).toList());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the width of each column of our current property editor
-
-    pSettings->setValue(SettingsColumnWidths, qIntListToVariantList(mColumnWidths));
-}
-
-//==============================================================================
-
 void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                            SingleCellViewSimulation *pSimulation)
 {
@@ -133,55 +120,10 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
     populateModel(pRuntime);
     populateContextMenu(pRuntime);
 
-    // We want our own context menu for our property editor
-
-    mPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(propertyEditorContextMenu(const QPoint &)));
-
-    // Keep track of changes to the horizontal bar's value
-
-    connect(mPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
-            this, SLOT(propertyEditorHorizontalScrollBarValueChanged(const int &)));
-
-    // Keep track of changes to columns' width
-
-    connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
-
     // Keep track of when some of the model's data has changed
 
     connect(pSimulation->data(), SIGNAL(updated(const double &)),
             this, SLOT(updateParameters(const double &)));
-
-    // Keep track of when the user changes a property value
-
-    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(propertyChanged(Core::Property *)));
-
-    // Add our new property editor to ourselves
-
-    addWidget(mPropertyEditor);
-
-    // Set the value of the property editor's horizontal scroll bar
-
-    mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
-
-    // Set our property editor's columns' width
-
-    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
-        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
-
-    // Set our retrieved property editor as our current widget
-
-    setCurrentWidget(mPropertyEditor);
-
-    // Update the extra info of all our parameters
-    // Note: this is in case the user changed the locale and then switched to a
-    //       different file...
-
-    updateExtraInfos();
 }
 
 //==============================================================================
@@ -644,28 +586,6 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
     // Generate and show the context menu
 
     mContextMenu->exec(QCursor::pos());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationParametersWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
-{
-    // Keep track of the property editor's horizontal scroll bar value
-
-    mHorizontalScrollBarValue = pValue;
-}
-
-//==============================================================================
-
-void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(const int &pLogicalIndex,
-                                                                             const int &pOldSize,
-                                                                             const int &pNewSize)
-{
-    Q_UNUSED(pOldSize);
-
-    // Keep track of the new column width
-
-    mColumnWidths[pLogicalIndex] = pNewSize;
 }
 
 //==============================================================================
