@@ -156,7 +156,7 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
                                                        CellMLSupport::CellmlFileRuntime *pRuntime,
                                                        SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the context menu, file name, runtime and simulation
+    // Keep track of the file name, runtime and simulation
 
     mFileName = pFileName;
 
@@ -652,8 +652,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
                 foreach (QObject *object, menu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);
 
-                    if (    subMenu
-                        && !subMenu->menuAction()->text().compare(component)) {
+                    if (subMenu && !subMenu->menuAction()->text().compare(component)) {
                         componentMenu = subMenu;
 
                         break;
