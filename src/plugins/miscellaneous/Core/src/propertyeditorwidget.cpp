@@ -1257,10 +1257,9 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 PropertyEditorWidget::~PropertyEditorWidget()
 {
-    // Delete some internal objects
+    // Clear ourselves
 
-    foreach (Property *property, mProperties)
-        delete property;
+    clear();
 }
 
 //==============================================================================
@@ -1386,6 +1385,22 @@ QSize PropertyEditorWidget::sizeHint() const
 
         return maximumSize();
     }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::clear()
+{
+    // Clear our data model
+
+    mModel->clear();
+
+    // Delete some internal objects
+
+    foreach (Property *property, mProperties)
+        delete property;
+
+    mProperties.clear();
 }
 
 //==============================================================================

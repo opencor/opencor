@@ -107,7 +107,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const bool &pReloadingView = false);
-    void finalize(const bool &pReloadingView = false);
+    void finalize();
 
     void setSizes(const QIntList &pSizes);
 

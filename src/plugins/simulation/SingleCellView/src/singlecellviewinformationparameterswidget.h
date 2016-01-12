@@ -81,9 +81,8 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation,
-                    const bool &pReloadingView = false);
-    void finalize(const bool &pReloadingView = false);
+                    SingleCellViewSimulation *pSimulation);
+    void finalize();
 
     void finishEditing();
 

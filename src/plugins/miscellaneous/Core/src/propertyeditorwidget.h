@@ -357,6 +357,8 @@ public:
 
     virtual QSize sizeHint() const;
 
+    void clear();
+
     void selectFirstProperty();
 
     PropertyEditorWidgetGuiState * guiState();
