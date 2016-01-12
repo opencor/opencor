@@ -954,16 +954,14 @@ QString Property::extraInfo() const
 
 //==============================================================================
 
-void Property::setExtraInfo(const QString &pExtraInfo,
-                            const bool &pUpdateToolTip)
+void Property::setExtraInfo(const QString &pExtraInfo)
 {
     // Set our extra info
 
     if (pExtraInfo.compare(mExtraInfo)) {
         mExtraInfo = pExtraInfo;
 
-        if (pUpdateToolTip)
-            updateToolTip();
+        updateToolTip();
     }
 }
 

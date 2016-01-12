@@ -244,8 +244,7 @@ public:
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
 
     QString extraInfo() const;
-    void setExtraInfo(const QString &pExtraInfo,
-                      const bool &pUpdateToolTip = true);
+    void setExtraInfo(const QString &pExtraInfo);
 
     bool isVisible() const;
     void setVisible(const bool &pVisible);

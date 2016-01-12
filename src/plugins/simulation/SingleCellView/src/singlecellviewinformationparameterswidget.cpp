@@ -394,20 +394,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Update (well, set here) the extra info of all our parameters
 
-    updateExtraInfos(false);
-
-    // Make sure that the VOI property has its tool tip properly initialised
-    // Note: indeed, to speed the process of populating our model, we call
-    //       Property::setName(), Property::setUnit() and
-    //       Property::setExtraInfo() (through our call to updateExtraInfos())
-    //       by asking them not to update the tool tip (since its time
-    //       consuming). Now, this is fine to do with all the model parameters
-    //       (since their value and, therefore, their tool tip get updated later
-    //       on), but not with the VOI hence we 'manually' update its tool tip
-    //       here...
-
-    if (voiProperty)
-        voiProperty->updateToolTip();
+    updateExtraInfos();
 
     // Expand all our properties
 
@@ -523,7 +510,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSuppor
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateExtraInfos(const bool &pUpdateToolTips)
+void SingleCellViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our property editor's properties
 
@@ -560,7 +547,7 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos(const bool &pUp
                 parameterType = tr("variable of integration");
             }
 
-            property->setExtraInfo(parameterType, pUpdateToolTips);
+            property->setExtraInfo(parameterType);
         }
     }
 }

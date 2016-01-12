@@ -97,7 +97,7 @@ private:
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateExtraInfos(const bool &pUpdateToolTips = true);
+    void updateExtraInfos();
 
     void retranslateContextMenu();
 
