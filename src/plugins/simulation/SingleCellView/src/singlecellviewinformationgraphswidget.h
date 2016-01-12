@@ -125,8 +125,7 @@ private:
 
     int mHorizontalScrollBarValue;
 
-    void populateContextMenu(QMenu *pContextMenu,
-                             CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         SingleCellViewGraphPanelPlotGraph *pGraph,

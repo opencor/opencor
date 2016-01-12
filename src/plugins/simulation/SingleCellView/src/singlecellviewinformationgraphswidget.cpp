@@ -61,7 +61,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
-    mParametersContextMenu(0),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QIntList()),
     mFileNames(QStringList()),
@@ -84,9 +83,10 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
 
     delete tempPropertyEditor;
 
-    // Create our context menu
+    // Create our context menus and populate our main context menu
 
     mContextMenu = new QMenu(this);
+    mParametersContextMenu = new QMenu(this);
 
     mContextMenu->addAction(mGui->actionAddGraph);
     mContextMenu->addSeparator();
@@ -163,13 +163,9 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
     mRuntimes.insert(pFileName, pRuntime);
     mSimulations.insert(pFileName, pSimulation);
 
-    // Create and populate our context menu, if needed
+    // Populate our parameters context menu
 
-    if (!mParametersContextMenu) {
-        mParametersContextMenu = new QMenu(this);
-
-        populateContextMenu(mParametersContextMenu, pRuntime);
-    }
+    populateParametersContextMenu(pRuntime);
 
     // Update the information about our graphs properties and this for all our
     // property editors
@@ -181,11 +177,11 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
 void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
+    // Clear our parameters context menu
+
+    mParametersContextMenu->clear();
+
     // Remove track of various information
-
-    delete mParametersContextMenu;
-
-    mParametersContextMenu = 0;
 
     mFileNames.removeOne(pFileName);
 
@@ -611,13 +607,13 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextMenu,
-                                                                CellMLSupport::CellmlFileRuntime *pRuntime)
+void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    // Populate our context menu with the contents of our context menu
+    // Populate our parameters context menu with the contents of our main
+    // context menu
 
-    pContextMenu->addActions(mContextMenu->actions());
-    pContextMenu->addSeparator();
+    mParametersContextMenu->addActions(mContextMenu->actions());
+    mParametersContextMenu->addSeparator();
 
     // Now, add our model parameters to it
 
@@ -635,7 +631,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
-            QMenu *menu = pContextMenu;
+            QMenu *menu = mParametersContextMenu;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current
@@ -897,9 +893,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     if (pSectionProperty) {
         graphProperties << pSectionProperty;
     } else {
-        foreach (Core::Property *property, mPropertyEditor->properties())
+        foreach (Core::Property *property, mPropertyEditor->properties()) {
             if (property->type() == Core::Property::Section)
                 graphProperties << property;
+        }
     }
 
     // Determine the model list values
