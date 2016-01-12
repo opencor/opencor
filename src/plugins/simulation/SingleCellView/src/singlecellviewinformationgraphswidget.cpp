@@ -61,7 +61,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
-    mContextMenus(QMap<QString, QMenu *>()),
+    mParametersContextMenu(0),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QIntList()),
     mFileNames(QStringList()),
@@ -163,18 +163,12 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
     mRuntimes.insert(pFileName, pRuntime);
     mSimulations.insert(pFileName, pSimulation);
 
-    // Create and populate our context menu
+    // Create and populate our context menu, if needed
 
-    QMenu *contextMenu = mContextMenus.value(pFileName);
+    if (!mParametersContextMenu) {
+        mParametersContextMenu = new QMenu(this);
 
-    if (!contextMenu) {
-        QMenu *contextMenu = new QMenu(this);
-
-        populateContextMenu(contextMenu, pRuntime);
-
-        // Keep track of our new context menu
-
-        mContextMenus.insert(pFileName, contextMenu);
+        populateContextMenu(mParametersContextMenu, pRuntime);
     }
 
     // Update the information about our graphs properties and this for all our
@@ -189,9 +183,9 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
     // Remove track of various information
 
-    delete mContextMenus.value(pFileName);
+    delete mParametersContextMenu;
 
-    mContextMenus.remove(pFileName);
+    mParametersContextMenu = 0;
 
     mFileNames.removeOne(pFileName);
 
@@ -589,7 +583,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
         || (!crtProperty->name().compare(tr("Model")))) {
         mContextMenu->exec(QCursor::pos());
     } else {
-        mContextMenus.value(mFileName)->exec(QCursor::pos());
+        mParametersContextMenu->exec(QCursor::pos());
     }
 }
 

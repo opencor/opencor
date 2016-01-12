@@ -108,8 +108,8 @@ private:
     QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *> mGraphs;
     QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
-    QMap<QString, QMenu *> mContextMenus;
     QMenu *mContextMenu;
+    QMenu *mParametersContextMenu;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
