@@ -848,7 +848,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // Now, we can safely update our parameters widget since our model
         // parameters have been computed
 
-        informationWidget->parametersWidget()->initialize(mFileName, cellmlFileRuntime, mSimulation, pReloadingView);
+        informationWidget->parametersWidget()->initialize(cellmlFileRuntime, mSimulation, pReloadingView);
 
         // Update our plots since our 'new' simulation properties may have
         // affected them
@@ -884,7 +884,7 @@ void SingleCellViewSimulationWidget::finalize(const bool &pReloadingView)
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
     informationWidget->graphsWidget()->finalize(mFileName);
-    informationWidget->parametersWidget()->finalize(mFileName, pReloadingView);
+    informationWidget->parametersWidget()->finalize(pReloadingView);
 }
 
 //==============================================================================

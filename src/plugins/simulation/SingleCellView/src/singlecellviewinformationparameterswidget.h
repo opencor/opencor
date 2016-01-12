@@ -80,32 +80,23 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
+    void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation,
                     const bool &pReloadingView = false);
-    void finalize(const QString &pFileName, const bool &pReloadingView = false);
+    void finalize(const bool &pReloadingView = false);
 
     void finishEditing();
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
 private:
-    QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;
-
-    QMap<QString, QMenu *> mContextMenus;
     QMenu *mContextMenu;
 
-    QMap<QString, QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *> mParametersMapping;
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameters;
-
-    QMap<QString, QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *> mParameterActionsMapping;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameterActions;
 
     QIntList mColumnWidths;
-
-    QString mFileName;
 
     SingleCellViewSimulation *mSimulation;
 
