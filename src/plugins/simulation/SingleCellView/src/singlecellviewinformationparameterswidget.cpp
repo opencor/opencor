@@ -256,7 +256,6 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Populate our property editor with the parameters
 
-    Core::Property *voiProperty = 0;
     QString componentHierarchy = QString();
     Core::Property *sectionProperty = 0;
 
@@ -374,11 +373,6 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         // Keep track of the link between our property value and parameter
 
         mParameters.insert(property, parameter);
-
-        // Keep track of our VOI property, if it is the one
-
-        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
-            voiProperty = property;
     }
 
     // Update (well, set here) the extra info of all our parameters
