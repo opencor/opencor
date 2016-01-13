@@ -848,7 +848,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // Now, we can safely update our parameters widget since our model
         // parameters have been computed
 
-        informationWidget->parametersWidget()->initialize(cellmlFileRuntime, mSimulation);
+        informationWidget->parametersWidget()->initialize(cellmlFileRuntime, mSimulation, pReloadingView);
 
         // Update our plots since our 'new' simulation properties may have
         // affected them

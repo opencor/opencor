@@ -24,15 +24,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "corecliutils.h"
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
 #include <QList>
 #include <QMap>
 #include <QPoint>
-#include <QStackedWidget>
 
 //==============================================================================
 
@@ -47,7 +46,6 @@ namespace OpenCOR {
 
 namespace Core {
     class Property;
-    class PropertyEditorWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -67,8 +65,7 @@ class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewInformationParametersWidget : public QStackedWidget,
-                                                  public Core::CommonWidget
+class SingleCellViewInformationParametersWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
@@ -78,15 +75,13 @@ public:
     virtual void retranslateUi();
 
     void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation);
+                    SingleCellViewSimulation *pSimulation,
+                    const bool &pReloadingView = false);
     void finalize();
-
-    void finishEditing();
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
 private:
-    Core::PropertyEditorWidget *mPropertyEditor;
     QMenu *mContextMenu;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;

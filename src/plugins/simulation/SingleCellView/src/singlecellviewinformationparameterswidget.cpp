@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "propertyeditorwidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
@@ -47,36 +46,26 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
-    QStackedWidget(pParent),
-    Core::CommonWidget(pParent),
+    PropertyEditorWidget(false, pParent),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mSimulation(0)
 {
-    // Create our property editor and context menu
+    // Create our context menu
 
-    mPropertyEditor = new Core::PropertyEditorWidget(this);
     mContextMenu = new QMenu(this);
 
-    // We want our own context menu for our property editor
+    // We want our own context menu
 
-    mPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
+    setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(propertyEditorContextMenu(const QPoint &)));
 
     // Keep track of when the user changes a property value
 
-    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+    connect(this, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(propertyChanged(Core::Property *)));
-
-    // Add our new property editor to ourselves
-
-    addWidget(mPropertyEditor);
-
-    // Set our retrieved property editor as our current widget
-
-    setCurrentWidget(mPropertyEditor);
 }
 
 //==============================================================================
@@ -95,9 +84,11 @@ void SingleCellViewInformationParametersWidget::retranslateContextMenu()
 
 void SingleCellViewInformationParametersWidget::retranslateUi()
 {
-    // Retranslate our property editor and context menu
+    // Default retranslation
 
-    mPropertyEditor->retranslateUi();
+    PropertyEditorWidget::retranslateUi();
+
+    // Retranslate our context menu
 
     retranslateContextMenu();
 
@@ -109,11 +100,21 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
 //==============================================================================
 
 void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulation *pSimulation)
+                                                           SingleCellViewSimulation *pSimulation,
+                                                           const bool &pReloadingView)
 {
     // Keep track of the simulation
 
     mSimulation = pSimulation;
+
+    // Retranslate our core self, if needed
+    // Note: part of reloading ourselves consists of finalising ourselves, which
+    //       means clearing all of our contents including our header labels. So,
+    //       we need to 'retranslate' them otherwise they will read "1", "2",
+    //       "3", etc.
+
+    if (pReloadingView)
+        PropertyEditorWidget::retranslateUi();
 
     // Populate our property editor and context menu
 
@@ -130,14 +131,11 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
 
 void SingleCellViewInformationParametersWidget::finalize()
 {
-    // Clear our property editor, context menu, parameters and parameter actions
-    // Note: we don't want to delete our 'old' property editor straightaway when
-    //       reloading a file. Indeed, if we were to do so, the area where it
-    //       sits would become blank for a split second before our 'new'
-    //       property editor is created and becomes visible. So, instead, we
-    //       delete it in initialize()...
+    // Clear ourselves, as well as our context menu, parameters and parameter
+    // actions
 
-    mPropertyEditor->clear();
+    clear();
+
     mContextMenu->clear();
 
     mParameters.clear();
@@ -149,9 +147,9 @@ void SingleCellViewInformationParametersWidget::finalize()
 void SingleCellViewInformationParametersWidget::updateParameters(const double &pCurrentPoint,
                                                                  const bool &pProcessEvents)
 {
-    // Update our property editor's data
+    // Update our data
 
-    foreach (Core::Property *property, mPropertyEditor->properties()) {
+    foreach (Core::Property *property, properties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
@@ -241,15 +239,6 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::finishEditing()
-{
-    // Ask our current property editor to finish the editing
-
-    mPropertyEditor->finishEditing();
-}
-
-//==============================================================================
-
 QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SingleCellViewInformationParametersWidget::parameters() const
 {
     // Return our parameters
@@ -263,7 +252,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 {
     // Prevent ourselves from being updated (to avoid flickering)
 
-    mPropertyEditor->setUpdatesEnabled(false);
+    setUpdatesEnabled(false);
 
     // Populate our property editor with the parameters
 
@@ -307,13 +296,13 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                         }
                     }
                 } else {
-                    // We don't have a section, so go through our property
-                    // editor's properties and keep tack of those that are a
-                    // section
+                    // We don't have a section, so go through our properties and
+                    // keep tack of those that are a section
 
-                    foreach (Core::Property *property, mPropertyEditor->properties())
+                    foreach (Core::Property *property, properties()) {
                         if (property->type() == Core::Property::Section)
                             subSections << property;
+                    }
                 }
 
                 // Go through the sub-sections and check if one of them is the
@@ -331,7 +320,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                 // be found
 
                 if (!sectionProperty)
-                    sectionProperty = mPropertyEditor->addSectionProperty(component, section);
+                    sectionProperty = addSectionProperty(component, section);
 
                 // Get ready for the next component in our component hierarchy
 
@@ -372,7 +361,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
             propertyValue = mSimulation->data()->startingPoint();
         }
 
-        Core::Property *property = mPropertyEditor->addDoubleProperty(propertyValue, sectionProperty);
+        Core::Property *property = addDoubleProperty(propertyValue, sectionProperty);
 
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
@@ -398,11 +387,11 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Expand all our properties
 
-    mPropertyEditor->expandAll();
+    expandAll();
 
     // Allow ourselves to be updated again
 
-    mPropertyEditor->setUpdatesEnabled(true);
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -512,9 +501,9 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSuppor
 
 void SingleCellViewInformationParametersWidget::updateExtraInfos()
 {
-    // Update the extra info of all our property editor's properties
+    // Update the extra info of all our properties
 
-    foreach (Core::Property *property, mPropertyEditor->properties()) {
+    foreach (Core::Property *property, properties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
@@ -560,7 +549,7 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
 
     // Make sure that we have a current property
 
-    Core::Property *crtProperty = mPropertyEditor->currentProperty();
+    Core::Property *crtProperty = currentProperty();
 
     if (!crtProperty)
         return;
@@ -583,7 +572,7 @@ void SingleCellViewInformationParametersWidget::emitGraphRequired()
     // another
 
     emit graphRequired(mParameterActions.value(qobject_cast<QAction *>(sender())),
-                       mParameters.value(mPropertyEditor->currentProperty()));
+                       mParameters.value(currentProperty()));
 }
 
 //==============================================================================
