@@ -1053,10 +1053,7 @@ bool SingleCellViewSimulation::pause()
 {
     // Pause our worker
 
-    if (mWorker)
-        return mWorker->pause();
-    else
-        return false;
+    return mWorker?mWorker->pause():false;
 }
 
 //==============================================================================
@@ -1065,10 +1062,7 @@ bool SingleCellViewSimulation::resume()
 {
     // Resume our worker
 
-    if (mWorker)
-        return mWorker->resume();
-    else
-        return false;
+    return mWorker?mWorker->resume():false;
 }
 
 //==============================================================================
@@ -1077,10 +1071,7 @@ bool SingleCellViewSimulation::stop()
 {
     // Stop our worker
 
-    if (mWorker)
-        return mWorker->stop();
-    else
-        return false;
+    return mWorker?mWorker->stop():false;
 }
 
 //==============================================================================
@@ -1093,10 +1084,7 @@ bool SingleCellViewSimulation::reset()
 
     // Reset our worker
 
-    if (mWorker)
-        return mWorker->reset();
-    else
-        return false;
+    return mWorker?mWorker->reset():false;
 }
 
 //==============================================================================
