@@ -117,9 +117,11 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false)
 {
-    // Set up the GUI
+    // Set up and customsise the GUI
 
     mGui->setupUi(this);
+
+    mGui->actionDevelopmentMode->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mFileName));
 
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
@@ -571,14 +573,12 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 {
-    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
-
-    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
-    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
-
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
     // Note: see the corresponding code at the end of this method...
+
+    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
@@ -612,13 +612,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     connect(mSimulation->data(), SIGNAL(modified(const bool &)),
             this, SLOT(simulationDataModified(const bool &)));
 
-    // Retrieve the status of the reset action, the simulation delay and the
-    // development mode
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-    mGui->actionDevelopmentMode->setEnabled(fileManagerInstance->isReadableAndWritable(mFileName));
-
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
 
@@ -641,15 +634,14 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Output some information about our CellML file
 
-    QString information = QString();
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString fileName = fileManagerInstance->isNew(mFileName)?
                            tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileName)):
                            fileManagerInstance->isRemote(mFileName)?
                                fileManagerInstance->url(mFileName):
                                mFileName;
-
-    information += "<strong>"+fileName+"</strong>"+OutputBrLn;
-    information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn
+                          +OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
     if (variableOfIntegration) {
         // A variable of integration could be retrieved for our CellML file, so
@@ -710,6 +702,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // type(s) of solvers
 
     bool validSimulationEnvironment = false;
+    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
 
     if (variableOfIntegration) {
         // Show our contents widget in case it got previously hidden
