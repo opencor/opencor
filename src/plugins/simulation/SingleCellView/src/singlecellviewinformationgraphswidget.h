@@ -85,7 +85,6 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation);
     void finalize(const QString &pFileName);
 

@@ -99,8 +99,7 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulation *pSimulation,
+void SingleCellViewInformationParametersWidget::initialize(SingleCellViewSimulation *pSimulation,
                                                            const bool &pReloadingView)
 {
     // Keep track of the simulation
@@ -118,8 +117,8 @@ void SingleCellViewInformationParametersWidget::initialize(CellMLSupport::Cellml
 
     // Populate our property editor and context menu
 
-    populateModel(pRuntime);
-    populateContextMenu(pRuntime);
+    populateModel(pSimulation->runtime());
+    populateContextMenu(pSimulation->runtime());
 
     // Keep track of when some of the model's data has changed
 

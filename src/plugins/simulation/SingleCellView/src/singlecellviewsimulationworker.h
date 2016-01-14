@@ -52,8 +52,7 @@ class SingleCellViewSimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationWorker(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                            SingleCellViewSimulation *pSimulation,
+    explicit SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
                                             SingleCellViewSimulationWorker **pSelf);
 
     bool isRunning() const;
@@ -71,9 +70,9 @@ public:
 private:
     QThread *mThread;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     double mCurrentPoint;
 

@@ -85,8 +85,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation);
+    void initialize(SingleCellViewSimulation *pSimulation);
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;

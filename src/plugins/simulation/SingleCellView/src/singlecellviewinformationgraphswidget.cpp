@@ -153,19 +153,18 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
-                                                       CellMLSupport::CellmlFileRuntime *pRuntime,
                                                        SingleCellViewSimulation *pSimulation)
 {
     // Keep track of the file name, runtime and simulation
 
     mFileName = pFileName;
 
-    mRuntimes.insert(pFileName, pRuntime);
+    mRuntimes.insert(pFileName, pSimulation->runtime());
     mSimulations.insert(pFileName, pSimulation);
 
     // Populate our parameters context menu
 
-    populateParametersContextMenu(pRuntime);
+    populateParametersContextMenu(pSimulation->runtime());
 
     // Update the information about our graphs properties and this for all our
     // property editors

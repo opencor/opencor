@@ -65,12 +65,11 @@ void SingleCellViewInformationSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationSimulationWidget::initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulation *pSimulation)
+void SingleCellViewInformationSimulationWidget::initialize(SingleCellViewSimulation *pSimulation)
 {
     // Iniialise the unit of our different properties
 
-    QString unit = pRuntime->variableOfIntegration()->unit();
+    QString unit = pSimulation->runtime()->variableOfIntegration()->unit();
 
     mStartingPointProperty->setUnit(unit);
     mEndingPointProperty->setUnit(unit);

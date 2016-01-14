@@ -331,27 +331,26 @@ void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInf
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                        SingleCellViewSimulation *pSimulation)
+void SingleCellViewInformationSolversWidget::initialize(SingleCellViewSimulation *pSimulation)
 {
     // Make sure that the CellML file runtime is valid
 
-    if (pRuntime->isValid()) {
+    if (pSimulation->runtime()->isValid()) {
         // Show/hide the ODE/DAE/NLA solver information
 
         if (mOdeSolverData)
-            mOdeSolverData->solversProperty()->setVisible(pRuntime->needOdeSolver());
+            mOdeSolverData->solversProperty()->setVisible(pSimulation->runtime()->needOdeSolver());
 
         if (mDaeSolverData)
-            mDaeSolverData->solversProperty()->setVisible(pRuntime->needDaeSolver());
+            mDaeSolverData->solversProperty()->setVisible(pSimulation->runtime()->needDaeSolver());
 
         if (mNlaSolverData)
-            mNlaSolverData->solversProperty()->setVisible(pRuntime->needNlaSolver());
+            mNlaSolverData->solversProperty()->setVisible(pSimulation->runtime()->needNlaSolver());
     }
 
     // Set the unit of our different properties, if needed
 
-    QString voiUnit = pRuntime->variableOfIntegration()->unit();
+    QString voiUnit = pSimulation->runtime()->variableOfIntegration()->unit();
 
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mDaeSolverData, voiUnit);

@@ -55,8 +55,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation);
+    void initialize(SingleCellViewSimulation *pSimulation);
 
     Core::Property * startingPointProperty() const;
     Core::Property * endingPointProperty() const;

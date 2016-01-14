@@ -74,8 +74,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation,
+    void initialize(SingleCellViewSimulation *pSimulation,
                     const bool &pReloadingView = false);
     void finalize();
 

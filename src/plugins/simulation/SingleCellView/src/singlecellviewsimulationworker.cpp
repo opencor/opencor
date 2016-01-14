@@ -37,11 +37,10 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                               SingleCellViewSimulation *pSimulation,
+SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
                                                                SingleCellViewSimulationWorker **pSelf) :
-    mRuntime(pRuntime),
     mSimulation(pSimulation),
+    mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
     mPaused(false),
     mStopped(false),

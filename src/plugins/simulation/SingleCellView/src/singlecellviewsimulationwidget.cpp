@@ -813,11 +813,11 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         //          initialising (e.g. NLA solver) so that we can safely compute
         //          our model parameters before showing their values...
 
-        simulationWidget->initialize(cellmlFileRuntime, mSimulation);
-        solversWidget->initialize(cellmlFileRuntime, mSimulation);
+        simulationWidget->initialize(mSimulation);
+        solversWidget->initialize(mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphsWidget()->initialize(mFileName, cellmlFileRuntime, mSimulation);
+            informationWidget->graphsWidget()->initialize(mFileName, mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
         mContentsWidget->graphPanelsWidget()->initialize();
@@ -838,7 +838,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // Now, we can safely update our parameters widget since our model
         // parameters have been computed
 
-        informationWidget->parametersWidget()->initialize(cellmlFileRuntime, mSimulation, pReloadingView);
+        informationWidget->parametersWidget()->initialize(mSimulation, pReloadingView);
 
         // Update our plots since our 'new' simulation properties may have
         // affected them
