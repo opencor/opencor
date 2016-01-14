@@ -116,8 +116,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Retrieve the simulation widget associated with the given file, if any
 
     SingleCellViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
-    SingleCellViewContentsWidget *contentsWidget = 0;
-    Core::CollapsibleWidget *collapsibleWidget = 0;
 
     mSimulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -153,26 +151,20 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         // Keep track of various things related our simulation widget and its
         // children
 
-        contentsWidget = mSimulationWidget->contentsWidget();
-        collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
-
         connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
 
-        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
+        connect(mSimulationWidget->contentsWidget(), SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
 
-        connect(collapsibleWidget, SIGNAL(collapsed(const int &, const bool &)),
+        connect(mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
                 this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
-    } else {
-        contentsWidget = mSimulationWidget->contentsWidget();
-        collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
     }
 
     // Update our new simualtion widget and its children, if needed
 
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
-    contentsWidget->setSizes(mContentsWidgetSizes);
+    mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
 
     // Set (restore) some settings, if this is not our first (created)
     // simulation widget (the first one is already properly set)
