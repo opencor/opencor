@@ -24,25 +24,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "corecliutils.h"
 #include "singlecellviewgraphpanelwidget.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
-#include <QMap>
-#include <QRectF>
 #include <QSplitter>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace SingleCellView {
-
-//==============================================================================
-
-class SingleCellViewGraphPanelPlotWidget;
 
 //==============================================================================
 

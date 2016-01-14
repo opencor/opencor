@@ -33,16 +33,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class QFrame;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 
 //==============================================================================

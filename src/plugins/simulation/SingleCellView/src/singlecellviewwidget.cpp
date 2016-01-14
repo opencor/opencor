@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // Single cell view widget
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "collapsiblewidget.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -32,7 +31,6 @@ specific language governing permissions and limitations under the License.
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QHeaderView>
-#include <QIcon>
 #include <QLayout>
 #include <QSettings>
 

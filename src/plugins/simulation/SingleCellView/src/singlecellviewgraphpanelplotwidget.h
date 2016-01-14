@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
 #include "qwt_scale_draw.h"
+#include "qwt_text.h"
 
 //==============================================================================
 
@@ -154,10 +155,6 @@ public:
 protected:
     virtual QwtText label(double pValue) const;
 };
-
-//==============================================================================
-
-class SingleCellViewGraphPanelPlotWidget;
 
 //==============================================================================
 

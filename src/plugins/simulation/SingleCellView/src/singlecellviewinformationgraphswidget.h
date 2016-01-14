@@ -31,15 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QList>
-#include <QMap>
 #include <QStackedWidget>
-
-//==============================================================================
-
-class QAction;
-class QLabel;
-class QMenu;
 
 //==============================================================================
 
@@ -55,7 +47,6 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -64,7 +55,6 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewSimulation;
 

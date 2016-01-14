@@ -23,20 +23,10 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
-#include "singlecellviewwidget.h"
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
-#include <QCoreApplication>
-#include <QHeaderView>
 #include <QMenu>
-#include <QMetaType>
-#include <QScrollBar>
-#include <QSettings>
 
 //==============================================================================
 

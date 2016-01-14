@@ -49,7 +49,6 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewSimulation;
-class SingleCellViewWidget;
 
 //==============================================================================
 

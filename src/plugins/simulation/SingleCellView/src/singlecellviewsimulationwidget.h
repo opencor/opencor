@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 class QFrame;
 class QLabel;
 class QMenu;
-class QSettings;
 class QSplitter;
 class QTextEdit;
 
@@ -65,6 +64,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class DataStoreInterface;
+
+//==============================================================================
+
 namespace Core {
     class Property;
     class ProgressBarWidget;
@@ -74,19 +77,12 @@ namespace Core {
 
 //==============================================================================
 
-namespace CellMLSupport {
-    class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace SingleCellView {
 
 //==============================================================================
 
 class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelWidget;
-class SingleCellViewInformationSolversWidgetData;
 class SingleCellViewPlugin;
 
 //==============================================================================

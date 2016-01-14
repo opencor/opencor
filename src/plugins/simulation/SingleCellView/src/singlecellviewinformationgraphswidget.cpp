@@ -20,24 +20,15 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "propertyeditorwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
+#include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
-#include "singlecellviewwidget.h"
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
-#include <QAction>
 #include <QFileInfo>
-#include <QHeaderView>
-#include <QLabel>
 #include <QMenu>
-#include <QMetaType>
 #include <QScrollBar>
 #include <QSettings>
 

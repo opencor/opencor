@@ -29,15 +29,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace CellMLSupport {
-    class CellmlFileRuntime;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace SingleCellView {
 
 //==============================================================================

@@ -20,23 +20,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "singlecellviewgraphpanelplotwidget.h"
-#include "singlecellviewgraphpanelwidget.h"
-
-//==============================================================================
-
-#include <Qt>
-#include <QtNumeric>
 
 //==============================================================================
 
 #include <QClipboard>
-#include <QCoreApplication>
-#include <QCursor>
 #include <QDesktopWidget>
-#include <QLocale>
 #include <QMenu>
-#include <QMouseEvent>
-#include <QPainter>
+#include <QPaintEvent>
 
 //==============================================================================
 
@@ -46,11 +36,9 @@ specific language governing permissions and limitations under the License.
 
 #include "qwt_painter.h"
 #include "qwt_plot_canvas.h"
-#include "qwt_plot_curve.h"
 #include "qwt_plot_directpainter.h"
 #include "qwt_plot_grid.h"
 #include "qwt_plot_layout.h"
-#include "qwt_scale_draw.h"
 #include "qwt_scale_engine.h"
 #include "qwt_scale_widget.h"
 

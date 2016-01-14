@@ -21,17 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
-#include "singlecellviewcontentswidget.h"
-#include "singlecellviewinformationsimulationwidget.h"
-#include "singlecellviewinformationwidget.h"
 #include "singlecellviewsimulation.h"
-#include "singlecellviewwidget.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
 #include <QtMath>
-#include <QtNumeric>
 
 //==============================================================================
 

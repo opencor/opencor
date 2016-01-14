@@ -20,20 +20,15 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlfileruntime.h"
 #include "combinearchive.h"
 #include "combinesupportplugin.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
-#include "datastoreinterface.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
-#include "propertyeditorwidget.h"
 #include "sedmlfile.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelswidget.h"
-#include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -50,40 +45,22 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QBrush>
-#include <QCoreApplication>
 #include <QDesktopWidget>
 #include <QDir>
 #include <QFileInfo>
-#include <QFrame>
 #include <QLabel>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
-#include <QMetaType>
-#include <QPainter>
-#include <QPixmap>
-#include <QScrollBar>
 #include <QSettings>
 #include <QSplitter>
-#include <QStyle>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
-#include <QVariant>
-#include <QVBoxLayout>
 
 //==============================================================================
 
-#include "qwt_plot.h"
-#include "qwt_plot_curve.h"
 #include "qwt_wheel.h"
-
-//==============================================================================
-
-#include "sbmlapidisablewarnings.h"
-    #include "sbml/math/FormulaParser.h"
-#include "sbmlapienablewarnings.h"
 
 //==============================================================================
 

@@ -25,10 +25,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QStandardItemModel>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
