@@ -82,6 +82,8 @@ private:
 
     QMap<int, bool> mCollapsibleWidgetCollapsed;
 
+    QIntList mSimulationWidgetColumnWidths;
+
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
 
@@ -91,7 +93,12 @@ private:
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
     void contentsWidgetSplitterMoved(const QIntList &pSizes);
+
     void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
+
+    void simulationWidgetHeaderSectionResized(const int &pIndex,
+                                              const int &pOldSize,
+                                              const int &pNewSize);
 };
 
 //==============================================================================
