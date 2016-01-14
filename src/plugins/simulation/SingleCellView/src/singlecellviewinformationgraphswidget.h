@@ -164,8 +164,8 @@ private Q_SLOTS:
 
     void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
 
-    void propertyEditorSectionResized(const int &pLogicalIndex,
-                                      const int &pOldSize, const int &pNewSize);
+    void propertyEditorSectionResized(const int &pIndex, const int &pOldSize,
+                                      const int &pNewSize);
 
     void graphChanged(Core::Property *pProperty);
 

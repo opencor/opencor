@@ -596,7 +596,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorHorizontalScrollBarVal
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pLogicalIndex,
+void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pIndex,
                                                                          const int &pOldSize,
                                                                          const int &pNewSize)
 {
@@ -604,7 +604,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 
     // Keep track of the new column width
 
-    mColumnWidths[pLogicalIndex] = pNewSize;
+    mColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
