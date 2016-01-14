@@ -155,13 +155,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         settings.beginGroup(mSettingsGroup);
             mSimulationWidget->loadSettings(&settings);
 
-            if (mSimulationWidgets.count() == 1) {
-                // This is our first simulation widget, so keep track of some of
-                // its contents' children's settings
+            // Back up some settings, if this is our first simulation widget
 
-                for (int i = 0, iMax = collapsibleWidget->count(); i < iMax; ++i)
-                    mCollapsibleWidgetCollapsed.insert(i, collapsibleWidget->isCollapsed(i));
-            }
+            if (mSimulationWidgets.count() == 1)
+                backupSettings(mSimulationWidget);
         settings.endGroup();
 
         // Initialise our simulation widget
@@ -177,13 +174,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
     contentsWidget->setSizes(mContentsWidgetSizes);
 
-    if (mSimulationWidgets.count() > 1) {
-        // We are not dealing with our first (created) simulation widget, which
-        // means that we need to update it
+    // Set (restore) some settings, if this is not our first (created)
+    // simulation widget (the first one is already properly set)
 
-        foreach (const int &index, mCollapsibleWidgetCollapsed.keys())
-            collapsibleWidget->setCollapsed(index, mCollapsibleWidgetCollapsed.value(index));
-    }
+    if (mSimulationWidgets.count() > 1)
+        restoreSettings(mSimulationWidget);
 
     // Hide our previous simulation widget and show our new one
 
@@ -215,18 +210,12 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
         QSettings settings;
 
         settings.beginGroup(mSettingsGroup);
-            if (mSimulationWidgets.count() == 1) {
-                // This is our last simulation widget, so make sure that its
-                // contents' children's settings are up to date
-                // Note: indeed, say that we are closing OpenCOR after having
-                //       modified a collapsible widget and that it's not the one
-                //       that is closed last...
+            // Set (restore) some settings, if this is our last simulation
+            // widget (this is in case we close OpenCOR after having modified a
+            // simulation widget that is not the last one to be finalised)
 
-                Core::CollapsibleWidget *collapsibleWidget = simulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
-
-                foreach (const int &index, mCollapsibleWidgetCollapsed.keys())
-                    collapsibleWidget->setCollapsed(index, mCollapsibleWidgetCollapsed.value(index));
-            }
+            if (mSimulationWidgets.count() == 1)
+                restoreSettings(simulationWidget);
 
             simulationWidget->saveSettings(&settings);
         settings.endGroup();
@@ -383,6 +372,30 @@ void SingleCellViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
     // expanded, so keep track of that fact
 
     mCollapsibleWidgetCollapsed.insert(pIndex, pCollapsed);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::backupSettings(SingleCellViewSimulationWidget *pSimulationWidget)
+{
+    // Back up some of the given simulation's contents' children's settings
+
+    Core::CollapsibleWidget *collapsibleWidget = pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
+
+    for (int i = 0, iMax = collapsibleWidget->count(); i < iMax; ++i)
+        mCollapsibleWidgetCollapsed.insert(i, collapsibleWidget->isCollapsed(i));
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget)
+{
+    // Restore some of the given simulation's contents' children's settings
+
+    Core::CollapsibleWidget *collapsibleWidget = pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
+
+    foreach (const int &index, mCollapsibleWidgetCollapsed.keys())
+        collapsibleWidget->setCollapsed(index, mCollapsibleWidgetCollapsed.value(index));
 }
 
 //==============================================================================

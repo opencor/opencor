@@ -79,10 +79,14 @@ private:
 
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;
+
     QMap<int, bool> mCollapsibleWidgetCollapsed;
 
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
+
+    void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
+    void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
 
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
