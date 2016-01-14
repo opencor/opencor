@@ -126,21 +126,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
 
-        // Keep track of various things related our simulation widget and its
-        // children
-
-        contentsWidget = mSimulationWidget->contentsWidget();
-        collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
-
-        connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
-                this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
-
-        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
-                this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
-
-        connect(collapsibleWidget, SIGNAL(collapsed(const int &, const bool &)),
-                this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
-
         // Keep track of our editing widget and add it to ourselves
 
         mSimulationWidgets.insert(pFileName, mSimulationWidget);
@@ -164,6 +149,21 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         // Initialise our simulation widget
 
         mSimulationWidget->initialize();
+
+        // Keep track of various things related our simulation widget and its
+        // children
+
+        contentsWidget = mSimulationWidget->contentsWidget();
+        collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
+
+        connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
+                this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
+
+        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
+                this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
+
+        connect(collapsibleWidget, SIGNAL(collapsed(const int &, const bool &)),
+                this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
     } else {
         contentsWidget = mSimulationWidget->contentsWidget();
         collapsibleWidget = contentsWidget->informationWidget()->collapsibleWidget();
