@@ -62,7 +62,7 @@ public:
                                           const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulationData();
 
-    void reload();
+    void update();
 
     SingleCellViewSimulation * simulation() const;
 
@@ -172,7 +172,7 @@ public:
     explicit SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
 
-    void reload();
+    void update();
 
     bool reset(const bool &pCreateDataStore = true);
 
@@ -229,7 +229,7 @@ public:
     SingleCellViewSimulationData * data() const;
     SingleCellViewSimulationResults * results() const;
 
-    void reload(CellMLSupport::CellmlFileRuntime *pRuntime);
+    void update(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool isRunning() const;
     bool isPaused() const;

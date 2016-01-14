@@ -72,9 +72,9 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::reload()
+void SingleCellViewSimulationData::update()
 {
-    // Reload ourselves by updating our runtime, and deleting and recreating our
+    // Update ourselves by updating our runtime, and deleting and recreating our
     // arrays
 
     mRuntime = mSimulation->runtime();
@@ -760,9 +760,9 @@ void SingleCellViewSimulationResults::deleteDataStore()
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::reload()
+void SingleCellViewSimulationResults::update()
 {
-    // Reload ourselves by updating our runtime and deleting our data store
+    // Update ourselves by updating our runtime and deleting our data store
 
     mRuntime = mSimulation->runtime();
 
@@ -926,17 +926,17 @@ SingleCellViewSimulationResults * SingleCellViewSimulation::results() const
 
 //==============================================================================
 
-void SingleCellViewSimulation::reload(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SingleCellViewSimulation::update(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    // Reload ourselves by stopping ourselves, updating our runtime, and
-    // reloading our data and results
+    // Update ourselves by first stopping ourselves, then by by updating our
+    // runtime, and asking our data and results to update themselves too
 
     stop();
 
     mRuntime = pRuntime;
 
-    mData->reload();
-    mResults->reload();
+    mData->update();
+    mResults->update();
 }
 
 //==============================================================================

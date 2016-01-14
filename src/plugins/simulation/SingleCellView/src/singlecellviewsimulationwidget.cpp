@@ -601,13 +601,13 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
 
-    // Reload our simulation object, if needed
+    // Update our simulation object, if needed
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
     if (pReloadingView)
-        mSimulation->reload(cellmlFileRuntime);
+        mSimulation->update(cellmlFileRuntime);
 
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
