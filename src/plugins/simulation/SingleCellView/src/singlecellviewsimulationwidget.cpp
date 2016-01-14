@@ -593,10 +593,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     mSimulation = new SingleCellViewSimulation(cellmlFileRuntime,
                                                mPlugin->solverInterfaces());
 
-    // Initialise our simulation object's delay
-
-    updateDelayValue(mDelayWidget->value());
-
     // Create a few connections
 
     connect(mSimulation, SIGNAL(running(const bool &)),
