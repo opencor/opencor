@@ -372,6 +372,24 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     setFocusProxy(mContentsWidget);
 
+    // Create our simulation object and a few connections for it
+
+    mSimulation = new SingleCellViewSimulation(CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime(),
+                                               pPlugin->solverInterfaces());
+
+    connect(mSimulation, SIGNAL(running(const bool &)),
+            this, SLOT(simulationRunning(const bool &)));
+    connect(mSimulation, SIGNAL(paused()),
+            this, SLOT(simulationPaused()));
+    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
+            this, SLOT(simulationStopped(const qint64 &)));
+
+    connect(mSimulation, SIGNAL(error(const QString &)),
+            this, SLOT(simulationError(const QString &)));
+
+    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
+            this, SLOT(simulationDataModified(const bool &)));
+
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -583,30 +601,13 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
 
-    // Retrieve our simulation object for the current model, if any
+    // Reload our simulation object, if needed
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
-    // Create our simulation object
-
-    mSimulation = new SingleCellViewSimulation(cellmlFileRuntime,
-                                               mPlugin->solverInterfaces());
-
-    // Create a few connections
-
-    connect(mSimulation, SIGNAL(running(const bool &)),
-            this, SLOT(simulationRunning(const bool &)));
-    connect(mSimulation, SIGNAL(paused()),
-            this, SLOT(simulationPaused()));
-    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
-            this, SLOT(simulationStopped(const qint64 &)));
-
-    connect(mSimulation, SIGNAL(error(const QString &)),
-            this, SLOT(simulationError(const QString &)));
-
-    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-            this, SLOT(simulationDataModified(const bool &)));
+    if (pReloadingView)
+        mSimulation->reload(cellmlFileRuntime);
 
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know...
@@ -857,12 +858,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
 void SingleCellViewSimulationWidget::finalize()
 {
-    // Remove our simulation object
-
-    delete mSimulation;
-
-    mSimulation = 0;
-
     // Remove various information associated with the given file name
 
     mProgress = -1;

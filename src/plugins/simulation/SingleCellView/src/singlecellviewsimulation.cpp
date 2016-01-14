@@ -40,11 +40,10 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulation *pSimulation,
+SingleCellViewSimulationData::SingleCellViewSimulationData(SingleCellViewSimulation *pSimulation,
                                                            const SolverInterfaces &pSolverInterfaces) :
-    mRuntime(pRuntime),
     mSimulation(pSimulation),
+    mRuntime(pSimulation->runtime()),
     mSolverInterfaces(pSolverInterfaces),
     mDelay(0),
     mStartingPoint(0.0),
@@ -57,26 +56,9 @@ SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::Cellml
     mNlaSolverName(QString()),
     mNlaSolverProperties(Solver::Solver::Properties())
 {
-    // Create our various arrays, if possible
+    // Create our various arrays
 
-    if (pRuntime) {
-        // Create our various arrays to compute our model
-
-        mConstants   = new double[pRuntime->constantsCount()];
-        mRates       = new double[pRuntime->ratesCount()];
-        mStates      = new double[pRuntime->statesCount()];
-        mDummyStates = new double[pRuntime->statesCount()];
-        mAlgebraic   = new double[pRuntime->algebraicCount()];
-        mCondVar     = new double[pRuntime->condVarCount()];
-
-        // Create our various arrays to keep track of our various initial values
-
-        mInitialConstants = new double[pRuntime->constantsCount()];
-        mInitialStates    = new double[pRuntime->statesCount()];
-    } else {
-        mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
-        mInitialConstants = mInitialStates = 0;
-    }
+    createArrays();
 }
 
 //==============================================================================
@@ -85,15 +67,20 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
 {
     // Delete some internal objects
 
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
-    delete[] mDummyStates;
-    delete[] mAlgebraic;
-    delete[] mCondVar;
+    deleteArrays();
+}
 
-    delete[] mInitialConstants;
-    delete[] mInitialStates;
+//==============================================================================
+
+void SingleCellViewSimulationData::reload()
+{
+    // Reload ourselves by updating our runtime, and deleting and recreating our
+    // arrays
+
+    mRuntime = mSimulation->runtime();
+
+    deleteArrays();
+    createArrays();
 }
 
 //==============================================================================
@@ -592,10 +579,52 @@ void SingleCellViewSimulationData::checkForModifications()
 
 //==============================================================================
 
-SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                                 SingleCellViewSimulation *pSimulation) :
-    mRuntime(pRuntime),
+void SingleCellViewSimulationData::createArrays()
+{
+    // Create our various arrays, if possible
+
+    if (mRuntime) {
+        // Create our various arrays to compute our model
+
+        mConstants   = new double[mRuntime->constantsCount()];
+        mRates       = new double[mRuntime->ratesCount()];
+        mStates      = new double[mRuntime->statesCount()];
+        mDummyStates = new double[mRuntime->statesCount()];
+        mAlgebraic   = new double[mRuntime->algebraicCount()];
+        mCondVar     = new double[mRuntime->condVarCount()];
+
+        // Create our various arrays to keep track of our various initial values
+
+        mInitialConstants = new double[mRuntime->constantsCount()];
+        mInitialStates    = new double[mRuntime->statesCount()];
+    } else {
+        mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
+        mInitialConstants = mInitialStates = 0;
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationData::deleteArrays()
+{
+    // Delete our various arrays
+
+    delete[] mConstants;
+    delete[] mRates;
+    delete[] mStates;
+    delete[] mDummyStates;
+    delete[] mAlgebraic;
+    delete[] mCondVar;
+
+    delete[] mInitialConstants;
+    delete[] mInitialStates;
+}
+
+//==============================================================================
+
+SingleCellViewSimulationResults::SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation) :
     mSimulation(pSimulation),
+    mRuntime(pSimulation->runtime()),
     mSize(0),
     mDataStore(0),
     mPoints(0),
@@ -731,6 +760,17 @@ void SingleCellViewSimulationResults::deleteDataStore()
 
 //==============================================================================
 
+void SingleCellViewSimulationResults::reload()
+{
+    // Reload ourselves by updating our runtime and deleting our data store
+
+    mRuntime = mSimulation->runtime();
+
+    deleteDataStore();
+}
+
+//==============================================================================
+
 bool SingleCellViewSimulationResults::reset(const bool &pCreateDataStore)
 {
     // Reset our size
@@ -832,8 +872,8 @@ SingleCellViewSimulation::SingleCellViewSimulation(CellMLSupport::CellmlFileRunt
     mWorker(0),
     mRuntime(pRuntime),
     mSolverInterfaces(pSolverInterfaces),
-    mData(new SingleCellViewSimulationData(pRuntime, this, pSolverInterfaces)),
-    mResults(new SingleCellViewSimulationResults(pRuntime, this))
+    mData(new SingleCellViewSimulationData(this, pSolverInterfaces)),
+    mResults(new SingleCellViewSimulationResults(this))
 {
     // Keep track of any error occurring in our data
 
@@ -882,6 +922,21 @@ SingleCellViewSimulationResults * SingleCellViewSimulation::results() const
     // Return our results
 
     return mResults;
+}
+
+//==============================================================================
+
+void SingleCellViewSimulation::reload(CellMLSupport::CellmlFileRuntime *pRuntime)
+{
+    // Reload ourselves by stopping ourselves, updating our runtime, and
+    // reloading our data and results
+
+    stop();
+
+    mRuntime = pRuntime;
+
+    mData->reload();
+    mResults->reload();
 }
 
 //==============================================================================

@@ -58,10 +58,11 @@ class SingleCellViewSimulationData : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                          SingleCellViewSimulation *pSimulation,
+    explicit SingleCellViewSimulationData(SingleCellViewSimulation *pSimulation,
                                           const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulationData();
+
+    void reload();
 
     SingleCellViewSimulation * simulation() const;
 
@@ -120,9 +121,9 @@ public:
     void checkForModifications();
 
 private:
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -151,6 +152,9 @@ private:
     double *mInitialConstants;
     double *mInitialStates;
 
+    void createArrays();
+    void deleteArrays();
+
 Q_SIGNALS:
     void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
@@ -165,9 +169,10 @@ class SingleCellViewSimulationResults : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                             SingleCellViewSimulation *pSimulation);
+    explicit SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
+
+    void reload();
 
     bool reset(const bool &pCreateDataStore = true);
 
@@ -185,9 +190,9 @@ public:
     double * algebraic(const int &pIndex) const;
 
 private:
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     qulonglong mSize;
 
@@ -223,6 +228,8 @@ public:
 
     SingleCellViewSimulationData * data() const;
     SingleCellViewSimulationResults * results() const;
+
+    void reload(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool isRunning() const;
     bool isPaused() const;
