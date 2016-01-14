@@ -193,9 +193,12 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
 void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
 {
-    // Keep track of the file name
+    // Keep track of the file name, but only if we don't already track it (i.e.
+    // account for the reloading of a file), and update our graphs information
+    // (which is always to be done)
 
-    mFileNames << pFileName;
+    if (!mFileNames.contains(pFileName))
+        mFileNames << pFileName;
 
     updateAllGraphsInfo(true);
 }
