@@ -71,9 +71,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     void initialize(const QString &pFileName,
                     SingleCellViewSimulation *pSimulation);
     void finalize(const QString &pFileName);
@@ -106,8 +103,6 @@ private:
     QMenu *mParametersContextMenu;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
-
-    QIntList mColumnWidths;
 
     QStringList mFileNames;
     QString mFileName;

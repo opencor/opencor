@@ -53,7 +53,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mColumnWidths(QIntList()),
     mFileNames(QStringList()),
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
@@ -64,15 +63,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Determine the default width of each column of our property editors
-
-    Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
-
-    for (int i = 0, iMax = tempPropertyEditor->header()->count(); i < iMax; ++i)
-        mColumnWidths << tempPropertyEditor->columnWidth(i);
-
-    delete tempPropertyEditor;
 
     // Create our context menus and populate our main context menu
 
@@ -117,28 +107,6 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
     //       current graph panel...
 
     updateGraphsInfo();
-}
-
-//==============================================================================
-
-static const auto SettingsColumnWidths = QStringLiteral("ColumnWidths");
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the width of each column of our property editors
-
-    mColumnWidths = qVariantListToIntList(pSettings->value(SettingsColumnWidths, qIntListToVariantList(mColumnWidths)).toList());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the width of each column of our current property editor
-
-    pSettings->setValue(SettingsColumnWidths, qIntListToVariantList(mColumnWidths));
 }
 
 //==============================================================================
@@ -232,6 +200,8 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
     // Retrieve the property editor for the given file name or create one, if
     // none exists
 
+    Core::PropertyEditorWidget *oldPropertyEditor = mPropertyEditor;
+
     mPropertyEditor = mPropertyEditors.value(pGraphPanel);
 
     if (!mPropertyEditor) {
@@ -278,8 +248,10 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
     // Set our property editor's columns' width
 
-    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
-        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
+    if (oldPropertyEditor) {
+        for (int i = 0, iMax = oldPropertyEditor->header()->count(); i < iMax; ++i)
+            mPropertyEditor->setColumnWidth(i, oldPropertyEditor->columnWidth(i));
+    }
 
     // Set our retrieved property editor as our current widget
 
@@ -622,9 +594,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 {
     Q_UNUSED(pOldSize);
 
-    // Keep track of the new column width and let people know about it
-
-    mColumnWidths[pIndex] = pNewSize;
+    // Let people know that a header section has been resized
 
     emit headerSectionResized(pIndex, pOldSize, pNewSize);
 }
