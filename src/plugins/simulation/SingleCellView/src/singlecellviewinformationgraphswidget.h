@@ -87,6 +87,11 @@ public:
     Core::Properties graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 
+    int headerCount() const;
+
+    int columnWidth(const int &pIndex) const;
+    void setColumnWidth(const int &pIndex, const int &pColumnWidth);
+
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
 
@@ -129,6 +134,9 @@ private:
     void selectAllGraphs(const bool &pSelect);
 
 Q_SIGNALS:
+    void headerSectionResized(const int &pIndex, const int &pOldSize,
+                              const int &pNewSize);
+
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 

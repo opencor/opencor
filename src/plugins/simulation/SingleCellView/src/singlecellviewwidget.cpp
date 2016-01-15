@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "collapsiblewidget.h"
 #include "singlecellviewcontentswidget.h"
+#include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
@@ -53,6 +54,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mCollapsibleWidgetCollapsed(QMap<int, bool>()),
     mSimulationWidgetColumnWidths(QIntList()),
     mSolversWidgetColumnWidths(QIntList()),
+    mGraphsWidgetColumnWidths(QIntList()),
     mParametersWidgetColumnWidths(QIntList()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
@@ -169,6 +171,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
         connect(mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
+        connect(mSimulationWidget->contentsWidget()->informationWidget()->graphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
+                this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
         connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
     }
@@ -406,6 +410,19 @@ void SingleCellViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
 
 //==============================================================================
 
+void SingleCellViewWidget::graphsWidgetHeaderSectionResized(const int &pIndex,
+                                                            const int &pOldSize,
+                                                            const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Keep track of the new column width
+
+    mGraphsWidgetColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pIndex,
                                                                 const int &pOldSize,
                                                                 const int &pNewSize)
@@ -442,6 +459,13 @@ void SingleCellViewWidget::backupSettings(SingleCellViewSimulationWidget *pSimul
     for (int i = 0, iMax = solversWidget->header()->count(); i < iMax; ++i)
         mSolversWidgetColumnWidths << solversWidget->columnWidth(i);
 
+    SingleCellViewInformationGraphsWidget *graphsWidget = pSimulationWidget->contentsWidget()->informationWidget()->graphsWidget();
+
+    mGraphsWidgetColumnWidths = QIntList();
+
+    for (int i = 0, iMax = graphsWidget->headerCount(); i < iMax; ++i)
+        mGraphsWidgetColumnWidths << graphsWidget->columnWidth(i);
+
     SingleCellViewInformationParametersWidget *parametersWidget = pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget();
 
     mParametersWidgetColumnWidths = QIntList();
@@ -470,6 +494,11 @@ void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimu
 
     for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
         solversWidget->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
+
+    SingleCellViewInformationGraphsWidget *graphsWidget = pSimulationWidget->contentsWidget()->informationWidget()->graphsWidget();
+
+    for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
+        graphsWidget->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
 
     SingleCellViewInformationParametersWidget *parametersWidget = pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget();
 

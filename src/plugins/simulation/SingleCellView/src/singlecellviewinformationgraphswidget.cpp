@@ -533,6 +533,35 @@ Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(SingleCe
 
 //==============================================================================
 
+int SingleCellViewInformationGraphsWidget::headerCount() const
+{
+    // Return the number of headers in our property editors
+
+    return mPropertyEditor?mPropertyEditor->header()->count():0;
+}
+
+//==============================================================================
+
+int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
+{
+    // Return the width of the given column
+
+    return mPropertyEditor?mPropertyEditor->columnWidth(pIndex):0;
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
+                                                           const int &pColumnWidth)
+{
+    // Return the width of the given column
+
+    if (mPropertyEditor)
+        mPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
@@ -593,9 +622,11 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 {
     Q_UNUSED(pOldSize);
 
-    // Keep track of the new column width
+    // Keep track of the new column width and let people know about it
 
     mColumnWidths[pIndex] = pNewSize;
+
+    emit headerSectionResized(pIndex, pOldSize, pNewSize);
 }
 
 //==============================================================================
