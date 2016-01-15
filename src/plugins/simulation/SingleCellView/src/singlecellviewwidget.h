@@ -80,6 +80,7 @@ private:
 
     QIntList mSimulationWidgetColumnWidths;
     QIntList mSolversWidgetColumnWidths;
+    QIntList mParametersWidgetColumnWidths;
 
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
@@ -99,6 +100,9 @@ private Q_SLOTS:
     void solversWidgetHeaderSectionResized(const int &pIndex,
                                            const int &pOldSize,
                                            const int &pNewSize);
+    void parametersWidgetHeaderSectionResized(const int &pIndex,
+                                              const int &pOldSize,
+                                              const int &pNewSize);
 };
 
 //==============================================================================
