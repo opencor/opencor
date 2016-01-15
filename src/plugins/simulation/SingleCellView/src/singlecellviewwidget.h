@@ -79,6 +79,7 @@ private:
     QMap<int, bool> mCollapsibleWidgetCollapsed;
 
     QIntList mSimulationWidgetColumnWidths;
+    QIntList mSolversWidgetColumnWidths;
 
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
@@ -95,6 +96,9 @@ private Q_SLOTS:
     void simulationWidgetHeaderSectionResized(const int &pIndex,
                                               const int &pOldSize,
                                               const int &pNewSize);
+    void solversWidgetHeaderSectionResized(const int &pIndex,
+                                           const int &pOldSize,
+                                           const int &pNewSize);
 };
 
 //==============================================================================

@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "collapsiblewidget.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
+#include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
@@ -50,6 +51,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QMap<int, bool>()),
     mSimulationWidgetColumnWidths(QIntList()),
+    mSolversWidgetColumnWidths(QIntList()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
 {
@@ -163,6 +165,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         connect(mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
+        connect(mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
     }
 
     // Update our new simualtion widget and its children, if needed
@@ -385,6 +389,19 @@ void SingleCellViewWidget::simulationWidgetHeaderSectionResized(const int &pInde
 
 //==============================================================================
 
+void SingleCellViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
+                                                             const int &pOldSize,
+                                                             const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Keep track of the new column width
+
+    mSolversWidgetColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::backupSettings(SingleCellViewSimulationWidget *pSimulationWidget)
 {
     // Back up some of the given simulation's contents' children's settings
@@ -400,6 +417,13 @@ void SingleCellViewWidget::backupSettings(SingleCellViewSimulationWidget *pSimul
 
     for (int i = 0, iMax = simulationWidget->header()->count(); i < iMax; ++i)
         mSimulationWidgetColumnWidths << simulationWidget->columnWidth(i);
+
+    SingleCellViewInformationSolversWidget *solversWidget = pSimulationWidget->contentsWidget()->informationWidget()->solversWidget();
+
+    mSolversWidgetColumnWidths = QIntList();
+
+    for (int i = 0, iMax = solversWidget->header()->count(); i < iMax; ++i)
+        mSolversWidgetColumnWidths << solversWidget->columnWidth(i);
 }
 
 //==============================================================================
@@ -417,6 +441,11 @@ void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimu
 
     for (int i = 0, iMax = mSimulationWidgetColumnWidths.count(); i < iMax; ++i)
         simulationWidget->setColumnWidth(i, mSimulationWidgetColumnWidths[i]);
+
+    SingleCellViewInformationSolversWidget *solversWidget = pSimulationWidget->contentsWidget()->informationWidget()->solversWidget();
+
+    for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
+        solversWidget->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
 }
 
 //==============================================================================
