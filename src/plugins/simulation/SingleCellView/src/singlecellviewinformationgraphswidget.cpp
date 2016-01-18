@@ -22,8 +22,10 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfileruntime.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
+#include "singlecellviewplugin.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
+#include "singlecellviewwidget.h"
 
 //==============================================================================
 
@@ -43,17 +45,18 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
+SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                                             QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
+    mViewWidget(pPlugin->viewWidget()),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mFileNames(QStringList()),
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
@@ -141,8 +144,6 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
     // Remove track of various information
 
-    mFileNames.removeOne(pFileName);
-
     mRuntimes.remove(pFileName);
     mSimulations.remove(pFileName);
 }
@@ -151,12 +152,9 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
 void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
 {
-    // Keep track of the file name, but only if we don't already track it (i.e.
-    // account for the reloading of a file), and update our graphs information
-    // (which is always to be done)
+    Q_UNUSED(pFileName);
 
-    if (!mFileNames.contains(pFileName))
-        mFileNames << pFileName;
+    // Update our graphs information (which is always to be done)
 
     updateAllGraphsInfo(true);
 }
@@ -170,12 +168,8 @@ void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileN
 
     mFileName = pNewFileName;
 
-    mFileNames << pNewFileName;
-
     mRuntimes.insert(pNewFileName, mRuntimes.value(pOldFileName));
     mSimulations.insert(pNewFileName, mSimulations.value(pOldFileName));
-
-    finalize(pOldFileName);
 
     updateAllGraphsInfo(true);
 }
@@ -187,8 +181,6 @@ void SingleCellViewInformationGraphsWidget::fileClosed(const QString &pFileName)
     Q_UNUSED(pFileName);
 
     // Update the information about our graphs properties
-    // Note: our various trackers (e.g. mFileNames) will have been updated
-    //       through finalize(), so we are fine...
 
     updateAllGraphsInfo(true);
 }
@@ -897,7 +889,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mFileNames)
+    foreach (const QString &fileName, mViewWidget->fileNames())
         modelListValues << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
 
     modelListValues.sort();

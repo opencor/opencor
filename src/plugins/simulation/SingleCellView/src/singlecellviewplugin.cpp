@@ -334,6 +334,15 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 // Plugin specific
 //==============================================================================
 
+SingleCellViewWidget * SingleCellViewPlugin::viewWidget() const
+{
+    // Return our view widget
+
+    return mViewWidget;
+}
+
+//==============================================================================
+
 SolverInterfaces SingleCellViewPlugin::solverInterfaces() const
 {
     // Return our solver interfaces

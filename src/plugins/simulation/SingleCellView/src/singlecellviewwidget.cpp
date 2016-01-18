@@ -58,7 +58,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mParametersWidgetColumnWidths(QIntList()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>()),
-    mSimulations(SingleCellViewSimulations())
+    mFileNames(QStringList())
 {
 }
 
@@ -155,10 +155,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         // Initialise our simulation widget
 
         mSimulationWidget->initialize();
-
-        // Keep track of the simulation associated with the simulation widget
-
-        mSimluations << mSimulationWidget->simulation();
 
         // Keep track of various things related our simulation widget and its
         // children
@@ -286,11 +282,13 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
 
 void SingleCellViewWidget::fileOpened(const QString &pFileName)
 {
-    // Keep track, if possible, of the fact that a file has been opened
+    // Track the given file name
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    mFileNames << pFileName;
 
-    if (simulationWidget)
+    // Let our simulation widgets know that a file has been opened
+
+    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->fileOpened(pFileName);
 }
 
@@ -298,7 +296,8 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
 void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 {
-    // Keep track, if possible, of the fact that a file has been un/locked
+    // Let the simulation widget, if any, associated with the given file name
+    // know that a file has been un/locked
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -310,7 +309,8 @@ void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 
 void SingleCellViewWidget::fileModified(const QString &pFileName)
 {
-    // Keep track, if possible, of the fact that a file has been un/locked
+    // Let the simulation widget, if any, associated with the given file name
+    // know that a file has been modified
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -322,7 +322,8 @@ void SingleCellViewWidget::fileModified(const QString &pFileName)
 
 void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so reload it, should it be managed
+    // Let the simulation widget, if any, associated with the given file name
+    // know that a file has been reloaded
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -335,6 +336,12 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
+    // Stop tracking the old given file name and track the given new one instead
+
+    mFileNames.removeOne(pOldFileName);
+
+    mFileNames << pNewFileName;
+
     // The given file has been renamed, so update our simulation widgets mapping
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
@@ -343,14 +350,22 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulationWidgets.insert(pNewFileName, simulationWidget);
         mSimulationWidgets.remove(pOldFileName);
     }
+
+    // Let our simulation widgets know that a file has been renamed
+
+    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        simulationWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::fileClosed(const QString &pFileName)
 {
-    // The given file has been closed, so let our our simulation widgets know
-    // about it
+    // Stop tracking the given file name
+
+    mFileNames.removeOne(pFileName);
+
+    // Let our simulation widgets know that a file has been closed
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->fileClosed(pFileName);
@@ -358,11 +373,11 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
-SingleCellViewSimulations SingleCellViewWidget::simulations() const
+QStringList SingleCellViewWidget::fileNames() const
 {
-    // Return our simulations
+    // Return our file names
 
-    return mSimulations;
+    return mFileNames;
 }
 
 //==============================================================================

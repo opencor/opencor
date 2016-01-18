@@ -69,6 +69,8 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
+    SingleCellViewWidget * viewWidget() const;
+
     SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
 

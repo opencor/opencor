@@ -56,7 +56,9 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewGraphPanelWidget;
+class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewWidget;
 
 //==============================================================================
 
@@ -66,7 +68,8 @@ class SingleCellViewInformationGraphsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationGraphsWidget(QWidget *pParent);
+    explicit SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                   QWidget *pParent);
     ~SingleCellViewInformationGraphsWidget();
 
     virtual void retranslateUi();
@@ -92,6 +95,8 @@ public:
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
 
+    SingleCellViewWidget *mViewWidget;
+
     QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *> mGraphPanels;
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;
@@ -104,7 +109,6 @@ private:
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    QStringList mFileNames;
     QString mFileName;
 
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;

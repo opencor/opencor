@@ -69,7 +69,7 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
-    SingleCellViewSimulations simulations() const;
+    QStringList fileNames() const;
 
 private:
     SingleCellViewPlugin *mPlugin;
@@ -89,7 +89,7 @@ private:
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
 
-    SingleCellViewSimulations mSimulations;
+    QStringList mFileNames;
 
     void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
     void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);

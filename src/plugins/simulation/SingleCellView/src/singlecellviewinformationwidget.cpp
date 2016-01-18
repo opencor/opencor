@@ -76,7 +76,7 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewP
 
     // Create our graphs widget
 
-    mGraphsWidget = new SingleCellViewInformationGraphsWidget(mCollapsibleWidget);
+    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, mCollapsibleWidget);
 
     mGraphsWidget->setObjectName("Graphs");
 
