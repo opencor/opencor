@@ -166,10 +166,14 @@ void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileN
 {
     // Replace the old file name with the new one in our various trackers
 
-    mFileName = pNewFileName;
+    if (!mFileName.compare(pOldFileName))
+        mFileName = pNewFileName;
 
     mRuntimes.insert(pNewFileName, mRuntimes.value(pOldFileName));
     mSimulations.insert(pNewFileName, mSimulations.value(pOldFileName));
+
+    mRuntimes.remove(pOldFileName);
+    mSimulations.remove(pOldFileName);
 
     updateAllGraphsInfo(true);
 }
