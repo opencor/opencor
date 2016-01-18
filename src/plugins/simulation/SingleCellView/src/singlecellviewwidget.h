@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "singlecellviewsimulation.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -68,6 +69,8 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
+    SingleCellViewSimulations simulations() const;
+
 private:
     SingleCellViewPlugin *mPlugin;
 
@@ -85,6 +88,8 @@ private:
 
     SingleCellViewSimulationWidget *mSimulationWidget;
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
+
+    SingleCellViewSimulations mSimulations;
 
     void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
     void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);

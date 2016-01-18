@@ -1057,6 +1057,15 @@ void SingleCellViewSimulationWidget::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
+SingleCellViewSimulation * SingleCellViewSimulationWidget::simulation() const
+{
+    // Return our simulation
+
+    return mSimulation;
+}
+
+//==============================================================================
+
 QVariant SingleCellViewSimulationWidget::value(Core::Property *pProperty) const
 {
     switch (pProperty->type()) {

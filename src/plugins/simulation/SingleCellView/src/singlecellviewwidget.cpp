@@ -57,7 +57,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mGraphsWidgetColumnWidths(QIntList()),
     mParametersWidgetColumnWidths(QIntList()),
     mSimulationWidget(0),
-    mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>())
+    mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>()),
+    mSimulations(SingleCellViewSimulations())
 {
 }
 
@@ -154,6 +155,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         // Initialise our simulation widget
 
         mSimulationWidget->initialize();
+
+        // Keep track of the simulation associated with the simulation widget
+
+        mSimluations << mSimulationWidget->simulation();
 
         // Keep track of various things related our simulation widget and its
         // children
@@ -349,6 +354,15 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->fileClosed(pFileName);
+}
+
+//==============================================================================
+
+SingleCellViewSimulations SingleCellViewWidget::simulations() const
+{
+    // Return our simulations
+
+    return mSimulations;
 }
 
 //==============================================================================
