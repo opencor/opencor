@@ -412,7 +412,7 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
         || (simulationResultsSize != mSimulationResultsSizes.value(pSimulationWidget))) {
         mSimulationResultsSizes.insert(pSimulationWidget, simulationResultsSize);
 
-        pSimulationWidget->updateResults(simulationResultsSize);
+        pSimulationWidget->updateSimulationResults(simulationResultsSize);
     }
 
     // Ask to recheck our simulation widget's results, but only if its
@@ -420,21 +420,22 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
 
     if (   simulation->isRunning()
         || (simulationResultsSize != simulation->results()->size())) {
-        // Note: we cannot ask QTimer::singleShot() to call checkResults() since
-        //       it expects a simulation widget as a parameter, so instead we
-        //       call a method with no arguments that will make use of our list
-        //       to know which simulation should be passed as an argument to
-        //       checkResults()...
+        // Note: we cannot ask QTimer::singleShot() to call
+        //       callCheckSimulationResults() since it expects a simulation
+        //       widget as a parameter, so instead we call a method with no
+        //       arguments that will make use of our list to know which
+        //       simulation should be passed as an argument to
+        //       checkSimulationResults()...
 
         mSimulationCheckResults << pSimulationWidget;
 
-        QTimer::singleShot(0, this, SLOT(callCheckResults()));
+        QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
     }
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::callCheckResults()
+void SingleCellViewWidget::callCheckSimulationResults()
 {
     // Retrieve the simulation widget for which we want to call checkResults()
     // and then call checkResults() for it

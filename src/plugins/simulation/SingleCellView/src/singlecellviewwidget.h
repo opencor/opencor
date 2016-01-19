@@ -121,7 +121,7 @@ private Q_SLOTS:
                                               const int &pOldSize,
                                               const int &pNewSize);
 
-    void callCheckResults();
+    void callCheckSimulationResults();
 };
 
 //==============================================================================

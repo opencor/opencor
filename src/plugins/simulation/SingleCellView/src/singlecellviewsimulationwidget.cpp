@@ -2358,7 +2358,7 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
+void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &pSimulationResultsSize)
 {
     // Update the modified state of the simulation's corresponding file
     // Note: normally, our simulation worker would, for each point interval,
@@ -2396,13 +2396,13 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
 
                 // Update our graph's data
 
-                updateGraphData(graph, pSize);
+                updateGraphData(graph, pSimulationResultsSize);
 
                 // Draw the graph's new segment, but only if the graph is
                 // visible, there is no need to update the plot and there is
                 // some data to plot
 
-                if (graph->isVisible() && !needUpdatePlot && pSize) {
+                if (graph->isVisible() && !needUpdatePlot && pSimulationResultsSize) {
                     // Check that our graph segment can fit within our plot's
                     // current viewport, but only if the user hasn't changed the
                     // plot's viewport since we last came here
@@ -2413,7 +2413,7 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (qulonglong i = oldDataSize-1; i < pSize; ++i) {
+                        for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
                             double valX = graph->data()->sample(i).x();
                             double valY = graph->data()->sample(i).y();
 
@@ -2455,7 +2455,7 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
             mPlotsViewports.insert(plot,
                                    QRectF(plotMinX, plotMinY,
                                           plot->maxX()-plotMinX, plot->maxY()-plotMinY));
-        } else if (!pSize) {
+        } else if (!pSimulationResultsSize) {
             // We came here as a result of starting a simulation or clearing our
             // plot, so simply replot it (rather than update it)
             // Note: we don't want to update our plot since this is going to

@@ -123,7 +123,7 @@ public:
 
     SingleCellViewSimulation *simulation() const;
 
-    void updateResults(const qulonglong &pSize);
+    void updateSimulationResults(const qulonglong &pSimulationResultsSize);
 
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
