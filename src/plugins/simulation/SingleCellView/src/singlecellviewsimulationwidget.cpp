@@ -587,13 +587,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
 
-    // Reset our file tab icon and update our progress bar
-    // Note: they may not both be necessary, but we never know...
-
-    resetFileTabIcon();
-
-    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(this)/mSimulation->size());
-
     // Determine whether the CellML file has a valid runtime
 
     bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
@@ -884,7 +877,7 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 {
     // Return a file tab icon that shows the given file's simulation progress
 
-    if (mProgress != -1) {
+    if (!isVisible() && (mProgress != -1)) {
         // Create an image that shows the progress of our simulation
 
         QPixmap tabBarPixmap = QPixmap(tabBarPixmapSize(),
@@ -2004,8 +1997,6 @@ void SingleCellViewSimulationWidget::resetFileTabIcon()
     // tab icon should be reset
 
     static const QIcon NoIcon = QIcon();
-
-    mProgress = -1;
 
     emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
