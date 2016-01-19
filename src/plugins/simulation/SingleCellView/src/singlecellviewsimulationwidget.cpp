@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewsimulationwidget.h"
+#include "singlecellviewwidget.h"
 #include "toolbarwidget.h"
 #include "usermessagewidget.h"
 
@@ -81,13 +82,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     ViewWidget(pParent, false),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
+    mViewWidget(pPlugin->viewWidget()),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mSimulation(0),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
-    mSimulationResultsSize(0),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
@@ -591,7 +592,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     resetFileTabIcon();
 
-    mProgressBarWidget->setValue(mSimulationResultsSize/mSimulation->size());
+    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(this)/mSimulation->size());
 
     // Determine whether the CellML file has a valid runtime
 
@@ -1135,7 +1136,7 @@ void SingleCellViewSimulationWidget::on_actionRunPauseResumeSimulation_triggered
 
                 runSimulation = mSimulation->results()->reset();
 
-                checkResults(true);
+                mViewWidget->checkSimulationResults(this, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1186,7 +1187,7 @@ void SingleCellViewSimulationWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    checkResults(true);
+    mViewWidget->checkSimulationResults(this, true);
 }
 
 //==============================================================================
@@ -1901,7 +1902,7 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
     updateSimulationMode();
 
-    checkResults();
+    mViewWidget->checkSimulationResults(this);
 }
 
 //==============================================================================
@@ -1915,7 +1916,7 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
-    checkResults();
+    mViewWidget->checkSimulationResults(this);
 }
 
 //==============================================================================
@@ -1991,8 +1992,6 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
 void SingleCellViewSimulationWidget::resetProgressBar()
 {
     // Reset our progress bar
-
-    mSimulationResultsSize = 0;
 
     mProgressBarWidget->setValue(0.0);
 }
@@ -2474,7 +2473,7 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
     //       that cannot be handled by us, meaning that our central widget would
     //       show a message rather than us...
 
-    double simulationProgress = mSimulationResultsSize/mSimulation->size();
+    double simulationProgress = mViewWidget->simulationResultsSize(this)/mSimulation->size();
 
     if (isVisible()) {
         mProgressBarWidget->setValue(simulationProgress);
@@ -2500,30 +2499,6 @@ void SingleCellViewSimulationWidget::updateResults(const qulonglong &pSize)
 
             emit updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
         }
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::checkResults(const bool &pForceUpdateResults)
-{
-    // Update our results, but only if needed
-
-    qulonglong simulationResultsSize = mSimulation->results()->size();
-
-    if (    pForceUpdateResults
-        || (simulationResultsSize != mSimulationResultsSize)) {
-        mSimulationResultsSize = simulationResultsSize;
-
-        updateResults(simulationResultsSize);
-    }
-
-    // Ask to recheck our simulation's results, but only if our simulation is
-    // still running
-
-    if (   mSimulation->isRunning()
-        || (simulationResultsSize != mSimulation->results()->size())) {
-        QTimer::singleShot(0, this, SLOT(checkResults()));
     }
 }
 

@@ -84,6 +84,7 @@ namespace SingleCellView {
 class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
+class SingleCellViewWidget;
 
 //==============================================================================
 
@@ -122,6 +123,8 @@ public:
 
     SingleCellViewSimulation *simulation() const;
 
+    void updateResults(const qulonglong &pSize);
+
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
@@ -134,6 +137,8 @@ private:
     Ui::SingleCellViewSimulationWidget *mGui;
 
     SingleCellViewPlugin *mPlugin;
+
+    SingleCellViewWidget *mViewWidget;
 
     QString mFileName;
 
@@ -168,8 +173,6 @@ private:
 
     ErrorType mErrorType;
 
-    qulonglong mSimulationResultsSize;
-
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
@@ -202,8 +205,6 @@ private:
 
     void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
-
-    void updateResults(const qulonglong &pSize);
 
     QVariant value(Core::Property *pProperty) const;
 
@@ -277,9 +278,11 @@ private Q_SLOTS:
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
-
-    void checkResults(const bool &pForceUpdateResults = false);
 };
+
+//==============================================================================
+
+typedef QList<SingleCellViewSimulationWidget *> SingleCellViewSimulationWidgets;
 
 //==============================================================================
 

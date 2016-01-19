@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include <QHeaderView>
 #include <QLayout>
 #include <QSettings>
+#include <QTimer>
 
 //==============================================================================
 
@@ -58,7 +59,9 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mParametersWidgetColumnWidths(QIntList()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>()),
-    mFileNames(QStringList())
+    mFileNames(QStringList()),
+    mSimulationResultsSizes(QMap<SingleCellViewSimulationWidget *, qulonglong>()),
+    mSimulationCheckResults(SingleCellViewSimulationWidgets())
 {
 }
 
@@ -378,6 +381,69 @@ QStringList SingleCellViewWidget::fileNames() const
     // Return our file names
 
     return mFileNames;
+}
+
+//==============================================================================
+
+qulonglong SingleCellViewWidget::simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const
+{
+    // Return the results size for the given simulation widget
+
+    return mSimulationResultsSizes.value(pSimulationWidget);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+                                                  const bool &pForceUpdateResults)
+{
+    // Make sure that we can still check results (i.e. we are not closing down
+    // with some simulations still running)
+
+    if (!mSimulationWidgets.values().contains(pSimulationWidget))
+        return;
+
+    // Update our simulation widget's results, but only if needed
+
+    SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
+    qulonglong simulationResultsSize = simulation->results()->size();
+
+    if (    pForceUpdateResults
+        || (simulationResultsSize != mSimulationResultsSizes.value(pSimulationWidget))) {
+        mSimulationResultsSizes.insert(pSimulationWidget, simulationResultsSize);
+
+        pSimulationWidget->updateResults(simulationResultsSize);
+    }
+
+    // Ask to recheck our simulation widget's results, but only if its
+    // simulation is still running
+
+    if (   simulation->isRunning()
+        || (simulationResultsSize != simulation->results()->size())) {
+        // Note: we cannot ask QTimer::singleShot() to call checkResults() since
+        //       it expects a simulation widget as a parameter, so instead we
+        //       call a method with no arguments that will make use of our list
+        //       to know which simulation should be passed as an argument to
+        //       checkResults()...
+
+        mSimulationCheckResults << pSimulationWidget;
+
+        QTimer::singleShot(0, this, SLOT(callCheckResults()));
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::callCheckResults()
+{
+    // Retrieve the simulation widget for which we want to call checkResults()
+    // and then call checkResults() for it
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationCheckResults.first();
+
+    mSimulationCheckResults.removeFirst();
+
+    checkSimulationResults(simulationWidget);
 }
 
 //==============================================================================

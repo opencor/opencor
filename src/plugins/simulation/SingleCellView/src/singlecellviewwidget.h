@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -36,7 +37,6 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewPlugin;
-class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
@@ -71,6 +71,11 @@ public:
 
     QStringList fileNames() const;
 
+    qulonglong simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const;
+
+    void checkSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+                                const bool &pForceUpdateResults = false);
+
 private:
     SingleCellViewPlugin *mPlugin;
 
@@ -90,6 +95,9 @@ private:
     QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
 
     QStringList mFileNames;
+
+    QMap<SingleCellViewSimulationWidget *, qulonglong> mSimulationResultsSizes;
+    SingleCellViewSimulationWidgets mSimulationCheckResults;
 
     void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
     void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
@@ -112,6 +120,8 @@ private Q_SLOTS:
     void parametersWidgetHeaderSectionResized(const int &pIndex,
                                               const int &pOldSize,
                                               const int &pNewSize);
+
+    void callCheckResults();
 };
 
 //==============================================================================
