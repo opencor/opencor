@@ -79,7 +79,7 @@ namespace SingleCellView {
 SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlugin *pPlugin,
                                                                const QString &pFileName,
                                                                QWidget *pParent) :
-    ViewWidget(pParent, false),
+    Widget(pParent),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
     mViewWidget(pPlugin->viewWidget()),
@@ -1851,7 +1851,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     // Export our simulation data results
 
     setEnabled(false);
-    showBusyWidget(this, true);
+    mViewWidget->showBusyWidget(this, true);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
@@ -1860,7 +1860,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 
     dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
-    hideBusyWidget();
+    mViewWidget->hideBusyWidget();
     setEnabled(true);
 }
 
@@ -2007,7 +2007,7 @@ void SingleCellViewSimulationWidget::resetFileTabIcon()
 
     mProgress = -1;
 
-    emit updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
+    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
 
 //==============================================================================
@@ -2370,121 +2370,112 @@ void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &p
 
     checkSimulationDataModified(mSimulation->data()->isModified());
 
-    // Update all the graphs associated with the given simulation
+    // Update all the graphs of all our plots, but only if we are visible
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
-        bool needUpdatePlot = false;
+    if (isVisible()) {
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
+            bool needUpdatePlot = false;
 
-        double plotMinX = plot->minX();
-        double plotMaxX = plot->maxX();
-        double plotMinY = plot->minY();
-        double plotMaxY = plot->maxY();
+            double plotMinX = plot->minX();
+            double plotMaxX = plot->maxX();
+            double plotMinY = plot->minY();
+            double plotMaxY = plot->maxY();
 
-        QRectF plotViewport = QRectF(plotMinX, plotMinY,
-                                     plotMaxX-plotMinX, plotMaxY-plotMinY);
+            QRectF plotViewport = QRectF(plotMinX, plotMinY,
+                                         plotMaxX-plotMinX, plotMaxY-plotMinY);
 
-        foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
-            if (!graph->fileName().compare(mFileName)) {
-                // Keep track of our graph's old size
+            foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
+                if (!graph->fileName().compare(mFileName)) {
+                    // Keep track of our graph's old size
 
-                qulonglong oldDataSize = graph->dataSize();
+                    qulonglong oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing this graph's first segment, in
-                // which case we will need to update our plot
+                    // Check whether we are drawing this graph's first segment,
+                    // in which case we will need to update our plot
 
-                needUpdatePlot = needUpdatePlot || !oldDataSize;
+                    needUpdatePlot = needUpdatePlot || !oldDataSize;
 
-                // Update our graph's data
+                    // Update our graph's data
 
-                updateGraphData(graph, pSimulationResultsSize);
+                    updateGraphData(graph, pSimulationResultsSize);
 
-                // Draw the graph's new segment, but only if the graph is
-                // visible, there is no need to update the plot and there is
-                // some data to plot
+                    // Draw the graph's new segment, but only if the graph is
+                    // visible, there is no need to update the plot and there
+                    // is some data to plot
 
-                if (graph->isVisible() && !needUpdatePlot && pSimulationResultsSize) {
-                    // Check that our graph segment can fit within our plot's
-                    // current viewport, but only if the user hasn't changed the
-                    // plot's viewport since we last came here
+                    if (graph->isVisible() && !needUpdatePlot && pSimulationResultsSize) {
+                        // Check that our graph segment can fit within our
+                        // plot's current viewport, but only if the user hasn't
+                        // changed the plot's viewport since we last came here
 
-                    if (mPlotsViewports.value(plot) == plotViewport) {
-                        double minX = plotMinX;
-                        double maxX = plotMaxX;
-                        double minY = plotMinY;
-                        double maxY = plotMaxY;
+                        if (mPlotsViewports.value(plot) == plotViewport) {
+                            double minX = plotMinX;
+                            double maxX = plotMaxX;
+                            double minY = plotMinY;
+                            double maxY = plotMaxY;
 
-                        for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data()->sample(i).x();
-                            double valY = graph->data()->sample(i).y();
+                            for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
+                                double valX = graph->data()->sample(i).x();
+                                double valY = graph->data()->sample(i).y();
 
-                            minX = qMin(minX, valX);
-                            maxX = qMax(maxX, valX);
-                            minY = qMin(minY, valY);
-                            maxY = qMax(maxY, valY);
+                                minX = qMin(minX, valX);
+                                maxX = qMax(maxX, valX);
+                                minY = qMin(minY, valY);
+                                maxY = qMax(maxY, valY);
+                            }
+
+                            // Update pour plot, if our graph segment cannot fit
+                            // within our plot's current viewport
+
+                            needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                             || (minY < plotMinY) || (maxY > plotMaxY);
                         }
 
-                        if (   (minX < plotMinX) || (maxX > plotMaxX)
-                            || (minY < plotMinY) || (maxY > plotMaxY)) {
-                            // Our graph segment cannot fit within our plot's
-                            // current viewport, so we will need to update it
-
-                            needUpdatePlot = true;
-                        }
+                        if (!needUpdatePlot)
+                            plot->drawGraphFrom(graph, oldDataSize-1);
                     }
-
-                    if (!needUpdatePlot)
-                        plot->drawGraphFrom(graph, oldDataSize-1);
                 }
             }
-        }
 
-        // Check whether we need to update/replot our plot
+            // Check whether we need to update/replot our plot
 
-        if (needUpdatePlot) {
-            // We are either drawing a graph's first segment or its new segment
-            // doesn't fit within the plot's current viewport, in which case we
-            // need to udate our plot
+            if (needUpdatePlot) {
+                // We are either drawing a graph's first segment or its new
+                // segment doesn't fit within the plot's current viewport, in
+                // which case we need to update our plot
 
-            updatePlot(plot, true);
+                updatePlot(plot, true);
 
-            // Keep track of our plot's new viewport
+                // Keep track of our plot's new viewport
 
-            plotMinX = plot->minX();
-            plotMinY = plot->minY();
+                plotMinX = plot->minX();
+                plotMinY = plot->minY();
 
-            mPlotsViewports.insert(plot,
-                                   QRectF(plotMinX, plotMinY,
-                                          plot->maxX()-plotMinX, plot->maxY()-plotMinY));
-        } else if (!pSimulationResultsSize) {
-            // We came here as a result of starting a simulation or clearing our
-            // plot, so simply replot it (rather than update it)
-            // Note: we don't want to update our plot since this is going to
-            //       reset its axes' values and therefore result in some
-            //       (expected) flickering, if some data is to be drawn
-            //       straightaway (e.g. when we start a simulation)...
+                mPlotsViewports.insert(plot,
+                                       QRectF(plotMinX, plotMinY,
+                                              plot->maxX()-plotMinX, plot->maxY()-plotMinY));
+            } else if (!pSimulationResultsSize) {
+                // We came here as a result of starting a simulation or clearing
+                // our plot, so simply replot it (rather than update it)
+                // Note: we don't want to update our plot since this is going to
+                //       reset its axes' values and therefore result in some
+                //       (expected) flickering, if some data is to be drawn
+                //       straightaway (e.g. when we start a simulation)...
 
-            plot->replotNow();
+                plot->replotNow();
+            }
         }
     }
 
-    // Update our progress bar, if we are visible and dealing with the active
-    // simulation, otherwise the tab icon
-    // Note: we check that we are visible in case the user has selected a file
-    //       that cannot be handled by us, meaning that our central widget would
-    //       show a message rather than us...
+    // Update our progress bar, if we are visible
 
     double simulationProgress = mViewWidget->simulationResultsSize(this)/mSimulation->size();
 
     if (isVisible()) {
         mProgressBarWidget->setValue(simulationProgress);
     } else {
-        // We are not dealing with the active simulation, so create an icon that
-        // shows the simulation's progress and let people know about it
-        // Note: we need to retrieve the name of the file associated with the
-        //       other simulation since we have only one simulation object at
-        //       any given time, and anyone handling the updateFileTabIcon()
-        //       signal (e.g. CentralWidget) won't be able to tell for which
-        //       simulation the update is...
+        // We are not visible, so create an icon that shows our simulation's
+        // progress and let people know about it
 
         int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
         // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
@@ -2497,7 +2488,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &p
 
             // Let people know about the file tab icon to be used for the model
 
-            emit updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+            emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
         }
     }
 }

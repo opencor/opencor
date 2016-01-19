@@ -74,7 +74,7 @@ public:
     qulonglong simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const;
 
     void checkSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                const bool &pForceUpdateResults = false);
+                                const bool &pForceUpdateSimulationResults = false);
 
 private:
     SingleCellViewPlugin *mPlugin;

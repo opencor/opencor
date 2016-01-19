@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewsimulation.h"
-#include "viewwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
@@ -88,7 +88,7 @@ class SingleCellViewWidget;
 
 //==============================================================================
 
-class SingleCellViewSimulationWidget : public Core::ViewWidget
+class SingleCellViewSimulationWidget : public Core::Widget
 {
     Q_OBJECT
 

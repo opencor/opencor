@@ -395,7 +395,7 @@ qulonglong SingleCellViewWidget::simulationResultsSize(SingleCellViewSimulationW
 //==============================================================================
 
 void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                                  const bool &pForceUpdateResults)
+                                                  const bool &pForceUpdateSimulationResults)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -408,7 +408,7 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
     SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
 
-    if (    pForceUpdateResults
+    if (   pForceUpdateSimulationResults
         || (simulationResultsSize != mSimulationResultsSizes.value(pSimulationWidget))) {
         mSimulationResultsSizes.insert(pSimulationWidget, simulationResultsSize);
 
