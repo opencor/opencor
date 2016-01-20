@@ -2393,56 +2393,54 @@ void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &p
                                      plotMaxX-plotMinX, plotMaxY-plotMinY);
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
-            if (!graph->fileName().compare(mFileName)) {
-                // Keep track of our graph's old size
+            // Keep track of our graph's old size
 
-                qulonglong oldDataSize = graph->dataSize();
+            qulonglong oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing this graph's first segment,
-                // in which case we will need to update our plot
+            // Check whether we are drawing this graph's first segment, in which
+            // case we will need to update our plot
 
-                needUpdatePlot = needUpdatePlot || !oldDataSize;
+            needUpdatePlot = needUpdatePlot || !oldDataSize;
 
-                // Update our graph's data
+            // Update our graph's data
 
-                updateGraphData(graph, pSimulationResultsSize);
+            updateGraphData(graph, pSimulationResultsSize);
 
-                // Draw the graph's new segment, but only if we are visible, as
-                // as our graph, and that there is no need to update the plot
-                // and that there is some data to plot
+            // Draw the graph's new segment, but only if we are visible, as our
+            // graph, and that there is no need to update the plot and that
+            // there is some data to plot
 
-                if (    visible && graph->isVisible()
-                    && !needUpdatePlot && pSimulationResultsSize) {
-                    // Check that our graph segment can fit within our
-                    // plot's current viewport, but only if the user hasn't
-                    // changed the plot's viewport since we last came here
+            if (    visible && graph->isVisible()
+                && !needUpdatePlot && pSimulationResultsSize) {
+                // Check that our graph segment can fit within our plot's
+                // current viewport, but only if the user hasn't changed the
+                // plot's viewport since we last came here
 
-                    if (mPlotsViewports.value(plot) == plotViewport) {
-                        double minX = plotMinX;
-                        double maxX = plotMaxX;
-                        double minY = plotMinY;
-                        double maxY = plotMaxY;
+                if (mPlotsViewports.value(plot) == plotViewport) {
+                    double minX = plotMinX;
+                    double maxX = plotMaxX;
+                    double minY = plotMinY;
+                    double maxY = plotMaxY;
 
-                        for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data()->sample(i).x();
-                            double valY = graph->data()->sample(i).y();
+                    for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
+                        double valX = graph->data()->sample(i).x();
+                        double valY = graph->data()->sample(i).y();
 
-                            minX = qMin(minX, valX);
-                            maxX = qMax(maxX, valX);
-                            minY = qMin(minY, valY);
-                            maxY = qMax(maxY, valY);
-                        }
-
-                        // Update pour plot, if our graph segment cannot fit
-                        // within our plot's current viewport
-
-                        needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                         || (minY < plotMinY) || (maxY > plotMaxY);
+                        minX = qMin(minX, valX);
+                        maxX = qMax(maxX, valX);
+                        minY = qMin(minY, valY);
+                        maxY = qMax(maxY, valY);
                     }
 
-                    if (!needUpdatePlot)
-                        plot->drawGraphFrom(graph, oldDataSize-1);
+                    // Update pour plot, if our graph segment cannot fit within
+                    // our plot's current viewport
+
+                    needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                     || (minY < plotMinY) || (maxY > plotMaxY);
                 }
+
+                if (!needUpdatePlot)
+                    plot->drawGraphFrom(graph, oldDataSize-1);
             }
         }
 
