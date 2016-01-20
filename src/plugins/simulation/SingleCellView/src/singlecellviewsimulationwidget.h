@@ -127,6 +127,9 @@ public:
 
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
+protected:
+    virtual void showEvent(QShowEvent *pShowEvent);
+
 private:
     enum ErrorType {
         General,
@@ -180,6 +183,8 @@ private:
     bool mCanUpdatePlotsForUpdatedGraphs;
 
     bool mNeedReloadView;
+
+    bool mNeedUpdatePlots;
 
     void reloadView();
 
