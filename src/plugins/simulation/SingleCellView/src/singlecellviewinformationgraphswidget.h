@@ -111,9 +111,6 @@ private:
 
     QString mFileName;
 
-    QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
-    QMap<QString, SingleCellViewSimulation *> mSimulations;
-
     bool mCanEmitGraphsUpdatedSignal;
 
     int mHorizontalScrollBarValue;
