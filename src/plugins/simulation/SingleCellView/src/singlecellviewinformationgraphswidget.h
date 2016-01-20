@@ -82,6 +82,8 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
+    void updateGui();
+
     void finishEditing();
 
     Core::Properties graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,

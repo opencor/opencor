@@ -2345,6 +2345,10 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
 
 void SingleCellViewSimulationWidget::updateGui()
 {
+    // Make sure that our graphs widget's GUI is up to date
+
+    mContentsWidget->informationWidget()->graphsWidget()->updateGui();
+
     // Make sure that our plots are up to date
     // Note: indeed, say that we start a simulation with some graphs and switch
     //       to another file before the simulation is complete. Now, if we
