@@ -58,7 +58,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mFileName(QString()),
-    mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mCanEmitGraphsUpdatedSignal(true),
     mHorizontalScrollBarValue(0)
@@ -121,7 +120,6 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
     mFileName = pFileName;
 
-    mRuntimes.insert(pFileName, pSimulation->runtime());
     mSimulations.insert(pFileName, pSimulation);
 
     // Populate our parameters context menu
@@ -144,7 +142,6 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
     // Remove track of various information
 
-    mRuntimes.remove(pFileName);
     mSimulations.remove(pFileName);
 }
 
@@ -169,10 +166,8 @@ void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileN
     if (!mFileName.compare(pOldFileName))
         mFileName = pNewFileName;
 
-    mRuntimes.insert(pNewFileName, mRuntimes.value(pOldFileName));
     mSimulations.insert(pNewFileName, mSimulations.value(pOldFileName));
 
-    mRuntimes.remove(pOldFileName);
     mSimulations.remove(pOldFileName);
 
     updateAllGraphsInfo(true);
@@ -792,7 +787,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assignment...
 
     bool graphOk = true;
-    CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(fileName);
+    CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 

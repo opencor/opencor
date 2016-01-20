@@ -85,7 +85,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mViewWidget(pPlugin->viewWidget()),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
-    mSimulation(0),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),

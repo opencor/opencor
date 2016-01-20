@@ -385,6 +385,20 @@ QStringList SingleCellViewWidget::fileNames() const
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &pFileName) const
+{
+    // Return the runtime of the given file name
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget)
+        return simulationWidget->simulation()->runtime();
+    else
+        return 0;
+}
+
+//==============================================================================
+
 qulonglong SingleCellViewWidget::simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const
 {
     // Return the results size for the given simulation widget
