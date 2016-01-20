@@ -179,6 +179,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                 this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
         connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
+    } else {
+        // We already have a simulation widget, so just make sure that its GUI
+        // is up to date
+
+        mSimulationWidget->updateGui();
     }
 
     // Update our new simualtion widget and its children, if needed

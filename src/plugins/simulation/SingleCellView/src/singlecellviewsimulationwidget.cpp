@@ -448,28 +448,6 @@ void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::showEvent(QShowEvent *pShowEvent)
-{
-    Q_UNUSED(pShowEvent);
-
-    // Make sure that our plots are up to date
-    // Note: indeed, say that we start a simulation with some graphs and switch
-    //       to another file before the simulation is complete. Now, if we
-    //       switch back to the file after the simulation has completed, the
-    //       plots won't be up to date (since the simulation widget was not
-    //       visible and therefore didn't update its plots), so we need to do it
-    //       here...
-
-    if (mNeedUpdatePlots) {
-        mNeedUpdatePlots = false;
-
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-            updatePlot(plot, true);
-    }
-}
-
-//==============================================================================
-
 void SingleCellViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions
@@ -2360,6 +2338,26 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
         pGraph->setRawSamples(dataPoints(pGraph->parameterX()),
                               dataPoints(pGraph->parameterY()),
                               pSize);
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::updateGui()
+{
+    // Make sure that our plots are up to date
+    // Note: indeed, say that we start a simulation with some graphs and switch
+    //       to another file before the simulation is complete. Now, if we
+    //       switch back to the file after the simulation has completed, the
+    //       plots won't be up to date (since the simulation widget was not
+    //       visible and therefore didn't update its plots), so we need to do it
+    //       here...
+
+    if (mNeedUpdatePlots) {
+        mNeedUpdatePlots = false;
+
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+            updatePlot(plot, true);
     }
 }
 

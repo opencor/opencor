@@ -123,12 +123,10 @@ public:
 
     SingleCellViewSimulation *simulation() const;
 
+    void updateGui();
     void updateSimulationResults(const qulonglong &pSimulationResultsSize);
 
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
-
-protected:
-    virtual void showEvent(QShowEvent *pShowEvent);
 
 private:
     enum ErrorType {
