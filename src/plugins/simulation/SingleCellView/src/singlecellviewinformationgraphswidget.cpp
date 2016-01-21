@@ -814,6 +814,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     pProperty->setIcon(graphOk?BlankIcon:WarningIcon);
 
+    // Update the file name with which the graph is associated
+
+    graph->setFileName(fileName);
+
     // Let people know if we consider that the graph has been updated
 
     if (   mCanEmitGraphsUpdatedSignal

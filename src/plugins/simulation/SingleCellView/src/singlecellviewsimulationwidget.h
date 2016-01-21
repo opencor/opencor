@@ -121,10 +121,13 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
+    QString fileName() const;
+
     SingleCellViewSimulation *simulation() const;
 
     void updateGui();
-    void updateSimulationResults(const qulonglong &pSimulationResultsSize);
+    void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+                                 const qulonglong &pSimulationResultsSize);
 
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
@@ -204,7 +207,8 @@ private:
     bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * dataPoints(SingleCellViewSimulation *pSimulation,
+                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);

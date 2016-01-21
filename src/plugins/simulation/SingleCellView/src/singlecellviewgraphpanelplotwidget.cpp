@@ -57,6 +57,7 @@ SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSuppo
                                                                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
     QwtPlotCurve(),
     mSelected(true),
+    mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY)
 {
@@ -72,7 +73,8 @@ bool SingleCellViewGraphPanelPlotGraph::isValid() const
 {
     // Return whether we are valid
 
-    return mParameterX && mParameterY;
+    return   !mFileName.isEmpty()
+           && mParameterX && mParameterY;
 }
 
 //==============================================================================
@@ -91,6 +93,24 @@ void SingleCellViewGraphPanelPlotGraph::setSelected(const bool &pSelected)
     // Set our selected state
 
     mSelected = pSelected;
+}
+
+//==============================================================================
+
+QString SingleCellViewGraphPanelPlotGraph::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotGraph::setFileName(const QString &pFileName)
+{
+    // Set our file name
+
+    mFileName = pFileName;
 }
 
 //==============================================================================

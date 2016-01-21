@@ -1045,6 +1045,15 @@ void SingleCellViewSimulationWidget::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
+QString SingleCellViewSimulationWidget::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
 SingleCellViewSimulation * SingleCellViewSimulationWidget::simulation() const
 {
     // Return our simulation
@@ -2306,24 +2315,25 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
 //==============================================================================
 
-double * SingleCellViewSimulationWidget::dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pSimulation,
+                                                    CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
 
     switch (pParameter->type()) {
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return mSimulation->results()->constants(pParameter->index());
+        return pSimulation->results()->constants(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return mSimulation->results()->rates(pParameter->index());
+        return pSimulation->results()->rates(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return mSimulation->results()->states(pParameter->index());
+        return pSimulation->results()->states(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return mSimulation->results()->algebraic(pParameter->index());
+        return pSimulation->results()->algebraic(pParameter->index());
     default:
         // CellMLSupport::CellmlFileRuntimeParameter::Voi
 
-        return mSimulation->results()->points();
+        return pSimulation->results()->points();
     }
 }
 
@@ -2335,8 +2345,10 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        pGraph->setRawSamples(dataPoints(pGraph->parameterX()),
-                              dataPoints(pGraph->parameterY()),
+        SingleCellViewSimulation *simulation = mViewWidget->simulation(pGraph->fileName());
+
+        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
+                              dataPoints(simulation, pGraph->parameterY()),
                               pSize);
     }
 }
@@ -2367,9 +2379,11 @@ void SingleCellViewSimulationWidget::updateGui()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &pSimulationResultsSize)
+void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+                                                             const qulonglong &pSimulationResultsSize)
 {
-    // Update the modified state of the simulation's corresponding file
+    // Update the modified state of our simulation's corresponding file, if
+    // needed
     // Note: normally, our simulation worker would, for each point interval,
     //       call SingleCellViewSimulationData::checkForModifications(), but
     //       this would result in a signal being emitted (and then handled by
@@ -2377,7 +2391,10 @@ void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &p
     //       resulting in some time overhead, so we check things here
     //       instead...
 
-    checkSimulationDataModified(mSimulation->data()->isModified());
+    SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
+
+    if (simulation == mSimulation)
+        checkSimulationDataModified(mSimulation->data()->isModified());
 
     // Update all the graphs of all our plots, but only if we are visible
 
@@ -2395,54 +2412,56 @@ void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &p
                                      plotMaxX-plotMinX, plotMaxY-plotMinY);
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
-            // Keep track of our graph's old size
+            if (!graph->fileName().compare(pSimulationWidget->fileName())) {
+                // Keep track of our graph's old size
 
-            qulonglong oldDataSize = graph->dataSize();
+                qulonglong oldDataSize = graph->dataSize();
 
-            // Check whether we are drawing this graph's first segment, in which
-            // case we will need to update our plot
+                // Check whether we are drawing this graph's first segment, in
+                // which case we will need to update our plot
 
-            needUpdatePlot = needUpdatePlot || !oldDataSize;
+                needUpdatePlot = needUpdatePlot || !oldDataSize;
 
-            // Update our graph's data
+                // Update our graph's data
 
-            updateGraphData(graph, pSimulationResultsSize);
+                updateGraphData(graph, pSimulationResultsSize);
 
-            // Draw the graph's new segment, but only if we are visible, as our
-            // graph, and that there is no need to update the plot and that
-            // there is some data to plot
+                // Draw the graph's new segment, but only if we are visible, as
+                // our graph, and that there is no need to update the plot and
+                // that there is some data to plot
 
-            if (    visible && graph->isVisible()
-                && !needUpdatePlot && pSimulationResultsSize) {
-                // Check that our graph segment can fit within our plot's
-                // current viewport, but only if the user hasn't changed the
-                // plot's viewport since we last came here
+                if (    visible && graph->isVisible()
+                    && !needUpdatePlot && pSimulationResultsSize) {
+                    // Check that our graph segment can fit within our plot's
+                    // current viewport, but only if the user hasn't changed the
+                    // plot's viewport since we last came here
 
-                if (mPlotsViewports.value(plot) == plotViewport) {
-                    double minX = plotMinX;
-                    double maxX = plotMaxX;
-                    double minY = plotMinY;
-                    double maxY = plotMaxY;
+                    if (mPlotsViewports.value(plot) == plotViewport) {
+                        double minX = plotMinX;
+                        double maxX = plotMaxX;
+                        double minY = plotMinY;
+                        double maxY = plotMaxY;
 
-                    for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
-                        double valX = graph->data()->sample(i).x();
-                        double valY = graph->data()->sample(i).y();
+                        for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
+                            double valX = graph->data()->sample(i).x();
+                            double valY = graph->data()->sample(i).y();
 
-                        minX = qMin(minX, valX);
-                        maxX = qMax(maxX, valX);
-                        minY = qMin(minY, valY);
-                        maxY = qMax(maxY, valY);
+                            minX = qMin(minX, valX);
+                            maxX = qMax(maxX, valX);
+                            minY = qMin(minY, valY);
+                            maxY = qMax(maxY, valY);
+                        }
+
+                        // Update pour plot, if our graph segment cannot fit
+                        // within our plot's current viewport
+
+                        needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                         || (minY < plotMinY) || (maxY > plotMaxY);
                     }
 
-                    // Update pour plot, if our graph segment cannot fit within
-                    // our plot's current viewport
-
-                    needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                     || (minY < plotMinY) || (maxY > plotMaxY);
+                    if (!needUpdatePlot)
+                        plot->drawGraphFrom(graph, oldDataSize-1);
                 }
-
-                if (!needUpdatePlot)
-                    plot->drawGraphFrom(graph, oldDataSize-1);
             }
         }
 
@@ -2475,38 +2494,42 @@ void SingleCellViewSimulationWidget::updateSimulationResults(const qulonglong &p
 
                 plot->replotNow();
             }
+        } else if (needUpdatePlot || !pSimulationResultsSize) {
+            // We would normally update our plot, but we are not visible, so no
+            // point in doing it, so instead we keep track of the fact that we
+            // will need to update our plots the next time we become visible
+
+            mNeedUpdatePlots = true;
         }
     }
 
-    // Keep track, if needed, of the fact that we will need to update our plots
-    // the next time we become visible
+    if (simulation == mSimulation) {
+        // Update our simualtion progress (through our progress bar or file tab
+        // icon), if needed
 
-    if (!visible)
-        mNeedUpdatePlots = true;
+        double simulationProgress = mViewWidget->simulationResultsSize(this)/mSimulation->size();
 
-    // Update our simualtion progress (through our progress bar or file tab
-    // icon)
+        if (visible) {
+            mProgressBarWidget->setValue(simulationProgress);
+        } else {
+            // We are not visible, so create an icon that shows our simulation's
+            // progress and let people know about it
 
-    double simulationProgress = mViewWidget->simulationResultsSize(this)/mSimulation->size();
+            int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
+            // Note: tabBarPixmapSize()-2 because we want a one-pixel wide
+            //       border...
 
-    if (visible) {
-        mProgressBarWidget->setValue(simulationProgress);
-    } else {
-        // We are not visible, so create an icon that shows our simulation's
-        // progress and let people know about it
+            if (newProgress != mProgress) {
+                // The progress has changed, so keep track of its new value and
+                // update our file tab icon
 
-        int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
-        // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
+                mProgress = newProgress;
 
-        if (newProgress != mProgress) {
-            // The progress has changed, so keep track of its new value and
-            // update our file tab icon
+                // Let people know about the file tab icon to be used for the
+                // model
 
-            mProgress = newProgress;
-
-            // Let people know about the file tab icon to be used for the model
-
-            emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+                emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+            }
         }
     }
 }

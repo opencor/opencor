@@ -71,6 +71,7 @@ public:
 
     QStringList fileNames() const;
 
+    SingleCellViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
     qulonglong simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const;

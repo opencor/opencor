@@ -390,9 +390,23 @@ QStringList SingleCellViewWidget::fileNames() const
 
 //==============================================================================
 
+SingleCellViewSimulation * SingleCellViewWidget::simulation(const QString &pFileName) const
+{
+    // Return the simulation for the given file name
+
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget)
+        return simulationWidget->simulation();
+    else
+        return 0;
+}
+
+//==============================================================================
+
 CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &pFileName) const
 {
-    // Return the runtime of the given file name
+    // Return the runtime for the given file name
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -422,7 +436,10 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
     if (!mSimulationWidgets.values().contains(pSimulationWidget))
         return;
 
-    // Update our simulation widget's results, but only if needed
+    // Update all of our simulation widgets' results, but only if needed
+    // Note: to update only the given simulation widget's results is not enough
+    //       since another simulation widget may have graphs that refer to the
+    //       given simulation widget...
 
     SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
@@ -431,7 +448,8 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
         || (simulationResultsSize != mSimulationResultsSizes.value(pSimulationWidget))) {
         mSimulationResultsSizes.insert(pSimulationWidget, simulationResultsSize);
 
-        pSimulationWidget->updateSimulationResults(simulationResultsSize);
+        foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets)
+            simulationWidget->updateSimulationResults(pSimulationWidget, simulationResultsSize);
     }
 
     // Ask to recheck our simulation widget's results, but only if its

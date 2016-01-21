@@ -82,6 +82,9 @@ public:
     bool isSelected() const;
     void setSelected(const bool &pSelected);
 
+    QString fileName() const;
+    void setFileName(const QString &pFileName);
+
     CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
     void setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX);
 
@@ -90,6 +93,8 @@ public:
 
 private:
     bool mSelected;
+
+    QString mFileName;
 
     CellMLSupport::CellmlFileRuntimeParameter *mParameterX;
     CellMLSupport::CellmlFileRuntimeParameter *mParameterY;
