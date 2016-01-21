@@ -1132,7 +1132,7 @@ void SingleCellViewSimulationWidget::on_actionRunPauseResumeSimulation_triggered
 
                 runSimulation = mSimulation->results()->reset();
 
-                mViewWidget->checkSimulationResults(this, true);
+                mViewWidget->checkSimulationResults(mFileName, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1183,7 +1183,7 @@ void SingleCellViewSimulationWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(this, true);
+    mViewWidget->checkSimulationResults(mFileName, true);
 }
 
 //==============================================================================
@@ -1898,7 +1898,7 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(this);
+    mViewWidget->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -1912,7 +1912,7 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
-    mViewWidget->checkSimulationResults(this);
+    mViewWidget->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -2507,7 +2507,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         // Update our simualtion progress (through our progress bar or file tab
         // icon), if needed
 
-        double simulationProgress = mViewWidget->simulationResultsSize(this)/mSimulation->size();
+        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/mSimulation->size();
 
         if (visible) {
             mProgressBarWidget->setValue(simulationProgress);

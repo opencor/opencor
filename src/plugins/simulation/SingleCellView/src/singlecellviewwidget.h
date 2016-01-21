@@ -74,9 +74,9 @@ public:
     SingleCellViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
-    qulonglong simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const;
+    qulonglong simulationResultsSize(const QString &pFileName) const;
 
-    void checkSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+    void checkSimulationResults(const QString &pFileName,
                                 const bool &pForceUpdateSimulationResults = false);
 
 private:
@@ -99,8 +99,8 @@ private:
 
     QStringList mFileNames;
 
-    QMap<SingleCellViewSimulationWidget *, qulonglong> mSimulationResultsSizes;
-    SingleCellViewSimulationWidgets mSimulationCheckResults;
+    QMap<QString, qulonglong> mSimulationResultsSizes;
+    QStringList mSimulationCheckResults;
 
     void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
     void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);

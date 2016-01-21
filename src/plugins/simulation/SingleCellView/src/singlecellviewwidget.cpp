@@ -60,8 +60,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>()),
     mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<SingleCellViewSimulationWidget *, qulonglong>()),
-    mSimulationCheckResults(SingleCellViewSimulationWidgets())
+    mSimulationResultsSizes(QMap<QString, qulonglong>()),
+    mSimulationCheckResults(QStringList())
 {
 }
 
@@ -418,22 +418,24 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &
 
 //==============================================================================
 
-qulonglong SingleCellViewWidget::simulationResultsSize(SingleCellViewSimulationWidget *pSimulationWidget) const
+qulonglong SingleCellViewWidget::simulationResultsSize(const QString &pFileName) const
 {
-    // Return the results size for the given simulation widget
+    // Return the results size for the given file name
 
-    return mSimulationResultsSizes.value(pSimulationWidget);
+    return mSimulationResultsSizes.value(pFileName);
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
                                                   const bool &pForceUpdateSimulationResults)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
 
-    if (!mSimulationWidgets.values().contains(pSimulationWidget))
+    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (!simulationWidget)
         return;
 
     // Update all of our simulation widgets' results, but only if needed
@@ -441,15 +443,15 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
+    SingleCellViewSimulation *simulation = simulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
 
     if (   pForceUpdateSimulationResults
-        || (simulationResultsSize != mSimulationResultsSizes.value(pSimulationWidget))) {
-        mSimulationResultsSizes.insert(pSimulationWidget, simulationResultsSize);
+        || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
+        mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
         foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets)
-            simulationWidget->updateSimulationResults(pSimulationWidget, simulationResultsSize);
+            simulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize);
     }
 
     // Ask to recheck our simulation widget's results, but only if its
@@ -464,7 +466,7 @@ void SingleCellViewWidget::checkSimulationResults(SingleCellViewSimulationWidget
         //       simulation should be passed as an argument to
         //       checkSimulationResults()...
 
-        mSimulationCheckResults << pSimulationWidget;
+        mSimulationCheckResults << pFileName;
 
         QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
     }
@@ -477,11 +479,11 @@ void SingleCellViewWidget::callCheckSimulationResults()
     // Retrieve the simulation widget for which we want to call checkResults()
     // and then call checkResults() for it
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationCheckResults.first();
+    QString fileName = mSimulationCheckResults.first();
 
     mSimulationCheckResults.removeFirst();
 
-    checkSimulationResults(simulationWidget);
+    checkSimulationResults(fileName);
 }
 
 //==============================================================================

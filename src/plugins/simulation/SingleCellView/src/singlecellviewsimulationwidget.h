@@ -289,10 +289,6 @@ private Q_SLOTS:
 
 //==============================================================================
 
-typedef QList<SingleCellViewSimulationWidget *> SingleCellViewSimulationWidgets;
-
-//==============================================================================
-
 }   // namespace SingleCellView
 }   // namespace OpenCOR
 
