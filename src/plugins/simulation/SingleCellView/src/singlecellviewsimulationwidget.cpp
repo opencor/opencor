@@ -2503,10 +2503,10 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         }
     }
 
-    if (simulation == mSimulation) {
-        // Update our simualtion progress (through our progress bar or file tab
-        // icon), if needed
+    // Update our simualtion progress (through our progress bar or file tab
+    // icon), if needed
 
+    if (simulation == mSimulation) {
         double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/mSimulation->size();
 
         if (visible) {
