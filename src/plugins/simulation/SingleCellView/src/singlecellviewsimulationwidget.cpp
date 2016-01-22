@@ -2221,7 +2221,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
-    // so then asks the plot to use the minimum/maximum points as the
+    // so then asks the plot to use the starting/ending points as the
     // minimum/maximum values for the X and/or Y axes
 
     bool needInitialisationX = true;
@@ -2235,8 +2235,9 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
-            double startingPoint = mSimulation->data()->startingPoint();
-            double endingPoint = mSimulation->data()->endingPoint();
+            SingleCellViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
+            double startingPoint = simulation->data()->startingPoint();
+            double endingPoint = simulation->data()->endingPoint();
 
             startingPoints << startingPoint;
             endingPoints << endingPoint;
@@ -2245,8 +2246,8 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
                 // The starting point is greater than the ending point, so swap
                 // the two of them
 
-                startingPoint = mSimulation->data()->endingPoint();
-                endingPoint = mSimulation->data()->startingPoint();
+                startingPoint = simulation->data()->endingPoint();
+                endingPoint = simulation->data()->startingPoint();
             }
 
             if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
