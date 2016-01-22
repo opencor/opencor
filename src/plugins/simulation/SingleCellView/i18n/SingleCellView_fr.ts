@@ -151,7 +151,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
+    <name>OpenCOR::SingleCellView::SingleCellViewSimulationWidget</name>
     <message>
         <source>Delay between two data points</source>
         <translation>Délai entre deux points de données</translation>
@@ -395,7 +395,7 @@
     </message>
 </context>
 <context>
-    <name>SingleCellViewWidget</name>
+    <name>SingleCellViewSimulationWidget</name>
     <message>
         <source>Run the simulation</source>
         <translation>Lancer la simulation</translation>

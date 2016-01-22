@@ -244,8 +244,7 @@ public:
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
 
     QString extraInfo() const;
-    void setExtraInfo(const QString &pExtraInfo,
-                      const bool &pUpdateToolTip = true);
+    void setExtraInfo(const QString &pExtraInfo);
 
     bool isVisible() const;
     void setVisible(const bool &pVisible);
@@ -357,6 +356,8 @@ public:
 
     virtual QSize sizeHint() const;
 
+    void clear();
+
     void selectFirstProperty();
 
     PropertyEditorWidgetGuiState * guiState();
@@ -438,7 +439,7 @@ Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
     // Note: strictly speaking, we don't need to specify the Core namespace, but
     //       then if we were not to specify it, we wouldn't be able to use the
-    //       property editor outside of the Core namespace...
+    //       property editor outside the Core namespace...
 
 private Q_SLOTS:
     void updateHeight();

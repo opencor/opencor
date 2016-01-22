@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "collapsiblewidget.h"
-#include "coreguiutils.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -39,7 +38,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParent) :
+SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                                                 QWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent)
 {
@@ -70,13 +70,13 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
 
     // Create our solvers widget
 
-    mSolversWidget = new SingleCellViewInformationSolversWidget(mCollapsibleWidget);
+    mSolversWidget = new SingleCellViewInformationSolversWidget(pPlugin, mCollapsibleWidget);
 
     mSolversWidget->setObjectName("Solvers");
 
     // Create our graphs widget
 
-    mGraphsWidget = new SingleCellViewInformationGraphsWidget(mCollapsibleWidget);
+    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, mCollapsibleWidget);
 
     mGraphsWidget->setObjectName("Graphs");
 
@@ -190,7 +190,16 @@ void SingleCellViewInformationWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::simulationWidget()
+Core::CollapsibleWidget * SingleCellViewInformationWidget::collapsibleWidget() const
+{
+    // Return our collapsible widget
+
+    return mCollapsibleWidget;
+}
+
+//==============================================================================
+
+SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::simulationWidget() const
 {
     // Return our simulation widget
 
@@ -199,7 +208,7 @@ SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::sim
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solversWidget()
+SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solversWidget() const
 {
     // Return our solvers widget
 
@@ -208,7 +217,7 @@ SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solver
 
 //==============================================================================
 
-SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsWidget()
+SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsWidget() const
 {
     // Return our graphs widget
 
@@ -217,7 +226,7 @@ SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsW
 
 //==============================================================================
 
-SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::parametersWidget()
+SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::parametersWidget() const
 {
     // Return our parameters widget
 

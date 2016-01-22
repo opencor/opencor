@@ -31,15 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QList>
-#include <QMap>
 #include <QStackedWidget>
-
-//==============================================================================
-
-class QAction;
-class QLabel;
-class QMenu;
 
 //==============================================================================
 
@@ -55,7 +47,6 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -64,9 +55,10 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
+class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewWidget;
 
 //==============================================================================
 
@@ -76,31 +68,36 @@ class SingleCellViewInformationGraphsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationGraphsWidget(QWidget *pParent);
+    explicit SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                   QWidget *pParent);
     ~SingleCellViewInformationGraphsWidget();
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation);
-    void backup(const QString &pFileName);
     void finalize(const QString &pFileName);
 
     void fileOpened(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
+    void updateGui();
+
     void finishEditing();
 
     Core::Properties graphProperties(SingleCellViewGraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 
+    int headerCount() const;
+
+    int columnWidth(const int &pIndex) const;
+    void setColumnWidth(const int &pIndex, const int &pColumnWidth);
+
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
+
+    SingleCellViewWidget *mViewWidget;
 
     QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *> mGraphPanels;
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
@@ -109,26 +106,18 @@ private:
     QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *> mGraphs;
     QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
-    QMap<QString, QMenu *> mContextMenus;
     QMenu *mContextMenu;
+    QMenu *mParametersContextMenu;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    QIntList mColumnWidths;
-
-    QStringList mFileNames;
     QString mFileName;
-
-    QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
-    QMap<QString, SingleCellViewSimulation *> mSimulations;
-    QMap<QString, QMap<Core::Property *, bool>> mGraphPropertiesSelected;
 
     bool mCanEmitGraphsUpdatedSignal;
 
     int mHorizontalScrollBarValue;
 
-    void populateContextMenu(QMenu *pContextMenu,
-                             CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         SingleCellViewGraphPanelPlotGraph *pGraph,
@@ -143,6 +132,9 @@ private:
     void selectAllGraphs(const bool &pSelect);
 
 Q_SIGNALS:
+    void headerSectionResized(const int &pIndex, const int &pOldSize,
+                              const int &pNewSize);
+
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
@@ -168,8 +160,8 @@ private Q_SLOTS:
 
     void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
 
-    void propertyEditorSectionResized(const int &pLogicalIndex,
-                                      const int &pOldSize, const int &pNewSize);
+    void propertyEditorSectionResized(const int &pIndex, const int &pOldSize,
+                                      const int &pNewSize);
 
     void graphChanged(Core::Property *pProperty);
 

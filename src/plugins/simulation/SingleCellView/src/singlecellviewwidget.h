@@ -24,71 +24,18 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "corecliutils.h"
-#include "datastoreinterface.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewsimulation.h"
-#include "solverinterface.h"
+#include "singlecellviewsimulationwidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
 
-class QFrame;
-class QLabel;
-class QMenu;
-class QSettings;
-class QSplitter;
-class QTextEdit;
-
-//==============================================================================
-
-class QwtWheel;
-
-//==============================================================================
-
-namespace Ui {
-    class SingleCellViewWidget;
-}
-
-//==============================================================================
-
-namespace libsedml {
-    class SedDocument;
-    class SedModel;
-    class SedRepeatedTask;
-    class SedSimulation;
-    class SedVariable;
-}   // namespace libsedml
-
-//==============================================================================
-
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class Property;
-    class ProgressBarWidget;
-    class ToolBarWidget;
-    class UserMessageWidget;
-}   // namespace Core
-
-//==============================================================================
-
-namespace CellMLSupport {
-    class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelWidget;
-class SingleCellViewInformationSolversWidgetData;
 class SingleCellViewPlugin;
 
 //==============================================================================
@@ -100,21 +47,16 @@ class SingleCellViewWidget : public Core::ViewWidget
 public:
     explicit SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                   QWidget *pParent);
-    ~SingleCellViewWidget();
-
-    virtual void retranslateUi();
-
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
-    void setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    virtual void retranslateUi();
+
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName,
-                    const bool &pReloadingView = false);
-    void finalize(const QString &pFileName, const bool &pReloadingView = false);
+    void initialize(const QString &pFileName);
+    void finalize(const QString &pFileName);
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
@@ -127,176 +69,62 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
-    static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
+    QStringList fileNames() const;
+
+    SingleCellViewSimulation * simulation(const QString &pFileName) const;
+    CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
+
+    qulonglong simulationResultsSize(const QString &pFileName) const;
+
+    void checkSimulationResults(const QString &pFileName,
+                                const bool &pForceUpdateSimulationResults = false);
 
 private:
-    enum ErrorType {
-        General,
-        InvalidCellmlFile,
-        InvalidSimulationEnvironment
-    };
-
-    Ui::SingleCellViewWidget *mGui;
-
     SingleCellViewPlugin *mPlugin;
 
-    SolverInterfaces mSolverInterfaces;
+    QString mSettingsGroup;
 
-    QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
+    QIntList mSimulationWidgetSizes;
+    QIntList mContentsWidgetSizes;
 
-    SingleCellViewSimulation *mSimulation;
-    QMap<QString, SingleCellViewSimulation *> mSimulations;
+    QMap<int, bool> mCollapsibleWidgetCollapsed;
 
-    SingleCellViewSimulations mStoppedSimulations;
+    QIntList mSimulationWidgetColumnWidths;
+    QIntList mSolversWidgetColumnWidths;
+    QIntList mGraphsWidgetColumnWidths;
+    QIntList mParametersWidgetColumnWidths;
 
-    Core::ProgressBarWidget *mProgressBarWidget;
+    SingleCellViewSimulationWidget *mSimulationWidget;
+    QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
 
-    QMap<QString, int> mProgresses;
-    QMap<QString, bool> mResets;
-    QMap<QString, int> mDelays;
-    QMap<QString, bool> mDevelopmentModes;
-    QMap<QString, bool> mLockedDevelopmentModes;
+    QStringList mFileNames;
 
-    Core::ToolBarWidget *mToolBarWidget;
+    QMap<QString, qulonglong> mSimulationResultsSizes;
+    QStringList mSimulationCheckResults;
 
-    QMenu *mSimulationDataExportDropDownMenu;
-
-    QFrame *mTopSeparator;
-    QFrame *mBottomSeparator;
-
-    QwtWheel *mDelayWidget;
-    QLabel *mDelayValueWidget;
-
-    QSplitter *mSplitterWidget;
-    QIntList mSplitterWidgetSizes;
-
-    SingleCellViewContentsWidget *mContentsWidget;
-
-    bool mRunActionEnabled;
-
-    Core::UserMessageWidget *mInvalidModelMessageWidget;
-
-    QTextEdit *mOutputWidget;
-
-    ErrorType mErrorType;
-
-    QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
-    SingleCellViewSimulations mCheckResultsSimulations;
-
-    SingleCellViewSimulations mResetSimulations;
-
-    QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
-    SingleCellViewGraphPanelPlotWidgets mPlots;
-    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
-
-    bool mCanUpdatePlotsForUpdatedGraphs;
-
-    QList<QString> mNeedReloadViews;
-
-    void reloadView(const QString &pFileName);
-
-    void output(const QString &pMessage);
-
-    void updateSimulationMode();
-
-    int tabBarPixmapSize() const;
-
-    void updateRunPauseAction(const bool &pRunActionEnabled);
-
-    void updateDataStoreActions();
-
-    void updateInvalidModelMessageWidget();
-
-    void checkAxisValue(double &pValue, const double &pOrigValue,
-                        const QList<double> &pTestValues);
-
-    bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
-                    const bool &pForceReplot = false);
-
-    double * dataPoints(SingleCellViewSimulation *pSimulation,
-                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
-
-    void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
-                         const qulonglong &pSize);
-
-    void updateResults(SingleCellViewSimulation *pSimulation,
-                       const qulonglong &pSize);
-    void checkResults(SingleCellViewSimulation *pSimulation,
-                      const bool &pForceUpdateResults = false);
-
-    QVariant value(Core::Property *pProperty) const;
-
-    void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
-    void updateSolversProperties(Core::Property *pProperty = 0);
-
-    void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
-                            libsedml::SedModel *pSedmlModel,
-                            libsedml::SedRepeatedTask *pSedmlRepeatedTask,
-                            libsedml::SedSimulation *pSedmlSimulation,
-                            const int &pOrder);
-    void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
-                                const QString &pComponent,
-                                const QString &pVariable);
-    void createSedmlFile(const QString &pFileName, const QString &pModelSource);
-
-    void checkSimulationDataModified(const bool &pCurrentSimulation,
-                                     const QString &pFileName,
-                                     const bool &pIsModified);
+    void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
+    void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
 
 private Q_SLOTS:
-    void on_actionRunPauseResumeSimulation_triggered();
-    void on_actionStopSimulation_triggered();
+    void simulationWidgetSplitterMoved(const QIntList &pSizes);
+    void contentsWidgetSplitterMoved(const QIntList &pSizes);
 
-    void on_actionResetModelParameters_triggered();
-    void on_actionClearSimulationData_triggered();
+    void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
 
-    void on_actionDevelopmentMode_triggered();
+    void simulationWidgetHeaderSectionResized(const int &pIndex,
+                                              const int &pOldSize,
+                                              const int &pNewSize);
+    void solversWidgetHeaderSectionResized(const int &pIndex,
+                                           const int &pOldSize,
+                                           const int &pNewSize);
+    void graphsWidgetHeaderSectionResized(const int &pIndex,
+                                          const int &pOldSize,
+                                          const int &pNewSize);
+    void parametersWidgetHeaderSectionResized(const int &pIndex,
+                                              const int &pOldSize,
+                                              const int &pNewSize);
 
-    void on_actionAddGraphPanel_triggered();
-
-    void on_actionRemoveGraphPanel_triggered();
-    void on_actionRemoveCurrentGraphPanel_triggered();
-    void on_actionRemoveAllGraphPanels_triggered();
-
-    void on_actionSedmlExportSedmlFile_triggered();
-    void on_actionSedmlExportCombineArchive_triggered();
-
-    void simulationDataExport();
-
-    void updateDelayValue(const double &pDelayValue);
-
-    void simulationRunning(const bool &pIsResuming);
-    void simulationPaused();
-    void simulationStopped(const qint64 &pElapsedTime);
-
-    void resetProgressBar(SingleCellViewSimulation *pSimulation = 0);
-    void resetFileTabIcon(SingleCellViewSimulation *pSimulation = 0);
-
-    void simulationError(const QString &pMessage,
-                         const ErrorType &pErrorType = General);
-
-    void simulationDataModified(const bool &pIsModified);
-
-    void splitterWidgetMoved();
-
-    void simulationPropertyChanged(Core::Property *pProperty);
-    void solversPropertyChanged(Core::Property *pProperty);
-
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
-    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
-
-    void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                  CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
-
-    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
-                    SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
-
-    void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
-
-    void callCheckResults();
+    void callCheckSimulationResults();
 };
 
 //==============================================================================

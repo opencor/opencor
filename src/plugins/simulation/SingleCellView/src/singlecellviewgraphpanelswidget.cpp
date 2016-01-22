@@ -23,13 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QSettings>
-#include <QMetaType>
-#include <QWheelEvent>
 
 //==============================================================================
 
@@ -43,9 +37,7 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
     Core::CommonWidget(pParent),
     mSplitterSizes(QIntList()),
     mGraphPanels(SingleCellViewGraphPanelWidgets()),
-    mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
-    mActiveGraphPanel(0),
-    mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>>())
+    mActiveGraphPanel(0)
 {
     // Set our orientation
 
@@ -76,7 +68,8 @@ static const auto SettingsGraphPanelSizes = QStringLiteral("GraphPanelSizes");
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
+void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings,
+                                                   const QString &pFileName)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -90,7 +83,12 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    QIntList splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
+    QIntList splitterSizes = QIntList();
+
+    pSettings->beginGroup(pFileName);
+        splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
+    pSettings->endGroup();
+
     int graphPanelsCount = splitterSizes.count();
 
     if (!graphPanelsCount) {
@@ -112,82 +110,23 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
+void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings,
+                                                   const QString &pFileName) const
 {
     // Keep track of the size of each graph panel
 
-    pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
+    pSettings->beginGroup(pFileName);
+        pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
+    pSettings->endGroup();
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
+void SingleCellViewGraphPanelsWidget::initialize()
 {
-    // Set the active graph panel or select the first one, if no backup exists
+    // Set the first graph panel
 
-    SingleCellViewGraphPanelWidget *activeGraphPanel = mActiveGraphPanels.value(pFileName);
-
-    if (activeGraphPanel)
-        activeGraphPanel->setActive(true);
-    else
-        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
-
-    // Update our plots' axes' values
-    // Note: we always want our plot to be replotted. Indeed, say that you plot
-    //       a graph that doesn't require changing the axes' values of the plot
-    //       (i.e. they still have their default values), and then you switch to
-    //       a different file. In that case, the axes' values won't be updated
-    //       and the plot not replotted. That is, unless we replot the plot no
-    //       matter what...
-
-    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName);
-
-    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels) {
-        SingleCellViewGraphPanelPlotWidget *plot = graphPanel->plot();
-
-        QRectF dataRect = plotsRects.value(plot);
-
-        if ((dataRect == QRectF()) || (dataRect == DefPlotRect)) {
-            if (!plot->resetAxes())
-                plot->replotNow();
-        } else {
-            if (!plot->setAxes(dataRect))
-                plot->replotNow();
-        }
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelsWidget::backup(const QString &pFileName)
-{
-    // Keep track of our active graph panel
-
-    mActiveGraphPanels.insert(pFileName, mActiveGraphPanel);
-
-    // Keep track of the axes' values of our different plots
-
-    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>();
-
-    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels) {
-        SingleCellViewGraphPanelPlotWidget *plot = graphPanel->plot();
-
-        plotsRects.insert(plot, QRectF(QPointF(plot->minX(), plot->minY()),
-                                       QPointF(plot->maxX(), plot->maxY())));
-    }
-
-    mPlotsRects.insert(pFileName, plotsRects);
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
-{
-    // Remove track of our active graph panel and the axes' values of our
-    // different plots
-
-    mActiveGraphPanels.remove(pFileName);
-    mPlotsRects.remove(pFileName);
+    qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
 }
 
 //==============================================================================
@@ -296,11 +235,6 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
     // Remove all tracks
     // Note: mActiveGraphPanel will automatically get updated when another graph
     //       panel gets selected...
-
-    foreach (const QString &fileName, mActiveGraphPanels.keys()) {
-        if (mActiveGraphPanels.value(fileName) == pGraphPanel)
-            mActiveGraphPanels.remove(fileName);
-    }
 
     mGraphPanels.removeOne(pGraphPanel);
 

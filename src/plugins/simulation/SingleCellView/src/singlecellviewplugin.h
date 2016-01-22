@@ -24,11 +24,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "datastoreinterface.h"
 #include "filehandlinginterface.h"
 #include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "solverinterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -67,11 +69,19 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
+    SingleCellViewWidget * viewWidget() const;
+
+    SolverInterfaces solverInterfaces() const;
+    DataStoreInterfaces dataStoreInterfaces() const;
+
     FileTypes sedmlFileTypes() const;
     FileTypes combineFileTypes() const;
 
 private:
     SingleCellViewWidget *mViewWidget;
+
+    SolverInterfaces mSolverInterfaces;
+    DataStoreInterfaces mDataStoreInterfaces;
 
     FileTypes mSedmlFileTypes;
     FileTypes mCombineFileTypes;

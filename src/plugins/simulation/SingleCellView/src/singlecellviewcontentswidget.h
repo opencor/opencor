@@ -40,6 +40,7 @@ namespace SingleCellView {
 
 class SingleCellViewGraphPanelsWidget;
 class SingleCellViewInformationWidget;
+class SingleCellViewPlugin;
 
 //==============================================================================
 
@@ -48,24 +49,26 @@ class SingleCellViewContentsWidget : public QSplitter, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewContentsWidget(QWidget *pParent);
+    explicit SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
+                                          QWidget *pParent);
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    virtual void loadSettings(QSettings *pSettings, const QString &pFileName);
+    virtual void saveSettings(QSettings *pSettings, const QString &pFileName) const;
 
-    SingleCellViewInformationWidget * informationWidget();
-    SingleCellViewGraphPanelsWidget * graphPanelsWidget();
+    SingleCellViewInformationWidget * informationWidget() const;
+    SingleCellViewGraphPanelsWidget * graphPanelsWidget() const;
 
 private:
-    QIntList mSplitterSizes;
-
     SingleCellViewInformationWidget *mInformationWidget;
     SingleCellViewGraphPanelsWidget *mGraphPanelsWidget;
 
+Q_SIGNALS:
+    void splitterMoved(const QIntList &pSizes);
+
 private Q_SLOTS:
-    void splitterMoved();
+    void emitSplitterMoved();
 };
 
 //==============================================================================
