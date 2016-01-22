@@ -1883,8 +1883,7 @@ void SingleCellViewSimulationWidget::updateDelayValue(const double &pDelayValue)
 
     // Also update our simulation object
 
-    if (mSimulation)
-        mSimulation->setDelay(delay);
+    mSimulation->setDelay(delay);
 }
 
 //==============================================================================
@@ -2154,9 +2153,13 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
         graph->setVisible(graph->isValid() && graph->isSelected());
 
         // Update the graph's data
+        // Note: we need to check that we have a simulation since our graph may
+        //       indeed refer to a file that has not yet been activated and
+        //       therefore doesn't yet have a simulation associated with it...
 
-        if (mSimulation)
-            updateGraphData(graph, mSimulation->results()->size());
+        SingleCellViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
+
+        updateGraphData(graph, simulation?simulation->results()->size():0);
 
         // Keep track of the plot that needs to be updated and replotted
 
@@ -2395,7 +2398,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
     SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
 
     if (simulation == mSimulation)
-        checkSimulationDataModified(mSimulation->data()->isModified());
+        checkSimulationDataModified(simulation->data()->isModified());
 
     // Update all the graphs of all our plots, but only if we are visible
 
@@ -2508,7 +2511,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
     // icon), if needed
 
     if (simulation == mSimulation) {
-        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/mSimulation->size();
+        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();
 
         if (visible) {
             mProgressBarWidget->setValue(simulationProgress);
