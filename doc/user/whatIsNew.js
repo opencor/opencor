@@ -6,6 +6,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "Added", "description": "Use a user's proxy settings." },
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
@@ -68,7 +69,8 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." },
-                               { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." }
+                               { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." },
+                               { "type": "Fixed", "description": "Computing the initial value of a 'constant' algebraic variable." }
                              ]
                            }
                          ]
