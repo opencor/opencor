@@ -1,0 +1,22 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <divide/>
+            <apply>
+                <times/>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <minus/>
+                        <ci>b</ci>
+                        <ci>c</ci>
+                    </apply>
+                </apply>
+                <ci>d</ci>
+            </apply>
+            <exponentiale/>
+        </apply>
+    </apply>
+</math>
