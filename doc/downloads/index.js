@@ -24,14 +24,12 @@ var jsonData = { "versions": [
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
-                           { "extension": ".exe", "bitness": 32 }, { "extension": ".zip", "bitness": 32 },
-                           { "extension": ".exe", "bitness": 64 }, { "extension": ".zip", "bitness": 64 }
+                           { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
                        { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
                          "files": [
-                           { "extension": ".tar.gz", "bitness": 32 },
-                           { "extension": ".tar.gz", "bitness": 64 }
+                           { "extension": ".tar.gz" },
                          ]
                        },
                        { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
@@ -41,7 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> some SED-ML related refactoring (see issue <a href=\"https://github.com/opencor/opencor/issues/832\">#832</a>). Now use a user's proxy settings (see issue <a href=\"https://github.com/opencor/opencor/issues/845\">#845</a>)." },
+                       { "change": "<strong>General:</strong> 64-bit support only from now on (see issue <a href=\"https://github.com/opencor/opencor/issues/843\">#843</a>). Some SED-ML related refactoring (see issue <a href=\"https://github.com/opencor/opencor/issues/832\">#832</a>). Now use a user's proxy settings (see issue <a href=\"https://github.com/opencor/opencor/issues/845\">#845</a>)." },
                        { "change": "<strong>CellML support:</strong> the latest version of CellML is now used when creating a new CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/836\">#836</a>)." },
                        { "change": "<strong>Data stores:</strong> added support for <a href=\"http://biosignalml.org/\">BioSignalML</a> (work in progress)." },
                        { "change": "<strong>Viewer widget:</strong> improved/fixed the rendering of some equations (see issues <a href=\"https://github.com/opencor/opencor/issues/862\">#862</a> and <a href=\"https://github.com/opencor/opencor/issues/863\">#863</a>)." },
