@@ -43,6 +43,7 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>General:</strong> some SED-ML related refactoring (see issue <a href=\"https://github.com/opencor/opencor/issues/832\">#832</a>). Now use a user's proxy settings (see issue <a href=\"https://github.com/opencor/opencor/issues/845\">#845</a>)." },
                        { "change": "<strong>CellML support:</strong> the latest version of CellML is now used when creating a new CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/836\">#836</a>)." },
+                       { "change": "<strong>Data stores:</strong> added support for <a href=\"http://biosignalml.org/\">BioSignalML</a> (work in progress)." },
                        { "change": "<strong>Viewer widget:</strong> improved/fixed the rendering of some equations (see issues <a href=\"https://github.com/opencor/opencor/issues/862\">#862</a> and <a href=\"https://github.com/opencor/opencor/issues/863\">#863</a>)." },
                        { "change": "<strong>CellML Text view:</strong> now require the user's agreement before saving a CellML file using a different CellML version (see issue <a href=\"https://github.com/opencor/opencor/issues/838\">#838</a>)." },
                        { "change": "<strong>Single Cell view:</strong> made the view more file specific (see issue <a href=\"https://github.com/opencor/opencor/issues/590\">#590</a>)." },

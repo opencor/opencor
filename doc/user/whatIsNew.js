@@ -23,6 +23,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
+                           { "type": "Added", "description": "<a href=\"http://biosignalml.org/\">BioSignalML</a> data store (work in progress)." },
                            { "type": "Improved", "description": "Interface." }
                          ]
                        },
