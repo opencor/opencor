@@ -486,7 +486,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
   <x:if test="($p &gt; 2 and $op != 'minus') or ($op = 'minus' and (. != ../*[2] or count(../*) = 2) and count(*) != 2)"><mo>(</mo></x:if>
   <x:for-each select="*[position()&gt;1]">
    <x:choose>
-    <x:when test="self::m:apply[*[1][self::m:times] and *[2][self::m:apply/*[1][self::m:minus] or
+    <x:when test="self::m:apply[*[1][self::m:times] and count(*[2][self::m:apply]/*)=2 and *[2][self::m:apply/*[1][self::m:minus] or
                                   self::m:cn[not(m:sep) and (number(.) &lt; 0)]]] or
                     self::m:apply[count(*)=2 and *[1][self::m:minus]] or
                     self::m:cn[not(m:sep) and (number(.) &lt; 0)]">
