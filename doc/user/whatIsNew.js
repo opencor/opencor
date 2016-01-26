@@ -1,15 +1,17 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 25, "month": 11, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 25, "month": 1, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "Added", "description": "Use a user's proxy settings." },
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
+                           { "type": "Fixed", "description": "Equation rendering." },
                            { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
                          ]
                        },
@@ -21,6 +23,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
+                           { "type": "Added", "description": "<a href=\"http://biosignalml.org/\">BioSignalML</a> data store (work in progress)." },
                            { "type": "Improved", "description": "Interface." }
                          ]
                        },
@@ -61,14 +64,15 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export (either as a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "Added", "description": "Create a new or update an existing CellML file based on the results of a simulation." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." },
-                               { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." }
+                               { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." },
+                               { "type": "Fixed", "description": "Computing the initial value of a 'constant' algebraic variable." }
                              ]
                            }
                          ]
@@ -125,7 +129,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Fixed", "description": "Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and <a href=\"https://en.wikipedia.org/wiki/OS_X_Mountain_Lion\">OS X 10.8</a> (Mountain Lion) issue with models that need to compute 10<sup>x</sup>." }
                              ]
@@ -213,7 +217,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Improved", "description": "Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for the parameters section." },
@@ -318,7 +322,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Improved", "description": "View settings upon reloading a CellML file." },
                                { "type": "Improved", "description": "Delay between two data points." },
@@ -386,7 +390,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Added", "description": "Have several graph panels." },
                                { "type": "Added", "description": "Plot any model parameter against any other." },
@@ -413,7 +417,7 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Fixed", "description": "Runtime generation of some CellML files." }
                              ]
@@ -431,7 +435,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Simulation",
                          "entries": [
-                           { "type": "subCategory", "name": "Single Cell (simulation) view",
+                           { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Improved", "description": "Editing of property values." },
                                { "type": "Fixed", "description": "Plotting of property values." }

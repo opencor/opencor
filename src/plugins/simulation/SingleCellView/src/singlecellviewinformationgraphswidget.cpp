@@ -20,23 +20,17 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "propertyeditorwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
+#include "singlecellviewplugin.h"
+#include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
-#include <QAction>
 #include <QFileInfo>
-#include <QHeaderView>
-#include <QLabel>
 #include <QMenu>
-#include <QMetaType>
 #include <QScrollBar>
 #include <QSettings>
 
@@ -51,23 +45,19 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
+SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                                             QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
+    mViewWidget(pPlugin->viewWidget()),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
-    mContextMenus(QMap<QString, QMenu *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mColumnWidths(QIntList()),
-    mFileNames(QStringList()),
     mFileName(QString()),
-    mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
-    mSimulations(QMap<QString, SingleCellViewSimulation *>()),
-    mGraphPropertiesSelected(QMap<QString, QMap<Core::Property *, bool>>()),
     mCanEmitGraphsUpdatedSignal(true),
     mHorizontalScrollBarValue(0)
 {
@@ -75,18 +65,10 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
 
     mGui->setupUi(this);
 
-    // Determine the default width of each column of our property editors
-
-    Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
-
-    for (int i = 0, iMax = tempPropertyEditor->header()->count(); i < iMax; ++i)
-        mColumnWidths << tempPropertyEditor->columnWidth(i);
-
-    delete tempPropertyEditor;
-
-    // Create our context menu
+    // Create our context menus and populate our main context menu
 
     mContextMenu = new QMenu(this);
+    mParametersContextMenu = new QMenu(this);
 
     mContextMenu->addAction(mGui->actionAddGraph);
     mContextMenu->addSeparator();
@@ -130,108 +112,41 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsColumnWidths = QStringLiteral("ColumnWidths");
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the width of each column of our property editors
-
-    mColumnWidths = qVariantListToIntList(pSettings->value(SettingsColumnWidths, qIntListToVariantList(mColumnWidths)).toList());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the width of each column of our current property editor
-
-    pSettings->setValue(SettingsColumnWidths, qIntListToVariantList(mColumnWidths));
-}
-
-//==============================================================================
-
 void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
-                                                       CellMLSupport::CellmlFileRuntime *pRuntime,
                                                        SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the context menu, file name, runtime and simulation
+    // Keep track of the file name, runtime and simulation
 
     mFileName = pFileName;
 
-    mRuntimes.insert(pFileName, pRuntime);
-    mSimulations.insert(pFileName, pSimulation);
+    // Populate our parameters context menu
 
-    // Create and populate our context menu
-
-    QMenu *contextMenu = mContextMenus.value(pFileName);
-
-    if (!contextMenu) {
-        QMenu *contextMenu = new QMenu(this);
-
-        populateContextMenu(contextMenu, pRuntime);
-
-        // Keep track of our new context menu
-
-        mContextMenus.insert(pFileName, contextMenu);
-    }
+    populateParametersContextMenu(pSimulation->runtime());
 
     // Update the information about our graphs properties and this for all our
     // property editors
 
     updateAllGraphsInfo(true);
-
-    // Specify which graphs should be selected
-
-    QMap<Core::Property *, bool> graphsPropertiesSelected = mGraphPropertiesSelected.value(pFileName);
-
-    foreach (Core::Property *graphProperty, mGraphProperties) {
-        graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty, true));
-        // Note: by default, we want graphs to be selected, hence our use of
-        //       true as the default value...
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::backup(const QString &pFileName)
-{
-    // Keep track of which graphs are selected
-
-    QMap<Core::Property *, bool> graphsPropertiesSelected = QMap<Core::Property *, bool>();
-
-    foreach (Core::Property *graphProperty, mGraphProperties)
-        graphsPropertiesSelected.insert(graphProperty, graphProperty->isChecked());
-
-    mGraphPropertiesSelected.insert(pFileName, graphsPropertiesSelected);
 }
 
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
-    // Remove track of various information
+    Q_UNUSED(pFileName);
 
-    delete mContextMenus.value(pFileName);
+    // Clear our parameters context menu
 
-    mContextMenus.remove(pFileName);
-
-    mFileNames.removeOne(pFileName);
-
-    mRuntimes.remove(pFileName);
-    mSimulations.remove(pFileName);
-
-    mGraphPropertiesSelected.remove(pFileName);
+    mParametersContextMenu->clear();
 }
 
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
 {
-    // Keep track of the file name
+    Q_UNUSED(pFileName);
 
-    mFileNames << pFileName;
+    // Update our graphs information (which is always to be done)
 
     updateAllGraphsInfo(true);
 }
@@ -243,14 +158,8 @@ void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileN
 {
     // Replace the old file name with the new one in our various trackers
 
-    mFileName = pNewFileName;
-
-    mFileNames << pNewFileName;
-
-    mRuntimes.insert(pNewFileName, mRuntimes.value(pOldFileName));
-    mSimulations.insert(pNewFileName, mSimulations.value(pOldFileName));
-
-    finalize(pOldFileName);
+    if (!mFileName.compare(pOldFileName))
+        mFileName = pNewFileName;
 
     updateAllGraphsInfo(true);
 }
@@ -262,8 +171,6 @@ void SingleCellViewInformationGraphsWidget::fileClosed(const QString &pFileName)
     Q_UNUSED(pFileName);
 
     // Update the information about our graphs properties
-    // Note: our various trackers (e.g. mFileNames) will have been updated
-    //       through finalize(), so we are fine...
 
     updateAllGraphsInfo(true);
 }
@@ -274,6 +181,8 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 {
     // Retrieve the property editor for the given file name or create one, if
     // none exists
+
+    Core::PropertyEditorWidget *oldPropertyEditor = mPropertyEditor;
 
     mPropertyEditor = mPropertyEditors.value(pGraphPanel);
 
@@ -321,8 +230,10 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
     // Set our property editor's columns' width
 
-    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
-        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
+    if (oldPropertyEditor) {
+        for (int i = 0, iMax = oldPropertyEditor->header()->count(); i < iMax; ++i)
+            mPropertyEditor->setColumnWidth(i, oldPropertyEditor->columnWidth(i));
+    }
 
     // Set our retrieved property editor as our current widget
 
@@ -525,6 +436,19 @@ void SingleCellViewInformationGraphsWidget::on_actionUnselectAllGraphs_triggered
 
 //==============================================================================
 
+void SingleCellViewInformationGraphsWidget::updateGui()
+{
+    // Update the information about our graphs properties and this for all our
+    // property editors
+    // Note: this is in case we created a graph for a file that has not yet been
+    //       selected, in which case the graph will initially be invalid, but it
+    //       should become valid after we have switched to that file and back...
+
+    updateAllGraphsInfo();
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::finishEditing()
 {
     // Make sure that we have a property editor
@@ -576,6 +500,35 @@ Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(SingleCe
 
 //==============================================================================
 
+int SingleCellViewInformationGraphsWidget::headerCount() const
+{
+    // Return the number of headers in our property editors
+
+    return mPropertyEditor?mPropertyEditor->header()->count():0;
+}
+
+//==============================================================================
+
+int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
+{
+    // Return the width of the given column
+
+    return mPropertyEditor?mPropertyEditor->columnWidth(pIndex):0;
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
+                                                           const int &pColumnWidth)
+{
+    // Return the width of the given column
+
+    if (mPropertyEditor)
+        mPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
@@ -615,7 +568,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
         || (!crtProperty->name().compare(tr("Model")))) {
         mContextMenu->exec(QCursor::pos());
     } else {
-        mContextMenus.value(mFileName)->exec(QCursor::pos());
+        mParametersContextMenu->exec(QCursor::pos());
     }
 }
 
@@ -630,26 +583,26 @@ void SingleCellViewInformationGraphsWidget::propertyEditorHorizontalScrollBarVal
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pLogicalIndex,
+void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pIndex,
                                                                          const int &pOldSize,
                                                                          const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
-    // Keep track of the new column width
+    // Let people know that a header section has been resized
 
-    mColumnWidths[pLogicalIndex] = pNewSize;
+    emit headerSectionResized(pIndex, pOldSize, pNewSize);
 }
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextMenu,
-                                                                CellMLSupport::CellmlFileRuntime *pRuntime)
+void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    // Populate our context menu with the contents of our context menu
+    // Populate our parameters context menu with the contents of our main
+    // context menu
 
-    pContextMenu->addActions(mContextMenu->actions());
-    pContextMenu->addSeparator();
+    mParametersContextMenu->addActions(mContextMenu->actions());
+    mParametersContextMenu->addSeparator();
 
     // Now, add our model parameters to it
 
@@ -667,7 +620,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
-            QMenu *menu = pContextMenu;
+            QMenu *menu = mParametersContextMenu;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current
@@ -678,8 +631,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
                 foreach (QObject *object, menu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);
 
-                    if (    subMenu
-                        && !subMenu->menuAction()->text().compare(component)) {
+                    if (subMenu && !subMenu->menuAction()->text().compare(component)) {
                         componentMenu = subMenu;
 
                         break;
@@ -713,7 +665,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(SingleCellViewSimulationWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
 
         // Create a connection to handle the parameter value update
@@ -839,7 +791,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assignment...
 
     bool graphOk = true;
-    CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(fileName);
+    CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
@@ -930,16 +882,17 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     if (pSectionProperty) {
         graphProperties << pSectionProperty;
     } else {
-        foreach (Core::Property *property, mPropertyEditor->properties())
+        foreach (Core::Property *property, mPropertyEditor->properties()) {
             if (property->type() == Core::Property::Section)
                 graphProperties << property;
+        }
     }
 
     // Determine the model list values
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mFileNames)
+    foreach (const QString &fileName, mViewWidget->fileNames())
         modelListValues << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
 
     modelListValues.sort();

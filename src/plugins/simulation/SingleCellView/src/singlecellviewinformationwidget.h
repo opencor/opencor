@@ -50,6 +50,7 @@ class SingleCellViewInformationGraphsWidget;
 class SingleCellViewInformationParametersWidget;
 class SingleCellViewInformationSimulationWidget;
 class SingleCellViewInformationSolversWidget;
+class SingleCellViewPlugin;
 
 //==============================================================================
 
@@ -59,17 +60,20 @@ class SingleCellViewInformationWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationWidget(QWidget *pParent);
+    explicit SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                             QWidget *pParent);
 
     virtual void retranslateUi();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    SingleCellViewInformationSimulationWidget * simulationWidget();
-    SingleCellViewInformationSolversWidget * solversWidget();
-    SingleCellViewInformationGraphsWidget * graphsWidget();
-    SingleCellViewInformationParametersWidget * parametersWidget();
+    Core::CollapsibleWidget * collapsibleWidget() const;
+
+    SingleCellViewInformationSimulationWidget * simulationWidget() const;
+    SingleCellViewInformationSolversWidget * solversWidget() const;
+    SingleCellViewInformationGraphsWidget * graphsWidget() const;
+    SingleCellViewInformationParametersWidget * parametersWidget() const;
 
     void finishEditing(const bool &pPausedSimulation);
 

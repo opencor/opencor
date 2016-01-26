@@ -33,16 +33,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CellMLSupport {
-    class CellmlFileRuntime;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
 //==============================================================================
@@ -78,18 +73,13 @@ class SingleCellViewInformationSolversWidget : public Core::PropertyEditorWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationSolversWidget(QWidget *pParent);
+    explicit SingleCellViewInformationSolversWidget(SingleCellViewPlugin *pPlugin,
+                                                    QWidget *pParent);
     ~SingleCellViewInformationSolversWidget();
 
     virtual void retranslateUi();
 
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
-
-    void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation);
-    void backup(const QString &pFileName);
-    void finalize(const QString &pFileName);
+    void initialize(SingleCellViewSimulation *pSimulation);
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;
@@ -106,14 +96,9 @@ private:
     SingleCellViewInformationSolversWidgetData *mDaeSolverData;
     SingleCellViewInformationSolversWidgetData *mNlaSolverData;
 
-    QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
-    Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
-
     QMap<Core::Property *, Descriptions> mDescriptions;
 
     void updateSolverGui(SingleCellViewInformationSolversWidgetData *pSolverData);
-
-    void resetAllGuiStates();
 
     SingleCellViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                                                                      const Solver::Type &pSolverType);

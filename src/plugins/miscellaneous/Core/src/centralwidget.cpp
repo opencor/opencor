@@ -2088,18 +2088,13 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
         // The view from which the signal was emitted is the currently active
         // one, so we can try to handle its signal
 
-        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
-            if (!pFileName.compare(mFileNames[i])) {
-                // This is the file tab for which we want to update the icon, so
-                // do it and leave
+        int index = mFileNames.indexOf(pFileName);
 
-                if (pIcon.isNull())
-                    updateFileTab(i, true);
-                else
-                    mFileTabs->setTabIcon(i, pIcon);
-
-                return;
-            }
+        if (index != -1) {
+            if (pIcon.isNull())
+                updateFileTab(index, true);
+            else
+                mFileTabs->setTabIcon(index, pIcon);
         }
     }
 }

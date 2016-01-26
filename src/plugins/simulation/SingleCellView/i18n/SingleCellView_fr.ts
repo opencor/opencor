@@ -151,7 +151,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
+    <name>OpenCOR::SingleCellView::SingleCellViewSimulationWidget</name>
     <message>
         <source>Delay between two data points</source>
         <translation>Délai entre deux points de données</translation>
@@ -306,11 +306,11 @@
     </message>
     <message>
         <source>more than one master SED-ML file was found</source>
-        <translation>plus d&apos;un fichier SED-ML principal a été trouvé</translation>
+        <translation type="unfinished">plus d&apos;un fichier SED-ML principal a été trouvé</translation>
     </message>
     <message>
         <source>no master SED-ML file could be found</source>
-        <translation>aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
+        <translation type="unfinished">aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
     </message>
 </context>
 <context>
@@ -403,7 +403,7 @@
     </message>
 </context>
 <context>
-    <name>SingleCellViewWidget</name>
+    <name>SingleCellViewSimulationWidget</name>
     <message>
         <source>Run the simulation</source>
         <translation>Lancer la simulation</translation>

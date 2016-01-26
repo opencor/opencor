@@ -36,6 +36,7 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewplugin.cpp
         src/singlecellviewsimulation.cpp
         src/singlecellviewsimulationworker.cpp
+        src/singlecellviewsimulationwidget.cpp
         src/singlecellviewwidget.cpp
     HEADERS_MOC
         ../../plugin.h
@@ -54,11 +55,12 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewplugin.h
         src/singlecellviewsimulation.h
         src/singlecellviewsimulationworker.h
+        src/singlecellviewsimulationwidget.h
         src/singlecellviewwidget.h
     UIS
         src/singlecellviewgraphpanelplotwidget.ui
         src/singlecellviewinformationgraphswidget.ui
-        src/singlecellviewwidget.ui
+        src/singlecellviewsimulationwidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

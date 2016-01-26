@@ -296,9 +296,10 @@ void CollapsibleWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our collapsable state
 
-    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i) {
         if (mHeaders[i]->isCollapsable())
             setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
+    }
 }
 
 //==============================================================================
@@ -309,6 +310,15 @@ void CollapsibleWidget::saveSettings(QSettings *pSettings) const
 
     for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
         pSettings->setValue(SettingsCollapsed.arg(i), isCollapsed(i));
+}
+
+//==============================================================================
+
+int CollapsibleWidget::count() const
+{
+    // Return our number of headers
+
+    return mHeaders.count();
 }
 
 //==============================================================================
@@ -386,11 +396,30 @@ void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
     mLayout->addWidget(pWidget);
 
     // Create a connection to show/hide our widget depending on the collapsed
-    // state of our header
+    // state of our header, as well as one to let people know about our overall
+    // new collapsible state
 
     if (pCollapsible) {
         connect(header, SIGNAL(widgetVisible(const bool &)),
                 pWidget, SLOT(setVisible(bool)));
+
+        connect(header, SIGNAL(widgetVisible(const bool &)),
+                this, SLOT(emitCollapsed()));
+    }
+}
+
+//==============================================================================
+
+void CollapsibleWidget::emitCollapsed()
+{
+    // Let people know that a collapsed state has changed
+
+    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i) {
+        if (mHeaders[i] == sender()) {
+            emit collapsed(i, mHeaders[i]->isCollapsed());
+
+            return;
+        }
     }
 }
 
