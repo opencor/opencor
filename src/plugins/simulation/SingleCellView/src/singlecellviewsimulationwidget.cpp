@@ -85,7 +85,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mViewWidget(pPlugin->viewWidget()),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
-    mFileType(Unknown),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
@@ -587,22 +586,20 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // Determine the type of our file
 
     CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
-
-    if (cellmlFileManager->cellmlFile(mFileName))
-        mFileType = CellmlFile;
-    else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName))
-        mFileType = SedmlFile;
-    else
-        mFileType = CombineArchive;
+    FileType fileType = cellmlFileManager->cellmlFile(mFileName)?
+                            CellmlFile:
+                            SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName)?
+                                SedmlFile:
+                                CombineArchive;
 
     // Check whether we are to deal with a CellML or a SED-ML file
 
     QString sedmlFileName = QString();
     QString combineIssue = QString();
 
-    if (mFileType == SedmlFile) {
+    if (fileType == SedmlFile) {
         sedmlFileName = mFileName;
-    } else if (mFileType == CombineArchive) {
+    } else if (fileType == CombineArchive) {
         // We are dealing with a COMBINE archive, so its master file should be
         // the SED-ML file we are after
 
@@ -629,8 +626,8 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Update our simulation object, if needed
 
-    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?cellmlFileManager->cellmlFile(mFileName):0;
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = (mFileType == CellmlFile)?cellmlFile->runtime():0;
+    CellMLSupport::CellmlFile *cellmlFile = (fileType == CellmlFile)?cellmlFileManager->cellmlFile(mFileName):0;
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = (fileType == CellmlFile)?cellmlFile->runtime():0;
 
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
@@ -689,7 +686,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
             // means that the model doesn't contain any ODE or DAE
 
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
-        } else if (mFileType == CellmlFile) {
+        } else if (fileType == CellmlFile) {
             // We don't have a valid runtime, so either there are some problems
             // with the CellML file or its runtime
 
@@ -698,7 +695,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                 information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                      issue.message());
             }
-        } else if ((mFileType == CombineArchive) && !combineIssue.isEmpty()) {
+        } else if ((fileType == CombineArchive) && !combineIssue.isEmpty()) {
             information += QString(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+combineIssue+".</span>");
         }
     }

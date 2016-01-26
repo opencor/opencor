@@ -155,8 +155,6 @@ private:
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
-    FileType mFileType;
-
     SingleCellViewSimulation *mSimulation;
 
     Core::ProgressBarWidget *mProgressBarWidget;
