@@ -306,11 +306,11 @@
     </message>
     <message>
         <source>more than one master SED-ML file was found</source>
-        <translation type="unfinished">plus d&apos;un fichier SED-ML principal a été trouvé</translation>
+        <translation>plus d&apos;un fichier SED-ML principal a été trouvé</translation>
     </message>
     <message>
         <source>no master SED-ML file could be found</source>
-        <translation type="unfinished">aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
+        <translation>aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
     </message>
 </context>
 <context>
