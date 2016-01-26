@@ -226,7 +226,7 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
-    void createSedmlFile(const QString &pFileName, const QString &pModelSource);
+    bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
 

@@ -312,6 +312,30 @@
         <source>no master SED-ML file could be found</source>
         <translation>aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
     </message>
+    <message>
+        <source>Export To SED-ML File</source>
+        <translation>Exporter Vers Fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;.</source>
+        <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;.</translation>
+    </message>
+    <message>
+        <source>Export To COMBINE Archive</source>
+        <translation>Exporter Vers Archive COMBINE</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be added</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ajouté</translation>
+    </message>
+    <message>
+        <source>the master SED-ML file could not be added</source>
+        <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
+    </message>
+    <message>
+        <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;%2.</source>
+        <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;%2.</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

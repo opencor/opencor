@@ -1401,7 +1401,7 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
+bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
                                                      const QString &pModelSource)
 {
     // Create a SED-ML document and add the CellML namespace to it
@@ -1573,7 +1573,7 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(sedmlDocument)));
 
-    Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
+    return Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
 }
 
 //==============================================================================
@@ -1617,7 +1617,10 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportSedmlFile_triggered()
             modelSource = sedmlFileDir.relativeFilePath(modelSource);
         }
 
-        createSedmlFile(sedmlFileName, modelSource);
+        if (!createSedmlFile(sedmlFileName, modelSource)) {
+            QMessageBox::warning(Core::mainWindow(), tr("Export To SED-ML File"),
+                                 tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
+        }
     }
 }
 
@@ -1706,41 +1709,72 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
 
+        QString errorMessage = QString();
+        QString temporaryCombineArchiveName = Core::temporaryFileName();
         QString sedmlFileName = Core::temporaryFileName();
 
         createSedmlFile(sedmlFileName, modelSource);
 
         // Create our COMBINE archive after having added all our files to it
 
-        COMBINESupport::CombineArchive combineArchive(combineArchiveName);
+        COMBINESupport::CombineArchive combineArchive(temporaryCombineArchiveName);
         QFileInfo combineArchiveInfo = QFileInfo(combineArchiveName);
         QString sedmlFileLocation = combineArchiveInfo.fileName();
 
         sedmlFileLocation.replace(QRegularExpression(QRegularExpression::escape(combineArchiveInfo.completeSuffix())+"$"),
                                   SEDMLSupport::SedmlFileExtension);
 
-        combineArchive.addFile(sedmlFileName, sedmlFileLocation,
-                               COMBINESupport::CombineArchiveFile::Sedml, true);
+        if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
+                                   COMBINESupport::CombineArchiveFile::Sedml, true)) {
+            if (combineArchive.addFile(mFileName, modelSource,
+                                       (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                           COMBINESupport::CombineArchiveFile::Cellml_1_1:
+                                           COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
+                foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+                    QString realImportedFileName = remoteFile?
+                                                       remoteImportedFileNames.value(importedFileName):
+                                                       importedFileName;
 
-        combineArchive.addFile(mFileName, modelSource,
-                               (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
-                                   COMBINESupport::CombineArchiveFile::Cellml_1_1:
-                                   COMBINESupport::CombineArchiveFile::Cellml_1_0);
+                    if (!combineArchive.addFile(realImportedFileName,
+                                                QString(importedFileName).remove(commonPath),
+                                                COMBINESupport::CombineArchiveFile::Cellml)) {
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(realImportedFileName)+").");
 
-        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-            combineArchive.addFile(remoteFile?
-                                       remoteImportedFileNames.value(importedFileName):
-                                       importedFileName,
-                                   QString(importedFileName).remove(commonPath),
-                                   COMBINESupport::CombineArchiveFile::Cellml);
+                        break;
+                    }
+                }
+
+                if (errorMessage.isEmpty()) {
+                    if (combineArchive.save()) {
+                        QFile::remove(combineArchiveName);
+
+                        if (!QFile::rename(temporaryCombineArchiveName, combineArchiveName))
+                            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(combineArchiveName);
+                    } else {
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(combineArchiveName);
+                    }
+                }
+            } else {
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(mFileName)+").");
+            }
+        } else {
+            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
         }
 
-        combineArchive.save();
+        // Remove our temporary COMBINE archive and the local copy of our remote
+        // imported CellML files, if any
 
-        // Remove the local copy of our remote imported CellML files, if any
+        QFile::remove(temporaryCombineArchiveName);
 
         foreach (const QString &localImportedFileName, remoteImportedFileNames.values())
             QFile::remove(localImportedFileName);
+
+        // Let the user know about any error that may have occurred
+
+        if (!errorMessage.isEmpty()) {
+            QMessageBox::warning(Core::mainWindow(), tr("Export To COMBINE Archive"),
+                                 errorMessage);
+        }
     }
 }
 
