@@ -591,11 +591,9 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
 
-    // Determine whether the CellML file has a valid runtime
+    // Retrieve our variable of integration, if possible
 
     bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
-
-    // Retrieve our variable of integration, if possible
 
     CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
