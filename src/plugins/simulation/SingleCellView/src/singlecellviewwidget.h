@@ -69,49 +69,6 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
-/*---GRY---
-    static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
-
-private:
-    enum FileType {
-        Unknown,
-        CellmlFile,
-        SedmlFile,
-        CombineArchive
-    };
-
-    enum ErrorType {
-        General,
-        InvalidCellmlFile,
-        InvalidSimulationEnvironment
-    };
-
-    Ui::SingleCellViewWidget *mGui;
-
-    SingleCellViewPlugin *mPlugin;
-
-    SolverInterfaces mSolverInterfaces;
-
-    QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
-
-    FileType mFileType;
-    QMap<QString, FileType> mFileTypes;
-
-    SingleCellViewSimulation *mSimulation;
-    QMap<QString, SingleCellViewSimulation *> mSimulations;
-
-    SingleCellViewSimulations mStoppedSimulations;
-
-    Core::ProgressBarWidget *mProgressBarWidget;
-
-    QMap<QString, int> mProgresses;
-    QMap<QString, bool> mResets;
-    QMap<QString, int> mDelays;
-    QMap<QString, bool> mDevelopmentModes;
-    QMap<QString, bool> mLockedDevelopmentModes;
-
-    Core::ToolBarWidget *mToolBarWidget;
-*/
     QStringList fileNames() const;
 
     SingleCellViewSimulation * simulation(const QString &pFileName) const;
