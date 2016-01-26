@@ -132,13 +132,6 @@ public:
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
-    enum FileType {
-        Unknown,
-        CellmlFile,
-        SedmlFile,
-        CombineArchive
-    };
-
     enum ErrorType {
         General,
         InvalidCellmlFile,

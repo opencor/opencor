@@ -585,6 +585,13 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Determine the type of our file
 
+    enum FileType {
+        Unknown,
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
     FileType fileType = cellmlFileManager->cellmlFile(mFileName)?
                             CellmlFile:
