@@ -34,3 +34,7 @@ a=-pow(fact(b), c);                             // 025
 a=pow(fact(b+c), d);                            // 026
 a=pow(-fact(b+c), d);                           // 027
 a=-pow(fact(b+c), d);                           // 028
+
+a=pow(abs(b), c);                               // 029
+a=pow(-abs(b), c);                              // 030
+a=-pow(abs(b), c);                              // 031
