@@ -21,3 +21,7 @@ a=pow(sin(b), c);                               // 015
 a=pow(sin(-b), c);                              // 016
 a=pow(-sin(b), c);                              // 017
 a=-pow(sin(b), c);                              // 018
+
+a=pow(sin(b+c), d);                             // 019
+a=pow(-sin(b+c), d);                            // 020
+a=-pow(sin(b+c), d);                            // 021

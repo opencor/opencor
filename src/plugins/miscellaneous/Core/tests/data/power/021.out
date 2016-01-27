@@ -1,0 +1,19 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+        <mi mathvariant="italic">a</mi>
+        <mo>=</mo>
+        <mo>−</mo>
+        <msup>
+            <mrow>
+                <mi>sin</mi>
+                <mo>⁡</mo>
+                <mo>(</mo>
+                <mi mathvariant="italic">b</mi>
+                <mo>+</mo>
+                <mi mathvariant="italic">c</mi>
+                <mo>)</mo>
+            </mrow>
+            <mi mathvariant="italic">d</mi>
+        </msup>
+    </mrow>
+</math>
