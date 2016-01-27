@@ -541,29 +541,22 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:power]]
                                 |m:apply[*[1][self::m:csymbol='power']]">
 <x:param name="p" select="0"/>
-<x:param name="op" select="name(../*[1])"/>
+<msup>
 <x:choose>
  <x:when test="$p&gt;=5">
-<mrow>
-<x:if test="$op != 'minus' and count(../*) = 2"><mo>(</mo></x:if>
-<msup>
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="5"/>
 </x:apply-templates>
 <x:apply-templates select="*[3]"/>
-</msup>
-<x:if test="$op != 'minus' and count(../*) = 2"><mo>)</mo></x:if>
-</mrow>
  </x:when>
 <x:otherwise>
-<msup>
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="5"/>
 </x:apply-templates>
 <x:apply-templates select="*[3]"/>
-</msup>
 </x:otherwise>
 </x:choose>
+</msup>
 </x:template>
 
 <!-- 4.4.3.8 remainder -->
