@@ -485,7 +485,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
   <x:for-each select="*[position()&gt;1]">
    <x:choose>
     <x:when test="self::m:apply[count(*)=2 and *[1][self::m:minus]] or
-                    self::m:cn[not(m:sep) and (number(.) &lt; 0)]">
+            self::m:cn[not(m:sep) and (number(.) &lt; 0)]">
      <mo>&#8722;<!--minus--></mo>
     </x:when>
     <x:when test="position()!=1">
@@ -503,7 +503,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
      </x:apply-templates>
     </x:when>
     <x:when test="self::m:apply[*[1][self::m:times] and
-                    *[2][self::m:cn[not(m:sep) and (number(.) &lt;0)]]]">
+            *[2][self::m:cn[not(m:sep) and (number(.) &lt;0)]]]">
      <mrow>
       <mn><x:value-of select="-(*[2])"/></mn>
       <mo>&#8290;<!--invisible times--></mo>
@@ -514,7 +514,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
      </mrow>
     </x:when>
     <x:when test="self::m:apply[*[1][self::m:times] and count(*[2][self::m:apply]/*)>3 and
-                    *[2][self::m:apply/*[1][self::m:minus]]]">
+            *[2][self::m:apply/*[1][self::m:minus]]]">
      <mrow>
       <x:apply-templates select="./*[2]/*[2]"/>
       <x:apply-templates select=".">
