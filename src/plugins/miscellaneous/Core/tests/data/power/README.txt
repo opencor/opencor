@@ -12,3 +12,7 @@ a=-pow(b, c+d);                                 // 009
 
 a=pow(b, -3{dimensionless});                    // 010
 a=pow(b, -c);                                   // 011
+
+a=pow(b/c, d);                                  // 012
+a=pow(-b/c, d);                                 // 013
+a=-pow(b/c, d);                                 // 014
