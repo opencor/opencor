@@ -16,3 +16,8 @@ a=pow(b, -c);                                   // 011
 a=pow(b/c, d);                                  // 012
 a=pow(-b/c, d);                                 // 013
 a=-pow(b/c, d);                                 // 014
+
+a=pow(sin(b), c);                               // 015
+a=pow(sin(-b), c);                              // 016
+a=pow(-sin(b), c);                              // 017
+a=-pow(sin(b), c);                              // 018
