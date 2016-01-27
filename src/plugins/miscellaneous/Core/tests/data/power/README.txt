@@ -30,3 +30,7 @@ a=pow(fact(b), c);                              // 022
 a=pow(fact(-b), c);                             // 023
 a=pow(-fact(b), c);                             // 024
 a=-pow(fact(b), c);                             // 025
+
+a=pow(fact(b+c), d);                            // 026
+a=pow(-fact(b+c), d);                           // 027
+a=-pow(fact(b+c), d);                           // 028
