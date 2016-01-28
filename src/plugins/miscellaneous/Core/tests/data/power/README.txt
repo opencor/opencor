@@ -36,3 +36,11 @@ a=-pow(pow(b, c), d);                           // 026
 a=pow(pow(-b, c), d);                           // 027
 a=pow(-pow(-b, c), d);                          // 028
 a=-pow(pow(-b, c), d);                          // 029
+
+a=pow(root(b, c), d);                           // 030
+a=pow(-root(b, c), d);                          // 031
+a=-pow(root(b, c), d);                          // 032
+
+a=pow(root(-b, c), d);                          // 033
+a=pow(-root(-b, c), d);                         // 034
+a=-pow(root(-b, c), d);                         // 035
