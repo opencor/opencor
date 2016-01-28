@@ -410,11 +410,9 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:factorial]]
                                 |m:apply[*[1][self::m:csymbol='factorial']]">
 <mrow>
-<x:if test="m:apply"><mo>(</mo></x:if>
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="7"/>
 </x:apply-templates>
-<x:if test="m:apply"><mo>)</mo></x:if>
 <mo>!</mo>
 </mrow>
 </x:template>
@@ -423,9 +421,23 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.3.3 divide -->
 <x:template match="m:apply[*[1][self::m:divide]]
                                 |m:apply[*[1][self::m:csymbol='divide']]">
-<mfrac>
-  <x:apply-templates select="*[position()!=1]"/>
-</mfrac>
+  <x:param name="p" select="0"/>
+<x:choose>
+ <x:when test="$p &gt;= 5 and name(../*[1]) = 'power'">
+  <mrow>
+    <mo>(</mo>
+    <mfrac>
+      <x:apply-templates select="*[position()!=1]"/>
+    </mfrac>
+    <mo>)</mo>
+  </mrow>
+ </x:when>
+ <x:otherwise>
+  <mfrac>
+    <x:apply-templates select="*[position()!=1]"/>
+  </mfrac>
+ </x:otherwise>
+</x:choose>
 </x:template>
 
 
@@ -455,14 +467,14 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.3.5  minus-->
 <x:template match="m:apply[*[1][self::m:minus] and count(*)=2]
                                 |m:apply[*[1][self::m:csymbol='unary_minus']]">
-  <x:param name="op" select="name(../*[1])"/>
+  <x:param name="p" select="0"/>
 <mrow>
-  <x:if test="$op = 'power' and count(*) = 2 and . = ../*[2]"><mo>(</mo></x:if>
+  <x:if test="$p &gt;= 5"><mo>(</mo></x:if>
   <mo>&#8722;<!--minus--></mo>
   <x:apply-templates select="*[2]">
       <x:with-param name="p" select="5"/>
   </x:apply-templates>
-  <x:if test="$op = 'power' and count(*) = 2 and . = ../*[2]"><mo>)</mo></x:if>
+  <x:if test="$p &gt;= 5"><mo>)</mo></x:if>
 </mrow>
 </x:template>
 
@@ -487,7 +499,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
   <x:for-each select="*[position()&gt;1]">
    <x:choose>
     <x:when test="self::m:apply[count(*)=2 and *[1][self::m:minus]] or
-                    self::m:cn[not(m:sep) and (number(.) &lt; 0)]">
+            self::m:cn[not(m:sep) and (number(.) &lt; 0)]">
      <mo>&#8722;<!--minus--></mo>
     </x:when>
     <x:when test="position()!=1">
@@ -505,7 +517,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
      </x:apply-templates>
     </x:when>
     <x:when test="self::m:apply[*[1][self::m:times] and
-                    *[2][self::m:cn[not(m:sep) and (number(.) &lt;0)]]]">
+            *[2][self::m:cn[not(m:sep) and (number(.) &lt;0)]]]">
      <mrow>
       <mn><x:value-of select="-(*[2])"/></mn>
       <mo>&#8290;<!--invisible times--></mo>
@@ -516,7 +528,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
      </mrow>
     </x:when>
     <x:when test="self::m:apply[*[1][self::m:times] and count(*[2][self::m:apply]/*)>3 and
-                    *[2][self::m:apply/*[1][self::m:minus]]]">
+            *[2][self::m:apply/*[1][self::m:minus]]]">
      <mrow>
       <x:apply-templates select="./*[2]/*[2]"/>
       <x:apply-templates select=".">
@@ -540,29 +552,27 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.3.7 power -->
 <x:template match="m:apply[*[1][self::m:power]]
                                 |m:apply[*[1][self::m:csymbol='power']]">
-<x:param name="p" select="0"/>
-<x:param name="op" select="name(../*[1])"/>
 <x:choose>
- <x:when test="$p&gt;=5">
-<mrow>
-<x:if test="$op != 'minus' and count(../*) = 2"><mo>(</mo></x:if>
-<msup>
-<x:apply-templates select="*[2]">
-  <x:with-param name="p" select="5"/>
-</x:apply-templates>
-<x:apply-templates select="*[3]"/>
-</msup>
-<x:if test="$op != 'minus' and count(../*) = 2"><mo>)</mo></x:if>
-</mrow>
+ <x:when test="name(../*[1]) = 'power' and name(*[3]) = 'apply'">
+  <mrow>
+    <mo>(</mo>
+    <msup>
+      <x:apply-templates select="*[2]">
+        <x:with-param name="p" select="5"/>
+      </x:apply-templates>
+      <x:apply-templates select="*[3]"/>
+    </msup>
+    <mo>)</mo>
+  </mrow>
  </x:when>
-<x:otherwise>
-<msup>
-<x:apply-templates select="*[2]">
-  <x:with-param name="p" select="5"/>
-</x:apply-templates>
-<x:apply-templates select="*[3]"/>
-</msup>
-</x:otherwise>
+ <x:otherwise>
+   <msup>
+     <x:apply-templates select="*[2]">
+       <x:with-param name="p" select="5"/>
+     </x:apply-templates>
+     <x:apply-templates select="*[3]"/>
+   </msup>
+ </x:otherwise>
 </x:choose>
 </x:template>
 
@@ -1536,12 +1546,16 @@ priority="2">
  or self::m:arccot or self::m:arccoth or self::m:arccsc or
  self::m:arccsch or self::m:arcsec or self::m:arcsech or
  self::m:arcsinh or self::m:arctanh or self::m:ln]]">
+ <x:param name="p" select="0"/>
+ <x:param name="op" select="name(../*[1])"/>
   <mrow>
+    <x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>(</mo></x:if>
     <mi><x:value-of select="local-name(*[1])"/></mi>
     <mo>&#8289;<!--function application--></mo>
     <x:if test="m:apply"><mo>(</mo></x:if>
     <x:apply-templates select="*[2]"/>
     <x:if test="m:apply"><mo>)</mo></x:if>
+    <x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
@@ -1564,10 +1578,24 @@ priority="2">
 <!-- 4.4.8.2 exp -->
 <x:template match="m:apply[*[1][self::m:exp]]
                        |m:apply[*[1][self::m:csymbol='exp']]">
-<msup>
-<mi>e<!-- exponential e--></mi>
-<mrow><x:apply-templates select="*[2]"/></mrow>
-</msup>
+<x:choose>
+ <x:when test="name(../*[1]) = 'power' and name(*[2]) = 'apply'">
+  <mrow>
+    <mo>(</mo>
+    <msup>
+      <mi>e<!-- exponential e--></mi>
+      <mrow><x:apply-templates select="*[2]"/></mrow>
+    </msup>
+    <mo>)</mo>
+  </mrow>
+ </x:when>
+ <x:otherwise>
+  <msup>
+    <mi>e<!-- exponential e--></mi>
+    <mrow><x:apply-templates select="*[2]"/></mrow>
+  </msup>
+ </x:otherwise>
+</x:choose>
 </x:template>
 
 <!-- 4.4.8.3 ln -->
@@ -1576,7 +1604,10 @@ priority="2">
 <!-- 4.4.8.4 log -->
 <x:template match="m:apply[*[1][self::m:log]]
                        |m:apply[*[1][self::m:csymbol='log']]">
+  <x:param name="p" select="0"/>
+  <x:param name="op" select="name(../*[1])"/>
 <mrow>
+<x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>(</mo></x:if>
 <x:choose>
 <x:when test="not(m:logbase) or number(m:logbase)=10">
 <mi>log</mi>
@@ -1592,6 +1623,7 @@ priority="2">
 <x:if test="m:apply"><mo>(</mo></x:if>
 <x:apply-templates select="*[last()]"/>
 <x:if test="m:apply"><mo>)</mo></x:if>
+<x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>)</mo></x:if>
 </mrow>
 </x:template>
 

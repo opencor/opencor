@@ -1,0 +1,14 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <power/>
+            <apply>
+                <ceiling/>
+                <ci>b</ci>
+            </apply>
+            <ci>c</ci>
+        </apply>
+    </apply>
+</math>

@@ -1,0 +1,15 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <power/>
+            <apply>
+                <minus/>
+                <ci>b</ci>
+                <ci>c</ci>
+            </apply>
+            <ci>d</ci>
+        </apply>
+    </apply>
+</math>
