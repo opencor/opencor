@@ -1532,12 +1532,16 @@ priority="2">
  or self::m:arccot or self::m:arccoth or self::m:arccsc or
  self::m:arccsch or self::m:arcsec or self::m:arcsech or
  self::m:arcsinh or self::m:arctanh or self::m:ln]]">
+ <x:param name="p" select="0"/>
+ <x:param name="op" select="name(../*[1])"/>
   <mrow>
+    <x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>(</mo></x:if>
     <mi><x:value-of select="local-name(*[1])"/></mi>
     <mo>&#8289;<!--function application--></mo>
     <x:if test="m:apply"><mo>(</mo></x:if>
     <x:apply-templates select="*[2]"/>
     <x:if test="m:apply"><mo>)</mo></x:if>
+    <x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>)</mo></x:if>
   </mrow>
 </x:template>
 
