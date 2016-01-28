@@ -4,11 +4,10 @@
         <mo>=</mo>
         <msup>
             <mrow>
-                <mi>sin</mi>
-                <mo>⁡</mo>
                 <mo>(</mo>
+                <mo>−</mo>
                 <mi mathvariant="italic">b</mi>
-                <mo>+</mo>
+                <mo>·</mo>
                 <mi mathvariant="italic">c</mi>
                 <mo>)</mo>
             </mrow>

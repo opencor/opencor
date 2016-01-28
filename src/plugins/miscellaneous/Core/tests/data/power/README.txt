@@ -13,32 +13,18 @@ a=-pow(b, c+d);                                 // 009
 a=pow(b, -3{dimensionless});                    // 010
 a=pow(b, -c);                                   // 011
 
-a=pow(b/c, d);                                  // 012
-a=pow(-b/c, d);                                 // 013
-a=-pow(b/c, d);                                 // 014
+a=pow(b+c, d);                                  // 012
+a=pow(-b+c, d);                                 // 013
+a=-pow(b+c, d);                                 // 014
 
-a=pow(sin(b), c);                               // 015
-a=pow(sin(-b), c);                              // 016
-a=pow(-sin(b), c);                              // 017
-a=-pow(sin(b), c);                              // 018
+a=pow(b-c, d);                                  // 015
+a=pow(-b-c, d);                                 // 016
+a=-pow(b-c, d);                                 // 017
 
-a=pow(sin(b+c), d);                             // 019
-a=pow(-sin(b+c), d);                            // 020
-a=-pow(sin(b+c), d);                            // 021
+a=pow(b*c, d);                                  // 018
+a=pow(-b*c, d);                                 // 019
+a=-pow(b*c, d);                                 // 020
 
-a=pow(fact(b), c);                              // 022
-a=pow(fact(-b), c);                             // 023
-a=pow(-fact(b), c);                             // 024
-a=-pow(fact(b), c);                             // 025
-
-a=pow(fact(b+c), d);                            // 026
-a=pow(-fact(b+c), d);                           // 027
-a=-pow(fact(b+c), d);                           // 028
-
-a=pow(abs(b), c);                               // 029
-a=pow(-abs(b), c);                              // 030
-a=-pow(abs(b), c);                              // 031
-
-a=pow(abs(b+c), d);                             // 032
-a=pow(-abs(b+c), d);                            // 033
-a=-pow(abs(b+c), d);                            // 034
+a=pow(b/c, d);                                  // 021
+a=pow(-b/c, d);                                 // 022
+a=-pow(b/c, d);                                 // 023

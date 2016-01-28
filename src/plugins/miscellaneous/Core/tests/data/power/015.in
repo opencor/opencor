@@ -5,10 +5,11 @@
         <apply>
             <power/>
             <apply>
-                <sin/>
+                <minus/>
                 <ci>b</ci>
+                <ci>c</ci>
             </apply>
-            <ci>c</ci>
+            <ci>d</ci>
         </apply>
     </apply>
 </math>

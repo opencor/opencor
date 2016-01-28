@@ -4,10 +4,17 @@
         <mo>=</mo>
         <msup>
             <mrow>
-                <mi mathvariant="italic">b</mi>
-                <mo>!</mo>
+                <mo>(</mo>
+                <mfrac>
+                    <mrow>
+                        <mo>−</mo>
+                        <mi mathvariant="italic">b</mi>
+                    </mrow>
+                    <mi mathvariant="italic">c</mi>
+                </mfrac>
+                <mo>)</mo>
             </mrow>
-            <mi mathvariant="italic">c</mi>
+            <mi mathvariant="italic">d</mi>
         </msup>
     </mrow>
 </math>

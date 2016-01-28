@@ -5,13 +5,10 @@
         <msup>
             <mrow>
                 <mo>(</mo>
-                <mfrac>
-                    <mrow>
-                        <mo>−</mo>
-                        <mi mathvariant="italic">b</mi>
-                    </mrow>
-                    <mi mathvariant="italic">c</mi>
-                </mfrac>
+                <mo>−</mo>
+                <mi mathvariant="italic">b</mi>
+                <mo>+</mo>
+                <mi mathvariant="italic">c</mi>
                 <mo>)</mo>
             </mrow>
             <mi mathvariant="italic">d</mi>

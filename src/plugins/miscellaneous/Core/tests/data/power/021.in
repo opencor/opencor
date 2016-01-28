@@ -3,19 +3,13 @@
         <eq/>
         <ci>a</ci>
         <apply>
-            <minus/>
+            <power/>
             <apply>
-                <power/>
-                <apply>
-                    <sin/>
-                    <apply>
-                        <plus/>
-                        <ci>b</ci>
-                        <ci>c</ci>
-                    </apply>
-                </apply>
-                <ci>d</ci>
+                <divide/>
+                <ci>b</ci>
+                <ci>c</ci>
             </apply>
+            <ci>d</ci>
         </apply>
     </apply>
 </math>

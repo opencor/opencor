@@ -5,7 +5,7 @@
         <apply>
             <power/>
             <apply>
-                <divide/>
+                <plus/>
                 <ci>b</ci>
                 <ci>c</ci>
             </apply>

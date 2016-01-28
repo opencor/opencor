@@ -3,15 +3,16 @@
         <eq/>
         <ci>a</ci>
         <apply>
-            <power/>
+            <minus/>
             <apply>
-                <minus/>
+                <power/>
                 <apply>
-                    <sin/>
+                    <minus/>
                     <ci>b</ci>
+                    <ci>c</ci>
                 </apply>
+                <ci>d</ci>
             </apply>
-            <ci>c</ci>
         </apply>
     </apply>
 </math>

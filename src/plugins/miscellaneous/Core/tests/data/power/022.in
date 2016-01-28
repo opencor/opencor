@@ -5,10 +5,14 @@
         <apply>
             <power/>
             <apply>
-                <factorial/>
-                <ci>b</ci>
+                <divide/>
+                <apply>
+                    <minus/>
+                    <ci>b</ci>
+                </apply>
+                <ci>c</ci>
             </apply>
-            <ci>c</ci>
+            <ci>d</ci>
         </apply>
     </apply>
 </math>

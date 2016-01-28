@@ -2,15 +2,17 @@
     <mrow>
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
+        <mo>−</mo>
         <msup>
             <mrow>
                 <mo>(</mo>
-                <mo>−</mo>
-                <mi mathvariant="italic">b</mi>
+                <mfrac>
+                    <mi mathvariant="italic">b</mi>
+                    <mi mathvariant="italic">c</mi>
+                </mfrac>
                 <mo>)</mo>
-                <mo>!</mo>
             </mrow>
-            <mi mathvariant="italic">c</mi>
+            <mi mathvariant="italic">d</mi>
         </msup>
     </mrow>
 </math>

@@ -5,12 +5,12 @@
         <msup>
             <mrow>
                 <mo>(</mo>
-                <mi>sin</mi>
-                <mo>⁡</mo>
                 <mi mathvariant="italic">b</mi>
+                <mo>−</mo>
+                <mi mathvariant="italic">c</mi>
                 <mo>)</mo>
             </mrow>
-            <mi mathvariant="italic">c</mi>
+            <mi mathvariant="italic">d</mi>
         </msup>
     </mrow>
 </math>
