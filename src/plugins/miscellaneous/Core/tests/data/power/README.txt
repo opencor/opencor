@@ -68,3 +68,11 @@ a=-pow(exp(b), c);                              // 050
 a=pow(exp(b+c), d);                             // 051
 a=pow(-exp(b+c), d);                            // 052
 a=-pow(exp(b+c), d);                            // 053
+
+a=pow(ln(b), c);                                // 054
+a=pow(-ln(b), c);                               // 055
+a=-pow(ln(b), c);                               // 056
+
+a=pow(ln(b+c), d);                              // 057
+a=pow(-ln(b+c), d);                             // 058
+a=-pow(ln(b+c), d);                             // 059
