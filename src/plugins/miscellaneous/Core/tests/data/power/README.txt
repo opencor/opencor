@@ -100,3 +100,11 @@ a=-pow(floor(b), c);                            // 074
 a=pow(floor(b+c), d);                           // 075
 a=pow(-floor(b+c), d);                          // 076
 a=-pow(floor(b+c), d);                          // 077
+
+a=pow(ceil(b), c);                              // 078
+a=pow(-ceil(b), c);                             // 079
+a=-pow(ceil(b), c);                             // 080
+
+a=pow(ceil(b+c), d);                            // 081
+a=pow(-ceil(b+c), d);                           // 082
+a=-pow(ceil(b+c), d);                           // 083
