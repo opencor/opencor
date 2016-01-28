@@ -92,3 +92,11 @@ a=-pow(log(b, c+d), e);                         // 068
 a=pow(log(b+c), d);                             // 069
 a=pow(-log(b+c), d);                            // 070
 a=-pow(log(b+c), d);                            // 071
+
+a=pow(floor(b), c);                             // 072
+a=pow(-floor(b), c);                            // 073
+a=-pow(floor(b), c);                            // 074
+
+a=pow(floor(b+c), d);                           // 075
+a=pow(-floor(b+c), d);                          // 076
+a=-pow(floor(b+c), d);                          // 077
