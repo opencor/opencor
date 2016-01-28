@@ -540,20 +540,10 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
                                 |m:apply[*[1][self::m:csymbol='power']]">
 <x:param name="p" select="0"/>
 <msup>
-<x:choose>
- <x:when test="$p&gt;=5">
 <x:apply-templates select="*[2]">
   <x:with-param name="p" select="5"/>
 </x:apply-templates>
 <x:apply-templates select="*[3]"/>
- </x:when>
-<x:otherwise>
-<x:apply-templates select="*[2]">
-  <x:with-param name="p" select="5"/>
-</x:apply-templates>
-<x:apply-templates select="*[3]"/>
-</x:otherwise>
-</x:choose>
 </msup>
 </x:template>
 
