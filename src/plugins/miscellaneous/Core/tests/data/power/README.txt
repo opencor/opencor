@@ -128,3 +128,11 @@ a=-pow(min(b, c), d);                           // 095
 a=pow(max(b, c), d);                            // 096
 a=pow(-max(b, c), d);                           // 097
 a=-pow(max(b, c), d);                           // 098
+
+a=pow(gcd(b, c), d);                            // 099
+a=pow(-gcd(b, c), d);                           // 100
+a=-pow(gcd(b, c), d);                           // 101
+
+a=pow(lcm(b, c), d);                            // 102
+a=pow(-lcm(b, c), d);                           // 103
+a=-pow(lcm(b, c), d);                           // 104
