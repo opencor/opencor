@@ -37,13 +37,13 @@ a=pow(pow(-b, c), d);                           // 027
 a=pow(-pow(-b, c), d);                          // 028
 a=-pow(pow(-b, c), d);                          // 029
 
-a=pow(root(b, c), d);                           // 030
-a=pow(-root(b, c), d);                          // 031
-a=-pow(root(b, c), d);                          // 032
+a=pow(pow(b, c+d), e);                          // 030
+a=pow(-pow(b, c+d), e);                         // 031
+a=-pow(pow(b, c+d), e);                         // 032
 
-a=pow(root(-b, c), d);                          // 033
-a=pow(-root(-b, c), d);                         // 034
-a=-pow(root(-b, c), d);                         // 035
+a=pow(pow(-b, c+d), e);                         // 033
+a=pow(-pow(-b, c+d), e);                        // 034
+a=-pow(pow(-b, c+d), e);                        // 035
 
 a=pow(root(b, c), d);                           // 036
 a=pow(-root(b, c), d);                          // 037
