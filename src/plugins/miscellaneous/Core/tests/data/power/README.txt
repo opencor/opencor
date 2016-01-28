@@ -28,3 +28,11 @@ a=-pow(b*c, d);                                 // 020
 a=pow(b/c, d);                                  // 021
 a=pow(-b/c, d);                                 // 022
 a=-pow(b/c, d);                                 // 023
+
+a=pow(pow(b, c), d);                            // 024
+a=pow(-pow(b, c), d);                           // 025
+a=-pow(pow(b, c), d);                           // 026
+
+a=pow(pow(-b, c), d);                           // 027
+a=pow(-pow(-b, c), d);                          // 028
+a=-pow(pow(-b, c), d);                          // 029
