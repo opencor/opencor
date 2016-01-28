@@ -421,9 +421,24 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.3.3 divide -->
 <x:template match="m:apply[*[1][self::m:divide]]
                                 |m:apply[*[1][self::m:csymbol='divide']]">
-<mfrac>
-  <x:apply-templates select="*[position()!=1]"/>
-</mfrac>
+  <x:param name="p" select="0"/>
+  <x:param name="op" select="name(../*[1])"/>
+<x:choose>
+ <x:when test="$p &gt;= 5 and $op = 'power'">
+  <mrow>
+    <mo>(</mo>
+    <mfrac>
+      <x:apply-templates select="*[position()!=1]"/>
+    </mfrac>
+    <mo>)</mo>
+  </mrow>
+ </x:when>
+ <x:otherwise>
+  <mfrac>
+    <x:apply-templates select="*[position()!=1]"/>
+  </mfrac>
+ </x:otherwise>
+</x:choose>
 </x:template>
 
 
