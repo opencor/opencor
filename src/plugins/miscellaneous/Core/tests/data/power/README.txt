@@ -108,3 +108,11 @@ a=-pow(ceil(b), c);                             // 080
 a=pow(ceil(b+c), d);                            // 081
 a=pow(-ceil(b+c), d);                           // 082
 a=-pow(ceil(b+c), d);                           // 083
+
+a=pow(fact(b), c);                              // 084
+a=pow(-fact(b), c);                             // 085
+a=-pow(fact(b), c);                             // 086
+
+a=pow(fact(b+c), d);                            // 087
+a=pow(-fact(b+c), d);                           // 088
+a=-pow(fact(b+c), d);                           // 089
