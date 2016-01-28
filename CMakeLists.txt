@@ -284,9 +284,7 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-#---GRY--- TEMPORARILY DISABLE BioSignalML SUPPORT UNTIL THE BioSignalML WEBSITE
-#          IS BACK ONLINE...
-#    api/BioSignalMLAPI
+    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
@@ -335,9 +333,7 @@ SET(PLUGINS
 
     # Selectable plugins
 
-#---GRY--- TEMPORARILY DISABLE BioSignalML SUPPORT UNTIL THE BioSignalML WEBSITE
-#          IS BACK ONLINE...
-#    dataStore/BSMLDataStore
+    dataStore/BSMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
