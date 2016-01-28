@@ -335,7 +335,9 @@ SET(PLUGINS
 
     # Selectable plugins
 
-    dataStore/BSMLDataStore
+#---GRY--- TEMPORARILY DISABLE BioSignalML SUPPORT UNTIL THE BioSignalML WEBSITE
+#          IS BACK ONLINE...
+#    dataStore/BSMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
