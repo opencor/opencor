@@ -1604,7 +1604,10 @@ priority="2">
 <!-- 4.4.8.4 log -->
 <x:template match="m:apply[*[1][self::m:log]]
                        |m:apply[*[1][self::m:csymbol='log']]">
+  <x:param name="p" select="0"/>
+  <x:param name="op" select="name(../*[1])"/>
 <mrow>
+<x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>(</mo></x:if>
 <x:choose>
 <x:when test="not(m:logbase) or number(m:logbase)=10">
 <mi>log</mi>
@@ -1620,6 +1623,7 @@ priority="2">
 <x:if test="m:apply"><mo>(</mo></x:if>
 <x:apply-templates select="*[last()]"/>
 <x:if test="m:apply"><mo>)</mo></x:if>
+<x:if test="$p &gt;= 5 and not(m:apply) and $op != 'minus'"><mo>)</mo></x:if>
 </mrow>
 </x:template>
 

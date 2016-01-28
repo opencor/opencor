@@ -76,3 +76,19 @@ a=-pow(ln(b), c);                               // 056
 a=pow(ln(b+c), d);                              // 057
 a=pow(-ln(b+c), d);                             // 058
 a=-pow(ln(b+c), d);                             // 059
+
+a=pow(log(b), c);                               // 060
+a=pow(-log(b), c);                              // 061
+a=-pow(log(b), c);                              // 062
+
+a=pow(log(b, c), d);                            // 063
+a=pow(-log(b, c), d);                           // 064
+a=-pow(log(b, c), d);                           // 065
+
+a=pow(log(b, c+d), e);                          // 066
+a=pow(-log(b, c+d), e);                         // 067
+a=-pow(log(b, c+d), e);                         // 068
+
+a=pow(log(b+c), d);                             // 069
+a=pow(-log(b+c), d);                            // 070
+a=-pow(log(b+c), d);                            // 071

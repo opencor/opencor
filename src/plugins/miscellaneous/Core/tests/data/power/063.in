@@ -1,0 +1,17 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+            <power/>
+            <apply>
+                <log/>
+                <logbase>
+                    <ci>c</ci>
+                </logbase>
+                <ci>b</ci>
+            </apply>
+            <ci>d</ci>
+        </apply>
+    </apply>
+</math>
