@@ -120,3 +120,11 @@ a=-pow(fact(b+c), d);                           // 089
 a=pow(rem(b, c), d);                            // 090
 a=pow(-rem(b, c), d);                           // 091
 a=-pow(rem(b, c), d);                           // 092
+
+a=pow(min(b, c), d);                            // 093
+a=pow(-min(b, c), d);                           // 094
+a=-pow(min(b, c), d);                           // 095
+
+a=pow(max(b, c), d);                            // 096
+a=pow(-max(b, c), d);                           // 097
+a=-pow(max(b, c), d);                           // 098
