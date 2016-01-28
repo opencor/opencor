@@ -422,9 +422,8 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <x:template match="m:apply[*[1][self::m:divide]]
                                 |m:apply[*[1][self::m:csymbol='divide']]">
   <x:param name="p" select="0"/>
-  <x:param name="op" select="name(../*[1])"/>
 <x:choose>
- <x:when test="$p &gt;= 5 and $op = 'power'">
+ <x:when test="$p &gt;= 5 and name(../*[1]) = 'power'">
   <mrow>
     <mo>(</mo>
     <mfrac>
@@ -1564,10 +1563,8 @@ priority="2">
 <!-- 4.4.8.2 exp -->
 <x:template match="m:apply[*[1][self::m:exp]]
                        |m:apply[*[1][self::m:csymbol='exp']]">
-  <x:param name="op" select="name(../*[1])"/>
-  <x:param name="exp" select="name(*[2])"/>
 <x:choose>
- <x:when test="$op = 'power' and $exp = 'apply'">
+ <x:when test="name(../*[1]) = 'power' and name(*[2]) = 'apply'">
   <mrow>
     <mo>(</mo>
     <msup>
