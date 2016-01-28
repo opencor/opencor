@@ -5,7 +5,7 @@
         <apply>
             <power/>
             <apply>
-                <exp/>
+                <abs/>
                 <ci>b</ci>
             </apply>
             <ci>c</ci>

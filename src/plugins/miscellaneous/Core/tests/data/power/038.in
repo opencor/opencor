@@ -7,10 +7,13 @@
             <apply>
                 <power/>
                 <apply>
-                    <abs/>
+                    <root/>
+                    <degree>
+                        <ci>c</ci>
+                    </degree>
                     <ci>b</ci>
                 </apply>
-                <ci>c</ci>
+                <ci>d</ci>
             </apply>
         </apply>
     </apply>

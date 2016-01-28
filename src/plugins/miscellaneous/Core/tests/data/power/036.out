@@ -3,12 +3,13 @@
         <mi mathvariant="italic">a</mi>
         <mo>=</mo>
         <msup>
-            <mrow>
-                <mo>|</mo>
+            <mroot>
                 <mi mathvariant="italic">b</mi>
-                <mo>|</mo>
-            </mrow>
-            <mi mathvariant="italic">c</mi>
+                <mrow>
+                    <mi mathvariant="italic">c</mi>
+                </mrow>
+            </mroot>
+            <mi mathvariant="italic">d</mi>
         </msup>
     </mrow>
 </math>

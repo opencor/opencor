@@ -5,16 +5,13 @@
         <apply>
             <power/>
             <apply>
-                <root/>
-                <degree>
-                    <ci>c</ci>
-                </degree>
+                <minus/>
                 <apply>
-                    <minus/>
+                    <exp/>
                     <ci>b</ci>
                 </apply>
             </apply>
-            <ci>d</ci>
+            <ci>c</ci>
         </apply>
     </apply>
 </math>

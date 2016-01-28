@@ -5,16 +5,11 @@
         <mo>−</mo>
         <msup>
             <mrow>
-                <mo>(</mo>
-                <msup>
-                    <mi>e</mi>
-                    <mrow>
-                        <mi mathvariant="italic">b</mi>
-                        <mo>+</mo>
-                        <mi mathvariant="italic">c</mi>
-                    </mrow>
-                </msup>
-                <mo>)</mo>
+                <mo>|</mo>
+                <mi mathvariant="italic">b</mi>
+                <mo>+</mo>
+                <mi mathvariant="italic">c</mi>
+                <mo>|</mo>
             </mrow>
             <mi mathvariant="italic">d</mi>
         </msup>

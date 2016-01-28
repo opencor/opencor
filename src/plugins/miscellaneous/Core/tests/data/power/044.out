@@ -4,12 +4,11 @@
         <mo>=</mo>
         <mo>−</mo>
         <msup>
-            <msup>
-                <mi>e</mi>
-                <mrow>
-                    <mi mathvariant="italic">b</mi>
-                </mrow>
-            </msup>
+            <mrow>
+                <mo>|</mo>
+                <mi mathvariant="italic">b</mi>
+                <mo>|</mo>
+            </mrow>
             <mi mathvariant="italic">c</mi>
         </msup>
     </mrow>

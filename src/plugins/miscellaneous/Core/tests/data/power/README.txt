@@ -45,18 +45,26 @@ a=pow(root(-b, c), d);                          // 033
 a=pow(-root(-b, c), d);                         // 034
 a=-pow(root(-b, c), d);                         // 035
 
-a=pow(abs(b), c);                               // 036
-a=pow(-abs(b), c);                              // 037
-a=-pow(abs(b), c);                              // 038
+a=pow(root(b, c), d);                           // 036
+a=pow(-root(b, c), d);                          // 037
+a=-pow(root(b, c), d);                          // 038
 
-a=pow(abs(b+c), d);                             // 039
-a=pow(-abs(b+c), d);                            // 040
-a=-pow(abs(b+c), d);                            // 041
+a=pow(root(-b, c), d);                          // 039
+a=pow(-root(-b, c), d);                         // 040
+a=-pow(root(-b, c), d);                         // 041
 
-a=pow(exp(b), c);                               // 042
-a=pow(-exp(b), c);                              // 043
-a=-pow(exp(b), c);                              // 044
+a=pow(abs(b), c);                               // 042
+a=pow(-abs(b), c);                              // 043
+a=-pow(abs(b), c);                              // 044
 
-a=pow(exp(b+c), d);                             // 045
-a=pow(-exp(b+c), d);                            // 046
-a=-pow(exp(b+c), d);                            // 047
+a=pow(abs(b+c), d);                             // 045
+a=pow(-abs(b+c), d);                            // 046
+a=-pow(abs(b+c), d);                            // 047
+
+a=pow(exp(b), c);                               // 048
+a=pow(-exp(b), c);                              // 049
+a=-pow(exp(b), c);                              // 050
+
+a=pow(exp(b+c), d);                             // 051
+a=pow(-exp(b+c), d);                            // 052
+a=-pow(exp(b+c), d);                            // 053

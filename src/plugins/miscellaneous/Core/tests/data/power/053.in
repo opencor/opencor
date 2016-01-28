@@ -3,21 +3,19 @@
         <eq/>
         <ci>a</ci>
         <apply>
-            <power/>
+            <minus/>
             <apply>
-                <minus/>
+                <power/>
                 <apply>
-                    <root/>
-                    <degree>
-                        <ci>c</ci>
-                    </degree>
+                    <exp/>
                     <apply>
-                        <minus/>
+                        <plus/>
                         <ci>b</ci>
+                        <ci>c</ci>
                     </apply>
                 </apply>
+                <ci>d</ci>
             </apply>
-            <ci>d</ci>
         </apply>
     </apply>
 </math>

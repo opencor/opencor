@@ -6,12 +6,9 @@
             <mrow>
                 <mo>(</mo>
                 <mo>−</mo>
-                <msup>
-                    <mi>e</mi>
-                    <mrow>
-                        <mi mathvariant="italic">b</mi>
-                    </mrow>
-                </msup>
+                <mo>|</mo>
+                <mi mathvariant="italic">b</mi>
+                <mo>|</mo>
                 <mo>)</mo>
             </mrow>
             <mi mathvariant="italic">c</mi>

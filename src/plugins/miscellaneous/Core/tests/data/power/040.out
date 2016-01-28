@@ -6,11 +6,15 @@
             <mrow>
                 <mo>(</mo>
                 <mo>−</mo>
-                <mo>|</mo>
-                <mi mathvariant="italic">b</mi>
-                <mo>+</mo>
-                <mi mathvariant="italic">c</mi>
-                <mo>|</mo>
+                <mroot>
+                    <mrow>
+                        <mo>−</mo>
+                        <mi mathvariant="italic">b</mi>
+                    </mrow>
+                    <mrow>
+                        <mi mathvariant="italic">c</mi>
+                    </mrow>
+                </mroot>
                 <mo>)</mo>
             </mrow>
             <mi mathvariant="italic">d</mi>

@@ -7,11 +7,12 @@
             <apply>
                 <minus/>
                 <apply>
-                    <root/>
-                    <degree>
+                    <exp/>
+                    <apply>
+                        <plus/>
+                        <ci>b</ci>
                         <ci>c</ci>
-                    </degree>
-                    <ci>b</ci>
+                    </apply>
                 </apply>
             </apply>
             <ci>d</ci>

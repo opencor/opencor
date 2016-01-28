@@ -7,7 +7,7 @@
             <apply>
                 <minus/>
                 <apply>
-                    <exp/>
+                    <abs/>
                     <apply>
                         <plus/>
                         <ci>b</ci>
