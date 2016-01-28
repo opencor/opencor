@@ -284,7 +284,9 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-    api/BioSignalMLAPI
+#---GRY--- TEMPORARILY DISABLE BioSignalML SUPPORT UNTIL THE BioSignalML WEBSITE
+#          IS BACK ONLINE...
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
