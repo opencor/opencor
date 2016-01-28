@@ -136,3 +136,11 @@ a=-pow(gcd(b, c), d);                           // 101
 a=pow(lcm(b, c), d);                            // 102
 a=pow(-lcm(b, c), d);                           // 103
 a=-pow(lcm(b, c), d);                           // 104
+
+a=pow(sin(b), c);                               // 105
+a=pow(-sin(b), c);                              // 106
+a=-pow(sin(b), c);                              // 107
+
+a=pow(sin(b+c), d);                             // 108
+a=pow(-sin(b+c), d);                            // 109
+a=-pow(sin(b+c), d);                            // 110
