@@ -44,3 +44,11 @@ a=-pow(root(b, c), d);                          // 032
 a=pow(root(-b, c), d);                          // 033
 a=pow(-root(-b, c), d);                         // 034
 a=-pow(root(-b, c), d);                         // 035
+
+a=pow(abs(b), c);                               // 036
+a=pow(-abs(b), c);                              // 037
+a=-pow(abs(b), c);                              // 038
+
+a=pow(abs(b+c), d);                             // 039
+a=pow(-abs(b+c), d);                            // 040
+a=-pow(abs(b+c), d);                            // 041
