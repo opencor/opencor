@@ -1564,10 +1564,26 @@ priority="2">
 <!-- 4.4.8.2 exp -->
 <x:template match="m:apply[*[1][self::m:exp]]
                        |m:apply[*[1][self::m:csymbol='exp']]">
-<msup>
-<mi>e<!-- exponential e--></mi>
-<mrow><x:apply-templates select="*[2]"/></mrow>
-</msup>
+  <x:param name="op" select="name(../*[1])"/>
+  <x:param name="exp" select="name(*[2])"/>
+<x:choose>
+ <x:when test="$op = 'power' and $exp = 'apply'">
+  <mrow>
+    <mo>(</mo>
+    <msup>
+      <mi>e<!-- exponential e--></mi>
+      <mrow><x:apply-templates select="*[2]"/></mrow>
+    </msup>
+    <mo>)</mo>
+  </mrow>
+ </x:when>
+ <x:otherwise>
+  <msup>
+    <mi>e<!-- exponential e--></mi>
+    <mrow><x:apply-templates select="*[2]"/></mrow>
+  </msup>
+ </x:otherwise>
+</x:choose>
 </x:template>
 
 <!-- 4.4.8.3 ln -->

@@ -52,3 +52,11 @@ a=-pow(abs(b), c);                              // 038
 a=pow(abs(b+c), d);                             // 039
 a=pow(-abs(b+c), d);                            // 040
 a=-pow(abs(b+c), d);                            // 041
+
+a=pow(exp(b), c);                               // 042
+a=pow(-exp(b), c);                              // 043
+a=-pow(exp(b), c);                              // 044
+
+a=pow(exp(b+c), d);                             // 045
+a=pow(-exp(b+c), d);                            // 046
+a=-pow(exp(b+c), d);                            // 047
