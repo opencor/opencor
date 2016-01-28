@@ -116,3 +116,7 @@ a=-pow(fact(b), c);                             // 086
 a=pow(fact(b+c), d);                            // 087
 a=pow(-fact(b+c), d);                           // 088
 a=-pow(fact(b+c), d);                           // 089
+
+a=pow(rem(b, c), d);                            // 090
+a=pow(-rem(b, c), d);                           // 091
+a=-pow(rem(b, c), d);                           // 092
