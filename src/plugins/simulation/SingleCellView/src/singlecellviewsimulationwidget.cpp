@@ -2424,7 +2424,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 // Check whether we are drawing this graph's first segment, in
                 // which case we will need to update our plot
 
-                needUpdatePlot = needUpdatePlot || !mPlotsViewports.contains(plot);
+                needUpdatePlot = needUpdatePlot || !oldDataSize;
 
                 // Update our graph's data
 
