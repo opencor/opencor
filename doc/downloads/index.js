@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Viewer widget:</strong> fixed the rendering of some equations (see issue <a href=\"https://github.com/opencor/opencor/issues/869\">#869</a>)." }
+                       { "change": "<strong>Viewer widget:</strong> fixed the rendering of some equations (see issue <a href=\"https://github.com/opencor/opencor/issues/869\">#869</a>)." },
+                       { "change": "<strong>Single Cell view:</strong> fixed a regression issue following our work on issue <a href=\"https://github.com/opencor/opencor/issues/590\">#590</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/868\">#868</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
