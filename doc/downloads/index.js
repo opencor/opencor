@@ -46,8 +46,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>CellML Text view:</strong> now require the user's agreement before saving a CellML file using a different CellML version (see issue <a href=\"https://github.com/opencor/opencor/issues/838\">#838</a>)." },
                        { "change": "<strong>Single Cell view:</strong> made the view more file specific (see issue <a href=\"https://github.com/opencor/opencor/issues/590\">#590</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://jquery.com/\">jQuery</a> to version 2.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/861\">#861</a>), <a href=\"http://www.llvm.org/\">LLVM</a> to version 3.7.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/859\">#859</a>) and <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2e (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/840\">#840</a>)." }
-                     ],
-                     "information": "<strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable."
+                     ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
                      "platforms": [
