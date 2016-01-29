@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "singlecellviewinformationsolverswidget.h"
+#include "singlecellviewplugin.h"
 #include "singlecellviewsimulation.h"
 
 //==============================================================================
@@ -80,15 +81,36 @@ QMap<QString, Core::Properties> SingleCellViewInformationSolversWidgetData::solv
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(QWidget *pParent) :
+SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(SingleCellViewPlugin *pPlugin,
+                                                                               QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
-    mOdeSolverData(0),
-    mDaeSolverData(0),
-    mNlaSolverData(0),
-    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState *>()),
-    mDefaultGuiState(0),
     mDescriptions(QMap<Core::Property *, Descriptions>())
 {
+    // Remove all our properties
+
+    removeAllProperties();
+
+    // Add properties for our different solvers
+
+    mOdeSolverData = addSolverProperties(pPlugin->solverInterfaces(), Solver::Ode);
+    mDaeSolverData = addSolverProperties(pPlugin->solverInterfaces(), Solver::Dae);
+    mNlaSolverData = addSolverProperties(pPlugin->solverInterfaces(), Solver::Nla);
+
+    // Show/hide the relevant properties
+
+    if (mOdeSolverData)
+        doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
+
+    if (mDaeSolverData)
+        doSolverChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value());
+
+    if (mNlaSolverData)
+        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
+
+    // Expand all our properties
+
+    expandAll();
+
     // Keep track of changes to list properties
 
     connect(this, SIGNAL(propertyChanged(Core::Property *)),
@@ -104,8 +126,6 @@ SingleCellViewInformationSolversWidget::~SingleCellViewInformationSolversWidget(
     delete mOdeSolverData;
     delete mDaeSolverData;
     delete mNlaSolverData;
-
-    resetAllGuiStates();
 }
 
 //==============================================================================
@@ -166,20 +186,6 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
     //       properties above...
 
     PropertyEditorWidget::retranslateUi();
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSolversWidget::resetAllGuiStates()
-{
-    // Reset all our GUI states including our default one
-
-    foreach (Core::PropertyEditorWidgetGuiState *guiState, mGuiStates)
-        delete guiState;
-
-    mGuiStates.clear();
-
-    delete mDefaultGuiState;
 }
 
 //==============================================================================
@@ -307,48 +313,6 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::setSolverInterfaces(const SolverInterfaces &pSolverInterfaces)
-{
-    // Remove all our properties
-
-    removeAllProperties();
-
-    // Add properties for our different solvers
-
-    delete mOdeSolverData;
-    delete mDaeSolverData;
-    delete mNlaSolverData;
-
-    mDescriptions.clear();
-
-    mOdeSolverData = addSolverProperties(pSolverInterfaces, Solver::Ode);
-    mDaeSolverData = addSolverProperties(pSolverInterfaces, Solver::Dae);
-    mNlaSolverData = addSolverProperties(pSolverInterfaces, Solver::Nla);
-
-    // Show/hide the relevant properties
-
-    if (mOdeSolverData)
-        doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
-
-    if (mDaeSolverData)
-        doSolverChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value());
-
-    if (mNlaSolverData)
-        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
-
-    // Expand all our properties
-
-    expandAll();
-
-    // Clear any track of previous GUI states and retrieve our default GUI state
-
-    resetAllGuiStates();
-
-    mDefaultGuiState = guiState();
-}
-
-//==============================================================================
-
 void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
                                                                const QString &pVoiUnit)
 {
@@ -367,34 +331,26 @@ void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInf
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName,
-                                                        CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                        SingleCellViewSimulation *pSimulation)
+void SingleCellViewInformationSolversWidget::initialize(SingleCellViewSimulation *pSimulation)
 {
-    // Retrieve and initialise our GUI state
-
-    setGuiState(mGuiStates.contains(pFileName)?
-                    mGuiStates.value(pFileName):
-                    mDefaultGuiState);
-
     // Make sure that the CellML file runtime is valid
 
-    if (pRuntime->isValid()) {
+    if (pSimulation->runtime()->isValid()) {
         // Show/hide the ODE/DAE/NLA solver information
 
         if (mOdeSolverData)
-            mOdeSolverData->solversProperty()->setVisible(pRuntime->needOdeSolver());
+            mOdeSolverData->solversProperty()->setVisible(pSimulation->runtime()->needOdeSolver());
 
         if (mDaeSolverData)
-            mDaeSolverData->solversProperty()->setVisible(pRuntime->needDaeSolver());
+            mDaeSolverData->solversProperty()->setVisible(pSimulation->runtime()->needDaeSolver());
 
         if (mNlaSolverData)
-            mNlaSolverData->solversProperty()->setVisible(pRuntime->needNlaSolver());
+            mNlaSolverData->solversProperty()->setVisible(pSimulation->runtime()->needNlaSolver());
     }
 
     // Set the unit of our different properties, if needed
 
-    QString voiUnit = pRuntime->variableOfIntegration()->unit();
+    QString voiUnit = pSimulation->runtime()->variableOfIntegration()->unit();
 
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mDaeSolverData, voiUnit);
@@ -414,26 +370,6 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
                                                       false);
         }
     }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSolversWidget::backup(const QString &pFileName)
-{
-    // Keep track of our GUI state
-
-    mGuiStates.insert(pFileName, guiState());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSolversWidget::finalize(const QString &pFileName)
-{
-    // Remove track of our GUI state
-
-    delete mGuiStates.value(pFileName);
-
-    mGuiStates.remove(pFileName);
 }
 
 //==============================================================================

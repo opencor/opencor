@@ -49,7 +49,6 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewSimulation;
-class SingleCellViewWidget;
 
 //==============================================================================
 
@@ -58,10 +57,11 @@ class SingleCellViewSimulationData : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                          SingleCellViewSimulation *pSimulation,
+    explicit SingleCellViewSimulationData(SingleCellViewSimulation *pSimulation,
                                           const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulationData();
+
+    void update();
 
     SingleCellViewSimulation * simulation() const;
 
@@ -120,9 +120,9 @@ public:
     void checkForModifications();
 
 private:
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -151,6 +151,9 @@ private:
     double *mInitialConstants;
     double *mInitialStates;
 
+    void createArrays();
+    void deleteArrays();
+
 Q_SIGNALS:
     void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
@@ -165,9 +168,10 @@ class SingleCellViewSimulationResults : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                             SingleCellViewSimulation *pSimulation);
+    explicit SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
+
+    void update();
 
     bool reset(const bool &pCreateDataStore = true);
 
@@ -185,9 +189,9 @@ public:
     double * algebraic(const int &pIndex) const;
 
 private:
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     qulonglong mSize;
 
@@ -215,18 +219,16 @@ class SingleCellViewSimulation : public QObject
     friend class SingleCellViewSimulationWorker;
 
 public:
-    explicit SingleCellViewSimulation(const QString &pFileName,
-                                      CellMLSupport::CellmlFileRuntime *pRuntime,
+    explicit SingleCellViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
                                       const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulation();
-
-    QString fileName() const;
-    void setFileName(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     SingleCellViewSimulationData * data() const;
     SingleCellViewSimulationResults * results() const;
+
+    void update(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool isRunning() const;
     bool isPaused() const;
@@ -249,8 +251,6 @@ public:
 
 private:
     SingleCellViewSimulationWorker *mWorker;
-
-    QString mFileName;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 

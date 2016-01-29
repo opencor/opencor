@@ -24,25 +24,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "corecliutils.h"
 #include "singlecellviewgraphpanelwidget.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
-#include <QMap>
-#include <QRectF>
 #include <QSplitter>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace SingleCellView {
-
-//==============================================================================
-
-class SingleCellViewGraphPanelPlotWidget;
 
 //==============================================================================
 
@@ -56,12 +48,10 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    virtual void loadSettings(QSettings *pSettings, const QString &pFileName);
+    virtual void saveSettings(QSettings *pSettings, const QString &pFileName) const;
 
-    void initialize(const QString &pFileName);
-    void backup(const QString &pFileName);
-    void finalize(const QString &pFileName);
+    void initialize();
 
     SingleCellViewGraphPanelWidgets graphPanels() const;
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
@@ -76,10 +66,7 @@ private:
 
     SingleCellViewGraphPanelWidgets mGraphPanels;
 
-    QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
-
-    QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>> mPlotsRects;
 
     void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 

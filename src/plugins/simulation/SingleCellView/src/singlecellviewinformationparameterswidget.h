@@ -24,31 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
-#include "corecliutils.h"
-
-//==============================================================================
-
-#include <QList>
-#include <QMap>
-#include <QPoint>
-#include <QStackedWidget>
-
-//==============================================================================
-
-class QAction;
-class QMenu;
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class Property;
-    class PropertyEditorWidget;
-}   // namespace Core
 
 //==============================================================================
 
@@ -67,8 +47,7 @@ class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewInformationParametersWidget : public QStackedWidget,
-                                                  public Core::CommonWidget
+class SingleCellViewInformationParametersWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
@@ -77,47 +56,26 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulation *pSimulation,
+    void initialize(SingleCellViewSimulation *pSimulation,
                     const bool &pReloadingView = false);
-    void finalize(const QString &pFileName, const bool &pReloadingView = false);
-
-    void finishEditing();
+    void finalize();
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
 private:
-    QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
-    Core::PropertyEditorWidget *mPropertyEditor;
-
-    QMap<QString, QMenu *> mContextMenus;
     QMenu *mContextMenu;
 
-    QMap<QString, QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *> mParametersMapping;
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameters;
-
-    QMap<QString, QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *> mParameterActionsMapping;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> *mParameterActions;
-
-    QIntList mColumnWidths;
-
-    QString mFileName;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     SingleCellViewSimulation *mSimulation;
 
-    int mHorizontalScrollBarValue;
-
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
-    void populateContextMenu(QMenu *pContextMenu,
-                             CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateExtraInfos(const bool &pUpdateToolTips = true);
+    void updateExtraInfos();
 
-    void retranslateContextMenu(QMenu *pContextMenu);
+    void retranslateContextMenu();
 
 Q_SIGNALS:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
@@ -129,11 +87,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void propertyEditorContextMenu(const QPoint &pPosition) const;
-
-    void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
-
-    void propertyEditorSectionResized(const int &pLogicalIndex,
-                                      const int &pOldSize, const int &pNewSize);
 
     void propertyChanged(Core::Property *pProperty);
 

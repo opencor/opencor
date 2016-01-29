@@ -22,10 +22,8 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "coreguiutils.h"
-#include "datastoreinterface.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -54,6 +52,8 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 //==============================================================================
 
 SingleCellViewPlugin::SingleCellViewPlugin() :
+    mSolverInterfaces(SolverInterfaces()),
+    mDataStoreInterfaces(DataStoreInterfaces()),
     mSedmlFileTypes(FileTypes()),
     mCombineFileTypes(FileTypes())
 {
@@ -181,23 +181,20 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Retrieve the different solvers and data stores that are available to us,
     // as well as the file types supported by the SEDMLSupport plugin
 
-    SolverInterfaces solverInterfaces = SolverInterfaces();
-    DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
-
     foreach (Plugin *plugin, pLoadedPlugins) {
         // Look for a solver
 
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
 
         if (solverInterface)
-            solverInterfaces << solverInterface;
+            mSolverInterfaces << solverInterface;
 
         // Look for a data store
 
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
 
         if (dataStoreInterface)
-            dataStoreInterfaces << dataStoreInterface;
+            mDataStoreInterfaces << dataStoreInterface;
 
         // File types supported by the SEDMLSupport and COMBINESupport plugins
 
@@ -210,12 +207,6 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
                 mCombineFileTypes << fileTypeInterface->fileTypes();
         }
     }
-
-    // Initialise our view widget with the different solvers and data stores
-    // that are available to us
-
-    mViewWidget->setSolverInterfaces(solverInterfaces);
-    mViewWidget->setDataStoreInterfaces(dataStoreInterfaces);
 }
 
 //==============================================================================
@@ -341,6 +332,33 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 // Plugin specific
+//==============================================================================
+
+SingleCellViewWidget * SingleCellViewPlugin::viewWidget() const
+{
+    // Return our view widget
+
+    return mViewWidget;
+}
+
+//==============================================================================
+
+SolverInterfaces SingleCellViewPlugin::solverInterfaces() const
+{
+    // Return our solver interfaces
+
+    return mSolverInterfaces;
+}
+
+//==============================================================================
+
+DataStoreInterfaces SingleCellViewPlugin::dataStoreInterfaces() const
+{
+    // Return our data store interfaces
+
+    return mDataStoreInterfaces;
+}
+
 //==============================================================================
 
 FileTypes SingleCellViewPlugin::sedmlFileTypes() const

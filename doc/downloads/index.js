@@ -20,18 +20,16 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 0, "month": 0, "year": 0, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 1, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
-                           { "extension": ".exe", "bitness": 32 }, { "extension": ".zip", "bitness": 32 },
-                           { "extension": ".exe", "bitness": 64 }, { "extension": ".zip", "bitness": 64 }
+                           { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
                        { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
                          "files": [
-                           { "extension": ".tar.gz", "bitness": 32 },
-                           { "extension": ".tar.gz", "bitness": 64 }
+                           { "extension": ".tar.gz" },
                          ]
                        },
                        { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
@@ -41,12 +39,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> some SED-ML related refactoring (see issue <a href=\"https://github.com/opencor/opencor/issues/832\">#832</a>). Now use a user's proxy settings (see issue <a href=\"https://github.com/opencor/opencor/issues/845\">#845</a>)." },
-                       { "change": "<strong>CellML support:</strong> the latest version of CellML is now used when creating a new CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/836\">#836</a>)." },
-                       { "change": "<strong>CellML Text view:</strong> now require the user's agreement before saving a CellML file using a different CellML version (see issue <a href=\"https://github.com/opencor/opencor/issues/838\">#838</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a> to version 3.7.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/859\">#859</a>) and <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2e (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/840\">#840</a>)." }
-                     ],
-                     "information": "<strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable."
+                       { "change": "<strong>Viewer widget:</strong> fixed the rendering of some equations (see issue <a href=\"https://github.com/opencor/opencor/issues/869\">#869</a>)." },
+                       { "change": "<strong>Single Cell view:</strong> fixed a regression issue following our work on issue <a href=\"https://github.com/opencor/opencor/issues/590\">#590</a> (see issues <a href=\"https://github.com/opencor/opencor/issues/866\">#866</a> and <a href=\"https://github.com/opencor/opencor/issues/868\">#868</a>). Fixed a small problem with the progress bar not always getting reset (see issue <a href=\"https://github.com/opencor/opencor/issues/874\">#874</a>)." }
+                     ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
                      "platforms": [

@@ -24,12 +24,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QEvent>
 #include <QHBoxLayout>
-#include <QMouseEvent>
-
-//==============================================================================
-
-#include "qwt_plot_curve.h"
 
 //==============================================================================
 

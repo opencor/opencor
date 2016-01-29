@@ -796,9 +796,10 @@ void Property::setListValues(const QStringList &pListValues,
     int i = 0;
     int iMax = pListValues.count();
 
-    for (; i < iMax; ++i)
+    for (; i < iMax; ++i) {
         if (!pListValues[i].isEmpty())
             break;
+    }
 
     bool prevItemIsSeparator = false;
 
@@ -953,16 +954,14 @@ QString Property::extraInfo() const
 
 //==============================================================================
 
-void Property::setExtraInfo(const QString &pExtraInfo,
-                            const bool &pUpdateToolTip)
+void Property::setExtraInfo(const QString &pExtraInfo)
 {
     // Set our extra info
 
     if (pExtraInfo.compare(mExtraInfo)) {
         mExtraInfo = pExtraInfo;
 
-        if (pUpdateToolTip)
-            updateToolTip();
+        updateToolTip();
     }
 }
 
@@ -1256,10 +1255,9 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 PropertyEditorWidget::~PropertyEditorWidget()
 {
-    // Delete some internal objects
+    // Clear ourselves
 
-    foreach (Property *property, mProperties)
-        delete property;
+    clear();
 }
 
 //==============================================================================
@@ -1311,9 +1309,10 @@ void PropertyEditorWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the width of each column
 
-    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
         setColumnWidth(i, pSettings->value(SettingsColumnWidth.arg(i),
                                            columnWidth(i)).toInt());
+    }
 }
 
 //==============================================================================
@@ -1334,7 +1333,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
 
     int res = 0;
 
-    if (pItem->hasChildren())
+    if (pItem->hasChildren()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             QStandardItem *childItem = pItem->child(i, 0);
             int childIndexHeight = rowHeight(childItem->index());
@@ -1342,6 +1341,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
             if (childIndexHeight)
                 res += childIndexHeight+childrenRowHeight(childItem);
         }
+    }
 
     return res;
 }
@@ -1367,12 +1367,13 @@ QSize PropertyEditorWidget::sizeHint() const
             QStandardItem *rowItem = mModel->item(i, 0);
             int rowItemHeight = rowHeight(rowItem->index());
 
-            if (rowItemHeight)
+            if (rowItemHeight) {
                 // Our current row has some height, meaning that it is visible,
                 // so we can set its height to our hintHeight, as well as
                 // retrieve the total height of our row's children
 
                 hintHeight += rowItemHeight+childrenRowHeight(rowItem);
+            }
         }
 
         return QSize(hintWidth, hintHeight);
@@ -1382,6 +1383,22 @@ QSize PropertyEditorWidget::sizeHint() const
 
         return maximumSize();
     }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::clear()
+{
+    // Clear our data model
+
+    mModel->clear();
+
+    // Delete some internal objects
+
+    foreach (Property *property, mProperties)
+        delete property;
+
+    mProperties.clear();
 }
 
 //==============================================================================
@@ -1408,7 +1425,7 @@ PropertyEditorWidgetGuiState * PropertyEditorWidget::guiState()
     // Retrieve the hidden state, expanded state and value of our different
     // properties
 
-    foreach (Property *property, mProperties)
+    foreach (Property *property, mProperties) {
         res->addProperty(new PropertyEditorWidgetGuiStateProperty(property,
                                                                   isRowHidden(property->row(),
                                                                               property->parent()?
@@ -1416,6 +1433,7 @@ PropertyEditorWidgetGuiState * PropertyEditorWidget::guiState()
                                                                                   mModel->invisibleRootItem()->index()),
                                                                   isExpanded(property->index()),
                                                                   property->value()));
+    }
 
     // Return our GUI state
 

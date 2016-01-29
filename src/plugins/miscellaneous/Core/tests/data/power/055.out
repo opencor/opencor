@@ -1,0 +1,17 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+        <mi mathvariant="italic">a</mi>
+        <mo>=</mo>
+        <msup>
+            <mrow>
+                <mo>(</mo>
+                <mo>−</mo>
+                <mi>ln</mi>
+                <mo>⁡</mo>
+                <mi mathvariant="italic">b</mi>
+                <mo>)</mo>
+            </mrow>
+            <mi mathvariant="italic">c</mi>
+        </msup>
+    </mrow>
+</math>

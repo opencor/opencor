@@ -25,18 +25,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QStandardItemModel>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
 //==============================================================================
 
 SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWidget(QWidget *pParent) :
-    PropertyEditorWidget(true, pParent),
-    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState *>())
+    PropertyEditorWidget(true, pParent)
 {
     // Populate our property editor
 
@@ -47,22 +42,6 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
     mStartingPointProperty->setEditable(true);
     mEndingPointProperty->setEditable(true);
     mPointIntervalProperty->setEditable(true);
-
-    // Retrieve our default GUI state
-
-    mDefaultGuiState = guiState();
-}
-
-//==============================================================================
-
-SingleCellViewInformationSimulationWidget::~SingleCellViewInformationSimulationWidget()
-{
-    // Delete some internal objects
-
-    foreach (Core::PropertyEditorWidgetGuiState *guiState, mGuiStates)
-        delete guiState;
-
-    delete mDefaultGuiState;
 }
 
 //==============================================================================
@@ -82,19 +61,11 @@ void SingleCellViewInformationSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileName,
-                                                           CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulation *pSimulation)
+void SingleCellViewInformationSimulationWidget::initialize(SingleCellViewSimulation *pSimulation)
 {
-    // Retrieve and initialise our GUI state
-
-    setGuiState(mGuiStates.contains(pFileName)?
-                    mGuiStates.value(pFileName):
-                    mDefaultGuiState);
-
     // Iniialise the unit of our different properties
 
-    QString unit = pRuntime->variableOfIntegration()->unit();
+    QString unit = pSimulation->runtime()->variableOfIntegration()->unit();
 
     mStartingPointProperty->setUnit(unit);
     mEndingPointProperty->setUnit(unit);
@@ -104,26 +75,6 @@ void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileN
     // reset our simulation the first time round
 
     pSimulation->data()->setStartingPoint(mStartingPointProperty->doubleValue(), false);
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSimulationWidget::backup(const QString &pFileName)
-{
-    // Keep track of our GUI state
-
-    mGuiStates.insert(pFileName, guiState());
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSimulationWidget::finalize(const QString &pFileName)
-{
-    // Remove track of our GUI state
-
-    delete mGuiStates.value(pFileName);
-
-    mGuiStates.remove(pFileName);
 }
 
 //==============================================================================

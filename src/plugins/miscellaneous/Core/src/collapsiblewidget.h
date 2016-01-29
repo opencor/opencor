@@ -117,6 +117,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    int count() const;
+
     bool isCollapsed(const int &pIndex) const;
     void setCollapsed(const int &pIndex, const bool &pCollapsed);
 
@@ -133,6 +135,12 @@ private:
     QList<CollapsibleHeaderWidget *> mHeaders;
 
     void constructor(const QColor &pSeparatorColor = borderColor());
+
+Q_SIGNALS:
+    void collapsed(const int &pIndex, const bool &pCollapsed);
+
+private Q_SLOTS:
+    void emitCollapsed();
 };
 
 //==============================================================================

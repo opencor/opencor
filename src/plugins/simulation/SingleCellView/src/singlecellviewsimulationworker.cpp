@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationworker.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -38,13 +37,10 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
-                                                               CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                               SingleCellViewSimulation *pSimulation,
+SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
                                                                SingleCellViewSimulationWorker **pSelf) :
-    mSolverInterfaces(pSolverInterfaces),
-    mRuntime(pRuntime),
     mSimulation(pSimulation),
+    mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
     mPaused(false),
     mStopped(false),

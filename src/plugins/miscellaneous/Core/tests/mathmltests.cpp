@@ -100,7 +100,7 @@ void MathmlTests::tests(const QString &pCategory)
                 if (!failMessage.isEmpty())
                     failMessage += QString("\nFAIL!  : MathmlTests::%1Tests() ").arg(pCategory);
 
-                failMessage += QString("Failed to convert '%1/%2'\n%3\n%4").arg(pCategory, fileName, actualOutput, expectedOutput);
+                failMessage += QString("Failed to convert '%1/%2'\n%3\n%4\n%5").arg(pCategory, fileName, OpenCOR::rawFileContents(dirName+fileName), actualOutput, expectedOutput);
             }
         } else {
             if (!failMessage.isEmpty())
