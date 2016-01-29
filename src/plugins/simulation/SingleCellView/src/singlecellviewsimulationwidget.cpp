@@ -1706,21 +1706,21 @@ void SingleCellViewSimulationWidget::updateSimulationProperties(Core::Property *
     if (!pProperty || (pProperty == simulationWidget->startingPointProperty())) {
         mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
 
-        if (pProperty == simulationWidget->startingPointProperty())
+        if (pProperty)
             return;
     }
 
     if (!pProperty || (pProperty == simulationWidget->endingPointProperty())) {
         mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
 
-        if (pProperty == simulationWidget->endingPointProperty())
+        if (pProperty)
             return;
     }
 
     if (!pProperty || (pProperty == simulationWidget->pointIntervalProperty())) {
         mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
 
-        if (pProperty == simulationWidget->pointIntervalProperty())
+        if (pProperty)
             return;
     }
 }
@@ -1752,7 +1752,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
                     needOdeSolverGuiUpdate = true;
 
-                    if (pProperty == property)
+                    if (pProperty)
                         break;
                 }
             }
@@ -1784,7 +1784,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
                     needDaeSolverGuiUpdate = true;
 
-                    if (pProperty == property)
+                    if (pProperty)
                         break;
                 }
             }
@@ -1816,7 +1816,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
                     needNlaSolverGuiUpdate = true;
 
-                    if (pProperty == property)
+                    if (pProperty)
                         break;
                 }
             }
