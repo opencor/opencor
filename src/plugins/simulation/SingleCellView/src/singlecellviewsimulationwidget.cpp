@@ -1918,24 +1918,9 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
 void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTime)
 {
-    // We want a short delay before resetting the progress bar and the file tab
-    // icon, so that the user can really see when our simulation has completed,
-    // but this is only is we don't need to reload ourselves
-    // Note: indeed, if we need to reload ourselves (see fileReloaded()), we
-    //       want things to be done as quickly as possible. Not only that, but
-    //       we don't want to risk problems with our simulation being used while
-    //       it has already been deleted due to threading issues...
-
-    enum {
-        ResetDelay = 169
-    };
-
-    // Output the elapsed time, if valid, and reset our progress bar (with a
-    // short delay)
+    // Output the given elapsed time, if valid
 
     if (pElapsedTime != -1) {
-        // We have a valid elapsed time, so show our simulation time
-
         QString solversInformation = QString();
 
         if (!mSimulation->data()->odeSolverName().isEmpty())
@@ -1949,11 +1934,6 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
         output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
     }
 
-    if (mNeedReloadView)
-        resetProgressBar();
-    else
-        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
-
     // Update our parameters and simulation mode
 
     updateSimulationMode();
@@ -1964,12 +1944,30 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
 
     mProgress = -1;
 
-    // Reset our tab icon in case we are not visible
-    // Note: we check that we are not visible in case the user has selected a
-    //       file that cannot be handled by us, meaning that our central widget
-    //       would show a message rather than us...
+    // Reset our progress bar or tab icon, in case we are not visible, and this
+    // with a short delay
+    // Note #1: we check that we are not visible in case the user has selected a
+    //          file that cannot be handled by us, meaning that our central
+    //          widget would show a message rather than us...
+    // Note #2: we want a short delay before resetting our progress bar or tab
+    //          icon, so that the user can really see when our simulation has
+    //          completed, but this is only is we don't need to reload
+    //          ourselves. Indeed, if we need to reload ourselves (see
+    //          fileReloaded()), we want things to be done as quickly as
+    //          possible. Not only that, but we don't want to risk problems with
+    //          our simulation being used while it has already been deleted due
+    //          to threading issues...
 
-    if (!isVisible()) {
+    enum {
+        ResetDelay = 169
+    };
+
+    if (isVisible()) {
+        if (mNeedReloadView)
+            resetProgressBar();
+        else
+            QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+    } else {
         if (mNeedReloadView)
             resetFileTabIcon();
         else
@@ -2507,8 +2505,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         }
     }
 
-    // Update our simualtion progress (through our progress bar or file tab
-    // icon), if needed
+    // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
         double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();
