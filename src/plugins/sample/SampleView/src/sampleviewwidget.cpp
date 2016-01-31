@@ -39,7 +39,7 @@ namespace SampleView {
 //==============================================================================
 
 SampleViewWidget::SampleViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
+    ViewWidget(pParent, false),
     mGui(new Ui::SampleViewWidget),
     mFileName(QString())
 {
