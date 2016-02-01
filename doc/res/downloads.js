@@ -66,7 +66,6 @@ function versions(downloads) {
         var versionType        = version.type;
         var versionPlatforms   = version.platforms;
         var versionChanges     = version.changes;
-        var versionInformation = version.information;
 
         if (versionMajor || versionMinor || versionPatch) {
             versionTitle   = "Version "+versionMajor+"."+versionMinor;
@@ -121,14 +120,9 @@ function versions(downloads) {
         var versionClass = "";
 
         if (versionType === 1)
-            versionClass = "official";
+            versionClass = "official withoutInfo";
         else if ((versionType === 2) && downloads)
-            versionClass = "latest";
-
-        if (typeof versionInformation !== "undefined")
-            versionClass += " withInfo";
-        else
-            versionClass += " withoutInfo";
+            versionClass = "latest withInfo";
 
         document.write("<div class=\""+versionClass+"\">\n");
         document.write("    <table class=\"version\">\n");
@@ -287,16 +281,9 @@ function versions(downloads) {
 
         // Add some information, if any
 
-        if (typeof versionInformation !== "undefined") {
-            var versionClass;
-
-            if (versionType === 1)
-                versionClass = "officialInfo";
-            else if (versionType === 2)
-                versionClass = "latestInfo";
-
-            document.write("<div class=\""+versionClass+"\">\n");
-            document.write("    "+versionInformation+"\n");
+        if ((versionType === 2) && downloads) {
+            document.write("<div class=\"latestInfo\">\n");
+            document.write("    <strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable.\n");
             document.write("</div>\n");
         }
     }

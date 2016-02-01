@@ -284,9 +284,7 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-#---GRY--- TEMPORARILY DISABLE BioSignalML SUPPORT UNTIL THE BioSignalML WEBSITE
-#          IS BACK ONLINE...
-#    api/BioSignalMLAPI
+    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
@@ -335,9 +333,7 @@ SET(PLUGINS
 
     # Selectable plugins
 
-#---GRY--- TEMPORARILY DISABLE BioSignalML SUPPORT UNTIL THE BioSignalML WEBSITE
-#          IS BACK ONLINE...
-#    dataStore/BSMLDataStore
+    dataStore/BSMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
@@ -534,8 +530,8 @@ ELSE()
             )
         ENDIF()
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll ce3841a3a14c6201c7f391787e40b68b1607c0c8)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll faeddfc25ac09fc0b54298a72213b709054c6580)
+        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 30f2fa6d93ce0a7429ea89657b02e25cdb4dfe5a)
+        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll aa0ac27b772176580af5b246bf92555777592418)
 
         LIST(APPEND ADDITIONAL_FILES
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll

@@ -469,6 +469,11 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
         mSimulationCheckResults << pFileName;
 
         QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
+    } else if (!simulation->isRunning() && !simulation->isPaused()) {
+        // The simulation is over, so stop tracking the result's size of the
+        // given file
+
+        mSimulationResultsSizes.remove(pFileName);
     }
 }
 

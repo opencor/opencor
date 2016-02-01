@@ -93,7 +93,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
-    mNeedUpdatePlots(false)
+    mNeedUpdatePlots(false),
+    mOldDataSizes(QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong>())
 {
     // Set up and customsise the GUI
 
@@ -1790,21 +1791,21 @@ void SingleCellViewSimulationWidget::updateSimulationProperties(Core::Property *
     if (!pProperty || (pProperty == simulationWidget->startingPointProperty())) {
         mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
 
-        if (pProperty == simulationWidget->startingPointProperty())
+        if (pProperty)
             return;
     }
 
     if (!pProperty || (pProperty == simulationWidget->endingPointProperty())) {
         mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
 
-        if (pProperty == simulationWidget->endingPointProperty())
+        if (pProperty)
             return;
     }
 
     if (!pProperty || (pProperty == simulationWidget->pointIntervalProperty())) {
         mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
 
-        if (pProperty == simulationWidget->pointIntervalProperty())
+        if (pProperty)
             return;
     }
 }
@@ -1836,7 +1837,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
                     needOdeSolverGuiUpdate = true;
 
-                    if (pProperty == property)
+                    if (pProperty)
                         break;
                 }
             }
@@ -1868,7 +1869,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
                     needDaeSolverGuiUpdate = true;
 
-                    if (pProperty == property)
+                    if (pProperty)
                         break;
                 }
             }
@@ -1900,7 +1901,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
                     needNlaSolverGuiUpdate = true;
 
-                    if (pProperty == property)
+                    if (pProperty)
                         break;
                 }
             }
@@ -2002,24 +2003,9 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
 void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTime)
 {
-    // We want a short delay before resetting the progress bar and the file tab
-    // icon, so that the user can really see when our simulation has completed,
-    // but this is only is we don't need to reload ourselves
-    // Note: indeed, if we need to reload ourselves (see fileReloaded()), we
-    //       want things to be done as quickly as possible. Not only that, but
-    //       we don't want to risk problems with our simulation being used while
-    //       it has already been deleted due to threading issues...
-
-    enum {
-        ResetDelay = 169
-    };
-
-    // Output the elapsed time, if valid, and reset our progress bar (with a
-    // short delay)
+    // Output the given elapsed time, if valid
 
     if (pElapsedTime != -1) {
-        // We have a valid elapsed time, so show our simulation time
-
         QString solversInformation = QString();
 
         if (!mSimulation->data()->odeSolverName().isEmpty())
@@ -2033,11 +2019,6 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
         output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
     }
 
-    if (mNeedReloadView)
-        resetProgressBar();
-    else
-        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
-
     // Update our parameters and simulation mode
 
     updateSimulationMode();
@@ -2048,12 +2029,30 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
 
     mProgress = -1;
 
-    // Reset our tab icon in case we are not visible
-    // Note: we check that we are not visible in case the user has selected a
-    //       file that cannot be handled by us, meaning that our central widget
-    //       would show a message rather than us...
+    // Reset our progress bar or tab icon, in case we are not visible, and this
+    // with a short delay
+    // Note #1: we check that we are not visible in case the user has selected a
+    //          file that cannot be handled by us, meaning that our central
+    //          widget would show a message rather than us...
+    // Note #2: we want a short delay before resetting our progress bar or tab
+    //          icon, so that the user can really see when our simulation has
+    //          completed, but this is only is we don't need to reload
+    //          ourselves. Indeed, if we need to reload ourselves (see
+    //          fileReloaded()), we want things to be done as quickly as
+    //          possible. Not only that, but we don't want to risk problems with
+    //          our simulation being used while it has already been deleted due
+    //          to threading issues...
 
-    if (!isVisible()) {
+    enum {
+        ResetDelay = 169
+    };
+
+    if (isVisible()) {
+        if (mNeedReloadView)
+            resetProgressBar();
+        else
+            QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+    } else {
         if (mNeedReloadView)
             resetFileTabIcon();
         else
@@ -2463,6 +2462,10 @@ void SingleCellViewSimulationWidget::updateGui()
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true);
     }
+
+    // Make sure that our progress bar is up to date
+
+    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mFileName)/mSimulation->size());
 }
 
 //==============================================================================
@@ -2501,21 +2504,30 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
-                // Keep track of our graph's old size
+                // Update our graph's data and keep track of our new old data
+                // size, if we are visible
+                // Note: indeed, to update our graph's old data size if we are
+                //       not visible means that when we come back to this file,
+                //       part of the graphs will be missing...
 
                 qulonglong oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing this graph's first segment, in
-                // which case we will need to update our plot
-
-                needUpdatePlot = needUpdatePlot || !mPlotsViewports.contains(plot);
-
-                // Update our graph's data
+                if (visible)
+                    mOldDataSizes.insert(graph, oldDataSize);
 
                 updateGraphData(graph, pSimulationResultsSize);
 
-                // Draw the graph's new segment, but only if we are visible, as
-                // our graph, and that there is no need to update the plot and
+                // We need to update our plot, if we are drawing this graph's
+                // first segment or if we were invisible at some point during
+                // the simulation
+
+                qulonglong realOldDataSize = mOldDataSizes.value(graph);
+
+                needUpdatePlot =    needUpdatePlot || !realOldDataSize
+                                 || (oldDataSize != realOldDataSize);
+
+                // Draw the graph's new segment, but only if we and our graph
+                // are visible,and that there is no need to update the plot and
                 // that there is some data to plot
 
                 if (    visible && graph->isVisible()
@@ -2530,7 +2542,8 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (qulonglong i = oldDataSize-1; i < pSimulationResultsSize; ++i) {
+                        for (qulonglong i = qMin(0ULL, oldDataSize-1);
+                             i < pSimulationResultsSize; ++i) {
                             double valX = graph->data()->sample(i).x();
                             double valY = graph->data()->sample(i).y();
 
@@ -2548,7 +2561,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                     }
 
                     if (!needUpdatePlot)
-                        plot->drawGraphFrom(graph, oldDataSize-1);
+                        plot->drawGraphFrom(graph, realOldDataSize-1);
                 }
             }
         }
@@ -2591,8 +2604,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         }
     }
 
-    // Update our simualtion progress (through our progress bar or file tab
-    // icon), if needed
+    // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
         double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();

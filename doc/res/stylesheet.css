@@ -10,17 +10,6 @@ div.official {
     background: rgba(118, 146, 60, 0.13);
 }
 
-div.officialInfo {
-    margin: -1px;
-    border-bottom: 1px solid rgba(118, 146, 60, 0.39);
-    border-left: 1px solid rgba(118, 146, 60, 0.39);
-    border-right: 1px solid rgba(118, 146, 60, 0.39);
-    border-radius: 0px 0px 13px 13px;
-    padding: 3px 7px 3px 7px;
-    background: rgba(118, 146, 60, 0.39);
-    color: rgb(103, 103, 103);
-}
-
 div.latest {
     margin: -1px;
     border: 1px solid rgba(227, 108, 9, 0.39);
