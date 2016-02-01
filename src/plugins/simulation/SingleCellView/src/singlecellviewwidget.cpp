@@ -469,6 +469,8 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
         mSimulationCheckResults << pFileName;
 
         QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
+    } else {
+        mSimulationResultsSizes.remove(pFileName);
     }
 }
 

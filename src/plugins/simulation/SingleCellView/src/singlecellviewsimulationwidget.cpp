@@ -2378,6 +2378,10 @@ void SingleCellViewSimulationWidget::updateGui()
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true);
     }
+
+    // Make sure that our progress bar is up to date
+
+    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mFileName)/mSimulation->size());
 }
 
 //==============================================================================
