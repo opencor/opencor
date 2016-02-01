@@ -93,7 +93,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
-    mNeedUpdatePlots(false)
+    mNeedUpdatePlots(false),
+    mOldDataSizes(QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong>())
 {
     // Set up and customsise the GUI
 
@@ -2377,6 +2378,10 @@ void SingleCellViewSimulationWidget::updateGui()
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true);
     }
+
+    // Make sure that our progress bar is up to date
+
+    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mFileName)/mSimulation->size());
 }
 
 //==============================================================================
@@ -2415,22 +2420,30 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
-                // Keep track of our graph's old size
+                // Update our graph's data and keep track of our new old data
+                // size, if we are visible
+                // Note: indeed, to update our graph's old data size if we are
+                //       not visible means that when we come back to this file,
+                //       part of the graphs will be missing...
 
                 qulonglong oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing this graph's first segment, in
-                // which case we will need to update our plot
-
-                needUpdatePlot =    needUpdatePlot || !oldDataSize
-                                || !mPlotsViewports.contains(plot);
-
-                // Update our graph's data
+                if (visible)
+                    mOldDataSizes.insert(graph, oldDataSize);
 
                 updateGraphData(graph, pSimulationResultsSize);
 
-                // Draw the graph's new segment, but only if we are visible, as
-                // our graph, and that there is no need to update the plot and
+                // We need to update our plot, if we are drawing this graph's
+                // first segment or if we were invisible at some point during
+                // the simulation
+
+                qulonglong realOldDataSize = mOldDataSizes.value(graph);
+
+                needUpdatePlot =    needUpdatePlot || !realOldDataSize
+                                 || (oldDataSize != realOldDataSize);
+
+                // Draw the graph's new segment, but only if we and our graph
+                // are visible,and that there is no need to update the plot and
                 // that there is some data to plot
 
                 if (    visible && graph->isVisible()
@@ -2464,7 +2477,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                     }
 
                     if (!needUpdatePlot)
-                        plot->drawGraphFrom(graph, oldDataSize-1);
+                        plot->drawGraphFrom(graph, realOldDataSize-1);
                 }
             }
         }
