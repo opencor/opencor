@@ -187,6 +187,8 @@ private:
 
     bool mNeedUpdatePlots;
 
+    QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+
     void reloadView();
 
     void output(const QString &pMessage);
