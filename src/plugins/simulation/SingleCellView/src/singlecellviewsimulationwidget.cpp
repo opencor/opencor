@@ -600,7 +600,8 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                                 SedmlFile:
                                 CombineArchive;
 
-    // Check whether we are to deal with a CellML or a SED-ML file
+    // Check whether we are to deal with a CellML or a SED-ML file, or even a
+    // COMBINE archive
 
     QString sedmlFileName = QString();
     QString combineIssue = QString();
