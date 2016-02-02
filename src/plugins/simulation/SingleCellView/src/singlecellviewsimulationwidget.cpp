@@ -594,10 +594,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     mProgress = -1;
 
-    // Determine the type of our file
-
-    CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
-
     // Check whether we are to deal with a CellML or a SED-ML file, or even a
     // COMBINE archive
 
@@ -633,7 +629,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Update our simulation object, if needed
 
-    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?cellmlFileManager->cellmlFile(mFileName):0;
+    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName):0;
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = (mFileType == CellmlFile)?cellmlFile->runtime():0;
 
     if (pReloadingView)
