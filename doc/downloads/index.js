@@ -39,9 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Viewer widget:</strong> fixed the rendering of some equations (see issue <a href=\"https://github.com/opencor/opencor/issues/869\">#869</a>)." },
-                       { "change": "<strong>Single Cell view:</strong> fixed some regression issues following our work on issue <a href=\"https://github.com/opencor/opencor/issues/590\">#590</a> (see issues <a href=\"https://github.com/opencor/opencor/issues/866\">#866</a>, <a href=\"https://github.com/opencor/opencor/issues/868\">#868</a> and <a href=\"https://github.com/opencor/opencor/issues/876\">#876</a>). Fixed a small problem with the progress bar not always getting reset (see issue <a href=\"https://github.com/opencor/opencor/issues/874\">#874</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2f (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/870\">#870</a>)." }
+                       { "change": "<strong>Single Cell view:</strong> fixed a small problem with the progress bar not always getting reset (see issue <a href=\"https://github.com/opencor/opencor/issues/879\">#879</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
