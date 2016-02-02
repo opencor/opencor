@@ -1945,6 +1945,44 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
 
     mProgress = -1;
 
+    // Reload ourselves, if needed (see fileReloaded())
+
+    if (mNeedReloadView)
+        reloadView();
+
+    // Note: our simulation progress gets reset in resetSimulationProgress(),
+    //       which is called by SingleCellViewWidget::checkSimulationResults().
+    //       To reset our simulation progress here might not always work since
+    //       our simulation is run in a different thread, meaning that a call
+    //       to updateSimulationResults() might occur after we have reset our
+    //       simulation progress...
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBarWidget->setValue(0.0);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::resetFileTabIcon()
+{
+    // Stop tracking our simulation progress and let people know that our file
+    // tab icon should be reset
+
+    static const QIcon NoIcon = QIcon();
+
+    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::resetSimulationProgress()
+{
     // Reset our progress bar or tab icon, in case we are not visible, and this
     // with a short delay
     // Note #1: we check that we are not visible in case the user has selected a
@@ -1974,32 +2012,6 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
         else
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
     }
-
-    // Reload ourselves, if needed (see fileReloaded())
-
-    if (mNeedReloadView)
-        reloadView();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::resetProgressBar()
-{
-    // Reset our progress bar
-
-    mProgressBarWidget->setValue(0.0);
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::resetFileTabIcon()
-{
-    // Stop tracking our simulation progress and let people know that our file
-    // tab icon should be reset
-
-    static const QIcon NoIcon = QIcon();
-
-    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
 
 //==============================================================================
