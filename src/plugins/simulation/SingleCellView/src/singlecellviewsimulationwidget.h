@@ -129,6 +129,8 @@ public:
     void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
                                  const qulonglong &pSimulationResultsSize);
 
+    void resetSimulationProgress();
+
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
