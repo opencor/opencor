@@ -134,6 +134,12 @@ public:
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
+    enum FileType {
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     enum ErrorType {
         General,
         InvalidCellmlFile,
@@ -176,6 +182,8 @@ private:
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
+
+    FileType mFileType;
 
     ErrorType mErrorType;
 
