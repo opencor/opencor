@@ -1,4 +1,28 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2016, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" },
+                         ]
+                       },
+                       { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Viewer widget:</strong> fixed the rendering of some equations (see issue <a href=\"https://github.com/opencor/opencor/issues/869\">#869</a>)." },
+                       { "change": "<strong>Single Cell view:</strong> fixed some regression issues following our work on issue <a href=\"https://github.com/opencor/opencor/issues/590\">#590</a> (see issues <a href=\"https://github.com/opencor/opencor/issues/866\">#866</a>, <a href=\"https://github.com/opencor/opencor/issues/868\">#868</a> and <a href=\"https://github.com/opencor/opencor/issues/876\">#876</a>). Fixed a small problem with the progress bar not always getting reset (see issue <a href=\"https://github.com/opencor/opencor/issues/874\">#874</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2f (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/870\">#870</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 1, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
