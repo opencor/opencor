@@ -363,7 +363,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our simulation object and a few connections for it
 
-    mSimulation = new SingleCellViewSimulation(cellmlFileManager->cellmlFile(pFileName)->runtime(),
+    mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?cellmlFileManager->cellmlFile(pFileName)->runtime():0,
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
