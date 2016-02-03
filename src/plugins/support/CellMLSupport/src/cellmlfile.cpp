@@ -450,7 +450,7 @@ bool CellmlFile::load()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
-    // Check whether the file needs loading or contains issues
+    // Make sure that we are properly loaded and have no issues
 
     if (mLoadingNeeded || !mIssues.isEmpty())
         return false;

@@ -276,9 +276,9 @@ bool CombineArchive::load()
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-    // Make sure that we are properly loaded
+    // Make sure that we are properly loaded and have no issue
 
-    if (!load())
+    if (mLoadingNeeded || !mIssue.isEmpty())
         return false;
 
     // Generate the contents our manifest
