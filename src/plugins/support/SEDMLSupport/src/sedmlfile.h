@@ -93,6 +93,8 @@ private:
     bool mLoadingNeeded;
 
     virtual void reset();
+
+    void update();
 };
 
 //==============================================================================

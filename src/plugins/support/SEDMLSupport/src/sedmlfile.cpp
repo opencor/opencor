@@ -109,7 +109,14 @@ bool SedmlFile::load()
         mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
     }
 
-    return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+    bool res = !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+
+    // Update ourselves, if possible
+
+    if (res)
+        update();
+
+    return res;
 }
 
 //==============================================================================
@@ -127,7 +134,14 @@ bool SedmlFile::save(const QString &pNewFileName)
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
 
-    return Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
+    bool res = Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
+
+    // Update ourselves, if possible
+
+    if (res)
+        update();
+
+    return res;
 }
 
 //==============================================================================
@@ -218,6 +232,13 @@ CellMLSupport::CellmlFileRuntime * SedmlFile::runtime()
     load();
 
     return mCellmlFile?mCellmlFile->runtime():0;
+}
+
+//==============================================================================
+
+void SedmlFile::update()
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
