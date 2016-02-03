@@ -34,6 +34,15 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace COMBINESupport {
 
 //==============================================================================
@@ -96,6 +105,8 @@ public:
                  const bool &pMaster = false);
 
     QString issue() const;
+
+    CellMLSupport::CellmlFileRuntime * runtime();
 
 private:
     QString mDirName;

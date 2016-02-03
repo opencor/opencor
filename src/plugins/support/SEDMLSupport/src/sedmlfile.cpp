@@ -173,6 +173,16 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntime * SedmlFile::runtime()
+{
+    // Return the runtime for our CellML file, if any
+
+//---GRY--- TO BE DONE...
+    return 0;
+}
+
+//==============================================================================
+
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
 

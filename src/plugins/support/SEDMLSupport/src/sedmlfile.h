@@ -41,6 +41,15 @@ namespace libsedml {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SEDMLSupport {
 
 //==============================================================================
@@ -70,6 +79,8 @@ public:
     virtual bool save(const QString &pNewFileName = QString());
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
+
+    CellMLSupport::CellmlFileRuntime * runtime();
 
 private:
     libsedml::SedDocument *mSedmlDocument;

@@ -429,6 +429,16 @@ QString CombineArchive::issue() const
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntime * CombineArchive::runtime()
+{
+    // Return the runtime for our CellML file, if any
+
+//---GRY--- TO BE DONE...
+    return 0;
+}
+
+//==============================================================================
+
 }   // namespace COMBINESupport
 }   // namespace OpenCOR
 

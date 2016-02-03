@@ -354,16 +354,21 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     // Determine the type of file we are dealing with
 
     CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
+    SEDMLSupport::SedmlFileManager *sedmlFileManager = SEDMLSupport::SedmlFileManager::instance();
 
     mFileType = cellmlFileManager->cellmlFile(mFileName)?
                     CellmlFile:
-                    SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName)?
+                    sedmlFileManager->sedmlFile(mFileName)?
                         SedmlFile:
                         CombineArchive;
 
     // Create our simulation object and a few connections for it
 
-    mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?cellmlFileManager->cellmlFile(pFileName)->runtime():0,
+    mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?
+                                                   cellmlFileManager->cellmlFile(pFileName)->runtime():
+                                                   (mFileType == SedmlFile)?
+                                                       sedmlFileManager->sedmlFile(pFileName)->runtime():
+                                                       COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)->runtime(),
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
