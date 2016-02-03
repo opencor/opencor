@@ -101,7 +101,7 @@ bool SedmlFile::load()
 
     mLoadingNeeded = false;
 
-    // Create a new SED-ML document, if needed, or try to load the file
+    // Create a new SED-ML document, if needed, or try to load our file
 
     if (mNew) {
         mSedmlDocument = new libsedml::SedDocument();
@@ -214,7 +214,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     // Only consider the given file contents SED-ML valid if it has no errors
 
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    return !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 }
 
 //==============================================================================
