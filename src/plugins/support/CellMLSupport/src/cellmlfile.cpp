@@ -688,7 +688,7 @@ bool CellmlFile::isValid(const QString &pFileContents,
 
 bool CellmlFile::isModified() const
 {
-    // Return whether the file has been modified
+    // Return whether we have been modified
 
     return Core::FileManager::instance()->isModified(mFileName);
 }
@@ -697,7 +697,7 @@ bool CellmlFile::isModified() const
 
 void CellmlFile::setModified(const bool &pModified) const
 {
-    // Set the modified status of the file
+    // Set our modified status
 
     Core::FileManager::instance()->setModified(mFileName, pModified);
 }
@@ -706,7 +706,7 @@ void CellmlFile::setModified(const bool &pModified) const
 
 CellmlFileIssues CellmlFile::issues() const
 {
-    // Return the file's issue(s)
+    // Return our issues
 
     return mIssues;
 }
@@ -745,7 +745,7 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 CellmlFileRdfTriples & CellmlFile::rdfTriples()
 {
-    // Return all the RDF triples associated with the CellML file
+    // Return all the RDF triples associated with ourselves
 
     return mRdfTriples;
 }
@@ -867,7 +867,7 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
                                                const QString &pResource,
                                                const QString &pId)
 {
-    // Add an RDF triple to our CellML file
+    // Add an RDF triple to ourselves
 
     return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
                                                    pModelQualifier, pResource, pId));
@@ -880,7 +880,7 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
                                                const QString &pResource,
                                                const QString &pId)
 {
-    // Add an RDF Triple to our CellML file
+    // Add an RDF Triple to ourselves
 
     return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
                                                    pBioQualifier, pResource, pId));
@@ -892,7 +892,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
                                  const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                  const QString &pResource, const QString &pId)
 {
-    // Remove an RDF triple from our CellML file
+    // Remove an RDF triple from ourselves
 
     return mRdfTriples.remove(rdfTriple(pElement, pModelQualifier, pResource, pId));
 }
@@ -903,7 +903,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
                                  const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                                  const QString &pResource, const QString &pId)
 {
-    // Remove an RDF triple from our CellML file
+    // Remove an RDF triple from ourselves
 
     return mRdfTriples.remove(rdfTriple(pElement, pBioQualifier, pResource, pId));
 }
@@ -912,7 +912,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 
 QStringList CellmlFile::importedFileNames() const
 {
-    // Return the CellML model's imported file names
+    // Return our imported file names
 
     return mImportContents.keys();
 }
@@ -921,7 +921,7 @@ QStringList CellmlFile::importedFileNames() const
 
 QString CellmlFile::importedFileContents(const QString &pImportedFileName) const
 {
-    // Return the contents of the given CellML model's imported file name
+    // Return the contents of our given imported file name
 
     return mImportContents.value(pImportedFileName);
 }
@@ -939,7 +939,7 @@ QString CellmlFile::cmetaId() const
 
 QString CellmlFile::xmlBase()
 {
-    // Return the CellML file's base URI
+    // Return our base URI
 
     if (load()) {
         ObjRef<iface::cellml_api::URI> baseUri = mModel->xmlBase();
