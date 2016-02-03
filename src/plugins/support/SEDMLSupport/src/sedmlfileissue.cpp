@@ -32,13 +32,36 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
-                               const int &pColumn, const QString &pMessage) :
-    mType(pType),
-    mLine(pLine),
-    mColumn(pColumn),
-    mMessage(pMessage)
+void SedmlFileIssue::constructor(const Type &pType, const int &pLine,
+                                 const int &pColumn, const QString &pMessage)
 {
+    // Some initialisations
+
+    mType = pType;
+
+    mLine = pLine;
+    mColumn = pColumn;
+
+    mMessage = pMessage;
+}
+
+//==============================================================================
+
+SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage)
+{
+    // Construct our object
+
+    constructor(pType, pLine, pColumn, pMessage);
+}
+
+//==============================================================================
+
+SedmlFileIssue::SedmlFileIssue(const Type &pType, const QString &pMessage)
+{
+    // Construct our object
+
+    constructor(pType, 0, 0, pMessage);
 }
 
 //==============================================================================
