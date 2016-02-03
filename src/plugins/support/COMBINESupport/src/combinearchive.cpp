@@ -435,18 +435,23 @@ QString CombineArchive::issue() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFile * CombineArchive::cellmlFile() const
+CellMLSupport::CellmlFile * CombineArchive::cellmlFile()
 {
-    // Return our CellML file, if any
+    // Return our CellML file, after loading ourselves if necessary
+
+    load();
 
     return mCellmlFile;
 }
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntime * CombineArchive::runtime() const
+CellMLSupport::CellmlFileRuntime * CombineArchive::runtime()
 {
-    // Return the runtime for our CellML file, if any
+    // Return the runtime for our CellML file, if any, after loading ourselves
+    // if necessary
+
+    load();
 
     return mCellmlFile?mCellmlFile->runtime():0;
 }

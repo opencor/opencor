@@ -107,8 +107,8 @@ public:
 
     QString issue() const;
 
-    CellMLSupport::CellmlFile * cellmlFile() const;
-    CellMLSupport::CellmlFileRuntime * runtime() const;
+    CellMLSupport::CellmlFile * cellmlFile();
+    CellMLSupport::CellmlFileRuntime * runtime();
 
 private:
     QString mDirName;

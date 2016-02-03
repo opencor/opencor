@@ -74,20 +74,23 @@ public:
     explicit SedmlFile(const QString &pFileName, const bool &pNew = false);
     ~SedmlFile();
 
-    libsedml::SedDocument * sedmlDocument() const;
+    libsedml::SedDocument * sedmlDocument();
 
     virtual bool load();
     virtual bool save(const QString &pNewFileName = QString());
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
 
-    CellMLSupport::CellmlFile * cellmlFile() const;
-    CellMLSupport::CellmlFileRuntime * runtime() const;
+    CellMLSupport::CellmlFile * cellmlFile();
+    CellMLSupport::CellmlFileRuntime * runtime();
 
 private:
     libsedml::SedDocument *mSedmlDocument;
 
     CellMLSupport::CellmlFile * mCellmlFile;
+
+    bool mNew;
+    bool mLoadingNeeded;
 
     virtual void reset();
 };

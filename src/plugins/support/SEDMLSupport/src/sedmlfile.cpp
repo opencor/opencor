@@ -45,12 +45,12 @@ namespace SEDMLSupport {
 SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
     mSedmlDocument(0),
-    mCellmlFile(0)
+    mCellmlFile(0),
+    mNew(pNew)
 {
-    // Create a new SED-ML document, if this is what we want
+    // Reset ourselves
 
-    if (pNew)
-        mSedmlDocument = new libsedml::SedDocument();
+    reset();
 }
 
 //==============================================================================
@@ -71,13 +71,18 @@ void SedmlFile::reset()
     delete mSedmlDocument;
 
     mSedmlDocument = 0;
+
+    mLoadingNeeded = true;
 }
 
 //==============================================================================
 
-libsedml::SedDocument * SedmlFile::sedmlDocument() const
+libsedml::SedDocument * SedmlFile::sedmlDocument()
 {
-    // Return the SED-ML document associated with our SED-ML file
+    // Return the SED-ML document associated with our SED-ML file, after loading
+    // ourselves if necessary
+
+    load();
 
     return mSedmlDocument;
 }
@@ -86,11 +91,22 @@ libsedml::SedDocument * SedmlFile::sedmlDocument() const
 
 bool SedmlFile::load()
 {
-    // For now, we just check that we can load the file
+    // Check whether the file is already loaded and without any issues
 
-    QByteArray fileNameByteArray = mFileName.toUtf8();
+    if (!mLoadingNeeded)
+        return mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 
-    mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+    mLoadingNeeded = false;
+
+    // Create a new SED-ML document, if needed, or try to load the file
+
+    if (mNew) {
+        mSedmlDocument = new libsedml::SedDocument();
+    } else {
+        QByteArray fileNameByteArray = mFileName.toUtf8();
+
+        mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+    }
 
     return mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }
@@ -175,18 +191,23 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
 //==============================================================================
 
-CellMLSupport::CellmlFile * SedmlFile::cellmlFile() const
+CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 {
-    // Return our CellML file
+    // Return our CellML file, after loading ourselves if necessary
+
+    load();
 
     return mCellmlFile;
 }
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntime * SedmlFile::runtime() const
+CellMLSupport::CellmlFileRuntime * SedmlFile::runtime()
 {
-    // Return the runtime for our CellML file, if any
+    // Return the runtime for our CellML file, if any, after loading ourselves
+    // if necessary
+
+    load();
 
     return mCellmlFile?mCellmlFile->runtime():0;
 }
