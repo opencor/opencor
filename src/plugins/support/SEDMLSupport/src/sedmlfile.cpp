@@ -67,7 +67,7 @@ SedmlFile::~SedmlFile()
 
 void SedmlFile::reset()
 {
-    // Reset all of the file's properties
+    // Reset all of our properties
 
     delete mSedmlDocument;
 

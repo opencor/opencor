@@ -102,7 +102,7 @@ CellmlFile::~CellmlFile()
 
 void CellmlFile::reset()
 {
-    // Reset all of the file's properties
+    // Reset all of our properties
 
     mModel = 0;
 
