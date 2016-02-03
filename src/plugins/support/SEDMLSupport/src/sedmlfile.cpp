@@ -70,8 +70,10 @@ void SedmlFile::reset()
     // Reset all of our properties
 
     delete mSedmlDocument;
+    delete mCellmlFile;
 
     mSedmlDocument = 0;
+    mCellmlFile = 0;
 
     mLoadingNeeded = true;
 }
@@ -136,10 +138,14 @@ bool SedmlFile::save(const QString &pNewFileName)
 
     bool res = Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
 
-    // Update ourselves, if possible
+    // Update ourselves, if possible, and make sure that we are not considered
+    // as new anymore (in case we were)
 
-    if (res)
+    if (res) {
         update();
+
+        mNew = false;
+    }
 
     return res;
 }
