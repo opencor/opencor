@@ -94,7 +94,7 @@ bool SedmlFile::load()
     // Check whether the file is already loaded and without any issues
 
     if (!mLoadingNeeded)
-        return mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+        return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 
     mLoadingNeeded = false;
 
@@ -108,7 +108,7 @@ bool SedmlFile::load()
         mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
     }
 
-    return mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 }
 
 //==============================================================================
