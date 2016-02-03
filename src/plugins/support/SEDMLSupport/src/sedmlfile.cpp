@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML file class
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "corecliutils.h"
 #include "sedmlfile.h"
 
@@ -43,7 +44,8 @@ namespace SEDMLSupport {
 
 SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
-    mSedmlDocument(0)
+    mSedmlDocument(0),
+    mCellmlFile(0)
 {
     // Create a new SED-ML document, if this is what we want
 
@@ -173,12 +175,20 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntime * SedmlFile::runtime()
+CellMLSupport::CellmlFile * SedmlFile::cellmlFile() const
+{
+    // Return our CellML file
+
+    return mCellmlFile;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntime * SedmlFile::runtime() const
 {
     // Return the runtime for our CellML file, if any
 
-//---GRY--- TO BE DONE...
-    return 0;
+    return mCellmlFile?mCellmlFile->runtime():0;
 }
 
 //==============================================================================

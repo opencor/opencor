@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINE archive class
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "combinearchive.h"
 #include "corecliutils.h"
 
@@ -120,7 +121,8 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 
 CombineArchive::CombineArchive(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mDirName(Core::temporaryDirName())
+    mDirName(Core::temporaryDirName()),
+    mCellmlFile(0)
 {
     // Reset ourselves
 
@@ -429,12 +431,20 @@ QString CombineArchive::issue() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntime * CombineArchive::runtime()
+CellMLSupport::CellmlFile * CombineArchive::cellmlFile() const
+{
+    // Return our CellML file, if any
+
+    return mCellmlFile;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntime * CombineArchive::runtime() const
 {
     // Return the runtime for our CellML file, if any
 
-//---GRY--- TO BE DONE...
-    return 0;
+    return mCellmlFile?mCellmlFile->runtime():0;
 }
 
 //==============================================================================

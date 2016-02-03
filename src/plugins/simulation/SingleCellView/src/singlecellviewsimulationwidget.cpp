@@ -634,8 +634,12 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Update our simulation object, if needed
 
-    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName):0;
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = (mFileType == CellmlFile)?cellmlFile->runtime():0;
+    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?
+                                                CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName):
+                                                (mFileType == SedmlFile)?
+                                                    SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName)->cellmlFile():
+                                                    COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName)->cellmlFile();
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile?cellmlFile->runtime():0;
 
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);

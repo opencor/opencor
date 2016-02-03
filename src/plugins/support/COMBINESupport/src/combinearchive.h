@@ -38,6 +38,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
+    class CellmlFile;
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
 
@@ -106,7 +107,8 @@ public:
 
     QString issue() const;
 
-    CellMLSupport::CellmlFileRuntime * runtime();
+    CellMLSupport::CellmlFile * cellmlFile() const;
+    CellMLSupport::CellmlFileRuntime * runtime() const;
 
 private:
     QString mDirName;
@@ -116,6 +118,8 @@ private:
     CombineArchiveFiles mFiles;
 
     QString mIssue;
+
+    CellMLSupport::CellmlFile * mCellmlFile;
 
     virtual void reset();
 };

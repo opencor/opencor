@@ -45,6 +45,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
+    class CellmlFile;
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
 
@@ -80,10 +81,13 @@ public:
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
 
-    CellMLSupport::CellmlFileRuntime * runtime();
+    CellMLSupport::CellmlFile * cellmlFile() const;
+    CellMLSupport::CellmlFileRuntime * runtime() const;
 
 private:
     libsedml::SedDocument *mSedmlDocument;
+
+    CellMLSupport::CellmlFile * mCellmlFile;
 
     virtual void reset();
 };
