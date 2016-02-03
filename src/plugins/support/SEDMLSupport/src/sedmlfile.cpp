@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include "sedmlapidisablewarnings.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedReader.h"
+    #include "sedml/SedWriter.h"
 #include "sedmlapienablewarnings.h"
 
 //==============================================================================
@@ -115,11 +116,18 @@ bool SedmlFile::load()
 
 bool SedmlFile::save(const QString &pNewFileName)
 {
-    Q_UNUSED(pNewFileName);
+    // Make sure that we are properly loaded and have no issue
 
-    // Consider the file not saved
+    if (mLoadingNeeded || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR))
+        return false;
 
-    return false;
+    // Write ourselves after having reformatted ourselves
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
+
+    return Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
 }
 
 //==============================================================================

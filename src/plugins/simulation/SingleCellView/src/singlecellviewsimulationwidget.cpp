@@ -1567,14 +1567,9 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
         }
     }
 
-    // Our SED-ML document is ready, so write it to our SED-ML file, after
-    // having reformatted it
+    // Our SED-ML document is ready, so save it
 
-    QDomDocument domDocument;
-
-    domDocument.setContent(QString(libsedml::writeSedMLToString(sedmlDocument)));
-
-    return Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
+    return sedmlFile.save(pFileName);
 }
 
 //==============================================================================
