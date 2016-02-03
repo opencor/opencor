@@ -111,14 +111,7 @@ bool SedmlFile::load()
         mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
     }
 
-    bool res = !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
-
-    // Update ourselves, if possible
-
-    if (res)
-        update();
-
-    return res;
+    return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 }
 
 //==============================================================================
@@ -130,7 +123,8 @@ bool SedmlFile::save(const QString &pNewFileName)
     if (mLoadingNeeded || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR))
         return false;
 
-    // Write ourselves after having reformatted ourselves
+    // Save ourselves, after having reformatted ourselves, and stop considering
+    // ourselves as new anymore (in case we were), if the saving went fine
 
     QDomDocument domDocument;
 
@@ -138,14 +132,8 @@ bool SedmlFile::save(const QString &pNewFileName)
 
     bool res = Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
 
-    // Update ourselves, if possible, and make sure that we are not considered
-    // as new anymore (in case we were)
-
-    if (res) {
-        update();
-
+    if (res)
         mNew = false;
-    }
 
     return res;
 }
