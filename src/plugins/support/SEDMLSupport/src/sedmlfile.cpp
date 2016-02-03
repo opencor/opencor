@@ -87,9 +87,10 @@ bool SedmlFile::load()
     // For now, we just check that we can load the file
 
     QByteArray fileNameByteArray = mFileName.toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
 
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+
+    return mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }
 
 //==============================================================================
