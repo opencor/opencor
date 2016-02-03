@@ -89,9 +89,11 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 
 CellmlFile::~CellmlFile()
 {
-    // Delete some internal objects
+    // Reset ourselves
 
     reset();
+
+    // Delete some internal objects
 
     delete mRuntime;
 }

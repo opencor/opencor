@@ -133,6 +133,10 @@ CombineArchive::CombineArchive(const QString &pFileName) :
 
 CombineArchive::~CombineArchive()
 {
+    // Reset ourselves
+
+    reset();
+
     // Delete our temporary directory
 
     QDir(mDirName).removeRecursively();

@@ -57,7 +57,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
 
 SedmlFile::~SedmlFile()
 {
-    // Delete some internal objects
+    // Reset ourselves
 
     reset();
 }
