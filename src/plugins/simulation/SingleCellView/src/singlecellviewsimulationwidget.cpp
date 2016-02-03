@@ -1421,9 +1421,6 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
                                 SEDMLSupport::Language::Cellml_1_0.toStdString());
     sedmlModel->setSource(Core::nativeCanonicalFileName(pModelSource).toStdString());
 
-    // Apply some parameter changes, if any, to our SED-ML model
-//---GRY--- TO BE DONE...
-
     // Create and customise a repeated task containing a uniform time course
     // simulation followed by a one-step simulation, if needed
     // Note: a uniform time course simulation would be enough if we can
