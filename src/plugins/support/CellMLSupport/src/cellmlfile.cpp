@@ -129,8 +129,8 @@ void CellmlFile::reset()
 
 iface::cellml_api::Model * CellmlFile::model()
 {
-    // Return the model associated with our CellML file, after loading it if
-    // necessary
+    // Return the model associated with our CellML file, after loading ourselves
+    // if necessary
 
     load();
 
@@ -141,8 +141,8 @@ iface::cellml_api::Model * CellmlFile::model()
 
 iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 {
-    // Return the data source associated with our CellML file, after loading it
-    // if necessary
+    // Return the data source associated with our CellML file, after loading
+    // ourselves if necessary
 
     load();
 
@@ -399,7 +399,7 @@ void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
 
 bool CellmlFile::load()
 {
-    // Check whether the file is already loaded and without any issues
+    // Check whether we are already loaded and without any issues
 
     if (!mLoadingNeeded)
         return mIssues.isEmpty();
@@ -720,14 +720,13 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (!mRuntimeUpdateNeeded)
         return mRuntime;
 
-    // Load (but not reload!) the file, if needed
+    // Load (but not reload!) ourselves, if needed
 
     if (load()) {
-        // The file was properly loaded (or was already loaded), so make sure
-        // that its imports, if any, are fully instantiated
+        // Make sure that our imports, if any, are fully instantiated
 
         if (fullyInstantiateImports(mModel, mIssues)) {
-            // Now, we can return an updated version of its runtime
+            // Now, we can return an updated version of our runtime
 
             mRuntime->update();
 

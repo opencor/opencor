@@ -163,7 +163,7 @@ static const auto ManifestFileName = QStringLiteral("manifest.xml");
 
 bool CombineArchive::load()
 {
-    // Check whether the file is already loaded and without an issue
+    // Check whether we are already loaded and without an issue
 
     if (!mLoadingNeeded)
         return mIssue.isEmpty();
@@ -276,7 +276,7 @@ bool CombineArchive::load()
 
 bool CombineArchive::save(const QString &pNewFileName)
 {
-    // Make sure that the file has been properly loaded
+    // Make sure that we are properly loaded
 
     if (!load())
         return false;
@@ -362,7 +362,7 @@ QString CombineArchive::location(const CombineArchiveFile &pFile) const
 
 CombineArchiveFiles CombineArchive::masterFiles()
 {
-    // Make sure that the file has been properly loaded
+    // Make sure that we are properly loaded
 
     if (!load())
         return CombineArchiveFiles();
@@ -385,7 +385,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat,
                              const bool &pMaster)
 {
-    // Make sure that the file has been properly loaded
+    // Make sure that we are properly loaded
 
     if (!load())
         return false;
