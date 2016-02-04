@@ -533,7 +533,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     mGui->actionSelectAllGraphs->setEnabled(canSelectAllGraphs);
     mGui->actionUnselectAllGraphs->setEnabled(canUnselectAllGraphs);
 
-    // Show the context menu, or not, depending ont the type of property we are
+    // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any
 
     if (   !crtProperty
