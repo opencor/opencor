@@ -100,7 +100,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     mGui->setupUi(this);
 
-    mGui->actionDevelopmentMode->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mFileName));
+    mGui->actionDevelopmentMode->setEnabled(Core::FileManager::instance()->isReadableAndWritable(pFileName));
 
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
@@ -356,9 +356,9 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
     SEDMLSupport::SedmlFileManager *sedmlFileManager = SEDMLSupport::SedmlFileManager::instance();
 
-    mFileType = cellmlFileManager->cellmlFile(mFileName)?
+    mFileType = cellmlFileManager->cellmlFile(pFileName)?
                     CellmlFile:
-                    sedmlFileManager->sedmlFile(mFileName)?
+                    sedmlFileManager->sedmlFile(pFileName)?
                         SedmlFile:
                         CombineArchive;
 
