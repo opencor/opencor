@@ -1002,19 +1002,19 @@ bool SingleCellViewSimulationWidget::save(const QString &pNewFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileOpened(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileOpened()
 {
-    // Let our graphs widget know that the given file has been opened
+    // Let our graphs widget know that a file has been opened
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
+    mContentsWidget->informationWidget()->graphsWidget()->fileOpened();
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationWidget::filePermissionsChanged()
 {
-    // The given file has been un/locked, so enable/disable the development mode
-    // and keep track of its checked status or recheck it, as necessary
+    // We have been un/locked, so enable/disable the development mode and keep
+    // track of its checked status or recheck it, as necessary
 
      if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
          mGui->actionDevelopmentMode->setEnabled(true);
@@ -1029,11 +1029,11 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileModified(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileModified()
 {
     // Update our reset action
 
-    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
+    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(mFileName));
 }
 
 //==============================================================================
@@ -1041,7 +1041,7 @@ void SingleCellViewSimulationWidget::fileModified(const QString &pFileName)
 void SingleCellViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
-    // that the given file will have effectively been closed and (re)opened
+    // that we have effectively been closed and (re)opened
     // Note: we don't want to call fileClosed() between finalize() and
     //       initialize() since it will trigger the description of existing
     //       graphs to be updated, which will result in them being temporarily
@@ -1051,14 +1051,14 @@ void SingleCellViewSimulationWidget::reloadView()
     finalize();
     initialize(true);
 
-    fileOpened(mFileName);
+    fileOpened();
 
     mNeedReloadView = false;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileReloaded()
 {
     // The given file has been reloaded, so stop its current simulation
 
@@ -1083,21 +1083,20 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
-                                                 const QString &pNewFileName)
+void SingleCellViewSimulationWidget::fileRenamed(const QString &pNewFileName)
 {
-    // Let our graphs widget know that the given file has been renamed
+    // Let our graphs widget know we have been renamed
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pNewFileName);
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileClosed(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileClosed()
 {
-    // Let our graphs widget know that the given file has been closed
+    // Let our graphs widget know that a file has been closed
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileClosed(pFileName);
+    mContentsWidget->informationWidget()->graphsWidget()->fileClosed();
 }
 
 //==============================================================================

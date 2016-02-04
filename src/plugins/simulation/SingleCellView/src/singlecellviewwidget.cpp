@@ -297,7 +297,7 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
     // Let our simulation widgets know that a file has been opened
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->fileOpened(pFileName);
+        simulationWidget->fileOpened();
 }
 
 //==============================================================================
@@ -323,7 +323,7 @@ void SingleCellViewWidget::fileModified(const QString &pFileName)
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget)
-        simulationWidget->fileModified(pFileName);
+        simulationWidget->fileModified();
 }
 
 //==============================================================================
@@ -336,7 +336,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget)
-        simulationWidget->fileReloaded(pFileName);
+        simulationWidget->fileReloaded();
 }
 
 //==============================================================================
@@ -362,7 +362,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
     // Let our simulation widgets know that a file has been renamed
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->fileRenamed(pOldFileName, pNewFileName);
+        simulationWidget->fileRenamed(pNewFileName);
 }
 
 //==============================================================================
@@ -376,7 +376,7 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
     // Let our simulation widgets know that a file has been closed
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->fileClosed(pFileName);
+        simulationWidget->fileClosed();
 }
 
 //==============================================================================

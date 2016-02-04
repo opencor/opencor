@@ -78,9 +78,9 @@ public:
                     SingleCellViewSimulation *pSimulation);
     void finalize(const QString &pFileName);
 
-    void fileOpened(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileClosed(const QString &pFileName);
+    void fileOpened();
+    void fileRenamed(const QString &pNewFileName);
+    void fileClosed();
 
     void updateGui();
 

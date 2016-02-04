@@ -134,12 +134,12 @@ public:
 
     bool save(const QString &pNewFileName);
 
-    void fileOpened(const QString &pFileName);
+    void fileOpened();
     void filePermissionsChanged();
-    void fileModified(const QString &pFileName);
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileClosed(const QString &pFileName);
+    void fileModified();
+    void fileReloaded();
+    void fileRenamed(const QString &pNewFileName);
+    void fileClosed();
 
     QString fileName() const;
 

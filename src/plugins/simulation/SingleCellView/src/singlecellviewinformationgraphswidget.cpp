@@ -123,8 +123,7 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
     populateParametersContextMenu(pSimulation->runtime());
 
-    // Update the information about our graphs properties and this for all our
-    // property editors
+    // Update our graphs information
 
     updateAllGraphsInfo(true);
 }
@@ -142,35 +141,29 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
+void SingleCellViewInformationGraphsWidget::fileOpened()
 {
-    Q_UNUSED(pFileName);
-
-    // Update our graphs information (which is always to be done)
+    // Update our graphs information
 
     updateAllGraphsInfo(true);
 }
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
-                                                        const QString &pNewFileName)
+void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pNewFileName)
 {
-    // Replace the old file name with the new one in our various trackers
+    // Replace our file name with the new one and update our graphs information
 
-    if (!mFileName.compare(pOldFileName))
-        mFileName = pNewFileName;
+    mFileName = pNewFileName;
 
     updateAllGraphsInfo(true);
 }
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileClosed(const QString &pFileName)
+void SingleCellViewInformationGraphsWidget::fileClosed()
 {
-    Q_UNUSED(pFileName);
-
-    // Update the information about our graphs properties
+    // Update our graphs information
 
     updateAllGraphsInfo(true);
 }
@@ -239,8 +232,7 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
     setCurrentWidget(mPropertyEditor);
 
-    // Update the information about our graphs properties and this for all our
-    // property editors
+    // Update our graphs information
     // Note: this is in case the user changed the locale and then switched to a
     //       different graph panel...
 
@@ -438,8 +430,7 @@ void SingleCellViewInformationGraphsWidget::on_actionUnselectAllGraphs_triggered
 
 void SingleCellViewInformationGraphsWidget::updateGui()
 {
-    // Update the information about our graphs properties and this for all our
-    // property editors
+    // Update our graphs information
     // Note: this is in case we created a graph for a file that has not yet been
     //       selected, in which case the graph will initially be invalid, but it
     //       should become valid after we have switched to that file and back...
