@@ -123,9 +123,8 @@ private:
                         const bool &pParameterX) const;
 
     void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
-    void updateGraphsInfo(Core::Property *pSectionProperty = 0,
-                          const bool &pGlobalGraphsUpdate = false);
-    void updateAllGraphsInfo(const bool &pGlobalGraphsUpdate = false);
+    void updateGraphsInfo(Core::Property *pSectionProperty = 0);
+    void updateAllGraphsInfo();
 
     void selectAllGraphs(const bool &pSelect);
 
