@@ -281,7 +281,7 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
     if (simulationWidget)
-        return simulationWidget->saveFile(pOldFileName, pNewFileName);
+        return simulationWidget->save(pNewFileName);
     else
         return false;
 }

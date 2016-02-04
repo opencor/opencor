@@ -132,7 +132,7 @@ public:
 
     QIcon fileTabIcon() const;
 
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+    bool save(const QString &pNewFileName);
 
     void fileOpened(const QString &pFileName);
     void filePermissionsChanged();
