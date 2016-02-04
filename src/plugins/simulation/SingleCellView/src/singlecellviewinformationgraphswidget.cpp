@@ -115,7 +115,7 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
                                                        SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the file name, runtime and simulation
+    // Keep track of our file name
 
     mFileName = pFileName;
 
@@ -826,7 +826,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
     } else {
         // Either the model, X or Y parameter property of the graph has changed,
         // so update its information
-        // Note: updateGraphInfo() will emit the graphUpdated() signal, if
+        // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
         //       needed...
 
         updateGraphInfo(pProperty->parentProperty(),
