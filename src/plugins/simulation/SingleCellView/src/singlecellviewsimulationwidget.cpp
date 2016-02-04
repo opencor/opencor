@@ -2499,6 +2499,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 //       not visible means that when we come back to this file,
                 //       part of the graphs will be missing...
 
+                bool firstOldDataSize = mOldDataSizes.isEmpty();
                 qulonglong oldDataSize = graph->dataSize();
 
                 if (visible)
@@ -2512,7 +2513,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
                 qulonglong realOldDataSize = mOldDataSizes.value(graph);
 
-                needUpdatePlot =    needUpdatePlot || !realOldDataSize
+                needUpdatePlot =    needUpdatePlot || firstOldDataSize
                                  || (oldDataSize != realOldDataSize);
 
                 // Draw the graph's new segment, but only if we and our graph
