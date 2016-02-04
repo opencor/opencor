@@ -67,9 +67,9 @@ bool StandardFileManager::isFile(const QString &pFileName)
 {
     // If the given file is already managed, then we consider that it's of the
     // right type (e.g. CellML file), even though it may not be of the right
-    // anymore after having been edited and saved, but in this case it's good to
-    // keep considering the file as of the right type, so that the user can
-    // continue editing it without any problem, for example
+    // type anymore after having been edited and saved, but in this case it's
+    // good to keep considering the file as of the right type, so that the user
+    // can continue editing it without any problem, for example
 
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
