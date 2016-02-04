@@ -219,9 +219,7 @@ void RawSedmlViewWidget::fileReloaded(const QString &pFileName)
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
-
-        if (SEDMLSupport::SedmlFileManager::instance()->isSedmlFile(pFileName))
-            initialize(pFileName, update);
+        initialize(pFileName, update);
     }
 }
 

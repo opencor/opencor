@@ -425,9 +425,7 @@ void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
         bool update = mEditingWidget == data->editingWidget();
 
         finalize(pFileName);
-
-        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
-            initialize(pFileName, update);
+        initialize(pFileName, update);
     }
 }
 
