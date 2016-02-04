@@ -274,7 +274,7 @@ bool CombineArchive::load()
 
 //==============================================================================
 
-bool CombineArchive::save(const QString &pNewFileName)
+bool CombineArchive::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no issue
 
@@ -323,7 +323,7 @@ bool CombineArchive::save(const QString &pNewFileName)
     // Save ourselves to either the given file, which name is given, or to our
     // current file
 
-    OpenCOR::ZIPSupport::QZipWriter zipWriter(pNewFileName.isEmpty()?mFileName:pNewFileName);
+    OpenCOR::ZIPSupport::QZipWriter zipWriter(pFileName.isEmpty()?mFileName:pFileName);
 
     zipWriter.addFile(ManifestFileName,
                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"

@@ -116,7 +116,7 @@ bool SedmlFile::load()
 
 //==============================================================================
 
-bool SedmlFile::save(const QString &pNewFileName)
+bool SedmlFile::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no issue
 
@@ -130,7 +130,7 @@ bool SedmlFile::save(const QString &pNewFileName)
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
 
-    bool res = Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
+    bool res = Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
 
     if (res)
         mNew = false;

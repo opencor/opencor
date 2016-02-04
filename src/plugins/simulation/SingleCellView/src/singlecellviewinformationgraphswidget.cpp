@@ -150,11 +150,11 @@ void SingleCellViewInformationGraphsWidget::fileOpened()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pNewFileName)
+void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pFileName)
 {
     // Replace our file name with the new one and update our graphs information
 
-    mFileName = pNewFileName;
+    mFileName = pFileName;
 
     updateAllGraphsInfo(true);
 }

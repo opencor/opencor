@@ -95,7 +95,7 @@ public:
     ~CombineArchive();
 
     virtual bool load();
-    virtual bool save(const QString &pNewFileName = QString());
+    virtual bool save(const QString &pFileName = QString());
 
     QString location(const CombineArchiveFile &pFile) const;
 

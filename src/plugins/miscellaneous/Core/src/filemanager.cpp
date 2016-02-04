@@ -308,10 +308,10 @@ void FileManager::makeNew(const QString &pFileName)
     File *nativeFile = file(nativeCanonicalFileName(pFileName));
 
     if (nativeFile) {
-        QString newFileName;
+        QString fileName;
 
-        if (newFile(QString(), newFileName))
-            nativeFile->makeNew(newFileName);
+        if (newFile(QString(), fileName))
+            nativeFile->makeNew(fileName);
     }
 }
 
@@ -432,12 +432,12 @@ bool FileManager::newFile(const QString &pContents, QString &pFileName)
 {
     // Retrieve a temporary file name for our new file
 
-    QString newFileName = temporaryFileName();
+    QString fileName = temporaryFileName();
 
     // Create a new file with the given contents
 
-    if (writeTextToFile(newFileName, pContents)) {
-        pFileName = newFileName;
+    if (writeTextToFile(fileName, pContents)) {
+        pFileName = fileName;
 
         return true;
     } else {
@@ -454,12 +454,12 @@ FileManager::Status FileManager::create(const QString &pUrl,
 {
     // Create a new file
 
-    QString newFileName;
+    QString fileName;
 
-    if (newFile(pContents, newFileName)) {
+    if (newFile(pContents, fileName)) {
         // Let people know that we have created a file
 
-        emit fileCreated(newFileName, pUrl);
+        emit fileCreated(fileName, pUrl);
 
         return Created;
     } else {
@@ -514,12 +514,12 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
             // Now, we can create a new file, which contents will be that of our
             // given file
 
-            QString newFileName;
+            QString fileName;
 
-            if (newFile(fileContents, newFileName)) {
+            if (newFile(fileContents, fileName)) {
                 // Let people know that we have duplicated a file
 
-                emit fileDuplicated(newFileName);
+                emit fileDuplicated(fileName);
 
                 return Duplicated;
             } else {

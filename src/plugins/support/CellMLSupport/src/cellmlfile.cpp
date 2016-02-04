@@ -448,7 +448,7 @@ bool CellmlFile::load()
 
 //==============================================================================
 
-bool CellmlFile::save(const QString &pNewFileName)
+bool CellmlFile::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no issues
 
@@ -507,11 +507,11 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // Determine the file name to use for the CellML file
 
-    QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
+    QString fileName = pFileName.isEmpty()?mFileName:pFileName;
 
     // Write out the contents of our DOM document to our CellML file
 
-    if (!Core::writeTextToFile(newFileName, qDomDocumentToString(domDocument)))
+    if (!Core::writeTextToFile(fileName, qDomDocumentToString(domDocument)))
         return false;
 
     // Our CellML file being saved, it cannot be modified (should it have been
@@ -523,7 +523,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // Make sure that mFileName is up to date
 
-    mFileName = newFileName;
+    mFileName = fileName;
 
     // Everything went fine
 

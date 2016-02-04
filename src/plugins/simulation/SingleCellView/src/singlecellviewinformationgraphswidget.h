@@ -79,7 +79,7 @@ public:
     void finalize(const QString &pFileName);
 
     void fileOpened();
-    void fileRenamed(const QString &pNewFileName);
+    void fileRenamed(const QString &pFileName);
     void fileClosed();
 
     void updateGui();

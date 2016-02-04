@@ -77,7 +77,7 @@ public:
     libsedml::SedDocument * sedmlDocument();
 
     virtual bool load();
-    virtual bool save(const QString &pNewFileName = QString());
+    virtual bool save(const QString &pFileName = QString());
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
 

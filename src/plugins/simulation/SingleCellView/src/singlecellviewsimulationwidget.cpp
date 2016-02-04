@@ -953,7 +953,7 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::save(const QString &pNewFileName)
+bool SingleCellViewSimulationWidget::save(const QString &pFileName)
 {
     // Retrieve all the state and constant parameters which value has changed
     // and update our CellML object with their 'new' values, unless they are
@@ -984,7 +984,7 @@ bool SingleCellViewSimulationWidget::save(const QString &pNewFileName)
     // Now, we can effectively save our given file and let the user know if some
     // parameter values couldn't be saved
 
-    bool res = mCellmlFile->save(pNewFileName);
+    bool res = mCellmlFile->save(pFileName);
 
     if (res) {
         mFileName = mCellmlFile->fileName();
@@ -1083,11 +1083,11 @@ void SingleCellViewSimulationWidget::fileReloaded()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileRenamed(const QString &pNewFileName)
+void SingleCellViewSimulationWidget::fileRenamed(const QString &pFileName)
 {
     // Let our graphs widget know we have been renamed
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pNewFileName);
+    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pFileName);
 }
 
 //==============================================================================

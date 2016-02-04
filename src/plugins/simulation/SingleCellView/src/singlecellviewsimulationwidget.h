@@ -132,13 +132,13 @@ public:
 
     QIcon fileTabIcon() const;
 
-    bool save(const QString &pNewFileName);
+    bool save(const QString &pFileName);
 
     void fileOpened();
     void filePermissionsChanged();
     void fileModified();
     void fileReloaded();
-    void fileRenamed(const QString &pNewFileName);
+    void fileRenamed(const QString &pFileName);
     void fileClosed();
 
     QString fileName() const;
