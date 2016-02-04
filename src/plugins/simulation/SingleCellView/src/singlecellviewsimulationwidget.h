@@ -138,7 +138,7 @@ public:
     void filePermissionsChanged();
     void fileModified();
     void fileReloaded();
-    void fileRenamed(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed();
 
     QString fileName() const;

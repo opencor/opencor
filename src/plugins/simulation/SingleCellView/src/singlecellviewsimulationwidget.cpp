@@ -1083,11 +1083,12 @@ void SingleCellViewSimulationWidget::fileReloaded()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileRenamed(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
+                                                 const QString &pNewFileName)
 {
-    // Let our graphs widget know we have been renamed
+    // Let our graphs widget know that the given file has been renamed
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pFileName);
+    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================

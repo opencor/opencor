@@ -150,11 +150,13 @@ void SingleCellViewInformationGraphsWidget::fileOpened()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pFileName)
+void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
+                                                        const QString &pNewFileName)
 {
     // Replace our file name with the new one and update our graphs information
 
-    mFileName = pFileName;
+    if (!pOldFileName.compare(mFileName))
+        mFileName = pNewFileName;
 
     updateAllGraphsInfo(true);
 }
@@ -897,9 +899,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     // updating several graphs, thus making it faster to update them
     // Note: indeed, say that you have several graphs, each with several data
     //       points, and then switch to another file and back, then it each
-    //       graph will hidden and reshown individually, which can be slow. So,
-    //       instead we 'manually' let people know that some graphs have been
-    //       updated...
+    //       graph will be hidden and reshown individually, which can be slow.
+    //       So, instead we 'manually' let people know that some graphs have
+    //       been updated...
 
     mCanEmitGraphsUpdatedSignal = !pGlobalGraphsUpdate;
 
