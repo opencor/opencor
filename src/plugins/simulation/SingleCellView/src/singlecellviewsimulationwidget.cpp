@@ -1062,7 +1062,9 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so stop its current simulation
 
-    bool needReloadView = mCellmlFileManager->isCellmlFile(pFileName);
+    bool needReloadView =    mCellmlFileManager->isCellmlFile(pFileName)
+                          || mSedmlFileManager->isSedmlFile(pFileName)
+                          || mCombineFileManager->isCombineArchive(pFileName);
 
     mNeedReloadView = true;
 
