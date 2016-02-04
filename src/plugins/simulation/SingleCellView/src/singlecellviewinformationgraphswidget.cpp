@@ -141,33 +141,13 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileOpened()
-{
-    // Update our graphs information
-
-    updateAllGraphsInfo(true);
-}
-
-//==============================================================================
-
 void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
                                                         const QString &pNewFileName)
 {
-    // Replace our file name with the new one and update our graphs information
+    // Update our file name, if we are the file that has been renamed
 
     if (!pOldFileName.compare(mFileName))
         mFileName = pNewFileName;
-
-    updateAllGraphsInfo(true);
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::fileClosed()
-{
-    // Update our graphs information
-
-    updateAllGraphsInfo(true);
 }
 
 //==============================================================================

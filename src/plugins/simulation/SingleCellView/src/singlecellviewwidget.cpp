@@ -294,10 +294,10 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
     mFileNames << pFileName;
 
-    // Let our simulation widgets know that a file has been opened
+    // Make sure that GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->fileOpened();
+        simulationWidget->updateGui();
 }
 
 //==============================================================================
@@ -335,8 +335,14 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget)
+    if (simulationWidget) {
         simulationWidget->fileReloaded();
+
+        // Make sure that GUI of our simulation widgets is up to date
+
+        foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+            simulationWidget->updateGui();
+    }
 }
 
 //==============================================================================
@@ -363,6 +369,11 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->fileRenamed(pOldFileName, pNewFileName);
+
+    // Make sure that GUI of our simulation widgets is up to date
+
+    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        simulationWidget->updateGui();
 }
 
 //==============================================================================
@@ -373,10 +384,10 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
     mFileNames.removeOne(pFileName);
 
-    // Let our simulation widgets know that a file has been closed
+    // Make sure that GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->fileClosed();
+        simulationWidget->updateGui();
 }
 
 //==============================================================================

@@ -1002,15 +1002,6 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileOpened()
-{
-    // Let our graphs widget know that a file has been opened
-
-    mContentsWidget->informationWidget()->graphsWidget()->fileOpened();
-}
-
-//==============================================================================
-
 void SingleCellViewSimulationWidget::filePermissionsChanged()
 {
     // We have been un/locked, so enable/disable the development mode and keep
@@ -1051,8 +1042,6 @@ void SingleCellViewSimulationWidget::reloadView()
     finalize();
     initialize(true);
 
-    fileOpened();
-
     mNeedReloadView = false;
 }
 
@@ -1089,15 +1078,6 @@ void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
     // Let our graphs widget know that the given file has been renamed
 
     mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::fileClosed()
-{
-    // Let our graphs widget know that a file has been closed
-
-    mContentsWidget->informationWidget()->graphsWidget()->fileClosed();
 }
 
 //==============================================================================
