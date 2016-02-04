@@ -68,12 +68,32 @@ class DataStoreInterface;
 
 //==============================================================================
 
+namespace CellMLSupport {
+    class CellmlFileManager;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
+namespace COMBINESupport {
+    class CombineArchive;
+    class CombineFileManager;
+}   // namespace COMBINESupport
+
+//==============================================================================
+
 namespace Core {
     class Property;
     class ProgressBarWidget;
     class ToolBarWidget;
     class UserMessageWidget;
 }   // namespace Core
+
+//==============================================================================
+
+namespace SEDMLSupport {
+    class SedmlFile;
+    class SedmlFileManager;
+}   // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -182,6 +202,14 @@ private:
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
+
+    CellMLSupport::CellmlFileManager *mCellmlFileManager;
+    SEDMLSupport::SedmlFileManager *mSedmlFileManager;
+    COMBINESupport::CombineFileManager *mCombineFileManager;
+
+    CellMLSupport::CellmlFile *mCellmlFile;
+    SEDMLSupport::SedmlFile *mSedmlFile;
+    COMBINESupport::CombineArchive *mCombineArchive;
 
     FileType mFileType;
 

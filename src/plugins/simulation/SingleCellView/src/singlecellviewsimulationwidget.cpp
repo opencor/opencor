@@ -353,22 +353,23 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Determine the type of file we are dealing with
 
-    CellMLSupport::CellmlFileManager *cellmlFileManager = CellMLSupport::CellmlFileManager::instance();
-    SEDMLSupport::SedmlFileManager *sedmlFileManager = SEDMLSupport::SedmlFileManager::instance();
+    mCellmlFileManager = CellMLSupport::CellmlFileManager::instance();
+    mSedmlFileManager = SEDMLSupport::SedmlFileManager::instance();
+    mCombineFileManager = COMBINESupport::CombineFileManager::instance();
 
-    mFileType = cellmlFileManager->cellmlFile(pFileName)?
-                    CellmlFile:
-                    sedmlFileManager->sedmlFile(pFileName)?
-                        SedmlFile:
-                        CombineArchive;
+    mCellmlFile = mCellmlFileManager->cellmlFile(pFileName);
+    mSedmlFile = mSedmlFileManager->sedmlFile(pFileName);
+    mCombineArchive = mCombineFileManager->combineArchive(pFileName);
+
+    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
 
     // Create our simulation object and a few connections for it
 
     mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?
-                                                   cellmlFileManager->cellmlFile(pFileName)->runtime():
+                                                   mCellmlFile->runtime():
                                                    (mFileType == SedmlFile)?
-                                                       sedmlFileManager->sedmlFile(pFileName)->runtime():
-                                                       COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)->runtime(),
+                                                       mSedmlFile->runtime():
+                                                       mCombineArchive->runtime(),
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
@@ -611,7 +612,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // We are dealing with a COMBINE archive, so its master file should be
         // the SED-ML file we are after
 
-        COMBINESupport::CombineArchive *combineArchive = COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
+        COMBINESupport::CombineArchive *combineArchive = mCombineFileManager->combineArchive(mFileName);
         COMBINESupport::CombineArchiveFiles masterFiles = combineArchive->masterFiles();
 
         foreach (const COMBINESupport::CombineArchiveFile &masterFile, masterFiles) {
@@ -635,10 +636,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // Update our simulation object, if needed
 
     CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?
-                                                CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName):
+                                                mCellmlFileManager->cellmlFile(mFileName):
                                                 (mFileType == SedmlFile)?
-                                                    SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName)->cellmlFile():
-                                                    COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName)->cellmlFile();
+                                                    mSedmlFileManager->sedmlFile(mFileName)->cellmlFile():
+                                                    mCombineFileManager->combineArchive(mFileName)->cellmlFile();
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile?cellmlFile->runtime():0;
 
     if (pReloadingView)
@@ -960,7 +961,7 @@ bool SingleCellViewSimulationWidget::saveFile(const QString &pOldFileName,
     // imported, in which case we let the user know that their 'new' values
     // cannot be saved
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
+    CellMLSupport::CellmlFile *cellmlFile = mCellmlFileManager->cellmlFile(pOldFileName);
     ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
     QString importedParameters = QString();
@@ -1059,7 +1060,7 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so stop its current simulation
 
-    bool needReloadView = CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName);
+    bool needReloadView = mCellmlFileManager->isCellmlFile(pFileName);
 
     mNeedReloadView = true;
 
@@ -1660,7 +1661,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
     #error Unsupported platform
 #endif
 
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+        CellMLSupport::CellmlFile *cellmlFile = mCellmlFileManager->cellmlFile(mFileName);
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
                                  QFileInfo(mFileName).canonicalPath()+QDir::separator();
