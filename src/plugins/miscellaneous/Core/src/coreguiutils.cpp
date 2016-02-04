@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "commonwidget.h"
 #include "coreguiutils.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -181,7 +182,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     if (pSelectedFilter && !pSelectedFilter->isEmpty())
         dialog.selectNameFilter(*pSelectedFilter);
 
-    if (dialog.exec() == QDialog::Accepted) {
+    while (dialog.exec() == QDialog::Accepted) {
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
@@ -200,25 +201,31 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             setActiveDirectory(resInfo.path());
 
+            // Check whether the save file already exists and is opened
+
+            if (Core::FileManager::instance()->file(res)) {
+                QMessageBox::warning(qApp->activeWindow(), pCaption,
+                                     QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res),
+                                     QMessageBox::Ok);
+
+                continue;
+            }
+
             // Check whether the save file already exists
 
-            if (resInfo.exists()) {
-                // The save file already exists, so ask whether we want to
-                // overwrite it
-
-                if (QMessageBox::question(qApp->activeWindow(), pCaption,
-                                          QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
-                                          QMessageBox::Yes|QMessageBox::No,
-                                          QMessageBox::Yes) == QMessageBox::No) {
-                    return QString();
-                }
+            if (   resInfo.exists()
+                && QMessageBox::question(qApp->activeWindow(), pCaption,
+                                         QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
+                                         QMessageBox::Yes|QMessageBox::No,
+                                         QMessageBox::Yes) == QMessageBox::No) {
+                continue;
             }
         }
 
         return res;
-    } else {
-        return QString();
     }
+
+    return QString();
 }
 
 //==============================================================================

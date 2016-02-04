@@ -39,6 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> imrpoved the retrieval of a save file name (see issue <a href=\"https://github.com/opencor/opencor/issues/881\">#881</a>)." },
                        { "change": "<strong>Single Cell view:</strong> fixed a small problem with the progress bar not always getting reset (see issue <a href=\"https://github.com/opencor/opencor/issues/879\">#879</a>)." }
                      ]
                    },

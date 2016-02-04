@@ -10,6 +10,7 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
+                           { "type": "Improved", "description": "Retrieval of a save file name." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
                            { "type": "Fixed", "description": "Equation rendering." },
                            { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
