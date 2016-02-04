@@ -413,9 +413,10 @@ void SingleCellViewInformationGraphsWidget::on_actionUnselectAllGraphs_triggered
 void SingleCellViewInformationGraphsWidget::updateGui()
 {
     // Update our graphs information
-    // Note: this is in case we created a graph for a file that has not yet been
-    //       selected, in which case the graph will initially be invalid, but it
-    //       should become valid after we have switched to that file and back...
+    // Note: this is useful, for example, if we created a graph for a file that
+    //       has not yet been selected, in which case the graph will initially
+    //       be invalid, but it should become valid after we have switched to
+    //       that file and back...
 
     updateAllGraphsInfo();
 }
