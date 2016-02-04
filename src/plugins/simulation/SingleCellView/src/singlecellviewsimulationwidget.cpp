@@ -636,10 +636,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // Update our simulation object, if needed
 
     CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?
-                                                mCellmlFileManager->cellmlFile(mFileName):
+                                                mCellmlFile:
                                                 (mFileType == SedmlFile)?
-                                                    mSedmlFileManager->sedmlFile(mFileName)->cellmlFile():
-                                                    mCombineFileManager->combineArchive(mFileName)->cellmlFile();
+                                                    mSedmlFile->cellmlFile():
+                                                    mCombineArchive->cellmlFile();
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile?cellmlFile->runtime():0;
 
     if (pReloadingView)
@@ -1663,13 +1663,12 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
     #error Unsupported platform
 #endif
 
-        CellMLSupport::CellmlFile *cellmlFile = mCellmlFileManager->cellmlFile(mFileName);
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
                                  QFileInfo(mFileName).canonicalPath()+QDir::separator();
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
-        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+        foreach (const QString &importedFileName, mCellmlFile->importedFileNames()) {
             // Check for the common path
 
             QString importedFilePath = remoteFile?
@@ -1693,7 +1692,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
                 QString localImportedFileName = Core::temporaryFileName();
 
                 Core::writeTextToFile(localImportedFileName,
-                                      cellmlFile->importedFileContents(importedFileName));
+                                      mCellmlFile->importedFileContents(importedFileName));
 
                 remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }
@@ -1726,10 +1725,10 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
             if (combineArchive.addFile(mFileName, modelSource,
-                                       (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                       (CellMLSupport::CellmlFile::version(mCellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
-                foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+                foreach (const QString &importedFileName, mCellmlFile->importedFileNames()) {
                     QString realImportedFileName = remoteFile?
                                                        remoteImportedFileNames.value(importedFileName):
                                                        importedFileName;
