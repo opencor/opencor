@@ -115,6 +115,7 @@ QString CORE_EXPORT digitGroupNumber(const QString &pNumber);
 QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
+QString CORE_EXPORT sha1(const QByteArray &pByteArray);
 QString CORE_EXPORT sha1(const QString &pText);
 
 void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,

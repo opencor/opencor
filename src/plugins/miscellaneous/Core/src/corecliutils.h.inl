@@ -44,6 +44,11 @@ QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 
 QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
 
+bool CORE_EXPORT readByteArrayFromFile(const QString &pFileName,
+                                       QByteArray &pByteArray);
+bool CORE_EXPORT writeByteArrayToFile(const QString &pFileName,
+                                      const QByteArray &pByteArray);
+
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,
                                      const QString &pResource);
 
