@@ -362,9 +362,19 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
 
+    // In the case of a COMBINE archive, we need to retrieve the corresponding
+    // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
+    // corresponding CellML file
+
+    if (mCombineArchive)
+        retrieveSedmlFile();
+
+    if (mSedmlFile)
+        retrieveCellmlFile();
+
     // Create our simulation object and a few connections for it
 
-    mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?mCellmlFile->runtime():0,
+    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
@@ -630,8 +640,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Update our simulation object, if needed
 
-    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?mCellmlFile:0;
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile?cellmlFile->runtime():0;
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
 
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
@@ -694,7 +703,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
             // with the CellML file or its runtime
 
             foreach (const CellMLSupport::CellmlFileIssue &issue,
-                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues()) {
+                     cellmlFileRuntime?cellmlFileRuntime->issues():mCellmlFile->issues()) {
                 information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                      issue.message());
             }
@@ -2642,6 +2651,20 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
         return ErrorNodeIcon;
     }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::retrieveCellmlFile()
+{
+//---ISSUE825--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::retrieveSedmlFile()
+{
+//---ISSUE825--- TO BE DONE...
 }
 
 //==============================================================================

@@ -268,6 +268,9 @@ private:
 
     void checkSimulationDataModified(const bool &pIsModified);
 
+    void retrieveCellmlFile();
+    void retrieveSedmlFile();
+
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
