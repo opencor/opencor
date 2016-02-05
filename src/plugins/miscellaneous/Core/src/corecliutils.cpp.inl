@@ -423,13 +423,12 @@ bool writeTextToFile(const QString &pFileName, const QString &pText)
 
 bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 {
-    if (QResource(pResource).isValid()) {
-        // The resource exists, so write it to the given file
+    // Write the given resource to the given file, if possible
 
+    if (QResource(pResource).isValid())
         return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
-    } else {
+    else
         return false;
-    }
 }
 
 //==============================================================================
