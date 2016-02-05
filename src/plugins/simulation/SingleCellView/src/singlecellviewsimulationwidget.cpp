@@ -350,27 +350,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     setFocusProxy(mContentsWidget);
 
-    // Determine the type of file we are dealing with
+    // Update our file details
 
     mCellmlFileManager = CellMLSupport::CellmlFileManager::instance();
     mSedmlFileManager = SEDMLSupport::SedmlFileManager::instance();
     mCombineFileManager = COMBINESupport::CombineFileManager::instance();
 
-    mCellmlFile = mCellmlFileManager->cellmlFile(pFileName);
-    mSedmlFile = mSedmlFileManager->sedmlFile(pFileName);
-    mCombineArchive = mCombineFileManager->combineArchive(pFileName);
-
-    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
-
-    // In the case of a COMBINE archive, we need to retrieve the corresponding
-    // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
-    // corresponding CellML file
-
-    if (mCombineArchive)
-        retrieveSedmlFile();
-
-    if (mSedmlFile)
-        retrieveCellmlFile();
+    updateFileDetails();
 
     // Create our simulation object and a few connections for it
 
@@ -611,6 +597,16 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     mProgress = -1;
 
+    // Update our file details and simulation object, if needed
+
+    if (pReloadingView)
+        updateFileDetails();
+
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
+
+    if (pReloadingView)
+        mSimulation->update(cellmlFileRuntime);
+
     // Check whether we are to deal with a CellML or a SED-ML file, or even a
     // COMBINE archive
 
@@ -643,13 +639,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         if (sedmlFileName.isEmpty() && combineIssue.isEmpty())
             combineIssue = tr("no master SED-ML file could be found");
     }
-
-    // Update our simulation object, if needed
-
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
-
-    if (pReloadingView)
-        mSimulation->update(cellmlFileRuntime);
 
     // Retrieve our variable of integration, if possible
 
@@ -2671,6 +2660,29 @@ void SingleCellViewSimulationWidget::retrieveCellmlFile()
 void SingleCellViewSimulationWidget::retrieveSedmlFile()
 {
 //---ISSUE825--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::updateFileDetails()
+{
+    // Determine the type of file we are dealing with
+
+    mCellmlFile = mCellmlFileManager->cellmlFile(mFileName);
+    mSedmlFile = mSedmlFileManager->sedmlFile(mFileName);
+    mCombineArchive = mCombineFileManager->combineArchive(mFileName);
+
+    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
+
+    // In the case of a COMBINE archive, we need to retrieve the corresponding
+    // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
+    // corresponding CellML file
+
+    if (mCombineArchive)
+        retrieveSedmlFile();
+
+    if (mSedmlFile)
+        retrieveCellmlFile();
 }
 
 //==============================================================================

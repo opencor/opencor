@@ -271,6 +271,8 @@ private:
     void retrieveCellmlFile();
     void retrieveSedmlFile();
 
+    void updateFileDetails();
+
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
