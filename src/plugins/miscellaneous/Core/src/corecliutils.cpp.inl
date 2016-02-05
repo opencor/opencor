@@ -433,6 +433,19 @@ bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 
 //==============================================================================
 
+bool isTextFile(const QString &pFileName)
+{
+    // Return whether the given file is a text file
+
+    QByteArray fileContents;
+
+    readByteArrayFromFile(pFileName, fileContents);
+
+    return fileContents == QString(fileContents).toUtf8();
+}
+
+//==============================================================================
+
 QString eolString()
 {
     // Return the end of line to use

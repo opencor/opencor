@@ -57,6 +57,8 @@ bool CORE_EXPORT writeTextToFile(const QString &pFileName,
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,
                                      const QString &pResource);
 
+bool CORE_EXPORT isTextFile(const QString &pFileName);
+
 QString CORE_EXPORT eolString();
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);

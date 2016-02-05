@@ -287,6 +287,11 @@ bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 {
+    // Make sure that we are dealing with a text file
+
+    if (!Core::isTextFile(pFileName))
+        return 0;
+
     // Update and return our raw view widget using the given file
     // Note: we temporarily disable updates for our raw view widget, so as to
     //       avoid any risk of known/unknown/potential flickering...
