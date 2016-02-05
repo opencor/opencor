@@ -145,7 +145,8 @@ public:
 
     void updateGui();
     void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                 const qulonglong &pSimulationResultsSize);
+                                 const qulonglong &pSimulationResultsSize,
+                                 const bool &pForceUpdateSimulationResults);
 
     void resetSimulationProgress();
 

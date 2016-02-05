@@ -2460,7 +2460,8 @@ void SingleCellViewSimulationWidget::updateGui()
 //==============================================================================
 
 void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                                             const qulonglong &pSimulationResultsSize)
+                                                             const qulonglong &pSimulationResultsSize,
+                                                             const bool &pForceUpdateSimulationResults)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
@@ -2493,13 +2494,15 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
+                if (pForceUpdateSimulationResults)
+                    mOldDataSizes.remove(graph);
+
                 // Update our graph's data and keep track of our new old data
                 // size, if we are visible
                 // Note: indeed, to update our graph's old data size if we are
                 //       not visible means that when we come back to this file,
                 //       part of the graphs will be missing...
 
-                bool firstOldDataSize = mOldDataSizes.isEmpty();
                 qulonglong oldDataSize = graph->dataSize();
 
                 if (visible)
@@ -2513,7 +2516,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
                 qulonglong realOldDataSize = mOldDataSizes.value(graph);
 
-                needUpdatePlot =    needUpdatePlot || firstOldDataSize
+                needUpdatePlot =    needUpdatePlot || !realOldDataSize
                                  || (oldDataSize != realOldDataSize);
 
                 // Draw the graph's new segment, but only if we and our graph

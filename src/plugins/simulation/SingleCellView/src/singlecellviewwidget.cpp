@@ -462,7 +462,7 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
         foreach (SingleCellViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize);
+            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pForceUpdateSimulationResults);
     }
 
     // Ask to recheck our simulation widget's results, but only if its
