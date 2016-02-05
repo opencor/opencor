@@ -46,7 +46,6 @@ namespace SEDMLSupport {
 SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
     mSedmlDocument(0),
-    mCellmlFile(0),
     mNew(pNew)
 {
     // Reset ourselves
@@ -70,10 +69,8 @@ void SedmlFile::reset()
     // Reset all of our properties
 
     delete mSedmlDocument;
-    delete mCellmlFile;
 
     mSedmlDocument = 0;
-    mCellmlFile = 0;
 
     mLoadingNeeded = true;
 }
@@ -203,36 +200,6 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     // Only consider the given file contents SED-ML valid if it has no errors
 
     return !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
-{
-    // Return our CellML file, after loading ourselves if necessary
-
-    load();
-
-    return mCellmlFile;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileRuntime * SedmlFile::runtime()
-{
-    // Return the runtime for our CellML file, if any, after loading ourselves
-    // if necessary
-
-    load();
-
-    return mCellmlFile?mCellmlFile->runtime():0;
-}
-
-//==============================================================================
-
-void SedmlFile::update()
-{
-//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

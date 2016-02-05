@@ -121,8 +121,7 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 
 CombineArchive::CombineArchive(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mDirName(Core::temporaryDirName()),
-    mCellmlFile(0)
+    mDirName(Core::temporaryDirName())
 {
     // Reset ourselves
 
@@ -431,29 +430,6 @@ QString CombineArchive::issue() const
     // Return our archive's issue
 
     return mIssue;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFile * CombineArchive::cellmlFile()
-{
-    // Return our CellML file, after loading ourselves if necessary
-
-    load();
-
-    return mCellmlFile;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileRuntime * CombineArchive::runtime()
-{
-    // Return the runtime for our CellML file, if any, after loading ourselves
-    // if necessary
-
-    load();
-
-    return mCellmlFile?mCellmlFile->runtime():0;
 }
 
 //==============================================================================

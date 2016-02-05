@@ -44,13 +44,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CellMLSupport {
-    class CellmlFile;
-    class CellmlFileRuntime;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace SEDMLSupport {
 
 //==============================================================================
@@ -81,20 +74,13 @@ public:
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
 
-    CellMLSupport::CellmlFile * cellmlFile();
-    CellMLSupport::CellmlFileRuntime * runtime();
-
 private:
     libsedml::SedDocument *mSedmlDocument;
-
-    CellMLSupport::CellmlFile * mCellmlFile;
 
     bool mNew;
     bool mLoadingNeeded;
 
     virtual void reset();
-
-    void update();
 };
 
 //==============================================================================

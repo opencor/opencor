@@ -364,11 +364,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our simulation object and a few connections for it
 
-    mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?
-                                                   mCellmlFile->runtime():
-                                                   (mFileType == SedmlFile)?
-                                                       mSedmlFile->runtime():
-                                                       mCombineArchive->runtime(),
+    mSimulation = new SingleCellViewSimulation((mFileType == CellmlFile)?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
@@ -634,11 +630,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     // Update our simulation object, if needed
 
-    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?
-                                                mCellmlFile:
-                                                (mFileType == SedmlFile)?
-                                                    mSedmlFile->cellmlFile():
-                                                    mCombineArchive->cellmlFile();
+    CellMLSupport::CellmlFile *cellmlFile = (mFileType == CellmlFile)?mCellmlFile:0;
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile?cellmlFile->runtime():0;
 
     if (pReloadingView)
