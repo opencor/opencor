@@ -35,6 +35,11 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
+                           { "type": "subCategory", "name": "Raw view",
+                             "entries": [
+                               { "type": "Improved", "description": "Support for text files." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "Raw CellML view",
                              "entries": [
                                { "type": "Fixed", "description": "Reformatting unescaping HTML entities." }
