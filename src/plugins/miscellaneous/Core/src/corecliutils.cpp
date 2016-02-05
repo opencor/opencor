@@ -409,12 +409,21 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
 
 //==============================================================================
 
+QString sha1(const QByteArray &pByteArray)
+{
+    // Return the SHA-1 value of the given text
+
+    return QCryptographicHash::hash(pByteArray,
+                                    QCryptographicHash::Sha1).toHex();
+}
+
+//==============================================================================
+
 QString sha1(const QString &pText)
 {
     // Return the SHA-1 value of the given text
 
-    return QCryptographicHash::hash(pText.toUtf8(),
-                                    QCryptographicHash::Sha1).toHex();
+    return sha1(pText.toUtf8());
 }
 
 //==============================================================================
