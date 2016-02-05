@@ -346,6 +346,35 @@ bool readByteArrayFromFile(const QString &pFileName, QByteArray &pByteArray)
 
 //==============================================================================
 
+bool readTextFromFile(const QString &pFileName, QString &pText)
+{
+    // Read the contents of the file, which file name is given, as a string
+
+    QByteArray byteArray;
+
+    if (readByteArrayFromFile(pFileName, byteArray)) {
+        pText = byteArray;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool readTextFromUrl(const QString &pUrl, QString &pText,
+                     QString *pErrorMessage)
+{
+    // Read the contents of the file, which URL is given, as a string
+
+    static SynchronousTextFileDownloader synchronousTextFileDownloader;
+
+    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
+}
+
+//==============================================================================
+
 bool writeByteArrayToFile(const QString &pFileName,
                           const QByteArray &pByteArray)
 {
@@ -383,36 +412,6 @@ bool writeByteArrayToFile(const QString &pFileName,
 
 //==============================================================================
 
-bool writeResourceToFile(const QString &pFileName, const QString &pResource)
-{
-    if (QResource(pResource).isValid()) {
-        // The resource exists, so write it to the given file
-
-        return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool readTextFromFile(const QString &pFileName, QString &pText)
-{
-    // Read the contents of the file, which file name is given, as a string
-
-    QByteArray byteArray;
-
-    if (readByteArrayFromFile(pFileName, byteArray)) {
-        pText = byteArray;
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
 bool writeTextToFile(const QString &pFileName, const QString &pText)
 {
     // Write the given string to the given file
@@ -422,14 +421,15 @@ bool writeTextToFile(const QString &pFileName, const QString &pText)
 
 //==============================================================================
 
-bool readTextFromUrl(const QString &pUrl, QString &pText,
-                     QString *pErrorMessage)
+bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 {
-    // Read the contents of the file, which URL is given, as a string
+    if (QResource(pResource).isValid()) {
+        // The resource exists, so write it to the given file
 
-    static SynchronousTextFileDownloader synchronousTextFileDownloader;
-
-    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
+        return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
