@@ -467,6 +467,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
+    mAxesChanged(false),
     mCanZoomInX(true),
     mCanZoomOutX(true),
     mCanZoomInY(true),
@@ -1084,6 +1085,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         setAxes(minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY);
 
+        mAxesChanged = true;
+
         break;
     }
     case ShowCoordinates:
@@ -1117,6 +1120,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                           ScalingInFactor:
                           ScalingOutFactor:
                       NoScalingFactor);
+
+        mAxesChanged = true;
 
         break;
     }
@@ -1237,13 +1242,15 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         if (zoomRegion.width() && zoomRegion.height()) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
                     zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
+
+            mAxesChanged = true;
         }
 
         break;
     }
     default:
-        // A action that doesn't require anything specific to be done, except to
-        // reset our action
+        // An action that doesn't require anything specific to be done, except
+        // to reset our action
 
         resetAction();
     }
@@ -1454,6 +1461,24 @@ void SingleCellViewGraphPanelPlotWidget::forceAlignWithNeighbors()
     // Force the re-alignment with our neighbours
 
     alignWithNeighbors(true, true);
+}
+
+//==============================================================================
+
+bool SingleCellViewGraphPanelPlotWidget::axesChanged() const
+{
+    // Return whether our axes have been changed
+
+    return mAxesChanged;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::resetAxesChanged()
+{
+    // Reset our knowledge of whether our axes have been changed
+
+    mAxesChanged = false;
 }
 
 //==============================================================================

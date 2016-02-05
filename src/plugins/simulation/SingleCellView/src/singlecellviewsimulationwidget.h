@@ -216,7 +216,6 @@ private:
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
-    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 

@@ -90,7 +90,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mRunActionEnabled(true),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
-    mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
@@ -2376,7 +2375,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
         checkAxisValue(maxY, origMaxY, endingPoints);
     }
 
-    // Set our axes' values and replot the plot, if needed
+    // Set our axes' values and replot our plot, if needed
 
     if (pPlot->setAxes(minX, maxX, minY, maxY)) {
         return true;
@@ -2489,8 +2488,8 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
 
-        QRectF plotViewport = QRectF(plotMinX, plotMinY,
-                                     plotMaxX-plotMinX, plotMaxY-plotMinY);
+        if (pForceUpdateSimulationResults)
+            plot->resetAxesChanged();
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
@@ -2529,7 +2528,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                     // current viewport, but only if the user hasn't changed the
                     // plot's viewport since we last came here
 
-                    if (mPlotsViewports.value(plot) == plotViewport) {
+                    if (!plot->axesChanged()) {
                         double minX = plotMinX;
                         double maxX = plotMaxX;
                         double minY = plotMinY;
@@ -2569,15 +2568,6 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 // which case we need to update our plot
 
                 updatePlot(plot, true);
-
-                // Keep track of our plot's new viewport
-
-                plotMinX = plot->minX();
-                plotMinY = plot->minY();
-
-                mPlotsViewports.insert(plot,
-                                       QRectF(plotMinX, plotMinY,
-                                              plot->maxX()-plotMinX, plot->maxY()-plotMinY));
             } else if (!pSimulationResultsSize) {
                 // We came here as a result of starting a simulation or clearing
                 // our plot, so simply replot it (rather than update it)
