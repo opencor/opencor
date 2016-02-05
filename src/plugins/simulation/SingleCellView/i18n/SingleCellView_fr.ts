@@ -305,14 +305,6 @@
         <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
     </message>
     <message>
-        <source>more than one master SED-ML file was found</source>
-        <translation>plus d&apos;un fichier SED-ML principal a été trouvé</translation>
-    </message>
-    <message>
-        <source>no master SED-ML file could be found</source>
-        <translation>aucun fichier SED-ML principal n&apos;a pu être trouvé</translation>
-    </message>
-    <message>
         <source>Export To SED-ML File</source>
         <translation>Exporter Vers Fichier SED-ML</translation>
     </message>
@@ -335,6 +327,30 @@
     <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;%2.</source>
         <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;%2.</translation>
+    </message>
+    <message>
+        <source>Information:</source>
+        <translation>Information :</translation>
+    </message>
+    <message>
+        <source>Fatal:</source>
+        <translation>Fatal :</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with a CellML file are supported</source>
+        <translation>seulement les fichiers SED-ML avec un fichier CellML sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with one model are supported</source>
+        <translation>seulement les fichiers SED-ML avec un modèle sont supportés</translation>
+    </message>
+    <message>
+        <source>%1 could not be found</source>
+        <translation>%1 n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
+        <source>only COMBINE archives with one master file are supported</source>
+        <translation>seulement les archives COMBINE avec un fichier maître sont supportés</translation>
     </message>
 </context>
 <context>

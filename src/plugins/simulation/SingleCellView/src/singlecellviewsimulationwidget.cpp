@@ -607,39 +607,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
 
-    // Check whether we are to deal with a CellML or a SED-ML file, or even a
-    // COMBINE archive
-
-    QString sedmlFileName = QString();
-    QString combineIssue = QString();
-
-    if (mFileType == SedmlFile) {
-        sedmlFileName = mFileName;
-    } else if (mFileType == CombineArchive) {
-        // We are dealing with a COMBINE archive, so its master file should be
-        // the SED-ML file we are after
-
-        COMBINESupport::CombineArchive *combineArchive = mCombineFileManager->combineArchive(mFileName);
-        COMBINESupport::CombineArchiveFiles masterFiles = combineArchive->masterFiles();
-
-        foreach (const COMBINESupport::CombineArchiveFile &masterFile, masterFiles) {
-            if (masterFile.format() == COMBINESupport::CombineArchiveFile::Sedml) {
-                if (sedmlFileName.isEmpty()) {
-                    sedmlFileName = combineArchive->location(masterFile);
-                } else {
-                    sedmlFileName = QString();
-
-                    combineIssue = tr("more than one master SED-ML file was found");
-
-                    break;
-                }
-            }
-        }
-
-        if (sedmlFileName.isEmpty() && combineIssue.isEmpty())
-            combineIssue = tr("no master SED-ML file could be found");
-    }
-
     // Retrieve our variable of integration, if possible
 
     bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
@@ -659,51 +626,83 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                            fileManagerInstance->isRemote(mFileName)?
                                fileManagerInstance->url(mFileName):
                                mFileName;
-    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn
-                          +OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
 
-    if (variableOfIntegration) {
-        // A variable of integration could be retrieved for our CellML file, so
-        // we can also output the model type
+    if (!mCombineArchiveIssue.isEmpty()) {
+        // There is an issue with our COMBINE archive
 
-        QString additionalInformation = QString();
+        information += QString(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> %1.</span>"+OutputBrLn).arg(Core::plainString(mCombineArchiveIssue));
+    } else if (!mSedmlFileIssues.isEmpty()) {
+        // There is one or several issues with our SED-ML file, so list it/them
 
-        if (cellmlFileRuntime->needNlaSolver())
-            additionalInformation = " + "+tr("NLA system(s)");
+        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, mSedmlFileIssues) {
+            QString issueType;
 
-        information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
-                                                                                                                                   additionalInformation);
-    } else {
-        // We couldn't retrieve a variable of integration, which means that we
-        // either don't have a runtime or we have one, but it's not valid or
-        // it's valid but we really don't have a variable of integration
-        // Note: in the case of a valid runtime and no variable of integration,
-        //       we really shouldn't consider the runtime to be valid, hence we
-        //       handle this case here...
+            switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Information:
+                issueType = tr("Information:");
 
-        mErrorType = InvalidCellmlFile;
+                break;
+            case SEDMLSupport::SedmlFileIssue::Error:
+                issueType = tr("Error:");
 
-        updateInvalidModelMessageWidget();
+                break;
+            case SEDMLSupport::SedmlFileIssue::Warning:
+                issueType = tr("Warning:");
 
-        information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+                break;
+            case SEDMLSupport::SedmlFileIssue::Fatal:
+                issueType = tr("Fatal:");
 
-        if (validCellmlFileRuntime) {
-            // We have a valid runtime, but no variable of integration, which
-            // means that the model doesn't contain any ODE or DAE
-
-            information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
-        } else if (mFileType == CellmlFile) {
-            // We don't have a valid runtime, so either there are some problems
-            // with the CellML file or its runtime
-
-            foreach (const CellMLSupport::CellmlFileIssue &issue,
-                     cellmlFileRuntime?cellmlFileRuntime->issues():mCellmlFile->issues()) {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                     issue.message());
+                break;
             }
-        } else if ((mFileType == CombineArchive) && !combineIssue.isEmpty()) {
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+combineIssue+".</span>");
+
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, sedmlFileIssue.message());
+        }
+    } else {
+        information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+
+        if (variableOfIntegration) {
+            // A variable of integration could be retrieved for our CellML file,
+            // so we can also output the model type
+
+            QString additionalInformation = QString();
+
+            if (cellmlFileRuntime->needNlaSolver())
+                additionalInformation = " + "+tr("NLA system(s)");
+
+            information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
+            information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+                                                                                                                                       additionalInformation);
+        } else {
+            // We couldn't retrieve a variable of integration, which means that
+            // we either don't have a runtime or we have one, but it's not valid
+            // or it's valid but we really don't have a variable of integration
+            // Note: in the case of a valid runtime and no variable of
+            //       integration, we really shouldn't consider the runtime to be
+            //       valid, hence we handle this case here...
+
+            mErrorType = InvalidCellmlFile;
+
+            updateInvalidModelMessageWidget();
+
+            information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+
+            if (validCellmlFileRuntime) {
+                // We have a valid runtime, but no variable of integration,
+                // which means that the model doesn't contain any ODE or DAE
+
+                information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+            } else {
+                // We don't have a valid runtime, so either there are some
+                // problems with the CellML file or its runtime
+
+                foreach (const CellMLSupport::CellmlFileIssue &issue,
+                         cellmlFileRuntime?cellmlFileRuntime->issues():mCellmlFile->issues()) {
+                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                         issue.message());
+                }
+            }
         }
     }
 
@@ -2650,7 +2649,7 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::sedmlFileSupported() const
+bool SingleCellViewSimulationWidget::sedmlFileSupported()
 {
 //---ISSUE825--- TO BE DONE...
     // Make sure that there is only one model referenced in our SED-ML file and
@@ -2667,9 +2666,41 @@ bool SingleCellViewSimulationWidget::sedmlFileSupported() const
             || !language.compare(SEDMLSupport::Language::Cellml_1_1)) {
             return true;
         } else {
+            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with a CellML file are supported"));
+
             return false;
         }
     } else {
+        mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with one model are supported"));
+
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool SingleCellViewSimulationWidget::combineArchiveSupported()
+{
+//---ISSUE825--- TO BE DONE...
+    // Load our COMBINE archive
+
+    if (mCombineArchive->load()) {
+        // Make sure that there is only one master file in our COMBINE archive
+
+        if (mCombineArchive->masterFiles().count() == 1) {
+mCombineArchiveIssue = "still under development";
+
+            return true;
+        } else {
+            mCombineArchiveIssue = tr("only COMBINE archives with one master file are supported");
+
+            return false;
+        }
+    } else {
+        mCombineArchiveIssue = mCombineArchive->issue();
+
         return false;
     }
 }
@@ -2693,8 +2724,12 @@ void SingleCellViewSimulationWidget::retrieveCellmlFile()
 
     QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(mFileName).path()+QDir::separator()+modelSource);
 
-    if (QFile::exists(cellmlFileName))
+    if (QFile::exists(cellmlFileName)) {
         mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+    } else {
+        mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                         tr("%1 could not be found").arg(modelSource));
+    }
 //---ISSUE825--- HANDLE THE CASE OF A REMOTE FILE...
 }
 
@@ -2702,6 +2737,10 @@ void SingleCellViewSimulationWidget::retrieveCellmlFile()
 
 void SingleCellViewSimulationWidget::retrieveSedmlFile()
 {
+    // Make sure that we support our COMBINE archive
+
+    if (!combineArchiveSupported())
+        return;
 //---ISSUE825--- TO BE DONE...
 }
 
@@ -2716,6 +2755,9 @@ void SingleCellViewSimulationWidget::updateFileDetails()
     mCombineArchive = mCombineFileManager->combineArchive(mFileName);
 
     mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
+
+    mSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
+    mCombineArchiveIssue = QString();
 
     // In the case of a COMBINE archive, we need to retrieve the corresponding
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the

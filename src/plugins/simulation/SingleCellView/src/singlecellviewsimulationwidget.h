@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
+#include "sedmlfileissue.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewsimulation.h"
 #include "widget.h"
@@ -212,6 +213,9 @@ private:
 
     FileType mFileType;
 
+    SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
+    QString mCombineArchiveIssue;
+
     ErrorType mErrorType;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
@@ -268,7 +272,8 @@ private:
 
     void checkSimulationDataModified(const bool &pIsModified);
 
-    bool sedmlFileSupported() const;
+    bool sedmlFileSupported();
+    bool combineArchiveSupported();
 
     void retrieveCellmlFile();
     void retrieveSedmlFile();
