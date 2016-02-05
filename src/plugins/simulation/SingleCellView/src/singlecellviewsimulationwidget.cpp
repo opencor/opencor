@@ -2534,7 +2534,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (qulonglong i = qMin(0ULL, oldDataSize-1);
+                        for (qulonglong i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
                             double valX = graph->data()->sample(i).x();
                             double valY = graph->data()->sample(i).y();
