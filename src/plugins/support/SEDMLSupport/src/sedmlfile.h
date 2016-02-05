@@ -53,6 +53,7 @@ static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
 //==============================================================================
 
 namespace Language {
+    static const auto Cellml = QStringLiteral("urn:sedml:language:cellml");
     static const auto Cellml_1_0 = QStringLiteral("urn:sedml:language:cellml.1_0");
     static const auto Cellml_1_1 = QStringLiteral("urn:sedml:language:cellml.1_1");
 }

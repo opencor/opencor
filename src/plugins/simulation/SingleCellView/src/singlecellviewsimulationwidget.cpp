@@ -2650,9 +2650,52 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::retrieveCellmlFile()
+bool SingleCellViewSimulationWidget::sedmlFileSupported() const
 {
 //---ISSUE825--- TO BE DONE...
+    // Make sure that there is only one model referenced in our SED-ML file and
+    // that it is of CellML type
+
+    libsedml::SedDocument *sedmlDocument = mSedmlFile->sedmlDocument();
+
+    if (sedmlDocument->getNumModels() == 1) {
+        libsedml::SedModel *model = sedmlDocument->getModel(0);
+        QString language = QString::fromStdString(model->getLanguage());
+
+        if (   !language.compare(SEDMLSupport::Language::Cellml)
+            || !language.compare(SEDMLSupport::Language::Cellml_1_0)
+            || !language.compare(SEDMLSupport::Language::Cellml_1_1)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::retrieveCellmlFile()
+{
+    // Make sure that we support our SED-ML
+
+    if (!sedmlFileSupported())
+        return;
+
+    // Retrieve the source of the CellML file, if any, referenced in our SED-ML
+    // file
+
+    QString modelSource = QString::fromStdString(mSedmlFile->sedmlDocument()->getModel(0)->getSource());
+
+    // By default, we consider the file name to be relative to the location of
+    // our SED-ML file
+
+    QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(mFileName).path()+QDir::separator()+modelSource);
+
+    if (QFile::exists(cellmlFileName))
+        mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+//---ISSUE825--- HANDLE THE CASE OF A REMOTE FILE...
 }
 
 //==============================================================================

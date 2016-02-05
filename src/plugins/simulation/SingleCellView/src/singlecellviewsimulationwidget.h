@@ -268,6 +268,8 @@ private:
 
     void checkSimulationDataModified(const bool &pIsModified);
 
+    bool sedmlFileSupported() const;
+
     void retrieveCellmlFile();
     void retrieveSedmlFile();
 
