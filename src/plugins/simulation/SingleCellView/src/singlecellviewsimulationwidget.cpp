@@ -404,6 +404,12 @@ SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
 
     delete mSimulation;
 
+    if (mFileType != CellmlFile)
+        delete mCellmlFile;
+
+    if (mFileType != SedmlFile)
+        delete mSedmlFile;
+
     // Delete the GUI
 
     delete mGui;
