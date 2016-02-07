@@ -2,10 +2,10 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::RawView::RawViewPlugin</name>
+    <name>OpenCOR::RawTextView::RawTextViewPlugin</name>
     <message>
-        <source>Raw</source>
-        <translation>Brut</translation>
+        <source>Raw Text</source>
+        <translation>Texte Brut</translation>
     </message>
 </context>
 </TS>
