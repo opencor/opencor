@@ -16,71 +16,64 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Raw view widget
+// RawTextView plugin
 //==============================================================================
 
-#ifndef RAWVIEWWIDGET_H
-#define RAWVIEWWIDGET_H
-
-//==============================================================================
-
-#include "viewwidget.h"
+#ifndef RAWTEXTVIEWPLUGIN_H
+#define RAWTEXTVIEWPLUGIN_H
 
 //==============================================================================
 
-#include <QMap>
+#include "editinginterface.h"
+#include "filehandlinginterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace RawTextView {
 
 //==============================================================================
 
-namespace Editor {
-    class EditorWidget;
-}   // namespace Editor
+PLUGININFO_FUNC RawTextViewPluginInfo();
 
 //==============================================================================
 
-namespace RawView {
+class RawTextViewWidget;
 
 //==============================================================================
 
-class RawViewWidget : public Core::ViewWidget
+class RawTextViewPlugin : public QObject, public EditingInterface,
+                          public FileHandlingInterface, public I18nInterface,
+                          public PluginInterface, public ViewInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.RawTextViewPlugin" FILE "rawtextviewplugin.json")
+
+    Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::ViewInterface)
+
 public:
-    explicit RawViewWidget(QWidget *pParent);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void retranslateUi();
-
-    bool contains(const QString &pFileName) const;
-
-    void initialize(const QString &pFileName, const bool &pUpdate = true);
-    void finalize(const QString &pFileName);
-
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-
-    Editor::EditorWidget * editor(const QString &pFileName) const;
-
-    virtual QList<QWidget *> statusBarWidgets() const;
+#include "editinginterface.inl"
+#include "filehandlinginterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "viewinterface.inl"
 
 private:
-    bool mNeedLoadingSettings;
-    QString mSettingsGroup;
-
-    Editor::EditorWidget *mEditor;
-    QMap<QString, Editor::EditorWidget *> mEditors;
+    RawTextViewWidget *mViewWidget;
 };
 
 //==============================================================================
 
-}   // namespace RawView
+}   // namespace RawTextView
 }   // namespace OpenCOR
 
 //==============================================================================
