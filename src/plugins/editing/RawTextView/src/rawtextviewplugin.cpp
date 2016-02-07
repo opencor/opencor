@@ -16,14 +16,14 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawView plugin
+// RawTextView plugin
 //==============================================================================
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
-#include "rawviewplugin.h"
-#include "rawviewwidget.h"
+#include "rawtextviewplugin.h"
+#include "rawtextviewwidget.h"
 
 //==============================================================================
 
@@ -33,16 +33,16 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace RawView {
+namespace RawTextView {
 
 //==============================================================================
 
-PLUGININFO_FUNC RawViewPluginInfo()
+PLUGININFO_FUNC RawTextViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit files using a text editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers à l'aide d'un éditeur de texte."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to edit text-based files using a text editor."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte."));
 
     return new PluginInfo("Editing", true, false,
                           QStringList() << "CoreEditing",
@@ -53,7 +53,7 @@ PLUGININFO_FUNC RawViewPluginInfo()
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
+Editor::EditorWidget * RawTextViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -62,7 +62,7 @@ Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
 
 //==============================================================================
 
-bool RawViewPlugin::isEditorUseable(const QString &pFileName) const
+bool RawTextViewPlugin::isEditorUseable(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -73,7 +73,7 @@ bool RawViewPlugin::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool RawViewPlugin::isEditorContentsModified(const QString &pFileName) const
+bool RawTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file
@@ -89,9 +89,9 @@ bool RawViewPlugin::isEditorContentsModified(const QString &pFileName) const
 // File handling interface
 //==============================================================================
 
-bool RawViewPlugin::saveFile(const QString &pOldFileName,
-                             const QString &pNewFileName,
-                             bool &pNeedFeedback)
+bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
+                                 const QString &pNewFileName,
+                                 bool &pNeedFeedback)
 {
     Q_UNUSED(pNeedFeedback);
 
@@ -106,7 +106,7 @@ bool RawViewPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void RawViewPlugin::fileOpened(const QString &pFileName)
+void RawTextViewPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -115,7 +115,7 @@ void RawViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::filePermissionsChanged(const QString &pFileName)
+void RawTextViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -124,7 +124,7 @@ void RawViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileModified(const QString &pFileName)
+void RawTextViewPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -133,7 +133,7 @@ void RawViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileReloaded(const QString &pFileName)
+void RawTextViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let our view widget know about it
 
@@ -142,8 +142,8 @@ void RawViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileRenamed(const QString &pOldFileName,
-                                const QString &pNewFileName)
+void RawTextViewPlugin::fileRenamed(const QString &pOldFileName,
+                                    const QString &pNewFileName)
 {
     // The given file has been renamed, so let our view widget know about it
 
@@ -152,7 +152,7 @@ void RawViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void RawViewPlugin::fileSaved(const QString &pFileName)
+void RawTextViewPlugin::fileSaved(const QString &pFileName)
 {
     // The given file has been saved, but because it was done directly by
     // manipulating the file, we need to ask our file manager to reload it, so
@@ -164,7 +164,7 @@ void RawViewPlugin::fileSaved(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileClosed(const QString &pFileName)
+void RawTextViewPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -175,7 +175,7 @@ void RawViewPlugin::fileClosed(const QString &pFileName)
 // I18n interface
 //==============================================================================
 
-void RawViewPlugin::retranslateUi()
+void RawTextViewPlugin::retranslateUi()
 {
     // Retranslate our view widget
 
@@ -186,13 +186,13 @@ void RawViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawViewPlugin::initializePlugin()
+void RawTextViewPlugin::initializePlugin()
 {
-    // Create our raw view widget
+    // Create our raw text view widget
 
-    mViewWidget = new RawViewWidget(Core::mainWindow());
+    mViewWidget = new RawTextViewWidget(Core::mainWindow());
 
-    // Hide our raw view widget since it may not initially be shown in our
+    // Hide our raw text view widget since it may not initially be shown in our
     // central widget
 
     mViewWidget->setVisible(false);
@@ -200,14 +200,14 @@ void RawViewPlugin::initializePlugin()
 
 //==============================================================================
 
-void RawViewPlugin::finalizePlugin()
+void RawTextViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void RawViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void RawTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -216,9 +216,9 @@ void RawViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void RawViewPlugin::loadSettings(QSettings *pSettings)
+void RawTextViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our raw view widget settings
+    // Retrieve our raw text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -227,9 +227,9 @@ void RawViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void RawViewPlugin::saveSettings(QSettings *pSettings) const
+void RawTextViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our raw view widget settings
+    // Keep track of our raw text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -238,7 +238,7 @@ void RawViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawViewPlugin::handleAction(const QUrl &pUrl)
+void RawTextViewPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -249,7 +249,7 @@ void RawViewPlugin::handleAction(const QUrl &pUrl)
 // View interface
 //==============================================================================
 
-ViewInterface::Mode RawViewPlugin::viewMode() const
+ViewInterface::Mode RawTextViewPlugin::viewMode() const
 {
     // Return our mode
 
@@ -258,7 +258,7 @@ ViewInterface::Mode RawViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawViewPlugin::viewMimeTypes() const
+QStringList RawTextViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support, i.e. any in our case
 
@@ -267,7 +267,7 @@ QStringList RawViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QString RawViewPlugin::viewDefaultFileExtension() const
+QString RawTextViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support
 
@@ -276,7 +276,7 @@ QString RawViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-bool RawViewPlugin::hasViewWidget(const QString &pFileName)
+bool RawTextViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we have a view widget for the given file
 
@@ -285,11 +285,16 @@ bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
+QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Update and return our raw view widget using the given file
-    // Note: we temporarily disable updates for our raw view widget, so as to
-    //       avoid any risk of known/unknown/potential flickering...
+    // Make sure that we are dealing with a text file
+
+    if (!Core::isTextFile(pFileName))
+        return 0;
+
+    // Update and return our raw text view widget using the given file
+    // Note: we temporarily disable updates for our raw text view widget, so as
+    //       to avoid any risk of known/unknown/potential flickering...
 
     mViewWidget->setUpdatesEnabled(false);
         mViewWidget->initialize(pFileName);
@@ -300,25 +305,25 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::removeViewWidget(const QString &pFileName)
+void RawTextViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our raw view widget to finalise the given file
+    // Ask our raw text view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
 }
 
 //==============================================================================
 
-QString RawViewPlugin::viewName() const
+QString RawTextViewPlugin::viewName() const
 {
-    // Return our raw view's name
+    // Return our raw text view's name
 
-    return tr("Raw");
+    return tr("Raw Text");
 }
 
 //==============================================================================
 
-QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
+QIcon RawTextViewPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -331,7 +336,7 @@ QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace RawView
+}   // namespace RawTextView
 }   // namespace OpenCOR
 
 //==============================================================================

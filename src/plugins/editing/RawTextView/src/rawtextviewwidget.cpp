@@ -16,13 +16,13 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Raw view widget
+// Raw text view widget
 //==============================================================================
 
 #include "corecliutils.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "rawviewwidget.h"
+#include "rawtextviewwidget.h"
 
 //==============================================================================
 
@@ -33,11 +33,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace RawView {
+namespace RawTextView {
 
 //==============================================================================
 
-RawViewWidget::RawViewWidget(QWidget *pParent) :
+RawTextViewWidget::RawTextViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
@@ -48,7 +48,7 @@ RawViewWidget::RawViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void RawViewWidget::loadSettings(QSettings *pSettings)
+void RawTextViewWidget::loadSettings(QSettings *pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
@@ -60,7 +60,7 @@ void RawViewWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void RawViewWidget::saveSettings(QSettings *pSettings) const
+void RawTextViewWidget::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
     // Note: our view is such that our settings are actually saved when calling
@@ -69,7 +69,7 @@ void RawViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawViewWidget::retranslateUi()
+void RawTextViewWidget::retranslateUi()
 {
     // Retranslate our viewer and editor
 
@@ -79,7 +79,7 @@ void RawViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool RawViewWidget::contains(const QString &pFileName) const
+bool RawTextViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file
 
@@ -88,8 +88,8 @@ bool RawViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawViewWidget::initialize(const QString &pFileName,
-                               const bool &pUpdate)
+void RawTextViewWidget::initialize(const QString &pFileName,
+                                   const bool &pUpdate)
 {
     // Retrieve the editor associated with the given file, if any
 
@@ -161,7 +161,7 @@ void RawViewWidget::initialize(const QString &pFileName,
 
 //==============================================================================
 
-void RawViewWidget::finalize(const QString &pFileName)
+void RawTextViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editor, should there be one for the given file
 
@@ -192,7 +192,7 @@ void RawViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewWidget::fileReloaded(const QString &pFileName)
+void RawTextViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
     // Note: if the view for the given file is not the active view, then to call
@@ -211,8 +211,8 @@ void RawViewWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewWidget::fileRenamed(const QString &pOldFileName,
-                                const QString &pNewFileName)
+void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
+                                    const QString &pNewFileName)
 {
     // The given file has been renamed, so update our editors mapping
 
@@ -226,7 +226,7 @@ void RawViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-Editor::EditorWidget * RawViewWidget::editor(const QString &pFileName) const
+Editor::EditorWidget * RawTextViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -235,7 +235,7 @@ Editor::EditorWidget * RawViewWidget::editor(const QString &pFileName) const
 
 //==============================================================================
 
-QList<QWidget *> RawViewWidget::statusBarWidgets() const
+QList<QWidget *> RawTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
@@ -248,7 +248,7 @@ QList<QWidget *> RawViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-}   // namespace RawView
+}   // namespace RawTextView
 }   // namespace OpenCOR
 
 //==============================================================================

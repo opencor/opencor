@@ -35,6 +35,11 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
+                           { "type": "subCategory", "name": "Raw Text view",
+                             "entries": [
+                               { "type": "Improved", "description": "Support for text files." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "Raw CellML view",
                              "entries": [
                                { "type": "Fixed", "description": "Reformatting unescaping HTML entities." }
@@ -180,7 +185,7 @@ var jsonData = { "versions": [
                                { "type": "Fixed", "description": "Risk of the same <code>cmeta:id</code> value being used for two different CellML elements." }
                              ]
                            },
-                           { "type": "subCategory", "name": "Raw view",
+                           { "type": "subCategory", "name": "Raw Text view",
                              "entries": [
                                { "type": "Improved", "description": "File permissions changes." }
                              ]
@@ -284,7 +289,7 @@ var jsonData = { "versions": [
                                { "type": "Fixed", "description": "Listing of suggested ontological terms." }
                              ]
                            },
-                           { "type": "Added", "description": "<a href=\"plugins/editing/RawView.html\">Raw view</a>." },
+                           { "type": "Added", "description": "<a href=\"plugins/editing/RawTextView.html\">Raw Text view</a>." },
                            { "type": "Added", "description": "<a href=\"plugins/editing/RawCellMLView.html\">Raw CellML view</a>." }
                          ]
                        },

@@ -340,7 +340,7 @@ SET(PLUGINS
     editing/CellMLTextView
     editing/RawCellMLView
     editing/RawSEDMLView
-    editing/RawView
+    editing/RawTextView
 
     miscellaneous/HelpWindow
 

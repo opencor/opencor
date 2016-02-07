@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> imrpoved the retrieval of a save file name (see issue <a href=\"https://github.com/opencor/opencor/issues/881\">#881</a>)." },
+                       { "change": "<strong>General:</strong> improved the retrieval of a save file name (see issue <a href=\"https://github.com/opencor/opencor/issues/881\">#881</a>). Made it possible to detect file changes in binary files (see issue <a href=\"https://github.com/opencor/opencor/issues/882\">#882</a>)." },
+                       { "change": "<strong>Raw Text view:</strong> only allow text-based files (see issue <a href=\"https://github.com/opencor/opencor/issues/884\">#884</a>)." },
                        { "change": "<strong>Single Cell view:</strong> fixed a small problem with the progress bar not always getting reset (see issue <a href=\"https://github.com/opencor/opencor/issues/879\">#879</a>)." }
                      ]
                    },
