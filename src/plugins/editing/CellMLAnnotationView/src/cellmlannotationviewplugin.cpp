@@ -236,6 +236,17 @@ QString CellMLAnnotationViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
+bool CellMLAnnotationViewPlugin::showBusyWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file

@@ -276,6 +276,17 @@ QString RawTextViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
+bool RawTextViewPlugin::showBusyWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawTextViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we have a view widget for the given file

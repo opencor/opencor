@@ -301,6 +301,17 @@ QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
+bool RawSEDMLViewPlugin::showBusyWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawSEDMLViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a SED-ML file

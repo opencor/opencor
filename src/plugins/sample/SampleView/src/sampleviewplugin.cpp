@@ -247,6 +247,17 @@ QString SampleViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
+bool SampleViewPlugin::showBusyWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we have a view widget for the given file, which is always

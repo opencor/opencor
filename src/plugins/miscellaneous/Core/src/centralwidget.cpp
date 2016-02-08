@@ -1642,13 +1642,16 @@ void CentralWidget::updateGui()
         newView = mLogoView;
     } else {
         // There is a current file, so retrieve its view, showing our busy
-        // widget, if necessary
+        // widget, if we are dealing with a remote file or if the view requires
+        // it
 
         bool isRemoteFile = FileManager::instance()->isRemote(fileName);
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
-        if (isRemoteFile && !isBusyWidgetVisible() && !hasView) {
+        if (   (   isRemoteFile
+                || viewInterface?viewInterface->showBusyWidget(fileName):false)
+            && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
             //       coming here as a result of the user opening a remote file,
             //       as opposed to just switching files/modes/views...

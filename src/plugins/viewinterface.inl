@@ -8,6 +8,8 @@
     virtual QStringList viewMimeTypes() const PURE;
     virtual QString viewDefaultFileExtension() const PURE;
 
+    virtual bool showBusyWidget(const QString &pFileName) PURE;
+
     virtual bool hasViewWidget(const QString &pFileName) PURE;
     virtual QWidget * viewWidget(const QString &pFileName) PURE;
     virtual void removeViewWidget(const QString &pFileName) PURE;

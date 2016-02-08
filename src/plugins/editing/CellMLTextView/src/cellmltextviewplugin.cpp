@@ -290,6 +290,17 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
+bool CellMLTextViewPlugin::showBusyWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLTextViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file

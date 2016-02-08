@@ -273,6 +273,17 @@ QString SingleCellViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
+bool SingleCellViewPlugin::showBusyWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
