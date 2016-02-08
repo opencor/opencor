@@ -54,9 +54,6 @@ namespace Core {
 
 //==============================================================================
 
-void CORE_EXPORT showCentralBusyWidget();
-void CORE_EXPORT hideCentralBusyWidget();
-
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QString &pFilters = QString(),
                                     QString *pSelectedFilter = 0);
