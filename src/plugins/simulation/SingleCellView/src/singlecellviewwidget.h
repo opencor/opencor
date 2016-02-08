@@ -87,7 +87,8 @@ public:
                              OpenCOR::COMBINESupport::CombineArchive *&pCombineArchive,
                              SingleCellViewFileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             QString &pCombineArchiveIssue) const;
+                             QString &pCombineArchiveIssue,
+                             bool *pIsDirectOrIndirectRemoteFile = 0) const;
 
 private:
     SingleCellViewPlugin *mPlugin;
@@ -123,7 +124,8 @@ private:
     void retrieveCellmlFile(const QString &pFileName,
                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
-                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                            bool *pIsDirectOrIndirectRemoteFile) const;
     void retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
                            QString &pCombineArchiveIssue) const;
 

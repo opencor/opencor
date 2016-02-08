@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "collapsiblewidget.h"
 #include "combinefilemanager.h"
+#include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationgraphswidget.h"
@@ -128,17 +129,24 @@ bool SingleCellViewWidget::isDirectOrIndirectRemoteFile(const QString &pFileName
     // Return whether the given file is a direct or indirect remote file by
     // retrieving the details of the given file
 
-    CellMLSupport::CellmlFile *cellmlFile = 0;
-    SEDMLSupport::SedmlFile *sedmlFile = 0;
-    COMBINESupport::CombineArchive *combineArchive = 0;
-    SingleCellViewFileType fileType;
-    SEDMLSupport::SedmlFileIssues sedmlFileIssues;
-    QString combineArchiveIssue;
+    Core::File *file = Core::FileManager::instance()->file(pFileName);
 
-    retrieveFileDetails(pFileName, cellmlFile, sedmlFile, combineArchive,
-                        fileType, sedmlFileIssues, combineArchiveIssue);
+    if (file->isRemote()) {
+        return true;
+    } else {
+        CellMLSupport::CellmlFile *cellmlFile = 0;
+        SEDMLSupport::SedmlFile *sedmlFile = 0;
+        COMBINESupport::CombineArchive *combineArchive = 0;
+        SingleCellViewFileType fileType;
+        SEDMLSupport::SedmlFileIssues sedmlFileIssues;
+        QString combineArchiveIssue;
+        bool res = false;
 
-    return false;
+        retrieveFileDetails(pFileName, cellmlFile, sedmlFile, combineArchive,
+                            fileType, sedmlFileIssues, combineArchiveIssue, &res);
+
+        return res;
+    }
 }
 
 //==============================================================================
@@ -754,7 +762,8 @@ pCombineArchiveIssue = "still under development";
 void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                               CellMLSupport::CellmlFile *&pCellmlFile,
                                               SEDMLSupport::SedmlFile *pSedmlFile,
-                                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
+                                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                                              bool *pIsDirectOrIndirectRemoteFile) const
 {
     // Make sure that we support our SED-ML
 
@@ -769,30 +778,43 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
     // Check whether we are dealing with a local file (which is location is
     // relative to that of our SED-ML file) or a remote file
 
-    bool isLocalFile;
-    QString fileNameOrUrl;
+    if (pIsDirectOrIndirectRemoteFile) {
+        // We only want to determine whether we are dealing with a local file or
+        // a remote one
 
-    Core::checkFileNameOrUrl(modelSource, isLocalFile, fileNameOrUrl);
+        QString dummy;
 
-    if (isLocalFile) {
-        QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pFileName).path()+QDir::separator()+modelSource);
+        Core::checkFileNameOrUrl(modelSource, *pIsDirectOrIndirectRemoteFile, dummy);
 
-        if (QFile::exists(cellmlFileName)) {
-            pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
-        } else {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("%1 could not be found").arg(modelSource));
-        }
+        *pIsDirectOrIndirectRemoteFile = !*pIsDirectOrIndirectRemoteFile;
+        // Note: since Core::checkFileNameOrUrl() tells us whether we are
+        //       dealing with a local file...
     } else {
-        QString fileContents;
-        QString errorMessage;
+        bool isLocalFile;
+        QString dummy;
 
-        if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             QString("%1 has successfully been read").arg(modelSource));
+        Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
+
+        if (isLocalFile) {
+            QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pFileName).path()+QDir::separator()+modelSource);
+
+            if (QFile::exists(cellmlFileName)) {
+                pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+            } else {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                 tr("%1 could not be found").arg(modelSource));
+            }
         } else {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+            QString fileContents;
+            QString errorMessage;
+
+            if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 QString("%1 has successfully been read").arg(modelSource));
+            } else {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                 tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+            }
         }
     }
 //---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
@@ -818,7 +840,8 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
                                                COMBINESupport::CombineArchive *&pCombineArchive,
                                                SingleCellViewFileType &pFileType,
                                                SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                               QString &pCombineArchiveIssue) const
+                                               QString &pCombineArchiveIssue,
+                                               bool *pIsDirectOrIndirectRemoteFile) const
 {
     // Determine the type of file we are dealing with
 
@@ -838,8 +861,10 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     if (pCombineArchive)
         retrieveSedmlFile(pCombineArchive, pCombineArchiveIssue);
 
-    if (pSedmlFile)
-        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pSedmlFileIssues);
+    if (pSedmlFile) {
+        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pSedmlFileIssues,
+                           pIsDirectOrIndirectRemoteFile);
+    }
 }
 
 //==============================================================================
