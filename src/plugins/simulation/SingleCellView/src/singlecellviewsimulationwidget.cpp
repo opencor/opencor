@@ -2737,9 +2737,21 @@ void SingleCellViewSimulationWidget::retrieveCellmlFile()
                                                              tr("%1 could not be found").arg(modelSource));
         }
     } else {
-        mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         "remote files are not yet supported");
-    }
+        Core::showCentralBusyWidget();
+
+        QString fileContents;
+        QString errorMessage;
+
+        if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
+            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             QString("%1 has successfully been read").arg(modelSource));
+        } else {
+            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+        }
+
+        Core::hideCentralBusyWidget();
+   }
 //---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
 }
 

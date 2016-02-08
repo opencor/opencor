@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // GUI utilities
 //==============================================================================
 
+#include "centralwidget.h"
 #include "corecliutils.h"
 #include "commonwidget.h"
 #include "coreguiutils.h"
@@ -55,6 +56,50 @@ namespace Core {
 //==============================================================================
 
 #include "coreguiutils.cpp.inl"
+
+//==============================================================================
+
+CentralWidget * centralWidget()
+{
+    // Retrieve and return our central widget
+
+    static bool firstTime = true;
+    static CentralWidget *res = 0;
+
+    if (firstTime) {
+        foreach (QObject *object, mainWindow()->children()) {
+            if (object->inherits("OpenCOR::Core::CentralWidget")) {
+                res = qobject_cast<CentralWidget *>(object);
+
+                break;
+            }
+        }
+
+        firstTime = false;
+    }
+
+    Q_ASSERT(res);
+
+    return res;
+}
+
+//==============================================================================
+
+void showCentralBusyWidget()
+{
+    // Show our central widget's busy widget
+
+    centralWidget()->showBusyWidget(centralWidget());
+}
+
+//==============================================================================
+
+void hideCentralBusyWidget()
+{
+    // Hide our central widget's busy widget
+
+    centralWidget()->hideBusyWidget();
+}
 
 //==============================================================================
 
