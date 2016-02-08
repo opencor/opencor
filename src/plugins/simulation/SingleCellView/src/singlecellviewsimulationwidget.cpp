@@ -2719,18 +2719,28 @@ void SingleCellViewSimulationWidget::retrieveCellmlFile()
 
     QString modelSource = QString::fromStdString(mSedmlFile->sedmlDocument()->getModel(0)->getSource());
 
-    // By default, we consider the file name to be relative to the location of
-    // our SED-ML file
+    // Check whether we are dealing with a local file (which is location is
+    // relative to that of our SED-ML file) or a remote file
 
-    QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(mFileName).path()+QDir::separator()+modelSource);
+    bool isLocalFile;
+    QString fileNameOrUrl;
 
-    if (QFile::exists(cellmlFileName)) {
-        mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+    Core::checkFileNameOrUrl(modelSource, isLocalFile, fileNameOrUrl);
+
+    if (isLocalFile) {
+        QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(mFileName).path()+QDir::separator()+modelSource);
+
+        if (QFile::exists(cellmlFileName)) {
+            mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+        } else {
+            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("%1 could not be found").arg(modelSource));
+        }
     } else {
-        mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("%1 could not be found").arg(modelSource));
+        mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         "remote files are not yet supported");
     }
-//---ISSUE825--- HANDLE THE CASE OF A REMOTE FILE...
+//---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
 }
 
 //==============================================================================
