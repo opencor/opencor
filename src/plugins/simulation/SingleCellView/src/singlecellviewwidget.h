@@ -24,8 +24,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "singlecellviewsimulation.h"
+#include "cellmlfile.h"
+#include "combinearchive.h"
+#include "sedmlfile.h"
 #include "singlecellviewsimulationwidget.h"
 #include "viewwidget.h"
 
@@ -37,6 +38,7 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewPlugin;
+class SingleCellViewSimulation;
 
 //==============================================================================
 

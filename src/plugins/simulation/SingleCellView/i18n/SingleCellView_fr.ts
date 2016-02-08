@@ -336,6 +336,9 @@
         <source>Fatal:</source>
         <translation>Fatal :</translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
     <message>
         <source>only SED-ML files with a CellML file are supported</source>
         <translation>seulement les fichiers SED-ML avec un fichier CellML sont supportés</translation>
@@ -345,12 +348,12 @@
         <translation>seulement les fichiers SED-ML avec un modèle sont supportés</translation>
     </message>
     <message>
-        <source>%1 could not be found</source>
-        <translation>%1 n&apos;a pas pu être trouvé</translation>
-    </message>
-    <message>
         <source>only COMBINE archives with one master file are supported</source>
         <translation>seulement les archives COMBINE avec un fichier maître sont supportés</translation>
+    </message>
+    <message>
+        <source>%1 could not be found</source>
+        <translation>%1 n&apos;a pas pu être trouvé</translation>
     </message>
     <message>
         <source>%1 could not be opened (%2)</source>

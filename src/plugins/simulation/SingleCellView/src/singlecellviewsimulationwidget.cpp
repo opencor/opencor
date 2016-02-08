@@ -19,13 +19,10 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation widget
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "combinearchive.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
-#include "sedmlfile.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelswidget.h"
@@ -35,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewplugin.h"
+#include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 #include "toolbarwidget.h"
@@ -48,7 +46,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QDesktopWidget>
 #include <QDir>
-#include <QFileInfo>
 #include <QLabel>
 #include <QMainWindow>
 #include <QMenu>
@@ -65,8 +62,21 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sbmlapidisablewarnings.h"
+    #include "sbml/math/FormulaParser.h"
+#include "sbmlapienablewarnings.h"
+
+//==============================================================================
+
 #include "sedmlapidisablewarnings.h"
-    #include "sedml/SedTypes.h"
+    #include "sedml/SedAlgorithm.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedOneStep.h"
+    #include "sedml/SedPlot2D.h"
+    #include "sedml/SedRepeatedTask.h"
+    #include "sedml/SedSimulation.h"
+    #include "sedml/SedUniformTimeCourse.h"
+    #include "sedml/SedVectorRange.h"
 #include "sedmlapienablewarnings.h"
 
 //==============================================================================

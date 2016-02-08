@@ -30,7 +30,7 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewinformationwidget.h"
-#include "singlecellviewsimulationwidget.h"
+#include "singlecellviewsimulation.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
