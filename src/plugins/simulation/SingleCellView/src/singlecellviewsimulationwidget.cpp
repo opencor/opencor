@@ -19,13 +19,13 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation widget
 //==============================================================================
 
-#include "cellmlfilemanager.h"
-#include "combinefilemanager.h"
+#include "cellmlfile.h"
+#include "combinearchive.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
-#include "sedmlfilemanager.h"
+#include "sedmlfile.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelswidget.h"
@@ -351,9 +351,11 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     setFocusProxy(mContentsWidget);
 
     // Create our simulation object and a few connections for it, after having
-    // updated our file details
+    // retrieved our file details
 
-    updateFileDetails();
+    mViewWidget->retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile,
+                                     mCombineArchive, mFileType,
+                                     mSedmlFileIssues, mCombineArchiveIssue);
 
     mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
@@ -592,10 +594,13 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     mProgress = -1;
 
-    // Update our file details and simulation object, if needed
+    // Retrieve our file details and update our simulation object, if needed
 
-    if (pReloadingView)
-        updateFileDetails();
+    if (pReloadingView) {
+        mViewWidget->retrieveFileDetails(mFileName, mCellmlFile, mSedmlFile,
+                                         mCombineArchive, mFileType,
+                                         mSedmlFileIssues, mCombineArchiveIssue);
+    }
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
 
@@ -2640,147 +2645,6 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
         return ErrorNodeIcon;
     }
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationWidget::sedmlFileSupported()
-{
-//---ISSUE825--- TO BE DONE...
-    // Make sure that there is only one model referenced in our SED-ML file and
-    // that it is of CellML type
-
-    libsedml::SedDocument *sedmlDocument = mSedmlFile->sedmlDocument();
-
-    if (sedmlDocument->getNumModels() == 1) {
-        libsedml::SedModel *model = sedmlDocument->getModel(0);
-        QString language = QString::fromStdString(model->getLanguage());
-
-        if (   !language.compare(SEDMLSupport::Language::Cellml)
-            || !language.compare(SEDMLSupport::Language::Cellml_1_0)
-            || !language.compare(SEDMLSupport::Language::Cellml_1_1)) {
-            return true;
-        } else {
-            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with a CellML file are supported"));
-
-            return false;
-        }
-    } else {
-        mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one model are supported"));
-
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationWidget::combineArchiveSupported()
-{
-//---ISSUE825--- TO BE DONE...
-    // Load our COMBINE archive
-
-    if (mCombineArchive->load()) {
-        // Make sure that there is only one master file in our COMBINE archive
-
-        if (mCombineArchive->masterFiles().count() == 1) {
-mCombineArchiveIssue = "still under development";
-
-            return true;
-        } else {
-            mCombineArchiveIssue = tr("only COMBINE archives with one master file are supported");
-
-            return false;
-        }
-    } else {
-        mCombineArchiveIssue = mCombineArchive->issue();
-
-        return false;
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::retrieveCellmlFile()
-{
-    // Make sure that we support our SED-ML
-
-    if (!sedmlFileSupported())
-        return;
-
-    // Retrieve the source of the CellML file, if any, referenced in our SED-ML
-    // file
-
-    QString modelSource = QString::fromStdString(mSedmlFile->sedmlDocument()->getModel(0)->getSource());
-
-    // Check whether we are dealing with a local file (which is location is
-    // relative to that of our SED-ML file) or a remote file
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    Core::checkFileNameOrUrl(modelSource, isLocalFile, fileNameOrUrl);
-
-    if (isLocalFile) {
-        QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(mFileName).path()+QDir::separator()+modelSource);
-
-        if (QFile::exists(cellmlFileName)) {
-            mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
-        } else {
-            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("%1 could not be found").arg(modelSource));
-        }
-    } else {
-        QString fileContents;
-        QString errorMessage;
-
-        if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
-            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             QString("%1 has successfully been read").arg(modelSource));
-        } else {
-            mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
-        }
-    }
-//---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::retrieveSedmlFile()
-{
-    // Make sure that we support our COMBINE archive
-
-    if (!combineArchiveSupported())
-        return;
-//---ISSUE825--- TO BE DONE...
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::updateFileDetails()
-{
-    // Determine the type of file we are dealing with
-
-    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-    mSedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
-    mCombineArchive = COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
-
-    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
-
-    mSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
-    mCombineArchiveIssue = QString();
-
-    // In the case of a COMBINE archive, we need to retrieve the corresponding
-    // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
-    // corresponding CellML file
-
-    if (mCombineArchive)
-        retrieveSedmlFile();
-
-    if (mSedmlFile)
-        retrieveCellmlFile();
 }
 
 //==============================================================================

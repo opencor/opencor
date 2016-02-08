@@ -101,6 +101,14 @@ class SingleCellViewWidget;
 
 //==============================================================================
 
+enum SingleCellViewFileType {
+    CellmlFile,
+    SedmlFile,
+    CombineArchive
+};
+
+//==============================================================================
+
 class SingleCellViewSimulationWidget : public Core::Widget
 {
     Q_OBJECT
@@ -146,12 +154,6 @@ public:
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
-    enum FileType {
-        CellmlFile,
-        SedmlFile,
-        CombineArchive
-    };
-
     enum ErrorType {
         General,
         InvalidCellmlFile,
@@ -199,7 +201,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    FileType mFileType;
+    SingleCellViewFileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
     QString mCombineArchiveIssue;
@@ -259,14 +261,6 @@ private:
     bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
-
-    bool sedmlFileSupported();
-    bool combineArchiveSupported();
-
-    void retrieveCellmlFile();
-    void retrieveSedmlFile();
-
-    void updateFileDetails();
 
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);

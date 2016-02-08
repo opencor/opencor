@@ -19,7 +19,10 @@ specific language governing permissions and limitations under the License.
 // Single cell view widget
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "collapsiblewidget.h"
+#include "combinefilemanager.h"
+#include "sedmlfilemanager.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
@@ -33,10 +36,17 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QDir>
 #include <QHeaderView>
 #include <QLayout>
 #include <QSettings>
 #include <QTimer>
+
+//==============================================================================
+
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/SedDocument.h"
+#include "sedmlapienablewarnings.h"
 
 //==============================================================================
 
@@ -115,9 +125,18 @@ void SingleCellViewWidget::retranslateUi()
 
 bool SingleCellViewWidget::isDirectOrIndirectRemoteFile(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    // Return whether the given file is a direct or indirect remote file by
+    // retrieving the details of the given file
 
-    // Return whether the given file is a direct or indirect remote file
+    CellMLSupport::CellmlFile *cellmlFile = 0;
+    SEDMLSupport::SedmlFile *sedmlFile = 0;
+    COMBINESupport::CombineArchive *combineArchive = 0;
+    SingleCellViewFileType fileType;
+    SEDMLSupport::SedmlFileIssues sedmlFileIssues;
+    QString combineArchiveIssue;
+
+    retrieveFileDetails(pFileName, cellmlFile, sedmlFile, combineArchive,
+                        fileType, sedmlFileIssues, combineArchiveIssue);
 
     return false;
 }
@@ -668,6 +687,159 @@ void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimu
 
     for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
         parametersWidget->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
+}
+
+//==============================================================================
+
+bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
+                                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
+{
+//---ISSUE825--- TO BE DONE...
+    // Make sure that there is only one model referenced in our SED-ML file and
+    // that it is of CellML type
+
+    libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
+
+    if (sedmlDocument->getNumModels() == 1) {
+        libsedml::SedModel *model = sedmlDocument->getModel(0);
+        QString language = QString::fromStdString(model->getLanguage());
+
+        if (   !language.compare(SEDMLSupport::Language::Cellml)
+            || !language.compare(SEDMLSupport::Language::Cellml_1_0)
+            || !language.compare(SEDMLSupport::Language::Cellml_1_1)) {
+            return true;
+        } else {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with a CellML file are supported"));
+
+            return false;
+        }
+    } else {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with one model are supported"));
+
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
+                                                   QString &pCombineArchiveIssue) const
+{
+//---ISSUE825--- TO BE DONE...
+    // Load our COMBINE archive
+
+    if (pCombineArchive->load()) {
+        // Make sure that there is only one master file in our COMBINE archive
+
+        if (pCombineArchive->masterFiles().count() == 1) {
+pCombineArchiveIssue = "still under development";
+
+            return true;
+        } else {
+            pCombineArchiveIssue = tr("only COMBINE archives with one master file are supported");
+
+            return false;
+        }
+    } else {
+        pCombineArchiveIssue = pCombineArchive->issue();
+
+        return false;
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
+                                              CellMLSupport::CellmlFile *&pCellmlFile,
+                                              SEDMLSupport::SedmlFile *pSedmlFile,
+                                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
+{
+    // Make sure that we support our SED-ML
+
+    if (!sedmlFileSupported(pSedmlFile, pSedmlFileIssues))
+        return;
+
+    // Retrieve the source of the CellML file, if any, referenced in our SED-ML
+    // file
+
+    QString modelSource = QString::fromStdString(pSedmlFile->sedmlDocument()->getModel(0)->getSource());
+
+    // Check whether we are dealing with a local file (which is location is
+    // relative to that of our SED-ML file) or a remote file
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    Core::checkFileNameOrUrl(modelSource, isLocalFile, fileNameOrUrl);
+
+    if (isLocalFile) {
+        QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pFileName).path()+QDir::separator()+modelSource);
+
+        if (QFile::exists(cellmlFileName)) {
+            pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+        } else {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("%1 could not be found").arg(modelSource));
+        }
+    } else {
+        QString fileContents;
+        QString errorMessage;
+
+        if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             QString("%1 has successfully been read").arg(modelSource));
+        } else {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+        }
+    }
+//---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
+                                             QString &pCombineArchiveIssue) const
+{
+    // Make sure that we support our COMBINE archive
+
+    if (!combineArchiveSupported(pCombineArchive, pCombineArchiveIssue))
+        return;
+//---ISSUE825--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
+                                               CellMLSupport::CellmlFile *&pCellmlFile,
+                                               SEDMLSupport::SedmlFile *&pSedmlFile,
+                                               COMBINESupport::CombineArchive *&pCombineArchive,
+                                               SingleCellViewFileType &pFileType,
+                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                                               QString &pCombineArchiveIssue) const
+{
+    // Determine the type of file we are dealing with
+
+    pCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    pSedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
+    pCombineArchive = COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName);
+
+    pFileType = pCellmlFile?CellmlFile:SedmlFile?SedmlFile:CombineArchive;
+
+    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
+    pCombineArchiveIssue = QString();
+
+    // In the case of a COMBINE archive, we need to retrieve the corresponding
+    // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
+    // corresponding CellML file
+
+    if (pCombineArchive)
+        retrieveSedmlFile(pCombineArchive, pCombineArchiveIssue);
+
+    if (pSedmlFile)
+        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pSedmlFileIssues);
 }
 
 //==============================================================================

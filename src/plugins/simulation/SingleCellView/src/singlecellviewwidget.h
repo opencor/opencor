@@ -81,6 +81,14 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 const bool &pForceUpdateSimulationResults = false);
 
+    void retrieveFileDetails(const QString &pFileName,
+                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
+                             OpenCOR::SEDMLSupport::SedmlFile *&pSedmlFile,
+                             OpenCOR::COMBINESupport::CombineArchive *&pCombineArchive,
+                             SingleCellViewFileType &pFileType,
+                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                             QString &pCombineArchiveIssue) const;
+
 private:
     SingleCellViewPlugin *mPlugin;
 
@@ -106,6 +114,18 @@ private:
 
     void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
     void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
+
+    bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+    bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
+                                 QString &pCombineArchiveIssue) const;
+
+    void retrieveCellmlFile(const QString &pFileName,
+                            OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
+                            SEDMLSupport::SedmlFile *pSedmlFile,
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+    void retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
+                           QString &pCombineArchiveIssue) const;
 
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
