@@ -352,6 +352,10 @@
         <source>only COMBINE archives with one master file are supported</source>
         <translation>seulement les archives COMBINE avec un fichier maître sont supportés</translation>
     </message>
+    <message>
+        <source>%1 could not be opened (%2)</source>
+        <translation>%1 n&apos;a pas pu être ouvert (%2)</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
