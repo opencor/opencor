@@ -350,15 +350,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     setFocusProxy(mContentsWidget);
 
-    // Update our file details
-
-    mCellmlFileManager = CellMLSupport::CellmlFileManager::instance();
-    mSedmlFileManager = SEDMLSupport::SedmlFileManager::instance();
-    mCombineFileManager = COMBINESupport::CombineFileManager::instance();
+    // Create our simulation object and a few connections for it, after having
+    // updated our file details
 
     updateFileDetails();
-
-    // Create our simulation object and a few connections for it
 
     mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
@@ -2747,7 +2742,7 @@ void SingleCellViewSimulationWidget::retrieveCellmlFile()
             mSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
                                                              tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
         }
-   }
+    }
 //---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
 }
 
@@ -2768,9 +2763,9 @@ void SingleCellViewSimulationWidget::updateFileDetails()
 {
     // Determine the type of file we are dealing with
 
-    mCellmlFile = mCellmlFileManager->cellmlFile(mFileName);
-    mSedmlFile = mSedmlFileManager->sedmlFile(mFileName);
-    mCombineArchive = mCombineFileManager->combineArchive(mFileName);
+    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+    mSedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
+    mCombineArchive = COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
 
     mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
 
