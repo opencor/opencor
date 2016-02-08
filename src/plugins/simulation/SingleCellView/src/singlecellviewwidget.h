@@ -53,6 +53,8 @@ public:
 
     virtual void retranslateUi();
 
+    bool isDirectOrIndirectRemoteFile(const QString &pFileName) const;
+
     bool contains(const QString &pFileName) const;
 
     void initialize(const QString &pFileName);

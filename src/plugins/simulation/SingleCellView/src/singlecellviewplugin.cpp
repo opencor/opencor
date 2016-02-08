@@ -275,11 +275,10 @@ QString SingleCellViewPlugin::viewDefaultFileExtension() const
 
 bool SingleCellViewPlugin::showBusyWidget(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Check whether we should be showing our busy widget, based on whether we
+    // are dealing with direct or indirect remote file
 
-    // We don't handle this interface...
-
-    return false;
+    return mViewWidget->isDirectOrIndirectRemoteFile(pFileName);
 }
 
 //==============================================================================

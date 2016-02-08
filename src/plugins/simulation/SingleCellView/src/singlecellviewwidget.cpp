@@ -113,6 +113,17 @@ void SingleCellViewWidget::retranslateUi()
 
 //==============================================================================
 
+bool SingleCellViewWidget::isDirectOrIndirectRemoteFile(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // Return whether the given file is a direct or indirect remote file
+
+    return false;
+}
+
+//==============================================================================
+
 bool SingleCellViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file
