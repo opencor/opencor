@@ -365,7 +365,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     mViewWidget->retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile,
                                      mCombineArchive, mFileType,
-                                     mSedmlFileIssues, mCombineArchiveIssue);
+                                     mSedmlFileIssues, mCombineArchiveIssues);
 
     mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
@@ -609,7 +609,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     if (pReloadingView) {
         mViewWidget->retrieveFileDetails(mFileName, mCellmlFile, mSedmlFile,
                                          mCombineArchive, mFileType,
-                                         mSedmlFileIssues, mCombineArchiveIssue);
+                                         mSedmlFileIssues, mCombineArchiveIssues);
     }
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
@@ -638,10 +638,34 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                                mFileName;
     QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
 
-    if (!mCombineArchiveIssue.isEmpty()) {
-        // There is an issue with our COMBINE archive
+    if (!mCombineArchiveIssues.isEmpty()) {
+        // There is one or several issues with our COMBINE archive, so list
+        // it/them
 
-        information += QString(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> %1.</span>"+OutputBrLn).arg(Core::plainString(mCombineArchiveIssue));
+        foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, mCombineArchiveIssues) {
+            QString issueType;
+
+            switch (combineArchiveIssue.type()) {
+            case COMBINESupport::CombineArchiveIssue::Information:
+                issueType = tr("Information:");
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Error:
+                issueType = tr("Error:");
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Warning:
+                issueType = tr("Warning:");
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Fatal:
+                issueType = tr("Fatal:");
+
+                break;
+            }
+
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, combineArchiveIssue.message());
+        }
     } else if (!mSedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 

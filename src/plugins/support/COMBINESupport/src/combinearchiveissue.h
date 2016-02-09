@@ -16,104 +16,51 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// COMBINE archive class
+// COMBINE archive issue
 //==============================================================================
 
-#ifndef COMBINEARCHIVE_H
-#define COMBINEARCHIVE_H
+#ifndef COMBINEARCHIVEISSUE_H
+#define COMBINEARCHIVEISSUE_H
 
 //==============================================================================
 
-#include "combinearchiveissue.h"
 #include "combinesupportglobal.h"
-#include "standardfile.h"
 
 //==============================================================================
 
-#include <QObject>
+#include <QList>
+#include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace COMBINESupport {
 
 //==============================================================================
 
-class CombineArchiveFile
+class COMBINESUPPORT_EXPORT CombineArchiveIssue
 {
 public:
-    enum Format {
-        Unknown,
-        Cellml,
-        Cellml_1_0,
-        Cellml_1_1,
-        Omex,
-        Sedml
+    enum Type {
+        Information,
+        Error,
+        Warning,
+        Fatal
     };
 
-    explicit CombineArchiveFile(const QString &pFileName,
-                                const QString &pLocation, const Format &pFormat,
-                                const bool &pMaster);
+    explicit CombineArchiveIssue(const Type &pType, const QString &pMessage);
 
-    QString fileName() const;
-
-    QString location() const;
-    Format format() const;
-    bool isMaster() const;
-
-    static Format format(const QString &pFormat);
+    Type type() const;
+    QString message() const;
 
 private:
-    QString mFileName;
-
-    QString mLocation;
-    Format mFormat;
-    bool mMaster;
+    Type mType;
+    QString mMessage;
 };
 
 //==============================================================================
 
-typedef QList<CombineArchiveFile> CombineArchiveFiles;
-
-//==============================================================================
-
-class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFile
-{
-    Q_OBJECT
-
-public:
-    explicit CombineArchive(const QString &pFileName, const bool &pNew = false);
-    ~CombineArchive();
-
-    virtual bool load();
-    virtual bool save(const QString &pFileName = QString());
-
-    bool isValid();
-
-    QString location(const CombineArchiveFile &pFile) const;
-
-    CombineArchiveFiles masterFiles();
-
-    bool addFile(const QString &pFileName, const QString &pLocation,
-                 const CombineArchiveFile::Format &pFormat,
-                 const bool &pMaster = false);
-
-    CombineArchiveIssues issues() const;
-
-private:
-    QString mDirName;
-
-    bool mNew;
-    bool mLoadingNeeded;
-
-    CombineArchiveFiles mFiles;
-    CombineArchiveIssues mIssues;
-
-    virtual void reset();
-};
+typedef QList<CombineArchiveIssue> CombineArchiveIssues;
 
 //==============================================================================
 

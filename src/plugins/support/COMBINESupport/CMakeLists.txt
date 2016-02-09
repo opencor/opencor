@@ -18,6 +18,7 @@ ADD_PLUGIN(COMBINESupport
         ../../plugininfo.cpp
 
         src/combinearchive.cpp
+        src/combinearchiveissue.cpp
         src/combinefilemanager.cpp
         src/combinesupportplugin.cpp
     HEADERS_MOC

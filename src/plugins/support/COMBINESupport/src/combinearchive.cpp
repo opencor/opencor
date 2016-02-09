@@ -151,8 +151,7 @@ void CombineArchive::reset()
     mLoadingNeeded = true;
 
     mFiles.clear();
-
-    mIssue = QString();
+    mIssues.clear();
 }
 
 //==============================================================================
@@ -166,7 +165,7 @@ bool CombineArchive::load()
     // Check whether we are already loaded and without an issue
 
     if (!mLoadingNeeded)
-        return mIssue.isEmpty();
+        return mIssues.isEmpty();
 
     mLoadingNeeded = false;
 
@@ -176,7 +175,8 @@ bool CombineArchive::load()
     if (mNew) {
         return true;
     } else if (!QFile::exists(mFileName)) {
-        mIssue = QObject::tr("the archive does not exist");
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+                                       QObject::tr("the archive does not exist"));
 
         return false;
     }
@@ -186,79 +186,8 @@ bool CombineArchive::load()
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
 
     if (!zipReader.extractAll(mDirName)) {
-        mIssue = QObject::tr("the contents of the archive could not be extracted");
-
-        return false;
-    }
-
-    // A COMBINE archive must contain a manifest at its root
-
-    QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
-
-    if (!QFile::exists(manifestFileName)) {
-        mIssue = QObject::tr("the archive does not have a manifest");
-
-        return false;
-    }
-
-    // Make sure that the manifest is a valid OMEX file
-
-    QString manifestContents;
-    QString schemaContents;
-
-    Core::readTextFromFile(manifestFileName, manifestContents);
-    Core::readTextFromFile(":omex.xsd", schemaContents);
-
-    if (!Core::validXml(manifestContents, schemaContents)) {
-        mIssue = QObject::tr("the manifest is not a valid OMEX file");
-
-        return false;
-    }
-
-    // Retrieve the COMBINE archive files from the manifest, making sure that
-    // they have been physically extracted
-
-    QDomDocument domDocument;
-
-    domDocument.setContent(manifestContents, true);
-
-    for (QDomElement childElement = domDocument.documentElement().firstChildElement();
-         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        QString location = childElement.attribute("location");
-        QString fileName = mDirName+QDir::separator()+location;
-
-        if (!QFile::exists(fileName)) {
-            mIssue = QObject::tr("<strong>%1</strong> could not be found").arg(location);
-
-            mFiles.clear();
-
-            return false;
-        } else {
-            mFiles << CombineArchiveFile(fileName, location,
-                                         CombineArchiveFile::format(childElement.attribute("format")),
-                                         !childElement.attribute("master").compare("true"));
-        }
-    }
-
-    // Make sure that one of our COMBINE archive files represents our COMBINE
-    // archive itself
-
-    bool combineArchiveReferenceFound = false;
-
-    foreach (const CombineArchiveFile &file, mFiles) {
-        if (   !file.location().compare(".")
-            &&  (file.format() == CombineArchiveFile::Omex)
-            && !file.isMaster()) {
-            combineArchiveReferenceFound = true;
-
-            break;
-        }
-    }
-
-    if (!combineArchiveReferenceFound) {
-        mIssue = QObject::tr("no reference to the COMBINE archive itself could be found");
-
-        mFiles.clear();
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+                                       QObject::tr("the contents of the archive could not be extracted"));
 
         return false;
     }
@@ -272,7 +201,7 @@ bool CombineArchive::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no issue
 
-    if (mLoadingNeeded || !mIssue.isEmpty())
+    if (mLoadingNeeded || !mIssues.isEmpty())
         return false;
 
     // Generate the contents our manifest
@@ -338,6 +267,101 @@ bool CombineArchive::save(const QString &pFileName)
             zipWriter.addFile(file.location(),
                               combineArchiveFileContents.toUtf8());
         }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+bool CombineArchive::isValid()
+{
+    // Make sure that we are loaded and fine
+
+    if (!load())
+        return false;
+    else
+        mIssues.clear();
+
+    // Consider ourselves valid if new
+
+    if (mNew)
+        return true;
+
+    // A COMBINE archive must contain a manifest at its root
+
+    QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
+
+    if (!QFile::exists(manifestFileName)) {
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+                                       QObject::tr("the archive does not have a manifest"));
+
+        return false;
+    }
+
+    // Make sure that the manifest is a valid OMEX file
+
+    QString manifestContents;
+    QString schemaContents;
+
+    Core::readTextFromFile(manifestFileName, manifestContents);
+    Core::readTextFromFile(":omex.xsd", schemaContents);
+
+    if (!Core::validXml(manifestContents, schemaContents)) {
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+                                       QObject::tr("the manifest is not a valid OMEX file"));
+
+        return false;
+    }
+
+    // Retrieve the COMBINE archive files from the manifest, making sure that
+    // they have been physically extracted
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(manifestContents, true);
+
+    for (QDomElement childElement = domDocument.documentElement().firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        QString location = childElement.attribute("location");
+        QString fileName = mDirName+QDir::separator()+location;
+
+        if (!QFile::exists(fileName)) {
+            mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("<strong>%1</strong> could not be found").arg(location));
+
+            mFiles.clear();
+
+            return false;
+        } else {
+            mFiles << CombineArchiveFile(fileName, location,
+                                         CombineArchiveFile::format(childElement.attribute("format")),
+                                         !childElement.attribute("master").compare("true"));
+        }
+    }
+
+    // Make sure that one of our COMBINE archive files represents our COMBINE
+    // archive itself
+
+    bool combineArchiveReferenceFound = false;
+
+    foreach (const CombineArchiveFile &file, mFiles) {
+        if (   !file.location().compare(".")
+            &&  (file.format() == CombineArchiveFile::Omex)
+            && !file.isMaster()) {
+            combineArchiveReferenceFound = true;
+
+            break;
+        }
+    }
+
+    if (!combineArchiveReferenceFound) {
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+                                       QObject::tr("no reference to the COMBINE archive itself could be found"));
+
+        mFiles.clear();
+
+        return false;
     }
 
     return true;
@@ -420,11 +444,11 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
 //==============================================================================
 
-QString CombineArchive::issue() const
+CombineArchiveIssues CombineArchive::issues() const
 {
-    // Return our archive's issue
+    // Return our archive's issues
 
-    return mIssue;
+    return mIssues;
 }
 
 //==============================================================================

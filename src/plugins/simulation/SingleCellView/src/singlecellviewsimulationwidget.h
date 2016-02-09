@@ -196,7 +196,7 @@ private:
     SingleCellViewWidget::FileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
-    QString mCombineArchiveIssue;
+    COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
 
     ErrorType mErrorType;
 

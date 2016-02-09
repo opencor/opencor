@@ -96,7 +96,7 @@ public:
                              OpenCOR::COMBINESupport::CombineArchive *&pCombineArchive,
                              FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             QString &pCombineArchiveIssue,
+                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
                              bool *pIsDirectOrIndirectRemoteFile = 0) const;
 
 private:
@@ -128,7 +128,7 @@ private:
     bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
     bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                 QString &pCombineArchiveIssue) const;
+                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
 
     void retrieveCellmlFile(const QString &pFileName,
                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
@@ -136,7 +136,7 @@ private:
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                             bool *pIsDirectOrIndirectRemoteFile) const;
     void retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
-                           QString &pCombineArchiveIssue) const;
+                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
 
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);

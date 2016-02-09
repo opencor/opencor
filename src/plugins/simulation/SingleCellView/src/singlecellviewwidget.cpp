@@ -138,11 +138,12 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName) const
         COMBINESupport::CombineArchive *combineArchive = 0;
         FileType fileType;
         SEDMLSupport::SedmlFileIssues sedmlFileIssues;
-        QString combineArchiveIssue;
+        COMBINESupport::CombineArchiveIssues combineArchiveIssues;
         bool res = false;
 
         retrieveFileDetails(pFileName, cellmlFile, sedmlFile, combineArchive,
-                            fileType, sedmlFileIssues, combineArchiveIssue, &res);
+                            fileType, sedmlFileIssues, combineArchiveIssues,
+                            &res);
 
         if (fileType != CellmlFile)
             delete cellmlFile;
@@ -740,25 +741,27 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 //==============================================================================
 
 bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                                   QString &pCombineArchiveIssue) const
+                                                   COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
 {
 //---ISSUE825--- TO BE DONE...
     // Load our COMBINE archive
 
-    if (pCombineArchive->load()) {
+    if (pCombineArchive->load() && pCombineArchive->isValid()) {
         // Make sure that there is only one master file in our COMBINE archive
 
         if (pCombineArchive->masterFiles().count() == 1) {
-pCombineArchiveIssue = "still under development";
+pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                             "still under development");
 
             return true;
         } else {
-            pCombineArchiveIssue = tr("only COMBINE archives with one master file are supported");
+            pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                                         tr("only COMBINE archives with one master file are supported"));
 
             return false;
         }
     } else {
-        pCombineArchiveIssue = pCombineArchive->issue();
+        pCombineArchiveIssues = pCombineArchive->issues();
 
         return false;
     }
@@ -830,11 +833,11 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 //==============================================================================
 
 void SingleCellViewWidget::retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
-                                             QString &pCombineArchiveIssue) const
+                                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
 {
     // Make sure that we support our COMBINE archive
 
-    if (!combineArchiveSupported(pCombineArchive, pCombineArchiveIssue))
+    if (!combineArchiveSupported(pCombineArchive, pCombineArchiveIssues))
         return;
 //---ISSUE825--- TO BE DONE...
 }
@@ -847,7 +850,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
                                                COMBINESupport::CombineArchive *&pCombineArchive,
                                                FileType &pFileType,
                                                SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                               QString &pCombineArchiveIssue,
+                                               COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
                                                bool *pIsDirectOrIndirectRemoteFile) const
 {
     // Determine the type of file we are dealing with
@@ -859,14 +862,14 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     pFileType = pCellmlFile?CellmlFile:SedmlFile?SedmlFile:CombineArchive;
 
     pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
-    pCombineArchiveIssue = QString();
+    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
 
     // In the case of a COMBINE archive, we need to retrieve the corresponding
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
 
     if (pCombineArchive)
-        retrieveSedmlFile(pCombineArchive, pCombineArchiveIssue);
+        retrieveSedmlFile(pCombineArchive, pCombineArchiveIssues);
 
     if (pSedmlFile) {
         retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pSedmlFileIssues,
