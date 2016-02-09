@@ -109,6 +109,17 @@ bool CellMLTextViewPlugin::isEditorContentsModified(const QString &pFileName) co
 // File handling interface
 //==============================================================================
 
+bool CellMLTextViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLTextViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName,
                                     bool &pNeedFeedback)
@@ -286,17 +297,6 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return CellMLSupport::CellmlFileExtension;
-}
-
-//==============================================================================
-
-bool CellMLTextViewPlugin::showBusyWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
 }
 
 //==============================================================================

@@ -65,6 +65,15 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool SingleCellViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    // Check whether the given file is an indirect remote file
+
+    return mViewWidget->isDirectOrIndirectRemoteFile(pFileName);
+}
+
+//==============================================================================
+
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName,
                                     bool &pNeedFeedback)
@@ -269,16 +278,6 @@ QString SingleCellViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return CellMLSupport::CellmlFileExtension;
-}
-
-//==============================================================================
-
-bool SingleCellViewPlugin::showBusyWidget(const QString &pFileName)
-{
-    // Check whether we should be showing our busy widget, based on whether we
-    // are dealing with direct or indirect remote file
-
-    return mViewWidget->isDirectOrIndirectRemoteFile(pFileName);
 }
 
 //==============================================================================

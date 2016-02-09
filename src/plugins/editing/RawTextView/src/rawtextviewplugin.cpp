@@ -89,6 +89,17 @@ bool RawTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
 // File handling interface
 //==============================================================================
 
+bool RawTextViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)
@@ -272,17 +283,6 @@ QString RawTextViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return "txt";
-}
-
-//==============================================================================
-
-bool RawTextViewPlugin::showBusyWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
 }
 
 //==============================================================================

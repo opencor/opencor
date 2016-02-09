@@ -114,6 +114,17 @@ bool RawSEDMLViewPlugin::isEditorContentsModified(const QString &pFileName) cons
 // File handling interface
 //==============================================================================
 
+bool RawSEDMLViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
                                   const QString &pNewFileName,
                                   bool &pNeedFeedback)
@@ -297,17 +308,6 @@ QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return SEDMLSupport::SedmlFileExtension;
-}
-
-//==============================================================================
-
-bool RawSEDMLViewPlugin::showBusyWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
 }
 
 //==============================================================================

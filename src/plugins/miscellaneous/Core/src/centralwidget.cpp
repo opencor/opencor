@@ -1635,6 +1635,7 @@ void CentralWidget::updateGui()
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
     Plugin *viewPlugin = mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
+    FileHandlingInterface *fileHandlingInterface = viewPlugin?qobject_cast<FileHandlingInterface *>(viewPlugin->instance()):0;
     ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
     QWidget *newView;
 
@@ -1650,7 +1651,7 @@ void CentralWidget::updateGui()
         bool hasView = mViews.value(fileViewKey);
 
         if (   (   isRemoteFile
-                || viewInterface?viewInterface->showBusyWidget(fileName):false)
+                || fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false)
             && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
             //       coming here as a result of the user opening a remote file,

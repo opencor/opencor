@@ -116,6 +116,17 @@ bool RawCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) con
 // File handling interface
 //==============================================================================
 
+bool RawCellMLViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName,
                                    bool &pNeedFeedback)
@@ -299,17 +310,6 @@ QString RawCellMLViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return CellMLSupport::CellmlFileExtension;
-}
-
-//==============================================================================
-
-bool RawCellMLViewPlugin::showBusyWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
 }
 
 //==============================================================================
