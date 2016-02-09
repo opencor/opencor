@@ -856,8 +856,8 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     // Determine the type of file we are dealing with
 
     pCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    pSedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
-    pCombineArchive = COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName);
+    pSedmlFile = pCellmlFile?0:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
+    pCombineArchive = pSedmlFile?0:COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName);
 
     pFileType = pCellmlFile?CellmlFile:SedmlFile?SedmlFile:CombineArchive;
 
