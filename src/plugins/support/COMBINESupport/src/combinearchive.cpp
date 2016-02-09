@@ -119,9 +119,10 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 
 //==============================================================================
 
-CombineArchive::CombineArchive(const QString &pFileName) :
+CombineArchive::CombineArchive(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
-    mDirName(Core::temporaryDirName())
+    mDirName(Core::temporaryDirName()),
+    mNew(pNew)
 {
     // Reset ourselves
 
@@ -169,22 +170,16 @@ bool CombineArchive::load()
 
     mLoadingNeeded = false;
 
-    // Make sure that our file exists
+    // Make sure that our file exists, unless it is new in which case we
+    // consider it loaded
 
-    if (!QFile::exists(mFileName)) {
+    if (mNew) {
+        return true;
+    } else if (!QFile::exists(mFileName)) {
         mIssue = QObject::tr("the archive does not exist");
 
         return false;
     }
-
-    // Consider the file loaded if it is empty (i.e. new)
-
-    QString fileContents;
-
-    Core::readTextFromFile(mFileName, fileContents);
-
-    if (fileContents.isEmpty())
-        return true;
 
     // We assume our file to be a ZIP file, so extract all of its contents
 

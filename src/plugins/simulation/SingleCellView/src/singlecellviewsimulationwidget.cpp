@@ -1699,7 +1699,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
 
         // Create our COMBINE archive after having added all our files to it
 
-        COMBINESupport::CombineArchive combineArchive(temporaryCombineArchiveName);
+        COMBINESupport::CombineArchive combineArchive(temporaryCombineArchiveName, true);
         QFileInfo combineArchiveInfo = QFileInfo(combineArchiveName);
         QString sedmlFileLocation = combineArchiveInfo.fileName();
 

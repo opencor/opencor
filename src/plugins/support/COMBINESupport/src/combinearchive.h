@@ -84,7 +84,7 @@ class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFil
     Q_OBJECT
 
 public:
-    explicit CombineArchive(const QString &pFileName);
+    explicit CombineArchive(const QString &pFileName, const bool &pNew = false);
     ~CombineArchive();
 
     virtual bool load();
@@ -103,6 +103,7 @@ public:
 private:
     QString mDirName;
 
+    bool mNew;
     bool mLoadingNeeded;
 
     CombineArchiveFiles mFiles;

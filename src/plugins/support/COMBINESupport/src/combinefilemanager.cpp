@@ -76,7 +76,7 @@ QObject * CombineFileManager::newFile(const QString &pFileName) const
 {
     // Create and return a new COMBINE archive
 
-    return new CombineArchive(Core::nativeCanonicalFileName(pFileName));
+    return new CombineArchive(Core::nativeCanonicalFileName(pFileName), true);
 }
 
 //==============================================================================

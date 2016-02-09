@@ -69,7 +69,7 @@ void Tests::initTestCase()
 
     // Create a simple COMBINE archive that contains various files
 
-    mCombineArchive = new OpenCOR::COMBINESupport::CombineArchive(OpenCOR::Core::temporaryFileName());
+    mCombineArchive = new OpenCOR::COMBINESupport::CombineArchive(OpenCOR::Core::temporaryFileName(), true);
 
     int counter = 0;
 
