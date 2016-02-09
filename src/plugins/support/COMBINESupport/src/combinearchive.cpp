@@ -348,6 +348,8 @@ bool CombineArchive::isValid()
 
     domDocument.setContent(manifestContents, true);
 
+    mFiles.clear();
+
     for (QDomElement childElement = domDocument.documentElement().firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         QString location = childElement.attribute("location");

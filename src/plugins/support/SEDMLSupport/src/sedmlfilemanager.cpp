@@ -83,7 +83,7 @@ QObject * SedmlFileManager::newFile(const QString &pFileName) const
 {
     // Create and return a new SED-ML file
 
-    return new SedmlFile(Core::nativeCanonicalFileName(pFileName), true);
+    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================

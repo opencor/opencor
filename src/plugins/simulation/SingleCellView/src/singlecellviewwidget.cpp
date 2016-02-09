@@ -744,7 +744,7 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
                                                    COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
 {
 //---ISSUE825--- TO BE DONE...
-    // Load our COMBINE archive
+    // Load and check our COMBINE archive
 
     if (pCombineArchive->load() && pCombineArchive->isValid()) {
         // Make sure that there is only one master file in our COMBINE archive
@@ -820,7 +820,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
             if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 QString("%1 has successfully been read").arg(modelSource));
+                                                                 QString("%1 has been successfully read").arg(modelSource));
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
                                                                  tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));

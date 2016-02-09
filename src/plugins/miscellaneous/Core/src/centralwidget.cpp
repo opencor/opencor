@@ -1651,7 +1651,7 @@ void CentralWidget::updateGui()
         bool hasView = mViews.value(fileViewKey);
 
         if (   (   isRemoteFile
-                || fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false)
+                || (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false))
             && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
             //       coming here as a result of the user opening a remote file,
