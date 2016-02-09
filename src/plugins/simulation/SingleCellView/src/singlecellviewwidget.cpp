@@ -124,16 +124,14 @@ void SingleCellViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool SingleCellViewWidget::isDirectOrIndirectRemoteFile(const QString &pFileName) const
+bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName) const
 {
-    // Return whether the given file is a direct or indirect remote file by
-    // retrieving the details of the given file
+    // Return whether the given file is an indirect remote file by retrieving
+    // its details
 
     Core::File *file = Core::FileManager::instance()->file(pFileName);
 
-    if (file->isRemote()) {
-        return true;
-    } else {
+    if (file->isLocal()) {
         CellMLSupport::CellmlFile *cellmlFile = 0;
         SEDMLSupport::SedmlFile *sedmlFile = 0;
         COMBINESupport::CombineArchive *combineArchive = 0;
@@ -146,6 +144,8 @@ bool SingleCellViewWidget::isDirectOrIndirectRemoteFile(const QString &pFileName
                             fileType, sedmlFileIssues, combineArchiveIssue, &res);
 
         return res;
+    } else {
+        return false;
     }
 }
 

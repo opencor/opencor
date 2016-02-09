@@ -77,6 +77,7 @@ public:
 
     int newIndex() const;
 
+    bool isLocal() const;
     bool isRemote() const;
 
     QString url() const;

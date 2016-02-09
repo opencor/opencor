@@ -69,7 +69,7 @@ bool SingleCellViewPlugin::isIndirectRemoteFile(const QString &pFileName)
 {
     // Check whether the given file is an indirect remote file
 
-    return mViewWidget->isDirectOrIndirectRemoteFile(pFileName);
+    return mViewWidget->isIndirectRemoteFile(pFileName);
 }
 
 //==============================================================================

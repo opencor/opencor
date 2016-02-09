@@ -212,6 +212,15 @@ int File::newIndex() const
 
 //==============================================================================
 
+bool File::isLocal() const
+{
+    // Return whether the file is a local one
+
+    return mUrl.isEmpty();
+}
+
+//==============================================================================
+
 bool File::isRemote() const
 {
     // Return whether the file is a remote one
