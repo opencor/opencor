@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "sedmlfileissue.h"
 #include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -97,15 +98,6 @@ class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
-class SingleCellViewWidget;
-
-//==============================================================================
-
-enum SingleCellViewFileType {
-    CellmlFile,
-    SedmlFile,
-    CombineArchive
-};
 
 //==============================================================================
 
@@ -201,7 +193,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    SingleCellViewFileType mFileType;
+    SingleCellViewWidget::FileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
     QString mCombineArchiveIssue;

@@ -397,10 +397,10 @@ SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
 
     delete mSimulation;
 
-    if (mFileType != CellmlFile)
+    if (mFileType != SingleCellViewWidget::CellmlFile)
         delete mCellmlFile;
 
-    if (mFileType != SedmlFile)
+    if (mFileType != SingleCellViewWidget::SedmlFile)
         delete mSedmlFile;
 
     // Delete the GUI

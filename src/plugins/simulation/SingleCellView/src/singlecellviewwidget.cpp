@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
@@ -135,13 +136,19 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName) const
         CellMLSupport::CellmlFile *cellmlFile = 0;
         SEDMLSupport::SedmlFile *sedmlFile = 0;
         COMBINESupport::CombineArchive *combineArchive = 0;
-        SingleCellViewFileType fileType;
+        FileType fileType;
         SEDMLSupport::SedmlFileIssues sedmlFileIssues;
         QString combineArchiveIssue;
         bool res = false;
 
         retrieveFileDetails(pFileName, cellmlFile, sedmlFile, combineArchive,
                             fileType, sedmlFileIssues, combineArchiveIssue, &res);
+
+        if (fileType != CellmlFile)
+            delete cellmlFile;
+
+        if (fileType != SedmlFile)
+            delete sedmlFile;
 
         return res;
     } else {
@@ -838,7 +845,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
                                                CellMLSupport::CellmlFile *&pCellmlFile,
                                                SEDMLSupport::SedmlFile *&pSedmlFile,
                                                COMBINESupport::CombineArchive *&pCombineArchive,
-                                               SingleCellViewFileType &pFileType,
+                                               FileType &pFileType,
                                                SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                                                QString &pCombineArchiveIssue,
                                                bool *pIsDirectOrIndirectRemoteFile) const

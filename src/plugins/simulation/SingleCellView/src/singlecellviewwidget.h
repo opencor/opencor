@@ -26,8 +26,8 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "combinearchive.h"
+#include "corecliutils.h"
 #include "sedmlfile.h"
-#include "singlecellviewsimulationwidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -39,6 +39,7 @@ namespace SingleCellView {
 
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
@@ -47,6 +48,12 @@ class SingleCellViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
+    enum FileType {
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     explicit SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                   QWidget *pParent);
 
@@ -87,7 +94,7 @@ public:
                              OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
                              OpenCOR::SEDMLSupport::SedmlFile *&pSedmlFile,
                              OpenCOR::COMBINESupport::CombineArchive *&pCombineArchive,
-                             SingleCellViewFileType &pFileType,
+                             FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                              QString &pCombineArchiveIssue,
                              bool *pIsDirectOrIndirectRemoteFile = 0) const;
