@@ -174,7 +174,23 @@ void Tests::loadingErrorTests()
     QVERIFY(combineArchive.issues().count() == 1);
     QCOMPARE(combineArchive.issues().first().message(), QString("the archive does not exist"));
 
-    // Try to load a non-extractable COMBINE archive
+    // Try to load a non-signed COMBINE archive
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/notsigned.omex"));
+
+    QVERIFY(!combineArchive.reload());
+    QVERIFY(combineArchive.issues().count() == 1);
+    QCOMPARE(combineArchive.issues().first().message(), QString("the archive is not signed"));
+
+    // Try to load a badly signed COMBINE archive
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/badlysigned.omex"));
+
+    QVERIFY(!combineArchive.reload());
+    QVERIFY(combineArchive.issues().count() == 1);
+    QCOMPARE(combineArchive.issues().first().message(), QString("the archive does not have the correct signature"));
+
+    // Try to load a COMBINE archive with no manifest
 
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nomanifest.omex"));
 
