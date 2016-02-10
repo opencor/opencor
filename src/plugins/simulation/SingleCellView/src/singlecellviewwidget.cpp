@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewinformationwidget.h"
+#include "singlecellviewplugin.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
@@ -47,7 +48,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "sedmlapidisablewarnings.h"
+    #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
+    #include "sedml/SedUniformTimeCourse.h"
 #include "sedmlapienablewarnings.h"
 
 //==============================================================================
@@ -707,12 +710,40 @@ void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimu
 
 //==============================================================================
 
+bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
+                                                   SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
+{
+    // Make sure that the given algorithm relies on an algorithm that we support
+
+    bool ok = false;
+    QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
+
+    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+            ok = true;
+
+            break;
+        }
+    }
+
+    if (!ok) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("unsupported algorithm (%1)").arg(kisaoId));
+
+        return false;
+    }
+
+    return true;
+}
+
+//==============================================================================
+
 bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
 {
 //---ISSUE825--- TO BE DONE...
-    // Make sure that there is only one model referenced in our SED-ML file and
-    // that it is of CellML type
+    // Make sure that there is only one model referenced in the given SED-ML
+    // file and that it is of CellML type
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
 
@@ -720,11 +751,9 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         libsedml::SedModel *model = sedmlDocument->getModel(0);
         QString language = QString::fromStdString(model->getLanguage());
 
-        if (   !language.compare(SEDMLSupport::Language::Cellml)
-            || !language.compare(SEDMLSupport::Language::Cellml_1_0)
-            || !language.compare(SEDMLSupport::Language::Cellml_1_1)) {
-            return true;
-        } else {
+        if (   language.compare(SEDMLSupport::Language::Cellml)
+            && language.compare(SEDMLSupport::Language::Cellml_1_0)
+            && language.compare(SEDMLSupport::Language::Cellml_1_1)) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                              tr("only SED-ML files with a CellML file are supported"));
 
@@ -765,6 +794,51 @@ pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::Com
 
         return false;
     }
+
+    // Make sure that there is one or two simulations referenced in the given
+    // SED-ML file
+
+    int nbOfSimulations = sedmlDocument->getNumSimulations();
+
+    if ((nbOfSimulations == 1) || (nbOfSimulations == 2)) {
+        // Make sure that the first simulation is a uniform time course
+
+        libsedml::SedSimulation *simulation = sedmlDocument->getSimulation(0);
+
+        if (simulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
+
+            return false;
+        }
+
+        // Make sure that the initial and starting time of the first simulation
+        // are the same
+
+        libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(simulation);
+        double initialTime = uniformTimeCourse->getInitialTime();
+        double outputStartTime = uniformTimeCourse->getOutputStartTime();
+
+        if (initialTime != outputStartTime) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with the same initial and output start times are supported"));
+
+            return false;
+        }
+
+        // Make sure that the algorithm used for the first simulation is
+        // supported
+
+        if (!sedmlAlgorithmSupported(simulation->getAlgorithm(), pSedmlFileIssues))
+            return false;
+    } else {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with one or two simulations are supported"));
+
+        return false;
+    }
+
+    return true;
 }
 
 //==============================================================================
@@ -819,8 +893,8 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
             QString errorMessage;
 
             if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 QString("%1 has been successfully read").arg(modelSource));
+pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                 QString("%1 has been successfully read").arg(modelSource));
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
                                                                  tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));

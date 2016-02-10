@@ -32,6 +32,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace libsedml {
+    class SedAlgorithm;
+}   // namespace libsedml
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellView {
 
@@ -125,8 +131,11 @@ private:
     void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
     void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
 
+    bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
+                                 SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
     bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+
     bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
                                  COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
 
