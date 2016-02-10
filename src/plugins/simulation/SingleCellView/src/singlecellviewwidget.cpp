@@ -715,22 +715,36 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
 {
     // Make sure that the given algorithm relies on an algorithm that we support
 
-    bool ok = false;
+    SolverInterface *usedSolverInterface = 0;
     QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
 
     foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
-            ok = true;
+            usedSolverInterface = solverInterface;
 
             break;
         }
     }
 
-    if (!ok) {
+    if (!usedSolverInterface) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("unsupported algorithm (%1)").arg(kisaoId));
 
         return false;
+    }
+
+    // Make sure that the algorithm parameters are also supported
+
+    for (int i = 0, iMax = pSedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+        QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getAlgorithmParameter(i)->getKisaoID());
+        QString id = usedSolverInterface->id(kisaoId);
+
+        if (id.isEmpty() || !id.compare(usedSolverInterface->solverName())) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("unsupported algorithm parameter (%1)").arg(kisaoId));
+
+            return false;
+        }
     }
 
     return true;
@@ -762,35 +776,6 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     } else {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("only SED-ML files with one model are supported"));
-
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                                   COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
-{
-//---ISSUE825--- TO BE DONE...
-    // Load and check our COMBINE archive
-
-    if (pCombineArchive->load() && pCombineArchive->isValid()) {
-        // Make sure that there is only one master file in our COMBINE archive
-
-        if (pCombineArchive->masterFiles().count() == 1) {
-pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                             "still under development");
-
-            return true;
-        } else {
-            pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                                         tr("only COMBINE archives with one master file are supported"));
-
-            return false;
-        }
-    } else {
-        pCombineArchiveIssues = pCombineArchive->issues();
 
         return false;
     }
@@ -843,6 +828,27 @@ pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::Com
 
 //==============================================================================
 
+bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
+                                                   COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
+{
+//---ISSUE825--- TO BE DONE...
+    // Load and check our COMBINE archive
+
+    if (pCombineArchive->load() && pCombineArchive->isValid()) {
+        // Make sure that there is only one master file in our COMBINE archive
+
+        if (pCombineArchive->masterFiles().count() == 1) {
+pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                             "still under development");
+
+            return true;
+        } else {
+            pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                                         tr("only COMBINE archives with one master file are supported"));
+
+            return false;
+        }
+    } else {
 void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                               CellMLSupport::CellmlFile *&pCellmlFile,
                                               SEDMLSupport::SedmlFile *pSedmlFile,
