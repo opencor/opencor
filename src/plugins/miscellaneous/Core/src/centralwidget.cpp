@@ -951,10 +951,10 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                 // Actually redownload the file, if it is a remote one, making
                 // sure that our busy widget is show during that process (since
                 // it may take some time)
+                // Note: our busy widget will get hidden in fileReloaded()...
 
                 if (fileManagerInstance->isRemote(fileName)) {
                     showBusyWidget(this);
-                    // Note: it will get hidden in fileReloaded()...
 
                     QString url = fileManagerInstance->url(fileName);
                     QString fileContents;
@@ -1980,6 +1980,18 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 void CentralWidget::fileReloaded(const QString &pFileName)
 {
+    // Check whether we should show our busy widget
+    // Note: this only needs to be done in case of an indirect remote file since
+    //       for a direct one, it will have already been done in reloadFile()...
+
+    Plugin *fileViewPlugin = viewPlugin(pFileName);
+    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(fileViewPlugin->instance());
+
+    if (   (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(pFileName):false)
+        && !isBusyWidgetVisible()) {
+        showBusyWidget(this);
+    }
+
     // Let our plugins know about the file having been reloaded, but ignore the
     // current plugin if our file manager cannot check files
     // Note: indeed, if our file manager cannot check files, then it means that
@@ -1989,7 +2001,6 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     //       position) our current plugin to reload it...
 
     FileManager *fileManagerInstance = FileManager::instance();
-    Plugin *fileViewPlugin = viewPlugin(pFileName);
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
@@ -2005,8 +2016,12 @@ void CentralWidget::fileReloaded(const QString &pFileName)
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
     }
 
-    // Make sure that our busy widget is hidden (since it may have been shown;
-    // see reloadFile())
+    // Make sure that our busy widget is hidden
+    // Note: our busy widget may have been shown in reloadFile() (in case of a
+    //       direct remote file since we had to reload the remote file) or at
+    //       the beginning of this procedure (in case of an indirect remote
+    //       file since it's only after the file has been reloaded that we can
+    //       whether it's an indirect remote one)...
 
     hideBusyWidget();
 
