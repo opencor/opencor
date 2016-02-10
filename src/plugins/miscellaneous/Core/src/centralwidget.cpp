@@ -944,7 +944,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
             // Reload the file, if needed, and consider it as non-modified
             // anymore (in case it was before)
             // Note: by making the file non-modified anymore, we clearly assume
-            //       that all view plugins do their job properly and update
+            //       that all the view plugins do their job properly and update
             //       their GUI...
 
             if (doReloadFile) {
@@ -1646,11 +1646,10 @@ void CentralWidget::updateGui()
         // widget, if we are dealing with a remote file or if the view requires
         // it
 
-        bool isRemoteFile = FileManager::instance()->isRemote(fileName);
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
-        if (   (   isRemoteFile
+        if (   (   FileManager::instance()->isRemote(fileName)
                 || (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false))
             && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
