@@ -50,6 +50,7 @@ specific language governing permissions and limitations under the License.
 #include "sedmlapidisablewarnings.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
+    #include "sedml/SedOneStep.h"
     #include "sedml/SedUniformTimeCourse.h"
 #include "sedmlapienablewarnings.h"
 
@@ -787,6 +788,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
     if ((nbOfSimulations == 1) || (nbOfSimulations == 2)) {
         // Make sure that the first simulation is a uniform time course
+        // simulation
 
         libsedml::SedSimulation *simulation = sedmlDocument->getSimulation(0);
 
@@ -797,16 +799,33 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             return false;
         }
 
-        // Make sure that the initial and starting time of the first simulation
-        // are the same
+        // Make sure that the initial and output start time are the same, that
+        // the output start and end times are different, and that the number of
+        // points is greater than zero
 
         libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(simulation);
         double initialTime = uniformTimeCourse->getInitialTime();
         double outputStartTime = uniformTimeCourse->getOutputStartTime();
+        double outputEndTime = uniformTimeCourse->getOutputEndTime();
+        int nbOfPoints = uniformTimeCourse->getNumberOfPoints();
 
         if (initialTime != outputStartTime) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with the same initial and output start times are supported"));
+                                                             tr("only SED-ML files with the same initialTime and outputStartTime values are supported"));
+
+            return false;
+        }
+
+        if (outputStartTime == outputEndTime) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("the outputStartTime and outputEndTime values must be different"));
+
+            return false;
+        }
+
+        if (nbOfPoints <= 0) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("the numberOfPoints must be greater than zero"));
 
             return false;
         }
@@ -816,6 +835,31 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
         if (!sedmlAlgorithmSupported(simulation->getAlgorithm(), pSedmlFileIssues))
             return false;
+
+        // Check whether there is a second simulation
+
+        simulation = sedmlDocument->getSimulation(1);
+
+        if (simulation) {
+            // There is a second simulation, so make sure that it is a one-step
+            // simulation
+
+            if (simulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with a one-step as a second simulation are supported"));
+
+                return false;
+            }
+
+            // Make sure that the step is greater than zero
+
+            if (static_cast<libsedml::SedOneStep *>(simulation)->getStep() <= 0) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                 tr("the step value must be greater than zero"));
+
+                return false;
+            }
+        }
     } else {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("only SED-ML files with one or two simulations are supported"));
@@ -849,6 +893,14 @@ pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::Com
             return false;
         }
     } else {
+        pCombineArchiveIssues = pCombineArchive->issues();
+
+        return false;
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                               CellMLSupport::CellmlFile *&pCellmlFile,
                                               SEDMLSupport::SedmlFile *pSedmlFile,
