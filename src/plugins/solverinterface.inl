@@ -6,6 +6,7 @@
 
     virtual Solver::Solver * solverInstance() const PURE;
 
+    virtual QString id(const QString &pKisaoId) const PURE;
     virtual QString kisaoId(const QString &pId) const PURE;
 
     virtual Solver::Type solverType() const PURE;
