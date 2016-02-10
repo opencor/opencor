@@ -359,6 +359,46 @@
         <source>%1 could not be opened (%2)</source>
         <translation>%1 n&apos;a pas pu être ouvert (%2)</translation>
     </message>
+    <message>
+        <source>unsupported algorithm (%1)</source>
+        <translation>algorithme non supporté (%1)</translation>
+    </message>
+    <message>
+        <source>unsupported algorithm parameter (%1)</source>
+        <translation>paramètre d&apos;algorithme non supporté (%1)</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with one or two simulations are supported</source>
+        <translation>seulement les fichiers SED-ML avec une ou deux simulations sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with a uniform time course as a (first) simulation are supported</source>
+        <translation>seulement les fichiers SED-ML avec un cours de temps uniforme pour (première) simulation sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with the same values for initialTime and outputStartTime are supported</source>
+        <translation>seulement les fichiers SED-ML avec les mêmes valeurs pour initialTime et outputStartTime sont supportés</translation>
+    </message>
+    <message>
+        <source>the values for outputStartTime and outputEndTime must be different</source>
+        <translation>les valeurs pour outputStartTime et outputEndTime doivent être différentes</translation>
+    </message>
+    <message>
+        <source>the value for numberOfPoints must be greater than zero</source>
+        <translation>la valeur pour numberOfPoints doit être plus grande que zéro</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with a one-step as a second simulation are supported</source>
+        <translation>seulement les fichiers SED-ML avec un pas pour deuxième simulation sont supportés</translation>
+    </message>
+    <message>
+        <source>the value for step must be greater than zero</source>
+        <translation>la valeur pour step doit être plus grande que zéro</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with two simulations with the same algorithm are supported</source>
+        <translation>seulement les fichiers SED-ML avec deux simulations avec le même algorithme sont supportés</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

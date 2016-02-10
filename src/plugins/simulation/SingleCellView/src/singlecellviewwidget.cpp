@@ -818,21 +818,21 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
     if (initialTime != outputStartTime) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with the same initialTime and outputStartTime values are supported"));
+                                                         tr("only SED-ML files with the same values for initialTime and outputStartTime are supported"));
 
         return false;
     }
 
     if (outputStartTime == outputEndTime) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("the outputStartTime and outputEndTime values must be different"));
+                                                         tr("the values for outputStartTime and outputEndTime must be different"));
 
         return false;
     }
 
     if (nbOfPoints <= 0) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("the numberOfPoints must be greater than zero"));
+                                                         tr("the value for numberOfPoints must be greater than zero"));
 
         return false;
     }
@@ -860,7 +860,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
         if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("the step value must be greater than zero"));
+                                                             tr("the value for step must be greater than zero"));
 
             return false;
         }
