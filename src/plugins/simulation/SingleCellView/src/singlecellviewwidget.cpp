@@ -838,13 +838,13 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
         // Check whether there is a second simulation
 
-        simulation = sedmlDocument->getSimulation(1);
+        libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
 
-        if (simulation) {
+        if (secondSimulation) {
             // There is a second simulation, so make sure that it is a one-step
             // simulation
 
-            if (simulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
+            if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                                  tr("only SED-ML files with a one-step as a second simulation are supported"));
 
@@ -853,9 +853,27 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
             // Make sure that the step is greater than zero
 
-            if (static_cast<libsedml::SedOneStep *>(simulation)->getStep() <= 0) {
+            if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
                                                                  tr("the step value must be greater than zero"));
+
+                return false;
+            }
+
+            // Make sure that the algorithm is the same as for the first
+            // simulation
+
+            std::stringstream stream;
+            std::stringstream secondStream;
+            libsbml::XMLOutputStream xmlStream(stream);
+            libsbml::XMLOutputStream secondXmlStream(secondStream);
+
+            simulation->getAlgorithm()->write(xmlStream);
+            secondSimulation->getAlgorithm()->write(secondXmlStream);
+
+            if (stream.str().compare(secondStream.str())) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with two simulations with the same algorithm are supported"));
 
                 return false;
             }
