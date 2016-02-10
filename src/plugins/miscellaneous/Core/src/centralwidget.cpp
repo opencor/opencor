@@ -954,14 +954,13 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
 
                 if (fileManagerInstance->isRemote(fileName)) {
                     showBusyWidget(this);
+                    // Note: it will get hidden in fileReloaded()...
 
                     QString url = fileManagerInstance->url(fileName);
                     QString fileContents;
                     QString errorMessage;
 
                     bool res = readTextFromUrl(url, fileContents, &errorMessage);
-
-                    hideBusyWidget();
 
                     if (res) {
                         writeTextToFile(fileName, fileContents);
@@ -2005,6 +2004,11 @@ void CentralWidget::fileReloaded(const QString &pFileName)
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
     }
+
+    // Make sure that our busy widget is hidden (since it may have been shown;
+    // see reloadFile())
+
+    hideBusyWidget();
 
     // Update our modified settings
 
