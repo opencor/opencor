@@ -758,31 +758,33 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 {
 //---ISSUE825--- TO BE DONE...
     // Make sure that there is only one model referenced in the given SED-ML
-    // file and that it is of CellML type
+    // file
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
 
-    if (sedmlDocument->getNumModels() == 1) {
-        libsedml::SedModel *model = sedmlDocument->getModel(0);
-        QString language = QString::fromStdString(model->getLanguage());
-
-        if (   language.compare(SEDMLSupport::Language::Cellml)
-            && language.compare(SEDMLSupport::Language::Cellml_1_0)
-            && language.compare(SEDMLSupport::Language::Cellml_1_1)) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with a CellML file are supported"));
-
-            return false;
-        }
-    } else {
+    if (sedmlDocument->getNumModels() != 1) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("only SED-ML files with one model are supported"));
 
         return false;
     }
 
-    // Make sure that there is one or two simulations referenced in the given
-    // SED-ML file
+    // Make sure that the model is of CellML type
+
+    libsedml::SedModel *model = sedmlDocument->getModel(0);
+    QString language = QString::fromStdString(model->getLanguage());
+
+    if (   language.compare(SEDMLSupport::Language::Cellml)
+        && language.compare(SEDMLSupport::Language::Cellml_1_0)
+        && language.compare(SEDMLSupport::Language::Cellml_1_1)) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with a CellML file are supported"));
+
+        return false;
+    }
+
+    // Make sure that there is either one or two simulations referenced in the
+    // given SED-ML file
 
     int nbOfSimulations = sedmlDocument->getNumSimulations();
 
@@ -841,8 +843,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
 
         if (secondSimulation) {
-            // There is a second simulation, so make sure that it is a one-step
-            // simulation
+            // Make sure that it is a one-step simulation
 
             if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
@@ -851,7 +852,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                 return false;
             }
 
-            // Make sure that the step is greater than zero
+            // Make sure that its step is greater than zero
 
             if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
@@ -860,7 +861,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                 return false;
             }
 
-            // Make sure that the algorithm is the same as for the first
+            // Make sure that its algorithm is the same as for the first
             // simulation
 
             std::stringstream stream;
