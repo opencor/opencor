@@ -788,102 +788,99 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
     int nbOfSimulations = sedmlDocument->getNumSimulations();
 
-    if ((nbOfSimulations == 1) || (nbOfSimulations == 2)) {
-        // Make sure that the first simulation is a uniform time course
-        // simulation
-
-        libsedml::SedSimulation *simulation = sedmlDocument->getSimulation(0);
-
-        if (simulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
-
-            return false;
-        }
-
-        // Make sure that the initial and output start time are the same, that
-        // the output start and end times are different, and that the number of
-        // points is greater than zero
-
-        libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(simulation);
-        double initialTime = uniformTimeCourse->getInitialTime();
-        double outputStartTime = uniformTimeCourse->getOutputStartTime();
-        double outputEndTime = uniformTimeCourse->getOutputEndTime();
-        int nbOfPoints = uniformTimeCourse->getNumberOfPoints();
-
-        if (initialTime != outputStartTime) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with the same initialTime and outputStartTime values are supported"));
-
-            return false;
-        }
-
-        if (outputStartTime == outputEndTime) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("the outputStartTime and outputEndTime values must be different"));
-
-            return false;
-        }
-
-        if (nbOfPoints <= 0) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("the numberOfPoints must be greater than zero"));
-
-            return false;
-        }
-
-        // Make sure that the algorithm used for the first simulation is
-        // supported
-
-        if (!sedmlAlgorithmSupported(simulation->getAlgorithm(), pSedmlFileIssues))
-            return false;
-
-        // Check whether there is a second simulation
-
-        libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
-
-        if (secondSimulation) {
-            // Make sure that it is a one-step simulation
-
-            if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("only SED-ML files with a one-step as a second simulation are supported"));
-
-                return false;
-            }
-
-            // Make sure that its step is greater than zero
-
-            if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("the step value must be greater than zero"));
-
-                return false;
-            }
-
-            // Make sure that its algorithm is the same as for the first
-            // simulation
-
-            std::stringstream stream;
-            std::stringstream secondStream;
-            libsbml::XMLOutputStream xmlStream(stream);
-            libsbml::XMLOutputStream secondXmlStream(secondStream);
-
-            simulation->getAlgorithm()->write(xmlStream);
-            secondSimulation->getAlgorithm()->write(secondXmlStream);
-
-            if (stream.str().compare(secondStream.str())) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("only SED-ML files with two simulations with the same algorithm are supported"));
-
-                return false;
-            }
-        }
-    } else {
+    if ((nbOfSimulations != 1) && (nbOfSimulations != 2)) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("only SED-ML files with one or two simulations are supported"));
 
         return false;
+    }
+
+    // Make sure that the first simulation is a uniform time course simulation
+
+    libsedml::SedSimulation *simulation = sedmlDocument->getSimulation(0);
+
+    if (simulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
+
+        return false;
+    }
+
+    // Make sure that the initial and output start time are the same, that the
+    // output start and end times are different, and that the number of points
+    // is greater than zero
+
+    libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(simulation);
+    double initialTime = uniformTimeCourse->getInitialTime();
+    double outputStartTime = uniformTimeCourse->getOutputStartTime();
+    double outputEndTime = uniformTimeCourse->getOutputEndTime();
+    int nbOfPoints = uniformTimeCourse->getNumberOfPoints();
+
+    if (initialTime != outputStartTime) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with the same initialTime and outputStartTime values are supported"));
+
+        return false;
+    }
+
+    if (outputStartTime == outputEndTime) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                         tr("the outputStartTime and outputEndTime values must be different"));
+
+        return false;
+    }
+
+    if (nbOfPoints <= 0) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                         tr("the numberOfPoints must be greater than zero"));
+
+        return false;
+    }
+
+    // Make sure that the algorithm used for the first simulation is supported
+
+    if (!sedmlAlgorithmSupported(simulation->getAlgorithm(), pSedmlFileIssues))
+        return false;
+
+    // Check whether there is a second simulation
+
+    libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
+
+    if (secondSimulation) {
+        // Make sure that it is a one-step simulation
+
+        if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with a one-step as a second simulation are supported"));
+
+            return false;
+        }
+
+        // Make sure that its step is greater than zero
+
+        if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("the step value must be greater than zero"));
+
+            return false;
+        }
+
+        // Make sure that its algorithm is the same as for the first simulation
+
+        std::stringstream stream;
+        std::stringstream secondStream;
+        libsbml::XMLOutputStream xmlStream(stream);
+        libsbml::XMLOutputStream secondXmlStream(secondStream);
+
+        simulation->getAlgorithm()->write(xmlStream);
+        secondSimulation->getAlgorithm()->write(secondXmlStream);
+
+        if (stream.str().compare(secondStream.str())) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with two simulations with the same algorithm are supported"));
+
+            return false;
+        }
     }
 
     return true;
