@@ -104,7 +104,7 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // CellML-based view plugin
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?CellMLSupport::CellmlFile::version(cellmlFile):CellMLSupport::CellmlFile::Unknown;
+    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?cellmlFile->version():CellMLSupport::CellmlFile::Unknown;
 
     mExportToCellml10Action->setEnabled(   cellmlFile && cellmlFile->model()
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
@@ -391,7 +391,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                         && !QFile::exists(predefinedFormatOrUserDefinedFormatFileName)) {
                         errorMessage = "The user-defined format file could not be found.";
                     } else if (   !wantExportToUserDefinedFormat
-                               && (CellMLSupport::CellmlFile::version(inCellmlFile) == CellMLSupport::CellmlFile::Cellml_1_0)) {
+                               && (inCellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_0)) {
                         errorMessage = "The input file is already a CellML 1.0 file.";
                     } else {
                         // Everything seems to be fine, so attempt the export

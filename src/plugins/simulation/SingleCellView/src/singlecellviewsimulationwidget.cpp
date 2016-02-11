@@ -1739,7 +1739,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
             if (combineArchive.addFile(mFileName, modelSource,
-                                       (CellMLSupport::CellmlFile::version(mCellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                       (mCellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
                 foreach (const QString &importedFileName, mCellmlFile->importedFileNames()) {

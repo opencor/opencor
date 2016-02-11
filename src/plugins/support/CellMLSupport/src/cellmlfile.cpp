@@ -1114,23 +1114,16 @@ CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version(CellmlFile *pCellmlFile)
-{
-    // Return the version of the given CellML file
-
-    if (pCellmlFile)
-        return version(pCellmlFile->model());
-    else
-        return Unknown;
-}
-
-//==============================================================================
-
 CellmlFile::Version CellmlFile::version(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    return version(CellmlFileManager::instance()->cellmlFile(pFileName));
+    CellmlFile *cellmlFile = CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    if (cellmlFile)
+        return cellmlFile->version();
+    else
+        return Unknown;
 }
 
 //==============================================================================
