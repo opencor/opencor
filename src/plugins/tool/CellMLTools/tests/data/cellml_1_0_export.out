@@ -44,7 +44,7 @@
     <component name="stimulus_protocol_params">
         <variable initial_value="50" name="stimPeriod" public_interface="out" units="ms"/>
         <variable initial_value="0.5" name="stimDuration" public_interface="out" units="ms"/>
-        <variable initial_value="-10.0" name="stimCurrent" public_interface="out" units="uA_per_cmsq"/>
+        <variable initial_value="-10" name="stimCurrent" public_interface="out" units="uA_per_cmsq"/>
     </component>
     <component name="parameters"/>
     <component name="initial_conditions"/>
@@ -59,7 +59,7 @@
         <variable name="m" public_interface="in" units="dimensionless"/>
         <variable name="n" public_interface="in" units="dimensionless"/>
     </component>
-    <component name="model">
+    <component name="_model">
         <variable name="V_initial" private_interface="out" public_interface="in" units="mV"/>
         <variable name="n_initial" private_interface="out" public_interface="in" units="dimensionless"/>
         <variable name="m_initial" private_interface="out" public_interface="in" units="dimensionless"/>
@@ -71,7 +71,7 @@
         <variable name="h" private_interface="in" public_interface="out" units="dimensionless"/>
         <variable name="m" private_interface="in" public_interface="out" units="dimensionless"/>
         <variable name="n" private_interface="in" public_interface="out" units="dimensionless"/>
-        <variable initial_value="0.0" name="V" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="0" name="V" private_interface="out" public_interface="out" units="mV"/>
         <variable name="minus_V" private_interface="out" public_interface="out" units="mV"/>
         <variable name="VNa" private_interface="out" public_interface="in" units="mV"/>
         <variable name="VK" private_interface="out" public_interface="in" units="mV"/>
@@ -82,7 +82,7 @@
         <variable name="Cm" private_interface="out" public_interface="in" units="uF_per_cmsq"/>
         <variable name="time" private_interface="out" public_interface="in" units="ms"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="V_calculation">
+            <apply cmeta:id="V_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <apply>
                     <diff/>
@@ -108,7 +108,7 @@
             </apply>
         </math>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="minus_V_calculation">
+            <apply cmeta:id="minus_V_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>minus_V</ci>
                 <apply>
@@ -125,7 +125,7 @@
         <variable name="stimDuration" public_interface="in" units="ms"/>
         <variable name="stimCurrent" public_interface="in" units="uA_per_cmsq"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="stimulus_calculation">
+            <apply cmeta:id="stimulus_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>IStim</ci>
                 <piecewise>
@@ -142,26 +142,26 @@
                         </apply>
                     </piece>
                     <otherwise>
-                        <cn cellml:units="uA_per_cmsq">0.0</cn>
+                        <cn cellml:units="uA_per_cmsq">0</cn>
                     </otherwise>
                 </piecewise>
             </apply>
         </math>
     </component>
     <component name="time">
-        <variable initial_value="0.0" name="time" public_interface="out" units="ms"/>
+        <variable initial_value="0" name="time" public_interface="out" units="ms"/>
     </component>
     <component name="default_parameters">
-        <variable initial_value="12.0" name="VK" private_interface="out" public_interface="out" units="mV"/>
-        <variable initial_value="-115.0" name="VNa" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="12" name="VK" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="-115" name="VNa" private_interface="out" public_interface="out" units="mV"/>
         <variable initial_value="-10.613" name="Vleak" private_interface="out" public_interface="out" units="mV"/>
-        <variable initial_value="36.0" name="gK_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
-        <variable initial_value="120.0" name="gNa_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
+        <variable initial_value="36" name="gK_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
+        <variable initial_value="120" name="gNa_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable initial_value="0.3" name="gleak_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
-        <variable initial_value="1.0" name="Cm" private_interface="out" public_interface="out" units="uF_per_cmsq"/>
+        <variable initial_value="1" name="Cm" private_interface="out" public_interface="out" units="uF_per_cmsq"/>
     </component>
     <component name="default_initial_conditions">
-        <variable initial_value="0.0" name="V_initial" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="0" name="V_initial" private_interface="out" public_interface="out" units="mV"/>
         <variable initial_value="0.315" name="n_initial" private_interface="out" public_interface="out" units="dimensionless"/>
         <variable initial_value="0.042" name="m_initial" private_interface="out" public_interface="out" units="dimensionless"/>
         <variable initial_value="0.608" name="h_initial" private_interface="out" public_interface="out" units="dimensionless"/>
@@ -178,7 +178,7 @@
         <variable name="gNa" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable name="gNa_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="INa_calculation">
+            <apply cmeta:id="INa_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>INa</ci>
                 <apply>
@@ -193,7 +193,7 @@
             </apply>
         </math>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="gNa_calculation">
+            <apply cmeta:id="gNa_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>gNa</ci>
                 <apply>
@@ -202,7 +202,7 @@
                     <apply>
                         <power/>
                         <ci>m</ci>
-                        <cn cellml:units="dimensionless">3.0</cn>
+                        <cn cellml:units="dimensionless">3</cn>
                     </apply>
                     <ci>h</ci>
                 </apply>
@@ -219,7 +219,7 @@
         <variable name="gK" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable name="gK_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="IK_calculation">
+            <apply cmeta:id="IK_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>IK</ci>
                 <apply>
@@ -234,7 +234,7 @@
             </apply>
         </math>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="gK_calculation">
+            <apply cmeta:id="gK_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>gK</ci>
                 <apply>
@@ -243,7 +243,7 @@
                     <apply>
                         <power/>
                         <ci>n</ci>
-                        <cn cellml:units="dimensionless">4.0</cn>
+                        <cn cellml:units="dimensionless">4</cn>
                     </apply>
                 </apply>
             </apply>
@@ -255,7 +255,7 @@
         <variable name="Vleak" private_interface="out" public_interface="in" units="mV"/>
         <variable name="gleak_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="Ileak_calculation">
+            <apply cmeta:id="Ileak_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>Ileak</ci>
                 <apply>
@@ -274,7 +274,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="alpha_m_calculation">
+            <apply cmeta:id="alpha_m_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -285,7 +285,7 @@
                         <apply>
                             <plus/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">25.0</cn>
+                            <cn cellml:units="mV">25</cn>
                         </apply>
                     </apply>
                     <apply>
@@ -297,12 +297,12 @@
                                 <apply>
                                     <plus/>
                                     <ci>V</ci>
-                                    <cn cellml:units="mV">25.0</cn>
+                                    <cn cellml:units="mV">25</cn>
                                 </apply>
-                                <cn cellml:units="mV">10.0</cn>
+                                <cn cellml:units="mV">10</cn>
                             </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1.0</cn>
+                        <cn cellml:units="dimensionless">1</cn>
                     </apply>
                 </apply>
             </apply>
@@ -312,18 +312,18 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="beta_m_calculation">
+            <apply cmeta:id="beta_m_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>beta</ci>
                 <apply>
                     <times/>
-                    <cn cellml:units="per_ms">4.0</cn>
+                    <cn cellml:units="per_ms">4</cn>
                     <apply>
                         <exp/>
                         <apply>
                             <divide/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">18.0</cn>
+                            <cn cellml:units="mV">18</cn>
                         </apply>
                     </apply>
                 </apply>
@@ -334,7 +334,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="alpha_h_calculation">
+            <apply cmeta:id="alpha_h_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -345,7 +345,7 @@
                         <apply>
                             <divide/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">20.0</cn>
+                            <cn cellml:units="mV">20</cn>
                         </apply>
                     </apply>
                 </apply>
@@ -356,12 +356,12 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="beta_h_calculation">
+            <apply cmeta:id="beta_h_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>beta</ci>
                 <apply>
                     <divide/>
-                    <cn cellml:units="per_ms">1.0</cn>
+                    <cn cellml:units="per_ms">1</cn>
                     <apply>
                         <plus/>
                         <apply>
@@ -371,12 +371,12 @@
                                 <apply>
                                     <plus/>
                                     <ci>V</ci>
-                                    <cn cellml:units="mV">30.0</cn>
+                                    <cn cellml:units="mV">30</cn>
                                 </apply>
-                                <cn cellml:units="mV">10.0</cn>
+                                <cn cellml:units="mV">10</cn>
                             </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1.0</cn>
+                        <cn cellml:units="dimensionless">1</cn>
                     </apply>
                 </apply>
             </apply>
@@ -405,7 +405,7 @@
                         <ci>alpha_X</ci>
                         <apply>
                             <minus/>
-                            <cn cellml:units="dimensionless">1.0</cn>
+                            <cn cellml:units="dimensionless">1</cn>
                             <ci>X</ci>
                         </apply>
                     </apply>
@@ -441,7 +441,7 @@
                         <ci>alpha_X</ci>
                         <apply>
                             <minus/>
-                            <cn cellml:units="dimensionless">1.0</cn>
+                            <cn cellml:units="dimensionless">1</cn>
                             <ci>X</ci>
                         </apply>
                     </apply>
@@ -458,7 +458,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="alpha_n_calculation">
+            <apply cmeta:id="alpha_n_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -469,7 +469,7 @@
                         <apply>
                             <plus/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">10.0</cn>
+                            <cn cellml:units="mV">10</cn>
                         </apply>
                     </apply>
                     <apply>
@@ -481,12 +481,12 @@
                                 <apply>
                                     <plus/>
                                     <ci>V</ci>
-                                    <cn cellml:units="mV">10.0</cn>
+                                    <cn cellml:units="mV">10</cn>
                                 </apply>
-                                <cn cellml:units="mV">10.0</cn>
+                                <cn cellml:units="mV">10</cn>
                             </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1.0</cn>
+                        <cn cellml:units="dimensionless">1</cn>
                     </apply>
                 </apply>
             </apply>
@@ -496,7 +496,7 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cellml:id="beta_n_calculation">
+            <apply cmeta:id="beta_n_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
                 <eq/>
                 <ci>beta</ci>
                 <apply>
@@ -507,7 +507,7 @@
                         <apply>
                             <divide/>
                             <ci>V</ci>
-                            <cn cellml:units="mV">80.0</cn>
+                            <cn cellml:units="mV">80</cn>
                         </apply>
                     </apply>
                 </apply>
@@ -537,7 +537,7 @@
                         <ci>alpha_X</ci>
                         <apply>
                             <minus/>
-                            <cn cellml:units="dimensionless">1.0</cn>
+                            <cn cellml:units="dimensionless">1</cn>
                             <ci>X</ci>
                         </apply>
                     </apply>
@@ -552,7 +552,7 @@
     </component>
     <group>
         <relationship_ref relationship="encapsulation"/>
-        <component_ref component="model">
+        <component_ref component="_model">
             <component_ref component="INa"/>
             <component_ref component="IK"/>
             <component_ref component="Ileak"/>
@@ -572,7 +572,7 @@
         </component_ref>
     </group>
     <connection>
-        <map_components component_1="model" component_2="time"/>
+        <map_components component_1="_model" component_2="time"/>
         <map_variables variable_1="time" variable_2="time"/>
     </connection>
     <connection>
@@ -586,11 +586,11 @@
         <map_variables variable_1="stimCurrent" variable_2="stimCurrent"/>
     </connection>
     <connection>
-        <map_components component_1="model" component_2="stimulus_protocol"/>
+        <map_components component_1="_model" component_2="stimulus_protocol"/>
         <map_variables variable_1="Istim" variable_2="IStim"/>
     </connection>
     <connection>
-        <map_components component_1="model" component_2="default_parameters"/>
+        <map_components component_1="_model" component_2="default_parameters"/>
         <map_variables variable_1="Cm" variable_2="Cm"/>
         <map_variables variable_1="VNa" variable_2="VNa"/>
         <map_variables variable_1="VK" variable_2="VK"/>
@@ -600,14 +600,14 @@
         <map_variables variable_1="gleak_max" variable_2="gleak_max"/>
     </connection>
     <connection>
-        <map_components component_1="model" component_2="default_initial_conditions"/>
+        <map_components component_1="_model" component_2="default_initial_conditions"/>
         <map_variables variable_1="V_initial" variable_2="V_initial"/>
         <map_variables variable_1="m_initial" variable_2="m_initial"/>
         <map_variables variable_1="h_initial" variable_2="h_initial"/>
         <map_variables variable_1="n_initial" variable_2="n_initial"/>
     </connection>
     <connection>
-        <map_components component_1="outputs" component_2="model"/>
+        <map_components component_1="outputs" component_2="_model"/>
         <map_variables variable_1="INa" variable_2="INa"/>
         <map_variables variable_1="IK" variable_2="IK"/>
         <map_variables variable_1="Ileak" variable_2="Ileak"/>
@@ -622,7 +622,7 @@
         <map_variables variable_1="time" variable_2="time"/>
     </connection>
     <connection>
-        <map_components component_1="model" component_2="INa"/>
+        <map_components component_1="_model" component_2="INa"/>
         <map_variables variable_1="INa" variable_2="INa"/>
         <map_variables variable_1="h" variable_2="h"/>
         <map_variables variable_1="m" variable_2="m"/>
@@ -634,7 +634,7 @@
         <map_variables variable_1="gNa_max" variable_2="gNa_max"/>
     </connection>
     <connection>
-        <map_components component_1="model" component_2="IK"/>
+        <map_components component_1="_model" component_2="IK"/>
         <map_variables variable_1="IK" variable_2="IK"/>
         <map_variables variable_1="n" variable_2="n"/>
         <map_variables variable_1="n_initial" variable_2="n_initial"/>
@@ -644,7 +644,7 @@
         <map_variables variable_1="gK_max" variable_2="gK_max"/>
     </connection>
     <connection>
-        <map_components component_1="model" component_2="Ileak"/>
+        <map_components component_1="_model" component_2="Ileak"/>
         <map_variables variable_1="Ileak" variable_2="Ileak"/>
         <map_variables variable_1="V" variable_2="V"/>
         <map_variables variable_1="Vleak" variable_2="Vleak"/>
