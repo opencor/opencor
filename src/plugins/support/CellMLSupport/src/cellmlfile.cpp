@@ -1085,6 +1085,15 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
 //==============================================================================
 
+CellmlFile::Version CellmlFile::version() const
+{
+    // Return our version
+
+    return CellmlFile::version(mModel);
+}
+
+//==============================================================================
+
 CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
 {
     // Return the version of the given CellML model, if any

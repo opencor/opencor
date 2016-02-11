@@ -330,6 +330,16 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         bool res = cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues);
 
+        // Warn the user about the CellML issues being maybe for a (in)direclty
+        // imported CellML file, should we be dealing with a CellML 1.1 file
+
+        if (cellmlFile->version() != CellMLSupport::CellmlFile::Cellml_1_0) {
+            editorList->addItem(EditorList::EditorListItem::Information,
+                                (cellmlFileIssues.count() == 1)?
+                                    tr("The issue reported below may be related to this CellML file or to one of its (in)directly imported CellML files."):
+                                    tr("The issues reported below may be related to this CellML file and/or to one or several of its (in)directly imported CellML files."));
+        }
+
         // Add whatever issue there may be to our list and select the first one
         // of them
 
