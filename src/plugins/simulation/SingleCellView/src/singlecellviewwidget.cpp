@@ -757,8 +757,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
 {
 //---ISSUE825--- TO BE DONE...
-    // Make sure that there is only one model referenced in the given SED-ML
-    // file
+    // Make sure that there is only one model
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
 
@@ -783,8 +782,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         return false;
     }
 
-    // Make sure that there is either one or two simulations referenced in the
-    // given SED-ML file
+    // Make sure that there is either one or two simulations
 
     int nbOfSimulations = sedmlDocument->getNumSimulations();
 
@@ -806,9 +804,9 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         return false;
     }
 
-    // Make sure that the initial and output start time are the same, that the
-    // output start and end times are different, and that the number of points
-    // is greater than zero
+    // Make sure that the initial time and output start time are the same, that
+    // the output start time and output end time are different, and that the
+    // number of points is greater than zero
 
     libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(simulation);
     double initialTime = uniformTimeCourse->getInitialTime();
@@ -847,7 +845,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
 
     if (secondSimulation) {
-        // Make sure that it is a one-step simulation
+        // Make sure that the second simulation is a one-step simulation
 
         if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
@@ -881,6 +879,18 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
             return false;
         }
+    }
+
+    // Make sure that we have only one repeated task, which aim is to execute
+    // each simulation (using a sub-task) once
+
+    const unsigned int totalNbOfTasks = secondSimulation?3:2;
+
+    if (sedmlDocument->getNumTasks() != totalNbOfTasks) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files that execute one or two simulations once are supported"));
+
+        return false;
     }
 
     return true;
