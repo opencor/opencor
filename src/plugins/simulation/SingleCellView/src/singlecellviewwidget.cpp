@@ -51,6 +51,7 @@ specific language governing permissions and limitations under the License.
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
+    #include "sedml/SedPlot2D.h"
     #include "sedml/SedRepeatedTask.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
@@ -895,6 +896,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         return false;
     }
 
+    libsedml::SedRepeatedTask *repeatedTask = 0;
+
     bool repeatedTaskOk = false;
     std::string repeatedTaskFirstSubTaskId = std::string();
     std::string repeatedTaskSecondSubTaskId = std::string();
@@ -912,7 +915,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             // Make sure that the repeated task asks for the model to be reset,
             // that it has one range, no task change and one/two sub-task/s
 
-            libsedml::SedRepeatedTask *repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
+            repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
 
             if (    repeatedTask->getResetModel()
                 && (repeatedTask->getNumRanges() == 1)
@@ -973,6 +976,43 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                                                          tr("only SED-ML files that execute one or two simulations once are supported"));
 
         return false;
+    }
+
+    // Make sure that all the outputs are 2D outputs
+
+    for (uint i = 0, iMax = sedmlDocument->getNumOutputs(); i < iMax; ++i) {
+        libsedml::SedOutput *output = sedmlDocument->getOutput(i);
+
+        if (output->getTypeCode() != libsedml::SEDML_OUTPUT_PLOT2D) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with 2D outputs are supported"));
+
+            return false;
+        }
+
+        // Make sure that the curves reference listed data generators and don't
+        // use logarithmic axes
+
+        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(output);
+
+        for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
+            libsedml::SedCurve *curve = plot->getCurve(j);
+
+            if (curve->getLogX() || curve->getLogY()) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with linear 2D outputs are supported"));
+
+                return false;
+            }
+
+            if (   !sedmlDocument->getDataGenerator(curve->getXDataReference())
+                || !sedmlDocument->getDataGenerator(curve->getYDataReference())) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                 tr("curves must reference existing data generators"));
+
+                return false;
+            }
+        }
     }
 
     return true;
