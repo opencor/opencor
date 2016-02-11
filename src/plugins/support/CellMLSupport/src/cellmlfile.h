@@ -126,6 +126,8 @@ public:
     bool exportTo(const QString &pFileName,
                   const QString &pUserDefinedFormatFileName);
 
+    Version version() const;
+
     static Version version(iface::cellml_api::Model *pModel);
     static Version version(CellmlFile *pCellmlFile);
     static Version version(const QString &pFileName);
