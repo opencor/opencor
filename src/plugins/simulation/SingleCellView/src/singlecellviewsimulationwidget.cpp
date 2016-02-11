@@ -1465,7 +1465,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
 
     libsedml::SedVectorRange *sedmlVectorRange = sedmlRepeatedTask->createVectorRange();
 
-    sedmlVectorRange->setId("vectorRange");
+    sedmlVectorRange->setId("once");
     sedmlVectorRange->addValue(1);
 
     // Create and customise a uniform time course simulation

@@ -165,7 +165,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
     libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
 
-    for (unsigned int i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
+    for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
         const libsedml::SedError *error = errorLog->getError(i);
         SedmlFileIssue::Type issueType;
 

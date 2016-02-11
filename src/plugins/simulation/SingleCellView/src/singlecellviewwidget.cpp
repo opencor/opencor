@@ -51,7 +51,9 @@ specific language governing permissions and limitations under the License.
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
+    #include "sedml/SedRepeatedTask.h"
     #include "sedml/SedUniformTimeCourse.h"
+    #include "sedml/SedVectorRange.h"
 #include "sedmlapienablewarnings.h"
 
 //==============================================================================
@@ -795,9 +797,9 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
     // Make sure that the first simulation is a uniform time course simulation
 
-    libsedml::SedSimulation *simulation = sedmlDocument->getSimulation(0);
+    libsedml::SedSimulation *firstSimulation = sedmlDocument->getSimulation(0);
 
-    if (simulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
+    if (firstSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
 
@@ -808,7 +810,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     // the output start time and output end time are different, and that the
     // number of points is greater than zero
 
-    libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(simulation);
+    libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(firstSimulation);
     double initialTime = uniformTimeCourse->getInitialTime();
     double outputStartTime = uniformTimeCourse->getOutputStartTime();
     double outputEndTime = uniformTimeCourse->getOutputEndTime();
@@ -837,7 +839,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
     // Make sure that the algorithm used for the first simulation is supported
 
-    if (!sedmlAlgorithmSupported(simulation->getAlgorithm(), pSedmlFileIssues))
+    if (!sedmlAlgorithmSupported(firstSimulation->getAlgorithm(), pSedmlFileIssues))
         return false;
 
     // Check whether there is a second simulation
@@ -870,7 +872,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         libsbml::XMLOutputStream xmlStream(stream);
         libsbml::XMLOutputStream secondXmlStream(secondStream);
 
-        simulation->getAlgorithm()->write(xmlStream);
+        firstSimulation->getAlgorithm()->write(xmlStream);
         secondSimulation->getAlgorithm()->write(secondXmlStream);
 
         if (stream.str().compare(secondStream.str())) {
@@ -884,9 +886,89 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     // Make sure that we have only one repeated task, which aim is to execute
     // each simulation (using a sub-task) once
 
-    const unsigned int totalNbOfTasks = secondSimulation?3:2;
+    const uint totalNbOfTasks = secondSimulation?3:2;
 
     if (sedmlDocument->getNumTasks() != totalNbOfTasks) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files that execute one or two simulations once are supported"));
+
+        return false;
+    }
+
+    bool repeatedTaskOk = false;
+    std::string repeatedTaskFirstSubTaskId = std::string();
+    std::string repeatedTaskSecondSubTaskId = std::string();
+
+    bool firstSubTaskOk = false;
+    std::string firstSubTaskId = std::string();
+
+    bool secondSubTaskOk = false;
+    std::string secondSubTaskId = std::string();
+
+    for (uint i = 0; i < totalNbOfTasks; ++i) {
+        libsedml::SedTask *task = sedmlDocument->getTask(i);
+
+        if (task->getTypeCode() == libsedml::SEDML_TASK_REPEATEDTASK) {
+            // Make sure that the repeated task asks for the model to be reset,
+            // that it has one range, no task change and one/two sub-task/s
+
+            libsedml::SedRepeatedTask *repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
+
+            if (    repeatedTask->getResetModel()
+                && (repeatedTask->getNumRanges() == 1)
+                && (repeatedTask->getNumTaskChanges() == 0)
+                && (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
+                // Make sure that the range is a vector range and that it's the
+                // the one referenced in the repeated task
+
+                libsedml::SedRange *range = repeatedTask->getRange(0);
+
+                if (    (range->getTypeCode() == libsedml::SEDML_RANGE_VECTORRANGE)
+                    && !repeatedTask->getRangeId().compare(range->getId())) {
+                    // Make sure that the vector range has one value that is
+                    // equal to 1
+
+                    libsedml::SedVectorRange *vectorRange = static_cast<libsedml::SedVectorRange *>(range);
+
+                    if (   (vectorRange->getNumValues() == 1)
+                        && (vectorRange->getValues().front() == 1)) {
+                        // Make sure that the one/two sub-tasks have the correct
+                        // order and retrieve their id
+
+                        for (uint i = 0, iMax = totalNbOfTasks-1; i < iMax; ++i) {
+                            libsedml::SedSubTask *subTask = repeatedTask->getSubTask(i);
+
+                            if (subTask->getOrder() == 1)
+                                repeatedTaskFirstSubTaskId = subTask->getTask();
+                            else if (subTask->getOrder() == 2)
+                                repeatedTaskSecondSubTaskId = subTask->getTask();
+                        }
+
+                        repeatedTaskOk = true;
+                    }
+                }
+            }
+        } else if (task->getTypeCode() == libsedml::SEDML_TASK) {
+            // Make sure the sub-task references the correct model and
+            // simulation
+
+            if (   !task->getModelReference().compare(model->getId())
+                && !task->getSimulationReference().compare(firstSimulation->getId())) {
+                firstSubTaskOk = true;
+                firstSubTaskId = task->getId();
+            } else if (   secondSimulation
+                       && !task->getModelReference().compare(model->getId())
+                       && !task->getSimulationReference().compare(secondSimulation->getId())) {
+                secondSubTaskOk = true;
+                secondSubTaskId = task->getId();
+            }
+        }
+    }
+
+    if (   !repeatedTaskOk
+        || !firstSubTaskOk || repeatedTaskFirstSubTaskId.compare(firstSubTaskId)
+        || (     secondSimulation
+            && (!secondSubTaskOk || repeatedTaskSecondSubTaskId.compare(secondSubTaskId)))) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                          tr("only SED-ML files that execute one or two simulations once are supported"));
 
