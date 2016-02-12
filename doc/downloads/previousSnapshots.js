@@ -8,7 +8,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
                          "files": [
-                           { "extension": ".tar.gz" },
+                           { "extension": ".tar.gz" }
                          ]
                        },
                        { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
@@ -32,7 +32,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
                          "files": [
-                           { "extension": ".tar.gz" },
+                           { "extension": ".tar.gz" }
                          ]
                        },
                        { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",

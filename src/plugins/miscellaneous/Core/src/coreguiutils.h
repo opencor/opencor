@@ -50,9 +50,15 @@ namespace Core {
 
 //==============================================================================
 
+class CentralWidget;
+
+//==============================================================================
+
 #include "coreguiutils.h.inl"
 
 //==============================================================================
+
+CentralWidget CORE_EXPORT * centralWidget();
 
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QString &pFilters = QString(),
