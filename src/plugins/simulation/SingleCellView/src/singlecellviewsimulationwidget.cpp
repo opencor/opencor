@@ -1117,6 +1117,15 @@ QString SingleCellViewSimulationWidget::fileName() const
 
 //==============================================================================
 
+SEDMLSupport::SedmlFile * SingleCellViewSimulationWidget::sedmlFile() const
+{
+    // Return our SED-ML file
+
+    return mSedmlFile;
+}
+
+//==============================================================================
+
 SingleCellViewWidget::FileType SingleCellViewSimulationWidget::fileType() const
 {
     // Return our file type

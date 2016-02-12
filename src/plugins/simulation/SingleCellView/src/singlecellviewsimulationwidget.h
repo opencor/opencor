@@ -133,6 +133,8 @@ public:
 
     QString fileName() const;
 
+    SEDMLSupport::SedmlFile * sedmlFile() const;
+
     SingleCellViewWidget::FileType fileType() const;
 
     SingleCellViewSimulation *simulation() const;
