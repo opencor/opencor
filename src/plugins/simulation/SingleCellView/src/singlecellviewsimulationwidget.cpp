@@ -92,7 +92,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     Widget(pParent),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
-    mViewWidget(pPlugin->viewWidget()),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mProgress(-1),
@@ -363,9 +362,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     // Create our simulation object and a few connections for it, after having
     // retrieved our file details
 
-    mViewWidget->retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile,
-                                     mCombineArchive, mFileType,
-                                     mSedmlFileIssues, mCombineArchiveIssues);
+    mPlugin->viewWidget()->retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile,
+                                               mCombineArchive, mFileType,
+                                               mSedmlFileIssues,
+                                               mCombineArchiveIssues);
 
     mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
@@ -608,9 +608,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // Retrieve our file details and update our simulation object, if needed
 
     if (pReloadingView) {
-        mViewWidget->retrieveFileDetails(mFileName, mCellmlFile, mSedmlFile,
-                                         mCombineArchive, mFileType,
-                                         mSedmlFileIssues, mCombineArchiveIssues);
+        mPlugin->viewWidget()->retrieveFileDetails(mFileName, mCellmlFile,
+                                                   mSedmlFile, mCombineArchive,
+                                                   mFileType, mSedmlFileIssues,
+                                                   mCombineArchiveIssues);
     }
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
@@ -1203,7 +1204,7 @@ void SingleCellViewSimulationWidget::on_actionRunPauseResumeSimulation_triggered
 
                 runSimulation = mSimulation->results()->reset();
 
-                mViewWidget->checkSimulationResults(mFileName, true);
+                mPlugin->viewWidget()->checkSimulationResults(mFileName, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1254,7 +1255,7 @@ void SingleCellViewSimulationWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mFileName, true);
+    mPlugin->viewWidget()->checkSimulationResults(mFileName, true);
 }
 
 //==============================================================================
@@ -1944,7 +1945,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     // Export our simulation data results
 
     setEnabled(false);
-    mViewWidget->showBusyWidget(this, true);
+    mPlugin->viewWidget()->showBusyWidget(this, true);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
@@ -1953,7 +1954,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 
     dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
-    mViewWidget->hideBusyWidget();
+    mPlugin->viewWidget()->hideBusyWidget();
     setEnabled(true);
 }
 
@@ -1994,7 +1995,7 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mFileName);
+    mPlugin->viewWidget()->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -2008,7 +2009,7 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
-    mViewWidget->checkSimulationResults(mFileName);
+    mPlugin->viewWidget()->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -2072,7 +2073,7 @@ void SingleCellViewSimulationWidget::resetFileTabIcon()
 
     static const QIcon NoIcon = QIcon();
 
-    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
+    emit mPlugin->viewWidget()->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
 
 //==============================================================================
@@ -2264,7 +2265,7 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
         //       indeed refer to a file that has not yet been activated and
         //       therefore doesn't yet have a simulation associated with it...
 
-        SingleCellViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
+        SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
 
         updateGraphData(graph, simulation?simulation->results()->size():0);
 
@@ -2345,7 +2346,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
-            SingleCellViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
+            SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
 
@@ -2456,7 +2457,7 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        SingleCellViewSimulation *simulation = mViewWidget->simulation(pGraph->fileName());
+        SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
 
         pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
                               dataPoints(simulation, pGraph->parameterY()),
@@ -2489,7 +2490,7 @@ void SingleCellViewSimulationWidget::updateGui()
 
     // Make sure that our progress bar is up to date
 
-    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mFileName)/mSimulation->size());
+    mProgressBarWidget->setValue(mPlugin->viewWidget()->simulationResultsSize(mFileName)/mSimulation->size());
 }
 
 //==============================================================================
@@ -2626,7 +2627,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
     // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
-        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();
+        double simulationProgress = mPlugin->viewWidget()->simulationResultsSize(mFileName)/simulation->size();
 
         if (visible) {
             mProgressBarWidget->setValue(simulationProgress);
@@ -2647,7 +2648,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 // Let people know about the file tab icon to be used for the
                 // model
 
-                emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+                emit mPlugin->viewWidget()->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
             }
         }
     }

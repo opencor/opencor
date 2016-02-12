@@ -58,7 +58,6 @@ namespace SingleCellView {
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
-class SingleCellViewWidget;
 
 //==============================================================================
 
@@ -92,7 +91,7 @@ public:
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
 
-    SingleCellViewWidget *mViewWidget;
+    SingleCellViewPlugin *mPlugin;
 
     QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *> mGraphPanels;
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;

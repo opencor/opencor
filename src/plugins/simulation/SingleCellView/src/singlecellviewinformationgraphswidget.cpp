@@ -50,7 +50,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
     QStackedWidget(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
-    mViewWidget(pPlugin->viewWidget()),
+    mPlugin(pPlugin),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
@@ -746,7 +746,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assignment...
 
     bool graphOk = true;
-    CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
+    CellMLSupport::CellmlFileRuntime *runtime = mPlugin->viewWidget()->runtime(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
@@ -845,7 +845,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mViewWidget->fileNames())
+    foreach (const QString &fileName, mPlugin->viewWidget()->fileNames())
         modelListValues << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
 
     modelListValues.sort();

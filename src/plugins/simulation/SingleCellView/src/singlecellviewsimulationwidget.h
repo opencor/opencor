@@ -157,8 +157,6 @@ private:
 
     SingleCellViewPlugin *mPlugin;
 
-    SingleCellViewWidget *mViewWidget;
-
     QString mFileName;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
