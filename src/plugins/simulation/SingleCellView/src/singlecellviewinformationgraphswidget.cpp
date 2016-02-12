@@ -46,18 +46,19 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                                             SingleCellViewSimulationWidget *pSimulationWidget,
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
     mPlugin(pPlugin),
+    mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mFileName(QString()),
     mHorizontalScrollBarValue(0)
 {
     // Set up the GUI
@@ -721,7 +722,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
 
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
-    QString fileName = mFileName;
+    QString fileName = mSimulationWidget->fileName();
     QPen oldPen = graph->pen();
     QPen newPen = oldPen;
 
@@ -886,7 +887,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
             if (oldModelValue.contains(PropertySeparator)) {
                 // The current file got renamed
 
-                newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
+                newModelValue = QFileInfo(mSimulationWidget->fileName()).fileName()+PropertySeparator+mSimulationWidget->fileName();
             } else {
                 // The value of the model property was "Current" (and the locale
                 // got changed)

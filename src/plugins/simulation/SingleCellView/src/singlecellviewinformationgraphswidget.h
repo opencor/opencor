@@ -58,6 +58,7 @@ namespace SingleCellView {
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
@@ -68,6 +69,7 @@ class SingleCellViewInformationGraphsWidget : public QStackedWidget,
 
 public:
     explicit SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                   SingleCellViewSimulationWidget *pSimulationWidget,
                                                    QWidget *pParent);
     ~SingleCellViewInformationGraphsWidget();
 
@@ -92,6 +94,7 @@ private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
 
     SingleCellViewPlugin *mPlugin;
+    SingleCellViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *> mGraphPanels;
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
@@ -104,8 +107,6 @@ private:
     QMenu *mParametersContextMenu;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
-
-    QString mFileName;
 
     bool mCanEmitGraphsUpdatedSignal;
 

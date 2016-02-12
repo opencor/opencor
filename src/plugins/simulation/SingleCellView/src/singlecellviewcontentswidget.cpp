@@ -48,7 +48,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
     // Create our information widget
 
-    mInformationWidget = new SingleCellViewInformationWidget(pPlugin, this);
+    mInformationWidget = new SingleCellViewInformationWidget(pPlugin, pSimulationWidget, this);
 
     mInformationWidget->setObjectName("Information");
 

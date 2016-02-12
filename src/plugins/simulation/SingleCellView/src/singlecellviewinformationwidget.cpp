@@ -39,6 +39,7 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                                                 SingleCellViewSimulationWidget *pSimulationWidget,
                                                                  QWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent)
@@ -76,7 +77,7 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewP
 
     // Create our graphs widget
 
-    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, mCollapsibleWidget);
+    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, pSimulationWidget, mCollapsibleWidget);
 
     mGraphsWidget->setObjectName("Graphs");
 

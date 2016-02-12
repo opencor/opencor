@@ -137,6 +137,9 @@ void SingleCellViewGraphPanelsWidget::initialize()
 {
     // Set the first graph panel
 
+//---ISSUE825--- BEGIN TEMPORARY
+if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile)
+//---ISSUE825--- END TEMPORARY
     qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
 }
 
