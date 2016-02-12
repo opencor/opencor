@@ -519,7 +519,8 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     mGui->actionSimulationDataExport->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                                  &&  mSimulation->results()->size()
                                                  && !simulationModeEnabled);
-    mGui->actionSedmlExport->setEnabled(    mSimulation->results()->size()
+    mGui->actionSedmlExport->setEnabled(    (mFileType == SingleCellViewWidget::CellmlFile)
+                                        &&  mSimulation->results()->size()
                                         && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
@@ -1036,7 +1037,7 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
     // track of its checked status or recheck it, as necessary
 
      if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
-         mGui->actionDevelopmentMode->setEnabled(true);
+         mGui->actionDevelopmentMode->setEnabled(mFileType == SingleCellViewWidget::CellmlFile);
          mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentMode);
      } else {
          mLockedDevelopmentMode = mGui->actionDevelopmentMode->isChecked();
