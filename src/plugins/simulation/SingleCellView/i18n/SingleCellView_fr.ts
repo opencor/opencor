@@ -399,6 +399,46 @@
         <source>only SED-ML files with two simulations with the same algorithm are supported</source>
         <translation>seulement les fichiers SED-ML avec deux simulations avec le même algorithme sont supportés</translation>
     </message>
+    <message>
+        <source>only SED-ML files that execute one or two simulations once are supported</source>
+        <translation>seulement les fichiers SED-ML qui exécutent une ou deux simulations sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with data generators for one variable are supported</source>
+        <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with data generators for one variable with a target and a task reference are supported</source>
+        <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable avec une cible et une référence de tâche sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with data generators for one variable with a reference to a repeated task are supported</source>
+        <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable avec une référence à une tâche répétitive sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with data generators for one variable with a reference to a CellML variable are supported</source>
+        <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable avec une référence à une variable CellML sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with data generators for one variable that is not modified are supported</source>
+        <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable qui n&apos;est pas modifiée sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with 2D outputs are supported</source>
+        <translation>seulement les fichiers SED-ML avec des sorties 2D sont supportés</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with linear 2D outputs are supported</source>
+        <translation>seulement les fichiers SED-ML avec des sorties 2D linéaires sont supportés</translation>
+    </message>
+    <message>
+        <source>a curve must reference existing data generators</source>
+        <translation>une courbe doit référencer des générateurs de donnée qui existent</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with data generators for one variable that is derived or not are supported</source>
+        <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable qui est dérivée ou non sont supportés</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

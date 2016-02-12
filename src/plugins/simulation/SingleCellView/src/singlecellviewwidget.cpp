@@ -1073,7 +1073,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
                 if (!validVariableDegree) {
                     pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                     tr("only SED-ML files with data generators for one variable that may or not be derived are supported"));
+                                                                     tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
 
                     return false;
                 }
@@ -1121,7 +1121,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             if (   !sedmlDocument->getDataGenerator(curve->getXDataReference())
                 || !sedmlDocument->getDataGenerator(curve->getYDataReference())) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("curves must reference existing data generators"));
+                                                                 tr("a curve must reference existing data generators"));
 
                 return false;
             }
