@@ -47,6 +47,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sbmlapidisablewarnings.h"
+    #include "sbml/math/ASTNode.h"
+#include "sbmlapienablewarnings.h"
+
+//==============================================================================
+
 #include "sedmlapidisablewarnings.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
@@ -976,6 +982,113 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                                                          tr("only SED-ML files that execute one or two simulations once are supported"));
 
         return false;
+    }
+
+    // Make sure that all the data generators have one variable that references
+    // the repeated task, that follows the correct CellML format for their
+    // target (and OpenCOR format for their degree, if any), and that is not
+    // modified
+
+    for (uint i = 0, iMax = sedmlDocument->getNumDataGenerators(); i < iMax; ++i) {
+        libsedml::SedDataGenerator *dataGenerator = sedmlDocument->getDataGenerator(i);
+
+        if (   (dataGenerator->getNumVariables() != 1)
+            || (dataGenerator->getNumParameters() != 0)) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with data generators for one variable are supported"));
+
+            return false;
+        }
+
+        libsedml::SedVariable *variable = dataGenerator->getVariable(0);
+
+        if (variable->getSymbol().size() || variable->getModelReference().size()) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with data generators for one variable with a target and a task reference are supported"));
+
+            return false;
+        }
+
+        if (variable->getTaskReference().compare(repeatedTask->getId())) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with data generators for one variable with a reference to a repeated task are supported"));
+
+            return false;
+        }
+
+        static const QRegularExpression TargetStartRegEx  = QRegularExpression("^\\/cellml:model\\/cellml:component\\[@name='");
+        static const QRegularExpression TargetMiddleRegEx = QRegularExpression("']\\/cellml:variable\\[@name='");
+        static const QRegularExpression TargetEndRegEx    = QRegularExpression("'\\]$");
+
+        bool referencingCellmlVariable = false;
+        QString target = QString::fromStdString(variable->getTarget());
+
+        if (target.contains(TargetStartRegEx) && target.contains(TargetEndRegEx)) {
+            static const QString Separator = "|";
+
+            target.remove(TargetStartRegEx);
+            target.replace(TargetMiddleRegEx, Separator);
+            target.remove(TargetEndRegEx);
+
+            QStringList identifiers = target.split(Separator);
+
+            if (identifiers.count() == 2) {
+                static const QRegularExpression IdentifierRegEx = QRegularExpression("^[[:alpha:]_][[:alnum:]_]*$");
+
+                QString componentName = identifiers.first();
+                QString variableName = identifiers.last();
+
+                referencingCellmlVariable =    IdentifierRegEx.match(componentName).hasMatch()
+                                            && IdentifierRegEx.match(variableName).hasMatch();
+            }
+        }
+
+        if (!referencingCellmlVariable) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with data generators for one variable with a reference to a CellML variable are supported"));
+
+            return false;
+        }
+
+        libsbml::XMLNode *annotation = variable->getAnnotation();
+
+        if (annotation) {
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const XMLNode &node = annotation->getChild(i);
+
+                if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
+                    continue;
+                }
+
+                bool validVariableDegree = false;
+
+                if (node.getNumChildren() == 1) {
+                    const XMLNode &variableDegreeNode = node.getChild(0);
+                    bool conversionOk;
+                    int variableDegree = QString::fromStdString(variableDegreeNode.getCharacters()).toInt(&conversionOk);
+
+                    validVariableDegree = conversionOk && (variableDegree >= 0);
+                }
+
+                if (!validVariableDegree) {
+                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                     tr("only SED-ML files with data generators for one variable that may or not be derived are supported"));
+
+                    return false;
+                }
+            }
+        }
+
+        const libsbml::ASTNode *mathNode = dataGenerator->getMath();
+
+        if (   (mathNode->getType() != libsbml::AST_NAME)
+            || variable->getId().compare(mathNode->getName())) {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with data generators for one variable that is not modified are supported"));
+
+            return false;
+        }
     }
 
     // Make sure that all the outputs are 2D outputs
