@@ -85,47 +85,38 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     emit removeGraphPanelsEnabled(false);
 
     // Retrieve the number of graph panels and create the corresponding number
-    // of graphs, if we are dealing with a CellML file or simply create the
-    // number of graph panels corresponding to the number of 2D outputs
-    // mentioned in the SED-ML file
+    // of graphs, if we are dealing with a CellML file, or only one default
+    // graph panel
     // Note: we don't assign the value of SettingsGraphPanelSizes directly to
     //       mSplitterSizes because adding a graph panel will reset it. So,
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
-        QIntList splitterSizes = QIntList();
+    QIntList splitterSizes = QIntList();
 
+    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
         pSettings->beginGroup(mSimulationWidget->fileName());
             splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
         pSettings->endGroup();
-
-        int graphPanelsCount = splitterSizes.count();
-
-        if (!graphPanelsCount) {
-            // For some reasons, the settings for the number of graph panels to be
-            // created got messed up, so reset it
-
-            graphPanelsCount = 1;
-        }
-
-        for (int i = 0; i < graphPanelsCount; ++i)
-            addGraphPanel();
-
-        // Retrieve and set the size of each graph panel
-
-        mSplitterSizes = splitterSizes;
-
-        setSizes(mSplitterSizes);
-/*---ISSUE825---
-    } else {
-*/
-//---ISSUE825--- BEGIN
-    } else if (mSimulationWidget->fileType() == SingleCellViewWidget::SedmlFile) {
-//---ISSUE825--- END
-        for (uint i = 0, iMax = mSimulationWidget->sedmlFile()->sedmlDocument()->getNumOutputs(); i < iMax; ++i)
-            addGraphPanel();
     }
+
+    int graphPanelsCount = splitterSizes.count();
+
+    if (!graphPanelsCount) {
+        // For some reasons, the settings for the number of graph panels to be
+        // created got messed up, so reset it
+
+        graphPanelsCount = 1;
+    }
+
+    for (int i = 0; i < graphPanelsCount; ++i)
+        addGraphPanel();
+
+    // Retrieve and set the size of each graph panel
+
+    mSplitterSizes = splitterSizes;
+
+    setSizes(mSplitterSizes);
 }
 
 //==============================================================================
@@ -146,6 +137,22 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
 void SingleCellViewGraphPanelsWidget::initialize()
 {
+    // Create the number of graph panels corresponding to the number of 2D
+    // outputs mentioned in the SED-ML file, if we are not dealing with a CellML
+    // file
+
+/*---ISSUE825---
+    if (mSimulationWidget->fileType() != SingleCellViewWidget::CellmlFile) {
+*/
+//---ISSUE825--- BEGIN
+if (mSimulationWidget->fileType() == SingleCellViewWidget::SedmlFile) {
+//---ISSUE825--- END
+        removeAllGraphPanels();
+
+        for (uint i = 0, iMax = mSimulationWidget->sedmlFile()->sedmlDocument()->getNumOutputs()-1; i < iMax; ++i)
+            addGraphPanel();
+    }
+
     // Set the first graph panel
 
     qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
