@@ -74,11 +74,8 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const QString &pFileName,
-                    SingleCellViewSimulation *pSimulation);
-    void finalize(const QString &pFileName);
-
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+    void initialize(SingleCellViewSimulation *pSimulation);
+    void finalize();
 
     void updateGui();
 

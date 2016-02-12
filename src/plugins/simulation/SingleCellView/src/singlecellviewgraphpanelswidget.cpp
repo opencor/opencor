@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "singlecellviewgraphpanelswidget.h"
+#include "singlecellviewsimulationwidget.h"
 
 //==============================================================================
 
@@ -32,9 +33,11 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParent) :
+SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+                                                                 QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
+    mSimulationWidget(pSimulationWidget),
     mSplitterSizes(QIntList()),
     mGraphPanels(SingleCellViewGraphPanelWidgets()),
     mActiveGraphPanel(0)
@@ -68,13 +71,17 @@ static const auto SettingsGraphPanelSizes = QStringLiteral("GraphPanelSizes");
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings,
-                                                   const QString &pFileName)
+void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
     emit removeGraphPanelsEnabled(false);
+
+    // Make sure that we are dealing with a CellML file
+
+    if (mSimulationWidget->fileType() != SingleCellViewWidget::CellmlFile)
+        return;
 
     // Retrieve the number of graph panels and create the corresponding number
     // of graphs
@@ -85,7 +92,7 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings,
 
     QIntList splitterSizes = QIntList();
 
-    pSettings->beginGroup(pFileName);
+    pSettings->beginGroup(mSimulationWidget->fileName());
         splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
     pSettings->endGroup();
 
@@ -110,12 +117,16 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings,
-                                                   const QString &pFileName) const
+void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
+    // Make sure that we are dealing with a CellML file
+
+    if (mSimulationWidget->fileType() != SingleCellViewWidget::CellmlFile)
+        return;
+
     // Keep track of the size of each graph panel
 
-    pSettings->beginGroup(pFileName);
+    pSettings->beginGroup(mSimulationWidget->fileName());
         pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
     pSettings->endGroup();
 }

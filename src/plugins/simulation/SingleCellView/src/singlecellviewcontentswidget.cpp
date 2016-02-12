@@ -36,6 +36,7 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
+                                                           SingleCellViewSimulationWidget *pSimulationWidget,
                                                            QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent)
@@ -53,7 +54,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
     // Create our graph panels widget
 
-    mGraphPanelsWidget = new SingleCellViewGraphPanelsWidget(this);
+    mGraphPanelsWidget = new SingleCellViewGraphPanelsWidget(pSimulationWidget, this);
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
 
@@ -81,8 +82,7 @@ void SingleCellViewContentsWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings,
-                                                const QString &pFileName)
+void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of our information and graph panels widgets
 
@@ -91,14 +91,13 @@ void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings,
     pSettings->endGroup();
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->loadSettings(pSettings, pFileName);
+        mGraphPanelsWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings,
-                                                const QString &pFileName) const
+void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of our information and graph panels widgets
 
@@ -107,7 +106,7 @@ void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings,
     pSettings->endGroup();
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->saveSettings(pSettings, pFileName);
+        mGraphPanelsWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 

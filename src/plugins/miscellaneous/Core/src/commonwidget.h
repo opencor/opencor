@@ -54,9 +54,7 @@ public:
     explicit CommonWidget(QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void loadSettings(QSettings *pSettings, const QString &pFileName);
     virtual void saveSettings(QSettings *pSettings) const;
-    virtual void saveSettings(QSettings *pSettings, const QString &pFileName) const;
 
     virtual void retranslateUi();
 

@@ -130,9 +130,10 @@ public:
     void filePermissionsChanged();
     void fileModified();
     void fileReloaded();
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     QString fileName() const;
+
+    SingleCellViewWidget::FileType fileType() const;
 
     SingleCellViewSimulation *simulation() const;
 

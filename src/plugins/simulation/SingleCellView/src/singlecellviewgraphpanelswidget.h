@@ -38,18 +38,23 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewSimulationWidget;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelsWidget : public QSplitter,
                                         public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelsWidget(QWidget *pParent);
+    explicit SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+                                             QWidget *pParent);
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings, const QString &pFileName);
-    virtual void saveSettings(QSettings *pSettings, const QString &pFileName) const;
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize();
 
@@ -62,6 +67,8 @@ public:
     void removeAllGraphPanels();
 
 private:
+    SingleCellViewSimulationWidget *mSimulationWidget;
+
     QIntList mSplitterSizes;
 
     SingleCellViewGraphPanelWidgets mGraphPanels;

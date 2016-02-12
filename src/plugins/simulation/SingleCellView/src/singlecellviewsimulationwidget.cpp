@@ -236,7 +236,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our contents widget
 
-    mContentsWidget = new SingleCellViewContentsWidget(pPlugin, this);
+    mContentsWidget = new SingleCellViewContentsWidget(pPlugin, this, this);
 
     mContentsWidget->setObjectName("Contents");
 
@@ -452,7 +452,7 @@ void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
     // Retrieve the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->loadSettings(pSettings, mFileName);
+        mContentsWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -463,7 +463,7 @@ void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->saveSettings(pSettings, mFileName);
+        mContentsWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -876,7 +876,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         solversWidget->initialize(mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphsWidget()->initialize(mFileName, mSimulation);
+            informationWidget->graphsWidget()->initialize(mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
         mContentsWidget->graphPanelsWidget()->initialize();
@@ -916,7 +916,7 @@ void SingleCellViewSimulationWidget::finalize()
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->graphsWidget()->finalize(mFileName);
+    informationWidget->graphsWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
 }
 
@@ -1107,21 +1107,20 @@ void SingleCellViewSimulationWidget::fileReloaded()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
-                                                 const QString &pNewFileName)
-{
-    // Let our graphs widget know that the given file has been renamed
-
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
-}
-
-//==============================================================================
-
 QString SingleCellViewSimulationWidget::fileName() const
 {
     // Return our file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+SingleCellViewWidget::FileType SingleCellViewSimulationWidget::fileType() const
+{
+    // Return our file type
+
+    return mFileType;
 }
 
 //==============================================================================

@@ -111,13 +111,8 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
-                                                       SingleCellViewSimulation *pSimulation)
+void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of our file name
-
-    mFileName = pFileName;
-
     // Populate our parameters context menu
 
     populateParametersContextMenu(pSimulation->runtime());
@@ -129,24 +124,11 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
+void SingleCellViewInformationGraphsWidget::finalize()
 {
-    Q_UNUSED(pFileName);
-
     // Clear our parameters context menu
 
     mParametersContextMenu->clear();
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
-                                                        const QString &pNewFileName)
-{
-    // Update our file name, if we are the file that has been renamed
-
-    if (!pOldFileName.compare(mFileName))
-        mFileName = pNewFileName;
 }
 
 //==============================================================================
