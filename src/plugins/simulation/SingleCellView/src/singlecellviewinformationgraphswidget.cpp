@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "filemanager.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewplugin.h"
@@ -846,8 +847,14 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mPlugin->viewWidget()->fileNames())
-        modelListValues << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
+    foreach (const QString &fileName, mPlugin->viewWidget()->fileNames()) {
+        Core::File *file = Core::FileManager::instance()->file(fileName);
+        QString fileNameOrUrl = file->isLocal()?fileName:file->url();
+
+        modelListValues <<  QFileInfo(fileNameOrUrl).fileName()
+                           +PropertySeparator
+                           +fileNameOrUrl;
+    }
 
     modelListValues.sort();
 
