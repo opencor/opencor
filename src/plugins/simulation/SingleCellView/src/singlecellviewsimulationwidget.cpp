@@ -1415,8 +1415,9 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
     pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
 
     if (variableDegree) {
-        pSedmlVariable->appendAnnotation(QString("<variableDegree xmlns=\"%1\">%2</variableDegree>").arg(SEDMLSupport::OpencorNamespace,
-                                                                                                         QString::number(variableDegree)).toStdString());
+        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::VariableDegree,
+                                                                                 SEDMLSupport::OpencorNamespace,
+                                                                                 QString::number(variableDegree)).toStdString());
     }
 }
 

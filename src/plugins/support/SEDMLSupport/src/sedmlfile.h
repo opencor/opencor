@@ -49,6 +49,7 @@ namespace SEDMLSupport {
 //==============================================================================
 
 static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
+static const auto VariableDegree = QStringLiteral("variableDegree");
 
 //==============================================================================
 
