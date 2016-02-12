@@ -142,6 +142,8 @@ void SingleCellViewGraphPanelsWidget::initialize()
     // Create the number of graph panels corresponding to the number of 2D
     // outputs mentioned in the SED-ML file, if we are not dealing with a CellML
     // file
+    // Note: that removing all the graph panels will actually leave one of them,
+    //       hence the -1 in iMax...
 
 /*---ISSUE825---
     if (mSimulationWidget->fileType() != SingleCellViewWidget::CellmlFile) {
