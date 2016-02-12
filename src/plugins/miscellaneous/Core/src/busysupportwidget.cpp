@@ -21,11 +21,14 @@ specific language governing permissions and limitations under the License.
 
 #include "busysupportwidget.h"
 #include "busywidget.h"
+#include "centralwidget.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QMainWindow>
 #include <QRect>
 
 //==============================================================================
@@ -64,12 +67,21 @@ void BusySupportWidget::showBusyWidget(QWidget *pParent, const bool &pGlobal,
 
     centerBusyWidget();
 
-    // Disable our parent widget, if any
+    // Disable our parent widget (or OpenCOR itself in case our parent is the
+    // central widget), if any
+    // Note: if our parent is the central widget, we really want to disable the
+    //       whole application otherwise we could, for example, be loading a
+    //       remote file and still be able to switch files, which would mess up
+    //       our GUI...
 
     QWidget *effectiveParentWidget = mBusyWidget->effectiveParentWidget();
 
-    if (effectiveParentWidget)
-        effectiveParentWidget->setEnabled(false);
+    if (effectiveParentWidget) {
+        if (effectiveParentWidget == static_cast<QWidget *>(centralWidget()))
+            mainWindow()->setEnabled(false);
+        else
+            effectiveParentWidget->setEnabled(false);
+    }
 
     // Make sure that our busy widget is shown straightaway
     // Note: indeed, depending on the operating system (e.g. OS X) and on what
@@ -84,12 +96,17 @@ void BusySupportWidget::showBusyWidget(QWidget *pParent, const bool &pGlobal,
 
 void BusySupportWidget::hideBusyWidget()
 {
-    // Determine our parent widget, if any, and enable it
+    // Determine our parent widget, if any, and enable it (or OpenCOR itself in
+    // case our parent is the central widget)
 
     QWidget *effectiveParentWidget = mBusyWidget?mBusyWidget->effectiveParentWidget():0;
 
-    if (effectiveParentWidget)
-        effectiveParentWidget->setEnabled(true);
+    if (effectiveParentWidget) {
+        if (effectiveParentWidget == static_cast<QWidget *>(centralWidget()))
+            mainWindow()->setEnabled(true);
+        else
+            effectiveParentWidget->setEnabled(true);
+    }
 
     // Hide our busy widget by deleting it
 
