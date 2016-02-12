@@ -92,31 +92,33 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    QIntList splitterSizes = QIntList();
-
     if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
+        QIntList splitterSizes = QIntList();
+
         pSettings->beginGroup(mSimulationWidget->fileName());
             splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
         pSettings->endGroup();
-    }
 
-    int graphPanelsCount = splitterSizes.count();
+        int graphPanelsCount = splitterSizes.count();
 
-    if (!graphPanelsCount) {
-        // For some reasons, the settings for the number of graph panels to be
-        // created got messed up, so reset it
+        if (!graphPanelsCount) {
+            // For some reasons, the settings for the number of graph panels to be
+            // created got messed up, so reset it
 
-        graphPanelsCount = 1;
-    }
+            graphPanelsCount = 1;
+        }
 
-    for (int i = 0; i < graphPanelsCount; ++i)
+        for (int i = 0; i < graphPanelsCount; ++i)
+            addGraphPanel();
+
+        // Retrieve and set the size of each graph panel
+
+        mSplitterSizes = splitterSizes;
+
+        setSizes(mSplitterSizes);
+    } else {
         addGraphPanel();
-
-    // Retrieve and set the size of each graph panel
-
-    mSplitterSizes = splitterSizes;
-
-    setSizes(mSplitterSizes);
+    }
 }
 
 //==============================================================================
@@ -151,6 +153,8 @@ if (mSimulationWidget->fileType() == SingleCellViewWidget::SedmlFile) {
 
         for (uint i = 0, iMax = mSimulationWidget->sedmlFile()->sedmlDocument()->getNumOutputs()-1; i < iMax; ++i)
             addGraphPanel();
+
+        setSizes(QIntList());
     }
 
     // Set the first graph panel
@@ -336,7 +340,8 @@ void SingleCellViewGraphPanelsWidget::splitterMoved()
 {
     // Our splitter has been moved, so keep track of its new sizes
 
-    mSplitterSizes = sizes();
+    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile)
+        mSplitterSizes = sizes();
 }
 
 //==============================================================================
