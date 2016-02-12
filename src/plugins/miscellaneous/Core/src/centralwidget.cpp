@@ -483,7 +483,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QStringList fileNames = QStringList();
     QStringList fileNamesOrUrls = QStringList();
 
-    foreach (const QString &fileName, mFileNames)
+    foreach (const QString &fileName, mFileNames) {
         if (!fileManagerInstance->isNew(fileName)) {
             // The file is not new, so keep track of it, as well as of whether
             // it's a remote file
@@ -499,6 +499,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
             pSettings->setValue(SettingsFileIsRemote.arg(fileNamesOrUrls.last()), fileIsRemote);
         }
+    }
 
     pSettings->setValue(SettingsFileNamesOrUrls, fileNamesOrUrls);
 
@@ -586,9 +587,10 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     //       called as part of OpenCOR's loading its settings, so we do it here
     //       instead...
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         foreach (const QString &fileName, mFileNames)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
+    }
 }
 
 //==============================================================================
@@ -1222,10 +1224,11 @@ void CentralWidget::previousFile()
 {
     // Select the previous file
 
-    if (mFileTabs->count())
+    if (mFileTabs->count()) {
         mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
                                        mFileTabs->currentIndex()-1:
                                        mFileTabs->count()-1);
+    }
 }
 
 //==============================================================================
@@ -1234,10 +1237,11 @@ void CentralWidget::nextFile()
 {
     // Select the next file
 
-    if (mFileTabs->count())
+    if (mFileTabs->count()) {
         mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
                                        0:
                                        mFileTabs->currentIndex()+1);
+    }
 }
 
 //==============================================================================
@@ -1388,9 +1392,10 @@ bool CentralWidget::canClose()
 {
     // We can close only if none of the opened files is modified
 
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         if (!canCloseFile(i))
             return false;
+    }
 
     return true;
 }
