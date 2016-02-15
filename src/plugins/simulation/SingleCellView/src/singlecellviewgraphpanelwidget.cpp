@@ -75,14 +75,18 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(const SingleCellV
 
     layout->addWidget(mPlot);
 
+    // Allow the graph panel to be of any vertical size
+
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+
+    // Make sure that our marker's colour is properly intiialised
+
+    updateMarkerColor();
+
     // Let our plot's neighbours know about our plot
 
     foreach (SingleCellViewGraphPanelPlotWidget *neighbor, neighbors)
         neighbor->addNeighbor(mPlot);
-
-    // Allow the graph panel to be of any vertical size
-
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 }
 
 //==============================================================================

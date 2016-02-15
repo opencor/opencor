@@ -276,6 +276,8 @@ private Q_SLOTS:
     void on_actionSedmlExportSedmlFile_triggered();
     void on_actionSedmlExportCombineArchive_triggered();
 
+    void furtherInitialize();
+
     void emitSplitterMoved();
 
     void simulationDataExport();

@@ -139,26 +139,6 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
 void SingleCellViewGraphPanelsWidget::initialize()
 {
-    // Create the number of graph panels corresponding to the number of 2D
-    // outputs mentioned in the SED-ML file, if we are not dealing with a CellML
-    // file
-    // Note: that removing all the graph panels will actually leave one of them,
-    //       hence the -1 in iMax...
-
-/*---ISSUE825---
-    if (mSimulationWidget->fileType() != SingleCellViewWidget::CellmlFile) {
-*/
-//---ISSUE825--- BEGIN
-if (mSimulationWidget->fileType() == SingleCellViewWidget::SedmlFile) {
-//---ISSUE825--- END
-        removeAllGraphPanels();
-
-        for (uint i = 0, iMax = mSimulationWidget->sedmlFile()->sedmlDocument()->getNumOutputs()-1; i < iMax; ++i)
-            addGraphPanel();
-
-        setSizes(QIntList());
-    }
-
     // Set the first graph panel
 
     qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
@@ -184,7 +164,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPan
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel()
+SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(const bool &pActive)
 {
     // Keep track of the graph panels' original size
 
@@ -221,9 +201,9 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
     connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
             this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
-    // Activate the graph panel
+    // In/activate the graph panel
 
-    res->setActive(true);
+    res->setActive(pActive);
 
     // Keep track of our new sizes
 
@@ -332,6 +312,20 @@ void SingleCellViewGraphPanelsWidget::removeAllGraphPanels()
 
     while (mGraphPanels.count() > 1)
         removeGraphPanel(mGraphPanels.last());
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelsWidget::setActiveGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Make sure that we own the given graph panel
+
+    if (!mGraphPanels.contains(pGraphPanel))
+        return;
+
+    // Make the given graph panel the active one
+
+    pGraphPanel->setActive(true);
 }
 
 //==============================================================================

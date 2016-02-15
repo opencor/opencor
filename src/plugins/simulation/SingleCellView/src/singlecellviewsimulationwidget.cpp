@@ -899,6 +899,25 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // parameters have been computed
 
         informationWidget->parametersWidget()->initialize(mSimulation, pReloadingView);
+
+        // Further initialise ourselves, if we are not dealing with a CellML
+        // file
+        // Note: to further initialise ourselves involves, among other things,
+        //       removing/adding graph panels. However, to do those things
+        //       directly will result in the GUI flashing because of various
+        //       events still  having to be handled (e.g. see the above call to
+        //       mContentsWidget->graphPanelsWidget()->initialize()). So,
+        //       instead, we do the further initialisation through a single
+        //       shot, ensuring that all the other events have been properly
+        //       handled...
+
+/*---ISSUE825---
+        if (mFileType != SingleCellViewWidget::CellmlFile)
+*/
+//---ISSUE825--- BEGIN
+if (mFileType == SingleCellViewWidget::SedmlFile)
+//---ISSUE825--- END
+            QTimer::singleShot(0, this, SLOT(furtherInitialize()));
     }
 
     // Resume the tracking of certain things
@@ -1935,6 +1954,32 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
         if (pProperty)
             return;
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::furtherInitialize()
+{
+    // Add/remove some graph panels, so that the end number of them corresponds
+    // to the number of 2D outputs mentioned in the SED-ML file, this after
+    // having made sure that the current graph panels are all of the same size
+    // and that the first one of them is selected
+
+    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
+    int newNbOfGraphPanels = mSedmlFile->sedmlDocument()->getNumOutputs();
+
+    graphPanelsWidget->setSizes(QIntList());
+
+    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
+
+    if (newNbOfGraphPanels > oldNbOfGraphPanels) {
+        for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->addGraphPanel(false);
+    } else if (newNbOfGraphPanels < oldNbOfGraphPanels) {
+        for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->removeCurrentGraphPanel();
     }
 }
 

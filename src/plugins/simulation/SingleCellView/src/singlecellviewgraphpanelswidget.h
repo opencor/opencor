@@ -61,10 +61,12 @@ public:
     SingleCellViewGraphPanelWidgets graphPanels() const;
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
 
-    SingleCellViewGraphPanelWidget * addGraphPanel();
+    SingleCellViewGraphPanelWidget * addGraphPanel(const bool &pActive = true);
 
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
+
+    void setActiveGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 
 private:
     SingleCellViewSimulationWidget *mSimulationWidget;
