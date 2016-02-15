@@ -194,8 +194,6 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(mGraphPanels, this);
 
-    addWidget(res);
-
     mGraphPanels << res;
 
     // Resize the graph panels, thus making sure that their size is what it
