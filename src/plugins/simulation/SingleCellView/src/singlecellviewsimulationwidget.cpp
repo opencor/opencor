@@ -1981,6 +1981,38 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
     simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
 
+    // Customise our solvers properties
+
+    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
+    SolverInterface *usedSolverInterface = 0;
+    Core::Properties solverProperties = Core::Properties();
+    SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
+                                                                 solversWidget->odeSolverData():
+                                                                 solversWidget->daeSolverData();
+    QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
+
+    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+            usedSolverInterface = solverInterface;
+            solverProperties = solverData->solversProperties().value(solverInterface->solverName());
+
+            solverData->solversListProperty()->setValue(solverInterface->solverName());
+
+            break;
+        }
+    }
+
+    for (int i = 0, iMax = algorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *algorithmParameter = algorithm->getAlgorithmParameter(i);
+        QString id = usedSolverInterface->id(QString::fromStdString(algorithmParameter->getKisaoID()));
+
+        foreach (Core::Property *solverProperty, solverProperties) {
+            if (!solverProperty->id().compare(id))
+                solverProperty->setValue(QString::fromStdString(algorithmParameter->getValue()));
+        }
+    }
+
     // Add/remove some graph panels, so that the end number of them corresponds
     // to the number of 2D outputs mentioned in the SED-ML file, this after
     // having made sure that the current graph panels are all of the same size
