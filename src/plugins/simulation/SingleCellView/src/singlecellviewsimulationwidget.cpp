@@ -1382,8 +1382,9 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
     }
 
     if (!voiSolverProperties.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"%1\">%2</solverProperties>").arg(SEDMLSupport::OpencorNamespace,
-                                                                                                             voiSolverProperties).toStdString());
+        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%1\">%2</%1>").arg(SEDMLSupport::SolverProperties,
+                                                                                 SEDMLSupport::OpencorNamespace,
+                                                                                 voiSolverProperties).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1398,9 +1399,10 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
                                                                                            solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"%1\" name=\"%2\">%3</nlaSolver>").arg(SEDMLSupport::OpencorNamespace,
-                                                                                                             mSimulation->data()->nlaSolverName(),
-                                                                                                             nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" name=\"%3\">%4</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                                               SEDMLSupport::OpencorNamespace,
+                                                                                               mSimulation->data()->nlaSolverName(),
+                                                                                               nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1983,17 +1985,17 @@ void SingleCellViewSimulationWidget::furtherInitialize()
 
     // Customise our solvers properties
 
-    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
     const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     Core::Properties solverProperties = Core::Properties();
-    SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
-                                                                 solversWidget->odeSolverData():
-                                                                 solversWidget->daeSolverData();
     QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
 
     foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+            SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
+                                                                         informationWidget->solversWidget()->odeSolverData():
+                                                                         informationWidget->solversWidget()->daeSolverData();
+
             usedSolverInterface = solverInterface;
             solverProperties = solverData->solversProperties().value(solverInterface->solverName());
 
