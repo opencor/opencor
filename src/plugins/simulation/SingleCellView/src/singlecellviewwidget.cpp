@@ -397,7 +397,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     if (simulationWidget) {
         simulationWidget->fileReloaded();
 
-        // Make sure that GUI of our simulation widgets is up to date
+        // Make sure that the GUI of our simulation widgets is up to date
 
         foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
             simulationWidget->updateGui();
