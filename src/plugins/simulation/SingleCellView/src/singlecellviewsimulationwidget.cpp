@@ -1517,7 +1517,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     sedmlUniformTimeCourse->setId(QString("simulation%1").arg(simulationNumber).toStdString());
     sedmlUniformTimeCourse->setInitialTime(startingPoint);
     sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
-    sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
+    sedmlUniformTimeCourse->setOutputEndTime(startingPoint+nbOfPoints*pointInterval);
     sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
 
     addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
@@ -1961,6 +1961,26 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 void SingleCellViewSimulationWidget::furtherInitialize()
 {
+    // Customise our simulation properties
+
+    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+
+    libsedml::SedDocument *sedmlDocument = mSedmlFile->sedmlDocument();
+    libsedml::SedUniformTimeCourse *uniformTimeCourseSimulation = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    libsedml::SedOneStep *oneStepSimulation = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+
+    double startingPoint = uniformTimeCourseSimulation->getOutputStartTime();
+    double endingPoint = uniformTimeCourseSimulation->getOutputEndTime();
+    double pointInterval = (endingPoint-startingPoint)/uniformTimeCourseSimulation->getNumberOfPoints();
+
+    if (oneStepSimulation)
+        endingPoint += oneStepSimulation->getStep();
+
+    simulationWidget->startingPointProperty()->setDoubleValue(startingPoint);
+    simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
+    simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
+
     // Add/remove some graph panels, so that the end number of them corresponds
     // to the number of 2D outputs mentioned in the SED-ML file, this after
     // having made sure that the current graph panels are all of the same size
@@ -1968,7 +1988,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
 
     SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
-    int newNbOfGraphPanels = mSedmlFile->sedmlDocument()->getNumOutputs();
+    int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
     graphPanelsWidget->setSizes(QIntList());
 
