@@ -1382,7 +1382,7 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
     }
 
     if (!voiSolverProperties.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%1\">%2</%1>").arg(SEDMLSupport::SolverProperties,
+        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::SolverProperties,
                                                                                  SEDMLSupport::OpencorNamespace,
                                                                                  voiSolverProperties).toStdString());
     }
