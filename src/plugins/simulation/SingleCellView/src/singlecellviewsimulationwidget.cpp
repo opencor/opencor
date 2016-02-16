@@ -1986,7 +1986,11 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
     simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
 
-    // Customise our solvers properties
+    // Customise our solvers properties by:
+    //  - Specifying the solver to use
+    //  - Customising the solver's properties for which we have a KiSAO id
+    //  - Customising the solver's properties for which we don't have a KiSAO id
+    //    (this shouldn't happen, but better be safe than sorry)
 
     const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
@@ -2015,6 +2019,36 @@ void SingleCellViewSimulationWidget::furtherInitialize()
         foreach (Core::Property *solverProperty, solverProperties) {
             if (!solverProperty->id().compare(id))
                 solverProperty->setValue(QString::fromStdString(algorithmParameter->getValue()));
+        }
+    }
+
+    libsbml::XMLNode *annotation = algorithm->getAnnotation();
+
+    if (annotation) {
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::SolverProperties)) {
+                continue;
+            }
+
+            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
+                const XMLNode &solverPropertyNode = node.getChild(j);
+
+                if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                    continue;
+                }
+
+                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString())));
+                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString())));
+
+                foreach (Core::Property *solverProperty, solverProperties) {
+                    if (!solverProperty->id().compare(id))
+                        solverProperty->setValue(value);
+                }
+            }
         }
     }
 
