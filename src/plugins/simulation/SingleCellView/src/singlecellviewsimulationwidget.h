@@ -170,8 +170,6 @@ private:
     int mProgress;
     bool mLockedDevelopmentMode;
 
-    bool mReloadingView;
-
     Core::ToolBarWidget *mToolBarWidget;
 
     QMenu *mSimulationDataExportDropDownMenu;
@@ -247,7 +245,7 @@ private:
 
     bool doFurtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);
-    void finishInitialize(const bool &pValidSimulationEnvironment);
+    void initializeSimulation();
 
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,

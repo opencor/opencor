@@ -96,7 +96,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
-    mReloadingView(false),
     mRunActionEnabled(true),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
@@ -594,7 +593,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 {
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
-    // Note: see the corresponding code at the end of finishInitialize()...
+    // Note: see the corresponding code towards the end of this method...
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
@@ -602,17 +601,9 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
 
-    // Reset our progress and keep track of the fact that we might be reloading
-    // ourselves
-    // Note: mReloadingView is needed because the value of pReloadingView is
-    //       needed by finishInitialize(), which may be called either directly
-    //       (see at this end of this method) or through a single shot (see
-    //       furtherInitialize()). When called through a single shot, we can't
-    //       pass the value of pReloadingView, hence we need mReloadingView...
+    // Reset our progress
 
     mProgress = -1;
-
-    mReloadingView = pReloadingView;
 
     // Retrieve our file details and update our simulation object, if needed
 
@@ -833,8 +824,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // Some additional initialisations in case we have a valid simulation
     // environment
 
-    bool needFinishInitialize = true;
-
     if (validSimulationEnvironment) {
         // Initialise our GUI's simulation, solvers, graphs and graph panels
         // widgets, but not parameters widget
@@ -873,33 +862,42 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
         mContentsWidget->graphPanelsWidget()->initialize();
 
-        // Further initialise ourselves, if we are not dealing with a CellML
-        // file
-        // Note: to further initialise ourselves involves, among other things,
-        //       removing/adding graph panels. However, to do those things
-        //       directly will result in the GUI flashing because of various
-        //       events still  having to be handled (e.g. see the above call to
-        //       mContentsWidget->graphPanelsWidget()->initialize()). So,
-        //       instead, we do the further initialisation through a single
-        //       shot, ensuring that all the other events have been properly
-        //       handled...
+        // Initialise our simulation
 
-/*---ISSUE825---
-        if (mFileType != SingleCellViewWidget::CellmlFile) {
-*/
-//---ISSUE825--- BEGIN
-if (mFileType == SingleCellViewWidget::SedmlFile) {
-//---ISSUE825--- END
-            QTimer::singleShot(0, this, SLOT(furtherInitialize()));
+        initializeSimulation();
 
-            needFinishInitialize = false;
-        }
+        // Now, we can safely update our parameters widget since our model
+        // parameters have been computed
+
+        mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloadingView);
     }
 
-    // Finish initialising, if needed
+    // Resume the tracking of certain things
+    // Note: see the corresponding code at the beginning of this method...
 
-    if (needFinishInitialize)
-        finishInitialize(validSimulationEnvironment);
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(simulationPropertyChanged(Core::Property *)));
+
+    // Further initialise ourselves, if we have a valid environment and we are
+    // not dealing with a CellML file
+    // Note: to further initialise ourselves involves, among other things,
+    //       removing/adding graph panels. However, to do those things directly
+    //       will result in the GUI flashing because of various events still
+    //       having to be handled (e.g. see the above call to
+    //       mContentsWidget->graphPanelsWidget()->initialize()). So, instead,
+    //       we do the further initialisation through a single shot, ensuring
+    //       that all the other events have been properly handled...
+
+/*---ISSUE825---
+    if (    validSimulationEnvironment
+        && (mFileType != SingleCellViewWidget::CellmlFile)) {
+*/
+//---ISSUE825--- BEGIN
+if (   validSimulationEnvironment
+    && (mFileType == SingleCellViewWidget::SedmlFile)) {
+//---ISSUE825--- END
+        QTimer::singleShot(0, this, SLOT(furtherInitialize()));
+    }
 }
 
 //==============================================================================
@@ -2147,49 +2145,33 @@ void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationE
 void SingleCellViewSimulationWidget::furtherInitialize()
 {
     // Further initialise ourselves, update our GUI (by reinitialising it) and
-    // finish our initialisation based on whether our further initialisation was
-    // successful
+    // initialise our simulation, if we still have a valid simulation
+    // environment
 
     bool validSimulationEnvironment = doFurtherInitialize();
 
     initializeGui(validSimulationEnvironment);
-    finishInitialize(validSimulationEnvironment);
+
+    if (validSimulationEnvironment)
+        initializeSimulation();
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::finishInitialize(const bool &pValidSimulationEnvironment)
+void SingleCellViewSimulationWidget::initializeSimulation()
 {
-    // Some final initialisations in case we still have a valid simulation
-    // environment
+    // Reset both the simulation's data and results (well, initialise in the
+    // case of its data)
 
-    if (pValidSimulationEnvironment) {
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data)
+    mSimulation->data()->reset();
+    mSimulation->results()->reset(false);
 
-        mSimulation->data()->reset();
-        mSimulation->results()->reset(false);
+    // Retrieve our simulation and solvers properties since they may have an
+    // effect on our parameter values (as well as result in some solver
+    // properties being shown/hidden)
 
-        // Retrieve our simulation and solvers properties since they may have
-        // an effect on our parameter values (as well as result in some solver
-        // properties being shown/hidden)
-
-        updateSimulationProperties();
-        updateSolversProperties();
-
-        // Now, we can safely update our parameters widget since our model
-        // parameters have been computed
-
-        mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, mReloadingView);
-
-        mReloadingView = false;
-    }
-
-    // Resume the tracking of certain things
-    // Note: see the corresponding code at the beginning of initialize()...
-
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(simulationPropertyChanged(Core::Property *)));
+    updateSimulationProperties();
+    updateSolversProperties();
 }
 
 //==============================================================================
