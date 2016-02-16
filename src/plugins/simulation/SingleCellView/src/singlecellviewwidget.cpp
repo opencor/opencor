@@ -972,7 +972,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
         libsbml::XMLNode *secondSimulationAnnotation = secondSimulation->getAnnotation();
 
-        firstSimulationAnnotation->write(firstXmlStream);
+        if (firstSimulationAnnotation)
+            firstSimulationAnnotation->write(firstXmlStream);
 
         if (secondSimulationAnnotation)
             secondSimulationAnnotation->write(secondXmlStream);
