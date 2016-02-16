@@ -816,7 +816,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         }
     }
 
-    // Show/hide some widgets depending on whether we have a valid simulation
+    // Show/hide some widgets based on whether we have a valid simulation
     // environment
 
     bool prevValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
@@ -1991,7 +1991,11 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     //  - Customising the solver's properties for which we have a KiSAO id
     //  - Customising the solver's properties for which we don't have a KiSAO id
     //    (this shouldn't happen, but better be safe than sorry)
+    //  - Specifying the NLA solver, if any
 
+    SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
+                                                                 informationWidget->solversWidget()->odeSolverData():
+                                                                 informationWidget->solversWidget()->daeSolverData();
     const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     Core::Properties solverProperties = Core::Properties();
@@ -1999,10 +2003,6 @@ void SingleCellViewSimulationWidget::furtherInitialize()
 
     foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
-            SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
-                                                                         informationWidget->solversWidget()->odeSolverData():
-                                                                         informationWidget->solversWidget()->daeSolverData();
-
             usedSolverInterface = solverInterface;
             solverProperties = solverData->solversProperties().value(solverInterface->solverName());
 
@@ -2049,6 +2049,36 @@ void SingleCellViewSimulationWidget::furtherInitialize()
                         solverProperty->setValue(value);
                 }
             }
+        }
+    }
+
+    annotation = uniformTimeCourseSimulation->getAnnotation();
+
+    if (annotation) {
+        bool hasNlaSolver = false;
+
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const libsbml::XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
+                continue;
+            }
+
+            QString name = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+
+            foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+                if (!name.compare(solverInterface->solverName())) {
+                    informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(name);
+
+                    hasNlaSolver = true;
+
+                    break;
+                }
+            }
+
+            if (hasNlaSolver)
+                break;
         }
     }
 
