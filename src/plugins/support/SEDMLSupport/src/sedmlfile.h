@@ -51,6 +51,9 @@ namespace SEDMLSupport {
 static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
 static const auto VariableDegree = QStringLiteral("variableDegree");
 static const auto SolverProperties = QStringLiteral("solverProperties");
+static const auto SolverProperty = QStringLiteral("solverProperty");
+static const auto SolverPropertyId = QStringLiteral("id");
+static const auto SolverPropertyValue = QStringLiteral("value");
 static const auto NlaSolver = QStringLiteral("nlaSolver");
 
 //==============================================================================

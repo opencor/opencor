@@ -752,6 +752,47 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
         }
     }
 
+    // Make sure that the annotation, if any, contains (at least) the kind of
+    // information we would expect
+
+    libsbml::XMLNode *annotation = pSedmlAlgorithm->getAnnotation();
+
+    if (annotation) {
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::SolverProperties)) {
+                continue;
+            }
+
+            bool validSolverProperties = true;
+
+            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
+                const XMLNode &solverPropertyNode = node.getChild(j);
+
+                if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                    continue;
+                }
+
+                if (   (solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString()) == -1)
+                    || (solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString()) == -1)) {
+                    validSolverProperties = false;
+
+                    break;
+                }
+            }
+
+            if (!validSolverProperties) {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("incomplete algorithm annotation (missing attribute(s))"));
+
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 

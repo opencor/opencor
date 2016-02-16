@@ -1395,8 +1395,11 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
         QString nlaSolverProperties = QString();
 
         foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
-            nlaSolverProperties += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
-                                                                                           solverProperties.value(solverProperty).toString());
+            nlaSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            solverProperty,
+                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            solverProperties.value(solverProperty).toString());
         }
 
         pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" name=\"%3\">%4</%1>").arg(SEDMLSupport::NlaSolver,

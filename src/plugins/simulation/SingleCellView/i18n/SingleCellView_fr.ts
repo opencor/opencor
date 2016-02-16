@@ -439,6 +439,10 @@
         <source>only SED-ML files with data generators for one variable that is derived or not are supported</source>
         <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable qui est dérivée ou non sont supportés</translation>
     </message>
+    <message>
+        <source>incomplete algorithm annotation (missing attribute(s))</source>
+        <translation>annotation d&apos;algorithme incomplète (attribut(s) manquant(s))</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
