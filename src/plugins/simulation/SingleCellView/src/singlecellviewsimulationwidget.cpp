@@ -2132,8 +2132,6 @@ void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationE
     // Show/hide some widgets based on whether we have a valid simulation
     // environment
 
-    bool oldValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
-
     mToolBarWidget->setVisible(pValidSimulationEnvironment);
     mTopSeparator->setVisible(pValidSimulationEnvironment);
 
@@ -2142,17 +2140,6 @@ void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationE
 
     mBottomSeparator->setVisible(pValidSimulationEnvironment);
     mProgressBarWidget->setVisible(pValidSimulationEnvironment);
-
-    // Make sure that the last output message is visible
-    // Note: indeed, to (re)show some widgets (see above) might change the
-    //       height of our output widget, messing up the vertical scroll bar a
-    //       bit (if visible), resulting in the output being shifted a bit...
-
-    if (oldValidSimulationEnvironment != pValidSimulationEnvironment) {
-        QCoreApplication::processEvents();
-
-        mOutputWidget->ensureCursorVisible();
-    }
 }
 
 //==============================================================================
