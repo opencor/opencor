@@ -55,6 +55,7 @@ static const auto SolverProperty = QStringLiteral("solverProperty");
 static const auto SolverPropertyId = QStringLiteral("id");
 static const auto SolverPropertyValue = QStringLiteral("value");
 static const auto NlaSolver = QStringLiteral("nlaSolver");
+static const auto NlaSolverName = QStringLiteral("name");
 
 //==============================================================================
 

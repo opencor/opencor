@@ -1987,7 +1987,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
 
     // Customise our solvers properties by:
-    //  - Specifying the solver to use
+    //  - Specifying the ODE/DAE solver to use
     //  - Customising the solver's properties for which we have a KiSAO id
     //  - Customising the solver's properties for which we don't have a KiSAO id
     //    (this shouldn't happen, but better be safe than sorry)

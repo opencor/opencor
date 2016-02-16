@@ -718,6 +718,15 @@ void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimu
 bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
                                                    SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
 {
+    // Make sure that we have an algorithm
+
+    if (!pSedmlAlgorithm) {
+        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                         tr("only SED-ML files with one or two simulations with an algorithm are supported"));
+
+        return false;
+    }
+
     // Make sure that the given algorithm relies on an algorithm that we support
 
     SolverInterface *usedSolverInterface = 0;
@@ -752,7 +761,7 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
         }
     }
 
-    // Make sure that the annotation, if any, contains (at least) the kind of
+    // Make sure that the annotation, if any, contains at least the kind of
     // information we would expect
 
     libsbml::XMLNode *annotation = pSedmlAlgorithm->getAnnotation();
@@ -776,8 +785,12 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
                     continue;
                 }
 
-                if (   (solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString()) == -1)
-                    || (solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString()) == -1)) {
+                int idIndex = solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString());
+                int valueIndex = solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString());
+
+                if (   (idIndex == -1) || (valueIndex == -1)
+                    || solverPropertyNode.getAttrValue(idIndex).empty()
+                    || solverPropertyNode.getAttrValue(valueIndex).empty()) {
                     validSolverProperties = false;
 
                     break;
@@ -786,7 +799,7 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
 
             if (!validSolverProperties) {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("incomplete algorithm annotation (missing attribute(s))"));
+                                                                 tr("incomplete algorithm annotation (missing algorithm property information)"));
 
                 return false;
             }
@@ -885,6 +898,42 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     if (!sedmlAlgorithmSupported(firstSimulation->getAlgorithm(), pSedmlFileIssues))
         return false;
 
+    // Make sure that the annotation, if any, contains at least the kind of
+    // information we would expect
+
+    libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
+
+    if (firstSimulationAnnotation) {
+        bool hasNlaSolver = false;
+
+        for (uint i = 0, iMax = firstSimulationAnnotation->getNumChildren(); i < iMax; ++i) {
+            const libsbml::XMLNode &node = firstSimulationAnnotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
+                continue;
+            }
+
+            int nameIndex = node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString());
+
+            if ((nameIndex != -1) && !node.getAttrValue(nameIndex).empty()) {
+                if (hasNlaSolver) {
+                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                     tr("only one NLA solver is allowed"));
+
+                    return false;
+                } else {
+                    hasNlaSolver = true;
+                }
+            } else {
+                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("incomplete simulation annotation (missing NLA solver name)"));
+
+                return false;
+            }
+        }
+    }
+
     // Check whether there is a second simulation
 
     libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
@@ -908,17 +957,27 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             return false;
         }
 
-        // Make sure that its algorithm is the same as for the first simulation
+        // Make sure that its algorithm and annotation, if any, is the same as
+        // for the first simulation
 
-        std::stringstream stream;
+        std::stringstream firstStream;
         std::stringstream secondStream;
-        libsbml::XMLOutputStream xmlStream(stream);
+        libsbml::XMLOutputStream firstXmlStream(firstStream);
         libsbml::XMLOutputStream secondXmlStream(secondStream);
 
-        firstSimulation->getAlgorithm()->write(xmlStream);
-        secondSimulation->getAlgorithm()->write(secondXmlStream);
+        firstSimulation->getAlgorithm()->write(firstXmlStream);
 
-        if (stream.str().compare(secondStream.str())) {
+        if (secondSimulation->getAlgorithm())
+            secondSimulation->getAlgorithm()->write(secondXmlStream);
+
+        libsbml::XMLNode *secondSimulationAnnotation = secondSimulation->getAnnotation();
+
+        firstSimulationAnnotation->write(firstXmlStream);
+
+        if (secondSimulationAnnotation)
+            secondSimulationAnnotation->write(secondXmlStream);
+
+        if (firstStream.str().compare(secondStream.str())) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                              tr("only SED-ML files with two simulations with the same algorithm are supported"));
 
