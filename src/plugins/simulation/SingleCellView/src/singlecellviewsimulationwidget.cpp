@@ -96,6 +96,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
+    mReloadingView(false),
     mRunActionEnabled(true),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
@@ -593,7 +594,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 {
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
-    // Note: see the corresponding code at the end of this method...
+    // Note: see the corresponding code at the end of finishInitialize()...
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
@@ -601,9 +602,17 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
 
-    // Reset our progress
+    // Reset our progress and keep track of the fact that we might be reloading
+    // ourselves
+    // Note: mReloadingView is needed because the value of pReloadingView is
+    //       needed by finishInitialize(), which may be called either directly
+    //       (see at this end of this method) or through a single shot (see
+    //       furtherInitialize()). When called through a single shot, we can't
+    //       pass the value of pReloadingView, hence we need mReloadingView...
 
     mProgress = -1;
+
+    mReloadingView = pReloadingView;
 
     // Retrieve our file details and update our simulation object, if needed
 
@@ -816,33 +825,15 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         }
     }
 
-    // Show/hide some widgets based on whether we have a valid simulation
+    // Initialise our GUI based on whether we have a valid simulation
     // environment
 
-    bool prevValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
-
-    mToolBarWidget->setVisible(validSimulationEnvironment);
-    mTopSeparator->setVisible(validSimulationEnvironment);
-
-    mContentsWidget->setVisible(validSimulationEnvironment);
-    mInvalidModelMessageWidget->setVisible(!validSimulationEnvironment);
-
-    mBottomSeparator->setVisible(validSimulationEnvironment);
-    mProgressBarWidget->setVisible(validSimulationEnvironment);
-
-    // Make sure that the last output message is visible
-    // Note: indeed, to (re)show some widgets (see above) might change the
-    //       height of our output widget, messing up the vertical scroll bar a
-    //       bit (if visible), resulting in the output being shifted a bit...
-
-    if (prevValidSimulationEnvironment != validSimulationEnvironment) {
-        QCoreApplication::processEvents();
-
-        mOutputWidget->ensureCursorVisible();
-    }
+    initializeGui(validSimulationEnvironment);
 
     // Some additional initialisations in case we have a valid simulation
     // environment
+
+    bool needFinishInitialize = true;
 
     if (validSimulationEnvironment) {
         // Initialise our GUI's simulation, solvers, graphs and graph panels
@@ -882,24 +873,6 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
         mContentsWidget->graphPanelsWidget()->initialize();
 
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data)
-
-        mSimulation->data()->reset();
-        mSimulation->results()->reset(false);
-
-        // Retrieve our simulation and solvers properties since they may have
-        // an effect on our parameter values (as well as result in some solver
-        // properties being shown/hidden)
-
-        updateSimulationProperties();
-        updateSolversProperties();
-
-        // Now, we can safely update our parameters widget since our model
-        // parameters have been computed
-
-        informationWidget->parametersWidget()->initialize(mSimulation, pReloadingView);
-
         // Further initialise ourselves, if we are not dealing with a CellML
         // file
         // Note: to further initialise ourselves involves, among other things,
@@ -912,19 +885,21 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         //       handled...
 
 /*---ISSUE825---
-        if (mFileType != SingleCellViewWidget::CellmlFile)
+        if (mFileType != SingleCellViewWidget::CellmlFile) {
 */
 //---ISSUE825--- BEGIN
-if (mFileType == SingleCellViewWidget::SedmlFile)
+if (mFileType == SingleCellViewWidget::SedmlFile) {
 //---ISSUE825--- END
             QTimer::singleShot(0, this, SLOT(furtherInitialize()));
+
+            needFinishInitialize = false;
+        }
     }
 
-    // Resume the tracking of certain things
-    // Note: see the corresponding code at the beginning of this method...
+    // Finish initialising, if needed
 
-    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(simulationPropertyChanged(Core::Property *)));
+    if (needFinishInitialize)
+        finishInitialize(validSimulationEnvironment);
 }
 
 //==============================================================================
@@ -1964,7 +1939,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::furtherInitialize()
+bool SingleCellViewSimulationWidget::doFurtherInitialize()
 {
     // Customise our simulation properties
 
@@ -2012,13 +1987,34 @@ void SingleCellViewSimulationWidget::furtherInitialize()
         }
     }
 
+    if (!usedSolverInterface) {
+        simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
+                        InvalidSimulationEnvironment);
+
+        return false;
+    }
+
     for (int i = 0, iMax = algorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
         const libsedml::SedAlgorithmParameter *algorithmParameter = algorithm->getAlgorithmParameter(i);
-        QString id = usedSolverInterface->id(QString::fromStdString(algorithmParameter->getKisaoID()));
+        QString kisaoId = QString::fromStdString(algorithmParameter->getKisaoID());
+        QString id = usedSolverInterface->id(kisaoId);
+        bool propertySet = false;
 
         foreach (Core::Property *solverProperty, solverProperties) {
-            if (!solverProperty->id().compare(id))
+            if (!solverProperty->id().compare(id)) {
                 solverProperty->setValue(QString::fromStdString(algorithmParameter->getValue()));
+
+                propertySet = true;
+
+                break;
+            }
+        }
+
+        if (!propertySet) {
+            simulationError(tr("the requested property (%1) could not be set").arg(kisaoId),
+                            InvalidSimulationEnvironment);
+
+            return false;
         }
     }
 
@@ -2043,10 +2039,23 @@ void SingleCellViewSimulationWidget::furtherInitialize()
 
                 QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString())));
                 QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString())));
+                bool propertySet = false;
 
                 foreach (Core::Property *solverProperty, solverProperties) {
-                    if (!solverProperty->id().compare(id))
+                    if (!solverProperty->id().compare(id)) {
                         solverProperty->setValue(value);
+
+                        propertySet = true;
+
+                        break;
+                    }
+                }
+
+                if (!propertySet) {
+                    simulationError(tr("the requested property (%1) could not be set").arg(id),
+                                    InvalidSimulationEnvironment);
+
+                    return false;
                 }
             }
         }
@@ -2055,7 +2064,9 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     annotation = uniformTimeCourseSimulation->getAnnotation();
 
     if (annotation) {
+        bool mustHaveNlaSolver = false;
         bool hasNlaSolver = false;
+        QString nlaSolverName = QString();
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             const libsbml::XMLNode &node = annotation->getChild(i);
@@ -2065,11 +2076,12 @@ void SingleCellViewSimulationWidget::furtherInitialize()
                 continue;
             }
 
-            QString name = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+            mustHaveNlaSolver = true;
+            nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
             foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
-                if (!name.compare(solverInterface->solverName())) {
-                    informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(name);
+                if (!nlaSolverName.compare(solverInterface->solverName())) {
+                    informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
                     hasNlaSolver = true;
 
@@ -2079,6 +2091,13 @@ void SingleCellViewSimulationWidget::furtherInitialize()
 
             if (hasNlaSolver)
                 break;
+        }
+
+        if (mustHaveNlaSolver && !hasNlaSolver) {
+            simulationError(tr("the requested NLA solver (%1) could not be set").arg(nlaSolverName),
+                            InvalidSimulationEnvironment);
+
+            return false;
         }
     }
 
@@ -2102,6 +2121,88 @@ void SingleCellViewSimulationWidget::furtherInitialize()
         for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
             graphPanelsWidget->removeCurrentGraphPanel();
     }
+
+    return true;
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationEnvironment)
+{
+    // Show/hide some widgets based on whether we have a valid simulation
+    // environment
+
+    bool oldValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
+
+    mToolBarWidget->setVisible(pValidSimulationEnvironment);
+    mTopSeparator->setVisible(pValidSimulationEnvironment);
+
+    mContentsWidget->setVisible(pValidSimulationEnvironment);
+    mInvalidModelMessageWidget->setVisible(!pValidSimulationEnvironment);
+
+    mBottomSeparator->setVisible(pValidSimulationEnvironment);
+    mProgressBarWidget->setVisible(pValidSimulationEnvironment);
+
+    // Make sure that the last output message is visible
+    // Note: indeed, to (re)show some widgets (see above) might change the
+    //       height of our output widget, messing up the vertical scroll bar a
+    //       bit (if visible), resulting in the output being shifted a bit...
+
+    if (oldValidSimulationEnvironment != pValidSimulationEnvironment) {
+        QCoreApplication::processEvents();
+
+        mOutputWidget->ensureCursorVisible();
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::furtherInitialize()
+{
+    // Further initialise ourselves, update our GUI (by reinitialising it) and
+    // finish our initialisation based on whether our further initialisation was
+    // successful
+
+    bool validSimulationEnvironment = doFurtherInitialize();
+
+    initializeGui(validSimulationEnvironment);
+    finishInitialize(validSimulationEnvironment);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::finishInitialize(const bool &pValidSimulationEnvironment)
+{
+    // Some final initialisations in case we still have a valid simulation
+    // environment
+
+    if (pValidSimulationEnvironment) {
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data)
+
+        mSimulation->data()->reset();
+        mSimulation->results()->reset(false);
+
+        // Retrieve our simulation and solvers properties since they may have
+        // an effect on our parameter values (as well as result in some solver
+        // properties being shown/hidden)
+
+        updateSimulationProperties();
+        updateSolversProperties();
+
+        // Now, we can safely update our parameters widget since our model
+        // parameters have been computed
+
+        mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, mReloadingView);
+
+        mReloadingView = false;
+    }
+
+    // Resume the tracking of certain things
+    // Note: see the corresponding code at the beginning of initialize()...
+
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(simulationPropertyChanged(Core::Property *)));
 }
 
 //==============================================================================
