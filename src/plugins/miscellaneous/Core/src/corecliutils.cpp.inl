@@ -280,7 +280,7 @@ QString formatMessage(const QString &pMessage, const bool &pLowerCase,
 
 //==============================================================================
 
-QByteArray resourceAsByteArray(const QString &pResource)
+QByteArray resource(const QString &pResource)
 {
     // Retrieve a resource as a QByteArray
 
@@ -446,7 +446,7 @@ bool writeResourceToFile(const QString &pFileName, const QString &pResource)
     // Write the given resource to the given file, if possible
 
     if (QResource(pResource).isValid())
-        return writeFileContentsToFile(pFileName, resourceAsByteArray(pResource));
+        return writeFileContentsToFile(pFileName, resource(pResource));
     else
         return false;
 }
