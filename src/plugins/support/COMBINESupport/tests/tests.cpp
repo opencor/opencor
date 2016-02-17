@@ -145,6 +145,7 @@ void Tests::basicTests()
     QString yetAnotherFileName = OpenCOR::Core::temporaryFileName();
 
     QVERIFY(otherCombineArchive.load());
+    QVERIFY(otherCombineArchive.isValid());
     QVERIFY(otherCombineArchive.save(yetAnotherFileName));
 
     QByteArray otherFileContents;

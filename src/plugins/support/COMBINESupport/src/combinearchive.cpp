@@ -233,7 +233,7 @@ bool CombineArchive::save(const QString &pFileName)
 
     // Generate the contents our manifest
 
-    QString fileList = QString();
+    QByteArray fileList = QByteArray();
     QString fileFormat;
 
     foreach (const CombineArchiveFile &file, mFiles) {
@@ -279,7 +279,7 @@ bool CombineArchive::save(const QString &pFileName)
                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                        "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
                        "    <content location=\".\" format=\""+OmexFormat.toUtf8()+"\"/>\n"
-                      +fileList.toUtf8()
+                      +fileList
                       +"</omexManifest>\n");
 
     foreach (const CombineArchiveFile &file, mFiles) {
@@ -373,11 +373,16 @@ bool CombineArchive::isValid()
 
     bool combineArchiveReferenceFound = false;
 
-    foreach (const CombineArchiveFile &file, mFiles) {
+    for (int i = 0, iMax = mFiles.count(); i < iMax; ++i) {
+        const CombineArchiveFile &file = mFiles[i];
+
         if (   !file.location().compare(".")
             &&  (file.format() == CombineArchiveFile::Omex)
             && !file.isMaster()) {
             combineArchiveReferenceFound = true;
+
+            mFiles.removeAt(i);
+            // Note: we don't need to track it anymore...
 
             break;
         }
