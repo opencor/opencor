@@ -152,100 +152,6 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
 //==============================================================================
 
-bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
-                              const QString &pSerialisedAttribute2)
-{
-    // Determine which of the two serialised attributes should be first based on
-    // the attribute name, i.e. ignoring the "=<AttributeValue>" bit
-
-    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf("=")).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf("=")), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void cleanDomElement(QDomElement &pDomElement,
-                     QMap<QString, QByteArray> &pElementsAttributes)
-{
-    // Serialise all the element's attributes and sort their serialised version
-    // before removing them from the element and adding a new attribute that
-    // will later on be used for string replacement
-
-    static qulonglong attributeNumber = 0;
-    static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
-
-    if (pDomElement.hasAttributes()) {
-        QStringList serialisedAttributes = QStringList();
-        QDomNamedNodeMap domElementAttributes = pDomElement.attributes();
-
-        while (domElementAttributes.count()) {
-            // Serialise (ourselves) the element's attribute
-            // Note: to rely on QDomNode::save() to do the serialisation isn't
-            //       good enough. Indeed, if it is going to be fine for an
-            //       attribute that doesn't have a prefix, e.g.
-            //           name="my_name"
-            //       it may not be fine for an attribute with a prefix, e.g.
-            //           cmeta:id="my_cmeta_id"
-            //       since depending on how that attribute has been created
-            //       (i.e. using QDomDocument::createAttribute() or
-            //       QDomDocument::createAttributeNS()), then it may or not have
-            //       a namespace associated with it. If it does, then its
-            //       serialisation will look something like
-            //           cmeta:id="my_cmeta_id" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
-            //       which is clearly not what we want since that's effectively
-            //       two attributes in one. So, we need to separate them, which
-            //       is what we do here, after making sure that the namespace
-            //       for the attribute is not already defined for the given DOM
-            //       element...
-
-            QDomAttr attributeNode = domElementAttributes.item(0).toAttr();
-
-            if (attributeNode.namespaceURI().isEmpty()) {
-                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
-            } else {
-                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
-
-                if (   attributeNode.prefix().compare(pDomElement.prefix())
-                    && attributeNode.namespaceURI().compare(pDomElement.namespaceURI())) {
-                    serialisedAttributes << "xmlns:"+attributeNode.prefix()+"=\""+attributeNode.namespaceURI()+"\"";
-                }
-            }
-
-            // Remove the attribute node from the element
-
-            pDomElement.removeAttributeNode(attributeNode);
-        }
-
-        // Sort the serialised attributes, using the attributes' name, and
-        // remove duplicates, if any
-
-        std::sort(serialisedAttributes.begin(), serialisedAttributes.end(), sortSerialisedAttributes);
-
-        serialisedAttributes.removeDuplicates();
-
-        // Keep track of the serialisation of the element's attribute
-
-        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
-
-        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" ").toUtf8());
-
-        // Add a new attribute to the element
-        // Note: this attribute, once serialised by QDomDocument::save(), will
-        //       be used to do a string replacement (see
-        //       qDomDocumentToString())...
-
-        domElementAttributes.setNamedItem(pDomElement.ownerDocument().createAttribute(elementAttributes));
-    }
-
-    // Recursively clean ourselves
-
-    for (QDomElement childElement = pDomElement.firstChildElement();
-         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanDomElement(childElement, pElementsAttributes);
-    }
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Core {
 
@@ -847,6 +753,100 @@ bool validXmlFile(const QString &pXmlFileName, const QString &pSchemaFileName)
     readFileContentsFromFile(pSchemaFileName, schemaContents);
 
     return validXml(xmlContents, schemaContents);
+}
+
+//==============================================================================
+
+bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
+                              const QString &pSerialisedAttribute2)
+{
+    // Determine which of the two serialised attributes should be first based on
+    // the attribute name, i.e. ignoring the "=<AttributeValue>" bit
+
+    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf("=")).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf("=")), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+void cleanDomElement(QDomElement &pDomElement,
+                     QMap<QString, QByteArray> &pElementsAttributes)
+{
+    // Serialise all the element's attributes and sort their serialised version
+    // before removing them from the element and adding a new attribute that
+    // will later on be used for string replacement
+
+    static qulonglong attributeNumber = 0;
+    static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
+
+    if (pDomElement.hasAttributes()) {
+        QStringList serialisedAttributes = QStringList();
+        QDomNamedNodeMap domElementAttributes = pDomElement.attributes();
+
+        while (domElementAttributes.count()) {
+            // Serialise (ourselves) the element's attribute
+            // Note: to rely on QDomNode::save() to do the serialisation isn't
+            //       good enough. Indeed, if it is going to be fine for an
+            //       attribute that doesn't have a prefix, e.g.
+            //           name="my_name"
+            //       it may not be fine for an attribute with a prefix, e.g.
+            //           cmeta:id="my_cmeta_id"
+            //       since depending on how that attribute has been created
+            //       (i.e. using QDomDocument::createAttribute() or
+            //       QDomDocument::createAttributeNS()), then it may or not have
+            //       a namespace associated with it. If it does, then its
+            //       serialisation will look something like
+            //           cmeta:id="my_cmeta_id" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+            //       which is clearly not what we want since that's effectively
+            //       two attributes in one. So, we need to separate them, which
+            //       is what we do here, after making sure that the namespace
+            //       for the attribute is not already defined for the given DOM
+            //       element...
+
+            QDomAttr attributeNode = domElementAttributes.item(0).toAttr();
+
+            if (attributeNode.namespaceURI().isEmpty()) {
+                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
+            } else {
+                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
+
+                if (   attributeNode.prefix().compare(pDomElement.prefix())
+                    && attributeNode.namespaceURI().compare(pDomElement.namespaceURI())) {
+                    serialisedAttributes << "xmlns:"+attributeNode.prefix()+"=\""+attributeNode.namespaceURI()+"\"";
+                }
+            }
+
+            // Remove the attribute node from the element
+
+            pDomElement.removeAttributeNode(attributeNode);
+        }
+
+        // Sort the serialised attributes, using the attributes' name, and
+        // remove duplicates, if any
+
+        std::sort(serialisedAttributes.begin(), serialisedAttributes.end(), sortSerialisedAttributes);
+
+        serialisedAttributes.removeDuplicates();
+
+        // Keep track of the serialisation of the element's attribute
+
+        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
+
+        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" ").toUtf8());
+
+        // Add a new attribute to the element
+        // Note: this attribute, once serialised by QDomDocument::save(), will
+        //       be used to do a string replacement (see
+        //       serialiseDomDocument())...
+
+        domElementAttributes.setNamedItem(pDomElement.ownerDocument().createAttribute(elementAttributes));
+    }
+
+    // Recursively clean ourselves
+
+    for (QDomElement childElement = pDomElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanDomElement(childElement, pElementsAttributes);
+    }
 }
 
 //==============================================================================
