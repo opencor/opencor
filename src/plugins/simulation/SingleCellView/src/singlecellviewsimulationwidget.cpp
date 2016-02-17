@@ -977,39 +977,51 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 
 bool SingleCellViewSimulationWidget::save(const QString &pFileName)
 {
-    // Retrieve all the state and constant parameters which value has changed
-    // and update our CellML object with their 'new' values, unless they are
-    // imported, in which case we let the user know that their 'new' values
-    // cannot be saved
+    // In case of a CellML file that is in development mode, retrieve all the
+    // state and constant parameters which value has changed and update our
+    // CellML object with their 'new' values, unless they are imported, in which
+    // case we let the user know that their 'new' values cannot be saved
 
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
     QString importedParameters = QString();
 
-    foreach (Core::Property *property, parameters.keys()) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
+    if (   (mFileType == SingleCellViewWidget::CellmlFile)
+        && mGui->actionDevelopmentMode->isChecked()) {
+        ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
+        QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
 
-        if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-            || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
-            ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
-            ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
-            ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
-            ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+        foreach (Core::Property *property, parameters.keys()) {
+            CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
 
-            if (variable == sourceVariable)
-                variable->initialValue(property->value().toStdWString());
-            else
-                importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
+            if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+                || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
+                ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
+                ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
+                ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+
+                if (variable == sourceVariable)
+                    variable->initialValue(property->value().toStdWString());
+                else
+                    importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
+            }
         }
     }
 
     // Now, we can effectively save our given file and let the user know if some
     // parameter values couldn't be saved
 
-    bool res = mCellmlFile->save(pFileName);
+    bool res = (mFileType == SingleCellViewWidget::CellmlFile)?
+                   mCellmlFile->save(pFileName):
+                   (mFileType == SingleCellViewWidget::SedmlFile)?
+                       mSedmlFile->save(pFileName):
+                       mCombineArchive->save(pFileName);
 
     if (res) {
-        mFileName = mCellmlFile->fileName();
+        mFileName = (mFileType == SingleCellViewWidget::CellmlFile)?
+                        mCellmlFile->fileName():
+                        (mFileType == SingleCellViewWidget::SedmlFile)?
+                            mSedmlFile->fileName():
+                            mCombineArchive->fileName();
 
         if (!importedParameters.isEmpty()) {
             QMessageBox::information(Core::mainWindow(),
