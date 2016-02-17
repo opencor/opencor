@@ -339,20 +339,21 @@ QString temporaryFileName(const QString &pExtension)
 
 //==============================================================================
 
-bool readByteArrayFromFile(const QString &pFileName, QByteArray &pByteArray)
+bool readFileContentsFromFile(const QString &pFileName,
+                              QByteArray &pFileContents)
 {
-    // Read the contents of the file, which file name is given, as a string
+    // Read the contents of the file, which file name is given
 
     QFile file(pFileName);
 
     if (file.open(QIODevice::ReadOnly)) {
-        pByteArray = file.readAll();
+        pFileContents = file.readAll();
 
         file.close();
 
         return true;
     } else {
-        pByteArray = QByteArray();
+        pFileContents = QByteArray();
 
         return false;
     }
@@ -366,7 +367,7 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
     QByteArray byteArray;
 
-    if (readByteArrayFromFile(pFileName, byteArray)) {
+    if (readFileContentsFromFile(pFileName, byteArray)) {
         pText = byteArray;
 
         return true;
@@ -453,7 +454,7 @@ bool isTextFile(const QString &pFileName)
 
     QByteArray fileContents;
 
-    readByteArrayFromFile(pFileName, fileContents);
+    readFileContentsFromFile(pFileName, fileContents);
 
     return fileContents == QString(fileContents).toUtf8();
 }

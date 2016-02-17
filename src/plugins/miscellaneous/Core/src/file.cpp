@@ -137,7 +137,7 @@ QString File::sha1() const
 
     QByteArray fileContents;
 
-    if (readByteArrayFromFile(mFileName, fileContents))
+    if (readFileContentsFromFile(mFileName, fileContents))
         return Core::sha1(fileContents);
     else
         return QString();
