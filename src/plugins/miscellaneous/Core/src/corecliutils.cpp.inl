@@ -121,7 +121,8 @@ QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
 
 //==============================================================================
 
-bool SynchronousFileDownloader::download(const QString &pUrl, QString &pText,
+bool SynchronousFileDownloader::download(const QString &pUrl,
+                                         QByteArray &pContents,
                                          QString *pErrorMessage) const
 {
     // Try to read a remote file as text, but only if we are connected to the
@@ -154,12 +155,12 @@ bool SynchronousFileDownloader::download(const QString &pUrl, QString &pText,
         bool res = networkReply->error() == QNetworkReply::NoError;
 
         if (res) {
-            pText = networkReply->readAll();
+            pContents = networkReply->readAll();
 
             if (pErrorMessage)
                 *pErrorMessage = QString();
         } else {
-            pText = QString();
+            pContents = QByteArray();
 
             if (pErrorMessage)
                 *pErrorMessage = networkReply->errorString();
@@ -384,7 +385,12 @@ bool readTextFromUrl(const QString &pUrl, QString &pText,
 
     static SynchronousFileDownloader synchronousFileDownloader;
 
-    return synchronousFileDownloader.download(pUrl, pText, pErrorMessage);
+    QByteArray contents;
+    bool res = synchronousFileDownloader.download(pUrl, contents, pErrorMessage);
+
+    pText = contents;
+
+    return res;
 }
 
 //==============================================================================
