@@ -395,8 +395,8 @@ bool readTextFromUrl(const QString &pUrl, QString &pText,
 
 //==============================================================================
 
-bool writeByteArrayToFile(const QString &pFileName,
-                          const QByteArray &pByteArray)
+bool writeFileContentsToFile(const QString &pFileName,
+                             const QByteArray &pFileContents)
 {
     // Write the given byte array to a temporary file and rename it to the given
     // file name, if successful
@@ -404,7 +404,7 @@ bool writeByteArrayToFile(const QString &pFileName,
     QFile file(temporaryFileName());
 
     if (file.open(QIODevice::WriteOnly)) {
-        bool res = file.write(pByteArray) != -1;
+        bool res = file.write(pFileContents) != -1;
 
         file.close();
 
@@ -436,7 +436,7 @@ bool writeTextToFile(const QString &pFileName, const QString &pText)
 {
     // Write the given string to the given file
 
-    return writeByteArrayToFile(pFileName, pText.toUtf8());
+    return writeFileContentsToFile(pFileName, pText.toUtf8());
 }
 
 //==============================================================================
@@ -446,7 +446,7 @@ bool writeResourceToFile(const QString &pFileName, const QString &pResource)
     // Write the given resource to the given file, if possible
 
     if (QResource(pResource).isValid())
-        return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
+        return writeFileContentsToFile(pFileName, resourceAsByteArray(pResource));
     else
         return false;
 }

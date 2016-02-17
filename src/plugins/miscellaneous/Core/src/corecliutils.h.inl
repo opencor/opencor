@@ -51,8 +51,8 @@ bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
 bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
                                  QString *pErrorMessage = 0);
 
-bool CORE_EXPORT writeByteArrayToFile(const QString &pFileName,
-                                      const QByteArray &pByteArray);
+bool CORE_EXPORT writeFileContentsToFile(const QString &pFileName,
+                                         const QByteArray &pFileContents);
 bool CORE_EXPORT writeTextToFile(const QString &pFileName,
                                  const QString &pText);
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,
