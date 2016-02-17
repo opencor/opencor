@@ -59,14 +59,14 @@ void CheckForUpdatesEngine::check()
     // Retrieve some information about the different versions of OpenCOR that
     // are available
 
-    QString fileVersionsContents = QString();
+    QByteArray fileVersionsContents = QByteArray();
     QString errorMessage = QString();
 
     mNewerVersions.clear();
 
-    if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
+    if (OpenCOR::readFileContentsFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
         QJsonParseError jsonParseError;
-        QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17).toUtf8(), &jsonParseError);
+        QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
             QVariantMap versionMap;

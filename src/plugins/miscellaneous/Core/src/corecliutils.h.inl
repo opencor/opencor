@@ -48,8 +48,9 @@ QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
 bool CORE_EXPORT readByteArrayFromFile(const QString &pFileName,
                                        QByteArray &pByteArray);
 bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
-bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
-                                 QString *pErrorMessage = 0);
+bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
+                                         QByteArray &pFileContents,
+                                         QString *pErrorMessage = 0);
 
 bool CORE_EXPORT writeFileContentsToFile(const QString &pFileName,
                                          const QByteArray &pFileContents);

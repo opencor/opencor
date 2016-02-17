@@ -335,15 +335,15 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         // We are dealing with a remote input file, so try to get a local copy
         // of it
 
-        QString fileContents;
+        QByteArray fileContents;
 
-        if (Core::readTextFromUrl(inFileNameOrUrl, fileContents, &errorMessage)) {
+        if (Core::readFileContentsFromUrl(inFileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
             inFileName = Core::temporaryFileName();
 
-            if (!Core::writeTextToFile(inFileName, fileContents))
+            if (!Core::writeFileContentsToFile(inFileName, fileContents))
                 errorMessage = "The input file could not be saved locally.";
         } else {
             errorMessage = QString("The input file could not be opened (%1).").arg(Core::formatMessage(errorMessage));

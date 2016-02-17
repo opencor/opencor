@@ -377,19 +377,14 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 //==============================================================================
 
-bool readTextFromUrl(const QString &pUrl, QString &pText,
-                     QString *pErrorMessage)
+bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
+                             QString *pErrorMessage)
 {
     // Read the contents of the file, which URL is given, as a string
 
     static SynchronousFileDownloader synchronousFileDownloader;
 
-    QByteArray contents;
-    bool res = synchronousFileDownloader.download(pUrl, contents, pErrorMessage);
-
-    pText = contents;
-
-    return res;
+    return synchronousFileDownloader.download(pUrl, pFileContents, pErrorMessage);
 }
 
 //==============================================================================

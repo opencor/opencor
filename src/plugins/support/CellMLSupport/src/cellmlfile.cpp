@@ -239,14 +239,14 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         // We haven't already loaded the import contents, so do
                         // so now
 
-                        QString fileContents;
+                        QByteArray fileContents;
 
-                        if (   ( isLocalFile && Core::readTextFromFile(fileNameOrUrl, fileContents))
-                            || (!isLocalFile && Core::readTextFromUrl(fileNameOrUrl, fileContents))) {
+                        if (   ( isLocalFile && Core::readByteArrayFromFile(fileNameOrUrl, fileContents))
+                            || (!isLocalFile && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
-                            import->instantiateFromText(fileContents.toStdWString());
+                            import->instantiateFromText(QString(fileContents).toStdWString());
 
                             // Keep track of the import contents
 

@@ -1304,10 +1304,10 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                                                  tr("%1 could not be found").arg(modelSource));
             }
         } else {
-            QString fileContents;
+            QByteArray fileContents;
             QString errorMessage;
 
-            if (Core::readTextFromUrl(modelSource, fileContents, &errorMessage)) {
+            if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {
 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                  QString("%1 has been successfully read").arg(modelSource));
             } else {

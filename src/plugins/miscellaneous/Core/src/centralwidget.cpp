@@ -849,10 +849,10 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
         showBusyWidget(this);
 
-        QString fileContents;
+        QByteArray fileContents;
         QString errorMessage;
 
-        if (readTextFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -959,10 +959,10 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     showBusyWidget(this);
 
                     QString url = fileManagerInstance->url(fileName);
-                    QString fileContents;
+                    QByteArray fileContents;
                     QString errorMessage;
 
-                    bool res = readTextFromUrl(url, fileContents, &errorMessage);
+                    bool res = readFileContentsFromUrl(url, fileContents, &errorMessage);
 
                     if (res) {
                         writeTextToFile(fileName, fileContents);
