@@ -22,8 +22,10 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "combinefilemanager.h"
+#include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "sedmlfilemanager.h"
+#include "sedmlsupportplugin.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
 
@@ -268,7 +270,9 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType;
+    return QStringList() << CellMLSupport::CellmlMimeType
+                         << SEDMLSupport::SedmlMimeType
+                         << COMBINESupport::CombineMimeType;
 }
 
 //==============================================================================
