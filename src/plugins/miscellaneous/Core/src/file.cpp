@@ -168,7 +168,7 @@ bool File::isDifferent() const
 
 //==============================================================================
 
-bool File::isDifferent(const QString pFileContents) const
+bool File::isDifferent(const QByteArray &pFileContents) const
 {
     // Return whether the file is different from the given file contents by
     // comparing their SHA-1 values

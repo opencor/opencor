@@ -234,7 +234,7 @@ bool FileManager::isDifferent(const QString &pFileName) const
 //==============================================================================
 
 bool FileManager::isDifferent(const QString &pFileName,
-                              const QString &pFileContents) const
+                              const QByteArray &pFileContents) const
 {
     // Return whether the given file, if it is being managed, has the same
     // contents has the given one

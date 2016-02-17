@@ -110,7 +110,7 @@ public:
 
     bool isDifferent(const QString &pFileName) const;
     bool isDifferent(const QString &pFileName,
-                     const QString &pFileContents) const;
+                     const QByteArray &pFileContents) const;
 
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;

@@ -108,7 +108,7 @@ bool RawCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) con
     Editor::EditorWidget *crtEditor = editor(pFileName);
 
     return crtEditor?
-               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents()):
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
                false;
 }
 

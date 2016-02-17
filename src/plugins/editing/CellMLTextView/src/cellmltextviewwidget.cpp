@@ -297,7 +297,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                                                                CellMLSupport::CellmlFile::version(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
-                                            Core::sha1(editingWidget->editor()->contents()),
+                                            Core::sha1(editingWidget->editor()->contents().toUtf8()),
                                             successfulConversion,
                                             cellmlVersion,
                                             fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes());
@@ -474,7 +474,7 @@ bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) co
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
-    return data?Core::sha1(data->editingWidget()->editor()->contents()).compare(data->sha1()):false;
+    return data?Core::sha1(data->editingWidget()->editor()->contents().toUtf8()).compare(data->sha1()):false;
 }
 
 //==============================================================================
@@ -523,7 +523,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
                 // We could serialise our DOM document, so update our SHA-1
                 // value
 
-                data->setSha1(Core::sha1(data->editingWidget()->editor()->contents()));
+                data->setSha1(Core::sha1(data->editingWidget()->editor()->contents().toUtf8()));
 
                 mData.insert(pOldFileName, data);
 
