@@ -119,9 +119,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        QString fileContents;
+        QByteArray fileContents;
 
-        Core::readTextFromFile(pFileName, fileContents);
+        Core::readFileContentsFromFile(pFileName, fileContents);
 
         newEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
                                                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),

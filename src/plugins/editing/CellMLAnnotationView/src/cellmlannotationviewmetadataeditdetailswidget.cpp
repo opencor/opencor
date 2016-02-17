@@ -341,7 +341,11 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Create our output for ontological terms
 
-    Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
+    QByteArray fileContents;
+
+    Core::readFileContentsFromFile(":/ontologicalTerms.html", fileContents);
+
+    mOutputOntologicalTermsTemplate = fileContents;
 
     mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
 

@@ -136,10 +136,12 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
 
     // Retrieve the output template
 
-    Core::readTextFromFile(":/output.html", mOutputTemplate);
+    QByteArray fileContents;
 
-    setHtml(mOutputTemplate.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16)));
+    Core::readFileContentsFromFile(":/output.html", fileContents);
+
+    setHtml(QString(fileContents).arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
+                                      Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16)));
 }
 
 //==============================================================================

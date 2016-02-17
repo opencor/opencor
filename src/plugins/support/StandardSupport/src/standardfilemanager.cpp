@@ -85,10 +85,10 @@ bool StandardFileManager::isFile(const QString &pFileName)
     //  - Consider the file of the right type if it is new
 
     if (Core::isTextFile(nativeFileName)) {
-        QString fileContents;
+        QByteArray fileContents;
 
-        if (Core::readTextFromFile(nativeFileName, fileContents)) {
-            if (fileContents.trimmed().isEmpty())
+        if (Core::readFileContentsFromFile(nativeFileName, fileContents)) {
+            if (QString(fileContents).trimmed().isEmpty())
                 return true;
 
             return canLoadFile(nativeFileName);

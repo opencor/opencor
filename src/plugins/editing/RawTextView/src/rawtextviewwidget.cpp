@@ -98,9 +98,9 @@ void RawTextViewWidget::initialize(const QString &pFileName,
     if (!newEditor) {
         // No editor exists for the given file, so create one
 
-        QString fileContents;
+        QByteArray fileContents;
 
-        Core::readTextFromFile(pFileName, fileContents);
+        Core::readFileContentsFromFile(pFileName, fileContents);
 
         newEditor = new Editor::EditorWidget(fileContents,
                                              !Core::FileManager::instance()->isReadableAndWritable(pFileName),

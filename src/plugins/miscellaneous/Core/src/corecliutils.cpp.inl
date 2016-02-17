@@ -361,23 +361,6 @@ bool readFileContentsFromFile(const QString &pFileName,
 
 //==============================================================================
 
-bool readTextFromFile(const QString &pFileName, QString &pText)
-{
-    // Read the contents of the file, which file name is given, as a string
-
-    QByteArray byteArray;
-
-    if (readFileContentsFromFile(pFileName, byteArray)) {
-        pText = byteArray;
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
 bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
                              QString *pErrorMessage)
 {

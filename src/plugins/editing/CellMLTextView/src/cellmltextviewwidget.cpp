@@ -226,11 +226,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // text version of the given CellML file
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QString fileContents;
+        QByteArray fileContents;
 
-        Core::readTextFromFile(pFileName, fileContents);
+        Core::readFileContentsFromFile(pFileName, fileContents);
 
-        bool fileIsEmpty = fileContents.trimmed().isEmpty();
+        bool fileIsEmpty = QString(fileContents).trimmed().isEmpty();
         bool successfulConversion = fileIsEmpty?true:mConverter.execute(fileContents);
 
         // Create an editing widget for the given CellML file

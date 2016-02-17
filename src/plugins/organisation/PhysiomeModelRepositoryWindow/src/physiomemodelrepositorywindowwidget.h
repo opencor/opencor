@@ -98,8 +98,6 @@ private:
 
     QMenu *mContextMenu;
 
-    QString mOutputTemplate;
-
     QStringList mExposureNames;
     QBoolList mExposureDisplayed;
     QMap<QString, int> mExposureUrlId;

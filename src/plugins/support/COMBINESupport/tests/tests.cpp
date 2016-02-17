@@ -147,11 +147,11 @@ void Tests::basicTests()
     QVERIFY(otherCombineArchive.load());
     QVERIFY(otherCombineArchive.save(yetAnotherFileName));
 
-    QString otherFileContents;
-    QString yetAnotherFileContents;
+    QByteArray otherFileContents;
+    QByteArray yetAnotherFileContents;
 
-    QVERIFY(OpenCOR::Core::readTextFromFile(otherFileName, otherFileContents));
-    QVERIFY(OpenCOR::Core::readTextFromFile(yetAnotherFileName, yetAnotherFileContents));
+    QVERIFY(OpenCOR::Core::readFileContentsFromFile(otherFileName, otherFileContents));
+    QVERIFY(OpenCOR::Core::readFileContentsFromFile(yetAnotherFileName, yetAnotherFileContents));
 
     QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
              OpenCOR::Core::sha1(yetAnotherFileContents));

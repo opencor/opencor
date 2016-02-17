@@ -284,15 +284,14 @@ bool CombineArchive::save(const QString &pFileName)
 
     foreach (const CombineArchiveFile &file, mFiles) {
         if (file.location().compare(".")) {
-            QString combineArchiveFileContents;
+            QByteArray combineArchiveFileContents;
 
-            if (!Core::readTextFromFile(mDirName+QDir::separator()+file.location(),
-                                        combineArchiveFileContents)) {
+            if (!Core::readFileContentsFromFile(mDirName+QDir::separator()+file.location(),
+                                                combineArchiveFileContents)) {
                 return false;
             }
 
-            zipWriter.addFile(file.location(),
-                              combineArchiveFileContents.toUtf8());
+            zipWriter.addFile(file.location(), combineArchiveFileContents);
         }
     }
 
@@ -328,11 +327,11 @@ bool CombineArchive::isValid()
 
     // Make sure that the manifest is a valid OMEX file
 
-    QString manifestContents;
-    QString schemaContents;
+    QByteArray manifestContents;
+    QByteArray schemaContents;
 
-    Core::readTextFromFile(manifestFileName, manifestContents);
-    Core::readTextFromFile(":omex.xsd", schemaContents);
+    Core::readFileContentsFromFile(manifestFileName, manifestContents);
+    Core::readFileContentsFromFile(":omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,

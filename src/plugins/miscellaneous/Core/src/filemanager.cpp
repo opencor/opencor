@@ -508,9 +508,9 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
     if (nativeFile) {
         // The file is managed, so retrieve its contents
 
-        QString fileContents;
+        QByteArray fileContents;
 
-        if (readTextFromFile(pFileName, fileContents)) {
+        if (readFileContentsFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our
             // given file
 
