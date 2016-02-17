@@ -121,9 +121,8 @@ QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
 
 //==============================================================================
 
-bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
-                                                    QString &pText,
-                                                    QString *pErrorMessage) const
+bool SynchronousFileDownloader::download(const QString &pUrl, QString &pText,
+                                         QString *pErrorMessage) const
 {
     // Try to read a remote file as text, but only if we are connected to the
     // Internet
@@ -181,8 +180,8 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
 
 //==============================================================================
 
-void SynchronousTextFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-                                                                  const QList<QSslError> &pSslErrors)
+void SynchronousFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                                              const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we assume the user knows what s/he is doing
 
@@ -383,9 +382,9 @@ bool readTextFromUrl(const QString &pUrl, QString &pText,
 {
     // Read the contents of the file, which URL is given, as a string
 
-    static SynchronousTextFileDownloader synchronousTextFileDownloader;
+    static SynchronousFileDownloader synchronousFileDownloader;
 
-    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
+    return synchronousFileDownloader.download(pUrl, pText, pErrorMessage);
 }
 
 //==============================================================================
