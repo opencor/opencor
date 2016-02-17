@@ -519,7 +519,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             // Serialise our DOM document
 
-            if (Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument))) {
+            if (Core::writeFileContentsToFile(pNewFileName, qDomDocumentToString(domDocument).toUtf8())) {
                 // We could serialise our DOM document, so update our SHA-1
                 // value
 

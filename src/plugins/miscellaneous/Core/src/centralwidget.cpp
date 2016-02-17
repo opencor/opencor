@@ -965,7 +965,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     bool res = readFileContentsFromUrl(url, fileContents, &errorMessage);
 
                     if (res) {
-                        writeTextToFile(fileName, fileContents);
+                        writeFileContentsToFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
                     } else {

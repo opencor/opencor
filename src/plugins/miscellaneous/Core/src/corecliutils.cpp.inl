@@ -410,15 +410,6 @@ bool writeFileContentsToFile(const QString &pFileName,
 
 //==============================================================================
 
-bool writeTextToFile(const QString &pFileName, const QString &pText)
-{
-    // Write the given string to the given file
-
-    return writeFileContentsToFile(pFileName, pText.toUtf8());
-}
-
-//==============================================================================
-
 bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 {
     // Write the given resource to the given file, if possible

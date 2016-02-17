@@ -511,7 +511,7 @@ bool CellmlFile::save(const QString &pFileName)
 
     // Write out the contents of our DOM document to our CellML file
 
-    if (!Core::writeTextToFile(fileName, qDomDocumentToString(domDocument)))
+    if (!Core::writeFileContentsToFile(fileName, qDomDocumentToString(domDocument).toUtf8()))
         return false;
 
     // Our CellML file being saved, it cannot be modified (should it have been
@@ -1066,7 +1066,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         // Save the export
 
-        if (!Core::writeTextToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
+        if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)).toUtf8())) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the output file could not be saved"));
 

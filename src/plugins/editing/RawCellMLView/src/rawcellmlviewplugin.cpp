@@ -138,7 +138,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
     Editor::EditorWidget *crtEditor = editor(pOldFileName);
 
     return crtEditor?
-               Core::writeTextToFile(pNewFileName, crtEditor->contents()):
+               Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):
                false;
 }
 

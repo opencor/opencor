@@ -127,7 +127,7 @@ bool SedmlFile::save(const QString &pFileName)
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
 
-    bool res = Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
+    bool res = Core::writeFileContentsToFile(pFileName, qDomDocumentToString(domDocument).toUtf8());
 
     if (res)
         mNew = false;

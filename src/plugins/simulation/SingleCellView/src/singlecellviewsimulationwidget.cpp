@@ -1713,8 +1713,8 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
             if (remoteFile) {
                 QString localImportedFileName = Core::temporaryFileName();
 
-                Core::writeTextToFile(localImportedFileName,
-                                      mCellmlFile->importedFileContents(importedFileName));
+                Core::writeFileContentsToFile(localImportedFileName,
+                                      mCellmlFile->importedFileContents(importedFileName).toUtf8());
 
                 remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }

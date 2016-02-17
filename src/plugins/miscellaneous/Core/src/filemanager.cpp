@@ -436,7 +436,7 @@ bool FileManager::newFile(QString &pFileName, const QString &pContents)
 
     // Create a new file with the given contents
 
-    if (writeTextToFile(fileName, pContents)) {
+    if (writeFileContentsToFile(fileName, pContents.toUtf8())) {
         pFileName = fileName;
 
         return true;

@@ -53,8 +53,6 @@ bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
 
 bool CORE_EXPORT writeFileContentsToFile(const QString &pFileName,
                                          const QByteArray &pFileContents);
-bool CORE_EXPORT writeTextToFile(const QString &pFileName,
-                                 const QString &pText);
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,
                                      const QString &pResource);
 
