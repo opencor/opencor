@@ -519,7 +519,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             // Serialise our DOM document
 
-            if (Core::writeFileContentsToFile(pNewFileName, qDomDocumentToString(domDocument).toUtf8())) {
+            if (Core::writeFileContentsToFile(pNewFileName, Core::serialiseDomDocument(domDocument))) {
                 // We could serialise our DOM document, so update our SHA-1
                 // value
 
@@ -568,7 +568,7 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
         editor->cursorPosition(cursorLine, cursorColumn);
 
-        mConverter.execute(qDomDocumentToString(mParser.domDocument()));
+        mConverter.execute(Core::serialiseDomDocument(mParser.domDocument()));
 
         editor->setContents(mConverter.output(), true);
         editor->setCursorPosition(cursorLine, cursorColumn);
@@ -1053,7 +1053,7 @@ void CellmlTextViewWidget::updateViewer()
             // previous one
 
             QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"
-                                            +Core::cleanContentMathml(qDomDocumentToString(mParser.domDocument()))
+                                            +Core::cleanContentMathml(Core::serialiseDomDocument(mParser.domDocument()))
                                             +"</math>";
 
             if (contentMathmlEquation.compare(mContentMathmlEquation)) {

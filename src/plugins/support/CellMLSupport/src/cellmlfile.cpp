@@ -511,7 +511,7 @@ bool CellmlFile::save(const QString &pFileName)
 
     // Write out the contents of our DOM document to our CellML file
 
-    if (!Core::writeFileContentsToFile(fileName, qDomDocumentToString(domDocument).toUtf8()))
+    if (!Core::writeFileContentsToFile(fileName, Core::serialiseDomDocument(domDocument)))
         return false;
 
     // Our CellML file being saved, it cannot be modified (should it have been

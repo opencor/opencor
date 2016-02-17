@@ -280,7 +280,7 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
 
         domDocument.setContent(editingWidget->editor()->contents());
 
-        editingWidget->editor()->setContents(qDomDocumentToString(domDocument), true);
+        editingWidget->editor()->setContents(Core::serialiseDomDocument(domDocument), true);
         editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
     }
 }

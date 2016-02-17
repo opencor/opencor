@@ -64,8 +64,6 @@ bool CORE_EXPORT qSameStringLists(const QStringList &pStringList1,
 QIntList CORE_EXPORT qVariantListToIntList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
 
-QString CORE_EXPORT qDomDocumentToString(const QDomDocument &pDomDocument);
-
 //==============================================================================
 
 class QNetworkReply;
@@ -160,6 +158,8 @@ QString CORE_EXPORT newFileName(const QString &pFileName,
 bool CORE_EXPORT validXml(const QByteArray &pXml, const QByteArray &pSchema);
 bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
                               const QString &pSchemaFileName);
+
+QByteArray CORE_EXPORT serialiseDomDocument(const QDomDocument &pDomDocument);
 
 //==============================================================================
 

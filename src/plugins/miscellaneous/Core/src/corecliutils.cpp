@@ -164,7 +164,7 @@ bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
 //==============================================================================
 
 void cleanDomElement(QDomElement &pDomElement,
-                     QMap<QString, QString> &pElementsAttributes)
+                     QMap<QString, QByteArray> &pElementsAttributes)
 {
     // Serialise all the element's attributes and sort their serialised version
     // before removing them from the element and adding a new attribute that
@@ -226,7 +226,7 @@ void cleanDomElement(QDomElement &pDomElement,
 
         QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
 
-        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" "));
+        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" ").toUtf8());
 
         // Add a new attribute to the element
         // Note: this attribute, once serialised by QDomDocument::save(), will
@@ -242,47 +242,6 @@ void cleanDomElement(QDomElement &pDomElement,
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         cleanDomElement(childElement, pElementsAttributes);
     }
-}
-
-//==============================================================================
-
-QString qDomDocumentToString(const QDomDocument &pDomDocument)
-{
-    // Serialise the given DOM document
-    // Note: normally, we would simply be using QDomDocument::save(), but we
-    //       want elements' attributes to be sorted when serialised (so that it
-    //       is easier to compare two different XML documents). Unfortunately,
-    //       QDomDocument::save() doesn't provide such a functionality (since
-    //       the order of attributes doesn't matter in XML). So, we make a call
-    //       to QDomDocument::save(), but only after having removed all the
-    //       elements' attributes, which we serialise manually afterwards...
-
-    QString res = QString();
-
-    // Make a deep copy of the given DOM document and remove all the elements'
-    // attributes (but keep track of them, so that we can later on serialise
-    // them manually)
-
-    QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
-    QMap<QString, QString> elementsAttributes = QMap<QString, QString>();
-
-    for (QDomElement childElement = domDocument.firstChildElement();
-         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanDomElement(childElement, elementsAttributes);
-    }
-
-    // Serialise our 'reduced' DOM document
-
-    QTextStream textStream(&res, QIODevice::WriteOnly);
-
-    domDocument.save(textStream, 4);
-
-    // Manually serialise the elements' attributes
-
-    foreach (const QString &elementAttribute, elementsAttributes.keys())
-        res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
-
-    return res;
 }
 
 //==============================================================================
@@ -629,7 +588,7 @@ QString formatXml(const QString &pXml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pXml))
-        return qDomDocumentToString(domDocument);
+        return serialiseDomDocument(domDocument);
     else
         return QString();
 }
@@ -888,6 +847,47 @@ bool validXmlFile(const QString &pXmlFileName, const QString &pSchemaFileName)
     readFileContentsFromFile(pSchemaFileName, schemaContents);
 
     return validXml(xmlContents, schemaContents);
+}
+
+//==============================================================================
+
+QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
+{
+    // Serialise the given DOM document
+    // Note: normally, we would simply be using QDomDocument::save(), but we
+    //       want elements' attributes to be sorted when serialised (so that it
+    //       is easier to compare two different XML documents). Unfortunately,
+    //       QDomDocument::save() doesn't provide such a functionality (since
+    //       the order of attributes doesn't matter in XML). So, we make a call
+    //       to QDomDocument::save(), but only after having removed all the
+    //       elements' attributes, which we serialise manually afterwards...
+
+    QByteArray res = QByteArray();
+
+    // Make a deep copy of the given DOM document and remove all the elements'
+    // attributes (but keep track of them, so that we can later on serialise
+    // them manually)
+
+    QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
+    QMap<QString, QByteArray> elementsAttributes = QMap<QString, QByteArray>();
+
+    for (QDomElement childElement = domDocument.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanDomElement(childElement, elementsAttributes);
+    }
+
+    // Serialise our 'reduced' DOM document
+
+    QTextStream textStream(&res, QIODevice::WriteOnly);
+
+    domDocument.save(textStream, 4);
+
+    // Manually serialise the elements' attributes
+
+    foreach (const QString &elementAttribute, elementsAttributes.keys())
+        res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
+
+    return res;
 }
 
 //==============================================================================
