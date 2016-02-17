@@ -298,8 +298,7 @@ QByteArray resource(const QString &pResource)
             return QByteArray(reinterpret_cast<const char *>(resource.data()),
                               resource.size());
         }
-    }
-    else {
+    } else {
         return QByteArray();
     }
 }
