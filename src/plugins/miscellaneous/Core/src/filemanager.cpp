@@ -428,7 +428,7 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
-bool FileManager::newFile(QString &pFileName, const QString &pContents)
+bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
 {
     // Retrieve a temporary file name for our new file
 
@@ -436,7 +436,7 @@ bool FileManager::newFile(QString &pFileName, const QString &pContents)
 
     // Create a new file with the given contents
 
-    if (writeFileContentsToFile(fileName, pContents.toUtf8())) {
+    if (writeFileContentsToFile(fileName, pContents)) {
         pFileName = fileName;
 
         return true;
@@ -450,7 +450,7 @@ bool FileManager::newFile(QString &pFileName, const QString &pContents)
 //==============================================================================
 
 FileManager::Status FileManager::create(const QString &pUrl,
-                                        const QString &pContents)
+                                        const QByteArray &pContents)
 {
     // Create a new file
 

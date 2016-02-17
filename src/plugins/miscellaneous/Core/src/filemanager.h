@@ -131,7 +131,7 @@ public:
     void reload(const QString &pFileName);
 
     Status create(const QString &pUrl = QString(),
-                  const QString &pContents = QString());
+                  const QByteArray &pContents = QByteArray());
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -151,7 +151,7 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool newFile(QString &pFileName, const QString &pContents = QString());
+    bool newFile(QString &pFileName, const QByteArray &pContents = QByteArray());
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);
