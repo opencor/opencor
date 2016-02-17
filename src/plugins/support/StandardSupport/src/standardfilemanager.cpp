@@ -76,29 +76,18 @@ bool StandardFileManager::isFile(const QString &pFileName)
     if (file(nativeFileName))
         return true;
 
-    // The given file is not managed, so do the following:
-    //  - Check whether it is a text file and consider it of the right type if,
-    //    after having been trimmed, it is empty, or check whether it can be
-    //    loaded
-    //  - Check whether it is a binary file and consider it of the right type if
-    //    it can be loaded
-    //  - Consider the file of the right type if it is new
+    // The given file is not managed, so consider it of the right type if it is
+    // an empty file (after having been trimmed) or it can be loaded
 
-    if (Core::isTextFile(nativeFileName)) {
-        QByteArray fileContents;
+    QByteArray fileContents;
 
-        if (Core::readFileContentsFromFile(nativeFileName, fileContents)) {
-            if (fileContents.trimmed().isEmpty())
-                return true;
+    if (Core::readFileContentsFromFile(nativeFileName, fileContents)) {
+        if (fileContents.trimmed().isEmpty())
+            return true;
 
-            return canLoadFile(nativeFileName);
-        } else {
-            return false;
-        }
-    } else if (canLoadFile(nativeFileName)) {
-        return true;
+        return canLoadFile(nativeFileName);
     } else {
-        return Core::FileManager::instance()->isNew(nativeFileName);
+        return false;
     }
 }
 
