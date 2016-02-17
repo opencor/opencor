@@ -380,7 +380,7 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
                              QString *pErrorMessage)
 {
-    // Read the contents of the file, which URL is given, as a string
+    // Read the contents of the file, which URL is given
 
     static SynchronousFileDownloader synchronousFileDownloader;
 
@@ -392,8 +392,8 @@ bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
 bool writeFileContentsToFile(const QString &pFileName,
                              const QByteArray &pFileContents)
 {
-    // Write the given byte array to a temporary file and rename it to the given
-    // file name, if successful
+    // Write the given file contents to a temporary file and rename it to the
+    // given file name, if successful
 
     QFile file(temporaryFileName());
 
