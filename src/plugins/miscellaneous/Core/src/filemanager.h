@@ -151,7 +151,7 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool newFile(const QString &pContents, QString &pFileName);
+    bool newFile(QString &pFileName, const QString &pContents = QString());
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);

@@ -310,7 +310,7 @@ void FileManager::makeNew(const QString &pFileName)
     if (nativeFile) {
         QString fileName;
 
-        if (newFile(QString(), fileName))
+        if (newFile(fileName))
             nativeFile->makeNew(fileName);
     }
 }
@@ -428,7 +428,7 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
-bool FileManager::newFile(const QString &pContents, QString &pFileName)
+bool FileManager::newFile(QString &pFileName, const QString &pContents)
 {
     // Retrieve a temporary file name for our new file
 
@@ -456,7 +456,7 @@ FileManager::Status FileManager::create(const QString &pUrl,
 
     QString fileName;
 
-    if (newFile(pContents, fileName)) {
+    if (newFile(fileName, pContents)) {
         // Let people know that we have created a file
 
         emit fileCreated(fileName, pUrl);
@@ -516,7 +516,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
             QString fileName;
 
-            if (newFile(fileContents, fileName)) {
+            if (newFile(fileName, fileContents)) {
                 // Let people know that we have duplicated a file
 
                 emit fileDuplicated(fileName);
