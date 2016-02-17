@@ -336,6 +336,18 @@
         <source>Fatal:</source>
         <translation>Fatal :</translation>
     </message>
+    <message>
+        <source>the requested solver (%1) could not be found</source>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
+        <source>the requested property (%1) could not be set</source>
+        <translation>la propriété demandée (%1) n&apos;a pas pu être spécifiée</translation>
+    </message>
+    <message>
+        <source>the requested NLA solver (%1) could not be set</source>
+        <translation>le solveur ANL demandé (%1) n&apos;a pas pu être spécifié</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
@@ -440,8 +452,20 @@
         <translation>seulement les fichiers SED-ML avec des générateurs de donnée pour une variable qui est dérivée ou non sont supportés</translation>
     </message>
     <message>
-        <source>incomplete algorithm annotation (missing attribute(s))</source>
-        <translation>annotation d&apos;algorithme incomplète (attribut(s) manquant(s))</translation>
+        <source>only SED-ML files with one or two simulations with an algorithm are supported</source>
+        <translation>seulement les fichiers SED-ML avec une ou deux simulations avec un algorithme sont supportés</translation>
+    </message>
+    <message>
+        <source>incomplete algorithm annotation (missing algorithm property information)</source>
+        <translation>annotation d&apos;algorithme incomplète (information sur propriété d&apos;algorithme manquante)</translation>
+    </message>
+    <message>
+        <source>only one NLA solver is allowed</source>
+        <translation>seulement un solveur ANL est autorisé</translation>
+    </message>
+    <message>
+        <source>incomplete simulation annotation (missing NLA solver name)</source>
+        <translation>annotation de simulation incomplète (nom de solveur ANL manquant)</translation>
     </message>
 </context>
 <context>
