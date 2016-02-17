@@ -88,7 +88,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
         QByteArray fileContents;
 
         if (Core::readFileContentsFromFile(nativeFileName, fileContents)) {
-            if (QString(fileContents).trimmed().isEmpty())
+            if (fileContents.trimmed().isEmpty())
                 return true;
 
             return canLoadFile(nativeFileName);
