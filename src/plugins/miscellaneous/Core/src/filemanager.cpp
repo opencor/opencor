@@ -120,7 +120,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     if (nativeFile) {
         // The file is managed, so we can remove it
 
-        mFiles.remove(nativeFileName);;
+        mFiles.remove(nativeFileName);
 
         delete nativeFile;
 
