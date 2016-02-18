@@ -128,8 +128,6 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    void updateSettings(SingleCellViewSimulationWidget *pSimulationWidget);
-
     bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
                                  SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
     bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,

@@ -275,9 +275,22 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
     mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
 
-    // Update some settings
+    // Update some of our simulation's contents' children's settings
 
-    updateSettings(mSimulationWidget);
+    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
+        mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
+
+    for (int i = 0, iMax = mSimulationWidgetColumnWidths.count(); i < iMax; ++i)
+        mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->setColumnWidth(i, mSimulationWidgetColumnWidths[i]);
+
+    for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
+        mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
+
+    for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
+        mSimulationWidget->contentsWidget()->informationWidget()->graphsWidget()->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
+
+    for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
+        mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
 
     // Hide our previous simulation widget and show our new one
 
@@ -659,38 +672,6 @@ void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pInde
 
     if (qobject_cast<QHeaderView *>(sender())->isVisible())
         mParametersWidgetColumnWidths[pIndex] = pNewSize;
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::updateSettings(SingleCellViewSimulationWidget *pSimulationWidget)
-{
-    // Update some of the given simulation's contents' children's settings
-
-    Core::CollapsibleWidget *collapsibleWidget = pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
-
-    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
-        collapsibleWidget->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
-
-    SingleCellViewInformationSimulationWidget *simulationWidget = pSimulationWidget->contentsWidget()->informationWidget()->simulationWidget();
-
-    for (int i = 0, iMax = mSimulationWidgetColumnWidths.count(); i < iMax; ++i)
-        simulationWidget->setColumnWidth(i, mSimulationWidgetColumnWidths[i]);
-
-    SingleCellViewInformationSolversWidget *solversWidget = pSimulationWidget->contentsWidget()->informationWidget()->solversWidget();
-
-    for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
-        solversWidget->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
-
-    SingleCellViewInformationGraphsWidget *graphsWidget = pSimulationWidget->contentsWidget()->informationWidget()->graphsWidget();
-
-    for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
-        graphsWidget->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
-
-    SingleCellViewInformationParametersWidget *parametersWidget = pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget();
-
-    for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
-        parametersWidget->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
 }
 
 //==============================================================================
