@@ -2121,7 +2121,6 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
     graphPanelsWidget->setSizes(QIntList());
-
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     if (newNbOfGraphPanels > oldNbOfGraphPanels) {
