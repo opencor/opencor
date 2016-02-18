@@ -147,14 +147,14 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the collapsed states of our collapsible widget
 
-    pSettings->value(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
+    pSettings->setValue(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
 
     // Keep track of the columns' width of our various property editors
 
-    pSettings->value(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationWidgetColumnWidths));
-    pSettings->value(SettingsSolversColumnWidths, qIntListToVariantList(mSolversWidgetColumnWidths));
-    pSettings->value(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsWidgetColumnWidths));
-    pSettings->value(SettingsParametersColumnWidths, qIntListToVariantList(mParametersWidgetColumnWidths));
+    pSettings->setValue(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationWidgetColumnWidths));
+    pSettings->setValue(SettingsSolversColumnWidths, qIntListToVariantList(mSolversWidgetColumnWidths));
+    pSettings->setValue(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsWidgetColumnWidths));
+    pSettings->setValue(SettingsParametersColumnWidths, qIntListToVariantList(mParametersWidgetColumnWidths));
 }
 
 //==============================================================================
@@ -602,7 +602,7 @@ void SingleCellViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
     // One of the widgets in our collapsible widget has been collapsed or
     // expanded, so keep track of that fact
 
-    mCollapsibleWidgetCollapsed.insert(pIndex, pCollapsed);
+    mCollapsibleWidgetCollapsed[pIndex] = pCollapsed;
 }
 
 //==============================================================================
