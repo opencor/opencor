@@ -214,9 +214,31 @@ bool SingleCellViewWidget::contains(const QString &pFileName) const
 
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
-    // Retrieve the simulation widget associated with the given file, if any
+    // Stop tracking changes in our 'old' simulation widget's property editors'
+    // columns' width
+    // Note: if we didn't do this then to set our 'new' simulation widget's
+    //       property editors' columns' width would result in the sectionResized
+    //       event being handled, which in turn would mess up our units column's
+    //       width. Indeed, when our 'new' simulation widget's property editors'
+    //       columns' width, QTreeView tries to optimise the columns' width. So,
+    //       if we were to keep tracking those changes, we would end up with an
+    //       width that is too big for our units column, resulting in a
+    //       horizontal scrollbar being shown, which we don't want...
 
     SingleCellViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
+
+    if (oldSimulationWidget) {
+        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                   this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
+        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                   this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
+        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->graphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
+                   this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
+        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                   this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
+    }
+
+    // Retrieve the simulation widget associated with the given file, if any
 
     mSimulationWidget = mSimulationWidgets.value(pFileName);
 
@@ -254,15 +276,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         connect(mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
                 this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
-
-        connect(mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        connect(mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        connect(mSimulationWidget->contentsWidget()->informationWidget()->graphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
-                this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -291,6 +304,18 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
         mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
+
+    // Keep track of changes in our 'new' simulation widget's property editors'
+    // columns' width
+
+    connect(mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+            this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
+    connect(mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+            this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
+    connect(mSimulationWidget->contentsWidget()->informationWidget()->graphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
+            this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
+    connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+            this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
 
     // Hide our previous simulation widget and show our new one
 
