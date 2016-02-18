@@ -186,7 +186,8 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
     mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
 
-    // Set our property editor's columns' width
+    // Make sure that our 'new' property editor's columns' width is the same as
+    // that of our 'old' property editor
 
     if (oldPropertyEditor) {
         for (int i = 0, iMax = oldPropertyEditor->header()->count(); i < iMax; ++i)
