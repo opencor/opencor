@@ -67,9 +67,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     Core::CollapsibleWidget * collapsibleWidget() const;
 
     SingleCellViewInformationSimulationWidget * simulationWidget() const;

@@ -208,7 +208,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         settings.beginGroup(mSettingsGroup);
             mSimulationWidget->loadSettings(&settings);
 
-            // Back up some settings, if this is our first simulation widget
+            // Initialise some trackers, something that only needs to be done if
+            // we are dealing with our first simulation widget
 
             if (mSimulationWidgets.count() == 1)
                 backupSettings(mSimulationWidget);
@@ -250,11 +251,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
     mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
 
-    // Set (restore) some settings, if this is not our first (created)
-    // simulation widget (the first one is already properly set)
+    // Set (restore) some settings
 
-    if (mSimulationWidgets.count() > 1)
-        restoreSettings(mSimulationWidget);
+    restoreSettings(mSimulationWidget);
 
     // Hide our previous simulation widget and show our new one
 
@@ -599,7 +598,8 @@ void SingleCellViewWidget::simulationWidgetHeaderSectionResized(const int &pInde
 
     // Keep track of the new column width
 
-    mSimulationWidgetColumnWidths[pIndex] = pNewSize;
+    if (qobject_cast<QHeaderView *>(sender())->isVisible())
+        mSimulationWidgetColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -612,7 +612,8 @@ void SingleCellViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
 
     // Keep track of the new column width
 
-    mSolversWidgetColumnWidths[pIndex] = pNewSize;
+    if (qobject_cast<QHeaderView *>(sender())->isVisible())
+        mSolversWidgetColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -625,7 +626,8 @@ void SingleCellViewWidget::graphsWidgetHeaderSectionResized(const int &pIndex,
 
     // Keep track of the new column width
 
-    mGraphsWidgetColumnWidths[pIndex] = pNewSize;
+    if (qobject_cast<SingleCellViewInformationGraphsWidget *>(sender())->isVisible())
+        mGraphsWidgetColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -638,7 +640,8 @@ void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pInde
 
     // Keep track of the new column width
 
-    mParametersWidgetColumnWidths[pIndex] = pNewSize;
+    if (qobject_cast<QHeaderView *>(sender())->isVisible())
+        mParametersWidgetColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================

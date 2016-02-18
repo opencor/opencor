@@ -288,32 +288,6 @@ CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsCollapsed = QStringLiteral("Collapsed%1");
-
-//==============================================================================
-
-void CollapsibleWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our collapsable state
-
-    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i) {
-        if (mHeaders[i]->isCollapsable())
-            setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
-    }
-}
-
-//==============================================================================
-
-void CollapsibleWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our collapsable state
-
-    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsCollapsed.arg(i), isCollapsed(i));
-}
-
-//==============================================================================
-
 int CollapsibleWidget::count() const
 {
     // Return our number of headers

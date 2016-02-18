@@ -84,11 +84,7 @@ void SingleCellViewContentsWidget::retranslateUi()
 
 void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of our information and graph panels widgets
-
-    pSettings->beginGroup(mInformationWidget->objectName());
-        mInformationWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    // Retrieve the settings of our graph panels widgets
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
         mGraphPanelsWidget->loadSettings(pSettings);

@@ -1207,32 +1207,6 @@ void PropertyEditorWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsColumnWidth = QStringLiteral("ColumnWidth%1");
-
-//==============================================================================
-
-void PropertyEditorWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the width of each column
-
-    for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
-        setColumnWidth(i, pSettings->value(SettingsColumnWidth.arg(i),
-                                           columnWidth(i)).toInt());
-    }
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the width of each column
-
-    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth.arg(i), columnWidth(i));
-}
-
-//==============================================================================
-
 int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
 {
     // Return the total height of the given index's children

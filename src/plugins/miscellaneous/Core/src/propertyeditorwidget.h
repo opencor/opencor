@@ -304,9 +304,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     virtual QSize sizeHint() const;
 
     void clear();
