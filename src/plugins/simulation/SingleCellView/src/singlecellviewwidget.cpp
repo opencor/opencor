@@ -77,7 +77,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mSettingsGroup(QString()),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
-    mCollapsibleWidgetCollapsed(QMap<int, bool>()),
+    mCollapsibleWidgetCollapsed(QBoolList()),
     mSimulationWidgetColumnWidths(QIntList()),
     mSolversWidgetColumnWidths(QIntList()),
     mGraphsWidgetColumnWidths(QIntList()),
@@ -94,6 +94,11 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
 
 static const auto SettingsSizes = QStringLiteral("Sizes");
 static const auto SettingsContentsSizes = QStringLiteral("ContentsSizes");
+static const auto SettingsCollapsed = QStringLiteral("Collapsed");
+static const auto SettingsSimulationColumnWidths = QStringLiteral("SimulationColumnWidths");
+static const auto SettingsSolversColumnWidths = QStringLiteral("SolversColumnWidths");
+static const auto SettingsGraphsColumnWidths = QStringLiteral("GraphsColumnWidths");
+static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersColumnWidths");
 
 //==============================================================================
 
@@ -113,6 +118,21 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 
     mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
     mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());
+
+    // Retrieve the collapsed states of our collapsible widget
+
+    QVariantList defaultCollapsed = QVariantList() << false << false << false;
+
+    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings->value(SettingsCollapsed, defaultCollapsed).toList());
+
+    // Retrieve the columns' width of our various property editors
+
+    QVariantList defaultColumnWidths = QVariantList() << 100 << 100 << 100;
+
+    mSimulationWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultColumnWidths).toList());
+    mSolversWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultColumnWidths).toList());
+    mGraphsWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphsColumnWidths, defaultColumnWidths).toList());
+    mParametersWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsParametersColumnWidths, defaultColumnWidths).toList());
 }
 
 //==============================================================================
@@ -124,6 +144,17 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsSizes, qIntListToVariantList(mSimulationWidgetSizes));
     pSettings->setValue(SettingsContentsSizes, qIntListToVariantList(mContentsWidgetSizes));
+
+    // Keep track of the collapsed states of our collapsible widget
+
+    pSettings->value(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
+
+    // Keep track of the columns' width of our various property editors
+
+    pSettings->value(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationWidgetColumnWidths));
+    pSettings->value(SettingsSolversColumnWidths, qIntListToVariantList(mSolversWidgetColumnWidths));
+    pSettings->value(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsWidgetColumnWidths));
+    pSettings->value(SettingsParametersColumnWidths, qIntListToVariantList(mParametersWidgetColumnWidths));
 }
 
 //==============================================================================
@@ -200,19 +231,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         layout()->addWidget(mSimulationWidget);
 
-        // Load our simulation widget's settings and those of some of its
-        // contents' children, if needed
+        // Load our simulation widget's settings
 
         QSettings settings;
 
         settings.beginGroup(mSettingsGroup);
             mSimulationWidget->loadSettings(&settings);
-
-            // Initialise some trackers, something that only needs to be done if
-            // we are dealing with our first simulation widget
-
-            if (mSimulationWidgets.count() == 1)
-                backupSettings(mSimulationWidget);
         settings.endGroup();
 
         // Initialise our simulation widget
@@ -251,9 +275,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
     mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
 
-    // Set (restore) some settings
+    // Update some settings
 
-    restoreSettings(mSimulationWidget);
+    updateSettings(mSimulationWidget);
 
     // Hide our previous simulation widget and show our new one
 
@@ -285,13 +309,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
         QSettings settings;
 
         settings.beginGroup(mSettingsGroup);
-            // Set (restore) some settings, if this is our last simulation
-            // widget (this is in case we close OpenCOR after having modified a
-            // simulation widget that is not the last one to be finalised)
-
-            if (mSimulationWidgets.count() == 1)
-                restoreSettings(simulationWidget);
-
             simulationWidget->saveSettings(&settings);
         settings.endGroup();
 
@@ -646,54 +663,14 @@ void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pInde
 
 //==============================================================================
 
-void SingleCellViewWidget::backupSettings(SingleCellViewSimulationWidget *pSimulationWidget)
+void SingleCellViewWidget::updateSettings(SingleCellViewSimulationWidget *pSimulationWidget)
 {
-    // Back up some of the given simulation's contents' children's settings
+    // Update some of the given simulation's contents' children's settings
 
     Core::CollapsibleWidget *collapsibleWidget = pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
 
-    for (int i = 0, iMax = collapsibleWidget->count(); i < iMax; ++i)
-        mCollapsibleWidgetCollapsed.insert(i, collapsibleWidget->isCollapsed(i));
-
-    SingleCellViewInformationSimulationWidget *simulationWidget = pSimulationWidget->contentsWidget()->informationWidget()->simulationWidget();
-
-    mSimulationWidgetColumnWidths = QIntList();
-
-    for (int i = 0, iMax = simulationWidget->header()->count(); i < iMax; ++i)
-        mSimulationWidgetColumnWidths << simulationWidget->columnWidth(i);
-
-    SingleCellViewInformationSolversWidget *solversWidget = pSimulationWidget->contentsWidget()->informationWidget()->solversWidget();
-
-    mSolversWidgetColumnWidths = QIntList();
-
-    for (int i = 0, iMax = solversWidget->header()->count(); i < iMax; ++i)
-        mSolversWidgetColumnWidths << solversWidget->columnWidth(i);
-
-    SingleCellViewInformationGraphsWidget *graphsWidget = pSimulationWidget->contentsWidget()->informationWidget()->graphsWidget();
-
-    mGraphsWidgetColumnWidths = QIntList();
-
-    for (int i = 0, iMax = graphsWidget->headerCount(); i < iMax; ++i)
-        mGraphsWidgetColumnWidths << graphsWidget->columnWidth(i);
-
-    SingleCellViewInformationParametersWidget *parametersWidget = pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget();
-
-    mParametersWidgetColumnWidths = QIntList();
-
-    for (int i = 0, iMax = parametersWidget->header()->count(); i < iMax; ++i)
-        mParametersWidgetColumnWidths << parametersWidget->columnWidth(i);
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget)
-{
-    // Restore some of the given simulation's contents' children's settings
-
-    Core::CollapsibleWidget *collapsibleWidget = pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget();
-
-    foreach (const int &index, mCollapsibleWidgetCollapsed.keys())
-        collapsibleWidget->setCollapsed(index, mCollapsibleWidgetCollapsed.value(index));
+    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
+        collapsibleWidget->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
 
     SingleCellViewInformationSimulationWidget *simulationWidget = pSimulationWidget->contentsWidget()->informationWidget()->simulationWidget();
 

@@ -124,6 +124,34 @@ bool qSameStringLists(const QStringList &pStringList1,
 
 //==============================================================================
 
+QBoolList qVariantListToBoolList(const QVariantList &pVariantList)
+{
+    // Convert the given list of variants to a list of booleans
+
+    QBoolList res = QBoolList();
+
+    foreach (const QVariant &variant, pVariantList)
+        res << variant.toBool();
+
+    return res;
+}
+
+//==============================================================================
+
+QVariantList qBoolListToVariantList(const QBoolList &pBoolList)
+{
+    // Convert the given list of booleans to a list of variants
+
+    QVariantList res = QVariantList();
+
+    foreach (const int &nb, pBoolList)
+        res << nb;
+
+    return res;
+}
+
+//==============================================================================
+
 QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of integers

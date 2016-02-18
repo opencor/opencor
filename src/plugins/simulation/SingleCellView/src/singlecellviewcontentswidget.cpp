@@ -95,11 +95,7 @@ void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of our information and graph panels widgets
-
-    pSettings->beginGroup(mInformationWidget->objectName());
-        mInformationWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    // Keep track of the settings of our graph panels widgets
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
         mGraphPanelsWidget->saveSettings(pSettings);

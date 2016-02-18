@@ -113,7 +113,7 @@ private:
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;
 
-    QMap<int, bool> mCollapsibleWidgetCollapsed;
+    QBoolList mCollapsibleWidgetCollapsed;
 
     QIntList mSimulationWidgetColumnWidths;
     QIntList mSolversWidgetColumnWidths;
@@ -128,8 +128,7 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
-    void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
+    void updateSettings(SingleCellViewSimulationWidget *pSimulationWidget);
 
     bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
                                  SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
