@@ -2191,8 +2191,9 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
+        SingleCellViewGraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
-        graphPanelsWidget->graphPanels()[i]->removeAllGraphs();
+        graphPanel->removeAllGraphs();
 
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *curve = plot->getCurve(j);
@@ -2206,7 +2207,7 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
                 return false;
             }
 
-            graphPanelsWidget->graphPanels()[i]->addGraph(new SingleCellViewGraphPanelPlotGraph(xParameter, yParameter));
+            graphPanel->addGraph(new SingleCellViewGraphPanelPlotGraph(xParameter, yParameter));
         }
     }
 
