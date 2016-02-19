@@ -1951,7 +1951,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 bool SingleCellViewSimulationWidget::doFurtherInitialize()
 {
-    // Customise our simulation properties
+    // Customise our simulation widget
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
@@ -1971,7 +1971,7 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
     simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
     simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
 
-    // Customise our solvers properties by:
+    // Customise our solvers widget by:
     //  - Specifying the ODE/DAE solver to use
     //  - Customising the solver's properties for which we have a KiSAO id
     //  - Customising the solver's properties for which we don't have a KiSAO id
