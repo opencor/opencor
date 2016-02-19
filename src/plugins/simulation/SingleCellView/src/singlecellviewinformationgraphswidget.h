@@ -134,7 +134,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel,
-                    const bool &pActive);
+                    const bool &pActive = true);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
