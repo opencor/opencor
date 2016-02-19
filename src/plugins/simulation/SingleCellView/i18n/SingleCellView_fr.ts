@@ -348,6 +348,10 @@
         <source>the requested NLA solver (%1) could not be set</source>
         <translation>le solveur ANL demandé (%1) n&apos;a pas pu être spécifié</translation>
     </message>
+    <message>
+        <source>the requested curve (%1) could not be set</source>
+        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>

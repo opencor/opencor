@@ -243,6 +243,8 @@ private:
     void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
 
+    CellMLSupport::CellmlFileRuntimeParameter * parameter(libsedml::SedVariable *pSedmlVariable);
+
     bool doFurtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);
     void initializeSimulation();

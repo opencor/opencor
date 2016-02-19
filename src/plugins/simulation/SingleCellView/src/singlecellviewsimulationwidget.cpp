@@ -1949,6 +1949,62 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewSimulationWidget::parameter(libsedml::SedVariable *pSedmlVariable)
+{
+    // Retrieve the CellML runtime parameter corresponding to the given SED-ML
+    // variable
+
+    static const QRegularExpression TargetStartRegEx  = QRegularExpression("^\\/cellml:model\\/cellml:component\\[@name='");
+    static const QRegularExpression TargetMiddleRegEx = QRegularExpression("']\\/cellml:variable\\[@name='");
+    static const QRegularExpression TargetEndRegEx    = QRegularExpression("'\\]$");
+    static const QString Separator = "|";
+
+    // Retrieve the component and name of the parameter
+
+    QString target = QString::fromStdString(pSedmlVariable->getTarget());
+
+    target.remove(TargetStartRegEx);
+    target.replace(TargetMiddleRegEx, Separator);
+    target.remove(TargetEndRegEx);
+
+    QStringList identifiers = target.split(Separator);
+    QString componentName = identifiers.first();
+    QString variableName = identifiers.last();
+
+    // Check whether the parameter has a degree
+
+    libsbml::XMLNode *annotation = pSedmlVariable->getAnnotation();
+    int variableDegree = 0;
+
+    if (annotation) {
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
+                continue;
+            }
+
+            variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt();
+        }
+    }
+
+    // Go through the runtime parameters to see one of them correspond to our
+    // given SED-ML variable
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->parameters()) {
+        if (   !componentName.compare(parameter->componentHierarchy().last())
+            && !variableName.compare(parameter->name())
+            &&  (variableDegree == parameter->degree())) {
+            return parameter;
+        }
+    }
+
+    return 0;
+}
+
+//==============================================================================
+
 bool SingleCellViewSimulationWidget::doFurtherInitialize()
 {
     // Customise our simulation widget
@@ -2129,6 +2185,27 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
     } else if (newNbOfGraphPanels < oldNbOfGraphPanels) {
         for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
             graphPanelsWidget->removeCurrentGraphPanel();
+    }
+
+    // Customise our graphs widget
+
+    for (int i = 0; i < newNbOfGraphPanels; ++i) {
+        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
+
+        for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
+            libsedml::SedCurve *curve = plot->getCurve(j);
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = parameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = parameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
+
+            if (!xParameter || !yParameter) {
+                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(curve->getId())),
+                                InvalidSimulationEnvironment);
+
+                return false;
+            }
+
+            graphPanelsWidget->graphPanels()[i]->addGraph(new SingleCellViewGraphPanelPlotGraph(xParameter, yParameter));
+        }
     }
 
     return true;
