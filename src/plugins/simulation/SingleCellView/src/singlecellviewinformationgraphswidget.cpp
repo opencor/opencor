@@ -220,20 +220,20 @@ void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWid
 void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                      SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pGraphPanel);
-
     // Make sure that we have a property editor
 
-    if (!mPropertyEditor)
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+
+    if (!propertyEditor)
         return;
 
     // Prevent ourselves from being updated (to avoid flickering)
 
-    mPropertyEditor->setUpdatesEnabled(false);
+    propertyEditor->setUpdatesEnabled(false);
 
     // Create a section for our newly added graph
 
-    Core::Property *graphProperty = mPropertyEditor->addSectionProperty();
+    Core::Property *graphProperty = propertyEditor->addSectionProperty();
 
     graphProperty->setCheckable(true);
     graphProperty->setChecked(true);
@@ -251,18 +251,18 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelWid
     //       ourselves from it before adding the properties (and then reconnect
     //       ourselves to it once we are done)...
 
-    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+    disconnect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphChanged(Core::Property *)));
 
-    mPropertyEditor->addListProperty(graphProperty);
+    propertyEditor->addListProperty(graphProperty);
 
-    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
-    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
+    Core::Property *xProperty = propertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
+    Core::Property *yProperty = propertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
 
-    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+    connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
 
     // Update the information about our new graph
@@ -271,11 +271,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelWid
 
     // Allow ourselves to be updated again
 
-    mPropertyEditor->setUpdatesEnabled(true);
-
-    // Make sure that our property editor is our current widget
-
-    setCurrentWidget(mPropertyEditor);
+    propertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -283,16 +279,16 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelWid
 void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                          const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
-    Q_UNUSED(pGraphPanel);
-
     // Make sure that we have a property editor
 
-    if (!mPropertyEditor)
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+
+    if (!propertyEditor)
         return;
 
     // Prevent ourselves from being updated (to avoid flickering)
 
-    mPropertyEditor->setUpdatesEnabled(false);
+    propertyEditor->setUpdatesEnabled(false);
 
     // Remove the graph properties associated with the given graphs, as well as
     // their trace
@@ -300,7 +296,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPane
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
         Core::Property *property = mGraphProperties.value(graph);
 
-        mPropertyEditor->removeProperty(property);
+        propertyEditor->removeProperty(property);
 
         mGraphs.remove(property);
         mGraphProperties.remove(graph);
@@ -308,7 +304,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPane
 
     // Allow ourselves to be updated again
 
-    mPropertyEditor->setUpdatesEnabled(true);
+    propertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
