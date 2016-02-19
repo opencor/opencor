@@ -372,10 +372,6 @@
         <translation>%1 n&apos;a pas pu être trouvé</translation>
     </message>
     <message>
-        <source>%1 could not be opened (%2)</source>
-        <translation>%1 n&apos;a pas pu être ouvert (%2)</translation>
-    </message>
-    <message>
         <source>unsupported algorithm (%1)</source>
         <translation>algorithme non supporté (%1)</translation>
     </message>
@@ -470,6 +466,14 @@
     <message>
         <source>incomplete simulation annotation (missing NLA solver name)</source>
         <translation>annotation de simulation incomplète (nom de solveur ANL manquant)</translation>
+    </message>
+    <message>
+        <source>%1 could not be saved</source>
+        <translation>%1 n&apos;a pas pu être sauvegardé</translation>
+    </message>
+    <message>
+        <source>%1 could not be retrieved (%2)</source>
+        <translation>%1 n&apos;a pas pu être retrouvé (%2)</translation>
     </message>
 </context>
 <context>

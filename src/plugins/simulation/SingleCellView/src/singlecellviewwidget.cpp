@@ -86,7 +86,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>()),
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, qulonglong>()),
-    mSimulationCheckResults(QStringList())
+    mSimulationCheckResults(QStringList()),
+    mIndirectRemoteCellmlFiles(QMap<QString, QString>())
 {
 }
 
@@ -169,7 +170,7 @@ void SingleCellViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName) const
+bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
 {
     // Return whether the given file is an indirect remote file by retrieving
     // its details
@@ -347,10 +348,21 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
         mSimulationWidgets.remove(pFileName);
 
-        // Finally, reset our memory of the simulation widget, if needed
+        // Next, we reset our memory of the simulation widget, if needed
 
         if (simulationWidget == mSimulationWidget)
             mSimulationWidget = 0;
+
+        // Finally, we ask our file manager to stop managing our indirect remote
+        // CellML file, if any
+
+        QString cellmlFileName = mIndirectRemoteCellmlFiles.value(pFileName);
+
+        if (!cellmlFileName.isEmpty()) {
+            Core::FileManager::instance()->unmanage(cellmlFileName);
+
+            mIndirectRemoteCellmlFiles.remove(pFileName);
+        }
     }
 }
 
@@ -1263,7 +1275,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                               CellMLSupport::CellmlFile *&pCellmlFile,
                                               SEDMLSupport::SedmlFile *pSedmlFile,
                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                              bool *pIsDirectOrIndirectRemoteFile) const
+                                              bool *pIsDirectOrIndirectRemoteFile)
 {
     // Make sure that we support our SED-ML
 
@@ -1309,15 +1321,32 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
             QString errorMessage;
 
             if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {
-pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                 QString("%1 has been successfully read").arg(modelSource));
+                // Save the contents of our remote file to a local file and use
+                // that to create a CellML file object after having asked our
+                // file manager to manage it (so that CellML 1.1 files can be
+                // properly instantiated)
+                // Note: we also keep track of our indirect remote CellML file
+                //       since we will need to have it unmanaged when closing
+                //       this file...
+
+                QString cellmlFileName = Core::temporaryFileName();
+
+                if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
+                    Core::FileManager::instance()->manage(cellmlFileName, Core::File::Remote, modelSource);
+
+                    pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+
+                    mIndirectRemoteCellmlFiles.insert(pFileName, cellmlFileName);
+                } else {
+                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                     tr("%1 could not be saved").arg(modelSource));
+                }
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("%1 could not be opened (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+                                                                 tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
             }
         }
     }
-//---ISSUE825--- HANDLE THE CASE OF A REMOTE (CellML 1.1) FILE...
 }
 
 //==============================================================================
@@ -1341,7 +1370,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
                                                FileType &pFileType,
                                                SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                                                COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
-                                               bool *pIsDirectOrIndirectRemoteFile) const
+                                               bool *pIsDirectOrIndirectRemoteFile)
 {
     // Determine the type of file we are dealing with
 

@@ -68,7 +68,7 @@ public:
 
     virtual void retranslateUi();
 
-    bool isIndirectRemoteFile(const QString &pFileName) const;
+    bool isIndirectRemoteFile(const QString &pFileName);
 
     bool contains(const QString &pFileName) const;
 
@@ -103,7 +103,7 @@ public:
                              FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                              COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
-                             bool *pIsDirectOrIndirectRemoteFile = 0) const;
+                             bool *pIsDirectOrIndirectRemoteFile = 0);
 
 private:
     SingleCellViewPlugin *mPlugin;
@@ -128,6 +128,8 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
+    QMap<QString, QString> mIndirectRemoteCellmlFiles;
+
     void updateContentsInformationGui(SingleCellViewSimulationWidget *pSimulationWidget);
 
     bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
@@ -142,7 +144,7 @@ private:
                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                            bool *pIsDirectOrIndirectRemoteFile) const;
+                            bool *pIsDirectOrIndirectRemoteFile);
     void retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
                            COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
 
