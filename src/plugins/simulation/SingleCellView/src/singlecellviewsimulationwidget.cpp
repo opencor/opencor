@@ -1949,7 +1949,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewSimulationWidget::parameter(libsedml::SedVariable *pSedmlVariable)
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable)
 {
     // Retrieve the CellML runtime parameter corresponding to the given SED-ML
     // variable
@@ -2194,8 +2194,8 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
 
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *curve = plot->getCurve(j);
-            CellMLSupport::CellmlFileRuntimeParameter *xParameter = parameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
-            CellMLSupport::CellmlFileRuntimeParameter *yParameter = parameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
 
             if (!xParameter || !yParameter) {
                 simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(curve->getId())),
