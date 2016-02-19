@@ -1578,12 +1578,12 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
                 sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                     QString::number(graphCounter)).toStdString());
                 sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableX, propertyX.first(), propertyX.last());
+                addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
                 sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                     QString::number(graphCounter)).toStdString());
                 sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableY, propertyY.first(), propertyY.last());
+                addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
 
                 sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
                 sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
