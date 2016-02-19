@@ -288,22 +288,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     mSimulationWidget->setSizes(mSimulationWidgetSizes);
     mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
 
-    // Update some of our simulation's contents' children's settings
+    // Update some of our simulation's contents' information GUI
 
-    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
-        mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
-
-    for (int i = 0, iMax = mSimulationWidgetColumnWidths.count(); i < iMax; ++i)
-        mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->setColumnWidth(i, mSimulationWidgetColumnWidths[i]);
-
-    for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
-        mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
-
-    for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
-        mSimulationWidget->contentsWidget()->informationWidget()->graphsWidget()->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
-
-    for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
-        mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
+    updateContentsInformationGui(mSimulationWidget);
 
     // Keep track of changes in our 'new' simulation widget's property editors'
     // columns' width
@@ -451,10 +438,17 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     if (simulationWidget) {
         simulationWidget->fileReloaded();
 
+        // Make sure that our simulation's contents' information GUI is up to
+        // date
+        // Note: this is, at least, necessary for our paramaters widget since we
+        //       repopulate it, meaning that its columns' width will be reset...
+
+        updateContentsInformationGui(simulationWidget);
+
         // Make sure that the GUI of our simulation widgets is up to date
 
-        foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-            simulationWidget->updateGui();
+        foreach (SingleCellViewSimulationWidget *otherSimulationWidget, mSimulationWidgets.values())
+            otherSimulationWidget->updateGui();
     }
 }
 
@@ -697,6 +691,28 @@ void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pInde
 
     if (qobject_cast<QHeaderView *>(sender())->isVisible())
         mParametersWidgetColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::updateContentsInformationGui(SingleCellViewSimulationWidget *pSimulationWidget)
+{
+    // Update some of our simulation's contents' information GUI
+
+    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
+        pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
+
+    for (int i = 0, iMax = mSimulationWidgetColumnWidths.count(); i < iMax; ++i)
+        pSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->setColumnWidth(i, mSimulationWidgetColumnWidths[i]);
+
+    for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
+        pSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
+
+    for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
+        pSimulationWidget->contentsWidget()->informationWidget()->graphsWidget()->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
+
+    for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
+        pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
 }
 
 //==============================================================================
