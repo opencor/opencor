@@ -196,10 +196,10 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Keep track of the addition and removal of a graph
 
-    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            this, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
+            this, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
+    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // In/activate the graph panel
 

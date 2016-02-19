@@ -87,9 +87,9 @@ Q_SIGNALS:
 
     void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:

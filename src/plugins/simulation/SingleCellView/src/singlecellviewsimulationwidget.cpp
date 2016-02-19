@@ -281,15 +281,15 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
+            graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            this, SLOT(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SLOT(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
+            this, SLOT(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SLOT(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -2539,7 +2539,7 @@ void SingleCellViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimePa
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                 SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // A new graph has been added, so keep track of it and update its plot
@@ -2548,20 +2548,22 @@ void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelPlotWidg
     //       hand, if the plot's axes don't get updated, we need to draw our new
     //       graph...
 
+    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+
     updateGraphData(pGraph, mSimulation->results()->size());
 
-    if (!updatePlot(pPlot))
-        pPlot->drawGraphFrom(pGraph, 0);
+    if (!updatePlot(plot))
+        plot->drawGraphFrom(pGraph, 0);
 
     // Keep track of the plot itself, if needed
 
-    if (!mPlots.contains(pPlot))
-        mPlots << pPlot;
+    if (!mPlots.contains(plot))
+        mPlots << plot;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                    const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
@@ -2572,10 +2574,12 @@ void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelPlotW
     //       to replot the plot since at least one of its graphs has been
     //       removed...
 
-    updatePlot(pPlot, true);
+    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    if (pPlot->graphs().isEmpty())
-        mPlots.removeOne(pPlot);
+    updatePlot(plot, true);
+
+    if (plot->graphs().isEmpty())
+        mPlots.removeOne(plot);
 }
 
 //==============================================================================

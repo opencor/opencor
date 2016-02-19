@@ -136,9 +136,9 @@ public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
                   SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void removeGraphs(SingleCellViewGraphPanelWidget *pGraphPanel,
                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:

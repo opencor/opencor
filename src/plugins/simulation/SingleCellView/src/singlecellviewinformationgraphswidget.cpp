@@ -217,10 +217,10 @@ void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWid
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                      SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pPlot);
+    Q_UNUSED(pGraphPanel);
 
     // Make sure that we have a property editor
 
@@ -280,10 +280,10 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                          const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
-    Q_UNUSED(pPlot);
+    Q_UNUSED(pGraphPanel);
 
     // Make sure that we have a property editor
 

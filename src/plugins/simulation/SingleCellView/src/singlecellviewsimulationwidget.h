@@ -311,9 +311,9 @@ private Q_SLOTS:
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,

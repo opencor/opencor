@@ -166,7 +166,7 @@ void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph 
     // Add the graph to our plot
 
     if (mPlot->addGraph(pGraph))
-        emit graphAdded(mPlot, pGraph);
+        emit graphAdded(this, pGraph);
 }
 
 //==============================================================================
@@ -181,7 +181,7 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanel
         if (mPlot->removeGraph(graph))
             graphs << graph;
 
-    emit graphsRemoved(mPlot, graphs);
+    emit graphsRemoved(this, graphs);
 }
 
 //==============================================================================
