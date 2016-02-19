@@ -42,7 +42,7 @@ namespace COMBINESupport {
 
 //==============================================================================
 
-class CombineArchiveFile
+class COMBINESUPPORT_EXPORT CombineArchiveFile
 {
 public:
     enum Format {
