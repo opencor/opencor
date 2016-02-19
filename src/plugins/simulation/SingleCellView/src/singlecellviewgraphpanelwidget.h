@@ -66,6 +66,7 @@ public:
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void removeAllGraphs();
 
 protected:
     virtual void changeEvent(QEvent *pEvent);

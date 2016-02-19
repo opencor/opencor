@@ -2192,6 +2192,8 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
 
+        graphPanelsWidget->graphPanels()[i]->removeAllGraphs();
+
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *curve = plot->getCurve(j);
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));

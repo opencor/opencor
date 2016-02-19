@@ -186,6 +186,15 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanel
 
 //==============================================================================
 
+void SingleCellViewGraphPanelWidget::removeAllGraphs()
+{
+    // Remove all our graphs from our plot
+
+    removeGraphs(graphs());
+}
+
+//==============================================================================
+
 bool SingleCellViewGraphPanelWidget::isActive() const
 {
     // Return whether the graph panel is active
