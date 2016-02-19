@@ -1429,7 +1429,7 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
 
     variableDegree -= variable.size();
 
-    // Set the target itself, as we as its degree, if any
+    // Set the target itself, as well as its degree, if any
 
     pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
 
