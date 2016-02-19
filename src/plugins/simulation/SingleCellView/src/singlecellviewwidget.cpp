@@ -87,8 +87,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, qulonglong>()),
     mSimulationCheckResults(QStringList()),
-    mLocallyManagedCellmlFiles(QMap<QString, QString>()),
-    mLocallyManagedSedmlFiles(QMap<QString, QString>())
+    mLocallyManagedCellmlFiles(QMap<QString, QString>())
 {
 }
 
@@ -355,7 +354,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
             mSimulationWidget = 0;
 
         // Finally, we ask our file manager to stop managing our locally managed
-        // CellML file, if any, and SED-ML file, if any too
+        // CellML file, if any
 
         QString cellmlFileName = mLocallyManagedCellmlFiles.value(pFileName);
 
@@ -363,14 +362,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
             Core::FileManager::instance()->unmanage(cellmlFileName);
 
             mLocallyManagedCellmlFiles.remove(pFileName);
-        }
-
-        QString sedmlFileName = mLocallyManagedSedmlFiles.value(pFileName);
-
-        if (!sedmlFileName.isEmpty()) {
-            Core::FileManager::instance()->unmanage(sedmlFileName);
-
-            mLocallyManagedSedmlFiles.remove(pFileName);
         }
     }
 }
@@ -1269,9 +1260,6 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
 
         return false;
     }
-pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                             "still under development");
-return false;
 
     return true;
 }
@@ -1315,7 +1303,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
         Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
 
         if (isLocalFile) {
-            QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pFileName).path()+QDir::separator()+modelSource);
+            QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pSedmlFile->fileName()).path()+QDir::separator()+modelSource);
 
             if (QFile::exists(cellmlFileName)) {
                 pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
@@ -1358,14 +1346,18 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
-                                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
+void SingleCellViewWidget::retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
+                                             COMBINESupport::CombineArchive *pCombineArchive,
+                                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
 {
     // Make sure that we support our COMBINE archive
 
     if (!combineArchiveSupported(pCombineArchive, pCombineArchiveIssues))
         return;
-//---ISSUE825--- TO BE DONE...
+
+    // Create a SED-ML file object for our COMBINE archive's master file
+
+    pSedmlFile = new SEDMLSupport::SedmlFile(pCombineArchive->masterFiles().first().fileName());
 }
 
 //==============================================================================
@@ -1395,7 +1387,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     // corresponding CellML file
 
     if (pCombineArchive)
-        retrieveSedmlFile(pCombineArchive, pCombineArchiveIssues);
+        retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
 
     if (pSedmlFile) {
         retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pSedmlFileIssues,

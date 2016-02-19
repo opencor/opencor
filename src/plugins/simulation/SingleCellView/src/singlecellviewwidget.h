@@ -146,8 +146,9 @@ private:
                             SEDMLSupport::SedmlFile *pSedmlFile,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                             bool *pIsDirectOrIndirectRemoteFile);
-    void retrieveSedmlFile(COMBINESupport::CombineArchive *pCombineArchive,
-                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
+    void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
+                           COMBINESupport::CombineArchive *pCombineArchive,
+                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);

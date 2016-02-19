@@ -888,14 +888,8 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     //       we do the further initialisation through a single shot, ensuring
     //       that all the other events have been properly handled...
 
-/*---ISSUE825---
     if (    validSimulationEnvironment
         && (mFileType != SingleCellViewWidget::CellmlFile)) {
-*/
-//---ISSUE825--- BEGIN
-if (   validSimulationEnvironment
-    && (mFileType == SingleCellViewWidget::SedmlFile)) {
-//---ISSUE825--- END
         QTimer::singleShot(0, this, SLOT(furtherInitialize()));
     }
 }
