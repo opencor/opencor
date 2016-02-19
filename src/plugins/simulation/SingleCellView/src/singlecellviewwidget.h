@@ -128,7 +128,8 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    QMap<QString, QString> mIndirectRemoteCellmlFiles;
+    QMap<QString, QString> mLocallyManagedCellmlFiles;
+    QMap<QString, QString> mLocallyManagedSedmlFiles;
 
     void updateContentsInformationGui(SingleCellViewSimulationWidget *pSimulationWidget);
 

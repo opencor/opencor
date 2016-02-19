@@ -87,7 +87,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, qulonglong>()),
     mSimulationCheckResults(QStringList()),
-    mIndirectRemoteCellmlFiles(QMap<QString, QString>())
+    mLocallyManagedCellmlFiles(QMap<QString, QString>()),
+    mLocallyManagedSedmlFiles(QMap<QString, QString>())
 {
 }
 
@@ -353,15 +354,23 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
         if (simulationWidget == mSimulationWidget)
             mSimulationWidget = 0;
 
-        // Finally, we ask our file manager to stop managing our indirect remote
-        // CellML file, if any
+        // Finally, we ask our file manager to stop managing our locally managed
+        // CellML file, if any, and SED-ML file, if any too
 
-        QString cellmlFileName = mIndirectRemoteCellmlFiles.value(pFileName);
+        QString cellmlFileName = mLocallyManagedCellmlFiles.value(pFileName);
 
         if (!cellmlFileName.isEmpty()) {
             Core::FileManager::instance()->unmanage(cellmlFileName);
 
-            mIndirectRemoteCellmlFiles.remove(pFileName);
+            mLocallyManagedCellmlFiles.remove(pFileName);
+        }
+
+        QString sedmlFileName = mLocallyManagedSedmlFiles.value(pFileName);
+
+        if (!sedmlFileName.isEmpty()) {
+            Core::FileManager::instance()->unmanage(sedmlFileName);
+
+            mLocallyManagedSedmlFiles.remove(pFileName);
         }
     }
 }
@@ -828,7 +837,6 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
 bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
 {
-//---ISSUE825--- TO BE DONE...
     // Make sure that there is only one model
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
@@ -1245,7 +1253,6 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
                                                    COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
 {
-//---ISSUE825--- TO BE DONE...
     // Load and check our COMBINE archive
 
     if (pCombineArchive->load() && pCombineArchive->isValid()) {
@@ -1336,7 +1343,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
                     pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
 
-                    mIndirectRemoteCellmlFiles.insert(pFileName, cellmlFileName);
+                    mLocallyManagedCellmlFiles.insert(pFileName, cellmlFileName);
                 } else {
                     pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
                                                                      tr("%1 could not be saved").arg(modelSource));
