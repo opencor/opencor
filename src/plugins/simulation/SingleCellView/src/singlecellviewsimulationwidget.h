@@ -305,7 +305,8 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+                         const bool &pActive);
     void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,

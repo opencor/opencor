@@ -135,7 +135,8 @@ void SingleCellViewInformationGraphsWidget::finalize()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                                       const bool &pActive)
 {
     // Retrieve the property editor for the given file name or create one, if
     // none exists
@@ -194,9 +195,11 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
             mPropertyEditor->setColumnWidth(i, oldPropertyEditor->columnWidth(i));
     }
 
-    // Set our retrieved property editor as our current widget
+    // Set our retrieved property editor as our current widget, but only if the
+    // corresponding graph panel has been been made active
 
-    setCurrentWidget(mPropertyEditor);
+    if (pActive)
+        setCurrentWidget(mPropertyEditor);
 
     // Update our graphs information
     // Note: this is in case the user changed the locale and then switched to a

@@ -259,13 +259,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
-            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)),
+            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *, const bool &)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
-            this, SLOT(graphPanelAdded(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)),
+            this, SLOT(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             this, SLOT(graphPanelRemoved(SingleCellViewGraphPanelWidget *)));
 
@@ -2510,8 +2510,11 @@ void SingleCellViewSimulationWidget::solversPropertyChanged(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                                     const bool &pActive)
 {
+    Q_UNUSED(pActive);
+
     // Keep track of the graph panel's plot
 
     mGraphPanelsPlots.insert(pGraphPanel, pGraphPanel->plot());

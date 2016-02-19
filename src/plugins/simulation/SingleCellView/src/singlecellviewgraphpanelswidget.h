@@ -80,7 +80,8 @@ private:
     void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 
 Q_SIGNALS:
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+                         const bool &pActive);
     void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);

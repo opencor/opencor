@@ -211,7 +211,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Let people know that we have added a graph panel
 
-    emit graphPanelAdded(res);
+    emit graphPanelAdded(res, pActive);
 
     // Let people know whether graph panels can be removed
 

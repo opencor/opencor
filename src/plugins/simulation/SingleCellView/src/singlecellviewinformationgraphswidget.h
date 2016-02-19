@@ -133,7 +133,8 @@ Q_SIGNALS:
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 public Q_SLOTS:
-    void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void initialize(SingleCellViewGraphPanelWidget *pGraphPanel,
+                    const bool &pActive);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
