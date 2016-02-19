@@ -207,9 +207,7 @@ void CellmlAnnotationViewWidget::fileReloaded(const QString &pFileName)
 
     if (contains(pFileName)) {
         finalize(pFileName);
-
-        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
-            initialize(pFileName);
+        initialize(pFileName);
     }
 }
 

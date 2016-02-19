@@ -778,7 +778,7 @@ void CellmlFileRuntime::update()
     //       file. Not only does it make sense, but also only the variables
     //       listed in a main CellML file can be referenced by SED-ML...
 
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(model);
+    CellMLSupport::CellmlFile::Version cellmlVersion = mCellmlFile->version();
     QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
 
     if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {

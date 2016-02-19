@@ -160,7 +160,7 @@ void ParsingTests::fileTests()
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")).join("\n"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
-    QCOMPARE(qDomDocumentToString(parser.domDocument()).split("\n"),
+    QCOMPARE(QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
     QVERIFY(!parser.domDocument().isNull());
 
@@ -181,7 +181,7 @@ void ParsingTests::fileTests()
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.in")).join("\n"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
-    QCOMPARE(qDomDocumentToString(parser.domDocument()).split("\n"),
+    QCOMPARE(QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.cellml")));
     QVERIFY(!parser.domDocument().isNull());
 }

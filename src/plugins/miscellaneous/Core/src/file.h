@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "coreglobal.h"
+
+//==============================================================================
+
 #include <QString>
 
 //==============================================================================
@@ -33,7 +37,7 @@ namespace Core {
 
 //==============================================================================
 
-class File
+class CORE_EXPORT File
 {
 public:
     enum Type {
@@ -70,13 +74,14 @@ public:
     void reset();
 
     bool isDifferent() const;
-    bool isDifferent(const QString pFileContents) const;
+    bool isDifferent(const QByteArray &pFileContents) const;
 
     bool isNew() const;
     bool makeNew(const QString &pFileName);
 
     int newIndex() const;
 
+    bool isLocal() const;
     bool isRemote() const;
 
     QString url() const;

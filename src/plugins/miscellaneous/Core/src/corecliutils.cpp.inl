@@ -121,9 +121,9 @@ QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
 
 //==============================================================================
 
-bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
-                                                    QString &pText,
-                                                    QString *pErrorMessage) const
+bool SynchronousFileDownloader::download(const QString &pUrl,
+                                         QByteArray &pContents,
+                                         QString *pErrorMessage) const
 {
     // Try to read a remote file as text, but only if we are connected to the
     // Internet
@@ -155,12 +155,12 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
         bool res = networkReply->error() == QNetworkReply::NoError;
 
         if (res) {
-            pText = networkReply->readAll();
+            pContents = networkReply->readAll();
 
             if (pErrorMessage)
                 *pErrorMessage = QString();
         } else {
-            pText = QString();
+            pContents = QByteArray();
 
             if (pErrorMessage)
                 *pErrorMessage = networkReply->errorString();
@@ -181,8 +181,8 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
 
 //==============================================================================
 
-void SynchronousTextFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-                                                                  const QList<QSslError> &pSslErrors)
+void SynchronousFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                                              const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we assume the user knows what s/he is doing
 
@@ -280,7 +280,7 @@ QString formatMessage(const QString &pMessage, const bool &pLowerCase,
 
 //==============================================================================
 
-QByteArray resourceAsByteArray(const QString &pResource)
+QByteArray resource(const QString &pResource)
 {
     // Retrieve a resource as a QByteArray
 
@@ -298,10 +298,24 @@ QByteArray resourceAsByteArray(const QString &pResource)
             return QByteArray(reinterpret_cast<const char *>(resource.data()),
                               resource.size());
         }
-    }
-    else {
+    } else {
         return QByteArray();
     }
+}
+
+//==============================================================================
+
+QString temporaryDirName()
+{
+    // Get and return a temporary directory name
+
+    QTemporaryDir dir;
+
+    dir.setAutoRemove(false);
+    // Note: by default, a temporary directory is to autoremove itself, but we
+    //       clearly don't want that here...
+
+    return dir.path();
 }
 
 //==============================================================================
@@ -325,20 +339,21 @@ QString temporaryFileName(const QString &pExtension)
 
 //==============================================================================
 
-bool readByteArrayFromFile(const QString &pFileName, QByteArray &pByteArray)
+bool readFileContentsFromFile(const QString &pFileName,
+                              QByteArray &pFileContents)
 {
-    // Read the contents of the file, which file name is given, as a string
+    // Read the contents of the file, which file name is given
 
     QFile file(pFileName);
 
     if (file.open(QIODevice::ReadOnly)) {
-        pByteArray = file.readAll();
+        pFileContents = file.readAll();
 
         file.close();
 
         return true;
     } else {
-        pByteArray = QByteArray();
+        pFileContents = QByteArray();
 
         return false;
     }
@@ -346,45 +361,28 @@ bool readByteArrayFromFile(const QString &pFileName, QByteArray &pByteArray)
 
 //==============================================================================
 
-bool readTextFromFile(const QString &pFileName, QString &pText)
+bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
+                             QString *pErrorMessage)
 {
-    // Read the contents of the file, which file name is given, as a string
+    // Read the contents of the file, which URL is given
 
-    QByteArray byteArray;
+    static SynchronousFileDownloader synchronousFileDownloader;
 
-    if (readByteArrayFromFile(pFileName, byteArray)) {
-        pText = byteArray;
-
-        return true;
-    } else {
-        return false;
-    }
+    return synchronousFileDownloader.download(pUrl, pFileContents, pErrorMessage);
 }
 
 //==============================================================================
 
-bool readTextFromUrl(const QString &pUrl, QString &pText,
-                     QString *pErrorMessage)
+bool writeFileContentsToFile(const QString &pFileName,
+                             const QByteArray &pFileContents)
 {
-    // Read the contents of the file, which URL is given, as a string
-
-    static SynchronousTextFileDownloader synchronousTextFileDownloader;
-
-    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
-}
-
-//==============================================================================
-
-bool writeByteArrayToFile(const QString &pFileName,
-                          const QByteArray &pByteArray)
-{
-    // Write the given byte array to a temporary file and rename it to the given
-    // file name, if successful
+    // Write the given file contents to a temporary file and rename it to the
+    // given file name, if successful
 
     QFile file(temporaryFileName());
 
     if (file.open(QIODevice::WriteOnly)) {
-        bool res = file.write(pByteArray) != -1;
+        bool res = file.write(pFileContents) != -1;
 
         file.close();
 
@@ -412,21 +410,12 @@ bool writeByteArrayToFile(const QString &pFileName,
 
 //==============================================================================
 
-bool writeTextToFile(const QString &pFileName, const QString &pText)
-{
-    // Write the given string to the given file
-
-    return writeByteArrayToFile(pFileName, pText.toUtf8());
-}
-
-//==============================================================================
-
 bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 {
     // Write the given resource to the given file, if possible
 
     if (QResource(pResource).isValid())
-        return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
+        return writeFileContentsToFile(pFileName, resource(pResource));
     else
         return false;
 }
@@ -439,7 +428,7 @@ bool isTextFile(const QString &pFileName)
 
     QByteArray fileContents;
 
-    readByteArrayFromFile(pFileName, fileContents);
+    readFileContentsFromFile(pFileName, fileContents);
 
     return fileContents == QString(fileContents).toUtf8();
 }

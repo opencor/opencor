@@ -109,6 +109,17 @@ bool CellMLTextViewPlugin::isEditorContentsModified(const QString &pFileName) co
 // File handling interface
 //==============================================================================
 
+bool CellMLTextViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLTextViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName,
                                     bool &pNeedFeedback)
@@ -157,7 +168,7 @@ void CellMLTextViewPlugin::fileReloaded(const QString &pFileName)
 //==============================================================================
 
 void CellMLTextViewPlugin::fileRenamed(const QString &pOldFileName,
-                                         const QString &pNewFileName)
+                                       const QString &pNewFileName)
 {
     // The given file has been renamed, so let our view widget know about it
 

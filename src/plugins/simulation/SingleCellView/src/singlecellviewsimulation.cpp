@@ -1069,7 +1069,7 @@ bool SingleCellViewSimulation::run()
 
         // Create our worker
 
-        mWorker = new SingleCellViewSimulationWorker(this, &mWorker);
+        mWorker = new SingleCellViewSimulationWorker(this, mWorker);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));

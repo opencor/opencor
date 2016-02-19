@@ -38,7 +38,7 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
-                                                               SingleCellViewSimulationWorker **pSelf) :
+                                                               SingleCellViewSimulationWorker *&pSelf) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
@@ -434,7 +434,7 @@ void SingleCellViewSimulationWorker::started()
     //       slot for our finished() signal, but we want our simulation owner to
     //       know as quickly as possible that we are done...
 
-    *mSelf = 0;
+    mSelf = 0;
 
     // Let people know that we are done and give them the elapsed time
 

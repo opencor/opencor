@@ -59,7 +59,7 @@ void MathmlConverter::convert(const QString &pContentMathml)
     // Convert the given Content MathML to Presentation MathML through an XSL
     // transformation
 
-    static const QString CtopXsl = resourceAsByteArray(":ctop.xsl");
+    static const QString CtopXsl = resource(":ctop.xsl");
 
     mXslTransformer->transform(pContentMathml, CtopXsl);
 }

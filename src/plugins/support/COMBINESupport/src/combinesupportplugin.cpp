@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINESupport plugin
 //==============================================================================
 
+#include "combinefilemanager.h"
 #include "combinesupportplugin.h"
 
 //==============================================================================
@@ -88,6 +89,65 @@ void COMBINESupportPlugin::retranslateUi()
     // Note: even though we don't handle this interface, we still want to
     //       support it since some other aspects of our plugin are
     //       multilingual...
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void COMBINESupportPlugin::initializePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void COMBINESupportPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void COMBINESupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // Make a call to the instance of the COMBINE file manager so that it gets
+    // properly set up (and therefore can start managing COMBINE archives)
+    // before it actually gets used by other plugins
+    // Note: we do it here rather than in initialize() since we need the Core
+    //       plugin to be initialised (so we can get access to our 'global' file
+    //       manager)...
+
+    CombineFileManager::instance();
+}
+
+//==============================================================================
+
+void COMBINESupportPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void COMBINESupportPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void COMBINESupportPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

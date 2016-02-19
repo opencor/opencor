@@ -24,10 +24,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cellmlfile.h"
+#include "combinearchive.h"
 #include "corecliutils.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
+#include "sedmlfile.h"
 #include "viewwidget.h"
+
+//==============================================================================
+
+namespace libsedml {
+    class SedAlgorithm;
+}   // namespace libsedml
 
 //==============================================================================
 
@@ -37,6 +44,8 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewPlugin;
+class SingleCellViewSimulation;
+class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
@@ -45,6 +54,12 @@ class SingleCellViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
+    enum FileType {
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     explicit SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                   QWidget *pParent);
 
@@ -52,6 +67,8 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual void retranslateUi();
+
+    bool isIndirectRemoteFile(const QString &pFileName);
 
     bool contains(const QString &pFileName) const;
 
@@ -79,6 +96,15 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 const bool &pForceUpdateSimulationResults = false);
 
+    void retrieveFileDetails(const QString &pFileName,
+                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
+                             OpenCOR::SEDMLSupport::SedmlFile *&pSedmlFile,
+                             OpenCOR::COMBINESupport::CombineArchive *&pCombineArchive,
+                             FileType &pFileType,
+                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
+                             bool *pIsDirectOrIndirectRemoteFile = 0);
+
 private:
     SingleCellViewPlugin *mPlugin;
 
@@ -87,7 +113,7 @@ private:
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;
 
-    QMap<int, bool> mCollapsibleWidgetCollapsed;
+    QBoolList mCollapsibleWidgetCollapsed;
 
     QIntList mSimulationWidgetColumnWidths;
     QIntList mSolversWidgetColumnWidths;
@@ -102,8 +128,27 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    void backupSettings(SingleCellViewSimulationWidget *pSimulationWidget);
-    void restoreSettings(SingleCellViewSimulationWidget *pSimulationWidget);
+    QMap<QString, QString> mLocallyManagedCellmlFiles;
+    QMap<QString, QString> mLocallyManagedSedmlFiles;
+
+    void updateContentsInformationGui(SingleCellViewSimulationWidget *pSimulationWidget);
+
+    bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
+                                 SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+    bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+
+    bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
+                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
+
+    void retrieveCellmlFile(const QString &pFileName,
+                            OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
+                            SEDMLSupport::SedmlFile *pSedmlFile,
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                            bool *pIsDirectOrIndirectRemoteFile);
+    void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
+                           COMBINESupport::CombineArchive *pCombineArchive,
+                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 private Q_SLOTS:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);

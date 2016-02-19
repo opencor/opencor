@@ -483,7 +483,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QStringList fileNames = QStringList();
     QStringList fileNamesOrUrls = QStringList();
 
-    foreach (const QString &fileName, mFileNames)
+    foreach (const QString &fileName, mFileNames) {
         if (!fileManagerInstance->isNew(fileName)) {
             // The file is not new, so keep track of it, as well as of whether
             // it's a remote file
@@ -499,6 +499,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
             pSettings->setValue(SettingsFileIsRemote.arg(fileNamesOrUrls.last()), fileIsRemote);
         }
+    }
 
     pSettings->setValue(SettingsFileNamesOrUrls, fileNamesOrUrls);
 
@@ -586,9 +587,10 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     //       called as part of OpenCOR's loading its settings, so we do it here
     //       instead...
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         foreach (const QString &fileName, mFileNames)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
+    }
 }
 
 //==============================================================================
@@ -847,10 +849,10 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
         showBusyWidget(this);
 
-        QString fileContents;
+        QByteArray fileContents;
         QString errorMessage;
 
-        if (readTextFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -944,19 +946,26 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
             // Reload the file, if needed, and consider it as non-modified
             // anymore (in case it was before)
             // Note: by making the file non-modified anymore, we clearly assume
-            //       that all view plugins do their job properly and update
+            //       that all the view plugins do their job properly and update
             //       their GUI...
 
             if (doReloadFile) {
-                // Actually redownload the file, if it is a remote one
+                // Actually redownload the file, if it is a remote one, making
+                // sure that our busy widget is show during that process (since
+                // it may take some time)
+                // Note: our busy widget will get hidden in fileReloaded()...
 
                 if (fileManagerInstance->isRemote(fileName)) {
+                    showBusyWidget(this);
+
                     QString url = fileManagerInstance->url(fileName);
-                    QString fileContents;
+                    QByteArray fileContents;
                     QString errorMessage;
 
-                    if (readTextFromUrl(url, fileContents, &errorMessage)) {
-                        writeTextToFile(fileName, fileContents);
+                    bool res = readFileContentsFromUrl(url, fileContents, &errorMessage);
+
+                    if (res) {
+                        writeFileContentsToFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
                     } else {
@@ -1215,10 +1224,11 @@ void CentralWidget::previousFile()
 {
     // Select the previous file
 
-    if (mFileTabs->count())
+    if (mFileTabs->count()) {
         mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
                                        mFileTabs->currentIndex()-1:
                                        mFileTabs->count()-1);
+    }
 }
 
 //==============================================================================
@@ -1227,10 +1237,11 @@ void CentralWidget::nextFile()
 {
     // Select the next file
 
-    if (mFileTabs->count())
+    if (mFileTabs->count()) {
         mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
                                        0:
                                        mFileTabs->currentIndex()+1);
+    }
 }
 
 //==============================================================================
@@ -1381,9 +1392,10 @@ bool CentralWidget::canClose()
 {
     // We can close only if none of the opened files is modified
 
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         if (!canCloseFile(i))
             return false;
+    }
 
     return true;
 }
@@ -1635,6 +1647,7 @@ void CentralWidget::updateGui()
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
     Plugin *viewPlugin = mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
+    FileHandlingInterface *fileHandlingInterface = viewPlugin?qobject_cast<FileHandlingInterface *>(viewPlugin->instance()):0;
     ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
     QWidget *newView;
 
@@ -1642,13 +1655,15 @@ void CentralWidget::updateGui()
         newView = mLogoView;
     } else {
         // There is a current file, so retrieve its view, showing our busy
-        // widget, if necessary
+        // widget, if we are dealing with a remote file or if the view requires
+        // it
 
-        bool isRemoteFile = FileManager::instance()->isRemote(fileName);
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
-        if (isRemoteFile && !isBusyWidgetVisible() && !hasView) {
+        if (   (   FileManager::instance()->isRemote(fileName)
+                || (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false))
+            && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
             //       coming here as a result of the user opening a remote file,
             //       as opposed to just switching files/modes/views...
@@ -1970,6 +1985,18 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 void CentralWidget::fileReloaded(const QString &pFileName)
 {
+    // Check whether we should show our busy widget
+    // Note: this only needs to be done in case of an indirect remote file since
+    //       for a direct one, it will have already been done in reloadFile()...
+
+    Plugin *fileViewPlugin = viewPlugin(pFileName);
+    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(fileViewPlugin->instance());
+
+    if (   (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(pFileName):false)
+        && !isBusyWidgetVisible()) {
+        showBusyWidget(this);
+    }
+
     // Let our plugins know about the file having been reloaded, but ignore the
     // current plugin if our file manager cannot check files
     // Note: indeed, if our file manager cannot check files, then it means that
@@ -1979,7 +2006,6 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     //       position) our current plugin to reload it...
 
     FileManager *fileManagerInstance = FileManager::instance();
-    Plugin *fileViewPlugin = viewPlugin(pFileName);
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
@@ -1994,6 +2020,15 @@ void CentralWidget::fileReloaded(const QString &pFileName)
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
     }
+
+    // Make sure that our busy widget is hidden
+    // Note: our busy widget may have been shown in reloadFile() (in case of a
+    //       direct remote file since we had to reload the remote file) or at
+    //       the beginning of this procedure (in case of an indirect remote
+    //       file since it's only after the file has been reloaded that we can
+    //       whether it's an indirect remote one)...
+
+    hideBusyWidget();
 
     // Update our modified settings
 

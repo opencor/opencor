@@ -64,7 +64,7 @@ bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
 
     domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
 
-    return Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
+    return Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
 }
 
 //==============================================================================

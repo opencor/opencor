@@ -20,7 +20,7 @@
   </layout>
   <action name="actionRunPauseResumeSimulation">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
    </property>
    <property name="text">
@@ -35,7 +35,7 @@
   </action>
   <action name="actionStopSimulation">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
    </property>
    <property name="text">
@@ -53,7 +53,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/run-build-configure.png</normaloff>:/oxygen/actions/run-build-configure.png</iconset>
    </property>
    <property name="text">
@@ -65,7 +65,7 @@
   </action>
   <action name="actionAddGraphPanel">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
@@ -77,7 +77,7 @@
   </action>
   <action name="actionRemoveGraphPanel">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
    </property>
    <property name="text">
@@ -105,7 +105,7 @@
   </action>
   <action name="actionResetModelParameters">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
    </property>
    <property name="text">
@@ -117,7 +117,7 @@
   </action>
   <action name="actionClearSimulationData">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/trash-empty.png</normaloff>:/oxygen/actions/trash-empty.png</iconset>
    </property>
    <property name="text">
@@ -129,7 +129,7 @@
   </action>
   <action name="actionSimulationDataExport">
    <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-export.png</normaloff>:/oxygen/actions/document-export.png</iconset>
    </property>
    <property name="text">
@@ -141,7 +141,7 @@
   </action>
   <action name="actionSedmlExport">
    <property name="icon">
-    <iconset resource="../../../support/SEDMLSupport/res/SEDMLSupport.qrc">
+    <iconset resource="../../../support/SEDMLSupport/res/ui.qrc">
      <normaloff>:/sedmlLogo.png</normaloff>:/sedmlLogo.png</iconset>
    </property>
    <property name="text">
@@ -175,8 +175,8 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/SingleCellView.qrc"/>
-  <include location="../../../support/SEDMLSupport/res/SEDMLSupport.qrc"/>
+  <include location="../res/ui.qrc"/>
+  <include location="../../../support/SEDMLSupport/res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

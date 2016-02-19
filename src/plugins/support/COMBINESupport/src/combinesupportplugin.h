@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
@@ -45,7 +46,7 @@ static const auto CombineFileExtension = QStringLiteral("omex");
 //==============================================================================
 
 class COMBINESupportPlugin : public QObject, public FileTypeInterface,
-                             public I18nInterface
+                             public I18nInterface, public PluginInterface
 {
     Q_OBJECT
 
@@ -53,12 +54,14 @@ class COMBINESupportPlugin : public QObject, public FileTypeInterface,
 
     Q_INTERFACES(OpenCOR::FileTypeInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
     explicit COMBINESupportPlugin();
 
 #include "filetypeinterface.inl"
 #include "i18ninterface.inl"
+#include "plugininterface.inl"
 };
 
 //==============================================================================

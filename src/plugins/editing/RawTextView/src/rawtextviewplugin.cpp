@@ -81,12 +81,23 @@ bool RawTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
     Editor::EditorWidget *crtEditor = editor(pFileName);
 
     return crtEditor?
-               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents()):
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
                false;
 }
 
 //==============================================================================
 // File handling interface
+//==============================================================================
+
+bool RawTextViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
 //==============================================================================
 
 bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
@@ -100,7 +111,7 @@ bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
     Editor::EditorWidget *crtEditor = editor(pOldFileName);
 
     return crtEditor?
-               Core::writeTextToFile(pNewFileName, crtEditor->contents()):
+               Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):
                false;
 }
 

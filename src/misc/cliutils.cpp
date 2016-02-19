@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <QProcess>
 #include <QResource>
 #include <QSettings>
+#include <QTemporaryDir>
 #include <QTemporaryFile>
 #include <QXmlStreamReader>
 
@@ -131,11 +132,11 @@ void initApplication(QString *pAppDate)
 
     // Retrieve and set the version of the application
 
-    QString versionData;
+    QByteArray versionData;
 
-    readTextFromFile(":app_versiondate", versionData);
+    readFileContentsFromFile(":app_versiondate", versionData);
 
-    QStringList versionDataList = versionData.split(eolString());
+    QStringList versionDataList = QString(versionData).split(eolString());
 
     qApp->setApplicationVersion(versionDataList.first());
 

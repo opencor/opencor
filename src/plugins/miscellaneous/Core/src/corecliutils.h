@@ -61,10 +61,11 @@ typedef QList<int> QIntList;
 bool CORE_EXPORT qSameStringLists(const QStringList &pStringList1,
                                   const QStringList &pStringList2);
 
+QBoolList CORE_EXPORT qVariantListToBoolList(const QVariantList &pVariantList);
+QVariantList CORE_EXPORT qBoolListToVariantList(const QBoolList &pBoolList);
+
 QIntList CORE_EXPORT qVariantListToIntList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
-
-QString CORE_EXPORT qDomDocumentToString(const QDomDocument &pDomDocument);
 
 //==============================================================================
 
@@ -89,16 +90,16 @@ protected:
 
 //==============================================================================
 // Note: both cliutils.h and corecliutils.h must specifically define
-//       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
+//       SynchronousFileDownloader. To have it in cliutils.h.inl is NOT good
 //       enough since the MOC won't pick it up...
 
-class SynchronousTextFileDownloader : public QObject
+class SynchronousFileDownloader : public QObject
 {
     Q_OBJECT
 
 public:
-    bool readTextFromUrl(const QString &pUrl, QString &pText,
-                         QString *pErrorMessage) const;
+    bool download(const QString &pUrl, QByteArray &pContents,
+                  QString *pErrorMessage) const;
 
 private Q_SLOTS:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
@@ -116,7 +117,6 @@ QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
 QString CORE_EXPORT sha1(const QByteArray &pByteArray);
-QString CORE_EXPORT sha1(const QString &pText);
 
 void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,
                                             const QString &pEol,
@@ -156,6 +156,12 @@ QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const bool &pBefore);
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pFileExtension);
+
+bool CORE_EXPORT validXml(const QByteArray &pXml, const QByteArray &pSchema);
+bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
+                              const QString &pSchemaFileName);
+
+QByteArray CORE_EXPORT serialiseDomDocument(const QDomDocument &pDomDocument);
 
 //==============================================================================
 

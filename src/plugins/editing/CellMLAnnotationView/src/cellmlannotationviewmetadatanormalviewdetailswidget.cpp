@@ -111,7 +111,11 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     // Create our output for ontological terms
 
-    Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
+    QByteArray fileContents;
+
+    Core::readFileContentsFromFile(":/ontologicalTerms.html", fileContents);
+
+    mOutputOntologicalTermsTemplate = fileContents;
 
     mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
 
@@ -300,7 +304,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
                             pRdfTriple->modelQualifierAsString():
                             pRdfTriple->bioQualifierAsString();
     QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
-    QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
+    QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation.toUtf8());
 
     QString ontologicalTerm = "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
                               "    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
@@ -375,7 +379,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     static const QString Selected = "selected";
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
-    QString rdfTripleInformationSha1 = pRdfTripleInformation.isEmpty()?QString():Core::sha1(pRdfTripleInformation);
+    QString rdfTripleInformationSha1 = pRdfTripleInformation.isEmpty()?QString():Core::sha1(pRdfTripleInformation.toUtf8());
 
     if (rdfTripleInformationSha1.compare(mRdfTripleInformationSha1)) {
         if (!mRdfTripleInformationSha1.isEmpty()) {

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML file class
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "corecliutils.h"
 #include "sedmlfile.h"
 
@@ -32,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include "sedmlapidisablewarnings.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedReader.h"
+    #include "sedml/SedWriter.h"
 #include "sedmlapienablewarnings.h"
 
 //==============================================================================
@@ -43,19 +45,19 @@ namespace SEDMLSupport {
 
 SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
-    mSedmlDocument(0)
+    mSedmlDocument(0),
+    mNew(pNew)
 {
-    // Create a new SED-ML document, if this is what we want
+    // Reset ourselves
 
-    if (pNew)
-        mSedmlDocument = new libsedml::SedDocument();
+    reset();
 }
 
 //==============================================================================
 
 SedmlFile::~SedmlFile()
 {
-    // Delete some internal objects
+    // Reset ourselves
 
     reset();
 }
@@ -64,18 +66,23 @@ SedmlFile::~SedmlFile()
 
 void SedmlFile::reset()
 {
-    // Reset all of the file's properties
+    // Reset all of our properties
 
     delete mSedmlDocument;
 
     mSedmlDocument = 0;
+
+    mLoadingNeeded = true;
 }
 
 //==============================================================================
 
-libsedml::SedDocument * SedmlFile::sedmlDocument() const
+libsedml::SedDocument * SedmlFile::sedmlDocument()
 {
-    // Return the SED-ML document associated with our SED-ML file
+    // Return the SED-ML document associated with our SED-ML file, after loading
+    // ourselves if necessary
+
+    load();
 
     return mSedmlDocument;
 }
@@ -84,23 +91,48 @@ libsedml::SedDocument * SedmlFile::sedmlDocument() const
 
 bool SedmlFile::load()
 {
-    // For now, we just check that we can load the file
+    // Check whether the file is already loaded and without any issues
 
-    QByteArray fileNameByteArray = mFileName.toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+    if (!mLoadingNeeded)
+        return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    mLoadingNeeded = false;
+
+    // Create a new SED-ML document, if needed, or try to load our file
+
+    if (mNew) {
+        mSedmlDocument = new libsedml::SedDocument();
+    } else {
+        QByteArray fileNameByteArray = mFileName.toUtf8();
+
+        mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+    }
+
+    return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 }
 
 //==============================================================================
 
-bool SedmlFile::save(const QString &pNewFileName)
+bool SedmlFile::save(const QString &pFileName)
 {
-    Q_UNUSED(pNewFileName);
+    // Make sure that we are properly loaded and have no issue
 
-    // Consider the file not saved
+    if (mLoadingNeeded || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR))
+        return false;
 
-    return false;
+    // Save ourselves, after having reformatted ourselves, and stop considering
+    // ourselves as new anymore (in case we were), if the saving went fine
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
+
+    bool res = Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
+
+    if (res)
+        mNew = false;
+
+    return res;
 }
 
 //==============================================================================
@@ -133,7 +165,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
     libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
 
-    for (unsigned int i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
+    for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
         const libsedml::SedError *error = errorLog->getError(i);
         SedmlFileIssue::Type issueType;
 
@@ -167,7 +199,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     // Only consider the given file contents SED-ML valid if it has no errors
 
-    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
+    return !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 }
 
 //==============================================================================

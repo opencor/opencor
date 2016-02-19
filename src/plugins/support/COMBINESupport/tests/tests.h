@@ -28,12 +28,29 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace OpenCOR {
+namespace COMBINESupport {
+    class CombineArchive;
+}   // namespace COMBINESupport
+}   // namespace OpenCOR
+
+//==============================================================================
+
 class Tests : public QObject
 {
     Q_OBJECT
 
+private:
+    OpenCOR::COMBINESupport::CombineArchive *mCombineArchive;
+
+    void doBasicTests(const QString &pFileName = QString());
+
 private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
+
     void basicTests();
+    void loadingErrorTests();
 };
 
 //==============================================================================

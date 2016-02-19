@@ -137,7 +137,7 @@ QString File::sha1() const
 
     QByteArray fileContents;
 
-    if (readByteArrayFromFile(mFileName, fileContents))
+    if (readFileContentsFromFile(mFileName, fileContents))
         return Core::sha1(fileContents);
     else
         return QString();
@@ -168,7 +168,7 @@ bool File::isDifferent() const
 
 //==============================================================================
 
-bool File::isDifferent(const QString pFileContents) const
+bool File::isDifferent(const QByteArray &pFileContents) const
 {
     // Return whether the file is different from the given file contents by
     // comparing their SHA-1 values
@@ -208,6 +208,15 @@ int File::newIndex() const
     // Return the file's new index
 
     return mNewIndex;
+}
+
+//==============================================================================
+
+bool File::isLocal() const
+{
+    // Return whether the file is a local one
+
+    return mUrl.isEmpty();
 }
 
 //==============================================================================

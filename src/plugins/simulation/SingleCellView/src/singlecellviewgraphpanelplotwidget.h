@@ -211,6 +211,9 @@ public:
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
 
+    bool axesChanged() const;
+    void resetAxesChanged();
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -240,6 +243,8 @@ private:
     QPoint mPoint;
 
     SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
+
+    bool mAxesChanged;
 
     bool mCanZoomInX;
     bool mCanZoomOutX;

@@ -114,9 +114,6 @@ public:
     explicit CollapsibleWidget(const QColor &pSeparatorColor, QWidget *pParent);
     explicit CollapsibleWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     int count() const;
 
     bool isCollapsed(const int &pIndex) const;

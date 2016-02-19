@@ -20,10 +20,17 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "singlecellviewgraphpanelswidget.h"
+#include "singlecellviewsimulationwidget.h"
 
 //==============================================================================
 
 #include <QSettings>
+
+//==============================================================================
+
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/SedDocument.h"
+#include "sedmlapienablewarnings.h"
 
 //==============================================================================
 
@@ -32,9 +39,11 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParent) :
+SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+                                                                 QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
+    mSimulationWidget(pSimulationWidget),
     mSplitterSizes(QIntList()),
     mGraphPanels(SingleCellViewGraphPanelWidgets()),
     mActiveGraphPanel(0)
@@ -68,8 +77,7 @@ static const auto SettingsGraphPanelSizes = QStringLiteral("GraphPanelSizes");
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings,
-                                                   const QString &pFileName)
+void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -77,47 +85,54 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings,
     emit removeGraphPanelsEnabled(false);
 
     // Retrieve the number of graph panels and create the corresponding number
-    // of graphs
+    // of graphs, if we are dealing with a CellML file, or only one default
+    // graph panel
     // Note: we don't assign the value of SettingsGraphPanelSizes directly to
     //       mSplitterSizes because adding a graph panel will reset it. So,
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    QIntList splitterSizes = QIntList();
+    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
+        QIntList splitterSizes = QIntList();
 
-    pSettings->beginGroup(pFileName);
-        splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
-    pSettings->endGroup();
+        pSettings->beginGroup(mSimulationWidget->fileName());
+            splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
+        pSettings->endGroup();
 
-    int graphPanelsCount = splitterSizes.count();
+        int graphPanelsCount = splitterSizes.count();
 
-    if (!graphPanelsCount) {
-        // For some reasons, the settings for the number of graph panels to be
-        // created got messed up, so reset it
+        if (!graphPanelsCount) {
+            // For some reasons, the settings for the number of graph panels to be
+            // created got messed up, so reset it
 
-        graphPanelsCount = 1;
-    }
+            graphPanelsCount = 1;
+        }
 
-    for (int i = 0; i < graphPanelsCount; ++i)
+        for (int i = 0; i < graphPanelsCount; ++i)
+            addGraphPanel();
+
+        // Retrieve and set the size of each graph panel
+
+        mSplitterSizes = splitterSizes;
+
+        setSizes(mSplitterSizes);
+    } else {
         addGraphPanel();
-
-    // Retrieve and set the size of each graph panel
-
-    mSplitterSizes = splitterSizes;
-
-    setSizes(mSplitterSizes);
+    }
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings,
-                                                   const QString &pFileName) const
+void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the size of each graph panel
+    // Keep track of the size of each graph panel, but only if we are dealing
+    // with a CellML file
 
-    pSettings->beginGroup(pFileName);
-        pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
-    pSettings->endGroup();
+    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
+        pSettings->beginGroup(mSimulationWidget->fileName());
+            pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
+        pSettings->endGroup();
+    }
 }
 
 //==============================================================================
@@ -149,7 +164,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPan
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel()
+SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(const bool &pActive)
 {
     // Keep track of the graph panels' original size
 
@@ -158,8 +173,6 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
     // Create a new graph panel, add it to ourselves and keep track of it
 
     SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(mGraphPanels, this);
-
-    addWidget(res);
 
     mGraphPanels << res;
 
@@ -183,14 +196,14 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Keep track of the addition and removal of a graph
 
-    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            this, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
+            this, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
+    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
-    // Activate the graph panel
+    // In/activate the graph panel
 
-    res->setActive(true);
+    res->setActive(pActive);
 
     // Keep track of our new sizes
 
@@ -198,7 +211,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Let people know that we have added a graph panel
 
-    emit graphPanelAdded(res);
+    emit graphPanelAdded(res, pActive);
 
     // Let people know whether graph panels can be removed
 
@@ -303,11 +316,26 @@ void SingleCellViewGraphPanelsWidget::removeAllGraphPanels()
 
 //==============================================================================
 
+void SingleCellViewGraphPanelsWidget::setActiveGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Make sure that we own the given graph panel
+
+    if (!mGraphPanels.contains(pGraphPanel))
+        return;
+
+    // Make the given graph panel the active one
+
+    pGraphPanel->setActive(true);
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelsWidget::splitterMoved()
 {
     // Our splitter has been moved, so keep track of its new sizes
 
-    mSplitterSizes = sizes();
+    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile)
+        mSplitterSizes = sizes();
 }
 
 //==============================================================================

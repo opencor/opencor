@@ -289,53 +289,6 @@ typedef QList<Property *> Properties;
 
 //==============================================================================
 
-class PropertyEditorWidgetGuiStateProperty
-{
-public:
-    explicit PropertyEditorWidgetGuiStateProperty(Property *pProperty,
-                                                  const bool &pHidden,
-                                                  const bool &pExpanded,
-                                                  const QString &pValue);
-
-    Property * property() const;
-
-    bool isHidden() const;
-    bool isExpanded() const;
-    QString value() const;
-
-private:
-    Property *mProperty;
-
-    bool mHidden;
-    bool mExpanded;
-    QString mValue;
-};
-
-//==============================================================================
-
-typedef QList<PropertyEditorWidgetGuiStateProperty *> PropertyEditorWidgetGuiStateProperties;
-
-//==============================================================================
-
-class CORE_EXPORT PropertyEditorWidgetGuiState
-{
-public:
-    explicit PropertyEditorWidgetGuiState(const QModelIndex &pCurrentProperty);
-    ~PropertyEditorWidgetGuiState();
-
-    PropertyEditorWidgetGuiStateProperties properties() const;
-    void addProperty(PropertyEditorWidgetGuiStateProperty *pProperty);
-
-    QModelIndex currentProperty() const;
-
-private:
-    PropertyEditorWidgetGuiStateProperties mProperties;
-
-    QModelIndex mCurrentProperty;
-};
-
-//==============================================================================
-
 class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 {
     Q_OBJECT
@@ -351,17 +304,11 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     virtual QSize sizeHint() const;
 
     void clear();
 
     void selectFirstProperty();
-
-    PropertyEditorWidgetGuiState * guiState();
-    void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
     Property * addSectionProperty(const QString &pName, Property *pParent = 0);
     Property * addSectionProperty(Property *pParent = 0);

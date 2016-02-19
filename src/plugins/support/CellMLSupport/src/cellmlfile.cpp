@@ -89,9 +89,11 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 
 CellmlFile::~CellmlFile()
 {
-    // Delete some internal objects
+    // Reset ourselves
 
     reset();
+
+    // Delete some internal objects
 
     delete mRuntime;
 }
@@ -100,7 +102,7 @@ CellmlFile::~CellmlFile()
 
 void CellmlFile::reset()
 {
-    // Reset all of the file's properties
+    // Reset all of our properties
 
     mModel = 0;
 
@@ -127,8 +129,8 @@ void CellmlFile::reset()
 
 iface::cellml_api::Model * CellmlFile::model()
 {
-    // Return the model associated with our CellML file, after loading it if
-    // necessary
+    // Return the model associated with our CellML file, after loading ourselves
+    // if necessary
 
     load();
 
@@ -139,8 +141,8 @@ iface::cellml_api::Model * CellmlFile::model()
 
 iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 {
-    // Return the data source associated with our CellML file, after loading it
-    // if necessary
+    // Return the data source associated with our CellML file, after loading
+    // ourselves if necessary
 
     load();
 
@@ -237,14 +239,14 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         // We haven't already loaded the import contents, so do
                         // so now
 
-                        QString fileContents;
+                        QByteArray fileContents;
 
-                        if (   ( isLocalFile && Core::readTextFromFile(fileNameOrUrl, fileContents))
-                            || (!isLocalFile && Core::readTextFromUrl(fileNameOrUrl, fileContents))) {
+                        if (   ( isLocalFile && Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
+                            || (!isLocalFile && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
-                            import->instantiateFromText(fileContents.toStdWString());
+                            import->instantiateFromText(QString(fileContents).toStdWString());
 
                             // Keep track of the import contents
 
@@ -397,15 +399,10 @@ void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
 
 bool CellmlFile::load()
 {
-    // Check whether the file is already loaded and without any issues
+    // Check whether we are already loaded and without any issues
 
     if (!mLoadingNeeded)
         return mIssues.isEmpty();
-
-    // Consider the file loaded
-    // Note: even when we can't load the file, we still consider it 'loaded'
-    //       since we at least tried to load it, so unless the file gets
-    //       modified (and we are to reload it), we are 'fine'...
 
     mLoadingNeeded = false;
 
@@ -451,9 +448,9 @@ bool CellmlFile::load()
 
 //==============================================================================
 
-bool CellmlFile::save(const QString &pNewFileName)
+bool CellmlFile::save(const QString &pFileName)
 {
-    // Check whether the file needs loading or contains issues
+    // Make sure that we are properly loaded and have no issues
 
     if (mLoadingNeeded || !mIssues.isEmpty())
         return false;
@@ -510,11 +507,11 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // Determine the file name to use for the CellML file
 
-    QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
+    QString fileName = pFileName.isEmpty()?mFileName:pFileName;
 
     // Write out the contents of our DOM document to our CellML file
 
-    if (!Core::writeTextToFile(newFileName, qDomDocumentToString(domDocument)))
+    if (!Core::writeFileContentsToFile(fileName, Core::serialiseDomDocument(domDocument)))
         return false;
 
     // Our CellML file being saved, it cannot be modified (should it have been
@@ -526,7 +523,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // Make sure that mFileName is up to date
 
-    mFileName = newFileName;
+    mFileName = fileName;
 
     // Everything went fine
 
@@ -691,7 +688,7 @@ bool CellmlFile::isValid(const QString &pFileContents,
 
 bool CellmlFile::isModified() const
 {
-    // Return whether the file has been modified
+    // Return whether we have been modified
 
     return Core::FileManager::instance()->isModified(mFileName);
 }
@@ -700,7 +697,7 @@ bool CellmlFile::isModified() const
 
 void CellmlFile::setModified(const bool &pModified) const
 {
-    // Set the modified status of the file
+    // Set our modified status
 
     Core::FileManager::instance()->setModified(mFileName, pModified);
 }
@@ -709,7 +706,7 @@ void CellmlFile::setModified(const bool &pModified) const
 
 CellmlFileIssues CellmlFile::issues() const
 {
-    // Return the file's issue(s)
+    // Return our issues
 
     return mIssues;
 }
@@ -723,14 +720,13 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (!mRuntimeUpdateNeeded)
         return mRuntime;
 
-    // Load (but not reload!) the file, if needed
+    // Load (but not reload!) ourselves, if needed
 
     if (load()) {
-        // The file was properly loaded (or was already loaded), so make sure
-        // that its imports, if any, are fully instantiated
+        // Make sure that our imports, if any, are fully instantiated
 
         if (fullyInstantiateImports(mModel, mIssues)) {
-            // Now, we can return an updated version of its runtime
+            // Now, we can return an updated version of our runtime
 
             mRuntime->update();
 
@@ -749,7 +745,7 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 CellmlFileRdfTriples & CellmlFile::rdfTriples()
 {
-    // Return all the RDF triples associated with the CellML file
+    // Return all the RDF triples associated with ourselves
 
     return mRdfTriples;
 }
@@ -871,7 +867,7 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
                                                const QString &pResource,
                                                const QString &pId)
 {
-    // Add an RDF triple to our CellML file
+    // Add an RDF triple to ourselves
 
     return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
                                                    pModelQualifier, pResource, pId));
@@ -884,7 +880,7 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
                                                const QString &pResource,
                                                const QString &pId)
 {
-    // Add an RDF Triple to our CellML file
+    // Add an RDF Triple to ourselves
 
     return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
                                                    pBioQualifier, pResource, pId));
@@ -896,7 +892,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
                                  const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                  const QString &pResource, const QString &pId)
 {
-    // Remove an RDF triple from our CellML file
+    // Remove an RDF triple from ourselves
 
     return mRdfTriples.remove(rdfTriple(pElement, pModelQualifier, pResource, pId));
 }
@@ -907,7 +903,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
                                  const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                                  const QString &pResource, const QString &pId)
 {
-    // Remove an RDF triple from our CellML file
+    // Remove an RDF triple from ourselves
 
     return mRdfTriples.remove(rdfTriple(pElement, pBioQualifier, pResource, pId));
 }
@@ -916,7 +912,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 
 QStringList CellmlFile::importedFileNames() const
 {
-    // Return the CellML model's imported file names
+    // Return our imported file names
 
     return mImportContents.keys();
 }
@@ -925,7 +921,7 @@ QStringList CellmlFile::importedFileNames() const
 
 QString CellmlFile::importedFileContents(const QString &pImportedFileName) const
 {
-    // Return the contents of the given CellML model's imported file name
+    // Return the contents of our given imported file name
 
     return mImportContents.value(pImportedFileName);
 }
@@ -943,7 +939,7 @@ QString CellmlFile::cmetaId() const
 
 QString CellmlFile::xmlBase()
 {
-    // Return the CellML file's base URI
+    // Return our base URI
 
     if (load()) {
         ObjRef<iface::cellml_api::URI> baseUri = mModel->xmlBase();
@@ -1033,9 +1029,9 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Note: you would normally expect CeLEDSExporter to check this, but all
         //       it does in case of an invalid XML file is crash...
 
-        QString userDefinedFormatFileContents;
+        QByteArray userDefinedFormatFileContents;
 
-        if (!Core::readTextFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
+        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the user-defined format file could not be read"));
 
@@ -1059,7 +1055,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
-        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(userDefinedFormatFileContents.toStdWString());
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(userDefinedFormatFileContents).toStdWString());
 
         if (celedsExporterBootstrap->loadError().length()) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -1070,7 +1066,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         // Save the export
 
-        if (!Core::writeTextToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
+        if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)).toUtf8())) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the output file could not be saved"));
 
@@ -1118,23 +1114,16 @@ CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version(CellmlFile *pCellmlFile)
-{
-    // Return the version of the given CellML file
-
-    if (pCellmlFile)
-        return version(pCellmlFile->model());
-    else
-        return Unknown;
-}
-
-//==============================================================================
-
 CellmlFile::Version CellmlFile::version(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    return version(CellmlFileManager::instance()->cellmlFile(pFileName));
+    CellmlFile *cellmlFile = CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    if (cellmlFile)
+        return cellmlFile->version();
+    else
+        return Unknown;
 }
 
 //==============================================================================

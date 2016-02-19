@@ -40,20 +40,19 @@ QString CORE_EXPORT formatMessage(const QString &pMessage,
                                   const bool &pLowerCase = true,
                                   const bool &pDotDotDot = false);
 
-QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
+QByteArray CORE_EXPORT resource(const QString &pResource);
 
+QString CORE_EXPORT temporaryDirName();
 QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
 
-bool CORE_EXPORT readByteArrayFromFile(const QString &pFileName,
-                                       QByteArray &pByteArray);
-bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
-bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
-                                 QString *pErrorMessage = 0);
+bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
+                                          QByteArray &pFileContents);
+bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
+                                         QByteArray &pFileContents,
+                                         QString *pErrorMessage = 0);
 
-bool CORE_EXPORT writeByteArrayToFile(const QString &pFileName,
-                                      const QByteArray &pByteArray);
-bool CORE_EXPORT writeTextToFile(const QString &pFileName,
-                                 const QString &pText);
+bool CORE_EXPORT writeFileContentsToFile(const QString &pFileName,
+                                         const QByteArray &pFileContents);
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,
                                      const QString &pResource);
 

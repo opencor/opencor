@@ -87,14 +87,13 @@ CentralWidget * centralWidget()
 
 QString allFilters(const QString &pFilters)
 {
-    return (pFilters.isEmpty()?QString():pFilters+";;")
-           + QObject::tr("All Files")
+    return  (pFilters.isEmpty()?QString():pFilters+";;")
+           +QObject::tr("All Files")
            +" (*"
 #ifdef Q_OS_WIN
             ".*"
 #endif
-            ")"
-           +(pFilters.isEmpty()?QString():";;"+pFilters);
+            ")";
 }
 
 //==============================================================================
@@ -192,8 +191,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     // Retrieve and return a save file name
     // Note: normally, we would rely on QFileDialog::getSaveFileName() to
     //       retrieve a save file name, but then we wouldn't be able to handle
-    //       the case where the user cancels his/her action, so instead we
-    //       create and execute our own QFileDialog object...
+    //       the case where a user cancels his/her action, so instead we create
+    //       and execute our own QFileDialog object...
 
     QFileInfo fileInfo = pFileName;
     QFileDialog dialog(qApp->activeWindow(), pCaption,

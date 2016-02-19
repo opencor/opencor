@@ -676,7 +676,8 @@ void CellmlTextViewScanner::getNextToken()
     mTokenComment = QString();
 
     switch (mCharType) {
-    case LetterChar: case UnderscoreChar:
+    case LetterChar:
+    case UnderscoreChar:
         getWord();
 
         break;

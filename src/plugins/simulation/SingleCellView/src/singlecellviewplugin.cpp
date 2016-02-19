@@ -21,7 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "combinefilemanager.h"
+#include "combinesupportplugin.h"
 #include "coreguiutils.h"
+#include "sedmlfilemanager.h"
+#include "sedmlsupportplugin.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
 
@@ -61,6 +65,15 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
 
 //==============================================================================
 // File handling interface
+//==============================================================================
+
+bool SingleCellViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    // Check whether the given file is an indirect remote file
+
+    return mViewWidget->isIndirectRemoteFile(pFileName);
+}
+
 //==============================================================================
 
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
@@ -257,7 +270,9 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType;
+    return QStringList() << CellMLSupport::CellmlMimeType
+                         << SEDMLSupport::SedmlMimeType
+                         << COMBINESupport::CombineMimeType;
 }
 
 //==============================================================================
@@ -287,12 +302,17 @@ bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
 
 QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML file, a SED-ML file or a
+    // COMBINE archive
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (   !CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)
+        && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
+        && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)) {
         return 0;
+    }
 
-    // Update and return our simulation view widget using the given CellML file
+    // Update and return our simulation view widget using the given CellML file,
+    // SED-ML file or COMBINE archive
     // Note: we temporarily disable updates for our simulation view widget, so
     //       as to avoid any risk of known/unknown/potential flickering...
 

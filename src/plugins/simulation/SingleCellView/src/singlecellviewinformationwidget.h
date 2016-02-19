@@ -51,6 +51,7 @@ class SingleCellViewInformationParametersWidget;
 class SingleCellViewInformationSimulationWidget;
 class SingleCellViewInformationSolversWidget;
 class SingleCellViewPlugin;
+class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
@@ -61,12 +62,10 @@ class SingleCellViewInformationWidget : public QScrollArea,
 
 public:
     explicit SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                             SingleCellViewSimulationWidget *pSimulationWidget,
                                              QWidget *pParent);
 
     virtual void retranslateUi();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
 
     Core::CollapsibleWidget * collapsibleWidget() const;
 

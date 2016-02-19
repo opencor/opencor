@@ -76,7 +76,7 @@ public:
     iface::rdf_api::DataSource * rdfDataSource();
 
     virtual bool load();
-    virtual bool save(const QString &pNewFileName = QString());
+    virtual bool save(const QString &pFileName = QString());
 
     bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues);
 
@@ -129,7 +129,6 @@ public:
     Version version() const;
 
     static Version version(iface::cellml_api::Model *pModel);
-    static Version version(CellmlFile *pCellmlFile);
     static Version version(const QString &pFileName);
 
     static QString versionAsString(const Version &pVersion);

@@ -110,9 +110,9 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        QString fileContents;
+        QByteArray fileContents;
 
-        Core::readTextFromFile(pFileName, fileContents);
+        Core::readFileContentsFromFile(pFileName, fileContents);
 
         newEditingWidget = new CoreSEDMLEditing::CoreSedmlEditingWidget(fileContents,
                                                                         !Core::FileManager::instance()->isReadableAndWritable(pFileName),
@@ -219,9 +219,7 @@ void RawSedmlViewWidget::fileReloaded(const QString &pFileName)
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
-
-        if (SEDMLSupport::SedmlFileManager::instance()->isSedmlFile(pFileName))
-            initialize(pFileName, update);
+        initialize(pFileName, update);
     }
 }
 
@@ -282,7 +280,7 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
 
         domDocument.setContent(editingWidget->editor()->contents());
 
-        editingWidget->editor()->setContents(qDomDocumentToString(domDocument), true);
+        editingWidget->editor()->setContents(Core::serialiseDomDocument(domDocument), true);
         editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
     }
 }

@@ -15,6 +15,7 @@
     </simulation>
     <import xlink:href="../components/units.xml">
         <units name="ms" units_ref="ms"/>
+        <units name="mV" units_ref="mV"/>
         <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
     </import>
     <import xlink:href="../components/stimulated.xml">

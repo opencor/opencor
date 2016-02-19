@@ -38,30 +38,39 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewSimulationWidget;
+
+//==============================================================================
+
 class SingleCellViewGraphPanelsWidget : public QSplitter,
                                         public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelsWidget(QWidget *pParent);
+    explicit SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+                                             QWidget *pParent);
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings, const QString &pFileName);
-    virtual void saveSettings(QSettings *pSettings, const QString &pFileName) const;
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize();
 
     SingleCellViewGraphPanelWidgets graphPanels() const;
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
 
-    SingleCellViewGraphPanelWidget * addGraphPanel();
+    SingleCellViewGraphPanelWidget * addGraphPanel(const bool &pActive = true);
 
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
 
+    void setActiveGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
+
 private:
+    SingleCellViewSimulationWidget *mSimulationWidget;
+
     QIntList mSplitterSizes;
 
     SingleCellViewGraphPanelWidgets mGraphPanels;
@@ -71,16 +80,17 @@ private:
     void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 
 Q_SIGNALS:
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+                         const bool &pActive);
     void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
     void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
