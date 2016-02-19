@@ -1253,27 +1253,27 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
                                                    COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
 {
-    // Load and check our COMBINE archive
+    // Load and make sure that our COMBINE archive is valid
 
-    if (pCombineArchive->load() && pCombineArchive->isValid()) {
-        // Make sure that there is only one master file in our COMBINE archive
-
-        if (pCombineArchive->masterFiles().count() == 1) {
-pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                             "still under development");
-
-            return true;
-        } else {
-            pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                                         tr("only COMBINE archives with one master file are supported"));
-
-            return false;
-        }
-    } else {
+    if (!pCombineArchive->load() || !pCombineArchive->isValid()) {
         pCombineArchiveIssues = pCombineArchive->issues();
 
         return false;
     }
+
+    // Make sure that there is only one master file in our COMBINE archive
+
+    if (pCombineArchive->masterFiles().count() != 1) {
+        pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                                     tr("only COMBINE archives with one master file are supported"));
+
+        return false;
+    }
+pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                             "still under development");
+return false;
+
+    return true;
 }
 
 //==============================================================================
