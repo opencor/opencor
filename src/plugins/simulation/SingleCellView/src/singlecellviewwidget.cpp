@@ -1162,9 +1162,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                 bool validVariableDegree = false;
 
                 if (node.getNumChildren() == 1) {
-                    const XMLNode &variableDegreeNode = node.getChild(0);
                     bool conversionOk;
-                    int variableDegree = QString::fromStdString(variableDegreeNode.getCharacters()).toInt(&conversionOk);
+                    int variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt(&conversionOk);
 
                     validVariableDegree = conversionOk && (variableDegree >= 0);
                 }
