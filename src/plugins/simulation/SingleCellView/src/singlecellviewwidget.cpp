@@ -1297,12 +1297,14 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
         // Note: since Core::checkFileNameOrUrl() tells us whether we are
         //       dealing with a local file...
     } else {
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+        QString url = fileManagerInstance->file(pFileName)->url();
         bool isLocalFile;
         QString dummy;
 
         Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
 
-        if (isLocalFile) {
+        if (isLocalFile && url.isEmpty()) {
             QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pSedmlFile->fileName()).path()+QDir::separator()+modelSource);
 
             if (QFile::exists(cellmlFileName)) {
@@ -1312,22 +1314,31 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                                                  tr("%1 could not be found").arg(modelSource));
             }
         } else {
+            // Handle the case where our model source is a relative remote file
+
+            static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+
+            if (isLocalFile)
+                modelSource = url.remove(FileNameRegEx)+"/"+modelSource;
+
+            // Retrieve the contents of our model source
+
             QByteArray fileContents;
             QString errorMessage;
 
             if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {
-                // Save the contents of our remote file to a local file and use
+                // Save the contents of our model source to a local file and use
                 // that to create a CellML file object after having asked our
                 // file manager to manage it (so that CellML 1.1 files can be
                 // properly instantiated)
-                // Note: we also keep track of our indirect remote CellML file
-                //       since we will need to have it unmanaged when closing
-                //       this file...
+                // Note: we also keep track of our model source's local file
+                //       since we will need to unmanage it when closing this
+                //       file...
 
                 QString cellmlFileName = Core::temporaryFileName();
 
                 if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
-                    Core::FileManager::instance()->manage(cellmlFileName, Core::File::Remote, modelSource);
+                    fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
 
                     pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
 
