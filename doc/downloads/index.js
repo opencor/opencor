@@ -40,7 +40,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> can now handle 3xx redirection headers (see issue <a href=\"https://github.com/opencor/opencor/issues/893\">#893</a>)." },
-                       { "change": "<strong>Single Cell view:</strong> fixed a problem with opening a remote SED-ML file not working with relatively specified sources (see issue <a href=\"https://github.com/opencor/opencor/issues/894\">#894</a>). Fixed a small problem with the URL of a model being wrongly formatted on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/896\">#896</a>)." }
+                       { "change": "<strong>Single Cell view:</strong> fixed a problem with opening a remote SED-ML file not working with relatively specified sources (see issue <a href=\"https://github.com/opencor/opencor/issues/894\">#894</a>). Can now open a CellML file referenced in a SED-ML file or COMBINE archive (see issue <a href=\"https://github.com/opencor/opencor/issues/895\">#895</a>). Fixed a small problem with the URL of a model being wrongly formatted on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/896\">#896</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
