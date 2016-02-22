@@ -153,6 +153,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
+    QToolButton *cellmlOpenToolButton = new QToolButton(mToolBarWidget);
+
+    cellmlOpenToolButton->setDefaultAction(mGui->actionCellmlOpen);
+
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
     QMenu *sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
 
@@ -187,6 +191,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addWidget(cellmlOpenToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
@@ -519,6 +525,7 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     mGui->actionSimulationDataExport->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                                  &&  mSimulation->results()->size()
                                                  && !simulationModeEnabled);
+    mGui->actionCellmlOpen->setEnabled(mFileType != SingleCellViewWidget::CellmlFile);
     mGui->actionSedmlExport->setEnabled(    (mFileType == SingleCellViewWidget::CellmlFile)
                                         &&  mSimulation->results()->size()
                                         && !simulationModeEnabled);
