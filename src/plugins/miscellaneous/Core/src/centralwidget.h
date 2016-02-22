@@ -124,6 +124,9 @@ public:
 
     bool canClose();
 
+    void selectMode(const QString &pModeName);
+    void selectView(const QString &pViewName);
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);

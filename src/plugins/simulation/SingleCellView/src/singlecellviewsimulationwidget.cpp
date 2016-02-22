@@ -3063,6 +3063,14 @@ void SingleCellViewSimulationWidget::openCellmlFile()
     // Ask OpenCOR to open our referenced CellML file
 
     static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+mCellmlFile->fileName());
+
+    // Ask OpenCOR to switch to the requested CellML editing view after having
+    // selected the correct mode
+
+    ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(qobject_cast<QAction *>(sender()));
+
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://Core.selectMode/"+ViewInterface::viewModeAsString(viewInterface->viewMode()));
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://Core.selectView/"+viewInterface->viewName());
 }
 
 //==============================================================================
