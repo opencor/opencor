@@ -322,6 +322,8 @@ private Q_SLOTS:
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+
+    void openCellmlFile();
 };
 
 //==============================================================================

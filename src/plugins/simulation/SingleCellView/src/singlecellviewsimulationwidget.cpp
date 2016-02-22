@@ -58,6 +58,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QtSingleApplication>
+
+//==============================================================================
+
 #include "qwt_wheel.h"
 
 //==============================================================================
@@ -167,6 +171,9 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
         cellmlOpenDropDownMenu->addAction(action);
 
         mCellmlEditingViewInterfaces.insert(action, cellmlEditingViewInterface);
+
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(openCellmlFile()));
     }
 
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
@@ -3047,6 +3054,15 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
         return ErrorNodeIcon;
     }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::openCellmlFile()
+{
+    // Ask OpenCOR to open our referenced CellML file
+
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+mCellmlFile->fileName());
 }
 
 //==============================================================================
