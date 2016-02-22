@@ -1312,17 +1312,19 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                                                  tr("%1 could not be found").arg(modelSource));
             }
         } else {
+            // Retrieve the contents of our model source
+
             QByteArray fileContents;
             QString errorMessage;
 
             if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {
-                // Save the contents of our remote file to a local file and use
+                // Save the contents of our model source to a local file and use
                 // that to create a CellML file object after having asked our
                 // file manager to manage it (so that CellML 1.1 files can be
                 // properly instantiated)
-                // Note: we also keep track of our indirect remote CellML file
-                //       since we will need to have it unmanaged when closing
-                //       this file...
+                // Note: we also keep track of our model source's local file
+                //       since we will need to unmanage it when closing this
+                //       file...
 
                 QString cellmlFileName = Core::temporaryFileName();
 
