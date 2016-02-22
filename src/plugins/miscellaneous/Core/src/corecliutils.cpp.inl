@@ -155,6 +155,14 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
         bool res = networkReply->error() == QNetworkReply::NoError;
 
         if (res) {
+            // Before accepting the contents as is, make sure that we are not
+            // dealing with a redirection
+
+            QUrl redirectedUrl = networkReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+
+            if (!redirectedUrl.isEmpty())
+                return download(redirectedUrl.toString(), pContents, pErrorMessage);
+
             pContents = networkReply->readAll();
 
             if (pErrorMessage)
