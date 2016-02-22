@@ -1459,7 +1459,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                                 SEDMLSupport::Language::Cellml_1_1.toStdString():
                                 SEDMLSupport::Language::Cellml_1_0.toStdString());
-    sedmlModel->setSource(Core::nativeCanonicalFileName(pModelSource).toStdString());
+    sedmlModel->setSource(pModelSource.toStdString());
 
     // Create and customise a repeated task containing a uniform time course
     // simulation followed by a one-step simulation, if needed
@@ -1683,13 +1683,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         // CellML files, as well as get a copy of our imported CellML files,
         // should they be remote ones
 
-#if defined(Q_OS_WIN)
-        static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
-#endif
 
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
