@@ -58,6 +58,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QtSingleApplication>
+
+//==============================================================================
+
 #include "qwt_wheel.h"
 
 //==============================================================================
@@ -94,6 +98,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlugin(pPlugin),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
+    mCellmlEditingViewInterfaces(QMap<QAction *, ViewInterface *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
@@ -153,6 +158,24 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
+    QToolButton *cellmlOpenToolButton = new QToolButton(mToolBarWidget);
+    QMenu *cellmlOpenDropDownMenu = new QMenu(cellmlOpenToolButton);
+
+    cellmlOpenToolButton->setDefaultAction(mGui->actionCellmlOpen);
+    cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
+    cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    foreach (ViewInterface *cellmlEditingViewInterface, pPlugin->cellmlEditingViewInterfaces()) {
+        QAction *action = new QAction(Core::mainWindow());
+
+        cellmlOpenDropDownMenu->addAction(action);
+
+        mCellmlEditingViewInterfaces.insert(action, cellmlEditingViewInterface);
+
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(openCellmlFile()));
+    }
+
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
     QMenu *sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
 
@@ -187,6 +210,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addWidget(cellmlOpenToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
@@ -436,6 +461,16 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
     updateDataStoreActions();
 
+    // Retranslate our CellML editing view actions
+
+    foreach (QAction *cellmlEditingViewAction, mCellmlEditingViewInterfaces.keys()) {
+        ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(cellmlEditingViewAction);
+
+        I18nInterface::retranslateAction(cellmlEditingViewAction,
+                                         tr("%1 View").arg(viewInterface->viewName()),
+                                         tr("Open the referenced CellML file using the %1 view").arg(viewInterface->viewName()));
+    }
+
     // Retranslate our invalid model message
 
     updateInvalidModelMessageWidget();
@@ -519,6 +554,7 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     mGui->actionSimulationDataExport->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                                  &&  mSimulation->results()->size()
                                                  && !simulationModeEnabled);
+    mGui->actionCellmlOpen->setEnabled(mFileType != SingleCellViewWidget::CellmlFile);
     mGui->actionSedmlExport->setEnabled(    (mFileType == SingleCellViewWidget::CellmlFile)
                                         &&  mSimulation->results()->size()
                                         && !simulationModeEnabled);
@@ -3018,6 +3054,23 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
         return ErrorNodeIcon;
     }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::openCellmlFile()
+{
+    // Ask OpenCOR to open our referenced CellML file
+
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+mCellmlFile->fileName());
+
+    // Ask OpenCOR to switch to the requested CellML editing view after having
+    // selected the correct mode
+
+    ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(qobject_cast<QAction *>(sender()));
+
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://Core.selectMode/"+ViewInterface::viewModeAsString(viewInterface->viewMode()));
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://Core.selectView/"+viewInterface->viewName());
 }
 
 //==============================================================================

@@ -1402,6 +1402,32 @@ bool CentralWidget::canClose()
 
 //==============================================================================
 
+void CentralWidget::selectMode(const QString &pModeName)
+{
+    // Select the given mode
+
+    mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(ViewInterface::viewModeFromString(pModeName)));
+}
+
+//==============================================================================
+
+void CentralWidget::selectView(const QString &pViewName)
+{
+    // Select the given mode
+
+    TabBarWidget *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
+
+    for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i) {
+        if (!viewTabs->tabText(i).compare(pViewName)) {
+            viewTabs->setCurrentIndex(i);
+
+            break;
+        }
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::addView(Plugin *pPlugin)
 {
     // Make sure that our list of required modes is up to date

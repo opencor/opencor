@@ -173,9 +173,25 @@
     <string>Export the simulation to SED-ML using a COMBINE archive</string>
    </property>
   </action>
+  <action name="actionCellmlOpen">
+   <property name="icon">
+    <iconset resource="../../../support/CellMLSupport/res/ui.qrc">
+     <normaloff>:/cellmlLogo.png</normaloff>:/cellmlLogo.png</iconset>
+   </property>
+   <property name="text">
+    <string>CellML Open</string>
+   </property>
+   <property name="toolTip">
+    <string>CellML Open</string>
+   </property>
+   <property name="statusTip">
+    <string>Open the referenced CellML file</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../res/ui.qrc"/>
+  <include location="../../../support/CellMLSupport/res/ui.qrc"/>
   <include location="../../../support/SEDMLSupport/res/ui.qrc"/>
  </resources>
  <connections/>

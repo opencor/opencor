@@ -14,5 +14,6 @@
         <file alias="CellMLSupport_relationshipNode">relationshipNode.png</file>
         <file alias="CellMLSupport_connectionNode">connectionNode.png</file>
         <file alias="CellMLSupport_metadataNode">metadataNode.png</file>
+        <file>cellmlLogo.png</file>
     </qresource>
 </RCC>

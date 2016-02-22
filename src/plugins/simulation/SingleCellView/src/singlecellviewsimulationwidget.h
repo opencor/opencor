@@ -66,6 +66,7 @@ namespace OpenCOR {
 //==============================================================================
 
 class DataStoreInterface;
+class ViewInterface;
 
 //==============================================================================
 
@@ -162,6 +163,8 @@ private:
     QString mFileName;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
+
+    QMap<QAction *, ViewInterface *> mCellmlEditingViewInterfaces;
 
     SingleCellViewSimulation *mSimulation;
 
@@ -319,6 +322,8 @@ private Q_SLOTS:
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+
+    void openCellmlFile();
 };
 
 //==============================================================================
