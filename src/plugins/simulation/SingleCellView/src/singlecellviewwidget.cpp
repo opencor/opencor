@@ -1282,7 +1282,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
     QString modelSource = QString::fromStdString(pSedmlFile->sedmlDocument()->getModel(0)->getSource());
 
-    // Check whether we are dealing with a local file (which is location is
+    // Check whether we are dealing with a local file (which location is
     // relative to that of our SED-ML file) or a remote file
 
     if (pIsDirectOrIndirectRemoteFile) {
