@@ -66,6 +66,7 @@ namespace OpenCOR {
 //==============================================================================
 
 class DataStoreInterface;
+class ViewInterface;
 
 //==============================================================================
 
@@ -162,6 +163,8 @@ private:
     QString mFileName;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
+
+    QMap<ViewInterface *, QAction *> mCellmlEditingViewActions;
 
     SingleCellViewSimulation *mSimulation;
 

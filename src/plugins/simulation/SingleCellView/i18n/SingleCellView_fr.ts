@@ -352,6 +352,14 @@
         <source>the requested curve (%1) could not be set</source>
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée</translation>
     </message>
+    <message>
+        <source>%1 View</source>
+        <translation>Vue %1</translation>
+    </message>
+    <message>
+        <source>Open the referenced CellML file using the %1 view</source>
+        <translation>Ouvrir le fichier CellML référencé à l&apos;aide de la vue %1</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>

@@ -94,6 +94,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlugin(pPlugin),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
+    mCellmlEditingViewActions(QMap<ViewInterface *, QAction *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
@@ -154,8 +155,19 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     QToolButton *cellmlOpenToolButton = new QToolButton(mToolBarWidget);
+    QMenu *cellmlOpenDropDownMenu = new QMenu(cellmlOpenToolButton);
 
     cellmlOpenToolButton->setDefaultAction(mGui->actionCellmlOpen);
+    cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
+    cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    foreach (ViewInterface *cellmlEditingViewInterface, pPlugin->cellmlEditingViewInterfaces()) {
+        QAction *action = new QAction(Core::mainWindow());
+
+        cellmlOpenDropDownMenu->addAction(action);
+
+        mCellmlEditingViewActions.insert(cellmlEditingViewInterface, action);
+    }
 
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
     QMenu *sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
@@ -441,6 +453,15 @@ void SingleCellViewSimulationWidget::retranslateUi()
     // Retranslate our data store actions
 
     updateDataStoreActions();
+
+    // Retranslate our CellML editing view actions
+
+    foreach (ViewInterface *cellmlEditingViewInterface, mCellmlEditingViewActions.keys()) {
+        QAction *action = mCellmlEditingViewActions.value(cellmlEditingViewInterface);
+
+        I18nInterface::retranslateAction(action, tr("%1 View").arg(cellmlEditingViewInterface->viewName()),
+                                         tr("Open the referenced CellML file using the %1 view").arg(cellmlEditingViewInterface->viewName()));
+    }
 
     // Retranslate our invalid model message
 
