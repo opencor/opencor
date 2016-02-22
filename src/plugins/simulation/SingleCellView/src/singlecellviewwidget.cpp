@@ -1272,7 +1272,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                                               bool *pIsDirectOrIndirectRemoteFile)
 {
-    // Make sure that we support our SED-ML
+    // Make sure that we support our SED-ML file
 
     if (!sedmlFileSupported(pSedmlFile, pSedmlFileIssues))
         return;
