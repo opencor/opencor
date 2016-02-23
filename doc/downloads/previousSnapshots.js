@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 22, "month": 2, "year": 2016, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> can now handle 3xx redirection headers (see issue <a href=\"https://github.com/opencor/opencor/issues/893\">#893</a>)." },
+                       { "change": "<strong>Single Cell view:</strong> fixed a problem with opening a remote SED-ML file not working with relatively specified sources (see issue <a href=\"https://github.com/opencor/opencor/issues/894\">#894</a>). Can now open a CellML file referenced in a SED-ML file or COMBINE archive (see issue <a href=\"https://github.com/opencor/opencor/issues/895\">#895</a>). Fixed a small problem with the URL of a model being wrongly formatted on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/896\">#896</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 2, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
