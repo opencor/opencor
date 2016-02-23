@@ -1016,7 +1016,7 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Strip the library of all its local symbols
 
     IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+        ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                            COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
 
@@ -1041,7 +1041,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         # Strip the Qt plugin of all its local symbols
 
         IF(RELEASE_MODE)
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+            ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                                COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
 
@@ -1119,13 +1119,13 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+    ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                         ${DEST_DIRNAME}/${FILENAME})
 
     # Clean up the Qt file
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
