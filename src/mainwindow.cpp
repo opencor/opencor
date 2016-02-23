@@ -1008,29 +1008,14 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 {
     Q_UNUSED(pSocket);
 
-    // We have just received a message, which can be one of two things:
-    //  1) The user tried to run another instance of OpenCOR, which sent a
-    //     message to this instance, asking it to bring itself to the foreground
-    //     and handling all the arguments passed in the message; or
-    //  2) A GUI action was sent to us, so we need to handle it.
+    // We have just received a message, which means that the user tried to run
+    // another instance of OpenCOR, which sent a message to this instance,
+    // asking it to bring itself to the foreground and handling all the
+    // arguments passed in the given message
 
-    // Check whether the passed message corresponds to a GUI action
+    showSelf();
 
-    QUrl url = pMessage;
-
-    if (!url.scheme().compare("gui")) {
-        // We are dealing with a GUI action, so handle it
-
-        handleAction(url);
-    } else {
-        // It's not a GUI action, so bring ourselves to the foreground
-
-        showSelf();
-
-        // Now, we must handle the arguments that were passed to us
-
-        handleArguments(pMessage);
-    }
+    handleArguments(pMessage);
 }
 
 //==============================================================================
