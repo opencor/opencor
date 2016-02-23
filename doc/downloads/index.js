@@ -39,6 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> refactored the handling of OpenCOR actions (see issue <a href=\"https://github.com/opencor/opencor/issues/901\">#901</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://jquery.com/\">jQuery</a> to version 2.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/902\">#902</a>)." }
                      ]
                    },
