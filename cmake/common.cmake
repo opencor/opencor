@@ -15,16 +15,16 @@ MACRO(INITIALISE_PROJECT)
     IF(WIN32)
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
            OR NOT ${MSVC_VERSION} EQUAL 1800)
-            MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built using MSVC 2013 on Windows...")
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2013 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
         IF(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
            AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-            MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built using (Apple) Clang on OS X...")
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on OS X...")
         ENDIF()
     ELSE()
         IF(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-            MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built using GCC on Linux...")
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC on Linux...")
         ENDIF()
     ENDIF()
 
@@ -38,9 +38,9 @@ MACRO(INITIALISE_PROJECT)
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ARCHITECTURE_COMPILE)
-        MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your ${PROJECT_NAME} environment and try again...")
+        MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your ${CMAKE_PROJECT_NAME} environment and try again...")
     ELSEIF(NOT ${ARCHITECTURE} EQUAL 64)
-        MESSAGE(FATAL_ERROR "${PROJECT_NAME} can only be built in 64-bit mode...")
+        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in 64-bit mode...")
     ENDIF()
 
     # By default, we are building a release version of OpenCOR, unless we are
@@ -48,13 +48,13 @@ MACRO(INITIALISE_PROJECT)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a debug version of ${PROJECT_NAME}")
+            SET(BUILD_INFORMATION "Building a debug version of ${CMAKE_PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
         IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a release version of ${PROJECT_NAME}")
+            SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE TRUE)
@@ -308,9 +308,9 @@ MACRO(INITIALISE_PROJECT)
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
-        SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${PROJECT_NAME}")
+        SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
     ELSEIF(NOT WIN32)
-        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
+        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}")
     ENDIF()
 
     # Show the build information, if allowed
