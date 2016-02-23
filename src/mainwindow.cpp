@@ -66,6 +66,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#ifdef Q_OS_MAC
+    #include <CoreServices/CoreServices.h>
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -105,6 +111,10 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Handle the OpenCOR URL
 
     QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
+
+    // Make sure that OpenCOR's URL scheme is active
+
+    checkUrlScheme();
 
     // Create our settings object
 
@@ -369,6 +379,48 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         // Ignore the event, i.e. don't close ourselves
 
         pEvent->ignore();
+    }
+}
+
+//==============================================================================
+
+void MainWindow::checkUrlScheme()
+{
+    // Check whether our URL scheme is set
+
+    bool urlSchemeSet = false;
+
+#if defined(Q_OS_WIN)
+//---GRY--- TO BE DONE...
+#elif defined(Q_OS_LINUX)
+//---GRY--- TO BE DONE...
+#elif defined(Q_OS_MAC)
+    static const CFStringRef UrlScheme = CFSTR("opencor");
+
+    CFStringRef defaultHandler = LSCopyDefaultHandlerForURLScheme(UrlScheme);
+    CFStringRef bundleId = CFBundleGetIdentifier(CFBundleGetMainBundle());
+
+    if (defaultHandler) {
+        urlSchemeSet = !CFStringCompare(bundleId, defaultHandler, 0);
+
+        CFRelease(defaultHandler);
+    }
+#else
+    #error Unsupported platform
+#endif
+
+    // Set our URL scheme, if needed
+
+    if (!urlSchemeSet) {
+#if defined(Q_OS_WIN)
+//---GRY--- TO BE DONE...
+#elif defined(Q_OS_LINUX)
+//---GRY--- TO BE DONE...
+#elif defined(Q_OS_MAC)
+        LSSetDefaultHandlerForURLScheme(UrlScheme, bundleId);
+#else
+    #error Unsupported platform
+#endif
     }
 }
 

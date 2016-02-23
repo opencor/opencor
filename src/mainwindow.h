@@ -114,6 +114,8 @@ private:
 
     QByteArray mDockedWindowsState;
 
+    void checkUrlScheme();
+
     void initializeGuiPlugin(Plugin *pPlugin);
 
     void loadSettings();
