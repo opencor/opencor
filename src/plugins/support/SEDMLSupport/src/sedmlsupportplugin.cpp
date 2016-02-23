@@ -188,7 +188,7 @@ void SEDMLSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SEDMLSupportPlugin::handleAction(const QUrl &pUrl)
+void SEDMLSupportPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

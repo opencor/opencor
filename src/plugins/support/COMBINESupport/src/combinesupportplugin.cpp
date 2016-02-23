@@ -143,7 +143,7 @@ void COMBINESupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void COMBINESupportPlugin::handleAction(const QUrl &pUrl)
+void COMBINESupportPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

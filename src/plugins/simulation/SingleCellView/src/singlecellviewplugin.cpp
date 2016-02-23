@@ -257,7 +257,7 @@ void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
+void SingleCellViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

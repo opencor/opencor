@@ -263,7 +263,7 @@ void CellMLTextViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLTextViewPlugin::handleAction(const QUrl &pUrl)
+void CellMLTextViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

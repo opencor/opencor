@@ -171,7 +171,7 @@ bool HelpWindowPage::acceptNavigationRequest(QWebFrame*,
         return true;
     } else {
         // This is either an action, which we want OpenCOR or one of its plugins
-        // to execute (i.e. something of the form gui://...), or an external
+        // to execute (i.e. something of the form opencor://...), or an external
         // resource of sorts, so just open the URL the default way
 
         QDesktopServices::openUrl(url);

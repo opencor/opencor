@@ -102,9 +102,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
                      this, SLOT(messageReceived(const QString &, QObject *)));
 
-    // Handle OpenCOR URLs
+    // Handle the OpenCOR URL
 
-    QDesktopServices::setUrlHandler("gui", this, "handleAction");
+    QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
 
     // Create our settings object
 
@@ -950,7 +950,7 @@ void MainWindow::fileOpenRequest(const QString &pFileName)
 
 //==============================================================================
 
-void MainWindow::handleAction(const QUrl &pUrl)
+void MainWindow::handleUrl(const QUrl &pUrl)
 {
     // Handle the action that was passed to OpenCOR
 
@@ -969,7 +969,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open file request will look
-        //       like gui://openFile//home/user/file...
+        //       like opencor://openFile//home/user/file...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else if (!actionName.compare("openFiles", Qt::CaseInsensitive)) {
@@ -977,7 +977,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // that were passed to OpenCOR
         // Note: the file names are contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open files request  will look
-        //       like gui://openFiles//home/user/file1|/home/user/file2...
+        //       like opencor://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else {
@@ -994,7 +994,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
                 PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
                 if (pluginInterface)
-                    pluginInterface->handleAction(pUrl);
+                    pluginInterface->handleUrl(pUrl);
 
                 break;
             }

@@ -220,7 +220,7 @@ void SampleViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SampleViewPlugin::handleAction(const QUrl &pUrl)
+void SampleViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

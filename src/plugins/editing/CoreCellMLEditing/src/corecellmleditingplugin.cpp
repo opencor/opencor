@@ -305,7 +305,7 @@ void CoreCellMLEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::handleAction(const QUrl &pUrl)
+void CoreCellMLEditingPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

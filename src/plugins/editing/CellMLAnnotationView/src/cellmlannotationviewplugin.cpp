@@ -209,7 +209,7 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
+void CellMLAnnotationViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

@@ -305,7 +305,7 @@ void CoreSEDMLEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreSEDMLEditingPlugin::handleAction(const QUrl &pUrl)
+void CoreSEDMLEditingPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

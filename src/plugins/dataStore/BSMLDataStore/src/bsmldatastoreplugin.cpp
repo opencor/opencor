@@ -138,7 +138,7 @@ void BSMLDataStorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void BSMLDataStorePlugin::handleAction(const QUrl &pUrl)
+void BSMLDataStorePlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

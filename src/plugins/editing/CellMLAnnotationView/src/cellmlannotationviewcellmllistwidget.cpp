@@ -1095,7 +1095,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
 
     url = url.resolved(currentCellmlElementItem()->text());
 
-    QDesktopServices::openUrl("gui://openFile/"+url.toString());
+    QDesktopServices::openUrl("opencor://openFile/"+url.toString());
 }
 
 //==============================================================================

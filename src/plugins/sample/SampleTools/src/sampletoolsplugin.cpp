@@ -175,7 +175,7 @@ void SampleToolsPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SampleToolsPlugin::handleAction(const QUrl &pUrl)
+void SampleToolsPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

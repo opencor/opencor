@@ -154,7 +154,7 @@ private Q_SLOTS:
 
     void resetAll();
 
-    void handleAction(const QUrl &pUrl);
+    void handleUrl(const QUrl &pUrl);
 };
 
 //==============================================================================

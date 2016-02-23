@@ -122,7 +122,7 @@ void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileBrowserWindowPlugin::handleAction(const QUrl &pUrl)
+void FileBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

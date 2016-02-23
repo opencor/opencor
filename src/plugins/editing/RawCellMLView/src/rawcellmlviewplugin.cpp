@@ -276,7 +276,7 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
+void RawCellMLViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

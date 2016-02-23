@@ -188,7 +188,7 @@ void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
+void CellMLSupportPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

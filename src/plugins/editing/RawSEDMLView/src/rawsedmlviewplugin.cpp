@@ -274,7 +274,7 @@ void RawSEDMLViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawSEDMLViewPlugin::handleAction(const QUrl &pUrl)
+void RawSEDMLViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

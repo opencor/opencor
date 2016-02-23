@@ -44,7 +44,7 @@ void OrganisationWidget::openFile(const QString &pFileName) const
 {
     // Ask OpenCOR to open the file
 
-    QDesktopServices::openUrl("gui://openFile/"+pFileName);
+    QDesktopServices::openUrl("opencor://openFile/"+pFileName);
 }
 
 //==============================================================================
@@ -53,7 +53,7 @@ void OrganisationWidget::openFiles(const QStringList &pFileNames) const
 {
     // Ask OpenCOR to open the files
 
-    QDesktopServices::openUrl("gui://openFiles/"+pFileNames.join("|"));
+    QDesktopServices::openUrl("opencor://openFiles/"+pFileNames.join("|"));
 }
 
 //==============================================================================

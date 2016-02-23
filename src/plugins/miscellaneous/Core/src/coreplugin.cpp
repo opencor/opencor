@@ -612,7 +612,7 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CorePlugin::handleAction(const QUrl &pUrl)
+void CorePlugin::handleUrl(const QUrl &pUrl)
 {
     // Handle the action that was passed to us
 

@@ -110,7 +110,7 @@ void SampleWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SampleWindowPlugin::handleAction(const QUrl &pUrl)
+void SampleWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

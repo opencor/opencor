@@ -249,7 +249,7 @@ void RawTextViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawTextViewPlugin::handleAction(const QUrl &pUrl)
+void RawTextViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

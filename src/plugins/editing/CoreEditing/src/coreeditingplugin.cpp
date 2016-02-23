@@ -415,7 +415,7 @@ void CoreEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreEditingPlugin::handleAction(const QUrl &pUrl)
+void CoreEditingPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
