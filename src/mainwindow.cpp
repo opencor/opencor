@@ -1019,7 +1019,7 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
     QUrl url = pMessage;
 
     if (!url.scheme().compare("gui")) {
-        // We are dealing with a GUI COR action, so handle it
+        // We are dealing with a GUI action, so handle it
 
         handleAction(url);
     } else {
