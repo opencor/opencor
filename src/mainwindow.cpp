@@ -965,7 +965,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open file request will look
-        //       like gui://openFiles//home/user/file...
+        //       like gui://openFile//home/user/file...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else if (!actionName.compare("openFiles", Qt::CaseInsensitive)) {
