@@ -36,15 +36,12 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QAbstractItemView>
+#include <QDesktopServices>
 #include <QFont>
 #include <QMenu>
 #include <QPoint>
 #include <QStandardItemModel>
 #include <QStyle>
-
-//==============================================================================
-
-#include <QtSingleApplication>
 
 //==============================================================================
 
@@ -1098,7 +1095,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
 
     url = url.resolved(currentCellmlElementItem()->text());
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+url.toString());
+    QDesktopServices::openUrl("gui://openFile/"+url.toString());
 }
 
 //==============================================================================

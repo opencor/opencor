@@ -102,6 +102,10 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
                      this, SLOT(messageReceived(const QString &, QObject *)));
 
+    // Handle OpenCOR URLs
+
+    QDesktopServices::setUrlHandler("gui", this, "handleAction");
+
     // Create our settings object
 
     mSettings = new QSettings();

@@ -23,7 +23,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QtSingleApplication>
+#include <QDesktopServices>
+#include <QUrl>
 
 //==============================================================================
 
@@ -43,7 +44,7 @@ void OrganisationWidget::openFile(const QString &pFileName) const
 {
     // Ask OpenCOR to open the file
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+pFileName);
+    QDesktopServices::openUrl("gui://openFile/"+pFileName);
 }
 
 //==============================================================================
@@ -52,7 +53,7 @@ void OrganisationWidget::openFiles(const QStringList &pFileNames) const
 {
     // Ask OpenCOR to open the files
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFiles/"+pFileNames.join("|"));
+    QDesktopServices::openUrl("gui://openFiles/"+pFileNames.join("|"));
 }
 
 //==============================================================================

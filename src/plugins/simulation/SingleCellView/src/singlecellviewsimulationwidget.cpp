@@ -44,6 +44,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDir>
 #include <QLabel>
@@ -55,10 +56,6 @@ specific language governing permissions and limitations under the License.
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
-
-//==============================================================================
-
-#include <QtSingleApplication>
 
 //==============================================================================
 
@@ -3062,15 +3059,15 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+mCellmlFile->fileName());
+    QDesktopServices::openUrl("gui://openFile/"+mCellmlFile->fileName());
 
     // Ask OpenCOR to switch to the requested CellML editing view after having
     // selected the correct mode
 
     ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(qobject_cast<QAction *>(sender()));
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://Core.selectMode/"+ViewInterface::viewModeAsString(viewInterface->viewMode()));
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://Core.selectView/"+viewInterface->viewName());
+    QDesktopServices::openUrl("gui://Core.selectMode/"+ViewInterface::viewModeAsString(viewInterface->viewMode()));
+    QDesktopServices::openUrl("gui://Core.selectView/"+viewInterface->viewName());
 }
 
 //==============================================================================

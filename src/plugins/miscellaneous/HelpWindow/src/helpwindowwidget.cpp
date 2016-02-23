@@ -39,10 +39,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QtSingleApplication>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace HelpWindow {
 
@@ -173,16 +169,10 @@ bool HelpWindowPage::acceptNavigationRequest(QWebFrame*,
 
     if (!urlScheme.compare("qthelp")) {
         return true;
-    } else if (!urlScheme.compare("gui")) {
-        // This is an action which we want OpenCOR or one of its plugins to
-        // execute
-
-        static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
-
-        return false;
     } else {
-        // This is an external resource of sorts, so we leave it to the user's
-        // default web browser to open it for us
+        // This is either an action, which we want OpenCOR or one of its plugins
+        // to execute (i.e. something of the form gui://...), or an external
+        // resource of sorts, so just open the URL the default way
 
         QDesktopServices::openUrl(url);
 
