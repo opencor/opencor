@@ -104,15 +104,21 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // itself
 
     QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
-                     this, SLOT(fileOpenRequest(const QString &)));
+                     this, SLOT(openFileOrHandleUrl(const QString &)));
     QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
-                     this, SLOT(messageReceived(const QString &, QObject *)));
+                     this, SLOT(handleMessage(const QString &)));
 
-    // Handle the OpenCOR URL
+    // Handle OpenCOR URLs
+    // Note: we should, through our GuiApplication class (see main.cpp), be able
+    //       to handle OpenCOR URLs (not least because we make sure that the
+    //       OpenCOR URL scheme is set; see the call to checkUrlScheme() below),
+    //       but our URL handler ensures that it will work whether the OpenCOR
+    //       URL scheme is set or not (in case it can't be set on a given
+    //       platform)...
 
     QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
 
-    // Make sure that OpenCOR's URL scheme is active
+    // Make sure that the OpenCOR URL scheme is set
 
     checkUrlScheme();
 
@@ -992,12 +998,17 @@ void MainWindow::handleArguments(const QString &pArguments)
 
 //==============================================================================
 
-void MainWindow::fileOpenRequest(const QString &pFileName)
+void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl)
 {
-    // We have received a request to open a file, so handle it as an argument
-    // that was passed to OpenCOR
+    // We have received a request to open a file or to handle an OpenCOR URL, so
+    // check which one it is and do it
 
-    handleArguments(pFileName);
+    QUrl url = pFileNameOrOpencorUrl;
+
+    if (!url.scheme().compare("opencor"))
+        handleUrl(url);
+    else
+        handleArguments(pFileNameOrOpencorUrl);
 }
 
 //==============================================================================
@@ -1056,10 +1067,8 @@ void MainWindow::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
+void MainWindow::handleMessage(const QString &pMessage)
 {
-    Q_UNUSED(pSocket);
-
     // We have just received a message, which means that the user tried to run
     // another instance of OpenCOR, which sent a message to this instance,
     // asking it to bring itself to the foreground and handling all the

@@ -133,8 +133,8 @@ private:
     void showEnableActions(const QList<QAction *> &pActions);
 
 private Q_SLOTS:
-    void fileOpenRequest(const QString &pFileName);
-    void messageReceived(const QString &pMessage, QObject *pSocket);
+    void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
+    void handleMessage(const QString &pMessage);
 
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();
