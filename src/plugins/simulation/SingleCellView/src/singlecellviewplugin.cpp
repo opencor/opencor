@@ -215,7 +215,7 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (    viewInterface
-            && (viewInterface->viewMode() == ViewInterface::Editing)
+            && (viewInterface->viewMode() == ViewInterface::EditingMode)
             &&  viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType)) {
             mCellmlEditingViewInterfaces << viewInterface;
         }
@@ -272,7 +272,7 @@ ViewInterface::Mode SingleCellViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return ViewInterface::Simulation;
+    return ViewInterface::SimulationMode;
 }
 
 //==============================================================================

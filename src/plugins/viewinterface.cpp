@@ -27,13 +27,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto ViewModeUnknown    = QStringLiteral("Unknown");
+static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
 #ifdef ENABLE_SAMPLES
-static const auto ViewModeSample     = QStringLiteral("Sample");
+static const auto ViewModeSample     = QStringLiteral("SampleMode");
 #endif
-static const auto ViewModeEditing    = QStringLiteral("Editing");
-static const auto ViewModeSimulation = QStringLiteral("Simulation");
-static const auto ViewModeAnalysis   = QStringLiteral("Analysis");
+static const auto ViewModeEditing    = QStringLiteral("EditingMode");
+static const auto ViewModeSimulation = QStringLiteral("SimulationMode");
+static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
 
 //==============================================================================
 
@@ -43,16 +43,16 @@ QString ViewInterface::viewModeAsString(const ViewInterface::Mode &pMode)
 
     switch (pMode) {
 #ifdef ENABLE_SAMPLES
-    case ViewInterface::Sample:
+    case ViewInterface::SampleMode:
         return ViewModeSample;
 #endif
-    case ViewInterface::Editing:
+    case ViewInterface::EditingMode:
         return ViewModeEditing;
-    case ViewInterface::Simulation:
+    case ViewInterface::SimulationMode:
         return ViewModeSimulation;
-    case ViewInterface::Analysis:
+    case ViewInterface::AnalysisMode:
         return ViewModeAnalysis;
-    default:   // ViewInterface::Unknown
+    default:   // ViewInterface::UnknownMode
         return ViewModeUnknown;
     }
 }
@@ -65,18 +65,18 @@ ViewInterface::Mode ViewInterface::viewModeFromString(const QString &pMode)
 
 #ifdef ENABLE_SAMPLES
     if (!pMode.compare(ViewModeSample))
-        return ViewInterface::Sample;
+        return ViewInterface::SampleMode;
     else if (!pMode.compare(ViewModeEditing))
 #else
     if (!pMode.compare(ViewModeEditing))
 #endif
-        return ViewInterface::Editing;
+        return ViewInterface::EditingMode;
     else if (!pMode.compare(ViewModeSimulation))
-        return ViewInterface::Simulation;
+        return ViewInterface::SimulationMode;
     else if (!pMode.compare(ViewModeAnalysis))
-        return ViewInterface::Analysis;
+        return ViewInterface::AnalysisMode;
     else
-        return ViewInterface::Unknown;
+        return ViewInterface::UnknownMode;
 }
 
 //==============================================================================
