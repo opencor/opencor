@@ -85,7 +85,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
+    mFullyLoaded(false),
     mShuttingDown(false),
+    mFileNamesOrOpencorUrls(QStringList()),
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -296,6 +298,20 @@ showEnableAction(mGui->actionPreferences, false);
     // (re)start in full screen mode
 
     mGui->actionFullScreen->setChecked(isFullScreen());
+
+    // We are done, so open/handle any file / OpenCOR URL there may be
+    // Note: the way we open/handle those files / OpenCOR URLs ensures that we
+    //       can still receive files / OpenCOR URLs to open/handle while we
+    //       start opening/handling those that we have in stock, and this in the
+    //       correct order...
+
+    while (!mFileNamesOrOpencorUrls.isEmpty()) {
+        openFileOrHandleUrl(mFileNamesOrOpencorUrls.first(), true);
+
+        mFileNamesOrOpencorUrls.removeFirst();
+    }
+
+    mFullyLoaded = true;
 }
 
 //==============================================================================
@@ -998,17 +1014,31 @@ void MainWindow::handleArguments(const QString &pArguments)
 
 //==============================================================================
 
-void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl)
+void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
+                                     const bool &ForceOpeningOrHandling)
 {
-    // We have received a request to open a file or to handle an OpenCOR URL, so
-    // check which one it is and do it
+    // Make sure that we are fully loaded
+    // Note: indeed, if we are not then a file will still be opened, but not be
+    //       selected, or a URL may be handled, but having OpenCOR to keep
+    //       loading itself may mess things up (e.g. OpenCOR is not started and
+    //       it was previously in Simulation mode, from there an OpenCOR URL to
+    //       select the Editing mode is clicked, resuling in OpenCOR starting
+    //       up, selecting the Editing mode, but then the Simulation mode will
+    //       effectively be active even though not selected)...
 
-    QUrl url = pFileNameOrOpencorUrl;
+    if (!ForceOpeningOrHandling && !mFullyLoaded) {
+        mFileNamesOrOpencorUrls << pFileNameOrOpencorUrl;
+    } else {
+        // We have received a request to open a file or to handle an OpenCOR URL, so
+        // check which one it is and do it
 
-    if (!url.scheme().compare("opencor"))
-        handleUrl(url);
-    else
-        handleArguments(pFileNameOrOpencorUrl);
+        QUrl url = pFileNameOrOpencorUrl;
+
+        if (!url.scheme().compare("opencor"))
+            handleUrl(url);
+        else
+            handleArguments(pFileNameOrOpencorUrl);
+    }
 }
 
 //==============================================================================

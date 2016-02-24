@@ -85,7 +85,10 @@ private:
 
     QString mApplicationDate;
 
+    bool mFullyLoaded;
     bool mShuttingDown;
+
+    QStringList mFileNamesOrOpencorUrls;
 
     QSettings *mSettings;
 
@@ -133,7 +136,8 @@ private:
     void showEnableActions(const QList<QAction *> &pActions);
 
 private Q_SLOTS:
-    void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
+    void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
+                             const bool &ForceOpeningOrHandling = false);
     void handleMessage(const QString &pMessage);
 
     void on_actionFullScreen_triggered();
