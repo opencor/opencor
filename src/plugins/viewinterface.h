@@ -37,13 +37,13 @@ class ViewInterface
 {
 public:
     enum Mode {
-        Unknown,
+        UnknownMode,
 #ifdef ENABLE_SAMPLES
-        Sample,
+        SampleMode,
 #endif
-        Editing,
-        Simulation,
-        Analysis
+        EditingMode,
+        SimulationMode,
+        AnalysisMode
     };
 
 #define INTERFACE_DEFINITION
