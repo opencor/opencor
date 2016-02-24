@@ -58,7 +58,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 SingleCellViewPlugin::SingleCellViewPlugin() :
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(DataStoreInterfaces()),
-    mCellmlEditingViewPlugins(Plugins()),
+    mCellmlEditingViewInterfaces(ViewInterfaces()),
     mSedmlFileTypes(FileTypes()),
     mCombineFileTypes(FileTypes())
 {
@@ -217,7 +217,7 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (    viewInterface
             && (viewInterface->viewMode() == ViewInterface::EditingMode)
             &&  viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType)) {
-            mCellmlEditingViewPlugins << plugin;
+            mCellmlEditingViewInterfaces << viewInterface;
         }
 
         // File types supported by the SEDMLSupport and COMBINESupport plugins
@@ -392,11 +392,11 @@ DataStoreInterfaces SingleCellViewPlugin::dataStoreInterfaces() const
 
 //==============================================================================
 
-Plugins SingleCellViewPlugin::cellmlEditingViewPlugins() const
+ViewInterfaces SingleCellViewPlugin::cellmlEditingViewInterfaces() const
 {
-    // Return our CellML editing view plugins
+    // Return our CellML editing view interfaces
 
-    return mCellmlEditingViewPlugins;
+    return mCellmlEditingViewInterfaces;
 }
 
 //==============================================================================
