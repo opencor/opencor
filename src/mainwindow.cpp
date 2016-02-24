@@ -1029,8 +1029,8 @@ void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
     if (!ForceOpeningOrHandling && !mFullyLoaded) {
         mFileNamesOrOpencorUrls << pFileNameOrOpencorUrl;
     } else {
-        // We have received a request to open a file or to handle an OpenCOR URL, so
-        // check which one it is and do it
+        // We have received a request to open a file or to handle an OpenCOR
+        // URL, so check which one it is and do it
 
         QUrl url = pFileNameOrOpencorUrl;
 
