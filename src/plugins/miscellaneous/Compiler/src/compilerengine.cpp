@@ -170,7 +170,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     //       some functions (e.g. __exp10()). So, if the given code needs one of
     //       those functions, then OpenCOR will crash if run on an 'old' version
     //       of OS X. So, to avoid this issue, we set the target triple
-    //       ourselves, based on the system on which OpenCOR is being used...
+    //       ourselves, based on the system on which OpenCOR is to be used...
 
     std::string targetTriple;
 
