@@ -116,11 +116,11 @@ bool CompilerEngine::compileCode(const QString &pCode)
     std::string targetTriple;
 
 #if defined(Q_OS_WIN)
-    targetTriple = (sizeof(void *) == 4)?"i686-pc-windows-msvc-elf":"x86_64-pc-windows-msvc-elf";
+    targetTriple = "x86_64-pc-windows-msvc-elf";
     // Note: MCJIT currently works only through the ELF object format, hence we
     //       are appending "-elf"...
 #elif defined(Q_OS_LINUX)
-    targetTriple = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
+    targetTriple = "x86_64-pc-linux-gnu";
 #elif defined(Q_OS_MAC)
     targetTriple = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
 #else
