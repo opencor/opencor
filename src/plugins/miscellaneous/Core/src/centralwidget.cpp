@@ -1413,13 +1413,14 @@ void CentralWidget::selectMode(const QString &pModeName)
 
 void CentralWidget::selectView(const QString &pViewName)
 {
-    // Select the given mode
+    // Select the given view
 
-    TabBarWidget *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
+    CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()));
+    CentralWidgetViewPlugins *viewPlugins = mode->viewPlugins();
 
-    for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i) {
-        if (!viewTabs->tabText(i).compare(pViewName)) {
-            viewTabs->setCurrentIndex(i);
+    for (int i = 0, iMax = viewPlugins->count(); i < iMax; ++i) {
+        if (!viewPlugins->value(i)->name().compare(pViewName)) {
+            mode->viewTabs()->setCurrentIndex(i);
 
             break;
         }
