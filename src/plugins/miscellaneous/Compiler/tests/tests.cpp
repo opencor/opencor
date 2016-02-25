@@ -471,9 +471,7 @@ void Tests::greaterOrEqualThanOperatorTests()
 
 void Tests::absFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double fabs(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return fabs(pNb);\n"
                                          "}"));
@@ -492,9 +490,7 @@ void Tests::absFunctionTests()
 
 void Tests::expFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double exp(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return exp(pNb);\n"
                                          "}"));
@@ -509,9 +505,7 @@ void Tests::expFunctionTests()
 
 void Tests::logFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double log(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return log(pNb);\n"
                                          "}"));
@@ -526,9 +520,7 @@ void Tests::logFunctionTests()
 
 void Tests::ceilFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double ceil(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return ceil(pNb);\n"
                                          "}"));
@@ -547,9 +539,7 @@ void Tests::ceilFunctionTests()
 
 void Tests::floorFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double floor(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return floor(pNb);\n"
                                          "}"));
@@ -568,9 +558,7 @@ void Tests::floorFunctionTests()
 
 void Tests::factorialFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double factorial(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return factorial(pNb);\n"
                                          "}"));
@@ -585,9 +573,7 @@ void Tests::factorialFunctionTests()
 
 void Tests::sinFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double sin(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return sin(pNb);\n"
                                          "}"));
@@ -602,9 +588,7 @@ void Tests::sinFunctionTests()
 
 void Tests::sinhFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double sinh(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return sinh(pNb);\n"
                                          "}"));
@@ -619,9 +603,7 @@ void Tests::sinhFunctionTests()
 
 void Tests::asinFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double asin(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return asin(pNb);\n"
                                          "}"));
@@ -636,9 +618,7 @@ void Tests::asinFunctionTests()
 
 void Tests::asinhFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double asinh(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return asinh(pNb);\n"
                                          "}"));
@@ -653,9 +633,7 @@ void Tests::asinhFunctionTests()
 
 void Tests::cosFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double cos(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return cos(pNb);\n"
                                          "}"));
@@ -670,9 +648,7 @@ void Tests::cosFunctionTests()
 
 void Tests::coshFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double cosh(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return cosh(pNb);\n"
                                          "}"));
@@ -687,9 +663,7 @@ void Tests::coshFunctionTests()
 
 void Tests::acosFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double acos(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return acos(pNb);\n"
                                          "}"));
@@ -704,9 +678,7 @@ void Tests::acosFunctionTests()
 
 void Tests::acoshFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double acosh(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return acosh(pNb);\n"
                                          "}"));
@@ -721,9 +693,7 @@ void Tests::acoshFunctionTests()
 
 void Tests::tanFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double tan(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return tan(pNb);\n"
                                          "}"));
@@ -738,9 +708,7 @@ void Tests::tanFunctionTests()
 
 void Tests::tanhFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double tanh(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return tanh(pNb);\n"
                                          "}"));
@@ -755,9 +723,7 @@ void Tests::tanhFunctionTests()
 
 void Tests::atanFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double atan(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return atan(pNb);\n"
                                          "}"));
@@ -772,9 +738,7 @@ void Tests::atanFunctionTests()
 
 void Tests::atanhFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double atanh(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return atanh(pNb);\n"
                                          "}"));
@@ -789,9 +753,7 @@ void Tests::atanhFunctionTests()
 
 void Tests::secFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double sec(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return sec(pNb);\n"
                                          "}"));
@@ -806,9 +768,7 @@ void Tests::secFunctionTests()
 
 void Tests::sechFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double sech(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return sech(pNb);\n"
                                          "}"));
@@ -823,9 +783,7 @@ void Tests::sechFunctionTests()
 
 void Tests::asecFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double asec(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return asec(pNb);\n"
                                          "}"));
@@ -840,9 +798,7 @@ void Tests::asecFunctionTests()
 
 void Tests::asechFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double asech(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return asech(pNb);\n"
                                          "}"));
@@ -857,9 +813,7 @@ void Tests::asechFunctionTests()
 
 void Tests::cscFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double csc(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return csc(pNb);\n"
                                          "}"));
@@ -874,9 +828,7 @@ void Tests::cscFunctionTests()
 
 void Tests::cschFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double csch(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return csch(pNb);\n"
                                          "}"));
@@ -891,9 +843,7 @@ void Tests::cschFunctionTests()
 
 void Tests::acscFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double acsc(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return acsc(pNb);\n"
                                          "}"));
@@ -908,9 +858,7 @@ void Tests::acscFunctionTests()
 
 void Tests::acschFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double acsch(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return acsch(pNb);\n"
                                          "}"));
@@ -925,9 +873,7 @@ void Tests::acschFunctionTests()
 
 void Tests::cotFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double cot(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return cot(pNb);\n"
                                          "}"));
@@ -942,9 +888,7 @@ void Tests::cotFunctionTests()
 
 void Tests::cothFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double coth(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return coth(pNb);\n"
                                          "}"));
@@ -959,9 +903,7 @@ void Tests::cothFunctionTests()
 
 void Tests::acotFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double acot(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return acot(pNb);\n"
                                          "}"));
@@ -976,9 +918,7 @@ void Tests::acotFunctionTests()
 
 void Tests::acothFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double acoth(double);\n"
-                                         "\n"
-                                         "double function(double pNb)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
                                          "    return acoth(pNb);\n"
                                          "}"));
@@ -993,9 +933,7 @@ void Tests::acothFunctionTests()
 
 void Tests::powFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double pow(double, double);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
                                          "    return pow(pNb1, pNb2);\n"
                                          "}"));
@@ -1010,9 +948,7 @@ void Tests::powFunctionTests()
 
 void Tests::arbitraryLogFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double arbitrary_log(double, double);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
                                          "    return arbitrary_log(pNb1, pNb2);\n"
                                          "}"));
@@ -1027,9 +963,7 @@ void Tests::arbitraryLogFunctionTests()
 
 void Tests::minFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double multi_min(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
                                          "    return multi_min(2, pNb1, pNb2);\n"
                                          "}"));
@@ -1039,9 +973,7 @@ void Tests::minFunctionTests()
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              9282.0);
 
-    QVERIFY(mCompilerEngine->compileCode("extern double multi_min(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
                                          "    return multi_min(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
@@ -1056,9 +988,7 @@ void Tests::minFunctionTests()
 
 void Tests::maxFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double multi_max(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
                                          "    return multi_max(2, pNb1, pNb2);\n"
                                          "}"));
@@ -1068,9 +998,7 @@ void Tests::maxFunctionTests()
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              15015.0);
 
-    QVERIFY(mCompilerEngine->compileCode("extern double multi_max(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
                                          "    return multi_max(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
@@ -1085,9 +1013,7 @@ void Tests::maxFunctionTests()
 
 void Tests::gcdFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double gcd_multi(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
                                          "    return gcd_multi(2, pNb1, pNb2);\n"
                                          "}"));
@@ -1097,9 +1023,7 @@ void Tests::gcdFunctionTests()
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              273.0);
 
-    QVERIFY(mCompilerEngine->compileCode("extern double gcd_multi(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
                                          "    return gcd_multi(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
@@ -1114,9 +1038,7 @@ void Tests::gcdFunctionTests()
 
 void Tests::lcmFunctionTests()
 {
-    QVERIFY(mCompilerEngine->compileCode("extern double lcm_multi(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
                                          "    return lcm_multi(2, pNb1, pNb2);\n"
                                          "}"));
@@ -1126,9 +1048,7 @@ void Tests::lcmFunctionTests()
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              510510.0);
 
-    QVERIFY(mCompilerEngine->compileCode("extern double lcm_multi(int, ...);\n"
-                                         "\n"
-                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
                                          "    return lcm_multi(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
