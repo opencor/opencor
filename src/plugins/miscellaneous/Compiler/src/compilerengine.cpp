@@ -99,6 +99,65 @@ QString CompilerEngine::error() const
 
 bool CompilerEngine::compileCode(const QString &pCode)
 {
+    // Prepend all the external functions that may, or not, be needed to the
+    // given code
+    // Note: indeed, we cannot include header files since we don't (and don't
+    //       want in order to avoid complications) deploy them with OpenCOR. So,
+    //       instead, we must declare as external functions all the functions
+    //       that we would normally use through header files...
+
+    QString code =  "extern double fabs(double);\n"
+                    "\n"
+                    "extern double log(double);\n"
+                    "extern double exp(double);\n"
+                    "\n"
+                    "extern double floor(double);\n"
+                    "extern double ceil(double);\n"
+                    "\n"
+                    "extern double factorial(double);\n"
+                    "\n"
+                    "extern double sin(double);\n"
+                    "extern double sinh(double);\n"
+                    "extern double asin(double);\n"
+                    "extern double asinh(double);\n"
+                    "\n"
+                    "extern double cos(double);\n"
+                    "extern double cosh(double);\n"
+                    "extern double acos(double);\n"
+                    "extern double acosh(double);\n"
+                    "\n"
+                    "extern double tan(double);\n"
+                    "extern double tanh(double);\n"
+                    "extern double atan(double);\n"
+                    "extern double atanh(double);\n"
+                    "\n"
+                    "extern double sec(double);\n"
+                    "extern double sech(double);\n"
+                    "extern double asec(double);\n"
+                    "extern double asech(double);\n"
+                    "\n"
+                    "extern double csc(double);\n"
+                    "extern double csch(double);\n"
+                    "extern double acsc(double);\n"
+                    "extern double acsch(double);\n"
+                    "\n"
+                    "extern double cot(double);\n"
+                    "extern double coth(double);\n"
+                    "extern double acot(double);\n"
+                    "extern double acoth(double);\n"
+                    "\n"
+                    "extern double arbitrary_log(double, double);\n"
+                    "\n"
+                    "extern double pow(double, double);\n"
+                    "\n"
+                    "extern double multi_min(int, ...);\n"
+                    "extern double multi_max(int, ...);\n"
+                    "\n"
+                    "extern double gcd_multi(int, ...);\n"
+                    "extern double lcm_multi(int, ...);\n"
+                    "\n"
+                   +pCode;
+
     // Reset our compiler engine
 
     reset();
@@ -191,7 +250,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Map our dummy file to a memory buffer
 
-    QByteArray codeByteArray = pCode.toUtf8();
+    QByteArray codeByteArray = code.toUtf8();
 
     compilerInvocation->getPreprocessorOpts().addRemappedFile(dummyFileName, llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
 
