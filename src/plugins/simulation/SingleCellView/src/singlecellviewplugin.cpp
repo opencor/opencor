@@ -216,7 +216,8 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
         if (    viewInterface
             && (viewInterface->viewMode() == ViewInterface::EditingMode)
-            &&  viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType)) {
+            && (   viewInterface->viewMimeTypes().isEmpty()
+                || viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType))) {
             mCellmlEditingViewPlugins << plugin;
         }
 
