@@ -133,7 +133,7 @@ void CSVDataStorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CSVDataStorePlugin::handleAction(const QUrl &pUrl)
+void CSVDataStorePlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

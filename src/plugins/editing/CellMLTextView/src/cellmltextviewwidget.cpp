@@ -226,9 +226,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // text version of the given CellML file
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QString fileContents;
+        QByteArray fileContents;
 
-        Core::readTextFromFile(pFileName, fileContents);
+        Core::readFileContentsFromFile(pFileName, fileContents);
 
         bool fileIsEmpty = fileContents.trimmed().isEmpty();
         bool successfulConversion = fileIsEmpty?true:mConverter.execute(fileContents);
@@ -297,7 +297,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                                                                CellMLSupport::CellmlFile::version(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
-                                            Core::sha1(editingWidget->editor()->contents()),
+                                            Core::sha1(editingWidget->editor()->contents().toUtf8()),
                                             successfulConversion,
                                             cellmlVersion,
                                             fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes());
@@ -425,9 +425,7 @@ void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
         bool update = mEditingWidget == data->editingWidget();
 
         finalize(pFileName);
-
-        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
-            initialize(pFileName, update);
+        initialize(pFileName, update);
     }
 }
 
@@ -476,7 +474,7 @@ bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) co
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
-    return data?Core::sha1(data->editingWidget()->editor()->contents()).compare(data->sha1()):false;
+    return data?Core::sha1(data->editingWidget()->editor()->contents().toUtf8()).compare(data->sha1()):false;
 }
 
 //==============================================================================
@@ -521,11 +519,11 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             // Serialise our DOM document
 
-            if (Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument))) {
+            if (Core::writeFileContentsToFile(pNewFileName, Core::serialiseDomDocument(domDocument))) {
                 // We could serialise our DOM document, so update our SHA-1
                 // value
 
-                data->setSha1(Core::sha1(data->editingWidget()->editor()->contents()));
+                data->setSha1(Core::sha1(data->editingWidget()->editor()->contents().toUtf8()));
 
                 mData.insert(pOldFileName, data);
 
@@ -570,7 +568,7 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
         editor->cursorPosition(cursorLine, cursorColumn);
 
-        mConverter.execute(qDomDocumentToString(mParser.domDocument()));
+        mConverter.execute(Core::serialiseDomDocument(mParser.domDocument()));
 
         editor->setContents(mConverter.output(), true);
         editor->setCursorPosition(cursorLine, cursorColumn);
@@ -1055,7 +1053,7 @@ void CellmlTextViewWidget::updateViewer()
             // previous one
 
             QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"
-                                            +Core::cleanContentMathml(qDomDocumentToString(mParser.domDocument()))
+                                            +Core::cleanContentMathml(Core::serialiseDomDocument(mParser.domDocument()))
                                             +"</math>";
 
             if (contentMathmlEquation.compare(mContentMathmlEquation)) {

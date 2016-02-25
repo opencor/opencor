@@ -53,7 +53,7 @@ class SingleCellViewSimulationWorker : public QObject
 
 public:
     explicit SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
-                                            SingleCellViewSimulationWorker **pSelf);
+                                            SingleCellViewSimulationWorker *&pSelf);
 
     bool isRunning() const;
     bool isPaused() const;
@@ -85,7 +85,7 @@ private:
 
     bool mError;
 
-    SingleCellViewSimulationWorker **mSelf;
+    SingleCellViewSimulationWorker *&mSelf;
 
 Q_SIGNALS:
     void running(const bool &pIsResuming);

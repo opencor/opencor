@@ -1,18 +1,18 @@
-PROJECT(RawViewPlugin)
+PROJECT(RawTextViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(RawView
+ADD_PLUGIN(RawTextView
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../viewinterface.cpp
 
-        src/rawviewplugin.cpp
-        src/rawviewwidget.cpp
+        src/rawtextviewplugin.cpp
+        src/rawtextviewwidget.cpp
     HEADERS_MOC
-        src/rawviewplugin.h
-        src/rawviewwidget.h
+        src/rawtextviewplugin.h
+        src/rawtextviewwidget.h
     INCLUDE_DIRS
         src
     PLUGINS

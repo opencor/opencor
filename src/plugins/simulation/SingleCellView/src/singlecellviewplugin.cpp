@@ -21,7 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "combinefilemanager.h"
+#include "combinesupportplugin.h"
 #include "coreguiutils.h"
+#include "sedmlfilemanager.h"
+#include "sedmlsupportplugin.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
 
@@ -54,6 +58,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 SingleCellViewPlugin::SingleCellViewPlugin() :
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(DataStoreInterfaces()),
+    mCellmlEditingViewInterfaces(ViewInterfaces()),
     mSedmlFileTypes(FileTypes()),
     mCombineFileTypes(FileTypes())
 {
@@ -61,6 +66,15 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
 
 //==============================================================================
 // File handling interface
+//==============================================================================
+
+bool SingleCellViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    // Check whether the given file is an indirect remote file
+
+    return mViewWidget->isIndirectRemoteFile(pFileName);
+}
+
 //==============================================================================
 
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
@@ -196,6 +210,16 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (dataStoreInterface)
             mDataStoreInterfaces << dataStoreInterface;
 
+        // Look for a CellML capable editing view
+
+        ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
+
+        if (    viewInterface
+            && (viewInterface->viewMode() == ViewInterface::Editing)
+            &&  viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType)) {
+            mCellmlEditingViewInterfaces << viewInterface;
+        }
+
         // File types supported by the SEDMLSupport and COMBINESupport plugins
 
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
@@ -233,7 +257,7 @@ void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
+void SingleCellViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -257,7 +281,9 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType;
+    return QStringList() << CellMLSupport::CellmlMimeType
+                         << SEDMLSupport::SedmlMimeType
+                         << COMBINESupport::CombineMimeType;
 }
 
 //==============================================================================
@@ -287,12 +313,17 @@ bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
 
 QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML file, a SED-ML file or a
+    // COMBINE archive
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (   !CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)
+        && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
+        && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)) {
         return 0;
+    }
 
-    // Update and return our simulation view widget using the given CellML file
+    // Update and return our simulation view widget using the given CellML file,
+    // SED-ML file or COMBINE archive
     // Note: we temporarily disable updates for our simulation view widget, so
     //       as to avoid any risk of known/unknown/potential flickering...
 
@@ -357,6 +388,15 @@ DataStoreInterfaces SingleCellViewPlugin::dataStoreInterfaces() const
     // Return our data store interfaces
 
     return mDataStoreInterfaces;
+}
+
+//==============================================================================
+
+ViewInterfaces SingleCellViewPlugin::cellmlEditingViewInterfaces() const
+{
+    // Return our CellML editing view interfaces
+
+    return mCellmlEditingViewInterfaces;
 }
 
 //==============================================================================

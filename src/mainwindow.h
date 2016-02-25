@@ -46,12 +46,6 @@ class QSettings;
 
 //==============================================================================
 
-namespace SharedTools {
-    class QtSingleApplication;
-}   // namespace SharedTools
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -132,8 +126,6 @@ private:
 
     void updateViewWindowsMenu(QAction *pAction);
 
-    void handleAction(const QUrl &pUrl);
-
     void restart(const bool &pSaveSettings) const;
 
     void showEnableActions(const QList<QAction *> &pActions);
@@ -161,6 +153,8 @@ private Q_SLOTS:
     void updateDockWidgetsVisibility();
 
     void resetAll();
+
+    void handleUrl(const QUrl &pUrl);
 };
 
 //==============================================================================

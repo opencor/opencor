@@ -122,7 +122,7 @@ QStringList runCli(const QStringList pArguments)
     static const QString buildDir = OpenCOR::fileContents(":build_directory").first();
 
 #ifdef Q_OS_WIN
-    QString crtPath = QDir::currentPath();
+    QString origPath = QDir::currentPath();
 
     QDir::setCurrent(buildDir+"/bin");
 #endif
@@ -156,7 +156,7 @@ QStringList runCli(const QStringList pArguments)
     // Go back to our original directory
 
 #ifdef Q_OS_WIN
-    QDir::setCurrent(crtPath);
+    QDir::setCurrent(origPath);
 #endif
 
     return output.remove("\r").split("\n");

@@ -10,10 +10,10 @@ BEGIN
         BLOCK "040904E4"
         BEGIN
             VALUE "FileDescription", "${PROJECT_DESCRIPTION}"
-            VALUE "ProductName", "${PROJECT_NAME}"
+            VALUE "ProductName", "${CMAKE_PROJECT_NAME}"
             VALUE "ProductVersion", "${PRODUCT_VERSION}"
             VALUE "LegalCopyright", "Copyright 2011-${YEAR}"
-            VALUE "OriginalFilename", "${PROJECT_NAME}.exe"
+            VALUE "OriginalFilename", "${CMAKE_PROJECT_NAME}.exe"
         END
     END
     BLOCK "VarFileInfo"

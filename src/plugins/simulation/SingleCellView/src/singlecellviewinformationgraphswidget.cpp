@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "filemanager.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewplugin.h"
@@ -46,19 +47,19 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                                             SingleCellViewSimulationWidget *pSimulationWidget,
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
-    mViewWidget(pPlugin->viewWidget()),
+    mPlugin(pPlugin),
+    mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mFileName(QString()),
-    mCanEmitGraphsUpdatedSignal(true),
     mHorizontalScrollBarValue(0)
 {
     // Set up the GUI
@@ -112,29 +113,21 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
-                                                       SingleCellViewSimulation *pSimulation)
+void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the file name, runtime and simulation
-
-    mFileName = pFileName;
-
     // Populate our parameters context menu
 
     populateParametersContextMenu(pSimulation->runtime());
 
-    // Update the information about our graphs properties and this for all our
-    // property editors
+    // Update our graphs information
 
-    updateAllGraphsInfo(true);
+    updateAllGraphsInfo();
 }
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
+void SingleCellViewInformationGraphsWidget::finalize()
 {
-    Q_UNUSED(pFileName);
-
     // Clear our parameters context menu
 
     mParametersContextMenu->clear();
@@ -142,42 +135,8 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // Update our graphs information (which is always to be done)
-
-    updateAllGraphsInfo(true);
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
-                                                        const QString &pNewFileName)
-{
-    // Replace the old file name with the new one in our various trackers
-
-    if (!mFileName.compare(pOldFileName))
-        mFileName = pNewFileName;
-
-    updateAllGraphsInfo(true);
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::fileClosed(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // Update the information about our graphs properties
-
-    updateAllGraphsInfo(true);
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                                       const bool &pActive)
 {
     // Retrieve the property editor for the given file name or create one, if
     // none exists
@@ -228,19 +187,21 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
     mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
 
-    // Set our property editor's columns' width
+    // Make sure that our 'new' property editor's columns' width is the same as
+    // that of our 'old' property editor
 
     if (oldPropertyEditor) {
         for (int i = 0, iMax = oldPropertyEditor->header()->count(); i < iMax; ++i)
             mPropertyEditor->setColumnWidth(i, oldPropertyEditor->columnWidth(i));
     }
 
-    // Set our retrieved property editor as our current widget
+    // Set our retrieved property editor as our current widget, but only if the
+    // corresponding graph panel has been been made active
 
-    setCurrentWidget(mPropertyEditor);
+    if (pActive)
+        setCurrentWidget(mPropertyEditor);
 
-    // Update the information about our graphs properties and this for all our
-    // property editors
+    // Update our graphs information
     // Note: this is in case the user changed the locale and then switched to a
     //       different graph panel...
 
@@ -259,23 +220,23 @@ void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWid
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                      SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pPlot);
-
     // Make sure that we have a property editor
 
-    if (!mPropertyEditor)
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+
+    if (!propertyEditor)
         return;
 
     // Prevent ourselves from being updated (to avoid flickering)
 
-    mPropertyEditor->setUpdatesEnabled(false);
+    propertyEditor->setUpdatesEnabled(false);
 
     // Create a section for our newly added graph
 
-    Core::Property *graphProperty = mPropertyEditor->addSectionProperty();
+    Core::Property *graphProperty = propertyEditor->addSectionProperty();
 
     graphProperty->setCheckable(true);
     graphProperty->setChecked(true);
@@ -293,18 +254,18 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     //       ourselves from it before adding the properties (and then reconnect
     //       ourselves to it once we are done)...
 
-    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+    disconnect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphChanged(Core::Property *)));
 
-    mPropertyEditor->addListProperty(graphProperty);
+    propertyEditor->addListProperty(graphProperty);
 
-    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
-    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
+    Core::Property *xProperty = propertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
+    Core::Property *yProperty = propertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
 
-    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+    connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
 
     // Update the information about our new graph
@@ -313,28 +274,24 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
     // Allow ourselves to be updated again
 
-    mPropertyEditor->setUpdatesEnabled(true);
-
-    // Make sure that our property editor is our current widget
-
-    setCurrentWidget(mPropertyEditor);
+    propertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                          const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
-    Q_UNUSED(pPlot);
-
     // Make sure that we have a property editor
 
-    if (!mPropertyEditor)
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+
+    if (!propertyEditor)
         return;
 
     // Prevent ourselves from being updated (to avoid flickering)
 
-    mPropertyEditor->setUpdatesEnabled(false);
+    propertyEditor->setUpdatesEnabled(false);
 
     // Remove the graph properties associated with the given graphs, as well as
     // their trace
@@ -342,7 +299,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPane
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
         Core::Property *property = mGraphProperties.value(graph);
 
-        mPropertyEditor->removeProperty(property);
+        propertyEditor->removeProperty(property);
 
         mGraphs.remove(property);
         mGraphProperties.remove(graph);
@@ -350,7 +307,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPane
 
     // Allow ourselves to be updated again
 
-    mPropertyEditor->setUpdatesEnabled(true);
+    propertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -438,11 +395,11 @@ void SingleCellViewInformationGraphsWidget::on_actionUnselectAllGraphs_triggered
 
 void SingleCellViewInformationGraphsWidget::updateGui()
 {
-    // Update the information about our graphs properties and this for all our
-    // property editors
-    // Note: this is in case we created a graph for a file that has not yet been
-    //       selected, in which case the graph will initially be invalid, but it
-    //       should become valid after we have switched to that file and back...
+    // Update our graphs information
+    // Note: this is useful, for example, if we created a graph for a file that
+    //       has not yet been selected, in which case the graph will initially
+    //       be invalid, but it should become valid after we have switched to
+    //       that file and back...
 
     updateAllGraphsInfo();
 }
@@ -513,7 +470,7 @@ int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
 {
     // Return the width of the given column
 
-    return mPropertyEditor?mPropertyEditor->columnWidth(pIndex):0;
+    return mPropertyEditor->columnWidth(pIndex);
 }
 
 //==============================================================================
@@ -523,8 +480,7 @@ void SingleCellViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
 {
     // Return the width of the given column
 
-    if (mPropertyEditor)
-        mPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
+    mPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
 }
 
 //==============================================================================
@@ -560,7 +516,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     mGui->actionSelectAllGraphs->setEnabled(canSelectAllGraphs);
     mGui->actionUnselectAllGraphs->setEnabled(canUnselectAllGraphs);
 
-    // Show the context menu, or not, depending ont the type of property we are
+    // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any
 
     if (   !crtProperty
@@ -766,7 +722,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
 
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
-    QString fileName = mFileName;
+    QString fileName = mSimulationWidget->fileName();
     QPen oldPen = graph->pen();
     QPen newPen = oldPen;
 
@@ -791,7 +747,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assignment...
 
     bool graphOk = true;
-    CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
+    CellMLSupport::CellmlFileRuntime *runtime = mPlugin->viewWidget()->runtime(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
@@ -820,10 +776,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     // Let people know if we consider that the graph has been updated
 
-    if (   mCanEmitGraphsUpdatedSignal
-        && (   (oldParameterX != graph->parameterX())
-            || (oldParameterY != graph->parameterY())
-            || (oldPen != newPen))) {
+    if (   (oldParameterX != graph->parameterX())
+        || (oldParameterY != graph->parameterY())
+        || (oldPen != newPen)) {
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
                            SingleCellViewGraphPanelPlotGraphs() << graph);
     }
@@ -852,7 +807,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
     } else {
         // Either the model, X or Y parameter property of the graph has changed,
         // so update its information
-        // Note: updateGraphInfo() will emit the graphUpdated() signal, if
+        // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
         //       needed...
 
         updateGraphInfo(pProperty->parentProperty(),
@@ -862,8 +817,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSectionProperty,
-                                                             const bool &pGlobalGraphsUpdate)
+void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSectionProperty)
 {
     // Make sure that we have a property editor
 
@@ -892,25 +846,19 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mViewWidget->fileNames())
-        modelListValues << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
+    foreach (const QString &fileName, mPlugin->viewWidget()->fileNames()) {
+        Core::File *file = Core::FileManager::instance()->file(fileName);
+        QString fileNameOrUrl = file->isLocal()?fileName:file->url();
+
+        modelListValues <<  QFileInfo(fileNameOrUrl).fileName()
+                           +PropertySeparator
+                           +fileNameOrUrl;
+    }
 
     modelListValues.sort();
 
     modelListValues.prepend(QString());
     modelListValues.prepend(tr("Current"));
-
-    // Prevent updateGraphInfo(), which is going to be called when updating the
-    // information of our graph properies below, from emitting the
-    // graphsUpdated() signal, in case we came here with the intention of
-    // updating several graphs, thus making it faster to update them
-    // Note: indeed, say that you have several graphs, each with several data
-    //       points, and then switch to another file and back, then it each
-    //       graph will hidden and reshown individually, which can be slow. So,
-    //       instead we 'manually' let people know that some graphs have been
-    //       updated...
-
-    mCanEmitGraphsUpdatedSignal = !pGlobalGraphsUpdate;
 
     // Go through our graph properties and update (incl. retranslate) their
     // information
@@ -945,7 +893,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
             if (oldModelValue.contains(PropertySeparator)) {
                 // The current file got renamed
 
-                newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
+                newModelValue = QFileInfo(mSimulationWidget->fileName()).fileName()+PropertySeparator+mSimulationWidget->fileName();
             } else {
                 // The value of the model property was "Current" (and the locale
                 // got changed)
@@ -963,32 +911,11 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         //       associated with setValue() to be emitted (so that
         //       updateGraphInfo() can then be called)...
     }
-
-    // Reset mCanEmitGraphsUpdatedSignal and let people know that we have
-    // updated some graphs, if needed
-
-    if (pGlobalGraphsUpdate) {
-        // Re-allow updateGraphInfo() to emit the graphsUpdated() signal
-
-        mCanEmitGraphsUpdatedSignal = true;
-
-        // Let people know about some graphs having been updaated
-
-        SingleCellViewGraphPanelPlotGraphs graphs = SingleCellViewGraphPanelPlotGraphs();
-
-        foreach (Core::Property *graphProperty, graphProperties)
-            graphs << mGraphs.value(graphProperty);
-
-        if (graphs.count()) {
-            emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graphs.first()->plot()),
-                               graphs);
-        }
-    }
 }
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateAllGraphsInfo(const bool &pGlobalGraphsUpdate)
+void SingleCellViewInformationGraphsWidget::updateAllGraphsInfo()
 {
     // Update the information about our graphs properties and this for all our
     // property editors, so first keep track of our active property editor
@@ -1001,7 +928,7 @@ void SingleCellViewInformationGraphsWidget::updateAllGraphsInfo(const bool &pGlo
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors) {
         mPropertyEditor = propertyEditor;
 
-        updateGraphsInfo(0, pGlobalGraphsUpdate);
+        updateGraphsInfo();
     }
 
     // Retrieve our originally active property editor

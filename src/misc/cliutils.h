@@ -50,16 +50,16 @@ static const auto HomePageUrl = QStringLiteral("http://www.opencor.ws/");
 
 //==============================================================================
 // Note: both cliutils.h and corecliutils.h must specifically define
-//       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
+//       SynchronousFileDownloader. To have it in cliutils.h.inl is NOT good
 //       enough since the MOC won't pick it up...
 
-class SynchronousTextFileDownloader : public QObject
+class SynchronousFileDownloader : public QObject
 {
     Q_OBJECT
 
 public:
-    bool readTextFromUrl(const QString &pUrl, QString &pText,
-                         QString *pErrorMessage) const;
+    bool download(const QString &pUrl, QByteArray &pContents,
+                  QString *pErrorMessage) const;
 
 private Q_SLOTS:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,

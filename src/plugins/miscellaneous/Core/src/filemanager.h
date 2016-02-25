@@ -110,7 +110,7 @@ public:
 
     bool isDifferent(const QString &pFileName) const;
     bool isDifferent(const QString &pFileName,
-                     const QString &pFileContents) const;
+                     const QByteArray &pFileContents) const;
 
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
@@ -131,7 +131,7 @@ public:
     void reload(const QString &pFileName);
 
     Status create(const QString &pUrl = QString(),
-                  const QString &pContents = QString());
+                  const QByteArray &pContents = QByteArray());
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -151,7 +151,7 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool newFile(const QString &pContents, QString &pFileName);
+    bool newFile(QString &pFileName, const QByteArray &pContents = QByteArray());
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);

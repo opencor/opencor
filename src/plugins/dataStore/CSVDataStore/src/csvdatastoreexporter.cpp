@@ -51,7 +51,7 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
         DataStore::DataStoreVariable *voi = pDataStore->voi();
         DataStore::DataStoreVariables variables = pDataStore->variables();
 
-        QString data = QString();
+        QByteArray data = QByteArray();
 
         data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
                            voi->unit());
@@ -89,7 +89,7 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
 
         // The data is ready, so write it to the file
 
-        Core::writeTextToFile(fileName, data);
+        Core::writeFileContentsToFile(fileName, data);
     }
 }
 

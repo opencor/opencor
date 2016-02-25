@@ -188,7 +188,7 @@ void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
+void CellMLSupportPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -209,7 +209,7 @@ void CellMLSupportPlugin::newCellmlFile()
 #endif
     fileManagerInstance->create(QString(),
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                                "<model xmlns=\"http://www.cellml.org/cellml/"+Cellml_Latest+"#\" name=\"my_model\">\n"
+                                "<model xmlns=\"http://www.cellml.org/cellml/"+QString(Cellml_Latest).toUtf8()+"#\" name=\"my_model\">\n"
                                 "    <!-- Your code goes here-->\n"
                                 "</model>\n");
 

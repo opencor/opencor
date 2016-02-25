@@ -239,10 +239,6 @@ QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SingleCellVi
 
 void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
-
     // Populate our property editor with the parameters
 
     QString componentHierarchy = QString();
@@ -371,10 +367,6 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
     // Expand all our properties
 
     expandAll();
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
 }
 
 //==============================================================================

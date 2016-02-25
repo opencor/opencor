@@ -122,7 +122,7 @@ void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::handleAction(const QUrl &pUrl)
+void FileOrganiserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

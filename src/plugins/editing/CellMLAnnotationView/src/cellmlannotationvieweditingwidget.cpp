@@ -55,12 +55,21 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 {
     // Retrieve some SVG diagrams
 
-    Core::readTextFromFile(":/modelQualifier.svg", mModelQualifierSvg);
-    Core::readTextFromFile(":/biologyQualifier.svg", mBiologyQualifierSvg);
+    QByteArray fileContents;
+
+    Core::readFileContentsFromFile(":/modelQualifier.svg", fileContents);
+
+    mModelQualifierSvg = fileContents;
+
+    Core::readFileContentsFromFile(":/biologyQualifier.svg", fileContents);
+
+    mBiologyQualifierSvg = fileContents;
 
     // Retrieve our output template
 
-    Core::readTextFromFile(":/qualifierInformation.html", mQualifierInformationTemplate);
+    Core::readFileContentsFromFile(":/qualifierInformation.html", fileContents);
+
+    mQualifierInformationTemplate = fileContents;
 
     // Retrieve and load, in case it's necessary, the requested CellML file
 

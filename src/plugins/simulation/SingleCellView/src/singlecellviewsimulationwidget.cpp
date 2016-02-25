@@ -19,13 +19,10 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation widget
 //==============================================================================
 
-#include "cellmlfilemanager.h"
-#include "combinearchive.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
-#include "sedmlfile.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewgraphpanelswidget.h"
@@ -35,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewplugin.h"
+#include "singlecellviewsimulation.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 #include "toolbarwidget.h"
@@ -46,9 +44,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDir>
-#include <QFileInfo>
 #include <QLabel>
 #include <QMainWindow>
 #include <QMenu>
@@ -65,8 +63,21 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sbmlapidisablewarnings.h"
+    #include "sbml/math/FormulaParser.h"
+#include "sbmlapienablewarnings.h"
+
+//==============================================================================
+
 #include "sedmlapidisablewarnings.h"
-    #include "sedml/SedTypes.h"
+    #include "sedml/SedAlgorithm.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedOneStep.h"
+    #include "sedml/SedPlot2D.h"
+    #include "sedml/SedRepeatedTask.h"
+    #include "sedml/SedSimulation.h"
+    #include "sedml/SedUniformTimeCourse.h"
+    #include "sedml/SedVectorRange.h"
 #include "sedmlapienablewarnings.h"
 
 //==============================================================================
@@ -82,24 +93,24 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     Widget(pParent),
     mGui(new Ui::SingleCellViewSimulationWidget),
     mPlugin(pPlugin),
-    mViewWidget(pPlugin->viewWidget()),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
+    mCellmlEditingViewInterfaces(QMap<QAction *, ViewInterface *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
-    mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
-    mNeedUpdatePlots(false)
+    mNeedUpdatePlots(false),
+    mOldDataSizes(QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong>())
 {
     // Set up and customsise the GUI
 
     mGui->setupUi(this);
 
-    mGui->actionDevelopmentMode->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mFileName));
+    mGui->actionDevelopmentMode->setEnabled(Core::FileManager::instance()->isReadableAndWritable(pFileName));
 
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
@@ -144,6 +155,24 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
+    QToolButton *cellmlOpenToolButton = new QToolButton(mToolBarWidget);
+    QMenu *cellmlOpenDropDownMenu = new QMenu(cellmlOpenToolButton);
+
+    cellmlOpenToolButton->setDefaultAction(mGui->actionCellmlOpen);
+    cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
+    cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    foreach (ViewInterface *cellmlEditingViewInterface, pPlugin->cellmlEditingViewInterfaces()) {
+        QAction *action = new QAction(Core::mainWindow());
+
+        cellmlOpenDropDownMenu->addAction(action);
+
+        mCellmlEditingViewInterfaces.insert(action, cellmlEditingViewInterface);
+
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(openCellmlFile()));
+    }
+
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
     QMenu *sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
 
@@ -178,6 +207,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addWidget(cellmlOpenToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
@@ -226,7 +257,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our contents widget
 
-    mContentsWidget = new SingleCellViewContentsWidget(pPlugin, this);
+    mContentsWidget = new SingleCellViewContentsWidget(pPlugin, this, this);
 
     mContentsWidget->setObjectName("Contents");
 
@@ -250,13 +281,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
-            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)),
+            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *, const bool &)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
-            this, SLOT(graphPanelAdded(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)),
+            this, SLOT(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             this, SLOT(graphPanelRemoved(SingleCellViewGraphPanelWidget *)));
 
@@ -272,15 +303,15 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
+            graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            this, SLOT(graphAdded(SingleCellViewGraphPanelPlotWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SLOT(graphsRemoved(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
+            this, SLOT(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SLOT(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -350,9 +381,15 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     setFocusProxy(mContentsWidget);
 
-    // Create our simulation object and a few connections for it
+    // Create our simulation object and a few connections for it, after having
+    // retrieved our file details
 
-    mSimulation = new SingleCellViewSimulation(CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime(),
+    mPlugin->viewWidget()->retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile,
+                                               mCombineArchive, mFileType,
+                                               mSedmlFileIssues,
+                                               mCombineArchiveIssues);
+
+    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
@@ -381,6 +418,12 @@ SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
     // Delete some internal objects
 
     delete mSimulation;
+
+    if (mFileType != SingleCellViewWidget::CellmlFile)
+        delete mCellmlFile;
+
+    if (mFileType != SingleCellViewWidget::SedmlFile)
+        delete mSedmlFile;
 
     // Delete the GUI
 
@@ -415,6 +458,16 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
     updateDataStoreActions();
 
+    // Retranslate our CellML editing view actions
+
+    foreach (QAction *cellmlEditingViewAction, mCellmlEditingViewInterfaces.keys()) {
+        ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(cellmlEditingViewAction);
+
+        I18nInterface::retranslateAction(cellmlEditingViewAction,
+                                         tr("%1 View").arg(viewInterface->viewName()),
+                                         tr("Open the referenced CellML file using the %1 view").arg(viewInterface->viewName()));
+    }
+
     // Retranslate our invalid model message
 
     updateInvalidModelMessageWidget();
@@ -431,7 +484,7 @@ void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
     // Retrieve the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->loadSettings(pSettings, mFileName);
+        mContentsWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -442,7 +495,7 @@ void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the settings of our contents widget
 
     pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->saveSettings(pSettings, mFileName);
+        mContentsWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -498,7 +551,9 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     mGui->actionSimulationDataExport->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                                  &&  mSimulation->results()->size()
                                                  && !simulationModeEnabled);
-    mGui->actionSedmlExport->setEnabled(    mSimulation->results()->size()
+    mGui->actionCellmlOpen->setEnabled(mFileType != SingleCellViewWidget::CellmlFile);
+    mGui->actionSedmlExport->setEnabled(    (mFileType == SingleCellViewWidget::CellmlFile)
+                                        &&  mSimulation->results()->size()
                                         && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
@@ -571,7 +626,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 {
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
-    // Note: see the corresponding code at the end of this method...
+    // Note: see the corresponding code towards the end of this method...
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
@@ -583,10 +638,16 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     mProgress = -1;
 
-    // Update our simulation object, if needed
+    // Retrieve our file details and update our simulation object, if needed
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
+    if (pReloadingView) {
+        mPlugin->viewWidget()->retrieveFileDetails(mFileName, mCellmlFile,
+                                                   mSedmlFile, mCombineArchive,
+                                                   mFileType, mSedmlFileIssues,
+                                                   mCombineArchiveIssues);
+    }
+
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
 
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
@@ -610,49 +671,106 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                            fileManagerInstance->isRemote(mFileName)?
                                fileManagerInstance->url(mFileName):
                                mFileName;
-    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn
-                          +OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
 
-    if (variableOfIntegration) {
-        // A variable of integration could be retrieved for our CellML file, so
-        // we can also output the model type
+    if (!mCombineArchiveIssues.isEmpty()) {
+        // There is one or several issues with our COMBINE archive, so list
+        // it/them
 
-        QString additionalInformation = QString();
+        foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, mCombineArchiveIssues) {
+            QString issueType;
 
-        if (cellmlFileRuntime->needNlaSolver())
-            additionalInformation = " + "+tr("NLA system(s)");
+            switch (combineArchiveIssue.type()) {
+            case COMBINESupport::CombineArchiveIssue::Information:
+                issueType = tr("Information:");
 
-        information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
-                                                                                                                                   additionalInformation);
+                break;
+            case COMBINESupport::CombineArchiveIssue::Error:
+                issueType = tr("Error:");
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Warning:
+                issueType = tr("Warning:");
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Fatal:
+                issueType = tr("Fatal:");
+
+                break;
+            }
+
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, combineArchiveIssue.message());
+        }
+    } else if (!mSedmlFileIssues.isEmpty()) {
+        // There is one or several issues with our SED-ML file, so list it/them
+
+        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, mSedmlFileIssues) {
+            QString issueType;
+
+            switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Information:
+                issueType = tr("Information:");
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Error:
+                issueType = tr("Error:");
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Warning:
+                issueType = tr("Warning:");
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Fatal:
+                issueType = tr("Fatal:");
+
+                break;
+            }
+
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, sedmlFileIssue.message());
+        }
     } else {
-        // We couldn't retrieve a variable a variable of integration, which
-        // means that we either don't have a runtime or we have one, but it's
-        // not valid or it's valid but we really don't have a variable of
-        // integration
-        // Note: in the case of a valid runtime and no variable of integration,
-        //       we really shouldn't consider the runtime to be valid, hence we
-        //       handle this case here...
+        information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-        mErrorType = InvalidCellmlFile;
+        if (variableOfIntegration) {
+            // A variable of integration could be retrieved for our CellML file,
+            // so we can also output the model type
 
-        updateInvalidModelMessageWidget();
+            QString additionalInformation = QString();
 
-        information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+            if (cellmlFileRuntime->needNlaSolver())
+                additionalInformation = " + "+tr("NLA system(s)");
 
-        if (validCellmlFileRuntime) {
-            // We have a valid runtime, but no variable of integration, which
-            // means that the model doesn't contain any ODE or DAE
-
-            information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+            information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
+            information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+                                                                                                                                       additionalInformation);
         } else {
-            // We don't have a valid runtime, so either there are some problems
-            // with the CellML file or its runtime
+            // We couldn't retrieve a variable of integration, which means that
+            // we either don't have a runtime or we have one, but it's not valid
+            // or it's valid but we really don't have a variable of integration
+            // Note: in the case of a valid runtime and no variable of
+            //       integration, we really shouldn't consider the runtime to be
+            //       valid, hence we handle this case here...
 
-            foreach (const CellMLSupport::CellmlFileIssue &issue,
-                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues()) {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                     issue.message());
+            mErrorType = InvalidCellmlFile;
+
+            updateInvalidModelMessageWidget();
+
+            information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+
+            if (validCellmlFileRuntime) {
+                // We have a valid runtime, but no variable of integration,
+                // which means that the model doesn't contain any ODE or DAE
+
+                information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+            } else {
+                // We don't have a valid runtime, so either there are some
+                // problems with the CellML file or its runtime
+
+                foreach (const CellMLSupport::CellmlFileIssue &issue,
+                         cellmlFileRuntime?cellmlFileRuntime->issues():mCellmlFile->issues()) {
+                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                         issue.message());
+                }
             }
         }
     }
@@ -731,30 +849,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         }
     }
 
-    // Show/hide some widgets depending on whether we have a valid simulation
+    // Initialise our GUI based on whether we have a valid simulation
     // environment
 
-    bool prevValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
-
-    mToolBarWidget->setVisible(validSimulationEnvironment);
-    mTopSeparator->setVisible(validSimulationEnvironment);
-
-    mContentsWidget->setVisible(validSimulationEnvironment);
-    mInvalidModelMessageWidget->setVisible(!validSimulationEnvironment);
-
-    mBottomSeparator->setVisible(validSimulationEnvironment);
-    mProgressBarWidget->setVisible(validSimulationEnvironment);
-
-    // Make sure that the last output message is visible
-    // Note: indeed, to (re)show some widgets (see above) might change the
-    //       height of our output widget, messing up the vertical scroll bar a
-    //       bit (if visible), resulting in the output being shifted a bit...
-
-    if (prevValidSimulationEnvironment != validSimulationEnvironment) {
-        QCoreApplication::processEvents();
-
-        mOutputWidget->ensureCursorVisible();
-    }
+    initializeGui(validSimulationEnvironment);
 
     // Some additional initialisations in case we have a valid simulation
     // environment
@@ -792,35 +890,41 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         solversWidget->initialize(mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphsWidget()->initialize(mFileName, mSimulation);
+            informationWidget->graphsWidget()->initialize(mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
         mContentsWidget->graphPanelsWidget()->initialize();
 
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data)
+        // Initialise our simulation
 
-        mSimulation->data()->reset();
-        mSimulation->results()->reset(false);
-
-        // Retrieve our simulation and solvers properties since they may have
-        // an effect on our parameter values (as well as result in some solver
-        // properties being shown/hidden)
-
-        updateSimulationProperties();
-        updateSolversProperties();
+        initializeSimulation();
 
         // Now, we can safely update our parameters widget since our model
         // parameters have been computed
 
-        informationWidget->parametersWidget()->initialize(mSimulation, pReloadingView);
+        mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloadingView);
     }
 
     // Resume the tracking of certain things
     // Note: see the corresponding code at the beginning of this method...
 
-    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
+
+    // Further initialise ourselves, if we have a valid environment and we are
+    // not dealing with a CellML file
+    // Note: to further initialise ourselves involves, among other things,
+    //       removing/adding graph panels. However, to do those things directly
+    //       will result in the GUI flashing because of various events still
+    //       having to be handled (e.g. see the above call to
+    //       mContentsWidget->graphPanelsWidget()->initialize()). So, instead,
+    //       we do the further initialisation through a single shot, ensuring
+    //       that all the other events have been properly handled...
+
+    if (    validSimulationEnvironment
+        && (mFileType != SingleCellViewWidget::CellmlFile)) {
+        QTimer::singleShot(0, this, SLOT(furtherInitialize()));
+    }
 }
 
 //==============================================================================
@@ -832,7 +936,7 @@ void SingleCellViewSimulationWidget::finalize()
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->graphsWidget()->finalize(mFileName);
+    informationWidget->graphsWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
 }
 
@@ -898,46 +1002,60 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::saveFile(const QString &pOldFileName,
-                                              const QString &pNewFileName)
+bool SingleCellViewSimulationWidget::save(const QString &pFileName)
 {
-    // Retrieve all the state and constant parameters which value has changed
-    // and update our CellML object with their 'new' values, unless they are
-    // imported, in which case we let the user know that their 'new' values
-    // cannot be saved
+    // In case of a CellML file that is in development mode, retrieve all the
+    // state and constant parameters which value has changed and update our
+    // CellML object with their 'new' values, unless they are imported, in which
+    // case we let the user know that their 'new' values cannot be saved
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlFile->model()->localComponents();
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
     QString importedParameters = QString();
 
-    foreach (Core::Property *property, parameters.keys()) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
+    if (   (mFileType == SingleCellViewWidget::CellmlFile)
+        && mGui->actionDevelopmentMode->isChecked()) {
+        ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
+        QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
 
-        if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-            || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
-            ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
-            ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
-            ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
-            ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+        foreach (Core::Property *property, parameters.keys()) {
+            CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
 
-            if (variable == sourceVariable)
-                variable->initialValue(property->value().toStdWString());
-            else
-                importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
+            if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+                || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
+                ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
+                ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
+                ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+
+                if (variable == sourceVariable)
+                    variable->initialValue(property->value().toStdWString());
+                else
+                    importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
+            }
         }
     }
 
     // Now, we can effectively save our given file and let the user know if some
     // parameter values couldn't be saved
 
-    bool res = cellmlFile->save(pNewFileName);
+    bool res = (mFileType == SingleCellViewWidget::CellmlFile)?
+                   mCellmlFile->save(pFileName):
+                   (mFileType == SingleCellViewWidget::SedmlFile)?
+                       mSedmlFile->save(pFileName):
+                       mCombineArchive->save(pFileName);
 
-    if (res && !importedParameters.isEmpty()) {
-        QMessageBox::information(Core::mainWindow(),
-                                 tr("Save File"),
-                                 tr("The following parameters are imported and cannot therefore be saved:")+importedParameters,
-                                 QMessageBox::Ok);
+    if (res) {
+        mFileName = (mFileType == SingleCellViewWidget::CellmlFile)?
+                        mCellmlFile->fileName():
+                        (mFileType == SingleCellViewWidget::SedmlFile)?
+                            mSedmlFile->fileName():
+                            mCombineArchive->fileName();
+
+        if (!importedParameters.isEmpty()) {
+            QMessageBox::information(Core::mainWindow(),
+                                     tr("Save File"),
+                                     tr("The following parameters are imported and cannot therefore be saved:")+importedParameters,
+                                     QMessageBox::Ok);
+        }
     }
 
     return res;
@@ -945,22 +1063,13 @@ bool SingleCellViewSimulationWidget::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileOpened(const QString &pFileName)
-{
-    // Let our graphs widget know that the given file has been opened
-
-    mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
-}
-
-//==============================================================================
-
 void SingleCellViewSimulationWidget::filePermissionsChanged()
 {
-    // The given file has been un/locked, so enable/disable the development mode
-    // and keep track of its checked status or recheck it, as necessary
+    // We have been un/locked, so enable/disable the development mode and keep
+    // track of its checked status or recheck it, as necessary
 
      if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
-         mGui->actionDevelopmentMode->setEnabled(true);
+         mGui->actionDevelopmentMode->setEnabled(mFileType == SingleCellViewWidget::CellmlFile);
          mGui->actionDevelopmentMode->setChecked(mLockedDevelopmentMode);
      } else {
          mLockedDevelopmentMode = mGui->actionDevelopmentMode->isChecked();
@@ -972,11 +1081,11 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileModified(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileModified()
 {
     // Update our reset action
 
-    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(pFileName));
+    mGui->actionResetModelParameters->setEnabled(Core::FileManager::instance()->isModified(mFileName));
 }
 
 //==============================================================================
@@ -984,28 +1093,32 @@ void SingleCellViewSimulationWidget::fileModified(const QString &pFileName)
 void SingleCellViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
-    // that the given file will have effectively been closed and (re)opened
-    // Note: we don't want to call fileClosed() between finalize() and
-    //       initialize() since it will trigger the description of existing
-    //       graphs to be updated, which will result in them being temporarily
-    //       shown as invalid even though they may actually be valid (since we
-    //       have finalised the simulation)...
+    // that we have effectively been closed and (re)opened
+    // Note #1: we don't want to call fileClosed() between finalize() and
+    //          initialize() since it will trigger the description of existing
+    //          graphs to be updated, which will result in them being
+    //          temporarily shown as invalid even though they may actually be
+    //          valid (since we have finalised the simulation)...
+    // Note #2: we temporarily disable updates since reloading a remote CellML
+    //          1.1 file may take several seconds, which would normally result
+    //          in the list of model parameters becoming and remaining empty
+    //          until the model has been fully reloaded...
 
-    finalize();
-    initialize(true);
-
-    fileOpened(mFileName);
+    setUpdatesEnabled(false);
+        finalize();
+        initialize(true);
+    setUpdatesEnabled(true);
 
     mNeedReloadView = false;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
+void SingleCellViewSimulationWidget::fileReloaded()
 {
     // The given file has been reloaded, so stop its current simulation
 
-    bool needReloadView = CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName);
+    bool needReloadView = true;
 
     mNeedReloadView = true;
 
@@ -1026,30 +1139,29 @@ void SingleCellViewSimulationWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileRenamed(const QString &pOldFileName,
-                                                 const QString &pNewFileName)
-{
-    // Let our graphs widget know that the given file has been renamed
-
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::fileClosed(const QString &pFileName)
-{
-    // Let our graphs widget know that the given file has been closed
-
-    mContentsWidget->informationWidget()->graphsWidget()->fileClosed(pFileName);
-}
-
-//==============================================================================
-
 QString SingleCellViewSimulationWidget::fileName() const
 {
     // Return our file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+SEDMLSupport::SedmlFile * SingleCellViewSimulationWidget::sedmlFile() const
+{
+    // Return our SED-ML file
+
+    return mSedmlFile;
+}
+
+//==============================================================================
+
+SingleCellViewWidget::FileType SingleCellViewSimulationWidget::fileType() const
+{
+    // Return our file type
+
+    return mFileType;
 }
 
 //==============================================================================
@@ -1132,7 +1244,7 @@ void SingleCellViewSimulationWidget::on_actionRunPauseResumeSimulation_triggered
 
                 runSimulation = mSimulation->results()->reset();
 
-                mViewWidget->checkSimulationResults(mFileName, true);
+                mPlugin->viewWidget()->checkSimulationResults(mFileName, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1183,7 +1295,7 @@ void SingleCellViewSimulationWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mFileName, true);
+    mPlugin->viewWidget()->checkSimulationResults(mFileName, true);
 }
 
 //==============================================================================
@@ -1282,8 +1394,9 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
     }
 
     if (!voiSolverProperties.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString("<solverProperties xmlns=\"%1\">%2</solverProperties>").arg(SEDMLSupport::OpencorNamespace,
-                                                                                                             voiSolverProperties).toStdString());
+        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::SolverProperties,
+                                                                                 SEDMLSupport::OpencorNamespace,
+                                                                                 voiSolverProperties).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1294,13 +1407,17 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
         QString nlaSolverProperties = QString();
 
         foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
-            nlaSolverProperties += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
-                                                                                           solverProperties.value(solverProperty).toString());
+            nlaSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            solverProperty,
+                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<nlaSolver xmlns=\"%1\" name=\"%2\">%3</nlaSolver>").arg(SEDMLSupport::OpencorNamespace,
-                                                                                                             mSimulation->data()->nlaSolverName(),
-                                                                                                             nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" name=\"%3\">%4</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                                               SEDMLSupport::OpencorNamespace,
+                                                                                               mSimulation->data()->nlaSolverName(),
+                                                                                               nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1339,19 +1456,20 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
 
     variableDegree -= variable.size();
 
-    // Set the target itself, as we as its degree, if any
+    // Set the target itself, as well as its degree, if any
 
     pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
 
     if (variableDegree) {
-        pSedmlVariable->appendAnnotation(QString("<variableDegree xmlns=\"%1\">%2</variableDegree>").arg(SEDMLSupport::OpencorNamespace,
-                                                                                                         QString::number(variableDegree)).toStdString());
+        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::VariableDegree,
+                                                                                 SEDMLSupport::OpencorNamespace,
+                                                                                 QString::number(variableDegree)).toStdString());
     }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
+bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
                                                      const QString &pModelSource)
 {
     // Create a SED-ML document and add the CellML namespace to it
@@ -1374,10 +1492,7 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                                 SEDMLSupport::Language::Cellml_1_1.toStdString():
                                 SEDMLSupport::Language::Cellml_1_0.toStdString());
-    sedmlModel->setSource(Core::nativeCanonicalFileName(pModelSource).toStdString());
-
-    // Apply some parameter changes, if any, to our SED-ML model
-//---GRY--- TO BE DONE...
+    sedmlModel->setSource(pModelSource.toStdString());
 
     // Create and customise a repeated task containing a uniform time course
     // simulation followed by a one-step simulation, if needed
@@ -1397,7 +1512,7 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
 
     libsedml::SedVectorRange *sedmlVectorRange = sedmlRepeatedTask->createVectorRange();
 
-    sedmlVectorRange->setId("vectorRange");
+    sedmlVectorRange->setId("once");
     sedmlVectorRange->addValue(1);
 
     // Create and customise a uniform time course simulation
@@ -1419,7 +1534,7 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     sedmlUniformTimeCourse->setId(QString("simulation%1").arg(simulationNumber).toStdString());
     sedmlUniformTimeCourse->setInitialTime(startingPoint);
     sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
-    sedmlUniformTimeCourse->setOutputEndTime(nbOfPoints*pointInterval);
+    sedmlUniformTimeCourse->setOutputEndTime(startingPoint+nbOfPoints*pointInterval);
     sedmlUniformTimeCourse->setNumberOfPoints(nbOfPoints);
 
     addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
@@ -1490,12 +1605,12 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
                 sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                     QString::number(graphCounter)).toStdString());
                 sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableX, propertyX.first(), propertyX.last());
+                addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
                 sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                     QString::number(graphCounter)).toStdString());
                 sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableY, propertyY.first(), propertyY.last());
+                addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
 
                 sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
                 sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
@@ -1516,14 +1631,9 @@ void SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
         }
     }
 
-    // Our SED-ML document is ready, so write it to our SED-ML file, after
-    // having reformatted it
+    // Our SED-ML document is ready, so save it
 
-    QDomDocument domDocument;
-
-    domDocument.setContent(QString(libsedml::writeSedMLToString(sedmlDocument)));
-
-    Core::writeTextToFile(pFileName, qDomDocumentToString(domDocument));
+    return sedmlFile.save(pFileName);
 }
 
 //==============================================================================
@@ -1567,7 +1677,10 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportSedmlFile_triggered()
             modelSource = sedmlFileDir.relativeFilePath(modelSource);
         }
 
-        createSedmlFile(sedmlFileName, modelSource);
+        if (!createSedmlFile(sedmlFileName, modelSource)) {
+            QMessageBox::warning(Core::mainWindow(), tr("Export To SED-ML File"),
+                                 tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
+        }
     }
 }
 
@@ -1603,21 +1716,14 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         // CellML files, as well as get a copy of our imported CellML files,
         // should they be remote ones
 
-#if defined(Q_OS_WIN)
-        static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
-#endif
 
-        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
                                  QFileInfo(mFileName).canonicalPath()+QDir::separator();
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
-        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+        foreach (const QString &importedFileName, mCellmlFile->importedFileNames()) {
             // Check for the common path
 
             QString importedFilePath = remoteFile?
@@ -1640,8 +1746,8 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
             if (remoteFile) {
                 QString localImportedFileName = Core::temporaryFileName();
 
-                Core::writeTextToFile(localImportedFileName,
-                                      cellmlFile->importedFileContents(importedFileName));
+                Core::writeFileContentsToFile(localImportedFileName,
+                                      mCellmlFile->importedFileContents(importedFileName).toUtf8());
 
                 remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }
@@ -1656,41 +1762,72 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
 
+        QString errorMessage = QString();
+        QString temporaryCombineArchiveName = Core::temporaryFileName();
         QString sedmlFileName = Core::temporaryFileName();
 
         createSedmlFile(sedmlFileName, modelSource);
 
         // Create our COMBINE archive after having added all our files to it
 
-        COMBINESupport::CombineArchive combineArchive(combineArchiveName);
+        COMBINESupport::CombineArchive combineArchive(temporaryCombineArchiveName, true);
         QFileInfo combineArchiveInfo = QFileInfo(combineArchiveName);
         QString sedmlFileLocation = combineArchiveInfo.fileName();
 
         sedmlFileLocation.replace(QRegularExpression(QRegularExpression::escape(combineArchiveInfo.completeSuffix())+"$"),
                                   SEDMLSupport::SedmlFileExtension);
 
-        combineArchive.addFile(sedmlFileName, sedmlFileLocation,
-                               COMBINESupport::CombineArchiveFile::Sedml, true);
+        if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
+                                   COMBINESupport::CombineArchiveFile::Sedml, true)) {
+            if (combineArchive.addFile(mFileName, modelSource,
+                                       (mCellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
+                                           COMBINESupport::CombineArchiveFile::Cellml_1_1:
+                                           COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
+                foreach (const QString &importedFileName, mCellmlFile->importedFileNames()) {
+                    QString realImportedFileName = remoteFile?
+                                                       remoteImportedFileNames.value(importedFileName):
+                                                       importedFileName;
 
-        combineArchive.addFile(mFileName, modelSource,
-                               (CellMLSupport::CellmlFile::version(cellmlFile) == CellMLSupport::CellmlFile::Cellml_1_1)?
-                                   COMBINESupport::CombineArchiveFile::Cellml_1_1:
-                                   COMBINESupport::CombineArchiveFile::Cellml_1_0);
+                    if (!combineArchive.addFile(realImportedFileName,
+                                                QString(importedFileName).remove(commonPath),
+                                                COMBINESupport::CombineArchiveFile::Cellml)) {
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(realImportedFileName)+").");
 
-        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-            combineArchive.addFile(remoteFile?
-                                       remoteImportedFileNames.value(importedFileName):
-                                       importedFileName,
-                                   QString(importedFileName).remove(commonPath),
-                                   COMBINESupport::CombineArchiveFile::Cellml);
+                        break;
+                    }
+                }
+
+                if (errorMessage.isEmpty()) {
+                    if (combineArchive.save()) {
+                        QFile::remove(combineArchiveName);
+
+                        if (!QFile::rename(temporaryCombineArchiveName, combineArchiveName))
+                            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(combineArchiveName);
+                    } else {
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(combineArchiveName);
+                    }
+                }
+            } else {
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(mFileName)+").");
+            }
+        } else {
+            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
         }
 
-        combineArchive.save();
+        // Remove our temporary COMBINE archive and the local copy of our remote
+        // imported CellML files, if any
 
-        // Remove the local copy of our remote imported CellML files, if any
+        QFile::remove(temporaryCombineArchiveName);
 
         foreach (const QString &localImportedFileName, remoteImportedFileNames.values())
             QFile::remove(localImportedFileName);
+
+        // Let the user know about any error that may have occurred
+
+        if (!errorMessage.isEmpty()) {
+            QMessageBox::warning(Core::mainWindow(), tr("Export To COMBINE Archive"),
+                                 errorMessage);
+        }
     }
 }
 
@@ -1833,6 +1970,324 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 //==============================================================================
 
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable)
+{
+    // Retrieve the CellML runtime parameter corresponding to the given SED-ML
+    // variable
+
+    static const QRegularExpression TargetStartRegEx  = QRegularExpression("^\\/cellml:model\\/cellml:component\\[@name='");
+    static const QRegularExpression TargetMiddleRegEx = QRegularExpression("']\\/cellml:variable\\[@name='");
+    static const QRegularExpression TargetEndRegEx    = QRegularExpression("'\\]$");
+    static const QString Separator = "|";
+
+    // Retrieve the component and name of the parameter
+
+    QString target = QString::fromStdString(pSedmlVariable->getTarget());
+
+    target.remove(TargetStartRegEx);
+    target.replace(TargetMiddleRegEx, Separator);
+    target.remove(TargetEndRegEx);
+
+    QStringList identifiers = target.split(Separator);
+    QString componentName = identifiers.first();
+    QString variableName = identifiers.last();
+
+    // Check whether the parameter has a degree
+
+    libsbml::XMLNode *annotation = pSedmlVariable->getAnnotation();
+    int variableDegree = 0;
+
+    if (annotation) {
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
+                continue;
+            }
+
+            variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt();
+        }
+    }
+
+    // Go through the runtime parameters to see one of them correspond to our
+    // given SED-ML variable
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->parameters()) {
+        if (   !componentName.compare(parameter->componentHierarchy().last())
+            && !variableName.compare(parameter->name())
+            &&  (variableDegree == parameter->degree())) {
+            return parameter;
+        }
+    }
+
+    return 0;
+}
+
+//==============================================================================
+
+bool SingleCellViewSimulationWidget::doFurtherInitialize()
+{
+    // Customise our simulation widget
+
+    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+
+    libsedml::SedDocument *sedmlDocument = mSedmlFile->sedmlDocument();
+    libsedml::SedUniformTimeCourse *uniformTimeCourseSimulation = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    libsedml::SedOneStep *oneStepSimulation = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+
+    double startingPoint = uniformTimeCourseSimulation->getOutputStartTime();
+    double endingPoint = uniformTimeCourseSimulation->getOutputEndTime();
+    double pointInterval = (endingPoint-startingPoint)/uniformTimeCourseSimulation->getNumberOfPoints();
+
+    if (oneStepSimulation)
+        endingPoint += oneStepSimulation->getStep();
+
+    simulationWidget->startingPointProperty()->setDoubleValue(startingPoint);
+    simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
+    simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
+
+    // Customise our solvers widget by:
+    //  - Specifying the ODE/DAE solver to use
+    //  - Customising the solver's properties for which we have a KiSAO id
+    //  - Customising the solver's properties for which we don't have a KiSAO id
+    //    (this shouldn't happen, but better be safe than sorry)
+    //  - Specifying the NLA solver, if any
+
+    SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
+                                                                 informationWidget->solversWidget()->odeSolverData():
+                                                                 informationWidget->solversWidget()->daeSolverData();
+    const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
+    SolverInterface *usedSolverInterface = 0;
+    Core::Properties solverProperties = Core::Properties();
+    QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
+
+    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+            usedSolverInterface = solverInterface;
+            solverProperties = solverData->solversProperties().value(solverInterface->solverName());
+
+            solverData->solversListProperty()->setValue(solverInterface->solverName());
+
+            break;
+        }
+    }
+
+    if (!usedSolverInterface) {
+        simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
+                        InvalidSimulationEnvironment);
+
+        return false;
+    }
+
+    for (int i = 0, iMax = algorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *algorithmParameter = algorithm->getAlgorithmParameter(i);
+        QString kisaoId = QString::fromStdString(algorithmParameter->getKisaoID());
+        QString id = usedSolverInterface->id(kisaoId);
+        bool propertySet = false;
+
+        foreach (Core::Property *solverProperty, solverProperties) {
+            if (!solverProperty->id().compare(id)) {
+                solverProperty->setValue(QString::fromStdString(algorithmParameter->getValue()));
+
+                propertySet = true;
+
+                break;
+            }
+        }
+
+        if (!propertySet) {
+            simulationError(tr("the requested property (%1) could not be set").arg(kisaoId),
+                            InvalidSimulationEnvironment);
+
+            return false;
+        }
+    }
+
+    libsbml::XMLNode *annotation = algorithm->getAnnotation();
+
+    if (annotation) {
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::SolverProperties)) {
+                continue;
+            }
+
+            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
+                const XMLNode &solverPropertyNode = node.getChild(j);
+
+                if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                    continue;
+                }
+
+                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString())));
+                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString())));
+                bool propertySet = false;
+
+                foreach (Core::Property *solverProperty, solverProperties) {
+                    if (!solverProperty->id().compare(id)) {
+                        solverProperty->setValue(value);
+
+                        propertySet = true;
+
+                        break;
+                    }
+                }
+
+                if (!propertySet) {
+                    simulationError(tr("the requested property (%1) could not be set").arg(id),
+                                    InvalidSimulationEnvironment);
+
+                    return false;
+                }
+            }
+        }
+    }
+
+    annotation = uniformTimeCourseSimulation->getAnnotation();
+
+    if (annotation) {
+        bool mustHaveNlaSolver = false;
+        bool hasNlaSolver = false;
+        QString nlaSolverName = QString();
+
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const libsbml::XMLNode &node = annotation->getChild(i);
+
+            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
+                continue;
+            }
+
+            mustHaveNlaSolver = true;
+            nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+
+            foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+                if (!nlaSolverName.compare(solverInterface->solverName())) {
+                    informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
+
+                    hasNlaSolver = true;
+
+                    break;
+                }
+            }
+
+            if (hasNlaSolver)
+                break;
+        }
+
+        if (mustHaveNlaSolver && !hasNlaSolver) {
+            simulationError(tr("the requested NLA solver (%1) could not be set").arg(nlaSolverName),
+                            InvalidSimulationEnvironment);
+
+            return false;
+        }
+    }
+
+    // Add/remove some graph panels, so that the end number of them corresponds
+    // to the number of 2D outputs mentioned in the SED-ML file, this after
+    // having made sure that the current graph panels are all of the same size
+    // and that the first one of them is selected
+
+    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
+    int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
+
+    graphPanelsWidget->setSizes(QIntList());
+    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
+
+    if (newNbOfGraphPanels > oldNbOfGraphPanels) {
+        for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->addGraphPanel(false);
+    } else if (newNbOfGraphPanels < oldNbOfGraphPanels) {
+        for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->removeCurrentGraphPanel();
+    }
+
+    // Customise our graphs widget
+
+    for (int i = 0; i < newNbOfGraphPanels; ++i) {
+        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
+        SingleCellViewGraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+
+        graphPanel->removeAllGraphs();
+
+        for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
+            libsedml::SedCurve *curve = plot->getCurve(j);
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
+
+            if (!xParameter || !yParameter) {
+                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(curve->getId())),
+                                InvalidSimulationEnvironment);
+
+                return false;
+            }
+
+            graphPanel->addGraph(new SingleCellViewGraphPanelPlotGraph(xParameter, yParameter));
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationEnvironment)
+{
+    // Show/hide some widgets based on whether we have a valid simulation
+    // environment
+
+    mToolBarWidget->setVisible(pValidSimulationEnvironment);
+    mTopSeparator->setVisible(pValidSimulationEnvironment);
+
+    mContentsWidget->setVisible(pValidSimulationEnvironment);
+    mInvalidModelMessageWidget->setVisible(!pValidSimulationEnvironment);
+
+    mBottomSeparator->setVisible(pValidSimulationEnvironment);
+    mProgressBarWidget->setVisible(pValidSimulationEnvironment);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::furtherInitialize()
+{
+    // Further initialise ourselves, update our GUI (by reinitialising it) and
+    // initialise our simulation, if we still have a valid simulation
+    // environment
+
+    bool validSimulationEnvironment = doFurtherInitialize();
+
+    initializeGui(validSimulationEnvironment);
+
+    if (validSimulationEnvironment)
+        initializeSimulation();
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::initializeSimulation()
+{
+    // Reset both the simulation's data and results (well, initialise in the
+    // case of its data)
+
+    mSimulation->data()->reset();
+    mSimulation->results()->reset(false);
+
+    // Retrieve our simulation and solvers properties since they may have an
+    // effect on our parameter values (as well as result in some solver
+    // properties being shown/hidden)
+
+    updateSimulationProperties();
+    updateSolversProperties();
+}
+
+//==============================================================================
+
 void SingleCellViewSimulationWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
@@ -1847,7 +2302,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     // Export our simulation data results
 
     setEnabled(false);
-    mViewWidget->showBusyWidget(this, true);
+    mPlugin->viewWidget()->showBusyWidget(this, true);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
@@ -1856,7 +2311,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 
     dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
-    mViewWidget->hideBusyWidget();
+    mPlugin->viewWidget()->hideBusyWidget();
     setEnabled(true);
 }
 
@@ -1897,7 +2352,7 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mFileName);
+    mPlugin->viewWidget()->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -1911,7 +2366,7 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint(), true);
 
-    mViewWidget->checkSimulationResults(mFileName);
+    mPlugin->viewWidget()->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -1944,6 +2399,44 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
 
     mProgress = -1;
 
+    // Reload ourselves, if needed (see fileReloaded())
+
+    if (mNeedReloadView)
+        reloadView();
+
+    // Note: our simulation progress gets reset in resetSimulationProgress(),
+    //       which is called by SingleCellViewWidget::checkSimulationResults().
+    //       To reset our simulation progress here might not always work since
+    //       our simulation is run in a different thread, meaning that a call
+    //       to updateSimulationResults() might occur after we have reset our
+    //       simulation progress...
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBarWidget->setValue(0.0);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::resetFileTabIcon()
+{
+    // Stop tracking our simulation progress and let people know that our file
+    // tab icon should be reset
+
+    static const QIcon NoIcon = QIcon();
+
+    emit mPlugin->viewWidget()->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::resetSimulationProgress()
+{
     // Reset our progress bar or tab icon, in case we are not visible, and this
     // with a short delay
     // Note #1: we check that we are not visible in case the user has selected a
@@ -1973,32 +2466,6 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
         else
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
     }
-
-    // Reload ourselves, if needed (see fileReloaded())
-
-    if (mNeedReloadView)
-        reloadView();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::resetProgressBar()
-{
-    // Reset our progress bar
-
-    mProgressBarWidget->setValue(0.0);
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::resetFileTabIcon()
-{
-    // Stop tracking our simulation progress and let people know that our file
-    // tab icon should be reset
-
-    static const QIcon NoIcon = QIcon();
-
-    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
 
 //==============================================================================
@@ -2064,8 +2531,11 @@ void SingleCellViewSimulationWidget::solversPropertyChanged(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+                                                     const bool &pActive)
 {
+    Q_UNUSED(pActive);
+
     // Keep track of the graph panel's plot
 
     mGraphPanelsPlots.insert(pGraphPanel, pGraphPanel->plot());
@@ -2094,7 +2564,7 @@ void SingleCellViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimePa
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                 SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // A new graph has been added, so keep track of it and update its plot
@@ -2103,20 +2573,22 @@ void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelPlotWidg
     //       hand, if the plot's axes don't get updated, we need to draw our new
     //       graph...
 
+    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+
     updateGraphData(pGraph, mSimulation->results()->size());
 
-    if (!updatePlot(pPlot))
-        pPlot->drawGraphFrom(pGraph, 0);
+    if (!updatePlot(plot))
+        plot->drawGraphFrom(pGraph, 0);
 
     // Keep track of the plot itself, if needed
 
-    if (!mPlots.contains(pPlot))
-        mPlots << pPlot;
+    if (!mPlots.contains(plot))
+        mPlots << plot;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                                                    const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
@@ -2127,10 +2599,12 @@ void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelPlotW
     //       to replot the plot since at least one of its graphs has been
     //       removed...
 
-    updatePlot(pPlot, true);
+    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    if (pPlot->graphs().isEmpty())
-        mPlots.removeOne(pPlot);
+    updatePlot(plot, true);
+
+    if (plot->graphs().isEmpty())
+        mPlots.removeOne(plot);
 }
 
 //==============================================================================
@@ -2155,7 +2629,7 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
         //       indeed refer to a file that has not yet been activated and
         //       therefore doesn't yet have a simulation associated with it...
 
-        SingleCellViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
+        SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
 
         updateGraphData(graph, simulation?simulation->results()->size():0);
 
@@ -2236,7 +2710,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
-            SingleCellViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
+            SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
 
@@ -2302,7 +2776,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
         checkAxisValue(maxY, origMaxY, endingPoints);
     }
 
-    // Set our axes' values and replot the plot, if needed
+    // Set our axes' values and replot our plot, if needed
 
     if (pPlot->setAxes(minX, maxX, minY, maxY)) {
         return true;
@@ -2347,7 +2821,7 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        SingleCellViewSimulation *simulation = mViewWidget->simulation(pGraph->fileName());
+        SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
 
         pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
                               dataPoints(simulation, pGraph->parameterY()),
@@ -2377,12 +2851,17 @@ void SingleCellViewSimulationWidget::updateGui()
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true);
     }
+
+    // Make sure that our progress bar is up to date
+
+    mProgressBarWidget->setValue(mPlugin->viewWidget()->simulationResultsSize(mFileName)/mSimulation->size());
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                                             const qulonglong &pSimulationResultsSize)
+                                                             const qulonglong &pSimulationResultsSize,
+                                                             const bool &pForceUpdateSimulationResults)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
@@ -2410,27 +2889,38 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
 
-        QRectF plotViewport = QRectF(plotMinX, plotMinY,
-                                     plotMaxX-plotMinX, plotMaxY-plotMinY);
+        if (pForceUpdateSimulationResults)
+            plot->resetAxesChanged();
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
-                // Keep track of our graph's old size
+                if (pForceUpdateSimulationResults)
+                    mOldDataSizes.remove(graph);
+
+                // Update our graph's data and keep track of our new old data
+                // size, if we are visible
+                // Note: indeed, to update our graph's old data size if we are
+                //       not visible means that when we come back to this file,
+                //       part of the graphs will be missing...
 
                 qulonglong oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing this graph's first segment, in
-                // which case we will need to update our plot
-
-                needUpdatePlot =    needUpdatePlot || !oldDataSize
-                                || !mPlotsViewports.contains(plot);
-
-                // Update our graph's data
+                if (visible)
+                    mOldDataSizes.insert(graph, oldDataSize);
 
                 updateGraphData(graph, pSimulationResultsSize);
 
-                // Draw the graph's new segment, but only if we are visible, as
-                // our graph, and that there is no need to update the plot and
+                // We need to update our plot, if we are drawing this graph's
+                // first segment or if we were invisible at some point during
+                // the simulation
+
+                qulonglong realOldDataSize = mOldDataSizes.value(graph);
+
+                needUpdatePlot =    needUpdatePlot || !realOldDataSize
+                                 || (oldDataSize != realOldDataSize);
+
+                // Draw the graph's new segment, but only if we and our graph
+                // are visible,and that there is no need to update the plot and
                 // that there is some data to plot
 
                 if (    visible && graph->isVisible()
@@ -2439,13 +2929,14 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                     // current viewport, but only if the user hasn't changed the
                     // plot's viewport since we last came here
 
-                    if (mPlotsViewports.value(plot) == plotViewport) {
+                    if (!plot->axesChanged()) {
                         double minX = plotMinX;
                         double maxX = plotMaxX;
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (qulonglong i = qMin(0ULL, oldDataSize-1); i < pSimulationResultsSize; ++i) {
+                        for (qulonglong i = oldDataSize?oldDataSize-1:0;
+                             i < pSimulationResultsSize; ++i) {
                             double valX = graph->data()->sample(i).x();
                             double valY = graph->data()->sample(i).y();
 
@@ -2463,7 +2954,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                     }
 
                     if (!needUpdatePlot)
-                        plot->drawGraphFrom(graph, oldDataSize-1);
+                        plot->drawGraphFrom(graph, realOldDataSize-1);
                 }
             }
         }
@@ -2478,15 +2969,6 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 // which case we need to update our plot
 
                 updatePlot(plot, true);
-
-                // Keep track of our plot's new viewport
-
-                plotMinX = plot->minX();
-                plotMinY = plot->minY();
-
-                mPlotsViewports.insert(plot,
-                                       QRectF(plotMinX, plotMinY,
-                                              plot->maxX()-plotMinX, plot->maxY()-plotMinY));
             } else if (!pSimulationResultsSize) {
                 // We came here as a result of starting a simulation or clearing
                 // our plot, so simply replot it (rather than update it)
@@ -2509,7 +2991,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
     // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
-        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();
+        double simulationProgress = mPlugin->viewWidget()->simulationResultsSize(mFileName)/simulation->size();
 
         if (visible) {
             mProgressBarWidget->setValue(simulationProgress);
@@ -2530,7 +3012,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 // Let people know about the file tab icon to be used for the
                 // model
 
-                emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+                emit mPlugin->viewWidget()->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
             }
         }
     }
@@ -2569,6 +3051,23 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
         return ErrorNodeIcon;
     }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::openCellmlFile()
+{
+    // Ask OpenCOR to open our referenced CellML file
+
+    QDesktopServices::openUrl("opencor://openFile/"+mCellmlFile->fileName());
+
+    // Ask OpenCOR to switch to the requested CellML editing view after having
+    // selected the correct mode
+
+    ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(qobject_cast<QAction *>(sender()));
+
+    QDesktopServices::openUrl("opencor://Core.selectMode/"+ViewInterface::viewModeAsString(viewInterface->viewMode()));
+    QDesktopServices::openUrl("opencor://Core.selectView/"+viewInterface->viewName());
 }
 
 //==============================================================================

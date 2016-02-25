@@ -66,6 +66,40 @@ Solver::Solver * CVODESolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString CVODESolverPlugin::id(const QString &pKisaoId) const
+{
+    // Return the id for the given KiSAO id
+
+    if (!pKisaoId.compare("KISAO:0000019"))
+        return solverName();
+    else if (!pKisaoId.compare("KISAO:0000467"))
+        return MaximumStepId;
+    else if (!pKisaoId.compare("KISAO:0000415"))
+        return MaximumNumberOfStepsId;
+    else if (!pKisaoId.compare("KISAO:0000475"))
+        return IntegrationMethodId;
+    else if (!pKisaoId.compare("KISAO:0000476"))
+        return IterationTypeId;
+    else if (!pKisaoId.compare("KISAO:0000477"))
+        return LinearSolverId;
+    else if (!pKisaoId.compare("KISAO:0000478"))
+        return PreconditionerId;
+    else if (!pKisaoId.compare("KISAO:0000479"))
+        return UpperHalfBandwidthId;
+    else if (!pKisaoId.compare("KISAO:0000480"))
+        return LowerHalfBandwidthId;
+    else if (!pKisaoId.compare("KISAO:0000209"))
+        return RelativeToleranceId;
+    else if (!pKisaoId.compare("KISAO:0000211"))
+        return AbsoluteToleranceId;
+    else if (!pKisaoId.compare("KISAO:0000481"))
+        return InterpolateSolutionId;
+
+    return QString();
+}
+
+//==============================================================================
+
 QString CVODESolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id

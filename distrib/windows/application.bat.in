@@ -1,5 +1,5 @@
 @ECHO OFF
 
-TITLE Running the ${PROJECT_NAME} environment...
+TITLE Running the ${CMAKE_PROJECT_NAME} environment...
 
-bin\${PROJECT_NAME} %*
+bin\${CMAKE_PROJECT_NAME} %*

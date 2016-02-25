@@ -58,6 +58,17 @@ SampleViewPlugin::SampleViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool SampleViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SampleViewPlugin::saveFile(const QString &pOldFileName,
                                 const QString &pNewFileName,
                                 bool &pNeedFeedback)
@@ -209,7 +220,7 @@ void SampleViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SampleViewPlugin::handleAction(const QUrl &pUrl)
+void SampleViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

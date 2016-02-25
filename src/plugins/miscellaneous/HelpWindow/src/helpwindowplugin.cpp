@@ -123,7 +123,7 @@ void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWindowPlugin::handleAction(const QUrl &pUrl)
+void HelpWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

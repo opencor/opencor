@@ -63,6 +63,17 @@ CoreCellMLEditingPlugin::CoreCellMLEditingPlugin() :
 // File handling interface
 //==============================================================================
 
+bool CoreCellMLEditingPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CoreCellMLEditingPlugin::saveFile(const QString &pOldFileName,
                                        const QString &pNewFileName,
                                        bool &pNeedFeedback)
@@ -294,7 +305,7 @@ void CoreCellMLEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::handleAction(const QUrl &pUrl)
+void CoreCellMLEditingPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

@@ -356,5 +356,9 @@
         <source>No Internet connection available.</source>
         <translation>Aucune connexion Internet disponible.</translation>
     </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
+    </message>
 </context>
 </TS>

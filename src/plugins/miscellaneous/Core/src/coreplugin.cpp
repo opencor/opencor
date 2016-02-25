@@ -115,6 +115,17 @@ bool CorePlugin::canClose()
 // File handling interface
 //==============================================================================
 
+bool CorePlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CorePlugin::saveFile(const QString &pOldFileName,
                           const QString &pNewFileName,
                           bool &pNeedFeedback)
@@ -601,11 +612,21 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CorePlugin::handleAction(const QUrl &pUrl)
+void CorePlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    // Handle the action that was passed to us
 
-    // We don't handle this interface...
+    QString actionName = pUrl.authority();
+
+    if (!actionName.compare("Core.selectMode", Qt::CaseInsensitive)) {
+        // We want to select a given mode
+
+        mCentralWidget->selectMode(pUrl.path().remove(0, 1));
+    } else if (!actionName.compare("Core.selectView", Qt::CaseInsensitive)) {
+        // We want to select a given view
+
+        mCentralWidget->selectView(pUrl.path().remove(0, 1));
+    }
 }
 
 //==============================================================================

@@ -50,6 +50,7 @@ public:
 
     explicit SedmlFileIssue(const Type &pType, const int &pLine,
                             const int &pColumn, const QString &pMessage);
+    explicit SedmlFileIssue(const Type &pType, const QString &pMessage);
 
     bool operator<(const SedmlFileIssue &pIssue) const;
 
@@ -63,6 +64,9 @@ private:
     int mLine;
     int mColumn;
     QString mMessage;
+
+    void constructor(const Type &pType, const int &pLine,
+                     const int &pColumn, const QString &pMessage);
 };
 
 //==============================================================================

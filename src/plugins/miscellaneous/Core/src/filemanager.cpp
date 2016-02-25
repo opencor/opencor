@@ -120,7 +120,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     if (nativeFile) {
         // The file is managed, so we can remove it
 
-        mFiles.remove(nativeFileName);;
+        mFiles.remove(nativeFileName);
 
         delete nativeFile;
 
@@ -234,7 +234,7 @@ bool FileManager::isDifferent(const QString &pFileName) const
 //==============================================================================
 
 bool FileManager::isDifferent(const QString &pFileName,
-                              const QString &pFileContents) const
+                              const QByteArray &pFileContents) const
 {
     // Return whether the given file, if it is being managed, has the same
     // contents has the given one
@@ -308,10 +308,10 @@ void FileManager::makeNew(const QString &pFileName)
     File *nativeFile = file(nativeCanonicalFileName(pFileName));
 
     if (nativeFile) {
-        QString newFileName;
+        QString fileName;
 
-        if (newFile(QString(), newFileName))
-            nativeFile->makeNew(newFileName);
+        if (newFile(fileName))
+            nativeFile->makeNew(fileName);
     }
 }
 
@@ -428,16 +428,16 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
-bool FileManager::newFile(const QString &pContents, QString &pFileName)
+bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
 {
     // Retrieve a temporary file name for our new file
 
-    QString newFileName = temporaryFileName();
+    QString fileName = temporaryFileName();
 
     // Create a new file with the given contents
 
-    if (writeTextToFile(newFileName, pContents)) {
-        pFileName = newFileName;
+    if (writeFileContentsToFile(fileName, pContents)) {
+        pFileName = fileName;
 
         return true;
     } else {
@@ -450,16 +450,16 @@ bool FileManager::newFile(const QString &pContents, QString &pFileName)
 //==============================================================================
 
 FileManager::Status FileManager::create(const QString &pUrl,
-                                        const QString &pContents)
+                                        const QByteArray &pContents)
 {
     // Create a new file
 
-    QString newFileName;
+    QString fileName;
 
-    if (newFile(pContents, newFileName)) {
+    if (newFile(fileName, pContents)) {
         // Let people know that we have created a file
 
-        emit fileCreated(newFileName, pUrl);
+        emit fileCreated(fileName, pUrl);
 
         return Created;
     } else {
@@ -508,18 +508,18 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
     if (nativeFile) {
         // The file is managed, so retrieve its contents
 
-        QString fileContents;
+        QByteArray fileContents;
 
-        if (readTextFromFile(pFileName, fileContents)) {
+        if (readFileContentsFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our
             // given file
 
-            QString newFileName;
+            QString fileName;
 
-            if (newFile(fileContents, newFileName)) {
+            if (newFile(fileName, fileContents)) {
                 // Let people know that we have duplicated a file
 
-                emit fileDuplicated(newFileName);
+                emit fileDuplicated(fileName);
 
                 return Duplicated;
             } else {

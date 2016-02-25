@@ -59,14 +59,14 @@ void CheckForUpdatesEngine::check()
     // Retrieve some information about the different versions of OpenCOR that
     // are available
 
-    QString fileVersionsContents = QString();
+    QByteArray fileVersionsContents = QByteArray();
     QString errorMessage = QString();
 
     mNewerVersions.clear();
 
-    if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
+    if (OpenCOR::readFileContentsFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
         QJsonParseError jsonParseError;
-        QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17).toUtf8(), &jsonParseError);
+        QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
             QVariantMap versionMap;
@@ -95,10 +95,10 @@ void CheckForUpdatesEngine::check()
                 if (!versionMajor && !versionMinor && !versionPatch) {
                     versionVersion = versionDate;
                 } else {
-                    versionVersion = QString("%1.%2").arg(versionMajor).arg(versionMinor);
+                    versionVersion = QString("%1.%2").arg(versionMajor, versionMinor);
 
                     if (versionPatch)
-                        versionVersion = QString("%1.%2").arg(versionVersion).arg(versionPatch);
+                        versionVersion = QString("%1.%2").arg(versionVersion, versionPatch);
                 }
 
                 // Check whether the version is newer and, if so, add it to our list

@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 25, "month": 1, "year": 2016,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 22, "month": 2, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -10,6 +10,7 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
+                           { "type": "Improved", "description": "Retrieval of a save file name." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
                            { "type": "Fixed", "description": "Equation rendering." },
                            { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
@@ -32,6 +33,11 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "Raw Text view (formerly known as the Raw view)",
+                             "entries": [
+                               { "type": "Improved", "description": "Support for text files." }
                              ]
                            },
                            { "type": "subCategory", "name": "Raw CellML view",
@@ -66,7 +72,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> export (either as a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
+                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (either through a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "Added", "description": "Create a new or update an existing CellML file based on the results of a simulation." },
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
@@ -283,7 +289,7 @@ var jsonData = { "versions": [
                                { "type": "Fixed", "description": "Listing of suggested ontological terms." }
                              ]
                            },
-                           { "type": "Added", "description": "<a href=\"plugins/editing/RawView.html\">Raw view</a>." },
+                           { "type": "Added", "description": "<a href=\"plugins/editing/RawTextView.html\">Raw view</a>." },
                            { "type": "Added", "description": "<a href=\"plugins/editing/RawCellMLView.html\">Raw CellML view</a>." }
                          ]
                        },

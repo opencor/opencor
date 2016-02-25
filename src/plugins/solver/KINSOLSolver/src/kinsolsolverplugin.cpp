@@ -54,6 +54,18 @@ Solver::Solver * KINSOLSolverPlugin::solverInstance() const
 
 //==============================================================================
 
+QString KINSOLSolverPlugin::id(const QString &pKisaoId) const
+{
+    // Return the id for the given KiSAO id
+
+    if (!pKisaoId.compare("KISAO:0000282"))
+        return solverName();
+
+    return QString();
+}
+
+//==============================================================================
+
 QString KINSOLSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id

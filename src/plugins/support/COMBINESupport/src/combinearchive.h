@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "combinearchiveissue.h"
 #include "combinesupportglobal.h"
 #include "standardfile.h"
 
@@ -34,11 +35,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
 namespace COMBINESupport {
 
 //==============================================================================
 
-class CombineArchiveFile
+class COMBINESUPPORT_EXPORT CombineArchiveFile
 {
 public:
     enum Format {
@@ -46,6 +50,7 @@ public:
         Cellml,
         Cellml_1_0,
         Cellml_1_1,
+        Omex,
         Sedml
     };
 
@@ -58,6 +63,8 @@ public:
     QString location() const;
     Format format() const;
     bool isMaster() const;
+
+    static Format format(const QString &pFormat);
 
 private:
     QString mFileName;
@@ -78,17 +85,34 @@ class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFil
     Q_OBJECT
 
 public:
-    explicit CombineArchive(const QString &pFileName);
+    explicit CombineArchive(const QString &pFileName, const bool &pNew = false);
+    ~CombineArchive();
 
     virtual bool load();
-    virtual bool save(const QString &pNewFileName = QString());
+    virtual bool save(const QString &pFileName = QString());
+
+    bool isValid();
+
+    QString location(const CombineArchiveFile &pFile) const;
+
+    CombineArchiveFiles masterFiles();
 
     bool addFile(const QString &pFileName, const QString &pLocation,
                  const CombineArchiveFile::Format &pFormat,
                  const bool &pMaster = false);
 
+    CombineArchiveIssues issues() const;
+
 private:
-    CombineArchiveFiles mCombineArchiveFiles;
+    QString mDirName;
+
+    bool mNew;
+    bool mLoadingNeeded;
+
+    CombineArchiveFiles mFiles;
+    CombineArchiveIssues mIssues;
+
+    virtual void reset();
 };
 
 //==============================================================================

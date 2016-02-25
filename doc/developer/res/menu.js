@@ -17,7 +17,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 1, "label": "Internationalisation", "link": "developer/develop/internationalisation.html" },
                                 { "level": 1, "label": "Tests", "link": "developer/develop/tests.html" },
                                 { "level": 0, "label": "Build, test and run", "link": "developer/buildTestAndRun.html" },
-                                { "level": 0, "label": "Functional tests", "link": "developer/functionalTests.html" },
+                                { "level": 0, "label": "Functional tests", "link": "developer/functionalTests/index.html" },
                                 { "level": 0, "label": "Package", "link": "developer/package.html" },
                                 { "separator": true },
                                 { "level": 0, "label": "Third-party libraries", "link": "developer/thirdPartyLibraries.html" },

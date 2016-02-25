@@ -66,10 +66,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QtSingleApplication>
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -105,6 +101,10 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
                      this, SLOT(fileOpenRequest(const QString &)));
     QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
                      this, SLOT(messageReceived(const QString &, QObject *)));
+
+    // Handle the OpenCOR URL
+
+    QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
 
     // Create our settings object
 
@@ -950,48 +950,51 @@ void MainWindow::fileOpenRequest(const QString &pFileName)
 
 //==============================================================================
 
-void MainWindow::handleAction(const QUrl &pUrl)
+void MainWindow::handleUrl(const QUrl &pUrl)
 {
     // Handle the action that was passed to OpenCOR
 
-    QString authority = pUrl.authority();
+    QString actionName = pUrl.authority();
 
-    if (!authority.compare("openPluginsDialogBox", Qt::CaseInsensitive)) {
+    if (!actionName.compare("openPluginsDialogBox", Qt::CaseInsensitive)) {
         // We want to open the Plugins dialog box
 
         on_actionPlugins_triggered();
-    } else if (!authority.compare("openAboutDialogBox", Qt::CaseInsensitive)) {
+    } else if (!actionName.compare("openAboutDialogBox", Qt::CaseInsensitive)) {
         // We want to open the About dialog box
 
         on_actionAbout_triggered();
-    } else if (!authority.compare("openFile", Qt::CaseInsensitive)) {
+    } else if (!actionName.compare("openFile", Qt::CaseInsensitive)) {
         // We want to open a file, so handle it as an argument that is passed to
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open file request will look
-        //       like gui://openFiles//home/user/file...
+        //       like opencor://openFile//home/user/file...
 
         handleArguments(pUrl.path().remove(0, 1));
-    } else if (!authority.compare("openFiles", Qt::CaseInsensitive)) {
+    } else if (!actionName.compare("openFiles", Qt::CaseInsensitive)) {
         // We want to open some files, so handle them as a series of arguments
         // that were passed to OpenCOR
         // Note: the file names are contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open files request  will look
-        //       like gui://openFiles//home/user/file1|/home/user/file2...
+        //       like opencor://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else {
         // We are dealing with an action that OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
 
-        QString host = pUrl.host();
+        QString pluginName = actionName.split(".").first();
 
         foreach (Plugin *plugin, mLoadedPluginPlugins) {
-            if (!plugin->name().toLower().compare(host)) {
+            if (!plugin->name().compare(pluginName, Qt::CaseInsensitive)) {
                 // This is an action for the current plugin, so forward the
                 // action to it, should it support the Plugin interface
 
-                qobject_cast<PluginInterface *>(plugin->instance())->handleAction(pUrl);
+                PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+
+                if (pluginInterface)
+                    pluginInterface->handleUrl(pUrl);
 
                 break;
             }
@@ -1005,29 +1008,14 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 {
     Q_UNUSED(pSocket);
 
-    // We have just received a message, which can be one of two things:
-    //  1) The user tried to run another instance of OpenCOR, which sent a
-    //     message to this instance, asking it to bring itself to the foreground
-    //     and handling all the arguments passed in the message; or
-    //  2) A GUI action was sent to us, so we need to handle it.
+    // We have just received a message, which means that the user tried to run
+    // another instance of OpenCOR, which sent a message to this instance,
+    // asking it to bring itself to the foreground and handling all the
+    // arguments passed in the given message
 
-    // Check whether the passed message corresponds to a GUI action
+    showSelf();
 
-    QUrl url = pMessage;
-
-    if (!url.scheme().compare("gui")) {
-        // We are dealing with a GUI COR action, so handle it
-
-        handleAction(url);
-    } else {
-        // It's not a GUI action, so bring ourselves to the foreground
-
-        showSelf();
-
-        // Now, we must handle the arguments that were passed to us
-
-        handleArguments(pMessage);
-    }
+    handleArguments(pMessage);
 }
 
 //==============================================================================

@@ -66,6 +66,7 @@ public:
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void removeAllGraphs();
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -83,9 +84,9 @@ Q_SIGNALS:
     void activated(SingleCellViewGraphPanelWidget *pGraphPanel);
     void inactivated(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 };
 

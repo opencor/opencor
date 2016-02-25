@@ -341,7 +341,11 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Create our output for ontological terms
 
-    Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
+    QByteArray fileContents;
+
+    Core::readFileContentsFromFile(":/ontologicalTerms.html", fileContents);
+
+    mOutputOntologicalTermsTemplate = fileContents;
 
     mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
 
@@ -605,7 +609,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
             // Keep track of some information
 
             QString itemInformation = item.resource()+"|"+item.id();
-            QString itemInformationSha1 = Core::sha1(itemInformation);
+            QString itemInformationSha1 = Core::sha1(itemInformation.toUtf8());
             QString resourceUrl = "http://identifiers.org/"+item.resource()+"/?redirect=true";
             QString idUrl = "http://identifiers.org/"+item.resource()+"/"+item.id()+"/?profile=most_reliable&redirect=true";
 
@@ -716,7 +720,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     static const QString Selected = "selected";
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
-    QString itemInformationSha1 = mLink.isEmpty()?QString():Core::sha1(mLink);
+    QString itemInformationSha1 = mLink.isEmpty()?QString():Core::sha1(mLink.toUtf8());
 
     if (itemInformationSha1.compare(mItemInformationSha1)) {
         if (!mItemInformationSha1.isEmpty()) {

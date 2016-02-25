@@ -111,7 +111,7 @@
         <string>Find Previous</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/Editor.qrc">
+        <iconset resource="../res/ui.qrc">
          <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
        </property>
       </widget>
@@ -122,7 +122,7 @@
         <string>Find Next</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/Editor.qrc">
+        <iconset resource="../res/ui.qrc">
          <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
        </property>
       </widget>
@@ -148,7 +148,7 @@
   <tabstop>replaceAllButton</tabstop>
  </tabstops>
  <resources>
-  <include location="../res/Editor.qrc"/>
+  <include location="../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

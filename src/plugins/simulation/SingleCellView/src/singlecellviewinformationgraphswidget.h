@@ -58,7 +58,7 @@ namespace SingleCellView {
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
-class SingleCellViewWidget;
+class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
@@ -69,18 +69,14 @@ class SingleCellViewInformationGraphsWidget : public QStackedWidget,
 
 public:
     explicit SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
+                                                   SingleCellViewSimulationWidget *pSimulationWidget,
                                                    QWidget *pParent);
     ~SingleCellViewInformationGraphsWidget();
 
     virtual void retranslateUi();
 
-    void initialize(const QString &pFileName,
-                    SingleCellViewSimulation *pSimulation);
-    void finalize(const QString &pFileName);
-
-    void fileOpened(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileClosed(const QString &pFileName);
+    void initialize(SingleCellViewSimulation *pSimulation);
+    void finalize();
 
     void updateGui();
 
@@ -97,7 +93,8 @@ public:
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
 
-    SingleCellViewWidget *mViewWidget;
+    SingleCellViewPlugin *mPlugin;
+    SingleCellViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *> mGraphPanels;
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
@@ -111,8 +108,6 @@ private:
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    QString mFileName;
-
     bool mCanEmitGraphsUpdatedSignal;
 
     int mHorizontalScrollBarValue;
@@ -125,9 +120,8 @@ private:
                         const bool &pParameterX) const;
 
     void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
-    void updateGraphsInfo(Core::Property *pSectionProperty = 0,
-                          const bool &pGlobalGraphsUpdate = false);
-    void updateAllGraphsInfo(const bool &pGlobalGraphsUpdate = false);
+    void updateGraphsInfo(Core::Property *pSectionProperty = 0);
+    void updateAllGraphsInfo();
 
     void selectAllGraphs(const bool &pSelect);
 
@@ -139,12 +133,13 @@ Q_SIGNALS:
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 public Q_SLOTS:
-    void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void initialize(SingleCellViewGraphPanelWidget *pGraphPanel,
+                    const bool &pActive = true);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void addGraph(SingleCellViewGraphPanelWidget *pGraphPanel,
                   SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void removeGraphs(SingleCellViewGraphPanelWidget *pGraphPanel,
                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:

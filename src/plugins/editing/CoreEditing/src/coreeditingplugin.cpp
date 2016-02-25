@@ -64,6 +64,17 @@ CoreEditingPlugin::CoreEditingPlugin() :
 // File handling interface
 //==============================================================================
 
+bool CoreEditingPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CoreEditingPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)
@@ -404,7 +415,7 @@ void CoreEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreEditingPlugin::handleAction(const QUrl &pUrl)
+void CoreEditingPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

@@ -26,8 +26,9 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
+#include "sedmlfileissue.h"
 #include "singlecellviewgraphpanelplotwidget.h"
-#include "singlecellviewsimulation.h"
+#include "singlecellviewwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -65,6 +66,13 @@ namespace OpenCOR {
 //==============================================================================
 
 class DataStoreInterface;
+class ViewInterface;
+
+//==============================================================================
+
+namespace COMBINESupport {
+    class CombineArchive;
+}   // namespace COMBINESupport
 
 //==============================================================================
 
@@ -77,6 +85,12 @@ namespace Core {
 
 //==============================================================================
 
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
+
+//==============================================================================
+
 namespace SingleCellView {
 
 //==============================================================================
@@ -84,7 +98,7 @@ namespace SingleCellView {
 class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
-class SingleCellViewWidget;
+class SingleCellViewSimulation;
 
 //==============================================================================
 
@@ -112,22 +126,26 @@ public:
 
     QIcon fileTabIcon() const;
 
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+    bool save(const QString &pFileName);
 
-    void fileOpened(const QString &pFileName);
     void filePermissionsChanged();
-    void fileModified(const QString &pFileName);
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileClosed(const QString &pFileName);
+    void fileModified();
+    void fileReloaded();
 
     QString fileName() const;
+
+    SEDMLSupport::SedmlFile * sedmlFile() const;
+
+    SingleCellViewWidget::FileType fileType() const;
 
     SingleCellViewSimulation *simulation() const;
 
     void updateGui();
     void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                 const qulonglong &pSimulationResultsSize);
+                                 const qulonglong &pSimulationResultsSize,
+                                 const bool &pForceUpdateSimulationResults);
+
+    void resetSimulationProgress();
 
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
@@ -142,11 +160,11 @@ private:
 
     SingleCellViewPlugin *mPlugin;
 
-    SingleCellViewWidget *mViewWidget;
-
     QString mFileName;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
+
+    QMap<QAction *, ViewInterface *> mCellmlEditingViewInterfaces;
 
     SingleCellViewSimulation *mSimulation;
 
@@ -175,17 +193,27 @@ private:
 
     QTextEdit *mOutputWidget;
 
+    CellMLSupport::CellmlFile *mCellmlFile;
+    SEDMLSupport::SedmlFile *mSedmlFile;
+    COMBINESupport::CombineArchive *mCombineArchive;
+
+    SingleCellViewWidget::FileType mFileType;
+
+    SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
+    COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
+
     ErrorType mErrorType;
 
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
-    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
     bool mNeedReloadView;
 
     bool mNeedUpdatePlots;
+
+    QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong> mOldDataSizes;
 
     void reloadView();
 
@@ -218,6 +246,12 @@ private:
     void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
 
+    CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
+
+    bool doFurtherInitialize();
+    void initializeGui(const bool &pValidSimulationEnvironment);
+    void initializeSimulation();
+
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -226,7 +260,7 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
-    void createSedmlFile(const QString &pFileName, const QString &pModelSource);
+    bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
 
@@ -251,6 +285,8 @@ private Q_SLOTS:
     void on_actionSedmlExportSedmlFile_triggered();
     void on_actionSedmlExportCombineArchive_triggered();
 
+    void furtherInitialize();
+
     void emitSplitterMoved();
 
     void simulationDataExport();
@@ -272,19 +308,22 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+                         const bool &pActive);
     void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
                     SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+
+    void openCellmlFile();
 };
 
 //==============================================================================

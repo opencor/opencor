@@ -124,7 +124,7 @@ void PhysiomeModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) con
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
+void PhysiomeModelRepositoryWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 

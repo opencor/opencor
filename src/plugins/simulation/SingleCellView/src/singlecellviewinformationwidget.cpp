@@ -39,6 +39,7 @@ namespace SingleCellView {
 //==============================================================================
 
 SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
+                                                                 SingleCellViewSimulationWidget *pSimulationWidget,
                                                                  QWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent)
@@ -76,7 +77,7 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewP
 
     // Create our graphs widget
 
-    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, mCollapsibleWidget);
+    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, pSimulationWidget, mCollapsibleWidget);
 
     mGraphsWidget->setObjectName("Graphs");
 
@@ -116,76 +117,6 @@ void SingleCellViewInformationWidget::retranslateUi()
     mSolversWidget->retranslateUi();
     mGraphsWidget->retranslateUi();
     mParametersWidget->retranslateUi();
-}
-
-//==============================================================================
-
-void SingleCellViewInformationWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the settings of our collapsible widget
-
-    pSettings->beginGroup(mCollapsibleWidget->objectName());
-        mCollapsibleWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-
-    // Retrieve the settings of our simulation widget
-
-    pSettings->beginGroup(mSimulationWidget->objectName());
-        mSimulationWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-
-    // Retrieve the settings of our solvers widget
-
-    pSettings->beginGroup(mSolversWidget->objectName());
-        mSolversWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-
-    // Retrieve the settings of our graphs widget
-
-    pSettings->beginGroup(mGraphsWidget->objectName());
-        mGraphsWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-
-    // Retrieve the settings of our parameters widget
-
-    pSettings->beginGroup(mParametersWidget->objectName());
-        mParametersWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewInformationWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the settings of our collapsible widget
-
-    pSettings->beginGroup(mCollapsibleWidget->objectName());
-        mCollapsibleWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-
-    // Keep track of the settings of our simulation widget
-
-    pSettings->beginGroup(mSimulationWidget->objectName());
-        mSimulationWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-
-    // Keep track of the settings of our solvers widget
-
-    pSettings->beginGroup(mSolversWidget->objectName());
-        mSolversWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-
-    // Keep track of the settings of our graphs widget
-
-    pSettings->beginGroup(mGraphsWidget->objectName());
-        mGraphsWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-
-    // Keep track of the settings of our parameters widget
-
-    pSettings->beginGroup(mParametersWidget->objectName());
-        mParametersWidget->saveSettings(pSettings);
-    pSettings->endGroup();
 }
 
 //==============================================================================
