@@ -483,17 +483,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                        ${I18N_QRC_FILENAME})
 
         LIST(APPEND RESOURCES ${I18N_QRC_FILENAME})
+
+        # Update the translation (.ts) files and generate the language (.qm)
+        # files, which will later on be embedded in the plugin
+
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     IF(EXISTS ${UI_QRC_FILENAME})
         LIST(APPEND RESOURCES ${UI_QRC_FILENAME})
-    ENDIF()
-
-    # Update the translation (.ts) files and generate the language (.qm) files,
-    # which will later on be embedded in the plugin
-
-    IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins
