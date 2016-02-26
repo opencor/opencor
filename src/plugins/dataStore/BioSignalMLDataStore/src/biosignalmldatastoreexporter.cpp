@@ -59,7 +59,7 @@ void BioSignalMLExporter::execute(const QString &pFileName,
                     + " " + QObject::tr("at") + " " + QDateTime::currentDateTimeUtc().toString(Qt::ISODate)
                     + " " + QObject::tr("from") + " " + pDataStore->uri();
     mSaveDialog->setComment(comment);
-    mSaveDialog->setDefaultFileName(Core::newFileName(pFileName, QObject::tr("Data"), false, "biosignalml"));
+    mSaveDialog->setDefaultFileName(Core::newFileName(pFileName, "", false, "biosignalml"));
     DataStore::DataStoreVariables variables = pDataStore->variables();
     mSaveDialog->setSelectedVariables(variables);
 
