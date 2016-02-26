@@ -138,7 +138,7 @@ void BioSignalMLDataStorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void BioSignalMLDataStorePlugin::handleAction(const QUrl &pUrl)
+void BioSignalMLDataStorePlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
