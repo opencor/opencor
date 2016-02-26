@@ -476,30 +476,34 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
     # Resource files, if any
+    # Note: ideally, we would have our resource files named i18n.qrc.in and
+    #       ui.qrc for all our plugins, but this is causing problems on Linux
+    #       with Qt apparently accepting only one file called i18n.qrc.in or
+    #       ui.qrc. The end result is that, on a development machine, plugin
+    #       resources (e.g. icons, translations) are not available while,
+    #       strangely enough, they are on a deployment machine...
 
     SET(RESOURCES)
-    SET(I18N_QRC_IN_FILENAME ${PROJECT_SOURCE_DIR}/res/i18n.qrc.in)
-    SET(UI_QRC_FILENAME ${PROJECT_SOURCE_DIR}/res/ui.qrc)
+    SET(I18N_QRC_IN_FILENAME ${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}_i18n.qrc.in)
+    SET(UI_QRC_FILENAME ${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}_ui.qrc)
 
     IF(EXISTS ${I18N_QRC_IN_FILENAME})
         STRING(REPLACE "${CMAKE_SOURCE_DIR}" "${PROJECT_BUILD_DIR}"
-               I18N_QRC_FILENAME "${PROJECT_SOURCE_DIR}/res/i18n.qrc")
+               I18N_QRC_FILENAME "${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}_i18n.qrc")
 
         CONFIGURE_FILE(${I18N_QRC_IN_FILENAME}
                        ${I18N_QRC_FILENAME})
 
         LIST(APPEND RESOURCES ${I18N_QRC_FILENAME})
+
+        # Update the translation (.ts) files and generate the language (.qm)
+        # files, which will later on be embedded in the plugin
+
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     IF(EXISTS ${UI_QRC_FILENAME})
         LIST(APPEND RESOURCES ${UI_QRC_FILENAME})
-    ENDIF()
-
-    # Update the translation (.ts) files and generate the language (.qm) files,
-    # which will later on be embedded in the plugin
-
-    IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins

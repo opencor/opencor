@@ -25,8 +25,6 @@
 #include <biosignalml/resource.h>
 #include <biosignalml/timing.h>
 
-using namespace rdf ;
-
 
 namespace bsml {
 

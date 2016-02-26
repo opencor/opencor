@@ -28,28 +28,26 @@
 
 #include <string>
 
-using namespace rdf ;
-
 
 namespace bsml {
 
   class BIOSIGNALML_EXPORT Resource : public tobj::TypedObject
   /*--------------------------------------------------------*/
   {
-    TYPED_OBJECT(Resource, OWL::Object)
+    TYPED_OBJECT(Resource, rdf::OWL::Object)
 
     // Generic attributes all resources have:
     // http://dublincore.org/documents/dc-rdf/
-    PROPERTY_STRING(label, RDFS::label)  //!< A human-readable version of a resource's name.
+    PROPERTY_STRING(label, rdf::RDFS::label)  //!< A human-readable version of a resource's name.
                                          //!< The target must be a literal.
-    PROPERTY_STRING(comment, RDFS::comment)  //!< A human-readable description of a resource.
-    PROPERTY_STRING(description, DCT::description)  //!< An account of a resource's content.
-    PROPERTY_NODE(precededBy, PRV::precededBy)
-    PROPERTY_URI(creator, DCT::creator)
-    PROPERTY_DATETIME(created, DCT::created)
-    //, XSD.dateTime,  utils::datetime_to_isoformat, utils::isoformat_to_datetime)
+    PROPERTY_STRING(comment, rdf::RDFS::comment)  //!< A human-readable description of a resource.
+    PROPERTY_STRING(description, rdf::DCT::description)  //!< An account of a resource's content.
+    PROPERTY_NODE(precededBy, rdf::PRV::precededBy)
+    PROPERTY_URI(creator, rdf::DCT::creator)
+    PROPERTY_DATETIME(created, rdf::DCT::created)
+    //, rdf::XSD.dateTime,  utils::datetime_to_isoformat, utils::isoformat_to_datetime)
 
-    PREFIXES(BSML::NS, RDFS::NS, XSD::NS, DCT::NS, PRV::NS)
+    PREFIXES(BSML::NS, rdf::RDFS::NS, rdf::XSD::NS, rdf::DCT::NS, rdf::PRV::NS)
     } ;
 
   } ;

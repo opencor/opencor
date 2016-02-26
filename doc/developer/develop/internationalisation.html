@@ -60,8 +60,8 @@
         </div>
 
         <p>
-            A file called <code>&lt;PluginName&gt;_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[PluginName]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/miscellaneous/Core/i18n/Core_fr.ts</code></a>). An <code>i18n.qrc.in</code> file must also be created in <code>[PluginName]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/res/i18n.qrc.in"><code>[OpenCOR]/src/plugins/miscellaneous/Core/res/i18n.qrc.in</code></a>) and an entry for the translation file added to it, e.g.:
-            <pre class="prettyprint">&lt;file alias=&quot;Core_fr&quot;&gt;${PROJECT_BUILD_DIR}/Core_fr.qm&lt;/file&gt;</pre>
+            A file called <code>&lt;PluginName&gt;_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[PluginName]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/miscellaneous/Core/i18n/Core_fr.ts</code></a>). A <code>[PluginName]_i18n.qrc.in</code> file must also be created in <code>[PluginName]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/res/Core_i18n.qrc.in"><code>[OpenCOR]/src/plugins/miscellaneous/Core/res/Core_i18n.qrc.in</code></a>) and an entry for the translation file added to it, e.g. (<code>PLUGIN_NAME</code> and <code>PROJECT_BUILD_DIR</code> are automatically replaced during the build process):
+            <pre class="prettyprint">&lt;file alias=&quot;${PLUGIN_NAME}_fr&quot;&gt;${PROJECT_BUILD_DIR}/${PLUGIN_NAME}_fr.qm&lt;/file&gt;</pre>
         </p>
 
         <script type="text/javascript">

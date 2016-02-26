@@ -27,8 +27,6 @@
 
 #include <string>
 
-using namespace rdf ;
-
 
 namespace bsml {
 
@@ -37,7 +35,7 @@ namespace bsml {
   {
     TYPED_OBJECT(Segment, BSML::Segment)
 
-    PROPERTY_URI(source, DCT::source)
+    PROPERTY_URI(source, rdf::DCT::source)
     PROPERTY_OBJECT(time, BSML::time, TemporalEntity)
 
    public:

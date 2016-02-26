@@ -20,7 +20,7 @@
   </layout>
   <action name="actionExpandAll">
    <property name="icon">
-    <iconset resource="../res/CellMLAnnotationView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
@@ -32,7 +32,7 @@
   </action>
   <action name="actionCollapseAll">
    <property name="icon">
-    <iconset resource="../res/CellMLAnnotationView.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
    </property>
    <property name="text">
@@ -71,7 +71,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/CellMLAnnotationView.qrc"/>
+  <include location="../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

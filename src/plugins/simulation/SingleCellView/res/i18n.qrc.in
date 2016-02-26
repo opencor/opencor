@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="SingleCellView_fr">${PROJECT_BUILD_DIR}/SingleCellView_fr.qm</file>
-    </qresource>
-</RCC>

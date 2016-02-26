@@ -28,8 +28,6 @@
 #include <vector>
 
 
-using namespace rdf ;
-
 namespace bsml {
 
   class Interval ;
@@ -38,28 +36,32 @@ namespace bsml {
   class BIOSIGNALML_EXPORT RelativeTimeLine : public Resource
   /*-------------------------------------------------------*/
   {
-    TYPED_OBJECT(RelativeTimeLine, TL::RelativeTimeLine)
+    TYPED_OBJECT(RelativeTimeLine, rdf::TL::RelativeTimeLine)
     } ;
 
 
   class BIOSIGNALML_EXPORT TemporalEntity : public Resource
   /*-----------------------------------------------------*/
   {
-    TYPED_OBJECT(TemporalEntity, TIME::TemporalEntity)
+    TYPED_OBJECT(TemporalEntity, rdf::TIME::TemporalEntity)
 
-    PROPERTY_OBJECT(timeline, TL::timeline, RelativeTimeLine)
+    PROPERTY_OBJECT(timeline, rdf::TL::timeline, RelativeTimeLine)
     PROPERTY_DURATION(start, NONE)
     PROPERTY_DURATION(duration, NONE)
     } ;
 
 
+  //! An interval on a time line.
+  //!
+  //! Intervals are `closed` in the mathematical sense, that is they contain
+  //! their end points.
   class BIOSIGNALML_EXPORT Interval : public TemporalEntity
   /*-----------------------------------------------------*/
   {
     TYPED_OBJECT(Interval, BSML::Interval)
 
-    ASSIGN_DURATION(start, TL::start)
-    ASSIGN_DURATION(duration, TL::duration)
+    ASSIGN_DURATION(start, rdf::TL::start)
+    ASSIGN_DURATION(duration, rdf::TL::duration)
 
    public:
     Interval(const rdf::URI &uri, const double start, const double duration,
@@ -72,7 +74,7 @@ namespace bsml {
   {
     TYPED_OBJECT(Instant, BSML::Instant)
 
-    ASSIGN_DURATION(start, TL::at)
+    ASSIGN_DURATION(start, rdf::TL::at)
 
    public:
     Instant(const rdf::URI &uri, const double start, const std::string & units = "second",
@@ -96,6 +98,10 @@ namespace bsml {
     Clock(const rdf::URI &uri, const rdf::URI &units) ;
 
     virtual double time(const size_t n) const ;
+    //! Return the position of the first time point that is
+    //! not less than `t`. i.e. largest `n` such that `time(n) <= t`.
+    virtual size_t index(const double t) const ;
+    virtual size_t index_right(const double t) const ;
     virtual void extend(const double *times, const size_t length) ;
     virtual std::vector<double> read(size_t pos=0, intmax_t length=-1) ;
     void extend(const std::vector<double> &points) ;

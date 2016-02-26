@@ -39,19 +39,19 @@
 //**************************************************************************//
 
 namespace tobj {
-  class TYPEDOBJECT_EXPORT TypedObject ; // Declare forward
+  class TypedObject ;                // Declare forward
   } ;
 
 //**************************************************************************//
 
 namespace rdf {
 
-  class NodeImpl ;                       // Declare forward
-  class StmntImpl ;                      // Declare forward
-  class IterImpl ;                       // Declare forward
-  class GraphImpl ;                      // Declare forward
+  class NodeImpl ;                   // Declare forward
+  class StmntImpl ;                  // Declare forward
+  class IterImpl ;                   // Declare forward
+  class GraphImpl ;                  // Declare forward
 
-  class TYPEDOBJECT_EXPORT Graph ;       // Declare forward for VS2013
+  class Graph ;                      // Declare forward for VS2013
 
   class TYPEDOBJECT_EXPORT Node
   /*-------------------------*/

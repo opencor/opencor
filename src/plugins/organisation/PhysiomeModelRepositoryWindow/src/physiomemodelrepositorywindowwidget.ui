@@ -20,7 +20,7 @@
   </layout>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="../res/PhysiomeModelRepositoryWindow.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
@@ -32,7 +32,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/PhysiomeModelRepositoryWindow.qrc"/>
+  <include location="../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

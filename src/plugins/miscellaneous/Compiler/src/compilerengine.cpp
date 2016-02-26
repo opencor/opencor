@@ -99,6 +99,65 @@ QString CompilerEngine::error() const
 
 bool CompilerEngine::compileCode(const QString &pCode)
 {
+    // Prepend all the external functions that may, or not, be needed by the
+    // given code
+    // Note: indeed, we cannot include header files since we don't (and don't
+    //       want in order to avoid complications) deploy them with OpenCOR. So,
+    //       instead, we must declare as external functions all the functions
+    //       that we would normally use through header files...
+
+    QString code =  "extern double fabs(double);\n"
+                    "\n"
+                    "extern double log(double);\n"
+                    "extern double exp(double);\n"
+                    "\n"
+                    "extern double floor(double);\n"
+                    "extern double ceil(double);\n"
+                    "\n"
+                    "extern double factorial(double);\n"
+                    "\n"
+                    "extern double sin(double);\n"
+                    "extern double sinh(double);\n"
+                    "extern double asin(double);\n"
+                    "extern double asinh(double);\n"
+                    "\n"
+                    "extern double cos(double);\n"
+                    "extern double cosh(double);\n"
+                    "extern double acos(double);\n"
+                    "extern double acosh(double);\n"
+                    "\n"
+                    "extern double tan(double);\n"
+                    "extern double tanh(double);\n"
+                    "extern double atan(double);\n"
+                    "extern double atanh(double);\n"
+                    "\n"
+                    "extern double sec(double);\n"
+                    "extern double sech(double);\n"
+                    "extern double asec(double);\n"
+                    "extern double asech(double);\n"
+                    "\n"
+                    "extern double csc(double);\n"
+                    "extern double csch(double);\n"
+                    "extern double acsc(double);\n"
+                    "extern double acsch(double);\n"
+                    "\n"
+                    "extern double cot(double);\n"
+                    "extern double coth(double);\n"
+                    "extern double acot(double);\n"
+                    "extern double acoth(double);\n"
+                    "\n"
+                    "extern double arbitrary_log(double, double);\n"
+                    "\n"
+                    "extern double pow(double, double);\n"
+                    "\n"
+                    "extern double multi_min(int, ...);\n"
+                    "extern double multi_max(int, ...);\n"
+                    "\n"
+                    "extern double gcd_multi(int, ...);\n"
+                    "extern double lcm_multi(int, ...);\n"
+                    "\n"
+                   +pCode;
+
     // Reset our compiler engine
 
     reset();
@@ -111,16 +170,16 @@ bool CompilerEngine::compileCode(const QString &pCode)
     //       some functions (e.g. __exp10()). So, if the given code needs one of
     //       those functions, then OpenCOR will crash if run on an 'old' version
     //       of OS X. So, to avoid this issue, we set the target triple
-    //       ourselves, based on the system on which OpenCOR is being used...
+    //       ourselves, based on the system on which OpenCOR is to be used...
 
     std::string targetTriple;
 
 #if defined(Q_OS_WIN)
-    targetTriple = (sizeof(void *) == 4)?"i686-pc-windows-msvc-elf":"x86_64-pc-windows-msvc-elf";
+    targetTriple = "x86_64-pc-windows-msvc-elf";
     // Note: MCJIT currently works only through the ELF object format, hence we
     //       are appending "-elf"...
 #elif defined(Q_OS_LINUX)
-    targetTriple = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
+    targetTriple = "x86_64-pc-linux-gnu";
 #elif defined(Q_OS_MAC)
     targetTriple = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
 #else
@@ -191,7 +250,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Map our dummy file to a memory buffer
 
-    QByteArray codeByteArray = pCode.toUtf8();
+    QByteArray codeByteArray = code.toUtf8();
 
     compilerInvocation->getPreprocessorOpts().addRemappedFile(dummyFileName, llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
 
@@ -245,6 +304,59 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
         return false;
     }
+
+    // Map all the external functions that may, or not, be needed by the given
+    // code
+
+    mExecutionEngine->addGlobalMapping("fabs", (uint64_t) fabs);
+
+    mExecutionEngine->addGlobalMapping("log", (uint64_t) log);
+    mExecutionEngine->addGlobalMapping("exp", (uint64_t) exp);
+
+    mExecutionEngine->addGlobalMapping("floor", (uint64_t) floor);
+    mExecutionEngine->addGlobalMapping("ceil", (uint64_t) ceil);
+
+    mExecutionEngine->addGlobalMapping("factorial", (uint64_t) factorial);
+
+    mExecutionEngine->addGlobalMapping("sin", (uint64_t) sin);
+    mExecutionEngine->addGlobalMapping("sinh", (uint64_t) sinh);
+    mExecutionEngine->addGlobalMapping("asin", (uint64_t) asin);
+    mExecutionEngine->addGlobalMapping("asinh", (uint64_t) asinh);
+
+    mExecutionEngine->addGlobalMapping("cos", (uint64_t) cos);
+    mExecutionEngine->addGlobalMapping("cosh", (uint64_t) cosh);
+    mExecutionEngine->addGlobalMapping("acos", (uint64_t) acos);
+    mExecutionEngine->addGlobalMapping("acosh", (uint64_t) acosh);
+
+    mExecutionEngine->addGlobalMapping("tan", (uint64_t) tan);
+    mExecutionEngine->addGlobalMapping("tanh", (uint64_t) tanh);
+    mExecutionEngine->addGlobalMapping("atan", (uint64_t) atan);
+    mExecutionEngine->addGlobalMapping("atanh", (uint64_t) atanh);
+
+    mExecutionEngine->addGlobalMapping("sec", (uint64_t) sec);
+    mExecutionEngine->addGlobalMapping("sech", (uint64_t) sech);
+    mExecutionEngine->addGlobalMapping("asec", (uint64_t) asec);
+    mExecutionEngine->addGlobalMapping("asech", (uint64_t) asech);
+
+    mExecutionEngine->addGlobalMapping("csc", (uint64_t) csc);
+    mExecutionEngine->addGlobalMapping("csch", (uint64_t) csch);
+    mExecutionEngine->addGlobalMapping("acsc", (uint64_t) acsc);
+    mExecutionEngine->addGlobalMapping("acsch", (uint64_t) acsch);
+
+    mExecutionEngine->addGlobalMapping("cot", (uint64_t) cot);
+    mExecutionEngine->addGlobalMapping("coth", (uint64_t) coth);
+    mExecutionEngine->addGlobalMapping("acot", (uint64_t) acot);
+    mExecutionEngine->addGlobalMapping("acoth", (uint64_t) acoth);
+
+    mExecutionEngine->addGlobalMapping("arbitrary_log", (uint64_t) arbitrary_log);
+
+    mExecutionEngine->addGlobalMapping("pow", (uint64_t) pow);
+
+    mExecutionEngine->addGlobalMapping("multi_min", (uint64_t) multi_min);
+    mExecutionEngine->addGlobalMapping("multi_max", (uint64_t) multi_max);
+
+    mExecutionEngine->addGlobalMapping("gcd_multi", (uint64_t) gcd_multi);
+    mExecutionEngine->addGlobalMapping("lcm_multi", (uint64_t) lcm_multi);
 
     return true;
 }
