@@ -66,7 +66,7 @@ void BioSignalMLExporter::execute(const QString &pFileName,
     if (mSaveDialog->run()) {
 
         QString fileName = mSaveDialog->fileName();
-        std::string rec_uri = QUrl::fromLocalFile(fileName).toString().toStdString();
+        std::string rec_uri = QUrl::fromLocalFile(fileName).toEncoded().toStdString();
         std::string base_units = pDataStore->uri().toStdString() + "/units#";
 
         bsml::HDF5::Recording *recording = nullptr;
