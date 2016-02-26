@@ -29,7 +29,42 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-double factorial(double pNb)
+double compiler_fabs(double pNb)
+{
+    return ::fabs(pNb);
+}
+
+//==============================================================================
+
+double compiler_log(double pNb)
+{
+    return ::log(pNb);
+}
+
+//==============================================================================
+
+double compiler_exp(double pNb)
+{
+    return ::exp(pNb);
+}
+
+//==============================================================================
+
+double compiler_floor(double pNb)
+{
+    return ::floor(pNb);
+}
+
+//==============================================================================
+
+double compiler_ceil(double pNb)
+{
+    return ::ceil(pNb);
+}
+
+//==============================================================================
+
+double compiler_factorial(double pNb)
 {
     double res = 1.0;
 
@@ -41,28 +76,112 @@ double factorial(double pNb)
 
 //==============================================================================
 
-double sec(double pNb)
+double compiler_sin(double pNb)
+{
+    return ::sin(pNb);
+}
+
+//==============================================================================
+
+double compiler_sinh(double pNb)
+{
+    return ::sinh(pNb);
+}
+
+//==============================================================================
+
+double compiler_asin(double pNb)
+{
+    return ::asin(pNb);
+}
+
+//==============================================================================
+
+double compiler_asinh(double pNb)
+{
+    return ::asinh(pNb);
+}
+
+//==============================================================================
+
+double compiler_cos(double pNb)
+{
+    return ::cos(pNb);
+}
+
+//==============================================================================
+
+double compiler_cosh(double pNb)
+{
+    return ::cosh(pNb);
+}
+
+//==============================================================================
+
+double compiler_acos(double pNb)
+{
+    return ::acos(pNb);
+}
+
+//==============================================================================
+
+double compiler_acosh(double pNb)
+{
+    return ::acosh(pNb);
+}
+
+//==============================================================================
+
+double compiler_tan(double pNb)
+{
+    return ::tan(pNb);
+}
+
+//==============================================================================
+
+double compiler_tanh(double pNb)
+{
+    return ::tanh(pNb);
+}
+
+//==============================================================================
+
+double compiler_atan(double pNb)
+{
+    return ::atan(pNb);
+}
+
+//==============================================================================
+
+double compiler_atanh(double pNb)
+{
+    return ::atanh(pNb);
+}
+
+//==============================================================================
+
+double compiler_sec(double pNb)
 {
     return 1.0/cos(pNb);
 }
 
 //==============================================================================
 
-double sech(double pNb)
+double compiler_sech(double pNb)
 {
     return 1.0/cosh(pNb);
 }
 
 //==============================================================================
 
-double asec(double pNb)
+double compiler_asec(double pNb)
 {
     return acos(1.0/pNb);
 }
 
 //==============================================================================
 
-double asech(double pNb)
+double compiler_asech(double pNb)
 {
     double oneOverNb = 1.0/pNb;
 
@@ -71,28 +190,28 @@ double asech(double pNb)
 
 //==============================================================================
 
-double csc(double pNb)
+double compiler_csc(double pNb)
 {
     return 1.0/sin(pNb);
 }
 
 //==============================================================================
 
-double csch(double pNb)
+double compiler_csch(double pNb)
 {
     return 1.0/sinh(pNb);
 }
 
 //==============================================================================
 
-double acsc(double pNb)
+double compiler_acsc(double pNb)
 {
     return asin(1.0/pNb);
 }
 
 //==============================================================================
 
-double acsch(double pNb)
+double compiler_acsch(double pNb)
 {
     double oneOverNb = 1.0/pNb;
 
@@ -101,28 +220,28 @@ double acsch(double pNb)
 
 //==============================================================================
 
-double cot(double pNb)
+double compiler_cot(double pNb)
 {
     return 1.0/tan(pNb);
 }
 
 //==============================================================================
 
-double coth(double pNb)
+double compiler_coth(double pNb)
 {
     return 1.0/tanh(pNb);
 }
 
 //==============================================================================
 
-double acot(double pNb)
+double compiler_acot(double pNb)
 {
     return atan(1.0/pNb);
 }
 
 //==============================================================================
 
-double acoth(double pNb)
+double compiler_acoth(double pNb)
 {
     double oneOverNb = 1.0/pNb;
 
@@ -131,14 +250,21 @@ double acoth(double pNb)
 
 //==============================================================================
 
-double arbitrary_log(double pNb, double pBase)
+double compiler_arbitrary_log(double pNb, double pBase)
 {
     return std::log(pNb)/std::log(pBase);
 }
 
 //==============================================================================
 
-double multi_min(int pCount, ...)
+double compiler_pow(double pNb1, double pNb2)
+{
+    return ::pow(pNb1, pNb2);
+}
+
+//==============================================================================
+
+double compiler_multi_min(int pCount, ...)
 {
     if (!pCount)
         return strtod("NAN", 0);
@@ -162,7 +288,7 @@ double multi_min(int pCount, ...)
 
 //==============================================================================
 
-double multi_max(int pCount, ...)
+double compiler_multi_max(int pCount, ...)
 {
     if (!pCount)
         return strtod("NAN", 0);
@@ -186,7 +312,7 @@ double multi_max(int pCount, ...)
 
 //==============================================================================
 
-double gcdPair(double pNb1, double pNb2)
+double compiler_gcd_pair(double pNb1, double pNb2)
 {
     #define EVEN(pNb) !(pNb & 1)
 
@@ -224,14 +350,14 @@ double gcdPair(double pNb1, double pNb2)
 
 //==============================================================================
 
-double lcmPair(double pNb1, double pNb2)
+double compiler_lcm_pair(double pNb1, double pNb2)
 {
-    return (pNb1*pNb2)/gcdPair(pNb1, pNb2);
+    return (pNb1*pNb2)/compiler_gcd_pair(pNb1, pNb2);
 }
 
 //==============================================================================
 
-double gcd_multi(int pCount, ...)
+double compiler_gcd_multi(int pCount, ...)
 {
     if (!pCount)
         return 1.0;
@@ -242,7 +368,7 @@ double gcd_multi(int pCount, ...)
         double res = va_arg(parameters, double);
 
         while (--pCount)
-            res = gcdPair(res, va_arg(parameters, double));
+            res = compiler_gcd_pair(res, va_arg(parameters, double));
     va_end(parameters);
 
     return res;
@@ -250,7 +376,7 @@ double gcd_multi(int pCount, ...)
 
 //==============================================================================
 
-double lcm_multi(int pCount, ...)
+double compiler_lcm_multi(int pCount, ...)
 {
     if (!pCount)
         return 1.0;
@@ -261,7 +387,7 @@ double lcm_multi(int pCount, ...)
         double res = va_arg(parameters, double);
 
         while (--pCount)
-            res = lcmPair(res, va_arg(parameters, double));
+            res = compiler_lcm_pair(res, va_arg(parameters, double));
     va_end(parameters);
 
     return res;
