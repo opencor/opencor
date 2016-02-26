@@ -34,8 +34,6 @@
 #include <cassert>
 #include <list>
 
-using namespace rdf ;
-
 
 namespace bsml {
 
@@ -45,29 +43,29 @@ namespace bsml {
   {
     TYPED_OBJECT(Recording, BSML::Recording)
 
-    PROPERTY_NODE(format, DCT::format)
+    PROPERTY_NODE(format, rdf::DCT::format)
     PROPERTY_NODE(dataset, BSML::dataset)
-    PROPERTY_NODE_SET(source, DCT::source)
+    PROPERTY_NODE_SET(source, rdf::DCT::source)
 
-    PROPERTY_NODE(investigation, DCT::subject)
-    PROPERTY_NODE(investigator, DCT::creator)  // Also Resource::creator
-    PROPERTY_DATETIME(starttime, DCT::created) // Also Resource::created
-    PROPERTY_DURATION(duration, DCT::extent)
+    PROPERTY_NODE(investigation, rdf::DCT::subject)
+    PROPERTY_NODE(investigator, rdf::DCT::creator)  // Also Resource::creator
+    PROPERTY_DATETIME(starttime, rdf::DCT::created) // Also Resource::created
+    PROPERTY_DURATION(duration, rdf::DCT::extent)
 
-    PROPERTY_OBJECT(timeline, TL::timeline, RelativeTimeLine)
+    PROPERTY_OBJECT(timeline, rdf::TL::timeline, RelativeTimeLine)
 
-//    PROPERTY_OBJECT(generatedBy, PROV::wasGeneratedBy, Provenace class...)
-    PROPERTY_URI(generatedBy, PROV::wasGeneratedBy)   // TODO...
+//    PROPERTY_OBJECT(generatedBy, rdf::PROV::wasGeneratedBy, Provenace class...)
+    PROPERTY_URI(generatedBy, rdf::PROV::wasGeneratedBy)   // TODO...
 
     // Other reources that directly refer to a Recording
-    RESOURCE(BSML::recording, Clock)    // The type of these must change to HDF5::Clock etc
-    RESOURCE(BSML::recording, Signal)
-    RESOURCE(BSML::recording, Event)
-    RESOURCE(DCT::source,     Segment)
+      RESOURCE(BSML::recording,  Clock)    // The type of these must change to HDF5::Clock etc
+      RESOURCE(BSML::recording,  Signal)
+//    RESOURCE(BSML::recording,  Event)
+//    RESOURCE(rdf::DCT::source, Segment)
 
 // What we want are ALL bsml::Annotation resources in recording's Graph
 //    RESOURCE(bsml::Annotation) // Is this enough to get C++ type??,    Annotation)
-//    RESOURCE(DCT::subject,    Annotation)
+//    RESOURCE(rdf::DCT::subject,    Annotation)
 
    public:
     virtual void close(void) { }

@@ -19,19 +19,19 @@ specific language governing permissions and limitations under the License.
 // BioSignalML data store global
 //==============================================================================
 
-#ifndef BSMLDATASTOREGLOBAL_H
-#define BSMLDATASTOREGLOBAL_H
+#ifndef BioSignalMLDATASTOREGLOBAL_H
+#define BioSignalMLDATASTOREGLOBAL_H
 
 //==============================================================================
 
 #ifdef _WIN32
-    #ifdef BSMLDataStore_PLUGIN
-        #define BSMLDATASTORE_EXPORT __declspec(dllexport)
+    #ifdef BioSignalMLDataStore_PLUGIN
+        #define BioSignalMLDATASTORE_EXPORT __declspec(dllexport)
     #else
-        #define BSMLDATASTORE_EXPORT __declspec(dllimport)
+        #define BioSignalMLDATASTORE_EXPORT __declspec(dllimport)
     #endif
 #else
-    #define BSMLDATASTORE_EXPORT
+    #define BioSignalMLDATASTORE_EXPORT
 #endif
 
 //==============================================================================

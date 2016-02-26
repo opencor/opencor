@@ -29,8 +29,10 @@
 #include <string>
 #include <vector>
 
-using namespace rdf ;
-
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
 
 namespace bsml {
 
@@ -52,7 +54,7 @@ namespace bsml {
     PROPERTY_INTEGER(dataBits, BSML::dataBits)
     PROPERTY_NODE(signaltype, BSML::signalType)
     PROPERTY_DURATION(offset, BSML::offset)
-    PROPERTY_DURATION(duration, DCT::extent)
+    PROPERTY_DURATION(duration, rdf::DCT::extent)
 
    public:
     Signal(const rdf::URI &uri, const rdf::URI &units, double rate) ;
@@ -60,11 +62,14 @@ namespace bsml {
 
     virtual void extend(const double *points, const size_t length) ;
     void extend(const std::vector<double> &points) ;
-
-    //! Time based
-    virtual bsml::data::TimeSeries::Ptr read(bsml::Interval::Ptr interval, intmax_t maxpoints=-1) ;
+    
+    //! Time based.
+    //!
+    //! The returned time-series should be the longest bounded by the closed
+    //! interval, i.e. the interval `[ start, start+duration ]`.
+    virtual bsml::data::TimeSeries::Ptr read(bsml::Interval::Ptr interval, ssize_t maxpoints=-1) ;
     //! Point based
-    virtual data::TimeSeries::Ptr read(size_t pos=0, intmax_t length=0) ;
+    virtual data::TimeSeries::Ptr read(size_t pos=0, ssize_t length=0) ;
 
     } ;
 

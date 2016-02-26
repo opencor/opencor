@@ -25,8 +25,6 @@
 #include <biosignalml/resource.h>
 #include <biosignalml/timing.h>
 
-using namespace rdf ;
-
 
 namespace bsml {
 
@@ -35,7 +33,7 @@ namespace bsml {
   {
     TYPED_OBJECT(Annotation, BSML::Annotation)
 
-    PROPERTY_OBJECT(about, DCT::subject, Resource)
+    PROPERTY_OBJECT(about, rdf::DCT::subject, Resource)
     PROPERTY_NODE_SET(tags, BSML::tag)
     PROPERTY_OBJECT(annotation_time, BSML::time, TemporalEntity)
 

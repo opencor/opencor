@@ -19,85 +19,59 @@ specific language governing permissions and limitations under the License.
 // Save as BioSignalML widget
 //==============================================================================
 
-#include "coreguiutils.h"
-#include "bsmldatastoreselectvars.h"
-#include "i18ninterface.h"
-#include "filemanager.h"
+#ifndef BioSignalMLDATASTORESELECTVARS_H
+#define BioSignalMLDATASTORESELECTVARS_H
 
 //==============================================================================
 
-#include "ui_bsmldatastoreselectvars.h"
+#include "biosignalmldatastoreglobal.h"
+
+//==============================================================================
+
+#include <QDialog>
+
+//==============================================================================
+
+namespace Ui {
+    class BioSignalMLSelectVariables;
+}
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace BSMLDataStore {
+namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BioSignalMLSelectVariables::BioSignalMLSelectVariables(QWidget *pParent,
-                                                       const QVector<QString> & pLabels,
-                                                       const QVector<bool> & pChecked) :
-    QDialog(pParent),
-    mGui(new Ui::BioSignalMLSelectVariables)
+class BioSignalMLDATASTORE_EXPORT BioSignalMLSelectVariables : public QDialog
 {
-    // Set up the GUI
+    Q_OBJECT
 
-    mGui->setupUi(this);
-    QTableWidget *varlist = mGui->selectedVariables;
-    for (auto i = 0 ;  i < pLabels.size() ;  ++i) {
-        varlist->insertRow(i);
-        QTableWidgetItem *checked = new QTableWidgetItem();
-        checked->setCheckState(pChecked[i] ? Qt::Checked : Qt::Unchecked);
-        varlist->setItem(i, 0, checked);
-        varlist->setItem(i, 1, new QTableWidgetItem(pLabels[i]));
-    }
+public:
+    explicit BioSignalMLSelectVariables(QWidget * pParent,
+                                        const QVector<QString> & pLabels,
+                                        const QVector<bool> & pChecked);
+    ~BioSignalMLSelectVariables();
 
-    QObject::connect(mGui->allVariables, SIGNAL(clicked(bool)),
-                     this, SLOT(selectAllVariables(bool)));
+    virtual void retranslateUi();
+    bool checked(size_t pIndex);
 
-}
+private slots:
+    void selectAllVariables(bool checked = false);
 
-//==============================================================================
+private:
+    Ui::BioSignalMLSelectVariables *mGui;
 
-BioSignalMLSelectVariables::~BioSignalMLSelectVariables()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
+};
 
 //==============================================================================
 
-void BioSignalMLSelectVariables::retranslateUi()
-{
-    // Retranslate our GUI
-
-    mGui->retranslateUi(this);
-
-}
-
-//==============================================================================
-
-void BioSignalMLSelectVariables::selectAllVariables(bool checked)
-{
-    auto state = checked ? Qt::Checked : Qt::Unchecked;
-    QTableWidget *varlist = mGui->selectedVariables;
-    for (auto row = 0 ;  row < varlist->rowCount() ;  ++row)
-      varlist->item(row, 0)->setCheckState(state);
-}
-
-//==============================================================================
-
-bool BioSignalMLSelectVariables::checked(size_t pIndex)
-{
-    return (mGui->selectedVariables->item(pIndex, 0)->checkState() == Qt::Checked) ;
-}
-
-//==============================================================================
-
-}   // namespace BSMLDataStore
+}   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

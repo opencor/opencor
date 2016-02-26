@@ -27,6 +27,10 @@
 #include <vector>
 #include <cmath>
 
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
 
 namespace bsml {
 
@@ -48,6 +52,19 @@ namespace bsml {
       double m_data ;
       } ;
 
+
+    //! A sequence of time points.
+    //!
+    //! Points are accessed via the `time()` method using a 0-origin index.
+    //!
+    //! If `T` is a TimeSeries then:
+    //!   - start(T) = time(0)
+    //!   - end(T) = time(size(T) - 1)
+    //!   - duration(T) = end(T) - start(T)
+    //!   - interval(T) = Interval(start(T), duration(T))
+    //!   .
+    //! N.B. Intervals are considered as closed, that is they include both
+    //! start and end points.
     class BIOSIGNALML_EXPORT TimeSeries
     /*-------------------------------*/
     {
@@ -62,6 +79,11 @@ namespace bsml {
       inline const std::vector<double> & data(void) { return m_data ; }
       inline const std::vector<double> & times(void) { return m_times ; }
       virtual Point point(const size_t n) const ;
+      virtual double time(const size_t n) const ;
+      //! Find largest `n` such that `time(n) <= t`. Return `-1` if `t`
+      //! is before the start of the time series.
+      virtual ssize_t index(const double t) ;
+      double duration(void) const ;
 
       // std::vector<Point> points(void) { return Point(m_times[n], m_data[n]) ; }
       // Can we use std::valarray<double> ??
@@ -78,13 +100,16 @@ namespace bsml {
      public:
       SHARED_PTR(UniformTimeSeries)
       UniformTimeSeries() ;
-      UniformTimeSeries(const double rate, const size_t size) ;
-      UniformTimeSeries(const double rate, const std::vector<double> &data) ;
+      UniformTimeSeries(const double rate, const size_t size, const double start=0.0) ;
+      UniformTimeSeries(const double rate, const std::vector<double> &data, const double start=0.0) ;
 
       virtual Point point(const size_t n) const ;
+      virtual double time(const size_t n) const ;
+      virtual ssize_t index(const double t) ;
 
      private:
       double m_rate ;
+      double m_start ;
       } ;
 
     } ;

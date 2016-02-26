@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// BSMLDataStore plugin
+// BioSignalMLDataStore plugin
 //==============================================================================
 
-#ifndef BSMLDATASTOREPLUGIN_H
-#define BSMLDATASTOREPLUGIN_H
+#ifndef BioSignalMLDATASTOREPLUGIN_H
+#define BioSignalMLDATASTOREPLUGIN_H
 
 //==============================================================================
 
-#include "bsmldatastoreexporter.h"
+#include "biosignalmldatastoreexporter.h"
 
 //==============================================================================
 
@@ -36,20 +36,20 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace BSMLDataStore {
+namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-PLUGININFO_FUNC BSMLDataStorePluginInfo();
+PLUGININFO_FUNC BioSignalMLDataStorePluginInfo();
 
 //==============================================================================
 
-class BSMLDataStorePlugin : public QObject, public I18nInterface,
-                            public PluginInterface, public DataStoreInterface
+class BioSignalMLDataStorePlugin : public QObject, public I18nInterface,
+                                   public PluginInterface, public DataStoreInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.BSMLDataStorePlugin" FILE "bsmldatastoreplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.BioSignalMLDataStorePlugin" FILE "biosignalmldatastoreplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -66,7 +66,7 @@ private:
 
 //==============================================================================
 
-}   // namespace BSMLDataStore
+}   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
 
 //==============================================================================
