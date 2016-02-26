@@ -99,7 +99,7 @@ QString CompilerEngine::error() const
 
 bool CompilerEngine::compileCode(const QString &pCode)
 {
-    // Prepend all the external functions that may, or not, be needed to the
+    // Prepend all the external functions that may, or not, be needed by the
     // given code
     // Note: indeed, we cannot include header files since we don't (and don't
     //       want in order to avoid complications) deploy them with OpenCOR. So,
