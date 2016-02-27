@@ -434,17 +434,14 @@ void MainWindow::registerOpencorUrlScheme()
     if (!res.isEmpty()) {
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
 
-        QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
-        QByteArray contents = QString("[Desktop Entry]\n"
-                                      "Type=Application\n"
-                                      "Name=OpenCOR\n"
-                                      "Exec=%1 %u\n"
-                                      "Icon=%1\n"
-                                      "Terminal=false\n"
-                                      "MimeType=x-scheme-handler/opencor\n").arg(applicationFileName).toUtf8();
-
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
-                                contents);
+                                QString("[Desktop Entry]\n"
+                                        "Type=Application\n"
+                                        "Name=OpenCOR\n"
+                                        "Exec=%1 %u\n"
+                                        "Icon=%1\n"
+                                        "Terminal=false\n"
+                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())).toUtf8());
     }
 #elif defined(Q_OS_MAC)
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
