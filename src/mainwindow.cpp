@@ -113,16 +113,16 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Handle OpenCOR URLs
     // Note: we should, through our GuiApplication class (see main.cpp), be able
     //       to handle OpenCOR URLs (not least because we make sure that the
-    //       OpenCOR URL scheme is set; see the call to checkUrlScheme() below),
-    //       but our URL handler ensures that it will work whether the OpenCOR
-    //       URL scheme is set or not (in case it can't be set on a given
-    //       platform)...
+    //       OpenCOR URL scheme is set; see the call to checkOpencorUrlScheme()
+    //       below), but our URL handler ensures that it will work whether the
+    //       OpenCOR URL scheme is set or not (in case it can't be set on a
+    //       given platform)...
 
     QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
 
-    // Make sure that the OpenCOR URL scheme is set
+    // Register our OpenCOR URL scheme
 
-    checkUrlScheme();
+    checkOpencorUrlScheme();
 
     // Create our settings object
 
@@ -406,44 +406,20 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
 //==============================================================================
 
-void MainWindow::checkUrlScheme()
+void MainWindow::checkOpencorUrlScheme()
 {
-    // Check whether our URL scheme is set
-
-    bool urlSchemeSet = false;
+    // Register our OpenCOR URL scheme
 
 #if defined(Q_OS_WIN)
 //---GRY--- TO BE DONE...
 #elif defined(Q_OS_LINUX)
 //---GRY--- TO BE DONE...
 #elif defined(Q_OS_MAC)
-    static const CFStringRef UrlScheme = CFSTR("opencor");
-
-    CFStringRef defaultHandler = LSCopyDefaultHandlerForURLScheme(UrlScheme);
-    CFStringRef bundleId = CFBundleGetIdentifier(CFBundleGetMainBundle());
-
-    if (defaultHandler) {
-        urlSchemeSet = !CFStringCompare(bundleId, defaultHandler, 0);
-
-        CFRelease(defaultHandler);
-    }
+    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
+                                    CFBundleGetIdentifier(CFBundleGetMainBundle()));
 #else
     #error Unsupported platform
 #endif
-
-    // Set our URL scheme, if needed
-
-    if (!urlSchemeSet) {
-#if defined(Q_OS_WIN)
-//---GRY--- TO BE DONE...
-#elif defined(Q_OS_LINUX)
-//---GRY--- TO BE DONE...
-#elif defined(Q_OS_MAC)
-        LSSetDefaultHandlerForURLScheme(UrlScheme, bundleId);
-#else
-    #error Unsupported platform
-#endif
-    }
 }
 
 //==============================================================================

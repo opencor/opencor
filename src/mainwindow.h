@@ -117,7 +117,7 @@ private:
 
     QByteArray mDockedWindowsState;
 
-    void checkUrlScheme();
+    void checkOpencorUrlScheme();
 
     void initializeGuiPlugin(Plugin *pPlugin);
 
