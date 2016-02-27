@@ -308,55 +308,63 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Map all the external functions that may, or not, be needed by the given
     // code
 
-    mExecutionEngine->addGlobalMapping("fabs", (uint64_t) fabs);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    #define FUNCTION_NAME(x) (x)
+#elif defined(Q_OS_MAC)
+    #define FUNCTION_NAME(x) (std::string(std::string("_")+(x)).c_str())
+#else
+    #error Unsupported platform
+#endif
 
-    mExecutionEngine->addGlobalMapping("log", (uint64_t) log);
-    mExecutionEngine->addGlobalMapping("exp", (uint64_t) exp);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("fabs"), (uint64_t) compiler_fabs);
 
-    mExecutionEngine->addGlobalMapping("floor", (uint64_t) floor);
-    mExecutionEngine->addGlobalMapping("ceil", (uint64_t) ceil);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("log"), (uint64_t) compiler_log);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("exp"), (uint64_t) compiler_exp);
 
-    mExecutionEngine->addGlobalMapping("factorial", (uint64_t) factorial);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("floor"), (uint64_t) compiler_floor);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("ceil"), (uint64_t) compiler_ceil);
 
-    mExecutionEngine->addGlobalMapping("sin", (uint64_t) sin);
-    mExecutionEngine->addGlobalMapping("sinh", (uint64_t) sinh);
-    mExecutionEngine->addGlobalMapping("asin", (uint64_t) asin);
-    mExecutionEngine->addGlobalMapping("asinh", (uint64_t) asinh);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("factorial"), (uint64_t) compiler_factorial);
 
-    mExecutionEngine->addGlobalMapping("cos", (uint64_t) cos);
-    mExecutionEngine->addGlobalMapping("cosh", (uint64_t) cosh);
-    mExecutionEngine->addGlobalMapping("acos", (uint64_t) acos);
-    mExecutionEngine->addGlobalMapping("acosh", (uint64_t) acosh);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sin"), (uint64_t) compiler_sin);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sinh"), (uint64_t) compiler_sinh);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asin"), (uint64_t) compiler_asin);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asinh"), (uint64_t) compiler_asinh);
 
-    mExecutionEngine->addGlobalMapping("tan", (uint64_t) tan);
-    mExecutionEngine->addGlobalMapping("tanh", (uint64_t) tanh);
-    mExecutionEngine->addGlobalMapping("atan", (uint64_t) atan);
-    mExecutionEngine->addGlobalMapping("atanh", (uint64_t) atanh);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cos"), (uint64_t) compiler_cos);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cosh"), (uint64_t) compiler_cosh);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acos"), (uint64_t) compiler_acos);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acosh"), (uint64_t) compiler_acosh);
 
-    mExecutionEngine->addGlobalMapping("sec", (uint64_t) sec);
-    mExecutionEngine->addGlobalMapping("sech", (uint64_t) sech);
-    mExecutionEngine->addGlobalMapping("asec", (uint64_t) asec);
-    mExecutionEngine->addGlobalMapping("asech", (uint64_t) asech);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tan"), (uint64_t) compiler_tan);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tanh"), (uint64_t) compiler_tanh);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atan"), (uint64_t) compiler_atan);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atanh"), (uint64_t) compiler_atanh);
 
-    mExecutionEngine->addGlobalMapping("csc", (uint64_t) csc);
-    mExecutionEngine->addGlobalMapping("csch", (uint64_t) csch);
-    mExecutionEngine->addGlobalMapping("acsc", (uint64_t) acsc);
-    mExecutionEngine->addGlobalMapping("acsch", (uint64_t) acsch);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sec"), (uint64_t) compiler_sec);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sech"), (uint64_t) compiler_sech);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asec"), (uint64_t) compiler_asec);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asech"), (uint64_t) compiler_asech);
 
-    mExecutionEngine->addGlobalMapping("cot", (uint64_t) cot);
-    mExecutionEngine->addGlobalMapping("coth", (uint64_t) coth);
-    mExecutionEngine->addGlobalMapping("acot", (uint64_t) acot);
-    mExecutionEngine->addGlobalMapping("acoth", (uint64_t) acoth);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csc"), (uint64_t) compiler_csc);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csch"), (uint64_t) compiler_csch);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsc"), (uint64_t) compiler_acsc);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsch"), (uint64_t) compiler_acsch);
 
-    mExecutionEngine->addGlobalMapping("arbitrary_log", (uint64_t) arbitrary_log);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cot"), (uint64_t) compiler_cot);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("coth"), (uint64_t) compiler_coth);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acot"), (uint64_t) compiler_acot);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acoth"), (uint64_t) compiler_acoth);
 
-    mExecutionEngine->addGlobalMapping("pow", (uint64_t) pow);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("arbitrary_log"), (uint64_t) compiler_arbitrary_log);
 
-    mExecutionEngine->addGlobalMapping("multi_min", (uint64_t) multi_min);
-    mExecutionEngine->addGlobalMapping("multi_max", (uint64_t) multi_max);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("pow"), (uint64_t) compiler_pow);
 
-    mExecutionEngine->addGlobalMapping("gcd_multi", (uint64_t) gcd_multi);
-    mExecutionEngine->addGlobalMapping("lcm_multi", (uint64_t) lcm_multi);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_min"), (uint64_t) compiler_multi_min);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_max"), (uint64_t) compiler_multi_max);
+
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("gcd_multi"), (uint64_t) compiler_gcd_multi);
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("lcm_multi"), (uint64_t) compiler_lcm_multi);
 
     return true;
 }
