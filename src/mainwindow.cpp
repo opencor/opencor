@@ -119,10 +119,10 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Handle OpenCOR URLs
     // Note: we should, through our GuiApplication class (see main.cpp), be able
     //       to handle OpenCOR URLs (not least because we make sure that the
-    //       OpenCOR URL scheme is set; see the call to checkOpencorUrlScheme()
-    //       below), but our URL handler ensures that it will work whether the
-    //       OpenCOR URL scheme is set or not (in case it can't be set on a
-    //       given platform)...
+    //       OpenCOR URL scheme is set; see the call to
+    //       registerOpencorUrlScheme() below), but our URL handler ensures that
+    //       it will work whether the OpenCOR URL scheme is set or not (in case
+    //       it can't be set on a given platform)...
 
     QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
 
