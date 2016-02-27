@@ -58,7 +58,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 SingleCellViewPlugin::SingleCellViewPlugin() :
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(DataStoreInterfaces()),
-    mCellmlEditingViewInterfaces(ViewInterfaces()),
+    mCellmlEditingViewPlugins(Plugins()),
     mSedmlFileTypes(FileTypes()),
     mCombineFileTypes(FileTypes())
 {
@@ -215,9 +215,10 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (    viewInterface
-            && (viewInterface->viewMode() == ViewInterface::Editing)
-            &&  viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType)) {
-            mCellmlEditingViewInterfaces << viewInterface;
+            && (viewInterface->viewMode() == ViewInterface::EditingMode)
+            && (   viewInterface->viewMimeTypes().isEmpty()
+                || viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType))) {
+            mCellmlEditingViewPlugins << plugin;
         }
 
         // File types supported by the SEDMLSupport and COMBINESupport plugins
@@ -272,7 +273,7 @@ ViewInterface::Mode SingleCellViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return ViewInterface::Simulation;
+    return ViewInterface::SimulationMode;
 }
 
 //==============================================================================
@@ -392,11 +393,11 @@ DataStoreInterfaces SingleCellViewPlugin::dataStoreInterfaces() const
 
 //==============================================================================
 
-ViewInterfaces SingleCellViewPlugin::cellmlEditingViewInterfaces() const
+Plugins SingleCellViewPlugin::cellmlEditingViewPlugins() const
 {
-    // Return our CellML editing view interfaces
+    // Return our CellML editing view plugins
 
-    return mCellmlEditingViewInterfaces;
+    return mCellmlEditingViewPlugins;
 }
 
 //==============================================================================

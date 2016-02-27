@@ -291,7 +291,7 @@ ViewInterface::Mode RawCellMLViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return ViewInterface::Editing;
+    return ViewInterface::EditingMode;
 }
 
 //==============================================================================

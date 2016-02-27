@@ -66,6 +66,18 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    #include <shlobj.h>
+#endif
+
+//==============================================================================
+
+#ifdef Q_OS_MAC
+    #include <CoreServices/CoreServices.h>
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -79,7 +91,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
+    mFullyLoaded(false),
     mShuttingDown(false),
+    mFileNamesOrOpencorUrls(QStringList()),
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -98,13 +112,23 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // itself
 
     QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
-                     this, SLOT(fileOpenRequest(const QString &)));
+                     this, SLOT(openFileOrHandleUrl(const QString &)));
     QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
-                     this, SLOT(messageReceived(const QString &, QObject *)));
+                     this, SLOT(handleMessage(const QString &)));
 
-    // Handle the OpenCOR URL
+    // Handle OpenCOR URLs
+    // Note: we should, through our GuiApplication class (see main.cpp), be able
+    //       to handle OpenCOR URLs (not least because we make sure that the
+    //       OpenCOR URL scheme is set; see the call to
+    //       registerOpencorUrlScheme() below), but our URL handler ensures that
+    //       it will work whether the OpenCOR URL scheme is set or not (in case
+    //       it can't be set on a given platform)...
 
     QDesktopServices::setUrlHandler("opencor", this, "handleUrl");
+
+    // Register our OpenCOR URL scheme
+
+    registerOpencorUrlScheme();
 
     // Create our settings object
 
@@ -280,6 +304,20 @@ showEnableAction(mGui->actionPreferences, false);
     // (re)start in full screen mode
 
     mGui->actionFullScreen->setChecked(isFullScreen());
+
+    // We are done, so open/handle any file / OpenCOR URL there may be
+    // Note: the way we open/handle those files / OpenCOR URLs ensures that we
+    //       can still receive files / OpenCOR URLs to open/handle while we
+    //       start opening/handling those that we have in stock, and this in the
+    //       correct order...
+
+    while (!mFileNamesOrOpencorUrls.isEmpty()) {
+        openFileOrHandleUrl(mFileNamesOrOpencorUrls.first(), true);
+
+        mFileNamesOrOpencorUrls.removeFirst();
+    }
+
+    mFullyLoaded = true;
 }
 
 //==============================================================================
@@ -370,6 +408,47 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
         pEvent->ignore();
     }
+}
+
+//==============================================================================
+
+void MainWindow::registerOpencorUrlScheme()
+{
+    // Register our OpenCOR URL scheme
+
+#if defined(Q_OS_WIN)
+    QSettings settings("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
+    QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
+
+    settings.setValue("opencor/Default", "URL:OpenCOR link");
+    settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
+    settings.setValue("opencor/URL Protocol", "");
+    settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
+    settings.setValue("opencor/shell/Default", "open");
+    settings.setValue("opencor/shell/open/command/Default", "\""+applicationFileName+"\" \"%1\"");
+
+    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
+#elif defined(Q_OS_LINUX)
+    QString res = exec("which", QStringList() << "xdg-mime");
+
+    if (!res.isEmpty()) {
+        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
+
+        writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
+                                QString("[Desktop Entry]\n"
+                                        "Type=Application\n"
+                                        "Name=OpenCOR\n"
+                                        "Exec=%1 %u\n"
+                                        "Icon=%1\n"
+                                        "Terminal=false\n"
+                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())).toUtf8());
+    }
+#elif defined(Q_OS_MAC)
+    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
+                                    CFBundleGetIdentifier(CFBundleGetMainBundle()));
+#else
+    #error Unsupported platform
+#endif
 }
 
 //==============================================================================
@@ -929,23 +1008,38 @@ void MainWindow::showSelf()
 void MainWindow::handleArguments(const QString &pArguments)
 {
     // Handle the arguments that were passed to OpenCOR by passing them to the
-    // Core plugin, should it be loaded
+    // Core plugin, should it be loaded, but only if the argument is not an
+    // OpenCOR URL
 
-    if (mPluginManager->corePlugin()) {
+    QUrl url = pArguments;
+
+    if (!url.scheme().compare("opencor"))
+        handleUrl(url);
+    else if (mPluginManager->corePlugin())
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(pArguments.split("|"));
-        // Note: if the Core plugin is loaded, then it means it supports the
-        //       Core interface, so no need to check anything...
-    }
 }
 
 //==============================================================================
 
-void MainWindow::fileOpenRequest(const QString &pFileName)
+void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
+                                     const bool &ForceOpeningOrHandling)
 {
-    // We have received a request to open a file, so handle it as an argument
-    // that was passed to OpenCOR
+    // Handle the given file name or OpenCOR URL as if it was an argument, but
+    // only if we are fully loaded otherwise we keep track of that file name or
+    // OpenCOR URL
+    // Note: indeed, if we are not fully loaded then a file will still be
+    //       opened, but not selected, or a URL may be handled, but having
+    //       OpenCOR to keep loading itself may mess things up (e.g. OpenCOR is
+    //       not started and it was previously in Simulation mode, from there an
+    //       OpenCOR URL to select the Editing mode is clicked, resuling in
+    //       OpenCOR starting up, selecting the Editing mode, but then the
+    //       Simulation mode will effectively be active even though not
+    //       selected)...
 
-    handleArguments(pFileName);
+    if (!ForceOpeningOrHandling && !mFullyLoaded)
+        mFileNamesOrOpencorUrls << pFileNameOrOpencorUrl;
+    else
+        handleArguments(pFileNameOrOpencorUrl);
 }
 
 //==============================================================================
@@ -1004,10 +1098,8 @@ void MainWindow::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
+void MainWindow::handleMessage(const QString &pMessage)
 {
-    Q_UNUSED(pSocket);
-
     // We have just received a message, which means that the user tried to run
     // another instance of OpenCOR, which sent a message to this instance,
     // asking it to bring itself to the foreground and handling all the

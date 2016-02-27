@@ -37,13 +37,13 @@ class ViewInterface
 {
 public:
     enum Mode {
-        Unknown,
+        UnknownMode,
 #ifdef ENABLE_SAMPLES
-        Sample,
+        SampleMode,
 #endif
-        Editing,
-        Simulation,
-        Analysis
+        EditingMode,
+        SimulationMode,
+        AnalysisMode
     };
 
 #define INTERFACE_DEFINITION
@@ -53,10 +53,6 @@ public:
     static QString viewModeAsString(const Mode &pMode);
     static Mode viewModeFromString(const QString &pMode);
 };
-
-//==============================================================================
-
-typedef QList<ViewInterface *> ViewInterfaces;
 
 //==============================================================================
 

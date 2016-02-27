@@ -85,7 +85,10 @@ private:
 
     QString mApplicationDate;
 
+    bool mFullyLoaded;
     bool mShuttingDown;
+
+    QStringList mFileNamesOrOpencorUrls;
 
     QSettings *mSettings;
 
@@ -114,6 +117,8 @@ private:
 
     QByteArray mDockedWindowsState;
 
+    void registerOpencorUrlScheme();
+
     void initializeGuiPlugin(Plugin *pPlugin);
 
     void loadSettings();
@@ -131,8 +136,9 @@ private:
     void showEnableActions(const QList<QAction *> &pActions);
 
 private Q_SLOTS:
-    void fileOpenRequest(const QString &pFileName);
-    void messageReceived(const QString &pMessage, QObject *pSocket);
+    void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
+                             const bool &ForceOpeningOrHandling = false);
+    void handleMessage(const QString &pMessage);
 
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();

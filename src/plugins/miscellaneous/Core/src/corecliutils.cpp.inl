@@ -199,7 +199,7 @@ void SynchronousFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNe
 
 //==============================================================================
 
-QString exec(const QString &pProgram, const QStringList &pArgs = QStringList())
+QString exec(const QString &pProgram, const QStringList &pArgs)
 {
     // Execute and return the output of a program given its arguments
 

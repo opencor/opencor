@@ -188,6 +188,12 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # On OS X, we want to be able to access Cocoa
+
+    IF(APPLE)
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -framework AppKit")
+    ENDIF()
+
     # Some build settings that depend on whether we want a release or a debug
     # version of OpenCOR
 

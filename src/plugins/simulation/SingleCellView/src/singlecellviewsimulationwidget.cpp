@@ -95,7 +95,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlugin(pPlugin),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
-    mCellmlEditingViewInterfaces(QMap<QAction *, ViewInterface *>()),
+    mCellmlEditingViewPlugins(QMap<QAction *, Plugin *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
@@ -162,12 +162,12 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
     cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
 
-    foreach (ViewInterface *cellmlEditingViewInterface, pPlugin->cellmlEditingViewInterfaces()) {
+    foreach (Plugin *cellmlEditingViewPlugin, pPlugin->cellmlEditingViewPlugins()) {
         QAction *action = new QAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
 
-        mCellmlEditingViewInterfaces.insert(action, cellmlEditingViewInterface);
+        mCellmlEditingViewPlugins.insert(action, cellmlEditingViewPlugin);
 
         connect(action, SIGNAL(triggered(bool)),
                 this, SLOT(openCellmlFile()));
@@ -460,12 +460,13 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
     // Retranslate our CellML editing view actions
 
-    foreach (QAction *cellmlEditingViewAction, mCellmlEditingViewInterfaces.keys()) {
-        ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(cellmlEditingViewAction);
+    foreach (QAction *cellmlEditingViewAction, mCellmlEditingViewPlugins.keys()) {
+        Plugin *plugin = mCellmlEditingViewPlugins.value(cellmlEditingViewAction);
+        QString viewName = qobject_cast<ViewInterface *>(plugin->instance())->viewName();
 
         I18nInterface::retranslateAction(cellmlEditingViewAction,
-                                         tr("%1 View").arg(viewInterface->viewName()),
-                                         tr("Open the referenced CellML file using the %1 view").arg(viewInterface->viewName()));
+                                         tr("%1 View").arg(viewName),
+                                         tr("Open the referenced CellML file using the %1 view").arg(viewName));
     }
 
     // Retranslate our invalid model message
@@ -3064,10 +3065,10 @@ void SingleCellViewSimulationWidget::openCellmlFile()
     // Ask OpenCOR to switch to the requested CellML editing view after having
     // selected the correct mode
 
-    ViewInterface *viewInterface = mCellmlEditingViewInterfaces.value(qobject_cast<QAction *>(sender()));
+    Plugin *plugin = mCellmlEditingViewPlugins.value(qobject_cast<QAction *>(sender()));
 
-    QDesktopServices::openUrl("opencor://Core.selectMode/"+ViewInterface::viewModeAsString(viewInterface->viewMode()));
-    QDesktopServices::openUrl("opencor://Core.selectView/"+viewInterface->viewName());
+    QDesktopServices::openUrl("opencor://Core.selectMode/"+ViewInterface::viewModeAsString(qobject_cast<ViewInterface *>(plugin->instance())->viewMode()));
+    QDesktopServices::openUrl("opencor://Core.selectView/"+plugin->name());
 }
 
 //==============================================================================
