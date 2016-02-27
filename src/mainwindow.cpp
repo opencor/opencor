@@ -66,6 +66,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    #include <shlobj.h>
+#endif
+
+//==============================================================================
+
 #ifdef Q_OS_MAC
     #include <CoreServices/CoreServices.h>
 #endif
@@ -122,7 +128,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Register our OpenCOR URL scheme
 
-    checkOpencorUrlScheme();
+    registerOpencorUrlScheme();
 
     // Create our settings object
 
@@ -406,12 +412,22 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
 //==============================================================================
 
-void MainWindow::checkOpencorUrlScheme()
+void MainWindow::registerOpencorUrlScheme()
 {
     // Register our OpenCOR URL scheme
 
 #if defined(Q_OS_WIN)
-//---GRY--- TO BE DONE...
+    QSettings settings("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
+    QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
+
+    settings.setValue("opencor/Default", "URL:OpenCOR link");
+    settings.setValue("opencor/Content Type", "application/x-opencor");
+    settings.setValue("opencor/URL Protocol", "");
+    settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
+    settings.setValue("opencor/shell/Default", "open");
+    settings.setValue("opencor/shell/open/command/Default", "\""+applicationFileName+"\" \"%1\"");
+
+    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
 //---GRY--- TO BE DONE...
 #elif defined(Q_OS_MAC)
@@ -979,13 +995,15 @@ void MainWindow::showSelf()
 void MainWindow::handleArguments(const QString &pArguments)
 {
     // Handle the arguments that were passed to OpenCOR by passing them to the
-    // Core plugin, should it be loaded
+    // Core plugin, should it be loaded, but only if the argument is not an
+    // OpenCOR URL
 
-    if (mPluginManager->corePlugin()) {
+    QUrl url = pArguments;
+
+    if (!url.scheme().compare("opencor"))
+        handleUrl(url);
+    else if (mPluginManager->corePlugin())
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(pArguments.split("|"));
-        // Note: if the Core plugin is loaded, then it means it supports the
-        //       Core interface, so no need to check anything...
-    }
 }
 
 //==============================================================================
@@ -993,28 +1011,22 @@ void MainWindow::handleArguments(const QString &pArguments)
 void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
                                      const bool &ForceOpeningOrHandling)
 {
-    // Make sure that we are fully loaded
-    // Note: indeed, if we are not then a file will still be opened, but not be
-    //       selected, or a URL may be handled, but having OpenCOR to keep
-    //       loading itself may mess things up (e.g. OpenCOR is not started and
-    //       it was previously in Simulation mode, from there an OpenCOR URL to
-    //       select the Editing mode is clicked, resuling in OpenCOR starting
-    //       up, selecting the Editing mode, but then the Simulation mode will
-    //       effectively be active even though not selected)...
+    // Handle the given file name or OpenCOR URL as if it was an argument, but
+    // only if we are fully loaded otherwise we keep track of that file name or
+    // OpenCOR URL
+    // Note: indeed, if we are not fully loaded then a file will still be
+    //       opened, but not selected, or a URL may be handled, but having
+    //       OpenCOR to keep loading itself may mess things up (e.g. OpenCOR is
+    //       not started and it was previously in Simulation mode, from there an
+    //       OpenCOR URL to select the Editing mode is clicked, resuling in
+    //       OpenCOR starting up, selecting the Editing mode, but then the
+    //       Simulation mode will effectively be active even though not
+    //       selected)...
 
-    if (!ForceOpeningOrHandling && !mFullyLoaded) {
+    if (!ForceOpeningOrHandling && !mFullyLoaded)
         mFileNamesOrOpencorUrls << pFileNameOrOpencorUrl;
-    } else {
-        // We have received a request to open a file or to handle an OpenCOR
-        // URL, so check which one it is and do it
-
-        QUrl url = pFileNameOrOpencorUrl;
-
-        if (!url.scheme().compare("opencor"))
-            handleUrl(url);
-        else
-            handleArguments(pFileNameOrOpencorUrl);
-    }
+    else
+        handleArguments(pFileNameOrOpencorUrl);
 }
 
 //==============================================================================
