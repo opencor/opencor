@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 22, "month": 2, "year": 2016,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 27, "month": 2, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
