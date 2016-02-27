@@ -421,7 +421,7 @@ void MainWindow::registerOpencorUrlScheme()
     QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
 
     settings.setValue("opencor/Default", "URL:OpenCOR link");
-    settings.setValue("opencor/Content Type", "application/opencor");
+    settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
     settings.setValue("opencor/URL Protocol", "");
     settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
     settings.setValue("opencor/shell/Default", "open");
