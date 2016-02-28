@@ -1005,18 +1005,25 @@ void MainWindow::showSelf()
 
 //==============================================================================
 
-void MainWindow::handleArguments(const QString &pArguments)
+void MainWindow::handleArguments(const QStringList &pArguments)
 {
-    // Handle the arguments that were passed to OpenCOR by passing them to the
-    // Core plugin, should it be loaded, but only if the argument is not an
-    // OpenCOR URL
+    // Handle the arguments that were passed to OpenCOR by handling them as a
+    // URL if they are an OpenCOR URL or by passing them to the Core plugin,
+    // should it be loaded
 
-    QUrl url = pArguments;
+    QStringList arguments = QStringList();
 
-    if (!url.scheme().compare("opencor"))
-        handleUrl(url);
-    else if (mPluginManager->corePlugin())
-        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(pArguments.split("|"));
+    foreach (const QString &argument, pArguments) {
+        QUrl url = argument;
+
+        if (!url.scheme().compare("opencor"))
+            handleUrl(url);
+        else
+            arguments << argument;
+    }
+
+    if (!arguments.isEmpty() && mPluginManager->corePlugin())
+        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(arguments);
 }
 
 //==============================================================================
@@ -1039,7 +1046,7 @@ void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
     if (!ForceOpeningOrHandling && !mFullyLoaded)
         mFileNamesOrOpencorUrls << pFileNameOrOpencorUrl;
     else
-        handleArguments(pFileNameOrOpencorUrl);
+        handleArguments(QStringList() << pFileNameOrOpencorUrl);
 }
 
 //==============================================================================
@@ -1065,7 +1072,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
         //       leading forward slash. Indeed, an open file request will look
         //       like opencor://openFile//home/user/file...
 
-        handleArguments(pUrl.path().remove(0, 1));
+        handleArguments(QStringList() << pUrl.path().remove(0, 1));
     } else if (!actionName.compare("openFiles", Qt::CaseInsensitive)) {
         // We want to open some files, so handle them as a series of arguments
         // that were passed to OpenCOR
@@ -1073,7 +1080,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
         //       leading forward slash. Indeed, an open files request  will look
         //       like opencor://openFiles//home/user/file1|/home/user/file2...
 
-        handleArguments(pUrl.path().remove(0, 1));
+        handleArguments(pUrl.path().remove(0, 1).split("|"));
     } else {
         // We are dealing with an action that OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
@@ -1107,7 +1114,7 @@ void MainWindow::handleMessage(const QString &pMessage)
 
     showSelf();
 
-    handleArguments(pMessage);
+    handleArguments(pMessage.split("|"));
 }
 
 //==============================================================================

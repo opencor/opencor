@@ -91,15 +91,12 @@ void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 void CorePlugin::handleArguments(const QStringList &pArguments)
 {
-    // All the arguments are currently assumed to be files to open
-    // Note: we open all valid (i.e. non empty) arguments as if they were remote
-    //       files since if they are not then CentralWidget::openRemoteFile()
-    //       will open them as normal files...
+    // All the arguments are files to open, so open them as if they were remote
+    // files since if they are not then CentralWidget::openRemoteFile() will
+    // open them as normal files
 
-    foreach (const QString &argument, pArguments) {
-        if (!argument.isEmpty())
-            mCentralWidget->openRemoteFile(argument);
-    }
+    foreach (const QString &argument, pArguments)
+        mCentralWidget->openRemoteFile(argument);
 }
 
 //==============================================================================

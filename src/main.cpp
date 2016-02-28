@@ -177,9 +177,9 @@ int main(int pArgC, char *pArgV[])
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first one since it corresponds to the full
     // path to our executable, which we are not interested in) to our 'official'
-    // instance of OpenCOR, should there be one. If there is none, then just
+    // instance of OpenCOR, should there be one (if there is none, then just
     // carry on as normal, otherwise exit since we want only one instance of
-    // OpenCOR at any given time
+    // OpenCOR at any given time)
 
     QStringList appArguments = guiApp->arguments();
 
@@ -275,7 +275,7 @@ int main(int pArgC, char *pArgV[])
 
     // Handle our arguments
 
-    win->handleArguments(arguments);
+    win->handleArguments(appArguments);
 
     // Show our main window
 

@@ -70,7 +70,7 @@ public:
     explicit MainWindow(const QString &pApplicationDate);
     ~MainWindow();
 
-    void handleArguments(const QString &pArguments);
+    void handleArguments(const QStringList &pArguments);
 
     bool shuttingDown() const;
 
