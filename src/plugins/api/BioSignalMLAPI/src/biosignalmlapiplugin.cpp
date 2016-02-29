@@ -32,8 +32,8 @@ PLUGININFO_FUNC BioSignalMLAPIPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access BioSignalML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder BioSignalML</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the BioSignalML API."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder l'API BioSignalML."));
 
     return new PluginInfo("API", false, false,
                           QStringList(),

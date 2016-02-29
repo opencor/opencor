@@ -4,6 +4,8 @@ SET(BIOSIGNALML_VERSION "0.8")
 SET(TYPEDOBJECT_VERSION "1.1")
 
 MACRO(RETRIEVE_BioSignalML_API_SETTINGS)
+    # Retrieve the BioSignalML API external binaries
+
     IF(WIN32)
         SET(BioSignalML_API_EXTERNAL_BINARIES
             biosignalml.${BIOSIGNALML_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX}
@@ -70,8 +72,6 @@ ADD_PLUGIN(BioSignalMLAPI
         ${BioSignalML_API_EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${BioSignalML_API_EXTERNAL_BINARIES}
-#    TESTS
-#        tests
 )
 
 # Deploy the plugin's external binaries
