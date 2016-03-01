@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 27, "month": 2, "year": 2016, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> refactored the handling of OpenCOR actions (see issue <a href=\"https://github.com/opencor/opencor/issues/901\">#901</a>). Added support for an OpenCOR-specific URL scheme (see issue <a href=\"https://github.com/opencor/opencor/issues/903\">#903</a>). Fixed a problem that crashed OpenCOR on Linux due to an external function not being found by LLVM's execution engine (see <a href=\"https://github.com/opencor/opencor/issues/904\">#904</a>)" },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://jquery.com/\">jQuery</a> to version 2.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/902\">#902</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 22, "month": 2, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

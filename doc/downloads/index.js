@@ -39,8 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> refactored the handling of OpenCOR actions (see issue <a href=\"https://github.com/opencor/opencor/issues/901\">#901</a>). Added support for an OpenCOR-specific URL scheme (see issue <a href=\"https://github.com/opencor/opencor/issues/903\">#903</a>). Fixed a problem that crashed OpenCOR on Linux due to an external function not being found by LLVM's execution engine (see <a href=\"https://github.com/opencor/opencor/issues/904\">#904</a>)" },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://jquery.com/\">jQuery</a> to version 2.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/902\">#902</a>)." }
+                       { "change": "<strong>General:</strong> fixed a problem with OpenCOR firing up on 'old' versions of OS X, but not opening the CellML/SED-ML file referenced in an OpenCOR URL (see issue <a href=\"https://github.com/opencor/opencor/issues/909\">#909</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
