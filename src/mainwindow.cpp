@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
 #include "coreinterface.h"
+#include "guiapplication.h"
 #include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
@@ -91,9 +92,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
-    mFullyLoaded(false),
     mShuttingDown(false),
-    mFileNamesOrOpencorUrls(QStringList()),
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -305,19 +304,19 @@ showEnableAction(mGui->actionPreferences, false);
 
     mGui->actionFullScreen->setChecked(isFullScreen());
 
-    // We are done, so open/handle any file / OpenCOR URL there may be
+    // We are done initialising ourselves, so open/handle any file / OpenCOR URL
+    // we have been tracking until now
     // Note: the way we open/handle those files / OpenCOR URLs ensures that we
     //       can still receive files / OpenCOR URLs to open/handle while we
     //       start opening/handling those that we have in stock, and this in the
     //       correct order...
 
-    while (!mFileNamesOrOpencorUrls.isEmpty()) {
-        openFileOrHandleUrl(mFileNamesOrOpencorUrls.first(), true);
+    GuiApplication *guiApplication = qobject_cast<GuiApplication *>(qApp);
 
-        mFileNamesOrOpencorUrls.removeFirst();
-    }
+    while (guiApplication->hasFileNamesOrOpencorUrls())
+        openFileOrHandleUrl(guiApplication->firstFileNameOrOpencorUrl());
 
-    mFullyLoaded = true;
+    guiApplication->updateCanEmitFileOpenRequestSignal();
 }
 
 //==============================================================================
@@ -1028,25 +1027,11 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
-void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl,
-                                     const bool &ForceOpeningOrHandling)
+void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl)
 {
-    // Handle the given file name or OpenCOR URL as if it was an argument, but
-    // only if we are fully loaded otherwise we keep track of that file name or
-    // OpenCOR URL
-    // Note: indeed, if we are not fully loaded then a file will still be
-    //       opened, but not selected, or a URL may be handled, but having
-    //       OpenCOR to keep loading itself may mess things up (e.g. OpenCOR is
-    //       not started and it was previously in Simulation mode, from there an
-    //       OpenCOR URL to select the Editing mode is clicked, resuling in
-    //       OpenCOR starting up, selecting the Editing mode, but then the
-    //       Simulation mode will effectively be active even though not
-    //       selected)...
+    // Handle the given file name or OpenCOR URL as if it was an argument
 
-    if (!ForceOpeningOrHandling && !mFullyLoaded)
-        mFileNamesOrOpencorUrls << pFileNameOrOpencorUrl;
-    else
-        handleArguments(QStringList() << pFileNameOrOpencorUrl);
+    handleArguments(QStringList() << pFileNameOrOpencorUrl);
 }
 
 //==============================================================================

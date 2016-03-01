@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
+#include "guiapplication.h"
 #include "guiutils.h"
 #include "mainwindow.h"
 #include "splashscreenwindow.h"
@@ -28,7 +29,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDir>
-#include <QFileOpenEvent>
 #include <QLocale>
 #include <QProcess>
 #include <QSettings>
@@ -37,41 +37,6 @@ specific language governing permissions and limitations under the License.
 #ifdef Q_OS_WIN
     #include <QWebSettings>
 #endif
-
-//==============================================================================
-
-#include <QtSingleApplication>
-
-//==============================================================================
-
-class GuiApplication : public SharedTools::QtSingleApplication
-{
-public:
-    GuiApplication(const QString &pId, int &pArgC, char **pArgV) :
-        SharedTools::QtSingleApplication(pId, pArgC, pArgV)
-    {
-    }
-
-protected:
-    virtual bool event(QEvent *pEvent)
-    {
-        // Check whether we are asked to open a file or handle an OpenCOR URL
-
-        if (pEvent->type() == QEvent::FileOpen) {
-            QFileOpenEvent *fileOpenEvent = static_cast<QFileOpenEvent*>(pEvent);
-            QString fileNameOrOpencorUrl = fileOpenEvent->file();
-
-            if (fileNameOrOpencorUrl.isEmpty())
-                fileNameOrOpencorUrl = fileOpenEvent->url().toString();
-
-            emit fileOpenRequest(fileNameOrOpencorUrl);
-
-            return true;
-        } else {
-            return QApplication::event(pEvent);
-        }
-    }
-};
 
 //==============================================================================
 
@@ -171,8 +136,8 @@ int main(int pArgC, char *pArgV[])
 
     // Create the GUI version of OpenCOR
 
-    GuiApplication *guiApp = new GuiApplication(QFileInfo(pArgV[0]).baseName(),
-                                                pArgC, pArgV);
+    OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(QFileInfo(pArgV[0]).baseName(),
+                                                                  pArgC, pArgV);
 
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first one since it corresponds to the full

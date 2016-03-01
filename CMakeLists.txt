@@ -84,6 +84,7 @@ SET(SOURCES
 
     src/misc/cliapplication.cpp
     src/misc/cliutils.cpp
+    src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
 
     src/plugins/datastoreinterface.cpp
@@ -102,6 +103,7 @@ SET(HEADERS_MOC
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
+    src/misc/guiapplication.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
