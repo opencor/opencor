@@ -1017,7 +1017,7 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
         if (!url.scheme().compare("opencor"))
             handleUrl(url);
-        else
+        else if (!argument.isEmpty())
             arguments << argument;
     }
 
