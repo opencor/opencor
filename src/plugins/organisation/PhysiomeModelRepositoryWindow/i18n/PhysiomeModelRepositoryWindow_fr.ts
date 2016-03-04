@@ -47,7 +47,7 @@
         <translation>Ouvrir Fichier Exposition</translation>
     </message>
     <message>
-        <source>Browser Exposure</source>
+        <source>Browse Exposure</source>
         <translation>Naviguer Exposition</translation>
     </message>
 </context>
