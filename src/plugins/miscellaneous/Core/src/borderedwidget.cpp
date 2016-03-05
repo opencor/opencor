@@ -65,8 +65,8 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     gridLayout->addWidget(mTopBorder, 0, 0, 1, 3);
     gridLayout->addWidget(mLeftBorder, 1, 0);
     gridLayout->addWidget(pWidget, 1, 1);
-    gridLayout->addWidget(mBottomBorder, 2, 0, 1, 3);
     gridLayout->addWidget(mRightBorder, 1, 2);
+    gridLayout->addWidget(mBottomBorder, 2, 0, 1, 3);
 
     setTopBorderVisible(pTop);
     setLeftBorderVisible(pLeft);
