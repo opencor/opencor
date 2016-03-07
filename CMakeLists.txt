@@ -602,7 +602,9 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${Qt5Widgets_VERSION_MINOR}")
+    MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+
+    SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
 
     WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebChannel Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
     WINDOWS_DEPLOY_QT_LIBRARIES(icudt${ICU_VERSION} icuin${ICU_VERSION} icuuc${ICU_VERSION})
