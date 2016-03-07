@@ -42,7 +42,7 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewP
                                                                  SingleCellViewSimulationWidget *pSimulationWidget,
                                                                  QWidget *pParent) :
     QScrollArea(pParent),
-    Core::CommonWidget(pParent)
+    Core::CommonWidget()
 {
     // Create and set our vertical layout
 

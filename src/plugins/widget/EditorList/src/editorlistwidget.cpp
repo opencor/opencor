@@ -39,7 +39,7 @@ namespace EditorList {
 
 EditorListWidget::EditorListWidget(QWidget *pParent) :
     QListView(pParent),
-    CommonWidget(pParent),
+    CommonWidget(),
     mModel(new QStandardItemModel(this))
 {
     // Customise ourselves

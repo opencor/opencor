@@ -30,7 +30,7 @@ namespace Core {
 
 WindowWidget::WindowWidget(QWidget *pParent) :
     QDockWidget(pParent),
-    CommonWidget(pParent),
+    CommonWidget(),
     BusySupportWidget()
 {
 }

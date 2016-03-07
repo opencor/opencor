@@ -461,7 +461,7 @@ static const double MinAxisRange = 1.0e-5;
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors, QWidget *pParent) :
     QwtPlot(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(),
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
     mGraphs(SingleCellViewGraphPanelPlotGraphs()),
     mAction(None),

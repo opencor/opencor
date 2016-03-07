@@ -50,7 +50,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
                                                                              SingleCellViewSimulationWidget *pSimulationWidget,
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
     mPlugin(pPlugin),
     mSimulationWidget(pSimulationWidget),

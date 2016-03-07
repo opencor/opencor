@@ -46,7 +46,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(),
     mEditingWidgetSizes(QIntList())
 {
     // Set our orientation

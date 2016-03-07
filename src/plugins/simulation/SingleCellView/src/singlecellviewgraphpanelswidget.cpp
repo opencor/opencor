@@ -42,7 +42,7 @@ namespace SingleCellView {
 SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
                                                                  QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(),
     mSimulationWidget(pSimulationWidget),
     mSplitterSizes(QIntList()),
     mGraphPanels(SingleCellViewGraphPanelWidgets()),

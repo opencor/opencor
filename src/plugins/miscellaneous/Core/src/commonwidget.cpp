@@ -39,13 +39,6 @@ namespace Core {
 
 //==============================================================================
 
-CommonWidget::CommonWidget(QWidget *pParent) :
-    mParent(pParent)
-{
-}
-
-//==============================================================================
-
 QSize CommonWidget::defaultSize(const double &pRatio) const
 {
     // The default size of a widget is a ratio of the available geometry
@@ -79,44 +72,6 @@ void CommonWidget::saveSettings(QSettings *pSettings) const
 void CommonWidget::retranslateUi()
 {
     // Nothing to do by default...
-}
-
-//==============================================================================
-
-void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
-                              const bool &pDockedBottom, const bool &pDockedRight,
-                              const bool &pFloatingTop, const bool &pFloatingLeft,
-                              const bool &pFloatingBottom, const bool &pFloatingRight)
-{
-    // Draw a border around the widget
-
-    QDockWidget *dockWidget = qobject_cast<QDockWidget *>(mParent);
-    QWidget *widget = dynamic_cast<QWidget *>(this);
-
-    if (dockWidget && widget) {
-        QPainter painter(widget);
-
-        QPen newPen = painter.pen();
-
-        newPen.setColor(borderColor());
-
-        painter.setPen(newPen);
-
-        bool dockWidgetDocked = !dockWidget->isFloating();
-        QRect border = widget->rect();
-
-        if ((pDockedTop && dockWidgetDocked) || (pFloatingTop && !dockWidgetDocked))
-            painter.drawLine(border.topLeft(), border.topRight());
-
-        if ((pDockedLeft && dockWidgetDocked) || (pFloatingLeft && !dockWidgetDocked))
-            painter.drawLine(border.topLeft(), border.bottomLeft());
-
-        if ((pDockedBottom && dockWidgetDocked) || (pFloatingBottom && !dockWidgetDocked))
-            painter.drawLine(border.bottomLeft(), border.bottomRight());
-
-        if ((pDockedRight && dockWidgetDocked) || (pFloatingRight && !dockWidgetDocked))
-            painter.drawLine(border.topRight(), border.bottomRight());
-    }
 }
 
 //==============================================================================

@@ -51,8 +51,6 @@ namespace Core {
 class CORE_EXPORT CommonWidget
 {
 public:
-    explicit CommonWidget(QWidget *pParent);
-
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
@@ -60,14 +58,6 @@ public:
 
 protected:
     QSize defaultSize(const double &pRatio) const;
-
-    void drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
-                    const bool &pDockedBottom, const bool &pDockedRight,
-                    const bool &pFloatingTop, const bool &pFloatingLeft,
-                    const bool &pFloatingBottom, const bool &pFloatingRight);
-
-private:
-    QWidget *mParent;
 };
 
 //==============================================================================

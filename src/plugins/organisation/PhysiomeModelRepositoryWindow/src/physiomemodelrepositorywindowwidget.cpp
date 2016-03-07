@@ -83,7 +83,7 @@ QString PhysiomeModelRepositoryWindowExposure::name() const
 
 PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget *pParent) :
     Core::WebViewWidget(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(),
     mGui(new Ui::PhysiomeModelRepositoryWindowWidget),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
