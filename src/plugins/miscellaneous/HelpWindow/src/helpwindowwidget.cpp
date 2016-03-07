@@ -155,25 +155,23 @@ HelpWindowPage::HelpWindowPage(QObject *pParent) :
 
 //==============================================================================
 
-bool HelpWindowPage::acceptNavigationRequest(QWebFrame*,
+bool HelpWindowPage::acceptNavigationRequest(QWebFrame *pFrame,
                                              const QNetworkRequest &pRequest,
-                                             QWebPage::NavigationType)
+                                             QWebPage::NavigationType pType)
 {
-    // Requested URL
+    Q_UNUSED(pFrame);
+    Q_UNUSED(pType);
+
+    // Determine whether the URL refers to an OpenCOR document (qthelp://...) or
+    // an external resource of sorts (e.g. http[s]://... and opencor://...), and
+    // if it is the latter then just open the URL the default way
 
     QUrl url = pRequest.url();
     QString urlScheme = url.scheme();
 
-    // Determine whether the URL refers to an OpenCOR document or an external
-    // resource of sorts
-
     if (!urlScheme.compare("qthelp")) {
         return true;
     } else {
-        // This is either an action, which we want OpenCOR or one of its plugins
-        // to execute (i.e. something of the form opencor://...), or an external
-        // resource of sorts, so just open the URL the default way
-
         QDesktopServices::openUrl(url);
 
         return false;

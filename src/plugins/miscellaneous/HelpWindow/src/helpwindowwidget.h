@@ -93,9 +93,9 @@ public:
     explicit HelpWindowPage(QObject *pParent);
 
 protected:
-    virtual bool acceptNavigationRequest(QWebFrame*,
+    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
                                          const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType);
+                                         QWebPage::NavigationType pType);
 
 private:
     QMap<QString, QString> mFileNames;
