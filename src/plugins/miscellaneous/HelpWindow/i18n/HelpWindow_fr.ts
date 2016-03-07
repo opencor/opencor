@@ -73,17 +73,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::HelpWindow::HelpWindowPlugin</name>
-    <message>
-        <source>Help</source>
-        <translation>Aide</translation>
-    </message>
-    <message>
-        <source>Show/hide the OpenCOR help</source>
-        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::HelpWindow::HelpWindowNetworkAccessManager</name>
     <message>
         <source>Error</source>
@@ -96,6 +85,17 @@
     <message>
         <source>Please &lt;a href=&quot;contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
         <translation>Veuillez &lt;a href=&quot;contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::HelpWindow::HelpWindowPlugin</name>
+    <message>
+        <source>Help</source>
+        <translation>Aide</translation>
+    </message>
+    <message>
+        <source>Show/hide the OpenCOR help</source>
+        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
     </message>
 </context>
 </TS>

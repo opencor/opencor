@@ -1,4 +1,5 @@
 @import "../../res/common.css";
+@import "qthelp://opencor/doc/res/common.css";
 
 a {
     color: rgb(54, 96, 146);

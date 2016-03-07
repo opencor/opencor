@@ -91,8 +91,6 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
-    virtual void paintEvent(QPaintEvent *pEvent);
-
 private:
     Ui::PhysiomeModelRepositoryWindowWidget *mGui;
 

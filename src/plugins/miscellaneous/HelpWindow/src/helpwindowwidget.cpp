@@ -420,28 +420,6 @@ void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-void HelpWindowWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWebView::paintEvent(pEvent);
-
-    // Draw a border
-
-    drawBorder(
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-               true, true, true, true,
-#elif defined(Q_OS_MAC)
-               true, false, false, false,
-#else
-    #error Unsupported platform
-#endif
-               true, false, false, false
-              );
-}
-
-//==============================================================================
-
 void HelpWindowWidget::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so let the user know whether it's the home page

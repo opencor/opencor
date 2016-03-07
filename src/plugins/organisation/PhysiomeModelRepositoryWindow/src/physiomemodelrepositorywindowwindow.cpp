@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Physiome Model Repository window
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "physiomemodelrepositorywindowwidget.h"
@@ -80,7 +81,15 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
 
     mPhysiomeModelRepositoryWidget = new PhysiomeModelRepositoryWindowWidget(this);
 
-    mGui->dockWidgetContents->layout()->addWidget(mPhysiomeModelRepositoryWidget);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPhysiomeModelRepositoryWidget,
+                                                                           true, true, true, true));
+#elif defined(Q_OS_MAC)
+    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPhysiomeModelRepositoryWidget,
+                                                                           true, false, false, false));
+#else
+    #error Unsupported platform
+#endif
 
     // Keep track of the window's visibility, so that we can request the list of
     // exposures, if necessary

@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QMenu>
-#include <QPaintEvent>
 #include <QRegularExpression>
 #include <QWebElement>
 #include <QWebFrame>
@@ -96,17 +95,6 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Add a small margin ourselves, so that no visual trace of the border drawn
-    // by drawBorder() in paintEvent() is left when scrolling (on Windows and
-    // Linux, but it doesn't harm doing it for all our supported platforms)
-    // Note: not sure why, but no matter how many pixels are specified for the
-    //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorder()...
-
-    setStyleSheet("QWebView {"
-                  "    margin: 1px;"
-                  "}");
 
     // Create and populate our context menu
 
@@ -189,28 +177,6 @@ QSize PhysiomeModelRepositoryWindowWidget::sizeHint() const
     //       it, to have a decent size when docked to the main window...
 
     return defaultSize(0.15);
-}
-
-//==============================================================================
-
-void PhysiomeModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWebView::paintEvent(pEvent);
-
-    // Draw a border
-
-    drawBorder(
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-               true, true, true, true,
-#elif defined(Q_OS_MAC)
-               true, false, false, false,
-#else
-    #error Unsupported platform
-#endif
-               true, false, false, false
-              );
 }
 
 //==============================================================================

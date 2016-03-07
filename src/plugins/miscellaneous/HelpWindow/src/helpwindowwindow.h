@@ -65,7 +65,7 @@ public:
 private:
     Ui::HelpWindowWindow *mGui;
 
-    HelpWindowWidget *mHelpWidget;
+    HelpWindowWidget *mHelpWindowWidget;
 
     QHelpEngine *mHelpEngine;
 
