@@ -79,7 +79,7 @@ public:
     virtual void retranslateUi();
 
     void initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
-                    const QString &pErrorMessage,
+                    const QString &pErrorMessage, const QString &pFilter,
                     const bool &pInternetConnectionAvailable);
 
     void filter(const QString &pFilter);
@@ -100,12 +100,17 @@ private:
     QBoolList mExposureDisplayed;
     QMap<QString, int> mExposureUrlId;
 
+    bool mInitialized;
+
+    QString mTemplate;
     QString mErrorMessage;
     bool mInternetConnectionAvailable;
 
     int mNumberOfFilteredExposures;
 
     QString mExposureUrl;
+
+    QString message() const;
 
 Q_SIGNALS:
     void cloneWorkspace(const QString &pUrl, const QString &pDescription);

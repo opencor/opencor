@@ -87,6 +87,7 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
+    mInitialized(false),
     mErrorMessage(QString()),
     mInternetConnectionAvailable(true),
     mNumberOfFilteredExposures(0),
@@ -128,8 +129,9 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
 
     Core::readFileContentsFromFile(":/output.html", fileContents);
 
-    setHtml(QString(fileContents).arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                      Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16)));
+    mTemplate = QString(fileContents).arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
+                                          "%1", "%2");
 }
 
 //==============================================================================
@@ -145,27 +147,10 @@ PhysiomeModelRepositoryWindowWidget::~PhysiomeModelRepositoryWindowWidget()
 
 void PhysiomeModelRepositoryWindowWidget::retranslateUi()
 {
-    // Retranslate our message
+    // Retranslate our message, if we have been initialised
 
-    QWebElement messageElement = page()->mainFrame()->documentElement().findFirst("p[id=message]");
-
-    if (mInternetConnectionAvailable && mErrorMessage.isEmpty()) {
-        if (!mNumberOfFilteredExposures) {
-            if (mExposureNames.isEmpty())
-                messageElement.removeAllChildren();
-            else
-                messageElement.setInnerXml(tr("No exposure matches your criteria."));
-        } else if (mNumberOfFilteredExposures == 1) {
-            messageElement.setInnerXml(tr("<strong>1</strong> exposure was found:"));
-        } else {
-            messageElement.setInnerXml(tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures));
-        }
-    } else {
-        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mInternetConnectionAvailable?
-                                                                                          mErrorMessage:
-                                                                                          Core::noInternetConnectionAvailableMessage(),
-                                                                                      true, true));
-    }
+    if (mInitialized)
+        page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
 }
 
 //==============================================================================
@@ -179,10 +164,38 @@ QSize PhysiomeModelRepositoryWindowWidget::sizeHint() const
     return defaultSize(0.15);
 }
 
+ //==============================================================================
+
+QString PhysiomeModelRepositoryWindowWidget::message() const
+{
+    // Determine the message to be displayed, if any
+
+    QString res = QString();
+
+    if (mInternetConnectionAvailable && mErrorMessage.isEmpty()) {
+        if (!mNumberOfFilteredExposures) {
+            if (!mExposureNames.isEmpty())
+                res = tr("No exposure matches your criteria.");
+        } else if (mNumberOfFilteredExposures == 1) {
+            res = tr("<strong>1</strong> exposure was found:");
+        } else {
+            res = tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures);
+        }
+    } else {
+        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mInternetConnectionAvailable?
+                                                                     mErrorMessage:
+                                                                     Core::noInternetConnectionAvailableMessage(),
+                                                                 true, true);
+    }
+
+    return res;
+}
+
 //==============================================================================
 
 void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
                                                      const QString &pErrorMessage,
+                                                     const QString &pFilter,
                                                      const bool &pInternetConnectionAvailable)
 {
     // Initialise / keep track of some properties
@@ -197,53 +210,60 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
 
     // Initialise our list of exposures
 
-    QWebElement tbodyElement = page()->mainFrame()->documentElement().findFirst("tbody[id=exposures]");
+    QString exposures = QString();
+    QRegularExpression filterRegEx = QRegularExpression(pFilter, QRegularExpression::CaseInsensitiveOption);
 
-    tbodyElement.removeAllChildren();
+    mNumberOfFilteredExposures = 0;
 
     for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
         QString exposureUrl = pExposures[i].url();
         QString exposureName = pExposures[i].name();
+        bool exposureDisplayed = exposureName.contains(filterRegEx);
 
-        tbodyElement.appendInside("<tr id=\"exposure_"+QString::number(i)+"\">\n"
-                                  "    <td class=\"exposure\">\n"
-                                  "        <table class=\"fullWidth\">\n"
-                                  "            <tbody>\n"
-                                  "                <tr>\n"
-                                  "                    <td class=\"fullWidth\">\n"
-                                  "                        <ul>\n"
-                                  "                            <li class=\"exposure\">\n"
-                                  "                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
-                                  "                            </li>\n"
-                                  "                        </ul>\n"
-                                  "                    </td>\n"
-                                  "                    <td class=\"button\">\n"
-                                  "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"|"+exposureName+"\"><img class=\"button clone\"/></a>\n"
-                                  "                    </td>\n"
-                                  "                    <td class=\"button\">\n"
-                                  "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"|"+exposureName+"\"><img id=\"exposure_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
-                                  "                    </td>\n"
-                                  "                </tr>\n"
-                                  "            </tbody>\n"
-                                  "        </table>\n"
-                                  "        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                                  "        </ul>\n"
-                                  "    </td>\n"
-                                  "</tr>\n");
+        exposures += "<tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
+                     "    <td class=\"exposure\">\n"
+                     "        <table class=\"fullWidth\">\n"
+                     "            <tbody>\n"
+                     "                <tr>\n"
+                     "                    <td class=\"fullWidth\">\n"
+                     "                        <ul>\n"
+                     "                            <li class=\"exposure\">\n"
+                     "                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
+                     "                            </li>\n"
+                     "                        </ul>\n"
+                     "                    </td>\n"
+                     "                    <td class=\"button\">\n"
+                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"|"+exposureName+"\"><img class=\"button clone\"/></a>\n"
+                     "                    </td>\n"
+                     "                    <td class=\"button\">\n"
+                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"|"+exposureName+"\"><img id=\"exposure_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                     "                    </td>\n"
+                     "                </tr>\n"
+                     "            </tbody>\n"
+                     "        </table>\n"
+                     "        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+                     "        </ul>\n"
+                     "    </td>\n"
+                     "</tr>\n";
 
         mExposureNames << exposureName;
-        mExposureDisplayed << true;
+        mExposureDisplayed << exposureDisplayed;
         mExposureUrlId.insert(exposureUrl, i);
+
+        mNumberOfFilteredExposures += exposureDisplayed;
     }
+
+    setHtml(mTemplate.arg(message(), exposures));
+
+    mInitialized = true;
 }
 
 //==============================================================================
 
 void PhysiomeModelRepositoryWindowWidget::filter(const QString &pFilter)
 {
-    // Filter our list of exposures, remove any duplicates (they will be
-    // reintroduced in the next step) and update our message (by retranslating
-    // ourselves)
+    // Filter our list of exposures and remove any duplicates (they will be
+    // 'reintroduced' in the next step)
 
     QStringList filteredExposureNames = mExposureNames.filter(QRegularExpression(pFilter, QRegularExpression::CaseInsensitiveOption));
 
@@ -251,12 +271,9 @@ void PhysiomeModelRepositoryWindowWidget::filter(const QString &pFilter)
 
     filteredExposureNames.removeDuplicates();
 
-    retranslateUi();
+    // Update our message and show/hide the relevant exposures
 
-    // Show/hide the relevant exposures
-    // Note: to call QWebElement::setStyleProperty() many times is time
-    //       consuming, hence we rely on mExposureDisplayed to determine when we
-    //       should change the display property of our elements...
+    page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
 
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=exposures]")).firstChild();
     QWebElement ulElement;
