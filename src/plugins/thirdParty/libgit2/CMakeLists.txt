@@ -44,7 +44,7 @@ ENDIF()
 # Determine to which external binaries we need access
 
 IF(WIN32)
-    LINK_LIBRARIES(winhttp rpcrt4 crypt32)
+    LINK_LIBRARIES(winhttp rpcrt4 crypt32 ole32)
 ELSE()
     LINK_LIBRARIES(${OPENSSL_LIBRARIES})
 ENDIF()
@@ -78,16 +78,16 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll a5842ee414ef8f82de0437fb5585b3c087f30117)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 8d2201ef8b29b45f1aa4f02e7baa3d064b9f9fdd)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll e16be811757843efdfe2c7c782d113e3e2e01b80)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 4760f705f59002f70c74f14fdb50af1291653b33)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 2401a7e21cfe188a79e816d756ad6c1d008b751e)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib c44a83b11bfbf806459c9f5cf2992f23ae9cd337)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 513d1ee3096202d2f811dcceb082c8bc5aeff024)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 40f249e7682f8c0180fef0ff1e36218bb9e06087)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 01572c030bae2fb610269545a59856f69eae3b19)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 7bf567778ff44b5242ee778ef9ff5d1805ed4b97)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so dc76db779a7b82bb58aadce62cdc69f62e0c5cf7)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so ab8662b7780150a9a3ffee1d8f4f79ce431507c3)
     ENDIF()
 
     # Add the plugin as a binary
@@ -148,17 +148,18 @@ ELSE()
         SET(ADDITIONAL_SOURCES
             src/hash/hash_win32.c
 
-            src/win32/w32_buffer.c
             src/win32/dir.c
             src/win32/error.c
             src/win32/findfile.c
             src/win32/map.c
             src/win32/path_w32.c
-            src/win32/path_w32.h
             src/win32/posix_w32.c
             src/win32/precompiled.c
             src/win32/pthread.c
             src/win32/utf-conv.c
+            src/win32/w32_buffer.c
+            src/win32/w32_crtdbg_stacktrace.c
+            src/win32/w32_stack.c
             src/win32/w32_util.c
         )
     ELSE()

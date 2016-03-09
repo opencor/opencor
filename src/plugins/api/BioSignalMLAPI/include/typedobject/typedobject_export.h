@@ -25,7 +25,7 @@
 
 #  ifndef TYPEDOBJECT_NO_EXPORT
 #    ifdef WIN32
-#      define TYPEDOBJECT_NO_EXPORT 
+#      define TYPEDOBJECT_NO_EXPORT
 #    else
 #      define TYPEDOBJECT_NO_EXPORT __attribute__((visibility("hidden")))
 #    endif

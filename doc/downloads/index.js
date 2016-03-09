@@ -40,7 +40,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> fixed a problem with OpenCOR firing up an 'old' version of OS X, but not opening the CellML/SED-ML file referenced in an OpenCOR URL (see issue <a href=\"https://github.com/opencor/opencor/issues/909\">#909</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2g (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/910\">#910</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.24 (see issue <a href=\"https://github.com/opencor/opencor/issues/914\">#914</a>) and <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2g (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/910\">#910</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,

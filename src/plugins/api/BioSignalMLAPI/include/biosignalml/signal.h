@@ -62,7 +62,7 @@ namespace bsml {
 
     virtual void extend(const double *points, const size_t length) ;
     void extend(const std::vector<double> &points) ;
-    
+
     //! Time based.
     //!
     //! The returned time-series should be the longest bounded by the closed

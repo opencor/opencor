@@ -162,12 +162,12 @@ QStringList runCli(const QStringList pArguments)
 #ifdef Q_OS_WIN
     // Remove the first line, in case it's a Qt warning
 //---GRY--- THIS OUGHT TO BE REMOVED SOMEDAY...
-    
+
     QStringList res = output.remove("\r").split("\n");
 
     if (!res.first().compare("Qt: Untested Windows version 10.0 detected!"))
         res.removeFirst();
-    
+
     return res;
 #else
     return output.remove("\r").split("\n");
