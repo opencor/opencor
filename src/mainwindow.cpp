@@ -112,7 +112,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
                      this, SLOT(openFileOrHandleUrl(const QString &)));
-    QObject::connect(qApp, SIGNAL(messageReceived(const QString &, QObject *)),
+    QObject::connect(qApp, SIGNAL(messageReceived(const QString &)),
                      this, SLOT(handleMessage(const QString &)));
 
     // Handle OpenCOR URLs

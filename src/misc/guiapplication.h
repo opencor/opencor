@@ -32,7 +32,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class GuiApplication : public SharedTools::QtSingleApplication
+class GuiApplication : public QtSingleApplication
 {
     Q_OBJECT
 
@@ -51,6 +51,9 @@ private:
     bool mCanEmitFileOpenRequestSignal;
 
     QStringList mFileNamesOrOpencorUrls;
+
+Q_SIGNALS:
+    void fileOpenRequest(const QString &file);
 };
 
 //==============================================================================
