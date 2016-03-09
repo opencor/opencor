@@ -44,7 +44,7 @@ ENDIF()
 # Determine to which external binaries we need access
 
 IF(WIN32)
-    LINK_LIBRARIES(winhttp rpcrt4 crypt32)
+    LINK_LIBRARIES(winhttp rpcrt4 crypt32 ole32)
 ELSE()
     LINK_LIBRARIES(${OPENSSL_LIBRARIES})
 ENDIF()
@@ -148,17 +148,18 @@ ELSE()
         SET(ADDITIONAL_SOURCES
             src/hash/hash_win32.c
 
-            src/win32/w32_buffer.c
             src/win32/dir.c
             src/win32/error.c
             src/win32/findfile.c
             src/win32/map.c
             src/win32/path_w32.c
-            src/win32/path_w32.h
             src/win32/posix_w32.c
             src/win32/precompiled.c
             src/win32/pthread.c
             src/win32/utf-conv.c
+            src/win32/w32_buffer.c
+            src/win32/w32_crtdbg_stacktrace.c
+            src/win32/w32_stack.c
             src/win32/w32_util.c
         )
     ELSE()
