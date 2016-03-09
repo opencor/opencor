@@ -39,7 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed a problem with OpenCOR firing up an 'old' version of OS X, but not opening the CellML/SED-ML file referenced in an OpenCOR URL (see issue <a href=\"https://github.com/opencor/opencor/issues/909\">#909</a>)." },
+                       { "change": "<strong>General:</strong> fixed a problem with OpenCOR firing up an 'old' version of OS X, but not opening the CellML/SED-ML file referenced in an OpenCOR URL (see issue <a href=\"https://github.com/opencor/opencor/issues/909\">#909</a>). Now use the <a href=\"http://code.qt.io/cgit/qt-solutions/qt-solutions.git/\">Qt Solutions</a> version of <a href=\"http://code.qt.io/cgit/qt-solutions/qt-solutions.git/tree/qtsingleapplication\">QtSingleApplication</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/916\">#916</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.24 (see issue <a href=\"https://github.com/opencor/opencor/issues/914\">#914</a>) and <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2g (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/910\">#910</a>)." }
                      ]
                    },

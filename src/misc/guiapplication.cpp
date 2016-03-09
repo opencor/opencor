@@ -32,7 +32,7 @@ namespace OpenCOR {
 //==============================================================================
 
 GuiApplication::GuiApplication(const QString &pId, int &pArgC, char **pArgV) :
-    SharedTools::QtSingleApplication(pId, pArgC, pArgV),
+    QtSingleApplication(pId, pArgC, pArgV),
     mCanEmitFileOpenRequestSignal(false),
     mFileNamesOrOpencorUrls(QStringList())
 {
