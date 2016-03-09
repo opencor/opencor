@@ -532,8 +532,8 @@ ELSE()
             )
         ENDIF()
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 30f2fa6d93ce0a7429ea89657b02e25cdb4dfe5a)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll aa0ac27b772176580af5b246bf92555777592418)
+        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll f6fd2f79bd6900a020b7092e5189d6e1e085495e)
+        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 0735ac67e3bd844e6df0cf8709b584655ca71bd3)
 
         LIST(APPEND ADDITIONAL_FILES
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
