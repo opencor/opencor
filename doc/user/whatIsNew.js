@@ -5,16 +5,16 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
-                           { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "Added", "description": "Resetting all your settings from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Added", "description": "Support for an OpenCOR-specific URL scheme." },
                            { "type": "Added", "description": "Use a user's proxy settings." },
-                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
+                           { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Retrieval of a save file name." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
                            { "type": "Fixed", "description": "Equation rendering." },
-                           { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
+                           { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
                          ]
                        },
                        { "name": "API",
@@ -25,7 +25,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"http://biosignalml.org/\">BioSignalML</a> data store (work in progress)." },
+                           { "type": "Added", "description": "BioSignalML data store (work in progress)." },
                            { "type": "Improved", "description": "Interface." }
                          ]
                        },
@@ -33,7 +33,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
-                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
+                               { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
                            { "type": "subCategory", "name": "Raw Text view (formerly known as the Raw view)",
@@ -75,7 +75,7 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (either through a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "Added", "description": "Create a new or update an existing CellML file based on the results of a simulation." },
-                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
+                               { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." },
                                { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." },
@@ -86,12 +86,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
@@ -151,12 +151,12 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "Added", "description": "Checking for updates." },
                            { "type": "Added", "description": "<a href=\"howToGetStarted.html\">How to get started</a> section." },
-                           { "type": "Added", "description": "Support for 64-bit <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
+                           { "type": "Added", "description": "Support for 64-bit <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_Yosemite\">OS X 10.10</a> (Yosemite)." },
                            { "type": "Improved", "description": "OpenCOR logo." },
-                           { "type": "Improved", "description": "Binaries on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
-                           { "type": "Improved", "description": "<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
-                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
+                           { "type": "Improved", "description": "Binaries on <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
+                           { "type": "Improved", "description": "<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
+                           { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "File handling." },
                            { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Display of numbers." },
@@ -165,7 +165,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store." }
+                           { "type": "Added", "description": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store." }
                          ]
                        },
                        { "name": "Editing",
@@ -173,8 +173,8 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Added", "description": "Two new <a href=\"http://biomodels.net/qualifiers/\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
-                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked CellML files." },
-                               { "type": "Improved", "description": "Responsiveness of the <a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                               { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked CellML files." },
+                               { "type": "Improved", "description": "Responsiveness of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "Improved", "description": "Listing of component variables." },
                                { "type": "Improved", "description": "Translation of views for inactive CellML files." },
                                { "type": "Improved", "description": "Setting of the modified state of the CellML file." },
@@ -226,8 +226,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "Improved", "description": "Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
-                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for the parameters section." },
+                               { "type": "Improved", "description": "Export to <a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
+                               { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for the parameters section." },
                                { "type": "Fixed", "description": "Tracking of simulation properties." }
                              ]
                            }
@@ -257,10 +257,10 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Open a remote file." },
                            { "type": "Added", "description": "Duplicate a file." },
                            { "type": "Added", "description": "(Un)lock a file." },
-                           { "type": "Added", "description": "Close a file by pressing <code>Ctrl+W</code> on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
-                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> support on Linux and <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
+                           { "type": "Added", "description": "Close a file by pressing <code>Ctrl+W</code> on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
+                           { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> support on Linux and <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with improved <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
-                           { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> support." },
+                           { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> support." },
                            { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Plugins window." },
                            { "type": "Improved", "description": "File handling." },
@@ -299,10 +299,10 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
                                { "type": "Added", "description": "Export of a CellML file to a user-defined format." },
-                               { "type": "Added", "description": "User-defined format for <a href=\"http://en.wikipedia.org/wiki/C_(programming_language)\">C</a>." },
-                               { "type": "Added", "description": "User-defined format for <a href=\"http://en.wikipedia.org/wiki/Fortran#FORTRAN_77\">FORTRAN 77</a>." },
-                               { "type": "Added", "description": "User-defined format for <a href=\"http://en.wikipedia.org/wiki/MATLAB\">MATLAB</a>." },
-                               { "type": "Added", "description": "User-defined format for <a href=\"http://en.wikipedia.org/wiki/Python_(programming_language)\">Python</a>." }
+                               { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/C_(programming_language)\">C</a>." },
+                               { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/Fortran#FORTRAN_77\">FORTRAN 77</a>." },
+                               { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/MATLAB\">MATLAB</a>." },
+                               { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/Python_(programming_language)\">Python</a>." }
                              ]
                            }
                          ]
@@ -316,12 +316,12 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "File Browser window",
                              "entries": [
-                               { "type": "Added", "description": "Open a file by pressing <code>Enter</code> on (Mac) <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." }
+                               { "type": "Added", "description": "Open a file by pressing <code>Enter</code> on (Mac) <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." }
                              ]
                            },
                            { "type": "subCategory", "name": "File Organiser window",
                              "entries": [
-                               { "type": "Added", "description": "Open a file by pressing <code>Enter</code> on (Mac) <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
+                               { "type": "Added", "description": "Open a file by pressing <code>Enter</code> on (Mac) <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                                { "type": "Fixed", "description": "Retrieval of the contents of the file organiser." }
                              ]
                            }
@@ -334,7 +334,7 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "View settings upon reloading a CellML file." },
                                { "type": "Improved", "description": "Delay between two data points." },
                                { "type": "Improved", "description": "CellML file information." },
-                               { "type": "Improved", "description": "Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
+                               { "type": "Improved", "description": "Export to <a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
                                { "type": "Fixed", "description": "Removal of a graph panel that is selected by another CellML file." },
                                { "type": "Fixed", "description": "Property settings of a CellML file that requires a non-linear algebraic solver." }
                              ]
@@ -343,12 +343,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
                              ]
@@ -365,7 +365,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Support for Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and later." },
                            { "type": "Added", "description": "Reload a file (either as a result of a direct action or because it got modified outside OpenCOR)." },
                            { "type": "Added", "description": "Show/hide all the recent/current docked widgets at once." },
-                           { "type": "Added", "description": "<a href=\"http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the CellML file examples." },
+                           { "type": "Added", "description": "<a href=\"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the CellML file examples." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
                            { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "Plugins window." },
@@ -405,7 +405,7 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Various listings." },
                                { "type": "Improved", "description": "Simulation speed." },
                                { "type": "Improved", "description": "Graph panel features." },
-                               { "type": "Improved", "description": "Support for <a href=\"http://en.wikipedia.org/wiki/Retina_Display\">Retina displays</a>." },
+                               { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Retina_Display\">Retina displays</a>." },
                                { "type": "Improved", "description": "Support for a wider range of CellML files." }
                              ]
                            }
@@ -413,9 +413,9 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"http://en.wikipedia.org/wiki/Heun%27s_method\">Heun</a> solver." },
-                           { "type": "Added", "description": "Second-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." },
-                           { "type": "Added", "description": "Fourth-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." }
+                           { "type": "Added", "description": "<a href=\"https://en.wikipedia.org/wiki/Heun%27s_method\">Heun</a> solver." },
+                           { "type": "Added", "description": "Second-order <a href=\"https://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." },
+                           { "type": "Added", "description": "Fourth-order <a href=\"https://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta</a> solver." }
                          ]
                        }
                      ]

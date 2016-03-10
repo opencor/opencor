@@ -97,7 +97,7 @@ ADD_PLUGIN(SampleTools
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://www.qt.io/">Qt</a> module (line 20) needed by our plugin.
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="https://www.qt.io/">Qt</a> module (line 20) needed by our plugin.
         </p>
 
         <div class="section">
@@ -169,7 +169,7 @@ private Q_SLOTS:
 #endif</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="http://www.qt.io/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
         </p>
 
         <p>
@@ -189,7 +189,7 @@ private Q_SLOTS:
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user and it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 51). It also has a direct dependency on the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 52).
+            As can be seen, our plugin is selectable by the user and it offers direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 51). It also has a direct dependency on the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 52).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -278,7 +278,7 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
 //==============================================================================</pre>
 
         <p>
-            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 88-94). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 98-103). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 107-113). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
+            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 88-94). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 98-103). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 107-113). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
         </p>
 
         <p>
@@ -473,7 +473,7 @@ void SampleToolsPlugin::addTwoNumbers()
         </p>
 
         <p>
-            <code>addTwoNumbers()</code> (lines 241-255) is a <a href="http://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
+            <code>addTwoNumbers()</code> (lines 241-255) is a <a href="https://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
         </p>
 
         <script type="text/javascript">

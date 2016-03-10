@@ -20,7 +20,7 @@
         </script>
 
         <p>
-            The SingleCellView plugin can be used to run CellML models, which consist of either a system of <a href = "http://en.wikipedia.org/wiki/Ordinary_differential_equation">ordinary differential equations</a> (ODEs) or <a href="http://en.wikipedia.org/wiki/Differential_algebraic_equation">differential algebraic equations</a> (DAEs). The system may be <a href="https://en.wikipedia.org/wiki/Nonlinear_system">non-linear</a>.
+            The SingleCellView plugin can be used to run CellML models, which consist of either a system of <a href = "https://en.wikipedia.org/wiki/Ordinary_differential_equation">ordinary differential equations</a> (ODEs) or <a href="https://en.wikipedia.org/wiki/Differential_algebraic_equation">differential algebraic equations</a> (DAEs). The system may be <a href="https://en.wikipedia.org/wiki/Nonlinear_system">non-linear</a>.
         </p>
 
         <div class="section">
@@ -105,7 +105,7 @@
         </div>
 
         <p>
-            To simulate a model, you need to provide some information about the simulation itself, i.e. its starting point, ending point and point interval. Then, you need to specify the solver that you want to use. The solvers available to you will depend on which solver <a href="../index.html">plugins</a> you selected, as well as on the type of your model (i.e. <a href = "http://en.wikipedia.org/wiki/Ordinary_differential_equation">ODE</a> or <a href="http://en.wikipedia.org/wiki/Differential_algebraic_equation">DAE</a>). If you are dealing with an ODE model and all the solver plugins are selected, then <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, forward <a href="http://en.wikipedia.org/wiki/Euler_method">Euler</a>, <a href="http://en.wikipedia.org/wiki/Heun's_method">Heun</a>, and second- and fourth-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta</a> will be available to you:
+            To simulate a model, you need to provide some information about the simulation itself, i.e. its starting point, ending point and point interval. Then, you need to specify the solver that you want to use. The solvers available to you will depend on which solver <a href="../index.html">plugins</a> you selected, as well as on the type of your model (i.e. <a href = "https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODE</a> or <a href="https://en.wikipedia.org/wiki/Differential_algebraic_equation">DAE</a>). If you are dealing with an ODE model and all the solver plugins are selected, then <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, forward <a href="https://en.wikipedia.org/wiki/Euler_method">Euler</a>, <a href="https://en.wikipedia.org/wiki/Heun's_method">Heun</a>, and second- and fourth-order <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta</a> will be available to you:
         </p>
 
         <p class="center">
@@ -141,7 +141,7 @@
         </p>
 
         <p>
-            Back to the simulation, you can see that it failed with several model parameters having a value of <code>nan</code> (i.e. <a href="http://en.wikipedia.org/wiki/NaN">not a number</a>). This is because the solver was not properly set up: its <code>Step</code> property is too big. If you set it to <code>0.01 millisecond</code>s, reset all the model parameters (by clicking on the <img src="../res/pics/oxygen/actions/view-refresh.png" width=24 height=24 align=absmiddle> button) and clear the simulation data (by clicking on the <img src="../res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> button), and restart the simulation, then you get the following trace:
+            Back to the simulation, you can see that it failed with several model parameters having a value of <code>nan</code> (i.e. <a href="https://en.wikipedia.org/wiki/NaN">not a number</a>). This is because the solver was not properly set up: its <code>Step</code> property is too big. If you set it to <code>0.01 millisecond</code>s, reset all the model parameters (by clicking on the <img src="../res/pics/oxygen/actions/view-refresh.png" width=24 height=24 align=absmiddle> button) and clear the simulation data (by clicking on the <img src="../res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> button), and restart the simulation, then you get the following trace:
         </p>
 
         <p class="center">
@@ -173,7 +173,7 @@
         </p>
 
         <p>
-            If you want, you can export <em>all</em> the simulation data to a <a href="http://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values</a> (CSV) file. To do so, you need to click on the <img src="../res/pics/oxygen/actions/document-export.png" width=24 height=24 align=absmiddle> button. Alternatively, if you want to create other graphs, but do not want them on the same graph panel as the existing one, you can click on the <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button to create a new graph panel:
+            If you want, you can export <em>all</em> the simulation data to a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values</a> (CSV) file. To do so, you need to click on the <img src="../res/pics/oxygen/actions/document-export.png" width=24 height=24 align=absmiddle> button. Alternatively, if you want to create other graphs, but do not want them on the same graph panel as the existing one, you can click on the <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button to create a new graph panel:
         </p>
 
         <p class="center">
@@ -197,7 +197,7 @@
         </div>
 
         <p>
-            To simulate a <a href="http://en.wikipedia.org/wiki/Differential_algebraic_equation">DAE</a> model is similar to simulating an <a href = "http://en.wikipedia.org/wiki/Ordinary_differential_equation">ODE</a> model, except that OpenCOR only offers one DAE solver (<a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a>) at this stage:
+            To simulate a <a href="https://en.wikipedia.org/wiki/Differential_algebraic_equation">DAE</a> model is similar to simulating an <a href = "https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODE</a> model, except that OpenCOR only offers one DAE solver (<a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a>) at this stage:
         </p>
 
         <p class="center">

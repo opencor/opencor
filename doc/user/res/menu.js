@@ -48,7 +48,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "separator": true },
                                 { "level": 0, "label": "Team", "link": "user/team.html" },
                                 { "separator": true },
-                                { "level": 0, "label": "Published article", "link": "http://dx.doi.org/10.3389/fphys.2015.00026", "directLink": true },
+                                { "level": 0, "label": "Published article", "link": "https://dx.doi.org/10.3389/fphys.2015.00026", "directLink": true },
                                 { "separator": true },
                                 { "level": 0, "label": "Contact us", "link": "user/contactUs.html" },
                               ]

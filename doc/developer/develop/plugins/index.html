@@ -32,7 +32,7 @@
         </ul>
 
         <p class="note">
-            these plugins only get built if the <a href="http://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option is set to <code>ON</code>.
+            these plugins only get built if the <a href="https://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option is set to <code>ON</code>.
         </p>
 
         <span class="anchor" id="Category"></span>
@@ -66,7 +66,7 @@
         </p>
 
         <p class="note">
-            the <strong>Sample</strong> category is a special category in that it is only available when building OpenCOR with the <a href="http://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option set to <code>ON</code>. It should therefore only be used for plugins that are aimed at helping people who want to learn how to write plugins for OpenCOR.
+            the <strong>Sample</strong> category is a special category in that it is only available when building OpenCOR with the <a href="https://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option set to <code>ON</code>. It should therefore only be used for plugins that are aimed at helping people who want to learn how to write plugins for OpenCOR.
         </p>
 
         <span class="anchor" id="Interfaces"></span>
@@ -85,7 +85,7 @@
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/datastoreinterface.inl">Data store</a>:</strong> to let OpenCOR know about the name of our data store, as well as to provide OpenCOR with a new instance of that data store.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a>:</strong> to save a file, as well as to be told whenever a file has been opened, modified, closed, etc.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/filetypeinterface.inl">File type</a>:</strong> to let OpenCOR know about our supported file types and their description.</li>
-            <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>:</strong> to let OpenCOR know about the menus and menu actions that we want to see added to the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, as well as to be told whenever the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> needs updating.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>:</strong> to let OpenCOR know about the menus and menu actions that we want to see added to the <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, as well as to be told whenever the <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> needs updating.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a>:</strong> to be told whenever we should retranslate ourselves.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a>:</strong> to initialise/finalise a plugin, load/save its settings, etc.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/solverinterface.inl">Solver</a>:</strong> to let OpenCOR know about the type, name and properties of our solver, as well as to provide OpenCOR with a new instance of that solver.</li>
@@ -108,7 +108,7 @@
         </div>
 
         <p>
-            OpenCOR is built and packaged using <a href="http://www.cmake.org/">CMake</a>. When it comes to plugins, this requires creating a <code>CMakeLists.txt</code> file in the plugin's root folder and calling the <code>ADD_PLUGIN()</code> macro, which is defined in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>. The <code>ADD_PLUGIN()</code> macro uses information passed to it to build and package the plugin. That information comes in the form of a series of parameters, some of which are keywords:
+            OpenCOR is built and packaged using <a href="https://www.cmake.org/">CMake</a>. When it comes to plugins, this requires creating a <code>CMakeLists.txt</code> file in the plugin's root folder and calling the <code>ADD_PLUGIN()</code> macro, which is defined in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>. The <code>ADD_PLUGIN()</code> macro uses information passed to it to build and package the plugin. That information comes in the form of a series of parameters, some of which are keywords:
         </p>
 
         <ul>
@@ -119,7 +119,7 @@
             <li><code>DEFINITIONS</code>: definitions needed to build the plugin.</li>
             <li><code>PLUGINS</code>: plugins needed by the plugin.</li>
             <li><code>PLUGIN_BINARIES</code>: the binary version of plugins needed by the plugin.</li>
-            <li><code>QT_MODULES</code>: <a href="http://www.qt.io/">Qt</a> modules needed by the plugin.</li>
+            <li><code>QT_MODULES</code>: <a href="https://www.qt.io/">Qt</a> modules needed by the plugin.</li>
             <li><code>EXTERNAL_BINARIES_DIR</code>: location where external binaries needed by the plugin can be found.</li>
             <li><code>EXTERNAL_BINARIES</code>: external binaries needed by the plugin.</li>
             <li><code>TESTS</code>: <a href="../tests.html">tests</a> for the plugin.</li>
@@ -183,7 +183,7 @@ namespace Core {
         <ul>
             <li><strong>Category:</strong> category under which the plugin is to be listed.</li>
             <li><strong>Selectable:</strong> whether the plugin can be selected by the user (for loading upon starting OpenCOR).</li>
-            <li><strong><a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support:</strong> whether the plugin works from the command line.</li>
+            <li><strong><a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support:</strong> whether the plugin works from the command line.</li>
             <li><strong>Dependencies:</strong> plugins on which the plugin depends directly.</li>
             <li><strong>Descriptions:</strong> description of the plugin in various languages.</li>
         </ul>
@@ -215,7 +215,7 @@ namespace Core {
 }</pre>
 
         <p class="note">
-            support for the internationalisation of a plugin's description would normally be done using <a href="http://www.qt.io/">Qt</a>'s <code>tr()</code> function, but the C nature of the function means that it cannot be done. So, instead, we use a <code>QMap</code>-based approach.
+            support for the internationalisation of a plugin's description would normally be done using <a href="https://www.qt.io/">Qt</a>'s <code>tr()</code> function, but the C nature of the function means that it cannot be done. So, instead, we use a <code>QMap</code>-based approach.
         </p>
 
         <span class="anchor" id="Plugin class"></span>
@@ -225,7 +225,7 @@ namespace Core {
         </div>
 
         <p>
-            We rely on <a href="http://www.qt.io/">Qt</a>'s support for plugins, which means that plugins must define a specific class. The class must inherit from <code>QObject</code>, as well as from any interface the plugin implements. For example, the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces, so its class definition is:
+            We rely on <a href="https://www.qt.io/">Qt</a>'s support for plugins, which means that plugins must define a specific class. The class must inherit from <code>QObject</code>, as well as from any interface the plugin implements. For example, the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces, so its class definition is:
         </p>
 
         <pre class="prettyprint">...
@@ -273,7 +273,7 @@ class LLVMPlugin : public QObject
         </div>
 
         <p>
-            There may be cases where a plugin declares a function or defines a class that we want to be able to use from another plugin. On <a href="http://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>, nothing special needs to be done, but on <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, the function or class needs to be exported by the original plugin:
+            There may be cases where a plugin declares a function or defines a class that we want to be able to use from another plugin. On <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="https://en.wikipedia.org/wiki/OS_X">OS X</a>, nothing special needs to be done, but on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, the function or class needs to be exported by the original plugin:
         </p>
 
         <pre class="prettyprint">void __declspec(dllexport) myFunction();
