@@ -3060,7 +3060,11 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
 
-    QDesktopServices::openUrl("opencor://openFile/"+mCellmlFile->fileName());
+    Core::FileManager *fileManager = Core::FileManager::instance();
+
+    QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManager->isRemote(mCellmlFile->fileName())?
+                                                                       fileManager->url(mCellmlFile->fileName()):
+                                                                       mCellmlFile->fileName()));
 
     // Ask OpenCOR to switch to the requested CellML editing view after having
     // selected the correct mode
