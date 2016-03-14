@@ -116,8 +116,7 @@ public:
 
     void openFile(const QString &pFileName,
                   const File::Type &pType = File::Local,
-                  const QString &pUrl = QString(),
-                  const bool &pFromOpenRemoteFile = false);
+                  const QString &pUrl = QString());
     void openFiles(const QStringList &pFileNames);
 
     void openRemoteFile(const QString &pUrl, const bool &pShowWarning = true);

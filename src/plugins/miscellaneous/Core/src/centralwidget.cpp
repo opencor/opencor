@@ -710,8 +710,7 @@ void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
 //==============================================================================
 
 void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
-                             const QString &pUrl,
-                             const bool &pFromOpenRemoteFile)
+                             const QString &pUrl)
 {
     // Make sure that modes are available and that the file exists
 
@@ -722,9 +721,9 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
         if (mainWindow()->isVisible()) {
             QMessageBox::warning(mainWindow(),
-                                 pFromOpenRemoteFile?
-                                     tr("Open Remote File"):
-                                     tr("Open File"),
+                                 pUrl.isEmpty()?
+                                     tr("Open File"):
+                                     tr("Open Remote File"),
                                  tr("<strong>%1</strong> could not be opened.").arg(pFileName));
         }
 
@@ -829,7 +828,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        openFile(fileNameOrUrl, File::Local, QString(), true);
+        openFile(fileNameOrUrl);
 
         return;
     }
@@ -881,7 +880,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
             hideBusyWidget();
         }
     } else {
-        openFile(fileName);
+        openFile(fileName, File::Remote, fileNameOrUrl);
     }
 }
 
