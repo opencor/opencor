@@ -695,9 +695,11 @@ void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
     if (tabIcon.isNull()) {
         mFileTabs->setTabIcon(pIndex, fileIsRemote?
                                           InternetIcon:
-                                          fileManagerInstance->isReadableAndWritable(fileName)?
-                                              NoIcon:
-                                              LockedIcon);
+                                          QFile::exists(fileName)?
+                                              fileManagerInstance->isReadableAndWritable(fileName)?
+                                                  NoIcon:
+                                                  LockedIcon:
+                                              NoIcon);
         // Note: we really want to call isReadableAndWritable() rather than
         //       isLocked() since no icon should be shown only if the file can
         //       be both readable and writable (see
