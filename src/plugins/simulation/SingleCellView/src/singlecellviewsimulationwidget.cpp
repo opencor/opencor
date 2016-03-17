@@ -2292,12 +2292,16 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     // initialise our simulation, if we still have a valid simulation
     // environment
 
+    mPlugin->viewWidget()->showBusyWidget(this, true);
+
     bool validSimulationEnvironment = doFurtherInitialize();
 
     initializeGui(validSimulationEnvironment);
 
     if (validSimulationEnvironment)
         initializeSimulation();
+
+    mPlugin->viewWidget()->hideBusyWidget();
 }
 
 //==============================================================================
