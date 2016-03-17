@@ -497,7 +497,8 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // and, if so, ask the user whether it's OK to use that higher
             // version
 
-            if (   (mParser.cellmlVersion() > data->cellmlVersion())
+            if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
+                && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (QMessageBox::question(Core::mainWindow(), tr("Save File"),
                                           tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
                                                                                                                                                                                          CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
