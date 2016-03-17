@@ -2333,7 +2333,6 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 {
     // Export our simulation data results
 
-    setEnabled(false);
     mPlugin->viewWidget()->showBusyWidget(this, true);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
@@ -2344,7 +2343,6 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
 
     mPlugin->viewWidget()->hideBusyWidget();
-    setEnabled(true);
 }
 
 //==============================================================================
