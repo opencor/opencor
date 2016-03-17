@@ -1104,9 +1104,7 @@ CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
     } else if (!cellmlVersion.compare(CellMLSupport::Cellml_1_1)) {
         return Cellml_1_1;
     } else {
-#ifdef QT_DEBUG
         qWarning("WARNING | %s:%d: a CellML version should not be unknown.", __FILE__, __LINE__);
-#endif
 
         return Unknown;
     }
