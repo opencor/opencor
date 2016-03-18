@@ -1062,7 +1062,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
         // We want to open some files, so handle them as a series of arguments
         // that were passed to OpenCOR
         // Note: the file names are contained in the path of the URL minus the
-        //       leading forward slash. Indeed, an open files request  will look
+        //       leading forward slash. Indeed, an open files request will look
         //       like opencor://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(pUrl.path().remove(0, 1).split("|"));
