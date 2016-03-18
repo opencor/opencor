@@ -53,7 +53,7 @@ private:
     QStringList mFileNamesOrOpencorUrls;
 
 Q_SIGNALS:
-    void fileOpenRequest(const QString &file);
+    void fileOpenRequest(const QString &pFileName);
 };
 
 //==============================================================================
