@@ -502,5 +502,17 @@ QString plainString(const QString &pString)
 }
 
 //==============================================================================
+
+QString urlPath(const QUrl &pUrl)
+{
+    // Return the path of the given URL
+    // Note: we would normally retrieve the path using pUrl.path(), but this
+    //       doesn't work when there are spaces, so instead we adjust the URL by
+    //       removing its scheme and authority, and return it as a string...
+
+    return pUrl.adjusted(QUrl::RemoveScheme|QUrl::RemoveAuthority).toString();
+}
+
+//==============================================================================
 // End of file
 //==============================================================================
