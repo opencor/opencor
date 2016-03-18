@@ -1054,16 +1054,16 @@ void MainWindow::handleUrl(const QUrl &pUrl)
         // We want to open a file, so handle it as an argument that is passed to
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
-        //       leading forward slash. Indeed, an open file request will look
-        //       like opencor://openFile//home/user/file...
+        //       leading forward slash. Indeed, an open file request looks like
+        //       opencor://openFile//home/user/file...
 
         handleArguments(QStringList() << pUrl.path().remove(0, 1));
     } else if (!actionName.compare("openFiles", Qt::CaseInsensitive)) {
         // We want to open some files, so handle them as a series of arguments
         // that were passed to OpenCOR
         // Note: the file names are contained in the path of the URL minus the
-        //       leading forward slash. Indeed, an open files request will look
-        //       like opencor://openFiles//home/user/file1|/home/user/file2...
+        //       leading forward slash. Indeed, an open files request looks like
+        //       opencor://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(pUrl.path().remove(0, 1).split("|"));
     } else {
