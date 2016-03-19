@@ -1,13 +1,12 @@
-# Note : Qt 5.5 has been released, but it has been causing us more problems than
-#       anything (see https://github.com/opencor/opencor/issues/710), so we are
-#       now back to Qt 5.4.2. However, homebrew only provides Qt 5.5, hence we
-#       can only build OpenCOR on OS X...
+# Note: Qt 5.6 is the latest version of Qt that is available on homebrew.
+#       However, we are still using Qt 5.4.2 and Qt WebKit, which is not part
+#       of Qt anymore, hence we only test things on Linux...
 
 language: cpp
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
   - CONFIG=Release
@@ -51,14 +50,10 @@ script:
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
+       else
+         build/OpenCOR.app/Contents/MacOS/runtests
+         ;
        fi
-#    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-#         build/bin/runtests
-#         ;
-#       else
-#         build/OpenCOR.app/Contents/MacOS/runtests
-#         ;
-#       fi
 
 notifications:
   email: team@opencor.ws
