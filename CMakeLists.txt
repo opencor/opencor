@@ -710,16 +710,16 @@ ELSE()
                                 ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
-    IF(ENABLE_TRAVIS_CI)
+#    IF(ENABLE_TRAVIS_CI)
         # We are building OpenCOR on Linux on Travis CI, so use Travis CI's
         # version of the ICU libraries since they are not included in the PPA we
         # use
 
-        SET(ICU_DIRNAME "/usr/lib")
+#        SET(ICU_DIRNAME "/usr/lib")
 
-        SET(ORIG_ICU_VERSION ".48.1.1")
-        SET(DEST_ICU_VERSION ".48")
-    ELSE()
+#        SET(ORIG_ICU_VERSION ".48.1.1")
+#        SET(DEST_ICU_VERSION ".48")
+#    ELSE()
         # We are building OpenCOR locally, so use Qt's version of the ICU
         # libraries
 
@@ -729,7 +729,7 @@ ELSE()
 
         SET(ORIG_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1")
         SET(DEST_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
-    ENDIF()
+#    ENDIF()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
         LINUX_DEPLOY_QT_LIBRARY(${ICU_DIRNAME}
