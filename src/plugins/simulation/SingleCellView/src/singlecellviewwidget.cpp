@@ -480,6 +480,8 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
     if (simulationWidget) {
+        simulationWidget->setFileName(pNewFileName);
+
         mSimulationWidgets.insert(pNewFileName, simulationWidget);
         mSimulationWidgets.remove(pOldFileName);
     }

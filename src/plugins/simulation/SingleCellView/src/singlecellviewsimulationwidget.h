@@ -133,6 +133,7 @@ public:
     void fileReloaded();
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     SEDMLSupport::SedmlFile * sedmlFile() const;
 
