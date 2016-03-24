@@ -484,7 +484,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulationWidgets.remove(pOldFileName);
     }
 
-    // Make sure that GUI of our simulation widgets is up to date
+    // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->updateGui();
