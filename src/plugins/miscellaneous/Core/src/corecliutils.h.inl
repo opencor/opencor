@@ -67,7 +67,7 @@ QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 QString CORE_EXPORT plainString(const QString &pString);
 
-QString CORE_EXPORT urlPath(const QUrl &pUrl);
+QString CORE_EXPORT urlArguments(const QUrl &pUrl);
 
 //==============================================================================
 // End of file

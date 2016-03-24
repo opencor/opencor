@@ -618,11 +618,11 @@ void CorePlugin::handleUrl(const QUrl &pUrl)
     if (!actionName.compare("Core.selectMode", Qt::CaseInsensitive)) {
         // We want to select a given mode
 
-        mCentralWidget->selectMode(urlPath(pUrl).remove(0, 1));
+        mCentralWidget->selectMode(urlArguments(pUrl));
     } else if (!actionName.compare("Core.selectView", Qt::CaseInsensitive)) {
         // We want to select a given view
 
-        mCentralWidget->selectView(urlPath(pUrl).remove(0, 1));
+        mCentralWidget->selectView(urlArguments(pUrl));
     }
 }
 
