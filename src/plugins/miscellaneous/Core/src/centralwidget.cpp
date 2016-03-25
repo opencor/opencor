@@ -1422,16 +1422,22 @@ bool CentralWidget::selectMode(const QString &pModeName)
 
 bool CentralWidget::selectView(const QString &pViewName)
 {
-    // Select the given view
+    // Select the given view, after making sure that the corresponding mode has
+    // been selected
 
-    CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()));
-    CentralWidgetViewPlugins *viewPlugins = mode->viewPlugins();
+    for (int i = 0, iMax = mLoadedViewPlugins.count(); i < iMax; ++i) {
+        if (   !mLoadedViewPlugins[i]->name().compare(pViewName)
+            &&  selectMode(ViewInterface::modeAsString(qobject_cast<ViewInterface *>(mLoadedViewPlugins[i]->instance())->viewMode()))) {
+            CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()));
+            CentralWidgetViewPlugins *viewPlugins = mode->viewPlugins();
 
-    for (int i = 0, iMax = viewPlugins->count(); i < iMax; ++i) {
-        if (!viewPlugins->value(i)->name().compare(pViewName)) {
-            mode->viewTabs()->setCurrentIndex(i);
+            for (int j = 0, iMax = viewPlugins->count(); j < iMax; ++j) {
+                if (!viewPlugins->value(j)->name().compare(pViewName)) {
+                    mode->viewTabs()->setCurrentIndex(j);
 
-            return true;
+                    return true;
+                }
+            }
         }
     }
 
