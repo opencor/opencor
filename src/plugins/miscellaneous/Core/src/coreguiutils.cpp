@@ -116,9 +116,6 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        if (pSelectedFilter)
-            *pSelectedFilter = dialog.selectedNameFilter();
-
         QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
@@ -157,9 +154,6 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        if (pSelectedFilter)
-            *pSelectedFilter = dialog.selectedNameFilter();
-
         QStringList res = Core::nativeCanonicalFileNames(dialog.selectedFiles());
 
         if (!res.isEmpty()) {
@@ -205,10 +199,13 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     dialog.setFileMode(QFileDialog::AnyFile);
     dialog.setOption(QFileDialog::DontConfirmOverwrite);
 
-    if (pSelectedFilter && !pSelectedFilter->isEmpty())
-        dialog.selectNameFilter(*pSelectedFilter);
+    forever {
+        if (pSelectedFilter && !pSelectedFilter->isEmpty())
+            dialog.selectNameFilter(*pSelectedFilter);
 
-    while (dialog.exec() == QDialog::Accepted) {
+        if (dialog.exec() != QDialog::Accepted)
+            break;
+
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
