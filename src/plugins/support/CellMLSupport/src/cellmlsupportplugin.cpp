@@ -64,15 +64,6 @@ CellMLSupportPlugin::CellMLSupportPlugin()
 // File interface
 //==============================================================================
 
-FileTypes CellMLSupportPlugin::fileTypes() const
-{
-    // Return the file types that we support
-
-    return mFileTypes;
-}
-
-//==============================================================================
-
 QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 {
     // Return the description for the requested MIME type, that is as long as it

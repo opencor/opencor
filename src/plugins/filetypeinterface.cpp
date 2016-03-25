@@ -91,6 +91,15 @@ FileTypeInterface::~FileTypeInterface()
 
 //==============================================================================
 
+FileTypes FileTypeInterface::fileTypes() const
+{
+    // Return the file types that we support
+
+    return mFileTypes;
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

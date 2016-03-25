@@ -64,15 +64,6 @@ SEDMLSupportPlugin::SEDMLSupportPlugin()
 // File interface
 //==============================================================================
 
-FileTypes SEDMLSupportPlugin::fileTypes() const
-{
-    // Return the file types that we support
-
-    return mFileTypes;
-}
-
-//==============================================================================
-
 QString SEDMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 {
     // Return the description for the requested MIME type, that is as long as it

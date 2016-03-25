@@ -75,6 +75,8 @@ public:
     #include "filetypeinterface.inl"
 #undef INTERFACE_DEFINITION
 
+    FileTypes fileTypes() const;
+
 protected:
     FileTypes mFileTypes;
 };
