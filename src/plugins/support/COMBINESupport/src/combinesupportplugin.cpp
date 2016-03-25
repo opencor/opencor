@@ -58,6 +58,15 @@ COMBINESupportPlugin::COMBINESupportPlugin()
 // File interface
 //==============================================================================
 
+bool COMBINESupportPlugin::isFile(const QString &pFileName) const
+{
+    // Return whether the given file is of the type that we support
+
+    return CombineFileManager::instance()->isFile(pFileName);
+}
+
+//==============================================================================
+
 QString COMBINESupportPlugin::fileTypeDescription(const QString &pMimeType) const
 {
     // Return the description for the requested MIME type, that is as long as it

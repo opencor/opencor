@@ -66,6 +66,15 @@ CellMLSupportPlugin::CellMLSupportPlugin()
 // File interface
 //==============================================================================
 
+bool CellMLSupportPlugin::isFile(const QString &pFileName) const
+{
+    // Return whether the given file is of the type that we support
+
+    return CellmlFileManager::instance()->isFile(pFileName);
+}
+
+//==============================================================================
+
 QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 {
     // Return the description for the requested MIME type, that is as long as it
