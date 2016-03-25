@@ -87,13 +87,17 @@ CentralWidget * centralWidget()
 
 QString allFilters(const QStringList &pFilters)
 {
+    QStringList filters = pFilters;
+
+    filters.sort();
+
     return  QObject::tr("All Files")
            +" (*"
 #ifdef Q_OS_WIN
             ".*"
 #endif
             ")"
-           +(pFilters.isEmpty()?QString():";;"+pFilters.join(";;")) ;
+           +(filters.isEmpty()?QString():";;"+filters.join(";;")) ;
 }
 
 //==============================================================================
