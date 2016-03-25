@@ -1407,10 +1407,10 @@ bool CentralWidget::selectMode(const QString &pModeName)
 {
     // Select the given mode
 
-    ViewInterface::Mode mode = mModeModeTabIndexes.value(ViewInterface::modeFromString(pModeName));
+    ViewInterface::Mode mode = ViewInterface::modeFromString(pModeName);
 
     if (mode != ViewInterface::UnknownMode) {
-        mModeTabs->setCurrentIndex(mode);
+        mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(mode));
 
         return true;
     } else {
