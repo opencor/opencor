@@ -4,6 +4,8 @@
     #define PURE
 #endif
 
+    virtual bool isFile(const QString &pFileName) const PURE;
+
     virtual QString fileTypeDescription(const QString &pMimeType) const PURE;
 
 #undef PURE

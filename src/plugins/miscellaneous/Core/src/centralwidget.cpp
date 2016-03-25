@@ -135,6 +135,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mState(Starting),
     mLoadedFileHandlingPlugins(Plugins()),
+    mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
     mLoadedViewPlugins(Plugins()),
     mModeTabIndexModes(QMap<int, ViewInterface::Mode>()),
@@ -145,7 +146,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mFileNames(QStringList()),
     mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
     mRemoteLocalFileNames(QMap<QString, QString>()),
-    mViews(QMap<QString, QWidget *>())
+    mViews(QMap<QString, QWidget *>()),
+    mDefaultViews(QStringList())
 {
     // Create and set our horizontal layout
 
@@ -574,6 +576,9 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
         if (qobject_cast<FileHandlingInterface *>(plugin->instance()))
             mLoadedFileHandlingPlugins << plugin;
 
+        if (qobject_cast<FileTypeInterface *>(plugin->instance()))
+            mLoadedFileTypePlugins << plugin;
+
         if (qobject_cast<GuiInterface *>(plugin->instance()))
             mLoadedGuiPlugins << plugin;
 
@@ -761,6 +766,19 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     if (!pUrl.isEmpty())
         mRemoteLocalFileNames.insert(pUrl, nativeFileName);
+
+    // Check whether the file is recognised and, if so, the default views that
+    // ought to be tried when opening it
+
+    foreach (Plugin *plugin, mLoadedFileTypePlugins) {
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
+
+        if (fileTypeInterface->isFile(nativeFileName)) {
+            mDefaultViews = fileTypeInterface->defaultViews();
+
+            break;
+        }
+    }
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -1649,9 +1667,12 @@ void CentralWidget::updateGui()
     if (!fileName.isEmpty()) {
         int fileModeTabIndex = mFileModeTabIndexes.value(fileName, -1);
 
-        // Set the mode and view for the current file, should we know them and
-        // should we be changing files or coming here directly, or set the view
-        // for the current file, should we be changing modes
+        // Set the mode and view for the current file, depending on the case in
+        // which we are (i.e. direct call, switching files/modes/views or
+        // opening a file)
+        // Note: the value of mDefaultViews is only to be used once and if we
+        //       are opening a file, but it should be reset in all cases (just
+        //       to be safe)...
 
         if (((fileModeTabIndex != -1) && (changedFiles || directCall)) || changedModes) {
             if (changedModes)
@@ -1663,7 +1684,14 @@ void CentralWidget::updateGui()
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
+        } else if (!mDefaultViews.isEmpty()) {
+            foreach (const QString &defaultView, mDefaultViews) {
+                if (selectView(defaultView))
+                    break;
+            }
         }
+
+        mDefaultViews.clear();
 
         // Keep track of the mode and view of the current file, should we not
         // have any track of them or should we be changing modes or views

@@ -142,6 +142,7 @@ private:
     State mState;
 
     Plugins mLoadedFileHandlingPlugins;
+    Plugins mLoadedFileTypePlugins;
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedViewPlugins;
 
@@ -173,6 +174,8 @@ private:
     QMap<QString, QString> mRemoteLocalFileNames;
 
     QMap<QString, QWidget *> mViews;
+
+    QStringList mDefaultViews;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;

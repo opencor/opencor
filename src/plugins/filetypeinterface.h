@@ -76,9 +76,11 @@ public:
 #undef INTERFACE_DEFINITION
 
     FileTypes fileTypes() const;
+    QStringList defaultViews() const;
 
 protected:
     FileTypes mFileTypes;
+    QStringList mDefaultViews;
 };
 
 //==============================================================================
