@@ -58,10 +58,6 @@ namespace Core {
 
 //==============================================================================
 
-typedef QMap<int, Plugin *> CentralWidgetViewPlugins;
-
-//==============================================================================
-
 class CentralWidget;
 class UserMessageWidget;
 class TabBarWidget;
@@ -78,13 +74,16 @@ public:
     void setEnabled(const bool &pEnabled);
 
     TabBarWidget * viewTabs() const;
-    CentralWidgetViewPlugins * viewPlugins() const;
+
+    Plugins viewPlugins() const;
+    void addViewPlugin(Plugin *pViewPlugin);
 
 private:
     bool mEnabled;
 
     TabBarWidget *mViewTabs;
-    CentralWidgetViewPlugins *mViewPlugins;
+
+    Plugins mViewPlugins;
 };
 
 //==============================================================================
