@@ -174,6 +174,8 @@ private:
 
     QMap<QString, QWidget *> mViews;
 
+    QString mDefaultView;
+
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 

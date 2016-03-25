@@ -58,6 +58,8 @@ SEDMLSupportPlugin::SEDMLSupportPlugin()
 
     mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
                                              SedmlMimeType, SedmlFileExtension);
+
+    mDefaultViews = QStringList() << "SingleCellView";
 }
 
 //==============================================================================

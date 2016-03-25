@@ -50,6 +50,8 @@ COMBINESupportPlugin::COMBINESupportPlugin()
 
     mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
                                              CombineMimeType, CombineFileExtension);
+
+    mDefaultViews = QStringList() << "SingleCellView";
 }
 
 //==============================================================================

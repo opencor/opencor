@@ -145,7 +145,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mFileNames(QStringList()),
     mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
     mRemoteLocalFileNames(QMap<QString, QString>()),
-    mViews(QMap<QString, QWidget *>())
+    mViews(QMap<QString, QWidget *>()),
+    mDefaultView(QString())
 {
     // Create and set our horizontal layout
 
@@ -761,6 +762,10 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     if (!pUrl.isEmpty())
         mRemoteLocalFileNames.insert(pUrl, nativeFileName);
+
+    // Check whether we should be using a default view to open the file
+
+//---ISSUE925--- TO BE DONE...
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -1649,9 +1654,12 @@ void CentralWidget::updateGui()
     if (!fileName.isEmpty()) {
         int fileModeTabIndex = mFileModeTabIndexes.value(fileName, -1);
 
-        // Set the mode and view for the current file, should we know them and
-        // should we be changing files or coming here directly, or set the view
-        // for the current file, should we be changing modes
+        // Set the mode and view for the current file, depending on the case in
+        // which we are (i.e. direct call, switching files/modes/views or
+        // opening a file)
+        // Note: the value of mDefaultView is only to be used once and if we are
+        //       opening a file, but it should be reset in all cases (just to be
+        //       safe)...
 
         if (((fileModeTabIndex != -1) && (changedFiles || directCall)) || changedModes) {
             if (changedModes)
@@ -1663,7 +1671,11 @@ void CentralWidget::updateGui()
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
+        } else if (!mDefaultView.isEmpty()) {
+            selectView(mDefaultView);
         }
+
+        mDefaultView = QString();
 
         // Keep track of the mode and view of the current file, should we not
         // have any track of them or should we be changing modes or views

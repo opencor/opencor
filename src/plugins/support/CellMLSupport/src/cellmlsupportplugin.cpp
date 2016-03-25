@@ -58,6 +58,8 @@ CellMLSupportPlugin::CellMLSupportPlugin()
 
     mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
                                              CellmlMimeType, CellmlFileExtension);
+
+    mDefaultViews = QStringList() << "CellMLTextView" << "RawCellMLView" << "RawTextView";
 }
 
 //==============================================================================
