@@ -1657,6 +1657,8 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportSedmlFile_triggered()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
+    QStringList sedmlFilters = Core::filters(mPlugin->sedmlFileTypes());
+    QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
         sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
@@ -1667,7 +1669,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportSedmlFile_triggered()
 
     sedmlFileName = Core::getSaveFileName(QObject::tr("Export To SED-ML File"),
                                           sedmlFileName,
-                                          Core::fileTypes(mPlugin->sedmlFileTypes()));
+                                          sedmlFilters, &firstSedmlFilter);
 
     // Create a SED-ML file using the SED-ML file name that has been provided
 
@@ -1706,6 +1708,8 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
+    QStringList combineFilters = Core::filters(mPlugin->combineFileTypes());
+    QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
         combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
@@ -1716,7 +1720,7 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportCombineArchive_triggere
 
     combineArchiveName = Core::getSaveFileName(QObject::tr("Export To COMBINE Archive"),
                                                combineArchiveName,
-                                               Core::fileTypes(mPlugin->combineFileTypes()));
+                                               combineFilters, &firstCombineFilter);
 
     // Effectively export ourselves to a COMBINE archive, if a COMBINE archive
     // name has been provided

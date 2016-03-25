@@ -66,10 +66,6 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QObject</name>
     <message>
-        <source>BioSignalML</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Enter BioSignalML file name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -95,6 +91,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>As specified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BioSignalML File</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

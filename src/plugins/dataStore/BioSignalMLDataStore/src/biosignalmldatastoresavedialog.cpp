@@ -131,10 +131,11 @@ void BioSignalMLSaveDialog::setFileName(bool checked)
 {
     Q_UNUSED(checked)
 
-    QString biosignalmlFiles = QObject::tr("BioSignalML")+" (*.biosignalml)";
+    QString biosignalmlFilter = QObject::tr("BioSignalML File")+" (*.biosignalml)";
     QString name = Core::getSaveFileName(QObject::tr("Enter BioSignalML file name"),
                                          mDefaultFileName,
-                                         biosignalmlFiles, &biosignalmlFiles);
+                                         QStringList() << biosignalmlFilter,
+                                         &biosignalmlFilter);
     if (!name.isEmpty()) {
         mGui->fileNameValue->setText(name);
         mGui->fileNameValue->setCursorPosition(name.length());

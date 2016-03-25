@@ -830,7 +830,7 @@ void CentralWidget::openFile()
     // Ask for the file(s) to be opened
 
     QStringList files = getOpenFileNames(tr("Open File"),
-                                         fileTypes(mSupportedFileTypes));
+                                         filters(mSupportedFileTypes));
 
     // Open the file(s)
 
@@ -1105,13 +1105,16 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // under a new name, so we ask the user for a file name based on the
         // MIME types supported by our current view
 
+        QStringList supportedFilters = filters(mSupportedFileTypes, viewInterface->viewMimeTypes());
+        QString firstSupportedFilter = supportedFilters.first();
+
         newFileName = getSaveFileName(pNeedNewFileName?
                                           tr("Save File As"):
                                           tr("Save File"),
                                       fileIsNew?
                                           Core::newFileName(mFileTabs->tabToolTip(pIndex), viewInterface->viewDefaultFileExtension()):
                                           Core::newFileName(newFileName, tr("New"), true),
-                                      fileTypes(mSupportedFileTypes, viewInterface->viewMimeTypes()));
+                                      supportedFilters, &firstSupportedFilter);
 
         // Make sure that a new file name was retrieved
 

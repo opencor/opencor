@@ -61,14 +61,14 @@ class CentralWidget;
 CentralWidget CORE_EXPORT * centralWidget();
 
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
-                                    const QString &pFilters = QString(),
+                                    const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = 0);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
-                                         const QString &pFilters = QString(),
+                                         const QStringList &pFilters = QStringList(),
                                          QString *pSelectedFilter = 0);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
-                                    const QString &pFilters = QString(),
+                                    const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = 0);
 
 QString CORE_EXPORT getExistingDirectory(const QString &pCaption,
@@ -114,9 +114,9 @@ void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
 
-QString CORE_EXPORT fileTypes(const FileTypes &pFileTypes);
-QString CORE_EXPORT fileTypes(const FileTypes &pFileTypes,
-                              const QStringList &pMimeTypes);
+QStringList CORE_EXPORT filters(const FileTypes &pFileTypes);
+QStringList CORE_EXPORT filters(const FileTypes &pFileTypes,
+                                const QStringList &pMimeTypes);
 
 //==============================================================================
 

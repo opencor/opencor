@@ -259,9 +259,11 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                          "CellML 1.0":
                          "CellML 1.1";
+    QStringList cellmlFilters = Core::filters(mCellmlFileTypes);
+    QString firstCellmlFilter = cellmlFilters.first();
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
                                              Core::newFileName(mFileName, tr("Exported"), false),
-                                             Core::fileTypes(mCellmlFileTypes));
+                                             cellmlFilters, &firstCellmlFilter);
 
     if (fileName.isEmpty())
         return;
@@ -463,8 +465,10 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 {
     // Ask for the name of the file that contains the user-defined format
 
+    QString xmlFilter = tr("User-Defined Format File")+" (*.xml)";
     QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"),
-                                                              tr("User-Defined Format File")+" (*.xml)");
+                                                              QStringList() << xmlFilter,
+                                                              &xmlFilter);
 
     if (userDefinedFormatFileName.isEmpty())
         return;

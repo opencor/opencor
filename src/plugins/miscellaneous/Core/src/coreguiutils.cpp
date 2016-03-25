@@ -85,20 +85,20 @@ CentralWidget * centralWidget()
 
 //==============================================================================
 
-QString allFilters(const QString &pFilters)
+QString allFilters(const QStringList &pFilters)
 {
-    return  (pFilters.isEmpty()?QString():pFilters+";;")
-           +QObject::tr("All Files")
+    return  QObject::tr("All Files")
            +" (*"
 #ifdef Q_OS_WIN
             ".*"
 #endif
-            ")";
+            ")"
+           +(pFilters.isEmpty()?QString():";;"+pFilters.join(";;")) ;
 }
 
 //==============================================================================
 
-QString getOpenFileName(const QString &pCaption, const QString &pFilters,
+QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
                         QString *pSelectedFilter)
 {
     // Retrieve and return an open file name
@@ -136,7 +136,8 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters,
 
 //==============================================================================
 
-QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
+QStringList getOpenFileNames(const QString &pCaption,
+                             const QStringList &pFilters,
                              QString *pSelectedFilter)
 {
     // Retrieve and return one or several open file names
@@ -180,7 +181,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
 //==============================================================================
 
 QString getSaveFileName(const QString &pCaption, const QString &pFileName,
-                        const QString &pFilters, QString *pSelectedFilter)
+                        const QStringList &pFilters, QString *pSelectedFilter)
 {
     // Retrieve and return a save file name
     // Note: normally, we would rely on QFileDialog::getSaveFileName() to
@@ -571,22 +572,17 @@ QColor lockedColor(const QColor &pColor)
 
 //==============================================================================
 
-QString fileTypes(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
-                  const QStringList &pMimeTypes)
+QStringList filters(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
+                    const QStringList &pMimeTypes)
 {
-    // Convert and return as a string the given file types, using the given MIME
-    // types, if required
+    // Convert and return as a list of filters the given file types, using the
+    // given MIME types, if required
 
-    QString res = QString();
+    QStringList res = QStringList();
 
     foreach (FileType *fileType, pFileTypes) {
-        if (!pCheckMimeTypes || pMimeTypes.contains(fileType->mimeType())) {
-            if (!res.isEmpty())
-                res += ";;";
-
-            res +=  fileType->description()
-                   +" (*."+fileType->fileExtension()+")";
-        }
+        if (!pCheckMimeTypes || pMimeTypes.contains(fileType->mimeType()))
+            res << fileType->description()+" (*."+fileType->fileExtension()+")";
     }
 
     return res;
@@ -594,21 +590,21 @@ QString fileTypes(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
 
 //==============================================================================
 
-QString fileTypes(const FileTypes &pFileTypes)
+QStringList filters(const FileTypes &pFileTypes)
 {
-    // Convert and return as a string the given file types
+    // Convert and return as a list of filters the given file types
 
-    return fileTypes(pFileTypes, false, QStringList());
+    return filters(pFileTypes, false, QStringList());
 }
 
 //==============================================================================
 
-QString fileTypes(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+QStringList filters(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
 {
-    // Convert and return as a string the given file types, using the given MIME
-    // types, if any
+    // Convert and return as a list of filters the given file types, using the
+    // given MIME types, if any
 
-    return fileTypes(pFileTypes, true, pMimeTypes);
+    return filters(pFileTypes, true, pMimeTypes);
 }
 
 //==============================================================================
