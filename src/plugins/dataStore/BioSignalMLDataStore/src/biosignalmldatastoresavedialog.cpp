@@ -22,8 +22,6 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "biosignalmldatastoresavedialog.h"
 #include "biosignalmldatastoreselectvars.h"
-#include "i18ninterface.h"
-#include "filemanager.h"
 
 //==============================================================================
 

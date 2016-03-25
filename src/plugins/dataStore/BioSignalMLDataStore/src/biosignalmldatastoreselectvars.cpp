@@ -19,10 +19,7 @@ specific language governing permissions and limitations under the License.
 // Save as BioSignalML widget
 //==============================================================================
 
-#include "coreguiutils.h"
 #include "biosignalmldatastoreselectvars.h"
-#include "i18ninterface.h"
-#include "filemanager.h"
 
 //==============================================================================
 

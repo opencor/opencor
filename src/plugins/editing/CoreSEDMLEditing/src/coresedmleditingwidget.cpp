@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 #include "coresedmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
-#include "filemanager.h"
 
 //==============================================================================
 

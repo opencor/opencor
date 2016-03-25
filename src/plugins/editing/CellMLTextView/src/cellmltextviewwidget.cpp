@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License.
 //       updating the viewer (e.g. see the XSL transformation)...
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewlexer.h"
 #include "cellmltextviewparser.h"
