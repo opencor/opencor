@@ -17,6 +17,7 @@ APPLY_ZLIB_BUILD_SETTINGS()
 ADD_PLUGIN(SingleCellView
     SOURCES
         ../../datastoreinterface.cpp
+        ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
