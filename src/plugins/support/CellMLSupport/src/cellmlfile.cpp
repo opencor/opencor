@@ -928,11 +928,14 @@ QString CellmlFile::importedFileContents(const QString &pImportedFileName) const
 
 //==============================================================================
 
-QString CellmlFile::cmetaId() const
+QString CellmlFile::cmetaId()
 {
     // Return the CellML model's cmeta:id
 
-    return QString::fromStdWString(mModel->cmetaId());
+    if (load())
+        return QString::fromStdWString(mModel->cmetaId());
+    else
+        return QString();
 }
 
 //==============================================================================
@@ -1081,11 +1084,14 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version() const
+CellmlFile::Version CellmlFile::version()
 {
     // Return our version
 
-    return CellmlFile::version(mModel);
+    if (load())
+        return CellmlFile::version(mModel);
+    else
+        return CellmlFile::Unknown;
 }
 
 //==============================================================================

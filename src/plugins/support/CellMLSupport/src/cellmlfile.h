@@ -119,14 +119,14 @@ public:
 
     QString importedFileContents(const QString &pImportedFileName) const;
 
-    QString cmetaId() const;
+    QString cmetaId();
     QString xmlBase();
 
     bool exportTo(const QString &pFileName, const Version &pVersion);
     bool exportTo(const QString &pFileName,
                   const QString &pUserDefinedFormatFileName);
 
-    Version version() const;
+    Version version();
 
     static Version version(iface::cellml_api::Model *pModel);
     static Version version(const QString &pFileName);
