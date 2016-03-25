@@ -123,8 +123,8 @@ public:
 
     bool canClose();
 
-    void selectMode(const QString &pModeName);
-    void selectView(const QString &pViewName);
+    bool selectMode(const QString &pModeName);
+    bool selectView(const QString &pViewName);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);

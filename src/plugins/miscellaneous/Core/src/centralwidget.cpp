@@ -1403,16 +1403,24 @@ bool CentralWidget::canClose()
 
 //==============================================================================
 
-void CentralWidget::selectMode(const QString &pModeName)
+bool CentralWidget::selectMode(const QString &pModeName)
 {
     // Select the given mode
 
-    mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(ViewInterface::viewModeFromString(pModeName)));
+    ViewInterface::Mode mode = mModeModeTabIndexes.value(ViewInterface::modeFromString(pModeName));
+
+    if (mode != ViewInterface::UnknownMode) {
+        mModeTabs->setCurrentIndex(mode);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-void CentralWidget::selectView(const QString &pViewName)
+bool CentralWidget::selectView(const QString &pViewName)
 {
     // Select the given view
 
@@ -1423,9 +1431,11 @@ void CentralWidget::selectView(const QString &pViewName)
         if (!viewPlugins->value(i)->name().compare(pViewName)) {
             mode->viewTabs()->setCurrentIndex(i);
 
-            break;
+            return true;
         }
     }
+
+    return false;
 }
 
 //==============================================================================
