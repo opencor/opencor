@@ -3113,8 +3113,8 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 
     Plugin *plugin = mCellmlEditingViewPlugins.value(qobject_cast<QAction *>(sender()));
 
-    QDesktopServices::openUrl("opencor://Core.selectMode/"+ViewInterface::viewModeAsString(qobject_cast<ViewInterface *>(plugin->instance())->viewMode()));
     QDesktopServices::openUrl("opencor://Core.selectView/"+plugin->name());
+    QDesktopServices::openUrl("opencor://Core.selectMode/"+ViewInterface::modeAsString(qobject_cast<ViewInterface *>(plugin->instance())->viewMode()));
 }
 
 //==============================================================================

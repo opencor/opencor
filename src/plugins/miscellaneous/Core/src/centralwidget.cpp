@@ -391,7 +391,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
                                     fileManagerInstance->url(fileName):
                                     fileName;
-        ViewInterface::Mode fileMode = ViewInterface::viewModeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
+        ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
@@ -401,7 +401,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
 
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::viewModeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::modeAsString(fileMode))).toString();
             CentralWidgetViewPlugins *viewPlugins = mModes.value(fileMode)->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j) {
@@ -436,7 +436,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Retrieve the seleted modes and views, in case there are no files
 
     if (mFileNames.isEmpty()) {
-        ViewInterface::Mode fileMode = ViewInterface::viewModeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
+        ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
             mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(fileMode));
@@ -445,7 +445,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             fileMode = mModeTabIndexModes.value(i);
 
             CentralWidgetMode *mode = mModes.value(fileMode);
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString(), ViewInterface::viewModeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString(), ViewInterface::modeAsString(fileMode))).toString();
             CentralWidgetViewPlugins *viewPlugins = mode->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j) {
@@ -511,14 +511,14 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
                                     fileName;
 
         pSettings->setValue(SettingsFileMode.arg(fileNameOrUrl),
-                            ViewInterface::viewModeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
+                            ViewInterface::modeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
 
         QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
 
-            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::viewModeAsString(fileMode)),
+            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::modeAsString(fileMode)),
                                 mModes.value(fileMode)->viewPlugins()->value(modeViewTabIndexes.value(i))->name());
         }
     }
@@ -545,13 +545,13 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     // next time we use OpenCOR
 
     pSettings->setValue(SettingsFileMode.arg(QString()),
-                        ViewInterface::viewModeAsString(mModeTabIndexModes.value(mModeTabs->currentIndex())));
+                        ViewInterface::modeAsString(mModeTabIndexModes.value(mModeTabs->currentIndex())));
 
     for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
         ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
         CentralWidgetMode *mode = mModes.value(fileMode);
 
-        pSettings->setValue(SettingsFileModeView.arg(QString(), ViewInterface::viewModeAsString(fileMode)),
+        pSettings->setValue(SettingsFileModeView.arg(QString(), ViewInterface::modeAsString(fileMode)),
                             mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->name());
     }
 }
