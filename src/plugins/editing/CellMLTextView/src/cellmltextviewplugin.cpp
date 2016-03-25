@@ -278,13 +278,15 @@ ViewInterface::Mode CellMLTextViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return ViewInterface::EditingMode;
+    return EditingMode;
 }
 
 //==============================================================================
 
-QStringList CellMLTextViewPlugin::viewMimeTypes() const
+QStringList CellMLTextViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
 {
+    Q_UNUSED(pMimeTypeMode);
+
     // Return the MIME types we support
 
     return QStringList() << CellMLSupport::CellmlMimeType;

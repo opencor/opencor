@@ -214,11 +214,13 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (    viewInterface
-            && (viewInterface->viewMode() == ViewInterface::EditingMode)
-            && (   viewInterface->viewMimeTypes().isEmpty()
-                || viewInterface->viewMimeTypes().contains(CellMLSupport::CellmlMimeType))) {
-            mCellmlEditingViewPlugins << plugin;
+        if (viewInterface && (viewInterface->viewMode() == EditingMode)) {
+            QStringList viewMimeTypes = viewInterface->viewMimeTypes(OpenMimeTypeMode);
+
+            if (   viewMimeTypes.isEmpty()
+                || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
+                mCellmlEditingViewPlugins << plugin;
+            }
         }
 
         // File types supported by the SEDMLSupport and COMBINESupport plugins
@@ -273,18 +275,22 @@ ViewInterface::Mode SingleCellViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return ViewInterface::SimulationMode;
+    return SimulationMode;
 }
 
 //==============================================================================
 
-QStringList SingleCellViewPlugin::viewMimeTypes() const
+QStringList SingleCellViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType
-                         << SEDMLSupport::SedmlMimeType
-                         << COMBINESupport::CombineMimeType;
+    if (pMimeTypeMode == OpenMimeTypeMode) {
+        return QStringList() << CellMLSupport::CellmlMimeType
+                             << SEDMLSupport::SedmlMimeType
+                             << COMBINESupport::CombineMimeType;
+    } else {
+        return QStringList() << CellMLSupport::CellmlMimeType;
+    }
 }
 
 //==============================================================================

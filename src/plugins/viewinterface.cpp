@@ -37,22 +37,22 @@ static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
 
 //==============================================================================
 
-QString ViewInterface::modeAsString(const ViewInterface::Mode &pMode)
+QString ViewInterface::modeAsString(const Mode &pMode)
 {
     // Return the mode corresponding to the given mode string
 
     switch (pMode) {
 #ifdef ENABLE_SAMPLES
-    case ViewInterface::SampleMode:
+    case SampleMode:
         return ViewModeSample;
 #endif
-    case ViewInterface::EditingMode:
+    case EditingMode:
         return ViewModeEditing;
-    case ViewInterface::SimulationMode:
+    case SimulationMode:
         return ViewModeSimulation;
-    case ViewInterface::AnalysisMode:
+    case AnalysisMode:
         return ViewModeAnalysis;
-    default:   // ViewInterface::UnknownMode
+    default:   // UnknownMode
         return ViewModeUnknown;
     }
 }
@@ -65,18 +65,18 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
 
 #ifdef ENABLE_SAMPLES
     if (!pMode.compare(ViewModeSample))
-        return ViewInterface::SampleMode;
+        return SampleMode;
     else if (!pMode.compare(ViewModeEditing))
 #else
     if (!pMode.compare(ViewModeEditing))
 #endif
-        return ViewInterface::EditingMode;
+        return EditingMode;
     else if (!pMode.compare(ViewModeSimulation))
-        return ViewInterface::SimulationMode;
+        return SimulationMode;
     else if (!pMode.compare(ViewModeAnalysis))
-        return ViewInterface::AnalysisMode;
+        return AnalysisMode;
     else
-        return ViewInterface::UnknownMode;
+        return UnknownMode;
 }
 
 //==============================================================================

@@ -98,12 +98,10 @@ ADD_PLUGIN(SampleWindow
     PLUGINS
         Core
         Sample
-    QT_MODULES
-        Widgets
 )</pre>
 
         <p>
-            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20 and 21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15). Finally, we reference the <a href="https://www.qt.io/">Qt</a> module (line 23) needed by our plugin.
+            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20 and 21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15).
         </p>
 
         <div class="section">

@@ -291,13 +291,15 @@ ViewInterface::Mode RawCellMLViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return ViewInterface::EditingMode;
+    return EditingMode;
 }
 
 //==============================================================================
 
-QStringList RawCellMLViewPlugin::viewMimeTypes() const
+QStringList RawCellMLViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
 {
+    Q_UNUSED(pMimeTypeMode);
+
     // Return the MIME types we support
 
     return QStringList() << CellMLSupport::CellmlMimeType;

@@ -5,7 +5,7 @@
 #endif
 
     virtual Mode viewMode() const PURE;
-    virtual QStringList viewMimeTypes() const PURE;
+    virtual QStringList viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const PURE;
     virtual QString viewDefaultFileExtension() const PURE;
 
     virtual bool hasViewWidget(const QString &pFileName) PURE;

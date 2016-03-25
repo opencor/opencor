@@ -92,12 +92,10 @@ ADD_PLUGIN(SampleTools
     PLUGINS
         Core
         Sample
-    QT_MODULES
-        Widgets
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="https://www.qt.io/">Qt</a> module (line 20) needed by our plugin.
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16).
         </p>
 
         <div class="section">
@@ -183,7 +181,7 @@ private Q_SLOTS:
     descriptions.insert("en", QString::fromUtf8("a plugin that provides an addition tool."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un outil d'addition."));
 
-    return new PluginInfo(PluginInfo::Sample, true, true,
+    return new PluginInfo("Sample", true, true,
                           QStringList() << "Core" << "Sample",
                           descriptions);
 }</pre>

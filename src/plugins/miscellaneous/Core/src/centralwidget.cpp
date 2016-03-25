@@ -1105,7 +1105,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // under a new name, so we ask the user for a file name based on the
         // MIME types supported by our current view
 
-        QStringList supportedFilters = filters(mSupportedFileTypes, viewInterface->viewMimeTypes());
+        QStringList supportedFilters = filters(mSupportedFileTypes, viewInterface->viewMimeTypes(ViewInterface::SaveMimeTypeMode));
         QString firstSupportedFilter = supportedFilters.first();
 
         newFileName = getSaveFileName(pNeedNewFileName?
