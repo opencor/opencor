@@ -207,7 +207,7 @@ showEnableAction(mGui->actionPreferences, false);
 
     // A connection to handle the status bar
 
-    connect(mGui->actionStatusBar, SIGNAL(triggered(bool)),
+    connect(mGui->actionStatusBar, SIGNAL(toggled(bool)),
             mGui->statusBar, SLOT(setVisible(bool)));
 
     // Some connections to handle our various menu items
@@ -729,10 +729,7 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the status bar is to be shown
 
-    bool statusBarVisible = mSettings->value(SettingsStatusBarVisible, true).toBool();
-
-    mGui->statusBar->setVisible(statusBarVisible);
-    mGui->actionStatusBar->setChecked(statusBarVisible);
+    mGui->actionStatusBar->setChecked(mSettings->value(SettingsStatusBarVisible, true).toBool());
 
     // Retrieve and set the language to be used by OpenCOR
     // Note #1: the setting is forced in order to account for locale-dependent
