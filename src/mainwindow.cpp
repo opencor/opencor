@@ -1020,6 +1020,15 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
     if (!arguments.isEmpty() && mPluginManager->corePlugin())
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(arguments);
+
+    // Make sure that our status bar is shown/hidden, depending on its action's
+    // status
+    // Note: indeed, for some unclear reasons, to open/handle a file / OpenCOR
+    //       URL, with OpenCOR not running in the first place, results in the
+    //       status bar not being shown (assuming it has to be shown). So, we
+    //       make sure that the status bar is shown/hidden, as needed...
+
+    mGui->statusBar->setVisible(mGui->actionStatusBar->isChecked());
 }
 
 //==============================================================================
