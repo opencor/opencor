@@ -56,6 +56,10 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le recharger ?</translation>
     </message>
     <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; has had one or several of its dependencies modified. Do you want to reload it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a eu une ou plusieurs de ses dépendances modifiées. Voulez-vous le recharger ?</translation>
+    </message>
+    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you still want to reload it?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous quand même le recharger ?</translation>
     </message>

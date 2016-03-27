@@ -409,6 +409,19 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
 
 //==============================================================================
 
+void FileManager::setDependencies(const QString &pFileName,
+                                  const QStringList &pDependencies)
+{
+    // Set the dependencies of the given file, should it be managed
+
+    File *nativeFile = file(nativeCanonicalFileName(pFileName));
+
+    if (nativeFile)
+        nativeFile->setDependencies(pDependencies);
+}
+
+//==============================================================================
+
 void FileManager::reload(const QString &pFileName)
 {
     // Make sure that the given file is managed
@@ -546,7 +559,7 @@ void FileManager::save(const QString &pFileName)
         // The file is managed, so reset its settings and let people know that
         // it has been saved
 
-        nativeFile->reset();
+        nativeFile->reset(false);
 
         emit fileSaved(nativeFileName);
     }
@@ -597,7 +610,14 @@ void FileManager::checkFiles()
         case File::Changed:
             // The file has changed, so let people know about it
 
-            emit fileChanged(fileName);
+            emit fileChanged(fileName, false);
+
+            break;
+        case File::DependenciesChanged:
+            // One or several of the file's dependencies has changed, so let
+            // people know about it
+
+            emit fileChanged(fileName, true);
 
             break;
         case File::Deleted:

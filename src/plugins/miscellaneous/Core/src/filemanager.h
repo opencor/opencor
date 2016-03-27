@@ -128,6 +128,8 @@ public:
     bool isLocked(const QString &pFileName) const;
     Status setLocked(const QString &pFileName, const bool &pLocked);
 
+    void setDependencies(const QString &pFileName, const QStringList &pDependencies);
+
     void reload(const QString &pFileName);
 
     Status create(const QString &pUrl = QString(),
@@ -157,7 +159,8 @@ Q_SIGNALS:
     void fileManaged(const QString &pFileName);
     void fileUnmanaged(const QString &pFileName);
 
-    void fileChanged(const QString &pFileName);
+    void fileChanged(const QString &pFileName,
+                     const bool &pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void filePermissionsChanged(const QString &pFileName);

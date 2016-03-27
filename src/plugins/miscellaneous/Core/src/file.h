@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QString>
+#include <QStringList>
 
 //==============================================================================
 
@@ -50,6 +50,7 @@ public:
         // As a result of checking a file
 
         Changed,
+        DependenciesChanged,
         Unchanged,
         Deleted,
 
@@ -69,9 +70,9 @@ public:
 
     Status check();
 
-    QString sha1() const;
+    QString sha1(const QString &pFileName = QString()) const;
 
-    void reset();
+    void reset(const bool &pResetDependencies = true);
 
     bool isDifferent() const;
     bool isDifferent(const QByteArray &pFileContents) const;
@@ -96,6 +97,8 @@ public:
     bool isLocked() const;
     Status setLocked(const bool &pLocked);
 
+    bool setDependencies(const QStringList &pDependencies);
+
 private:
     QString mFileName;
     QString mUrl;
@@ -104,6 +107,9 @@ private:
     int mNewIndex;
 
     bool mModified;
+
+    QStringList mDependencies;
+    QStringList mDependenciesSha1;
 };
 
 //==============================================================================

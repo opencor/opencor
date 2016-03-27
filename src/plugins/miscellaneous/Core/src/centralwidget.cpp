@@ -347,8 +347,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &)),
-            this, SLOT(fileChanged(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &, const bool &)),
+            this, SLOT(fileChanged(const QString &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 
@@ -1897,7 +1897,8 @@ void CentralWidget::updateNoViewMsg()
 
 //==============================================================================
 
-void CentralWidget::fileChanged(const QString &pFileName)
+void CentralWidget::fileChanged(const QString &pFileName,
+                                const bool &pDependenciesChanged)
 {
     // Make sure that the fact that the file has been changed is still relevant,
     // i.e. the given file has either been modified or it's different from its
@@ -1905,12 +1906,17 @@ void CentralWidget::fileChanged(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (   !fileManagerInstance->isLocalNewOrModified(pFileName)
-        &&  fileManagerInstance->isDifferent(pFileName)) {
-        // The given file has been changed, so ask the user whether to reload it
+    if (    (   !pDependenciesChanged
+             && !fileManagerInstance->isLocalNewOrModified(pFileName)
+             &&  fileManagerInstance->isDifferent(pFileName))
+        || pDependenciesChanged){
+        // The given file or one of its dependencies has changed, so ask the
+        // user whether to reload the given file
 
         if (QMessageBox::question(mainWindow(), tr("File Modified"),
-                                  tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
+                                  pDependenciesChanged?
+                                      tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName):
+                                      tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes) == QMessageBox::Yes) {
             // The user wants to reload the file

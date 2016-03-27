@@ -99,14 +99,21 @@ bool File::setFileName(const QString &pFileName)
 
 File::Status File::check()
 {
-    // Retrieve the 'new' SHA-1 value of our file and check whether it's
-    // different from the one we currently have
+    // Retrieve the 'new' SHA-1 value of our file and of its dependencies (if
+    // any), and check whether it's different from the one(s) we currently have
 
     QString newSha1 = sha1();
+    QStringList newDependenciesSha1 = QStringList();
 
-    if (!newSha1.compare(mSha1) || !mUrl.isEmpty()) {
+    foreach (const QString &dependency, mDependencies)
+        newDependenciesSha1 << sha1(dependency);
+
+    bool dependenciesChanged = newDependenciesSha1 != mDependenciesSha1;
+
+    if (    (!newSha1.compare(mSha1) && !dependenciesChanged)
+        || !mUrl.isEmpty()) {
         // The SHA-1 values are the same or we are a remote file, which means
-        // that our hasn't been changed
+        // that our status hasn't changed
 
         return File::Unchanged;
     } else {
@@ -121,23 +128,23 @@ File::Status File::check()
                 return File::Deleted;
         } else {
             // The SHA-1 value of our file is different from our stored value,
-            // which means that our file has changed
+            // which means that our file or one of its dependencies has changed
 
-            return File::Changed;
+            return dependenciesChanged?File::DependenciesChanged:File::Changed;
         }
     }
 }
 
 //==============================================================================
 
-QString File::sha1() const
+QString File::sha1(const QString &pFileName) const
 {
-    // Compute the SHA-1 value for the file, if it still exists and can be
-    // opened
+    // Compute the SHA-1 value for the given file or our file (if no file is
+    // given), if it still exists and can be opened
 
     QByteArray fileContents;
 
-    if (readFileContentsFromFile(mFileName, fileContents))
+    if (readFileContentsFromFile(pFileName.isEmpty()?mFileName:pFileName, fileContents))
         return Core::sha1(fileContents);
     else
         return QString();
@@ -145,7 +152,7 @@ QString File::sha1() const
 
 //==============================================================================
 
-void File::reset()
+void File::reset(const bool &pResetDependencies)
 {
     // Reset our modified state, new index and SHA-1 value
 
@@ -154,6 +161,11 @@ void File::reset()
     mNewIndex = 0;
 
     mModified = false;
+
+    if (pResetDependencies) {
+        mDependencies = QStringList();
+        mDependenciesSha1 = QStringList();
+    }
 }
 
 //==============================================================================
@@ -335,6 +347,25 @@ File::Status File::setLocked(const bool &pLocked)
         return LockedSet;
     else
         return LockedNotSet;
+}
+
+//==============================================================================
+
+bool File::setDependencies(const QStringList &pDependencies)
+{
+    // Set the dependencies of the file
+
+    if (pDependencies != mDependencies) {
+        mDependencies = pDependencies;
+        mDependenciesSha1 = QStringList();
+
+        foreach (const QString &dependency, pDependencies)
+            mDependenciesSha1 << sha1(dependency);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

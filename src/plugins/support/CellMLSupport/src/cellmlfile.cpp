@@ -183,6 +183,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
     if (   ((pModel != mModel) || mFullInstantiationNeeded)
         && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
+        QStringList dependencies = QStringList();
+
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
             //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
@@ -251,6 +253,12 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             // Keep track of the import contents
 
                             mImportContents.insert(fileNameOrUrl, fileContents);
+
+                            // Keep track of the import as being one of our
+                            // dependencies, should it be local
+
+                            if (isLocalFile)
+                                dependencies << fileNameOrUrl;
                         } else {
                             throw(std::exception());
                         }
@@ -281,6 +289,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
             return false;
         }
+
+        // Set the dependencies for our CellML file
+
+        Core::FileManager::instance()->setDependencies(mFileName, dependencies);
     }
 
     return true;

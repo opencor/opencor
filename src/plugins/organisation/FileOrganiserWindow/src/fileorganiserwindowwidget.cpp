@@ -80,8 +80,8 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     // Some connections to handle our file manager
 
-    connect(mFileManager, SIGNAL(fileChanged(const QString &)),
-            this, SLOT(fileChanged(const QString &)));
+    connect(mFileManager, SIGNAL(fileChanged(const QString &, const bool &)),
+            this, SLOT(fileChanged(const QString &, const bool &)));
     connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 }
@@ -1170,8 +1170,11 @@ void FileOrganiserWindowWidget::updateFileItems(QStandardItem *pItem,
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::fileChanged(const QString &pFileName) const
+void FileOrganiserWindowWidget::fileChanged(const QString &pFileName,
+                                            const bool &pDependenciesChanged) const
 {
+    Q_UNUSED(pDependenciesChanged);
+
     // The file has changed, which may also mean that a file may have been
     // deleted and recreated, so go through all the (file) items and update the
     // icon of the ones that refer to the file in question

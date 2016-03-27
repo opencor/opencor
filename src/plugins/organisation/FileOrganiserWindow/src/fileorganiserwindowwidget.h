@@ -118,7 +118,8 @@ private Q_SLOTS:
 
     void emitItemsRelatedSignals();
 
-    void fileChanged(const QString &pFileName) const;
+    void fileChanged(const QString &pFileName,
+                     const bool &pDependenciesChanged) const;
     void fileDeleted(const QString &pFileName) const;
 };
 
