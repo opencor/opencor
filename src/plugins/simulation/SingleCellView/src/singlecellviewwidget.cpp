@@ -1307,7 +1307,19 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
         Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
 
         if (isLocalFile && url.isEmpty()) {
+            // By default, our model source refers to a file name relative to
+            // our SED-ML file
+
             QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pSedmlFile->fileName()).path()+QDir::separator()+modelSource);
+
+#ifdef Q_OS_WIN
+            // On Windows, if our model source exists, it means that it refers
+            // to a file on a different drive rather than to a file name
+            // relative to our SED-ML file
+
+            if (QFile::exists(modelSource))
+                cellmlFileName = modelSource;
+#endif
 
             if (QFile::exists(cellmlFileName)) {
                 pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);

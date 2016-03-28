@@ -1676,10 +1676,16 @@ void SingleCellViewSimulationWidget::on_actionSedmlExportSedmlFile_triggered()
     if (!sedmlFileName.isEmpty()) {
         QString modelSource = cellmlFileName;
 
+#if defined(Q_OS_WIN)
+        if (   !remoteFile
+            && !modelSource.left(3).compare(sedmlFileName.left(3))) {
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
         if (!remoteFile) {
-            // We are dealing with a local CellML file, so refer to it
-            // relatively to the directory where we are going to save our SED-ML
-            // file
+#else
+    #error Unsupported platform
+#endif
+            // We are dealing with a local CellML file that is on the same drive
+            // as our SED-ML file, so refer to it relatively to it
             // Note: normally, we would use QFileInfo::canonicalPath(), but this
             //       requires an existing file, so we use QFileInfo::path()
             //       instead...
