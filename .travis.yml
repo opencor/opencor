@@ -1,7 +1,3 @@
-# Note: Qt 5.6 is the latest version of Qt that is available on homebrew.
-#       However, we are still using Qt 5.4.2 and Qt WebKit, which is not part
-#       of Qt anymore, hence we only test things on Linux...
-
 language: cpp
 
 sudo: required
@@ -9,7 +5,7 @@ dist: trusty
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
@@ -17,9 +13,9 @@ env:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         wget --no-check-certificate https://www.cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.tar.gz
-      && tar -xzf cmake-3.5.0-Linux-i386.tar.gz
-      && sudo cp -fR cmake-3.5.0-Linux-i386/* /usr
+         wget --no-check-certificate https://www.cmake.org/files/v3.5/cmake-3.5.1-Linux-i386.tar.gz
+      && tar -xzf cmake-3.5.1-Linux-i386.tar.gz
+      && sudo cp -fR cmake-3.5.1-Linux-i386/* /usr
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
       && sudo apt-get -qq update
@@ -30,8 +26,8 @@ install:
     else
          brew update
       && brew unlink cmake
-      && brew install cmake qt5
-      && chmod -R 755 /usr/local/opt/qt5/*
+      && brew install cmake homebrew/versions/qt55
+      && chmod -R 755 /usr/local/opt/qt55/*
       ;
     fi
 
@@ -41,7 +37,7 @@ script:
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt55/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
     && make -j 3
