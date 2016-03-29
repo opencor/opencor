@@ -1086,7 +1086,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     QString oldFileName = mFileNames[pIndex];
 
-    if (!viewInterface->viewWidget(oldFileName)){
+    if (!viewInterface->viewWidget(oldFileName)) {
         QMessageBox::warning(mainWindow(), tr("Save File"),
                              tr("The <strong>%1</strong> view cannot save <strong>%2</strong>.").arg(viewInterface->viewName(), oldFileName));
 
@@ -1909,7 +1909,7 @@ void CentralWidget::fileChanged(const QString &pFileName,
     if (    (   !pDependenciesChanged
              && !fileManagerInstance->isLocalNewOrModified(pFileName)
              &&  fileManagerInstance->isDifferent(pFileName))
-        || pDependenciesChanged){
+        || pDependenciesChanged) {
         // The given file or one of its dependencies has changed, so ask the
         // user whether to reload the given file
 
