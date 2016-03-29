@@ -176,7 +176,7 @@ QStringList runCli(const QStringList pArguments)
 // Travis CI
     QStringList res = output.remove("\r").split("\n");
 
-    if (!res.first().contains("/usr/local/Cellar/"))
+    while (res.first().contains("/usr/local/Cellar/"))
         res.removeFirst();
 
     return res;
