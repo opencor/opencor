@@ -27,6 +27,7 @@ install:
          brew update
       && brew unlink cmake
       && brew install cmake homebrew/versions/qt55
+      && chmod -R 755 /usr/local/opt/qt55/*
       ;
     fi
 
