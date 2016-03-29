@@ -597,8 +597,9 @@ void FileManager::checkFiles()
 
     if (   !mCanCheckFiles
         || !QApplication::topLevelWidgets().count()
-        ||  QApplication::activePopupWidget())
+        ||  QApplication::activePopupWidget()) {
         return;
+    }
 
     // Check our various files, as well as their locked status, but only if they
     // are not being ignored
