@@ -120,7 +120,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     if (mType == Unknown)
         for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i)
-            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))){
+            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))) {
                 // It looks like we might be dealing with a model qualifier
 
                 mType = BioModelsDotNetQualifier;

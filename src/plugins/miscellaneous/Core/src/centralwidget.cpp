@@ -1086,7 +1086,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     QString oldFileName = mFileNames[pIndex];
 
-    if (!viewInterface->viewWidget(oldFileName)){
+    if (!viewInterface->viewWidget(oldFileName)) {
         QMessageBox::warning(mainWindow(), tr("Save File"),
                              tr("The <strong>%1</strong> view cannot save <strong>%2</strong>.").arg(viewInterface->viewName(), oldFileName));
 

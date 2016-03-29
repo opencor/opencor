@@ -1736,7 +1736,7 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
                     else
                         res = "sqrt("+a+")";
                 } else {
-                    if (childNode.localName().compare("degree")){
+                    if (childNode.localName().compare("degree")) {
                         mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
                                                                                                                                     .arg("degree");
                         mErrorLine = childNode.lineNumber();
@@ -1899,7 +1899,7 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
 
                 ;
             } else if (childElementNodeNumber == 1) {
-                if (childNode.localName().compare("bvar")){
+                if (childNode.localName().compare("bvar")) {
                     mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
                                                                                                                                 .arg("bvar");
                     mErrorLine = childNode.lineNumber();
@@ -1985,7 +1985,7 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
                 if (pHasError)
                     return QString();
             } else {
-                if (childNode.localName().compare("degree")){
+                if (childNode.localName().compare("degree")) {
                     mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
                                                                                                                                              .arg("degree");
                     mErrorLine = childNode.lineNumber();
