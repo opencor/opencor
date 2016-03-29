@@ -384,9 +384,6 @@ private:
 
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
-    // Note: strictly speaking, we don't need to specify the Core namespace, but
-    //       then if we were not to specify it, we wouldn't be able to use the
-    //       property editor outside the Core namespace...
 
 private Q_SLOTS:
     void updateHeight();
