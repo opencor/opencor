@@ -173,9 +173,11 @@ void CorePlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CorePlugin::fileReloaded(const QString &pFileName)
+void CorePlugin::fileReloaded(const QString &pFileName,
+                              const bool &pFileChanged)
 {
     Q_UNUSED(pFileName);
+    Q_UNUSED(pFileChanged);
 
     // We don't handle this interface...
 }

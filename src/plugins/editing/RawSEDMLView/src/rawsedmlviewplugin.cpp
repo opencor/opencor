@@ -169,11 +169,13 @@ void RawSEDMLViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawSEDMLViewPlugin::fileReloaded(const QString &pFileName)
+void RawSEDMLViewPlugin::fileReloaded(const QString &pFileName,
+                                      const bool &pFileChanged)
 {
     // The given file has been reloaded, so let our view widget know about it
 
-    mViewWidget->fileReloaded(pFileName);
+    if (pFileChanged)
+        mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================

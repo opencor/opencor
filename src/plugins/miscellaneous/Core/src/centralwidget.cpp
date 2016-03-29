@@ -347,8 +347,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &, const bool &)),
-            this, SLOT(fileChanged(const QString &, const bool &)));
+    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &, const bool &, const bool &)),
+            this, SLOT(fileChanged(const QString &, const bool &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 
@@ -358,8 +358,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
             this, SLOT(updateModifiedSettings()));
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(fileReloaded(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
+            this, SLOT(fileReloaded(const QString &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
 
@@ -1898,6 +1898,7 @@ void CentralWidget::updateNoViewMsg()
 //==============================================================================
 
 void CentralWidget::fileChanged(const QString &pFileName,
+                                const bool &pFileChanged,
                                 const bool &pDependenciesChanged)
 {
     // Make sure that the fact that the file has been changed is still relevant,
@@ -1906,17 +1907,19 @@ void CentralWidget::fileChanged(const QString &pFileName,
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (    (   !pDependenciesChanged
+    if (    (    pFileChanged
              && !fileManagerInstance->isLocalNewOrModified(pFileName)
              &&  fileManagerInstance->isDifferent(pFileName))
         || pDependenciesChanged) {
-        // The given file or one of its dependencies has changed, so ask the
-        // user whether to reload the given file
+        // The given file and/or one or several of its dependencies has changed,
+        // so ask the user whether to reload the given file
 
         if (QMessageBox::question(mainWindow(), tr("File Modified"),
-                                  pDependenciesChanged?
-                                      tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName):
-                                      tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
+                                  pFileChanged?
+                                      tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
+                                      pDependenciesChanged?
+                                          tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName):
+                                          tr("<strong>%1</strong> and/or one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName),
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes) == QMessageBox::Yes) {
             // The user wants to reload the file
@@ -2071,7 +2074,8 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CentralWidget::fileReloaded(const QString &pFileName)
+void CentralWidget::fileReloaded(const QString &pFileName,
+                                 const bool &pFileChanged)
 {
     // Check whether we should show our busy widget
     // Note: this only needs to be done in case of an indirect remote file since
@@ -2097,7 +2101,7 @@ void CentralWidget::fileReloaded(const QString &pFileName)
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
+            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged);
     }
 
     // Now, because of the way some of our views may reload a file (see, for

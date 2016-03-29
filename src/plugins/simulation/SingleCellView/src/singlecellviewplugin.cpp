@@ -117,8 +117,11 @@ void SingleCellViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewPlugin::fileReloaded(const QString &pFileName)
+void SingleCellViewPlugin::fileReloaded(const QString &pFileName,
+                                        const bool &pFileChanged)
 {
+    Q_UNUSED(pFileChanged);
+
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 

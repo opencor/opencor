@@ -159,14 +159,14 @@ Q_SIGNALS:
     void fileManaged(const QString &pFileName);
     void fileUnmanaged(const QString &pFileName);
 
-    void fileChanged(const QString &pFileName,
+    void fileChanged(const QString &pFileName, const bool &pFileChanged,
                      const bool &pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
 
-    void fileReloaded(const QString &pFileName);
+    void fileReloaded(const QString &pFileName, const bool &pFileChanged);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);

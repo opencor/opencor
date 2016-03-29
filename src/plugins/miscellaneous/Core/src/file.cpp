@@ -99,6 +99,11 @@ bool File::setFileName(const QString &pFileName)
 
 File::Status File::check()
 {
+    // Always consider ourselves unchanged if we are a remote file
+
+    if (!mUrl.isEmpty())
+        return Unchanged;
+
     // Retrieve the 'new' SHA-1 value of our file and of its dependencies (if
     // any), and check whether it's different from the one(s) we currently have
 
@@ -110,28 +115,20 @@ File::Status File::check()
 
     bool dependenciesChanged = newDependenciesSha1 != mDependenciesSha1;
 
-    if (    (!newSha1.compare(mSha1) && !dependenciesChanged)
-        || !mUrl.isEmpty()) {
-        // The SHA-1 values are the same or we are a remote file, which means
-        // that our status hasn't changed
+    if (newSha1.isEmpty()) {
+        // The SHA-1 value of our file is now empty, which means that either our
+        // file has been deleted or that it is unreadable (which, in effect,
+        // means that it has changed)
 
-        return File::Unchanged;
+        return (QFile::exists(mFileName))?Changed:Deleted;
     } else {
-        if (newSha1.isEmpty()) {
-            // The SHA-1 value of our file is now empty, which means that either
-            // our file has been deleted or that it is unreadable (which, in
-            // effect, means that it has changed)
+        // The SHA-1 value of our file and/or of one or several of its
+        // dependencies is different from our stored value, which means that our
+        // file and/or one or several of its dependencies has changed
 
-            if (QFile::exists(mFileName))
-                return File::Changed;
-            else
-                return File::Deleted;
-        } else {
-            // The SHA-1 value of our file is different from our stored value,
-            // which means that our file or one of its dependencies has changed
-
-            return dependenciesChanged?File::DependenciesChanged:File::Changed;
-        }
+        return newSha1.compare(mSha1)?
+                   dependenciesChanged?AllChanged:Changed:
+                   dependenciesChanged?DependenciesChanged:Unchanged;
     }
 }
 

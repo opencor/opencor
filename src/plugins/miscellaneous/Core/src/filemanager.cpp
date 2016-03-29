@@ -430,12 +430,16 @@ void FileManager::reload(const QString &pFileName)
     File *nativeFile = file(nativeFileName);
 
     if (nativeFile) {
-        // The file is managed, so reset its settings and let people know that
-        // it should be reloaded
+        // The file is managed, so determine whether the file itself has been
+        // modified, reset its settings and let people know that it should be
+        // reloaded
+
+        File::Status nativeFileStatus = nativeFile->check();
 
         nativeFile->reset();
 
-        emit fileReloaded(nativeFileName);
+        emit fileReloaded(nativeFileName,
+                          (nativeFileStatus == File::Changed) || (nativeFileStatus == File::AllChanged));
     }
 }
 
@@ -606,19 +610,18 @@ void FileManager::checkFiles()
 
     foreach (File *file, mFiles) {
         QString fileName = file->fileName();
+        File::Status fileStatus = file->check();
 
-        switch (file->check()) {
+        switch (fileStatus) {
         case File::Changed:
-            // The file has changed, so let people know about it
-
-            emit fileChanged(fileName, false);
-
-            break;
         case File::DependenciesChanged:
-            // One or several of the file's dependencies has changed, so let
-            // people know about it
+        case File::AllChanged:
+            // The file and/or one or several of its dependencies has changed,
+            // so let people know about it
 
-            emit fileChanged(fileName, true);
+            emit fileChanged(fileName,
+                             (fileStatus == File::Changed) || (fileStatus == File::AllChanged),
+                             (fileStatus == File::DependenciesChanged) || (fileStatus == File::AllChanged));
 
             break;
         case File::Deleted:

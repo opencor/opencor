@@ -51,6 +51,7 @@ public:
 
         Changed,
         DependenciesChanged,
+        AllChanged,
         Unchanged,
         Deleted,
 
