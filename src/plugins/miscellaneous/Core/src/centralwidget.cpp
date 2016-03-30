@@ -2070,12 +2070,13 @@ void CentralWidget::fileReloaded(const QString &pFileName,
         showBusyWidget(this);
     }
 
-    // Let all our plugins, but the current one, know about the file having been
-    // reloaded
+    // Let all our plugins, but the current one (if requested), know about the
+    // file having been reloaded
     // Note: in the case of the current plugin, we don't need and don't want
-    //       (since it may mess up our current view; e.g. the caret of a
-    //       QScintilla-based view will get moved back to its original position)
-    //       our current plugin to reload it...
+    //       our current plugin to reload it if it has just saved it (see
+    //       fileSaved(); indeed, it may mess up our current view; e.g. the
+    //       caret of a QScintilla-based view will get moved back to its
+    //       original position)...
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (pAllPlugins || (plugin != fileViewPlugin))
