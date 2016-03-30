@@ -994,14 +994,14 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     if (res) {
                         writeFileContentsToFile(fileName, fileContents);
 
-                        fileManagerInstance->reload(fileName);
+                        fileManagerInstance->reload(fileName, true);
                     } else {
                         QMessageBox::warning(mainWindow(),
                                              tr("Reload Remote File"),
                                              tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, formatMessage(errorMessage)));
                     }
                 } else {
-                    fileManagerInstance->reload(fileName);
+                    fileManagerInstance->reload(fileName, true);
 
                     fileManagerInstance->setModified(fileName, false);
                 }

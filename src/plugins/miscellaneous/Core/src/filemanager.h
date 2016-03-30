@@ -128,7 +128,8 @@ public:
     QStringList dependencies(const QString &pFileName) const;
     void setDependencies(const QString &pFileName, const QStringList &pDependencies);
 
-    void reload(const QString &pFileName);
+    void reload(const QString &pFileName,
+                const bool &pForceFileChanged = false);
 
     Status create(const QString &pUrl = QString(),
                   const QByteArray &pContents = QByteArray());
