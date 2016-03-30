@@ -116,9 +116,12 @@ void CellmlFile::reset()
 
     mIssues.clear();
 
+    Core::FileManager::instance()->setDependencies(mFileName, QStringList());
+
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
     mRuntimeUpdateNeeded = true;
+    mDependenciesNeeded = true;
 
     mImportContents.clear();
 
@@ -175,9 +178,10 @@ void CellmlFile::retrieveImports(const QString &pXmlBase,
 bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                          CellmlFileIssues &pIssues)
 {
-    // Fully instantiate all the imports, but only if we are dealing with a non
-    // CellML 1.0 model, and then keep track of that fact (so we don't fully
-    // instantiate everytime we come here)
+    // Fully instantiate all the imports, but only if we are not directly
+    // dealing with our model or if we are dealing with a non CellML 1.0 model,
+    // and then keep track of that fact (so we don't fully instantiate everytime
+    // we come here)
 
     Version cellmlVersion = version(pModel);
 
@@ -255,9 +259,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             mImportContents.insert(fileNameOrUrl, fileContents);
 
                             // Keep track of the import as being one of our
-                            // dependencies, should it be local
+                            // dependencies, should it be local and should we be
+                            // directly dealing with our model
 
-                            if (isLocalFile)
+                            if (isLocalFile && (pModel == mModel))
                                 dependencies << fileNameOrUrl;
                         } else {
                             throw(std::exception());
@@ -278,9 +283,6 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                     importModel, importList, importXmlBaseList);
                 }
             }
-
-            if (pModel == mModel)
-                mFullInstantiationNeeded = false;
         } catch (...) {
             // Something went wrong with the full instantiation of the imports
 
@@ -290,9 +292,16 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
             return false;
         }
 
-        // Set the dependencies for our CellML file
+        // Finalise a few things, should we be directly dealing with our model
 
-        Core::FileManager::instance()->setDependencies(mFileName, dependencies);
+        if (pModel == mModel) {
+            mFullInstantiationNeeded = false;
+            mDependenciesNeeded = false;
+
+            // Set the dependencies for our CellML file
+
+            Core::FileManager::instance()->setDependencies(mFileName, dependencies);
+        }
     }
 
     return true;
@@ -750,6 +759,32 @@ CellmlFileRuntime * CellmlFile::runtime()
         }
     } else {
         return 0;
+    }
+}
+
+//==============================================================================
+
+QStringList CellmlFile::dependencies()
+{
+    // Check whether the dependencies need to be retrieved
+
+    if (!mDependenciesNeeded)
+        return Core::FileManager::instance()->dependencies(mFileName);
+
+    // Load (but not reload!) ourselves, if needed
+
+    if (load()) {
+        // Make sure that our imports, if any, are fully instantiated
+
+        if (fullyInstantiateImports(mModel, mIssues)) {
+            // Now, we can return our dependencies
+
+            return Core::FileManager::instance()->dependencies(mFileName);
+        } else {
+            return QStringList();
+        }
+    } else {
+        return QStringList();
     }
 }
 
