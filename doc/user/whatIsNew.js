@@ -6,15 +6,19 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "Added", "description": "Use a default to view to open a particular type of file." },
                            { "type": "Added", "description": "Support for an OpenCOR-specific URL scheme." },
+                           { "type": "Added", "description": "Reference to the <a href=\"http://tutorial-on-cellml-opencor-and-pmr.readthedocs.org/en/latest/index.html\">official OpenCOR tutorial</a>." },
                            { "type": "Added", "description": "Use a user's proxy settings." },
+                           { "type": "Improved", "description": "File handling." },
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
                            { "type": "Improved", "description": "Retrieval of a save file name." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
                            { "type": "Fixed", "description": "Equation rendering." },
-                           { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." }
+                           { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." },
+                           { "type": "Fixed", "description": "Compiler engine crash due to an unfound external function (on <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>)." }
                          ]
                        },
                        { "name": "API",
@@ -43,7 +47,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Raw CellML view",
                              "entries": [
-                               { "type": "Fixed", "description": "Reformatting unescaping HTML entities." }
+                               { "type": "Fixed", "description": "Reformatting unescaped HTML entities." }
                              ]
                            },
                            { "type": "subCategory", "name": "CellML Text view",
@@ -100,6 +104,8 @@ var jsonData = { "versions": [
                        },
                        { "name": "Support",
                          "entries": [
+                           { "type": "Added", "description": "<a href=\"http://www.sed-ml.org/\">SED-ML</a> support." },
+                           { "type": "Added", "description": "<a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a> support." },
                            { "type": "subCategory", "name": "QScintilla support",
                              "entries": [
                                { "type": "Improved", "description": "Unicode support." }
@@ -258,7 +264,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Duplicate a file." },
                            { "type": "Added", "description": "(Un)lock a file." },
                            { "type": "Added", "description": "Close a file by pressing <code>Ctrl+W</code> on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
-                           { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> support on Linux and <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
+                           { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> support on <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a> and <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with improved <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> support." },
                            { "type": "Improved", "description": "Plugin framework." },
