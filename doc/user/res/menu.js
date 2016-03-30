@@ -3,7 +3,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                             { "menuItems": [
                                 { "level": 0, "label": "Home", "link": "user/index.html" },
                                 { "separator": true },
-                                { "level": 0, "label": "How to get started?", "link": "user/howToGetStarted.html" },
+                                { "level": 0, "label": "How to get started?", "link": "http://tutorial-on-cellml-opencor-and-pmr.readthedocs.org/en/latest/index.html", "directLink": true },
                                 { "separator": true },
                                 { "level": 0, "label": "What is new?", "link": "user/whatIsNew.html" },
                                 { "separator": true },
