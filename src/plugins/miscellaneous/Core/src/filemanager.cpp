@@ -576,14 +576,6 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 void FileManager::checkFiles()
 {
-    // We only want to check our files if there is no currently active dialog
-    // box (which requires at least one top level widget)
-
-    if (   !QApplication::topLevelWidgets().count()
-        ||  QApplication::activePopupWidget()) {
-        return;
-    }
-
     // Check our various files, as well as their locked status, but only if they
     // are not being ignored
 
