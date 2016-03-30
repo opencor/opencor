@@ -101,8 +101,7 @@ private:
     void backupExpandedInformation(QStandardItem *pItem) const;
     void restoreExpandedInformation(QStandardItem *pItem);
 
-    void updateFileItems(QStandardItem *pItem, const QString &pFileName,
-                         const Core::File::Status &pStatus) const;
+    void selectFileItem(QStandardItem *pItem, const QString &pFileName) const;
 
     bool canCreateNewFolder() const;
 
@@ -118,8 +117,7 @@ private Q_SLOTS:
 
     void emitItemsRelatedSignals();
 
-    void fileChanged(const QString &pFileName) const;
-    void fileDeleted(const QString &pFileName) const;
+    void fileDeleted(const QString &pFileName);
 };
 
 //==============================================================================

@@ -36,7 +36,6 @@ namespace Core {
 //==============================================================================
 
 FileManager::FileManager() :
-    mCanCheckFiles(true),
     mFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>())
@@ -142,24 +141,6 @@ File * FileManager::file(const QString &pFileName) const
     // Return the File object, if any, associated with the given file
 
     return mFiles.value(nativeCanonicalFileName(pFileName), 0);
-}
-
-//==============================================================================
-
-bool FileManager::canCheckFiles() const
-{
-    // Return whether we can check files
-
-    return mCanCheckFiles;
-}
-
-//==============================================================================
-
-void FileManager::setCanCheckFiles(const bool &pCanCheckFiles)
-{
-    // Set whether we can check files
-
-    mCanCheckFiles = pCanCheckFiles;
 }
 
 //==============================================================================
@@ -409,7 +390,35 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
 
 //==============================================================================
 
-void FileManager::reload(const QString &pFileName)
+QStringList FileManager::dependencies(const QString &pFileName) const
+{
+    // Return the given file's dependencies, should it be managed
+
+    File *nativeFile = file(nativeCanonicalFileName(pFileName));
+
+    if (nativeFile)
+        return nativeFile->dependencies();
+    else
+        return QStringList();
+}
+
+//==============================================================================
+
+void FileManager::setDependencies(const QString &pFileName,
+                                  const QStringList &pDependencies)
+{
+    // Set the dependencies of the given file, should it be managed
+
+    File *nativeFile = file(nativeCanonicalFileName(pFileName));
+
+    if (nativeFile)
+        nativeFile->setDependencies(pDependencies);
+}
+
+//==============================================================================
+
+void FileManager::reload(const QString &pFileName,
+                         const bool &pForceFileChanged)
 {
     // Make sure that the given file is managed
 
@@ -417,12 +426,17 @@ void FileManager::reload(const QString &pFileName)
     File *nativeFile = file(nativeFileName);
 
     if (nativeFile) {
-        // The file is managed, so reset its settings and let people know that
-        // it should be reloaded
+        // The file is managed, so determine whether the file itself has been
+        // modified, reset its settings and let people know that it should be
+        // reloaded
+
+        File::Status nativeFileStatus = nativeFile->check();
 
         nativeFile->reset();
 
-        emit fileReloaded(nativeFileName);
+        emit fileReloaded(nativeFileName,
+                              pForceFileChanged
+                          || (nativeFileStatus == File::Changed) || (nativeFileStatus == File::AllChanged));
     }
 }
 
@@ -546,7 +560,7 @@ void FileManager::save(const QString &pFileName)
         // The file is managed, so reset its settings and let people know that
         // it has been saved
 
-        nativeFile->reset();
+        nativeFile->reset(false);
 
         emit fileSaved(nativeFileName);
     }
@@ -578,26 +592,23 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 void FileManager::checkFiles()
 {
-    // We only want to check our files if we can check files and if there is no
-    // currently active dialog box (which requires at least one top level
-    // widget)
-
-    if (   !mCanCheckFiles
-        || !QApplication::topLevelWidgets().count()
-        ||  QApplication::activePopupWidget())
-        return;
-
     // Check our various files, as well as their locked status, but only if they
     // are not being ignored
 
     foreach (File *file, mFiles) {
         QString fileName = file->fileName();
+        File::Status fileStatus = file->check();
 
-        switch (file->check()) {
+        switch (fileStatus) {
         case File::Changed:
-            // The file has changed, so let people know about it
+        case File::DependenciesChanged:
+        case File::AllChanged:
+            // The file and/or one or several of its dependencies has changed,
+            // so let people know about it
 
-            emit fileChanged(fileName);
+            emit fileChanged(fileName,
+                             (fileStatus == File::Changed) || (fileStatus == File::AllChanged),
+                             (fileStatus == File::DependenciesChanged) || (fileStatus == File::AllChanged));
 
             break;
         case File::Deleted:

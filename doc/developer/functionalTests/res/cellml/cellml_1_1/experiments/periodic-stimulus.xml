@@ -1,18 +1,5 @@
 <?xml version='1.0'?>
 <model name="periodic_stimulus" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- this block of XML is used by CSim to execute a simulation (https://code.google.com/p/cellml-simulator/) -->
-    <simulation id="simulation1" xmlns="http://cellml.sourceforge.net/csim/simulation/0.1#">
-        <boundVariable end="220" maxStep="0.05" start="0" tabulationStep="0.1"/>
-        <outputVariable column="1" component="outputs" variable="time"/>
-        <outputVariable column="2" component="outputs" variable="INa"/>
-        <outputVariable column="3" component="outputs" variable="IK"/>
-        <outputVariable column="4" component="outputs" variable="Ileak"/>
-        <outputVariable column="5" component="outputs" variable="V"/>
-        <outputVariable column="6" component="outputs" variable="minus_V"/>
-        <outputVariable column="7" component="outputs" variable="h"/>
-        <outputVariable column="8" component="outputs" variable="m"/>
-        <outputVariable column="9" component="outputs" variable="n"/>
-    </simulation>
     <import xlink:href="../components/units.xml">
         <units name="ms" units_ref="ms"/>
         <units name="mV" units_ref="mV"/>

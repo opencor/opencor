@@ -220,7 +220,8 @@ private Q_SLOTS:
 
     void toggleLockedFile();
 
-    void fileChanged(const QString &pFileName);
+    void fileChanged(const QString &pFileName, const bool &pFileChanged,
+                     const bool &pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void updateModifiedSettings();
@@ -228,7 +229,8 @@ private Q_SLOTS:
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
 
-    void fileReloaded(const QString &pFileName);
+    void fileReloaded(const QString &pFileName, const bool &pFileChanged,
+                      const bool &pExcludeFileViewPlugin = false);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDuplicated(const QString &pFileName);

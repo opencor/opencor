@@ -107,11 +107,13 @@ void CellMLAnnotationViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
+void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName,
+                                              const bool &pFileChanged)
 {
     // The given file has been reloaded, so let our view widget know about it
 
-    mViewWidget->fileReloaded(pFileName);
+    if (pFileChanged)
+        mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -122,15 +124,6 @@ void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
     // The given file has been renamed, so let our view widget know about it
 
     mViewWidget->fileRenamed(pOldFileName, pNewFileName);
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
 }
 
 //==============================================================================

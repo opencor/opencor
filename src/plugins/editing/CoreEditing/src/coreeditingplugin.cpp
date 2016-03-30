@@ -117,7 +117,8 @@ void CoreEditingPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingPlugin::fileReloaded(const QString &pFileName)
+void CoreEditingPlugin::fileReloaded(const QString &pFileName,
+                                     const bool &pFileChanged)
 {
     // A file has been reloaded, so update our internals, if needed
     // Note: we clearly still have an editor for the given file, but when
@@ -129,7 +130,7 @@ void CoreEditingPlugin::fileReloaded(const QString &pFileName)
     //       its original editor will be discarded and a new one assigned to
     //       it, hence we need to reset things...
 
-    if (!pFileName.compare(mFileName)) {
+    if (pFileChanged && !pFileName.compare(mFileName)) {
         mEditor = 0;
         mFileName = QString();
     }
@@ -144,15 +145,6 @@ void CoreEditingPlugin::fileRenamed(const QString &pOldFileName,
 
     if (!pOldFileName.compare(mFileName))
         mFileName = pNewFileName;
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
 }
 
 //==============================================================================

@@ -117,8 +117,11 @@ void SingleCellViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewPlugin::fileReloaded(const QString &pFileName)
+void SingleCellViewPlugin::fileReloaded(const QString &pFileName,
+                                        const bool &pFileChanged)
 {
+    Q_UNUSED(pFileChanged);
+
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
@@ -134,15 +137,6 @@ void SingleCellViewPlugin::fileRenamed(const QString &pOldFileName,
     // Let our view widget know that a file has been renamed
 
     mViewWidget->fileRenamed(pOldFileName, pNewFileName);
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
 }
 
 //==============================================================================

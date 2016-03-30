@@ -44,11 +44,13 @@ StandardFileManager::StandardFileManager() :
     connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
             this, SLOT(unmanageFile(const QString &)));
 
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(reloadFile(const QString &)));
-
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
+            this, SLOT(reloadFile(const QString &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
+
+    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
+            this, SLOT(saveFile(const QString &)));
 }
 
 //==============================================================================
@@ -132,9 +134,13 @@ void StandardFileManager::unmanageFile(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::reloadFile(const QString &pFileName)
+void StandardFileManager::reloadFile(const QString &pFileName,
+                                     const bool &pFileChanged)
 {
-    // The file is to be reloaded, so reload it
+    Q_UNUSED(pFileChanged);
+
+    // The file is to be reloaded (either because it has been changed or because
+    // one or several of its dependencies has changed), so reload it
     // Note: to reload a file here ensures that our different standard-based
     //       views won't each do it, thus saving time and ensuring that a
     //       standard-based view doesn't forget to do it...
@@ -182,6 +188,15 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
     // We also need to ensure that our file object has its file name updated
 
     static_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
+}
+
+//==============================================================================
+
+void StandardFileManager::saveFile(const QString &pFileName)
+{
+    // The file has been (modified and) saved, so we need to reload it
+
+    reloadFile(pFileName, true);
 }
 
 //==============================================================================

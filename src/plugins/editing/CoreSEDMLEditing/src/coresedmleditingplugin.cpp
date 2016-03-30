@@ -120,9 +120,11 @@ void CoreSEDMLEditingPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CoreSEDMLEditingPlugin::fileReloaded(const QString &pFileName)
+void CoreSEDMLEditingPlugin::fileReloaded(const QString &pFileName,
+                                          const bool &pFileChanged)
 {
     Q_UNUSED(pFileName);
+    Q_UNUSED(pFileChanged);
 
     // We don't handle this interface...
 }
@@ -134,15 +136,6 @@ void CoreSEDMLEditingPlugin::fileRenamed(const QString &pOldFileName,
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreSEDMLEditingPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
 
     // We don't handle this interface...
 }

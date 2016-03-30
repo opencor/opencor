@@ -1271,6 +1271,7 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
 void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                               CellMLSupport::CellmlFile *&pCellmlFile,
                                               SEDMLSupport::SedmlFile *pSedmlFile,
+                                              const FileType &pFileType,
                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                                               bool *pIsDirectOrIndirectRemoteFile)
 {
@@ -1323,6 +1324,15 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
             if (QFile::exists(cellmlFileName)) {
                 pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+
+                // If possible, set our CellML file and its dependencies, if
+                // any, as dependencies for our SED-ML file
+
+                if (pFileType == SedmlFile) {
+                    Core::FileManager::instance()->setDependencies(pFileName,
+                                                                   QStringList() << pCellmlFile->fileName()
+                                                                                 << pCellmlFile->dependencies());
+                }
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
                                                                  tr("%1 could not be found").arg(modelSource));
@@ -1415,8 +1425,8 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
 
     if (pSedmlFile) {
-        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pSedmlFileIssues,
-                           pIsDirectOrIndirectRemoteFile);
+        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pFileType,
+                           pSedmlFileIssues, pIsDirectOrIndirectRemoteFile);
     }
 }
 

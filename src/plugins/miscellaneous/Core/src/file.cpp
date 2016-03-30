@@ -69,7 +69,7 @@ File::~File()
 
 QString File::fileName() const
 {
-    // Return the file name of the file
+    // Return our file name
 
     return mFileName;
 }
@@ -78,16 +78,16 @@ QString File::fileName() const
 
 bool File::setFileName(const QString &pFileName)
 {
-    // Set the new file name of the file
+    // Set our file name
 
     if (pFileName.compare(mFileName)) {
         mFileName = pFileName;
 
         mSha1 = sha1();
-        // Note: we will typically set a new file name when a file has been
-        //       saved under a new name, and depending on it was done, the SHA-1
-        //       value of the file may end up being different, hence we need to
-        //       recompute it, just to be on the safe side...
+        // Note: we will typically set our file name when we have been saved
+        //       under a new name, meaning that our SHA-1 value may end up being
+        //       different, hence we need to recompute it, just to be on the
+        //       safe side...
 
         return true;
     } else {
@@ -99,45 +99,49 @@ bool File::setFileName(const QString &pFileName)
 
 File::Status File::check()
 {
-    // Retrieve the 'new' SHA-1 value of our file and check whether it's
-    // different from the one we currently have
+    // Always consider ourselves unchanged if we are a remote file
+
+    if (!mUrl.isEmpty())
+        return Unchanged;
+
+    // Retrieve our 'new' SHA-1 value and that of our dependencies (if any), and
+    // check whether they are different from the one(s) we currently have
 
     QString newSha1 = sha1();
+    QStringList newDependenciesSha1 = QStringList();
 
-    if (!newSha1.compare(mSha1) || !mUrl.isEmpty()) {
-        // The SHA-1 values are the same or we are a remote file, which means
-        // that our hasn't been changed
+    foreach (const QString &dependency, mDependencies)
+        newDependenciesSha1 << sha1(dependency);
 
-        return File::Unchanged;
+    bool dependenciesChanged = newDependenciesSha1 != mDependenciesSha1;
+
+    if (newSha1.isEmpty()) {
+        // Our SHA-1 value is now empty, which means that either we have been
+        // deleted or that we are unreadable (which, in effect, means that we
+        // have been changed)
+
+        return (QFile::exists(mFileName))?Changed:Deleted;
     } else {
-        if (newSha1.isEmpty()) {
-            // The SHA-1 value of our file is now empty, which means that either
-            // our file has been deleted or that it is unreadable (which, in
-            // effect, means that it has changed)
+        // Our SHA-1 value and/or that of one or several of our dependencies is
+        // different from our stored value, which means that we and/or one or
+        // several of our dependencies has changed
 
-            if (QFile::exists(mFileName))
-                return File::Changed;
-            else
-                return File::Deleted;
-        } else {
-            // The SHA-1 value of our file is different from our stored value,
-            // which means that our file has changed
-
-            return File::Changed;
-        }
+        return newSha1.compare(mSha1)?
+                   dependenciesChanged?AllChanged:Changed:
+                   dependenciesChanged?DependenciesChanged:Unchanged;
     }
 }
 
 //==============================================================================
 
-QString File::sha1() const
+QString File::sha1(const QString &pFileName) const
 {
-    // Compute the SHA-1 value for the file, if it still exists and can be
-    // opened
+    // Compute the SHA-1 value for the given file or ourselves (if no file is
+    // given), if it/we still exist/s and can be opened
 
     QByteArray fileContents;
 
-    if (readFileContentsFromFile(mFileName, fileContents))
+    if (readFileContentsFromFile(pFileName.isEmpty()?mFileName:pFileName, fileContents))
         return Core::sha1(fileContents);
     else
         return QString();
@@ -145,7 +149,7 @@ QString File::sha1() const
 
 //==============================================================================
 
-void File::reset()
+void File::reset(const bool &pResetDependencies)
 {
     // Reset our modified state, new index and SHA-1 value
 
@@ -154,14 +158,19 @@ void File::reset()
     mNewIndex = 0;
 
     mModified = false;
+
+    if (pResetDependencies) {
+        mDependencies = QStringList();
+        mDependenciesSha1 = QStringList();
+    }
 }
 
 //==============================================================================
 
 bool File::isDifferent() const
 {
-    // Return whether the file is different from its corresponding physical
-    // version by comparing their SHA-1 values
+    // Return whether we are different from our corresponding physical version
+    // by comparing our SHA-1 values
 
     return mSha1.compare(sha1());
 }
@@ -170,8 +179,8 @@ bool File::isDifferent() const
 
 bool File::isDifferent(const QByteArray &pFileContents) const
 {
-    // Return whether the file is different from the given file contents by
-    // comparing their SHA-1 values
+    // Return whether we are different from the given file contents by comparing
+    // our SHA-1 values
 
     return mSha1.compare(Core::sha1(pFileContents));
 }
@@ -180,7 +189,7 @@ bool File::isDifferent(const QByteArray &pFileContents) const
 
 bool File::isNew() const
 {
-    // Return whether the file is new
+    // Return whether we are new
 
     return mNewIndex != 0;
 }
@@ -189,7 +198,7 @@ bool File::isNew() const
 
 bool File::makeNew(const QString &pFileName)
 {
-    // Make the file new
+    // Make ourselves new
 
     mFileName = nativeCanonicalFileName(pFileName);
     mUrl = QString();
@@ -205,7 +214,7 @@ bool File::makeNew(const QString &pFileName)
 
 int File::newIndex() const
 {
-    // Return the file's new index
+    // Return our new index
 
     return mNewIndex;
 }
@@ -214,7 +223,7 @@ int File::newIndex() const
 
 bool File::isLocal() const
 {
-    // Return whether the file is a local one
+    // Return whether we are a local file
 
     return mUrl.isEmpty();
 }
@@ -223,7 +232,7 @@ bool File::isLocal() const
 
 bool File::isRemote() const
 {
-    // Return whether the file is a remote one
+    // Return whether we are a remote file
 
     return !mUrl.isEmpty();
 }
@@ -232,7 +241,7 @@ bool File::isRemote() const
 
 QString File::url() const
 {
-    // Return the file's URL
+    // Return our URL
 
     return mUrl;
 }
@@ -241,7 +250,7 @@ QString File::url() const
 
 bool File::isModified() const
 {
-    // Return whether the file has been modified
+    // Return whether we have been modified
 
     return mModified;
 }
@@ -250,7 +259,7 @@ bool File::isModified() const
 
 bool File::setModified(const bool &pModified)
 {
-    // Set the modified status of the file
+    // Set our modified status
 
     if (pModified != mModified) {
         mModified = pModified;
@@ -265,7 +274,7 @@ bool File::setModified(const bool &pModified)
 
 bool File::isReadable() const
 {
-    // Return whether the file is readable
+    // Return whether we are readable
 
     return QFileInfo(mFileName).isReadable();
 }
@@ -274,7 +283,7 @@ bool File::isReadable() const
 
 bool File::isWritable() const
 {
-    // Return whether the file is writable
+    // Return whether we are writable
 
     return QFileInfo(mFileName).isWritable() && mUrl.isEmpty();
 }
@@ -283,7 +292,7 @@ bool File::isWritable() const
 
 bool File::isReadableAndWritable() const
 {
-    // Return whether the file is readable and writable
+    // Return whether we are both readable and writable
 
     return isReadable() && isWritable();
 }
@@ -292,7 +301,7 @@ bool File::isReadableAndWritable() const
 
 bool File::isLocked() const
 {
-    // Return whether the file is locked
+    // Return whether we are locked
 
     return !isWritable();
 }
@@ -301,7 +310,7 @@ bool File::isLocked() const
 
 File::Status File::setLocked(const bool &pLocked)
 {
-    // Set the locked status of the file, but only if it is readable
+    // Set our locked status, but only if we are readable
 
     if (pLocked == isLocked())
         return LockedNotNeeded;
@@ -335,6 +344,34 @@ File::Status File::setLocked(const bool &pLocked)
         return LockedSet;
     else
         return LockedNotSet;
+}
+
+//==============================================================================
+
+QStringList File::dependencies() const
+{
+    // Return our dependencies
+
+    return mDependencies;
+}
+
+//==============================================================================
+
+bool File::setDependencies(const QStringList &pDependencies)
+{
+    // Set our dependencies
+
+    if (pDependencies != mDependencies) {
+        mDependencies = pDependencies;
+        mDependenciesSha1 = QStringList();
+
+        foreach (const QString &dependency, pDependencies)
+            mDependenciesSha1 << sha1(dependency);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

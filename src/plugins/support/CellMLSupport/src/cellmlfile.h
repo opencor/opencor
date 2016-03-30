@@ -87,6 +87,8 @@ public:
 
     CellmlFileRuntime * runtime();
 
+    QStringList dependencies();
+
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
 
@@ -148,6 +150,7 @@ private:
     bool mLoadingNeeded;
     bool mFullInstantiationNeeded;
     bool mRuntimeUpdateNeeded;
+    bool mDependenciesNeeded;
 
     QMap<QString, QString> mImportContents;
 

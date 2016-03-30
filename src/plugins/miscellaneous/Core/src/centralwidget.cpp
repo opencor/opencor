@@ -347,8 +347,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &)),
-            this, SLOT(fileChanged(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &, const bool &, const bool &)),
+            this, SLOT(fileChanged(const QString &, const bool &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 
@@ -358,8 +358,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
             this, SLOT(updateModifiedSettings()));
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(fileReloaded(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
+            this, SLOT(fileReloaded(const QString &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
 
@@ -999,14 +999,14 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     if (res) {
                         writeFileContentsToFile(fileName, fileContents);
 
-                        fileManagerInstance->reload(fileName);
+                        fileManagerInstance->reload(fileName, true);
                     } else {
                         QMessageBox::warning(mainWindow(),
                                              tr("Reload Remote File"),
                                              tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, formatMessage(errorMessage)));
                     }
                 } else {
-                    fileManagerInstance->reload(fileName);
+                    fileManagerInstance->reload(fileName, true);
 
                     fileManagerInstance->setModified(fileName, false);
                 }
@@ -1137,12 +1137,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileIsModified || hasNewFileName) {
-        // Prevent our file manager from checking files
-        // Note: indeed, otherwise we will get told that the current file has
-        //       changed and we will be asked whether we want to reload it...
-
-        fileManagerInstance->setCanCheckFiles(false);
-
         if (fileIsNew || fileIsModified) {
             // The file is or has been modified, so ask the current view to save
             // it
@@ -1154,8 +1148,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                     QMessageBox::warning(mainWindow(), tr("Save File"),
                                          tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
                 }
-
-                fileManagerInstance->setCanCheckFiles(true);
 
                 return false;
             }
@@ -1171,8 +1163,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             if (!QFile::copy(oldFileName, newFileName)) {
                 QMessageBox::warning(mainWindow(), tr("Save File"),
                                      tr("<strong>%1</strong> could not be saved.").arg(newFileName));
-
-                fileManagerInstance->setCanCheckFiles(true);
 
                 return false;
             }
@@ -1208,16 +1198,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // The file has been saved, so ask our file manager to 'save' it too
 
         fileManagerInstance->save(newFileName);
-
-        // Let the other views (except the current one) know that the file has
-        // been saved, which for those views is equivalent to doing whatever is
-        // done whenever a file has been reloaded
-
-        fileReloaded(newFileName);
-
-        // Re-activate our file manager
-
-        fileManagerInstance->setCanCheckFiles(true);
 
         return true;
     } else {
@@ -1902,7 +1882,9 @@ void CentralWidget::updateNoViewMsg()
 
 //==============================================================================
 
-void CentralWidget::fileChanged(const QString &pFileName)
+void CentralWidget::fileChanged(const QString &pFileName,
+                                const bool &pFileChanged,
+                                const bool &pDependenciesChanged)
 {
     // Make sure that the fact that the file has been changed is still relevant,
     // i.e. the given file has either been modified or it's different from its
@@ -1910,12 +1892,19 @@ void CentralWidget::fileChanged(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (   !fileManagerInstance->isLocalNewOrModified(pFileName)
-        &&  fileManagerInstance->isDifferent(pFileName)) {
-        // The given file has been changed, so ask the user whether to reload it
+    if (    (    pFileChanged
+             && !fileManagerInstance->isLocalNewOrModified(pFileName)
+             &&  fileManagerInstance->isDifferent(pFileName))
+        || pDependenciesChanged) {
+        // The given file and/or one or several of its dependencies has changed,
+        // so ask the user whether to reload the given file
 
         if (QMessageBox::question(mainWindow(), tr("File Modified"),
-                                  tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
+                                  pFileChanged?
+                                      tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
+                                      pDependenciesChanged?
+                                          tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName):
+                                          tr("<strong>%1</strong> and/or one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName),
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes) == QMessageBox::Yes) {
             // The user wants to reload the file
@@ -2070,7 +2059,9 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CentralWidget::fileReloaded(const QString &pFileName)
+void CentralWidget::fileReloaded(const QString &pFileName,
+                                 const bool &pFileChanged,
+                                 const bool &pExcludeFileViewPlugin)
 {
     // Check whether we should show our busy widget
     // Note: this only needs to be done in case of an indirect remote file since
@@ -2084,19 +2075,19 @@ void CentralWidget::fileReloaded(const QString &pFileName)
         showBusyWidget(this);
     }
 
-    // Let our plugins know about the file having been reloaded, but ignore the
-    // current plugin if our file manager cannot check files
-    // Note: indeed, if our file manager cannot check files, then it means that
-    //       we are saving the file (see saveFile()), hence we don't need and
-    //       don't want (since it may mess up our current view; e.g. the caret
-    //       of a QScintilla-based view will get moved back to its original
-    //       position) our current plugin to reload it...
-
-    FileManager *fileManagerInstance = FileManager::instance();
+    // Let all our plugins, but the current one (if requested), know about the
+    // file having been reloaded
+    // Note: in the case of the current plugin, we don't need and don't want
+    //       our current plugin to reload it if it has just saved it (see
+    //       fileSaved(); indeed, it may mess up our current view; e.g. the
+    //       caret of a QScintilla-based view will get moved back to its
+    //       original position)...
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
+        if (   !pExcludeFileViewPlugin
+            ||  (pExcludeFileViewPlugin && (plugin != fileViewPlugin))) {
+            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged);
+        }
     }
 
     // Now, because of the way some of our views may reload a file (see, for
@@ -2104,8 +2095,10 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     // update their GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins) {
-        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
+        if (   !pExcludeFileViewPlugin
+            ||  (pExcludeFileViewPlugin && (plugin != fileViewPlugin))) {
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
+        }
     }
 
     // Make sure that our busy widget is hidden
@@ -2181,20 +2174,10 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
 void CentralWidget::fileSaved(const QString &pFileName)
 {
-    // Let the current view plugin know that a file has been saved
-    // Note: the other view plugins don't need to be told about the file having
-    //       been saved since, in their case, they will, instead, be told that
-    //       the file has been 'reloaded' (see saveFile())...
+    // A file has been saved, so we want all the plugins, but the current one,
+    // to reload it
 
-    Plugin *fileViewPlugin = viewPlugin(pFileName);
-
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (plugin == fileViewPlugin) {
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileSaved(pFileName);
-
-            break;
-        }
-    }
+    fileReloaded(pFileName, true, true);
 }
 
 //==============================================================================

@@ -80,8 +80,6 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     // Some connections to handle our file manager
 
-    connect(mFileManager, SIGNAL(fileChanged(const QString &)),
-            this, SLOT(fileChanged(const QString &)));
     connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 }
@@ -120,7 +118,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
         // Create the item, in case we are not dealing with the root folder item
 
-        QStandardItem *childParentItem;
+        QStandardItem *childParentItem = 0;
 
         if (parentItemIndex == -1) {
             // We are dealing with the root folder item, so don't do anything
@@ -157,29 +155,26 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
             } else {
                 // We are dealing with a file item
 
-                static const QIcon FileIcon        = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
-                static const QIcon DeletedFileIcon = QIcon(":oxygen/status/image-missing.png");
+                static const QIcon FileIcon = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
 
                 QFileInfo fileInfo = textOrPath;
 
-                QStandardItem *fileItem = new QStandardItem(fileInfo.exists()?FileIcon:DeletedFileIcon,
-                                                            fileInfo.fileName());
+                if (fileInfo.exists()) {
+                    QStandardItem *fileItem = new QStandardItem(FileIcon,
+                                                                fileInfo.fileName());
 
-                fileItem->setData(textOrPath, Item::Path);
+                    fileItem->setData(textOrPath, Item::Path);
 
-                if (pParentItem)
-                    pParentItem->appendRow(fileItem);
+                    if (pParentItem)
+                        pParentItem->appendRow(fileItem);
 
-                // Add the file to our file manager
-                // Note: it doesn't matter whether or not the file is already
-                //       being monitored, since if that's the case then the
-                //       current instance will be ignored
+                    // Add the file to our file manager
+                    // Note: it doesn't matter whether or not the file is
+                    //       already being monitored, since if that's the case
+                    //       then the current instance will be ignored
 
-                mFileManager->manage(textOrPath);
-
-                // A file cannot have child items
-
-                childParentItem = 0;
+                    mFileManager->manage(textOrPath);
+                }
             }
         }
 
@@ -1145,50 +1140,35 @@ void FileOrganiserWindowWidget::emitItemsRelatedSignals()
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::updateFileItems(QStandardItem *pItem,
-                                                const QString &pFileName,
-                                                const Core::File::Status &pStatus) const
+void FileOrganiserWindowWidget::selectFileItem(QStandardItem *pItem,
+                                               const QString &pFileName) const
 {
-    // Recursively update the icon of all file items that refer to pFileName
+    // Recursively delete the file items that refer to pFileName
 
     if (   !pItem->data(Item::Folder).toBool()
         && !pItem->data(Item::Path).toString().compare(pFileName)) {
-        // The current item is a file item and it refers to pFileName, so update
-        // its icon based on the value of pStatus
+        // The current item is a file item and it refers to pFileName, so delete
+        // it
 
-        static const QIcon FileIcon        = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
-        static const QIcon DeletedFileIcon = QIcon(":oxygen/status/image-missing.png");
+        selectionModel()->select(pItem->index(), QItemSelectionModel::Select);
+    } else {
+        // Update our child file items, if any
 
-        pItem->setIcon((pStatus == Core::File::Deleted)?DeletedFileIcon:FileIcon);
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+            selectFileItem(pItem->child(i), pFileName);
     }
-
-    // Update our child file items, if any
-
-    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
-        updateFileItems(pItem->child(i), pFileName, pStatus);
 }
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::fileChanged(const QString &pFileName) const
+void FileOrganiserWindowWidget::fileDeleted(const QString &pFileName)
 {
-    // The file has changed, which may also mean that a file may have been
-    // deleted and recreated, so go through all the (file) items and update the
-    // icon of the ones that refer to the file in question
+    // A file has been deleted, so select all the (file) items that refer to the
+    // given file and delete them
 
-    updateFileItems(mModel->invisibleRootItem(), pFileName,
-                    Core::File::Changed);
-}
+    selectFileItem(mModel->invisibleRootItem(), pFileName);
 
-//==============================================================================
-
-void FileOrganiserWindowWidget::fileDeleted(const QString &pFileName) const
-{
-    // A file has been deleted, so go through all the (file) items and update
-    // the icon of the ones that refer to the file in question
-
-    updateFileItems(mModel->invisibleRootItem(), pFileName,
-                    Core::File::Deleted);
+    deleteItems();
 }
 
 //==============================================================================

@@ -5,6 +5,5 @@
         <file>oxygen/actions/folder-new.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file>oxygen/places/folder.png</file>
-        <file>oxygen/status/image-missing.png</file>
     </qresource>
 </RCC>

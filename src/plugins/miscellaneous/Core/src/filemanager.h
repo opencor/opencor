@@ -98,9 +98,6 @@ public:
 
     File * file(const QString &pFileName) const;
 
-    bool canCheckFiles() const;
-    void setCanCheckFiles(const bool &pCanCheckFiles);
-
     QString sha1(const QString &pFileName) const;
 
     void reset(const QString &pFileName);
@@ -128,7 +125,11 @@ public:
     bool isLocked(const QString &pFileName) const;
     Status setLocked(const QString &pFileName, const bool &pLocked);
 
-    void reload(const QString &pFileName);
+    QStringList dependencies(const QString &pFileName) const;
+    void setDependencies(const QString &pFileName, const QStringList &pDependencies);
+
+    void reload(const QString &pFileName,
+                const bool &pForceFileChanged = false);
 
     Status create(const QString &pUrl = QString(),
                   const QByteArray &pContents = QByteArray());
@@ -157,13 +158,14 @@ Q_SIGNALS:
     void fileManaged(const QString &pFileName);
     void fileUnmanaged(const QString &pFileName);
 
-    void fileChanged(const QString &pFileName);
+    void fileChanged(const QString &pFileName, const bool &pFileChanged,
+                     const bool &pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
 
-    void fileReloaded(const QString &pFileName);
+    void fileReloaded(const QString &pFileName, const bool &pFileChanged);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);

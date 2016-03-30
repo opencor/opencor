@@ -171,11 +171,13 @@ void RawCellMLViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
+void RawCellMLViewPlugin::fileReloaded(const QString &pFileName,
+                                       const bool &pFileChanged)
 {
     // The given file has been reloaded, so let our view widget know about it
 
-    mViewWidget->fileReloaded(pFileName);
+    if (pFileChanged)
+        mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -186,18 +188,6 @@ void RawCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
     // The given file has been renamed, so let our view widget know about it
 
     mViewWidget->fileRenamed(pOldFileName, pNewFileName);
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::fileSaved(const QString &pFileName)
-{
-    // The given file has been saved, but because it was done directly by
-    // manipulating the file, we need to ask our file manager to reload it, so
-    // that anyone that relies on an internal representation of the file (e.g.
-    // the CellML Annotation view plugin) will get properly updated
-
-    Core::FileManager::instance()->reload(pFileName);
 }
 
 //==============================================================================

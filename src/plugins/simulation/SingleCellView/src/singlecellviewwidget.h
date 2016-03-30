@@ -144,6 +144,7 @@ private:
     void retrieveCellmlFile(const QString &pFileName,
                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
+                            const FileType &pFileType,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                             bool *pIsDirectOrIndirectRemoteFile);
     void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
