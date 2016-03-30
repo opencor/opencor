@@ -2056,7 +2056,7 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 void CentralWidget::fileReloaded(const QString &pFileName,
                                  const bool &pFileChanged,
-                                 const bool &pAllPlugins)
+                                 const bool &pExcludeFileViewPlugin)
 {
     // Check whether we should show our busy widget
     // Note: this only needs to be done in case of an indirect remote file since
@@ -2079,8 +2079,10 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     //       original position)...
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (pAllPlugins || (plugin != fileViewPlugin))
+        if (   !pExcludeFileViewPlugin
+            ||  (pExcludeFileViewPlugin && (plugin != fileViewPlugin))) {
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged);
+        }
     }
 
     // Now, because of the way some of our views may reload a file (see, for
@@ -2088,8 +2090,10 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     // update their GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins) {
-        if (pAllPlugins || (plugin != fileViewPlugin))
+        if (   !pExcludeFileViewPlugin
+            ||  (pExcludeFileViewPlugin && (plugin != fileViewPlugin))) {
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
+        }
     }
 
     // Make sure that our busy widget is hidden
@@ -2168,7 +2172,7 @@ void CentralWidget::fileSaved(const QString &pFileName)
     // A file has been saved, so we want all the plugins, but the current one,
     // to reload it
 
-    fileReloaded(pFileName, true, false);
+    fileReloaded(pFileName, true, true);
 }
 
 //==============================================================================

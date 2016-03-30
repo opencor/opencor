@@ -230,7 +230,7 @@ private Q_SLOTS:
     void fileModified(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName, const bool &pFileChanged,
-                      const bool &pAllPlugins = true);
+                      const bool &pExcludeFileViewPlugin = false);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDuplicated(const QString &pFileName);
