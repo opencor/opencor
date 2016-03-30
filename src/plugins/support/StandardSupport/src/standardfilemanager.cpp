@@ -46,7 +46,6 @@ StandardFileManager::StandardFileManager() :
 
     connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
             this, SLOT(reloadFile(const QString &, const bool &)));
-
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
 }
