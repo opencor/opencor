@@ -1675,7 +1675,7 @@ void CentralWidget::updateGui()
         // opening a file)
         // Note: the value of mDefaultViews is only to be used once and if we
         //       are opening a file, but it should be reset in all cases (just
-        //       to be safe)...
+        //       to be on the safe side)...
 
         if (((fileModeTabIndex != -1) && (changedFiles || directCall)) || changedModes) {
             if (changedModes)
@@ -1687,7 +1687,7 @@ void CentralWidget::updateGui()
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
-        } else if (!mDefaultViews.isEmpty()) {
+        } else {
             foreach (const QString &defaultView, mDefaultViews) {
                 if (selectView(defaultView))
                     break;
