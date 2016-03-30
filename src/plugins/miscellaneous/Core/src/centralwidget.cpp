@@ -780,6 +780,11 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
         }
     }
 
+    // If there are no views, then try the Raw Text view
+
+    if (mDefaultViews.isEmpty())
+        mDefaultViews << "RawTextView";
+
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
@@ -1655,7 +1660,7 @@ void CentralWidget::updateGui()
         // opening a file)
         // Note: the value of mDefaultViews is only to be used once and if we
         //       are opening a file, but it should be reset in all cases (just
-        //       to be safe)...
+        //       to be on the safe side)...
 
         if (((fileModeTabIndex != -1) && (changedFiles || directCall)) || changedModes) {
             if (changedModes)
@@ -1667,7 +1672,7 @@ void CentralWidget::updateGui()
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
-        } else if (!mDefaultViews.isEmpty()) {
+        } else {
             foreach (const QString &defaultView, mDefaultViews) {
                 if (selectView(defaultView))
                     break;
