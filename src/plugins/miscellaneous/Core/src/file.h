@@ -98,6 +98,7 @@ public:
     bool isLocked() const;
     Status setLocked(const bool &pLocked);
 
+    QStringList dependencies() const;
     bool setDependencies(const QStringList &pDependencies);
 
 private:

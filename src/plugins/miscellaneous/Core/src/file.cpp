@@ -348,6 +348,15 @@ File::Status File::setLocked(const bool &pLocked)
 
 //==============================================================================
 
+QStringList File::dependencies() const
+{
+    // Return the dependencies of the file
+
+    return mDependencies;
+}
+
+//==============================================================================
+
 bool File::setDependencies(const QStringList &pDependencies)
 {
     // Set the dependencies of the file

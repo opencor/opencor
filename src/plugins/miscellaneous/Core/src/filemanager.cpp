@@ -390,6 +390,20 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
 
 //==============================================================================
 
+QStringList FileManager::dependencies(const QString &pFileName) const
+{
+    // Return the given file's dependencies, should it be managed
+
+    File *nativeFile = file(nativeCanonicalFileName(pFileName));
+
+    if (nativeFile)
+        return nativeFile->dependencies();
+    else
+        return QStringList();
+}
+
+//==============================================================================
+
 void FileManager::setDependencies(const QString &pFileName,
                                   const QStringList &pDependencies)
 {

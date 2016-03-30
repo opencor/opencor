@@ -125,6 +125,7 @@ public:
     bool isLocked(const QString &pFileName) const;
     Status setLocked(const QString &pFileName, const bool &pLocked);
 
+    QStringList dependencies(const QString &pFileName) const;
     void setDependencies(const QString &pFileName, const QStringList &pDependencies);
 
     void reload(const QString &pFileName);
