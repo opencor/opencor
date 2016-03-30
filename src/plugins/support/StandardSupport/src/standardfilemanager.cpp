@@ -48,6 +48,9 @@ StandardFileManager::StandardFileManager() :
             this, SLOT(reloadFile(const QString &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
+
+    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
+            this, SLOT(saveFile(const QString &)));
 }
 
 //==============================================================================
@@ -185,6 +188,15 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
     // We also need to ensure that our file object has its file name updated
 
     static_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
+}
+
+//==============================================================================
+
+void StandardFileManager::saveFile(const QString &pFileName)
+{
+    // The file has been (modified and) saved, so we need to reload it
+
+    reloadFile(pFileName, true);
 }
 
 //==============================================================================

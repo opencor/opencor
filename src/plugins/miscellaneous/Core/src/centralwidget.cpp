@@ -1204,12 +1204,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         fileManagerInstance->save(newFileName);
 
-        // Let the other views (except the current one) know that the file has
-        // been saved, which for those views is equivalent to doing whatever is
-        // done whenever a file has been reloaded
-
-        fileReloaded(newFileName);
-
         // Re-activate our file manager
 
         fileManagerInstance->setCanCheckFiles(true);
@@ -2089,18 +2083,15 @@ void CentralWidget::fileReloaded(const QString &pFileName,
         showBusyWidget(this);
     }
 
-    // Let our plugins know about the file having been reloaded, but ignore the
-    // current plugin if our file manager cannot check files
-    // Note: indeed, if our file manager cannot check files, then it means that
-    //       we are saving the file (see saveFile()), hence we don't need and
-    //       don't want (since it may mess up our current view; e.g. the caret
-    //       of a QScintilla-based view will get moved back to its original
-    //       position) our current plugin to reload it...
-
-    FileManager *fileManagerInstance = FileManager::instance();
+    // Let all our plugins, but the current one, know about the file having been
+    // reloaded
+    // Note: in the case of the current plugin, we don't need and don't want
+    //       (since it may mess up our current view; e.g. the caret of a
+    //       QScintilla-based view will get moved back to its original position)
+    //       our current plugin to reload it...
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
+        if (plugin != fileViewPlugin)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged);
     }
 
@@ -2109,7 +2100,7 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     // update their GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins) {
-        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
+        if (plugin != fileViewPlugin)
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
     }
 
@@ -2186,20 +2177,10 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
 void CentralWidget::fileSaved(const QString &pFileName)
 {
-    // Let the current view plugin know that a file has been saved
-    // Note: the other view plugins don't need to be told about the file having
-    //       been saved since, in their case, they will, instead, be told that
-    //       the file has been 'reloaded' (see saveFile())...
+    // A file has been saved, so we want all the plugins, but the current one,
+    // to reload it
 
-    Plugin *fileViewPlugin = viewPlugin(pFileName);
-
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (plugin == fileViewPlugin) {
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileSaved(pFileName);
-
-            break;
-        }
-    }
+    fileReloaded(pFileName, true);
 }
 
 //==============================================================================

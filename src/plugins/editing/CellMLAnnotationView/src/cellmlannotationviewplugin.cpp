@@ -128,15 +128,6 @@ void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

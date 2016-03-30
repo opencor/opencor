@@ -68,6 +68,8 @@ private Q_SLOTS:
 
     void reloadFile(const QString &pFileName, const bool &pFileChanged);
     void renameFile(const QString &pOldFileName, const QString &pNewFileName);
+
+    void saveFile(const QString &pFileName);
 };
 
 //==============================================================================

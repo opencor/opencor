@@ -204,15 +204,6 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void CorePlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CorePlugin::fileClosed(const QString &pFileName)
 {
     // Add, if isn't new and it still exists (i.e. we are not here because the

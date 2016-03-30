@@ -190,18 +190,6 @@ void RawSEDMLViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void RawSEDMLViewPlugin::fileSaved(const QString &pFileName)
-{
-    // The given file has been saved, but because it was done directly by
-    // manipulating the file, we need to ask our file manager to reload it, so
-    // that anyone that relies on an internal representation of the file (e.g.
-    // the SED-ML Annotation view plugin) will get properly updated
-
-    Core::FileManager::instance()->reload(pFileName);
-}
-
-//==============================================================================
-
 void RawSEDMLViewPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

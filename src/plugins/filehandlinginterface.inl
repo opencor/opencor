@@ -27,7 +27,6 @@
                               const bool &pFileChanged) PURE;
     virtual void fileRenamed(const QString &pOldFileName,
                              const QString &pNewFileName) PURE;
-    virtual void fileSaved(const QString &pFileName) PURE;
     virtual void fileClosed(const QString &pFileName) PURE;
 
 #undef PURE
