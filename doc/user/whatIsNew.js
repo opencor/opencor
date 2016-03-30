@@ -47,6 +47,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Raw CellML view",
                              "entries": [
+                               { "type": "Improved", "description": "<a href=\"https://www.cellml.org/\">CellML</a> validation." },
                                { "type": "Fixed", "description": "Reformatting unescaped HTML entities." }
                              ]
                            },
@@ -78,11 +79,11 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
                                { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (either through a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
-                               { "type": "Added", "description": "Create a new or update an existing CellML file based on the results of a simulation." },
+                               { "type": "Added", "description": "Create a new or update an existing <a href=\"https://www.cellml.org/\">CellML</a> file based on the results of a simulation." },
                                { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
-                               { "type": "Improved", "description": "Support for CellML models." },
-                               { "type": "Improved", "description": "Listing of CellML 1.1 model parameters." },
+                               { "type": "Improved", "description": "Support for <a href=\"https://www.cellml.org/\">CellML</a> models." },
+                               { "type": "Improved", "description": "Listing of <a href=\"https://www.cellml.org/\">CellML</a> 1.1 model parameters." },
                                { "type": "Fixed", "description": "Computing the initial value of a 'constant' algebraic variable." }
                              ]
                            }
@@ -117,7 +118,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
-                               { "type": "Improved", "description": "Export of a CellML file." }
+                               { "type": "Improved", "description": "Export of a <a href=\"https://www.cellml.org/\">CellML</a> file." }
                              ]
                            }
                          ]
@@ -130,12 +131,12 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Raw CellML view",
                              "entries": [
-                               { "type": "Improved", "description": "CellML validation." }
+                               { "type": "Improved", "description": "<a href=\"https://www.cellml.org/\">CellML</a> validation." }
                              ]
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "Improved", "description": "CellML validation." }
+                               { "type": "Improved", "description": "<a href=\"https://www.cellml.org/\">CellML</a> validation." }
                              ]
                            }
                          ]
@@ -179,17 +180,17 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Added", "description": "Two new <a href=\"http://biomodels.net/qualifiers/\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
-                               { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked CellML files." },
+                               { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked <a href=\"https://www.cellml.org/\">CellML</a> files." },
                                { "type": "Improved", "description": "Responsiveness of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "Improved", "description": "Listing of component variables." },
-                               { "type": "Improved", "description": "Translation of views for inactive CellML files." },
-                               { "type": "Improved", "description": "Setting of the modified state of the CellML file." },
+                               { "type": "Improved", "description": "Translation of views for inactive <a href=\"https://www.cellml.org/\">CellML</a> files." },
+                               { "type": "Improved", "description": "Setting of the modified state of the <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "Improved", "description": "Detection of direct ontological terms." },
                                { "type": "Improved", "description": "Retrieval of ontological terms." },
                                { "type": "Improved", "description": "Listing of ontological terms." },
-                               { "type": "Fixed", "description": "Editing of malformed CellML files." },
-                               { "type": "Fixed", "description": "Further editing after saving a CellML file." },
-                               { "type": "Fixed", "description": "Risk of the same <code>cmeta:id</code> value being used for two different CellML elements." }
+                               { "type": "Fixed", "description": "Editing of malformed <a href=\"https://www.cellml.org/\">CellML</a> files." },
+                               { "type": "Fixed", "description": "Further editing after saving a <a href=\"https://www.cellml.org/\">CellML</a> file." },
+                               { "type": "Fixed", "description": "Risk of the same <code>cmeta:id</code> value being used for two different <a href=\"https://www.cellml.org/\">CellML</a> elements." }
                              ]
                            },
                            { "type": "subCategory", "name": "Raw view",
@@ -201,7 +202,7 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Added", "description": "Reformatting the contents of the editor." },
                                { "type": "Improved", "description": "Context menu." },
-                               { "type": "Improved", "description": "CellML validation." },
+                               { "type": "Improved", "description": "<a href=\"https://www.cellml.org/\">CellML</a> validation." },
                                { "type": "Improved", "description": "File permissions changes." },
                                { "type": "Fixed", "description": "Retrieval of view settings." }
                              ]
@@ -222,8 +223,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Model Repository window",
                              "entries": [
-                               { "type": "Improved", "description": "Retrieval of CellML files." },
-                               { "type": "Improved", "description": "Listing of CellML files." }
+                               { "type": "Improved", "description": "Retrieval of <a href=\"https://www.cellml.org/\">CellML</a> files." },
+                               { "type": "Improved", "description": "Listing of <a href=\"https://www.cellml.org/\">CellML</a> files." }
                              ]
                            }
                          ]
@@ -243,10 +244,10 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML support",
                              "entries": [
-                               { "type": "Improved", "description": "Serialisation of CellML files." },
-                               { "type": "Improved", "description": "Reloading of CellML files." },
+                               { "type": "Improved", "description": "Serialisation of <a href=\"https://www.cellml.org/\">CellML</a> files." },
+                               { "type": "Improved", "description": "Reloading of <a href=\"https://www.cellml.org/\">CellML</a> files." },
                                { "type": "Improved", "description": "Error messages." },
-                               { "type": "Fixed", "description": "Loading of CellML files." }
+                               { "type": "Fixed", "description": "Loading of <a href=\"https://www.cellml.org/\">CellML</a> files." }
                              ]
                            }
                          ]
@@ -258,8 +259,8 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Create a new blank file." },
-                           { "type": "Added", "description": "Create a new CellML 1.0 file." },
-                           { "type": "Added", "description": "Create a new CellML 1.1 file." },
+                           { "type": "Added", "description": "Create a new <a href=\"https://www.cellml.org/\">CellML</a> 1.0 file." },
+                           { "type": "Added", "description": "Create a new <a href=\"https://www.cellml.org/\">CellML</a> 1.1 file." },
                            { "type": "Added", "description": "Open a remote file." },
                            { "type": "Added", "description": "Duplicate a file." },
                            { "type": "Added", "description": "(Un)lock a file." },
@@ -304,7 +305,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
-                               { "type": "Added", "description": "Export of a CellML file to a user-defined format." },
+                               { "type": "Added", "description": "Export of a <a href=\"https://www.cellml.org/\">CellML</a> file to a user-defined format." },
                                { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/C_(programming_language)\">C</a>." },
                                { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/Fortran#FORTRAN_77\">FORTRAN 77</a>." },
                                { "type": "Added", "description": "User-defined format for <a href=\"https://en.wikipedia.org/wiki/MATLAB\">MATLAB</a>." },
@@ -317,7 +318,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Model Repository window",
                              "entries": [
-                               { "type": "Improved", "description": "Retrieval of CellML files." }
+                               { "type": "Improved", "description": "Retrieval of <a href=\"https://www.cellml.org/\">CellML</a> files." }
                              ]
                            },
                            { "type": "subCategory", "name": "File Browser window",
@@ -337,12 +338,12 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "Improved", "description": "View settings upon reloading a CellML file." },
+                               { "type": "Improved", "description": "View settings upon reloading a <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "Improved", "description": "Delay between two data points." },
-                               { "type": "Improved", "description": "CellML file information." },
+                               { "type": "Improved", "description": "<a href=\"https://www.cellml.org/\">CellML</a> file information." },
                                { "type": "Improved", "description": "Export to <a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
-                               { "type": "Fixed", "description": "Removal of a graph panel that is selected by another CellML file." },
-                               { "type": "Fixed", "description": "Property settings of a CellML file that requires a non-linear algebraic solver." }
+                               { "type": "Fixed", "description": "Removal of a graph panel that is selected by another <a href=\"https://www.cellml.org/\">CellML</a> file." },
+                               { "type": "Fixed", "description": "Property settings of a <a href=\"https://www.cellml.org/\">CellML</a> file that requires a non-linear algebraic solver." }
                              ]
                            }
                          ]
@@ -371,7 +372,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Support for Mac <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">OS X 10.7</a> (Lion) and later." },
                            { "type": "Added", "description": "Reload a file (either as a result of a direct action or because it got modified outside OpenCOR)." },
                            { "type": "Added", "description": "Show/hide all the recent/current docked widgets at once." },
-                           { "type": "Added", "description": "<a href=\"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the CellML file examples." },
+                           { "type": "Added", "description": "<a href=\"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the <a href=\"https://www.cellml.org/\">CellML</a> file examples." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
                            { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "Plugins window." },
@@ -382,7 +383,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
-                               { "type": "Added", "description": "Open an imported CellML file." }
+                               { "type": "Added", "description": "Open an imported <a href=\"https://www.cellml.org/\">CellML</a> file." }
                              ]
                            }
                          ]
@@ -396,7 +397,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Model Repository window",
                              "entries": [
-                               { "type": "Improved", "description": "Retrieval of CellML files." }
+                               { "type": "Improved", "description": "Retrieval of <a href=\"https://www.cellml.org/\">CellML</a> files." }
                              ]
                            }
                          ]
@@ -412,7 +413,7 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Simulation speed." },
                                { "type": "Improved", "description": "Graph panel features." },
                                { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Retina_Display\">Retina displays</a>." },
-                               { "type": "Improved", "description": "Support for a wider range of CellML files." }
+                               { "type": "Improved", "description": "Support for a wider range of <a href=\"https://www.cellml.org/\">CellML</a> files." }
                              ]
                            }
                          ]
@@ -432,7 +433,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "Fixed", "description": "Runtime generation of some CellML files." }
+                               { "type": "Fixed", "description": "Runtime generation of some <a href=\"https://www.cellml.org/\">CellML</a> files." }
                              ]
                            }
                          ]
