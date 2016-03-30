@@ -1132,12 +1132,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileIsModified || hasNewFileName) {
-        // Prevent our file manager from checking files
-        // Note: indeed, otherwise we will get told that the current file has
-        //       changed and we will be asked whether we want to reload it...
-
-        fileManagerInstance->setCanCheckFiles(false);
-
         if (fileIsNew || fileIsModified) {
             // The file is or has been modified, so ask the current view to save
             // it
@@ -1149,8 +1143,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                     QMessageBox::warning(mainWindow(), tr("Save File"),
                                          tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
                 }
-
-                fileManagerInstance->setCanCheckFiles(true);
 
                 return false;
             }
@@ -1166,8 +1158,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             if (!QFile::copy(oldFileName, newFileName)) {
                 QMessageBox::warning(mainWindow(), tr("Save File"),
                                      tr("<strong>%1</strong> could not be saved.").arg(newFileName));
-
-                fileManagerInstance->setCanCheckFiles(true);
 
                 return false;
             }
@@ -1203,10 +1193,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // The file has been saved, so ask our file manager to 'save' it too
 
         fileManagerInstance->save(newFileName);
-
-        // Re-activate our file manager
-
-        fileManagerInstance->setCanCheckFiles(true);
 
         return true;
     } else {

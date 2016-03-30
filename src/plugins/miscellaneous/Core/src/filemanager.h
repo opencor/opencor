@@ -98,9 +98,6 @@ public:
 
     File * file(const QString &pFileName) const;
 
-    bool canCheckFiles() const;
-    void setCanCheckFiles(const bool &pCanCheckFiles);
-
     QString sha1(const QString &pFileName) const;
 
     void reset(const QString &pFileName);

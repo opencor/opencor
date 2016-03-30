@@ -36,7 +36,6 @@ namespace Core {
 //==============================================================================
 
 FileManager::FileManager() :
-    mCanCheckFiles(true),
     mFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>())
@@ -142,24 +141,6 @@ File * FileManager::file(const QString &pFileName) const
     // Return the File object, if any, associated with the given file
 
     return mFiles.value(nativeCanonicalFileName(pFileName), 0);
-}
-
-//==============================================================================
-
-bool FileManager::canCheckFiles() const
-{
-    // Return whether we can check files
-
-    return mCanCheckFiles;
-}
-
-//==============================================================================
-
-void FileManager::setCanCheckFiles(const bool &pCanCheckFiles)
-{
-    // Set whether we can check files
-
-    mCanCheckFiles = pCanCheckFiles;
 }
 
 //==============================================================================
@@ -595,12 +576,10 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 void FileManager::checkFiles()
 {
-    // We only want to check our files if we can check files and if there is no
-    // currently active dialog box (which requires at least one top level
-    // widget)
+    // We only want to check our files if there is no currently active dialog
+    // box (which requires at least one top level widget)
 
-    if (   !mCanCheckFiles
-        || !QApplication::topLevelWidgets().count()
+    if (   !QApplication::topLevelWidgets().count()
         ||  QApplication::activePopupWidget()) {
         return;
     }
