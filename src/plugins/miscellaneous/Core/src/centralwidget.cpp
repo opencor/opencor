@@ -780,6 +780,11 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
         }
     }
 
+    // If there are no views, then try the Raw Text view
+
+    if (mDefaultViews.isEmpty())
+        mDefaultViews << "RawTextView";
+
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
