@@ -783,9 +783,12 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
 
     mGui->actionRunPauseResumeSimulation->setEnabled(variableOfIntegration);
 
-    // Update our simulation mode
+    // Update/reset our simulation mode
 
-    updateSimulationMode();
+    if (pReloadingView)
+        on_actionClearSimulationData_triggered();
+    else
+        updateSimulationMode();
 
     // Initialise our contents widget and make sure that we have the required
     // type(s) of solvers
