@@ -217,7 +217,7 @@ void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrR
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace)
+void PhysiomeModelRepositoryWindowWindow::doCloneWorkspace(const QString &pWorkspace)
 {
     // Retrieve the name of an empty directory
 
@@ -454,7 +454,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         // Clone the workspace, if possible and requested
 
         if (!mNumberOfExposureFilesLeft && (pmrRequest == ExposureFileForCloning))
-            cloneWorkspace(mWorkspaces.value(url));
+            doCloneWorkspace(mWorkspaces.value(url));
 
         break;
     }
@@ -527,7 +527,7 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl,
     if (!workspace.isEmpty()) {
         busy(true);
 
-        cloneWorkspace(workspace);
+        doCloneWorkspace(workspace);
 
         busy(false);
     } else {

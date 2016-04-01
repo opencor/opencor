@@ -64,6 +64,14 @@ public:
     virtual void retranslateUi();
 
 private:
+    enum PmrRequest {
+        ExposuresList,
+        BookmarkUrlsForCloning,
+        BookmarkUrlsForExposureFiles,
+        ExposureFileForCloning,
+        ExposureFileForExposureFiles
+    };
+
     Ui::PhysiomeModelRepositoryWindowWindow *mGui;
 
     PhysiomeModelRepositoryWindowWidget *mPhysiomeModelRepositoryWidget;
@@ -75,21 +83,13 @@ private:
     QMap<QString, QString> mWorkspaces;
     QMap<QString, QString> mExposureFiles;
 
-    enum PmrRequest {
-        ExposuresList,
-        BookmarkUrlsForCloning,
-        BookmarkUrlsForExposureFiles,
-        ExposureFileForCloning,
-        ExposureFileForExposureFiles
-    };
-
     void busy(const bool &pBusy);
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
                         const QString &pUrl = QString(),
                         const QString &pExtra = QString());
 
-    void cloneWorkspace(const QString &pWorkspace);
+    void doCloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &pText);
