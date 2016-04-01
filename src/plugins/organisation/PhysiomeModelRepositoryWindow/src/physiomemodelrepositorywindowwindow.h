@@ -81,13 +81,14 @@ private:
     int mNumberOfExposureFilesLeft;
 
     QMap<QString, QString> mWorkspaces;
+    QMap<QString, QString> mExposureUrls;
+    QMap<QString, QString> mExposureNames;
     QMap<QString, QString> mExposureFiles;
 
     void busy(const bool &pBusy);
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
-                        const QString &pUrl = QString(),
-                        const QString &pExtra = QString());
+                        const QString &pUrl = QString());
 
     void doCloneWorkspace(const QString &pWorkspace);
 
@@ -101,8 +102,8 @@ private Q_SLOTS:
 
     void retrieveExposuresList(const bool &pVisible);
 
-    void cloneWorkspace(const QString &pUrl, const QString &pDescription);
-    void showExposureFiles(const QString &pUrl, const QString &pDescription);
+    void cloneWorkspace(const QString &pUrl);
+    void showExposureFiles(const QString &pUrl);
 };
 
 //==============================================================================

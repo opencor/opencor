@@ -61,6 +61,8 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
     mGui(new Ui::PhysiomeModelRepositoryWindowWindow),
     mNumberOfExposureFilesLeft(0),
     mWorkspaces(QMap<QString, QString>()),
+    mExposureUrls(QMap<QString, QString>()),
+    mExposureNames(QMap<QString, QString>()),
     mExposureFiles(QMap<QString, QString>())
 {
     // Set up the GUI
@@ -113,10 +115,10 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
 
     // Some connections to know what our PMR widget wants from us
 
-    connect(mPhysiomeModelRepositoryWidget, SIGNAL(cloneWorkspace(const QString &, const QString &)),
-            this, SLOT(cloneWorkspace(const QString &, const QString &)));
-    connect(mPhysiomeModelRepositoryWidget, SIGNAL(showExposureFiles(const QString &, const QString &)),
-            this, SLOT(showExposureFiles(const QString &, const QString &)));
+    connect(mPhysiomeModelRepositoryWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
+            this, SLOT(cloneWorkspace(const QString &)));
+    connect(mPhysiomeModelRepositoryWidget, SIGNAL(showExposureFilesRequested(const QString &)),
+            this, SLOT(showExposureFiles(const QString &)));
 
     connect(mPhysiomeModelRepositoryWidget, SIGNAL(exposureFileOpenRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
@@ -170,13 +172,11 @@ void PhysiomeModelRepositoryWindowWindow::busy(const bool &pBusy)
 //==============================================================================
 
 static const char *PmrRequestProperty = "PmrRequest";
-static const char *ExtraProperty      = "Extra";
 
 //==============================================================================
 
 void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
-                                                         const QString &pUrl,
-                                                         const QString &pExtra)
+                                                         const QString &pUrl)
 {
     // Let the user know that we are busy
 
@@ -209,7 +209,6 @@ void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrR
         // information
 
         networkReply->setProperty(PmrRequestProperty, pPmrRequest);
-        networkReply->setProperty(ExtraProperty, pExtra);
     } else {
         finished();
     }
@@ -377,8 +376,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                         QVariantMap linksMap = linksVariant.toMap();
 
                         if (!linksMap["rel"].toString().compare("bookmark")) {
-                            exposures << PhysiomeModelRepositoryWindowExposure(linksMap["href"].toString().trimmed(),
-                                                                               linksMap["prompt"].toString().simplified());
+                            QString exposureUrl = linksMap["href"].toString().trimmed();
+                            QString exposureName = linksMap["prompt"].toString().simplified();
+
+                            mExposureNames.insert(exposureUrl, exposureName);
+
+                            exposures << PhysiomeModelRepositoryWindowExposure(exposureUrl, exposureName);
                         }
                     }
                 }
@@ -401,19 +404,22 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         // corresponding exposure file(s) from the PMR
 
         if (bookmarkUrls.isEmpty()) {
+            QString url = pNetworkReply->url().toString();
+
             QMessageBox::information( Core::mainWindow(), tr("Bookmark URLs"),
-                                      tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(pNetworkReply->url().toString(),
-                                                                                                          pNetworkReply->property(ExtraProperty).toString())
+                                      tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, mExposureNames.value(url))
                                      +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
                                       QMessageBox::Ok);
         } else {
             QString url = pNetworkReply->url().toString();
 
             foreach (const QString &bookmarkUrl, bookmarkUrls) {
+                mExposureUrls.insert(bookmarkUrl, url);
+
                 sendPmrRequest((pmrRequest == BookmarkUrlsForCloning)?
                                    ExposureFileForCloning:
                                    ExposureFileForExposureFiles,
-                               bookmarkUrl, url);
+                               bookmarkUrl);
             }
         }
 
@@ -422,9 +428,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     case ExposureFileForExposureFiles: {
         // Keep track of the exposure file
 
-        QString url = pNetworkReply->property(ExtraProperty).toString();
+        QString url = pNetworkReply->url().toString();
+        QString exposureUrl = mExposureUrls.value(url);
 
-        mExposureFiles.insertMulti(url, exposureFile);
+        mExposureFiles.insertMulti(exposureUrl, exposureFile);
+
+        mExposureUrls.remove(url);
 
         // Determine the URL of the workspace for the exposure, should we have
         // retrieved all of its exposure files, and ask our PMR widget to add
@@ -436,25 +445,23 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         if (!mNumberOfExposureFilesLeft) {
             static const QRegularExpression RawFileInfoRegEx = QRegularExpression("/rawfile/.*$");
 
-            QStringList exposureFiles = mExposureFiles.values(url);
+            QStringList exposureFiles = mExposureFiles.values(exposureUrl);
 
             std::sort(exposureFiles.begin(), exposureFiles.end(), sortExposureFiles);
 
-            mWorkspaces.insert(url, exposureFile.remove(RawFileInfoRegEx));
-            mPhysiomeModelRepositoryWidget->addExposureFiles(url, exposureFiles);
+            mWorkspaces.insert(exposureUrl, exposureFile.remove(RawFileInfoRegEx));
+            mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFiles);
 
             if (pmrRequest == ExposureFileForExposureFiles)
-                mPhysiomeModelRepositoryWidget->showExposureFiles(url);
+                mPhysiomeModelRepositoryWidget->showExposureFiles(exposureUrl);
 
-            // Remove the exposure source files since we don't need them anymore
-
-            mExposureFiles.remove(url);
+            mExposureFiles.remove(exposureUrl);
         }
 
         // Clone the workspace, if possible and requested
 
         if (!mNumberOfExposureFilesLeft && (pmrRequest == ExposureFileForCloning))
-            doCloneWorkspace(mWorkspaces.value(url));
+            doCloneWorkspace(mWorkspaces.value(exposureUrl));
 
         break;
     }
@@ -517,8 +524,7 @@ void PhysiomeModelRepositoryWindowWindow::retrieveExposuresList(const bool &pVis
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl,
-                                                         const QString &pDescription)
+void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl)
 {
     // Check whether we already know about the workspace for the given exposure
 
@@ -534,19 +540,18 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl,
         // To retrieve the workspace associated with the given exposure, we
         // first need to retrieve its bookmark URLs
 
-        sendPmrRequest(BookmarkUrlsForCloning, pUrl, pDescription);
+        sendPmrRequest(BookmarkUrlsForCloning, pUrl);
     }
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::showExposureFiles(const QString &pUrl,
-                                                            const QString &pDescription)
+void PhysiomeModelRepositoryWindowWindow::showExposureFiles(const QString &pUrl)
 {
     // To show exposure files, we first need to retrieve the bookmark URLs for
     // the given exposure
 
-    sendPmrRequest(BookmarkUrlsForExposureFiles, pUrl, pDescription);
+    sendPmrRequest(BookmarkUrlsForExposureFiles, pUrl);
 }
 
 //==============================================================================
