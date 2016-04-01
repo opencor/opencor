@@ -401,10 +401,9 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         // corresponding exposure file(s) from the PMR
 
         if (bookmarkUrls.isEmpty()) {
-            QString url = pNetworkReply->url().toString();
-
             QMessageBox::information( Core::mainWindow(), tr("Bookmark URLs"),
-                                      tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
+                                      tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(pNetworkReply->url().toString(),
+                                                                                                          pNetworkReply->property(ExtraProperty).toString())
                                      +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
                                       QMessageBox::Ok);
         } else {
