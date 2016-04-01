@@ -370,15 +370,18 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     // Retrieve the list of exposures
 
                     foreach (const QVariant &linkVariant, collectionMap["links"].toList()) {
-                        QVariantMap linkMap = linkVariant.toMap();
+                        QVariantMap linksMap = linkVariant.toMap();
 
-                        exposures << PhysiomeModelRepositoryWindowExposure(linkMap["href"].toString().trimmed(),
-                                                                           linkMap["prompt"].toString().trimmed().replace("\n", " ").replace("  ", " "));
-                        // Note: the prompt may contain some '\n', so we want to
-                        //       remove them, which in turn may mean that it
-                        //       will contain two consecutive spaces (should we
-                        //       have had something like "xxx \nyyy"), which we
-                        //       want to replace with only one of them...
+                        if (!linksMap["rel"].toString().compare("bookmark")) {
+                            exposures << PhysiomeModelRepositoryWindowExposure(linksMap["href"].toString().trimmed(),
+                                                                               linksMap["prompt"].toString().trimmed().replace("\n", " ").replace("  ", " "));
+                            // Note: the prompt may contain some '\n', so we
+                            //       want to remove them, which in turn may mean
+                            //       that it will contain two consecutive spaces
+                            //       (should we have had something like
+                            //       "xxx \nyyy"), which we want to replace with
+                            //       only one of them...
+                        }
                     }
                 }
             } else {
