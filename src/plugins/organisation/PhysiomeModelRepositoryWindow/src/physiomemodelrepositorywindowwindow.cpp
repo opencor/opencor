@@ -352,8 +352,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                 switch (pmrRequest) {
                 case BookmarkUrlsForCloning:
                 case BookmarkUrlsForExposureFiles:
-                    foreach (const QVariant &linkVariant, collectionMap["links"].toList())
-                        bookmarkUrls << linkVariant.toMap()["href"].toString().trimmed();
+                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
+                        QVariantMap linksMap = linksVariant.toMap();
+
+                        if (!linksMap["rel"].toString().compare("bookmark"))
+                            bookmarkUrls << linksMap["href"].toString().trimmed();
+                    }
 
                     mNumberOfExposureFilesLeft = bookmarkUrls.count();
 
@@ -369,18 +373,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                 default:   // ExposuresList
                     // Retrieve the list of exposures
 
-                    foreach (const QVariant &linkVariant, collectionMap["links"].toList()) {
-                        QVariantMap linksMap = linkVariant.toMap();
+                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
+                        QVariantMap linksMap = linksVariant.toMap();
 
                         if (!linksMap["rel"].toString().compare("bookmark")) {
                             exposures << PhysiomeModelRepositoryWindowExposure(linksMap["href"].toString().trimmed(),
-                                                                               linksMap["prompt"].toString().trimmed().replace("\n", " ").replace("  ", " "));
-                            // Note: the prompt may contain some '\n', so we
-                            //       want to remove them, which in turn may mean
-                            //       that it will contain two consecutive spaces
-                            //       (should we have had something like
-                            //       "xxx \nyyy"), which we want to replace with
-                            //       only one of them...
+                                                                               linksMap["prompt"].toString().simplified());
                         }
                     }
                 }
