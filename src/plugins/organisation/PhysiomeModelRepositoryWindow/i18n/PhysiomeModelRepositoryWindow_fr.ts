@@ -54,12 +54,16 @@
 <context>
     <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWindow</name>
     <message>
-        <source>Bookmark URLs</source>
-        <translation>URLs Bookmark</translation>
+        <source>Exposure Information</source>
+        <translation>Information Exposition</translation>
     </message>
     <message>
-        <source>No bookmark URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
-        <translation>Aucune URL bookmark n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+        <source>No workspace URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
+        <translation>Aucune URL d&apos;espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <source>No file exposure URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
+        <translation>Aucune URL pour un fichier d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to email &lt;a href=&quot;mailto: help@physiomeproject.org&quot;&gt;help@physiomeproject.org&lt;/a&gt; and ask why this is the case.</source>
