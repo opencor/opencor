@@ -1010,7 +1010,15 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
         // Check that it actually makes sense to export the model
 
         switch (pVersion) {
-        case Cellml_1_1: {
+        case Cellml_1_0:
+            // To export to CellML 1.0, the model must be in a non CellML 1.0
+            // format
+
+            if (version(mModel) == Cellml_1_0)
+                return false;
+
+            break;
+        case Cellml_1_1:
             // To export to CellML 1.1, the model must be in a non CellML 1.1
             // format
 
@@ -1018,13 +1026,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
                 return false;
 
             break;
-        }
-        default:   // Cellml_1_0
-            // To export to CellML 1.0, the model must be in a non CellML 1.0
-            // format
-
-            if (version(mModel) == Cellml_1_0)
-                return false;
         }
 
         // Fully instantiate all the imports

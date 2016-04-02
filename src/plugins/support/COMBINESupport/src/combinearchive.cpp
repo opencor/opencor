@@ -238,6 +238,8 @@ bool CombineArchive::save(const QString &pFileName)
 
     foreach (const CombineArchiveFile &file, mFiles) {
         switch (file.format()) {
+        case CombineArchiveFile::Unknown:
+            return false;
         case CombineArchiveFile::Cellml:
             fileFormat = CellmlFormat;
 
@@ -258,8 +260,6 @@ bool CombineArchive::save(const QString &pFileName)
             fileFormat = SedmlFormat;
 
             break;
-        default:   // CombineArchiveFile::Unknown
-            return false;
         }
 
         fileList += "    <content location=\""+file.location()+"\" format=\""+fileFormat+"\"";

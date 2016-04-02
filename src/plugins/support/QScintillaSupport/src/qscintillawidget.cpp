@@ -413,12 +413,12 @@ QString QScintillaWidget::eolString() const
     // Return the end of line we use
 
     switch (eolMode()) {
+    case EolWindows:
+        return "\r\n";
     case EolUnix:
         return "\n";
     case EolMac:
         return "\r";
-    default:   // EolWindows
-        return "\r\n";
     }
 }
 

@@ -42,6 +42,8 @@ QString ViewInterface::modeAsString(const Mode &pMode)
     // Return the mode corresponding to the given mode string
 
     switch (pMode) {
+    case UnknownMode:
+        return ViewModeUnknown;
 #ifdef ENABLE_SAMPLES
     case SampleMode:
         return ViewModeSample;
@@ -52,8 +54,6 @@ QString ViewInterface::modeAsString(const Mode &pMode)
         return ViewModeSimulation;
     case AnalysisMode:
         return ViewModeAnalysis;
-    default:   // UnknownMode
-        return ViewModeUnknown;
     }
 }
 
