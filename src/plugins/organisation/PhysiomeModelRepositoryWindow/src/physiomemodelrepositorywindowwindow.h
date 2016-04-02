@@ -66,10 +66,15 @@ public:
 private:
     enum PmrRequest {
         ExposuresList,
-        BookmarkUrlsForCloning,
-        BookmarkUrlsForExposureFiles,
-        ExposureFileForCloning,
-        ExposureFileForExposureFiles
+        ExposureInformation,
+        WorkspaceInformation,
+        ExposureFileInformation
+    };
+
+    enum Action {
+        Default,
+        CloneWorkspace,
+        ShowExposureFiles
     };
 
     Ui::PhysiomeModelRepositoryWindowWindow *mGui;
@@ -78,17 +83,18 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
-    int mNumberOfExposureFilesLeft;
+    int mNumberOfWorkspaceAndExposureFileUrlsLeft;
 
     QMap<QString, QString> mWorkspaces;
     QMap<QString, QString> mExposureUrls;
     QMap<QString, QString> mExposureNames;
-    QMap<QString, QString> mExposureFiles;
+    QMap<QString, QString> mExposureFileNames;
 
     void busy(const bool &pBusy);
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
-                        const QString &pUrl = QString());
+                        const QString &pUrl = QString(),
+                        const Action pAction = Default);
 
     void doCloneWorkspace(const QString &pWorkspace);
 
