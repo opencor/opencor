@@ -1044,7 +1044,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             // We clearly cannot export to an unknown version
 
             return false;
-        case Cellml_1_0:
+        case Cellml_1_0: {
             CellmlFileCellml10Exporter exporter(mModel, pFileName);
 
             if (exporter.errorMessage().size())
@@ -1052,6 +1052,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
                                            exporter.errorMessage());
 
             return exporter.result();
+        }
         case Cellml_1_1: {
             CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
@@ -1062,9 +1063,9 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             return exporter.result();
         }
         }
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -1200,6 +1201,8 @@ QString CellmlFile::versionAsString(const Version &pVersion)
     case Cellml_1_1:
         return "CellML 1.1";
     }
+
+    return "???";
 }
 
 //==============================================================================
