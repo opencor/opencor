@@ -1010,6 +1010,10 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
         // Check that it actually makes sense to export the model
 
         switch (pVersion) {
+        case Unknown:
+            // We clearly cannot export to an unknown version
+
+            return false;
         case Cellml_1_0:
             // To export to CellML 1.0, the model must be in a non CellML 1.0
             // format
@@ -1036,6 +1040,18 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
         // Do the actual export
 
         switch (pVersion) {
+        case Unknown:
+            // We clearly cannot export to an unknown version
+
+            return false;
+        case Cellml_1_0:
+            CellmlFileCellml10Exporter exporter(mModel, pFileName);
+
+            if (exporter.errorMessage().size())
+                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                           exporter.errorMessage());
+
+            return exporter.result();
         case Cellml_1_1: {
             CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
@@ -1045,14 +1061,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 
             return exporter.result();
         }
-        default:   // Cellml_1_0
-            CellmlFileCellml10Exporter exporter(mModel, pFileName);
-
-            if (exporter.errorMessage().size())
-                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                           exporter.errorMessage());
-
-            return exporter.result();
         }
     } else {
         return false;
@@ -1185,14 +1193,12 @@ QString CellmlFile::versionAsString(const Version &pVersion)
     // Return the string corresponding to the given version
 
     switch (pVersion) {
+    case Unknown:
+        return "???";
     case Cellml_1_0:
         return "CellML 1.0";
     case Cellml_1_1:
         return "CellML 1.1";
-    default:
-        // Unknown
-
-        return "???";
     }
 }
 
