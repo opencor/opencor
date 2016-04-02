@@ -420,6 +420,8 @@ QString QScintillaWidget::eolString() const
     case EolMac:
         return "\r";
     }
+
+    return QString();
 }
 
 //==============================================================================

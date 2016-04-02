@@ -55,6 +55,8 @@ QString ViewInterface::modeAsString(const Mode &pMode)
     case AnalysisMode:
         return ViewModeAnalysis;
     }
+
+    return QString();
 }
 
 //==============================================================================
