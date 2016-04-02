@@ -31,5 +31,13 @@
         <source>Hint</source>
         <translation>Conseil</translation>
     </message>
+    <message>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation>Fatal</translation>
+    </message>
 </context>
 </TS>

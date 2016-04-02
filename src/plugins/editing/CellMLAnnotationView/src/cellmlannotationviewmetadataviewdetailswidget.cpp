@@ -73,6 +73,13 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
     // Decide on which view to use and update it, if needed
 
     switch (mCellmlFile->rdfTriples(pElement).type()) {
+    case CellMLSupport::CellmlFileRdfTriple::Unknown:
+        removeWidget(mNormalView);
+        addWidget(mRawView);
+
+        mRawView->updateGui(pElement);
+
+        break;
     case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
     case CellMLSupport::CellmlFileRdfTriple::Empty:
         removeWidget(mRawView);
@@ -81,13 +88,6 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
         mNormalView->updateGui(pElement);
 
         break;
-    default:
-        // Unknown type
-
-        removeWidget(mNormalView);
-        addWidget(mRawView);
-
-        mRawView->updateGui(pElement);
     }
 }
 

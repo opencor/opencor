@@ -116,6 +116,10 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
     // on its type
 
     switch (mType) {
+    case Id:
+        mAsString = mId;
+
+        break;
     case UriReference:
         mAsString = mUriReference;
 
@@ -128,10 +132,6 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
         mAsString = mLexicalForm+" ["+mDataTypeUri+"]";
 
         break;
-    default:
-        // Id
-
-        mAsString = mId;
     }
 }
 
