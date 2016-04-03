@@ -328,6 +328,8 @@ QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModel
     // Return the given RDF triple's model qualifier as a string
 
     switch (pModelQualifier) {
+    case ModelUnknown:
+        return "model:unknown";
     case ModelIs:
         return "model:is";
     case ModelIsDerivedFrom:
@@ -338,11 +340,11 @@ QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModel
         return "model:isInstanceOf";
     case ModelHasInstance:
         return "model:hasInstance";
-    default:
-        // ModelUnknown
-
-        return "model:unknown";
     }
+
+    return "model:unknown";
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
@@ -383,6 +385,8 @@ QString CellmlFileRdfTriple::bioQualifierAsString(const BioQualifier &pBioQualif
     // Return the given RDF triple's bio(logy) qualifier as a string
 
     switch (pBioQualifier) {
+    case BioUnknown:
+        return "bio:unknown";
     case BioEncodes:
         return "bio:encodes";
     case BioHasPart:
@@ -409,11 +413,11 @@ QString CellmlFileRdfTriple::bioQualifierAsString(const BioQualifier &pBioQualif
         return "bio:occursIn";
     case BioHasTaxon:
         return "bio:hasTaxon";
-    default:
-        // BioUnknown
-
-        return "bio:unknown";
     }
+
+    return "bio:unknown";
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================

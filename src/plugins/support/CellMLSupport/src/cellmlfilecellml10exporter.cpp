@@ -350,7 +350,7 @@ iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Ele
             break;
         }
         default:
-            // Not something we care about, so do nothing...
+            // Not a relevant type, so do nothing...
 
             ;
         }

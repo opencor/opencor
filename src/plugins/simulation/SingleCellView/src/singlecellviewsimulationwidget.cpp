@@ -1203,7 +1203,8 @@ QVariant SingleCellViewSimulationWidget::value(Core::Property *pProperty) const
     case Core::Property::Boolean:
         return pProperty->booleanValue();
     default:
-        // Not a property type in which we are interested
+        // Not a relevant property, so return nothing
+        // Note: we should never reach this point...
 
         return QVariant();
     }
@@ -2853,6 +2854,8 @@ double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pS
     // Return the array of data points associated with the given parameter
 
     switch (pParameter->type()) {
+    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+        return pSimulation->results()->points();
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
         return pSimulation->results()->constants(pParameter->index());
@@ -2863,9 +2866,10 @@ double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pS
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return pSimulation->results()->algebraic(pParameter->index());
     default:
-        // CellMLSupport::CellmlFileRuntimeParameter::Voi
+        // Not a relevant type, so return null
+        // Note: we should never reach this point...
 
-        return pSimulation->results()->points();
+        return 0;
     }
 }
 
@@ -3102,7 +3106,7 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return AlgebraicIcon;
     default:
-        // We are dealing with a type of parameter that is of no interest to us
+        // Not a relevant type, so return an error node icon
         // Note: we should never reach this point...
 
         return ErrorNodeIcon;

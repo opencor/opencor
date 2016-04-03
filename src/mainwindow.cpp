@@ -494,7 +494,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                 switch (menu.type()) {
                 case Gui::Menu::File:
-                    // Not a type in which we are interested, so do nothing
+                    // Not a relevant type, so do nothing
 
                     break;
                 case Gui::Menu::View:
@@ -557,7 +557,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                     break;
                 case Gui::Menu::View:
-                    // Not a type in which we are interested, so do nothing
+                    // Not a relevant type, so do nothing
 
                     ;
                 }
@@ -573,7 +573,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
             switch (menuAction.type()) {
             case Gui::MenuAction::File:
-                // Not a type in which we are interested, so do nothing
+                // Not a relevant type, so do nothing
 
                 break;
             case Gui::MenuAction::FileNew:
@@ -609,7 +609,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                 break;
             case Gui::MenuAction::Tools:
-                // Not a type in which we are interested, so do nothing
+                // Not a relevant type, so do nothing
 
                 break;
             }

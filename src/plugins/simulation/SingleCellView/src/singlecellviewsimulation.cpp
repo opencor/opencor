@@ -725,7 +725,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
             break;
         default:
-            // Not a type in which we are interested, so do nothing
+            // Not a relevant type, so do nothing
 
             ;
         }
