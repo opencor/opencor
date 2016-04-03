@@ -611,13 +611,7 @@ void FileManager::checkFiles()
                              (fileStatus == File::DependenciesChanged) || (fileStatus == File::AllChanged));
 
             break;
-        case File::Deleted:
-            // The file has been deleted, so let people know about it
-
-            emit fileDeleted(fileName);
-
-            break;
-        default:
+        case File::Unchanged:
             // The file has neither changed nor been deleted, so check whether
             // its permissions have changed
 
@@ -627,6 +621,18 @@ void FileManager::checkFiles()
                      && mFilesWritable.contains(fileName))) {
                 emitFilePermissionsChanged(fileName);
             }
+
+            break;
+        case File::Deleted:
+            // The file has been deleted, so let people know about it
+
+            emit fileDeleted(fileName);
+
+            break;
+        default:
+            // Not a relevant status, so do nothing
+
+            ;
         }
     }
 }

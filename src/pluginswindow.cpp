@@ -381,6 +381,10 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         else
             return tr("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(pPlugin->statusErrors());
     }
+
+    return "???";
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
