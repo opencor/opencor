@@ -483,8 +483,9 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     if (itemsList.count()) {
                         // Retrieve the exposure file name, from the exposure
                         // file information, and keep track of it
+//---ISSUE930--- TO BE COMPLETED...
 
-                        QString exposureFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
+                        QString exposureFile = itemsList.first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
 
                         exposureUrl = mExposureUrls.value(url);
 
