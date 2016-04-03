@@ -59,7 +59,7 @@
     </message>
     <message>
         <source>No workspace or file exposure URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
-        <translation>Aucune URL pour un espace de travail ou pour un fichier d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+        <translation>Aucune URL pour un espace de travail ou pour un ou plusieurs fichiers d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No workspace URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
@@ -67,7 +67,7 @@
     </message>
     <message>
         <source>No file exposure URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
-        <translation>Aucune URL pour un fichier d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+        <translation>Aucune URL pour un ou plusieurs fichiers d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to email &lt;a href=&quot;mailto: help@physiomeproject.org&quot;&gt;help@physiomeproject.org&lt;/a&gt; and ask why this is the case.</source>

@@ -535,8 +535,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     if (   (pmrRequest == ExposuresList)
         || (   (pmrRequest == ExposureInformation)
-            && workspaceUrl.isEmpty()
-            && exposureFileUrls.isEmpty())
+            && (   workspaceUrl.isEmpty()
+                || exposureFileUrls.isEmpty()))
         || (    (   (pmrRequest == WorkspaceInformation)
                  || (pmrRequest == ExposureFileInformation))
             && !mNumberOfWorkspaceAndExposureFileUrlsLeft)) {
