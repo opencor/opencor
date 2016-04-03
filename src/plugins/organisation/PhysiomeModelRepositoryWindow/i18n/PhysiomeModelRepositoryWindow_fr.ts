@@ -58,8 +58,12 @@
         <translation>Information Exposition</translation>
     </message>
     <message>
+        <source>No workspace or file exposure URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
+        <translation>Aucune URL pour un espace de travail ou pour un fichier d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+    </message>
+    <message>
         <source>No workspace URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
-        <translation>Aucune URL d&apos;espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+        <translation>Aucune URL pour un espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No file exposure URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>

@@ -401,39 +401,37 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                         }
                     }
 
-                    // Make sure that we have a workspace URL and retrieve the
-                    // corresponding workspace information from PMR
+                    // Make sure that we have a workspace and at least one
+                    // exposure file URL
 
-                    if (workspaceUrl.isEmpty()) {
+                    if (workspaceUrl.isEmpty() || exposureFileUrls.isEmpty()) {
+                        QString message = workspaceUrl.isEmpty()?
+                                              exposureFileUrls.isEmpty()?
+                                                  tr("No workspace or file exposure URL could be found for <a href=\"%1\">%2</a>."):
+                                                  tr("No workspace URL could be found for <a href=\"%1\">%2</a>."):
+                                              tr("No file exposure URL could be found for <a href=\"%1\">%2</a>.");
+
                         QMessageBox::information( Core::mainWindow(), tr("Exposure Information"),
-                                                  tr("No workspace URL could be found for <a href=\"%1\">%2</a>.").arg(url, mExposureNames.value(url))
+                                                  message.arg(url, mExposureNames.value(url))
                                                  +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
                                                   QMessageBox::Ok);
 
                         break;
-                    } else {
-                        mExposureUrls.insert(workspaceUrl, url);
-
-                        sendPmrRequest(WorkspaceInformation, workspaceUrl,
-                                       Action(pNetworkReply->property(ActionProperty).toInt()));
                     }
 
-                    // Make sure that we have at least one exposure file URL and
-                    // retrieve the corresponding exposure file information from
+                    // Retrieve the workspace and exposure file information from
                     // PMR
 
-                    if (exposureFileUrls.isEmpty()) {
-                        QMessageBox::information( Core::mainWindow(), tr("Exposure Information"),
-                                                  tr("No file exposure URL could be found for <a href=\"%1\">%2</a>.").arg(url, mExposureNames.value(url))
-                                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
-                                                  QMessageBox::Ok);
-                    } else {
-                        foreach (const QString &exposureFileUrl, exposureFileUrls) {
-                            mExposureUrls.insert(exposureFileUrl, url);
+                    mExposureUrls.insert(workspaceUrl, url);
 
-                            sendPmrRequest(ExposureFileInformation, exposureFileUrl,
-                                           Action(pNetworkReply->property(ActionProperty).toInt()));
-                        }
+                    sendPmrRequest(WorkspaceInformation, workspaceUrl,
+                                   Action(pNetworkReply->property(ActionProperty).toInt()));
+
+                    foreach (const QString &exposureFileUrl, exposureFileUrls) {
+                        mExposureUrls.insert(exposureFileUrl, url);
+
+                        sendPmrRequest(ExposureFileInformation, exposureFileUrl,
+                                       Action(pNetworkReply->property(ActionProperty).toInt()));
                     }
 
                     break;
