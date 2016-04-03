@@ -311,7 +311,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     PmrRequest pmrRequest = pNetworkReply?PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt()):ExposuresList;
     bool internetConnectionAvailable = true;
     QString errorMessage = QString();
-    bool informationAvailable = true;
+    QString informationMessage = QString();
     PhysiomeModelRepositoryWindowExposures exposures = PhysiomeModelRepositoryWindowExposures();
     QString workspaceUrl = QString();
     QStringList exposureFileUrls = QStringList();
@@ -387,6 +387,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     // information about the exposure's workspace and exposure
                     // files
 
+                    exposureUrl = url;
+
                     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
                         QVariantMap linksMap = linksVariant.toMap();
                         QString relValue = linksMap["rel"].toString();
@@ -406,18 +408,11 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     // exposure file URL
 
                     if (workspaceUrl.isEmpty() || exposureFileUrls.isEmpty()) {
-                        QString informationMessage = workspaceUrl.isEmpty()?
-                                                         exposureFileUrls.isEmpty()?
-                                                             tr("No workspace or file exposure URL could be found for <a href=\"%1\">%2</a>."):
-                                                             tr("No workspace URL could be found for <a href=\"%1\">%2</a>."):
-                                                         tr("No file exposure URL could be found for <a href=\"%1\">%2</a>.");
-
-                        QMessageBox::information( Core::mainWindow(), tr("Exposure Information"),
-                                                  informationMessage.arg(url, mExposureNames.value(url))
-                                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
-                                                  QMessageBox::Ok);
-
-                        informationAvailable = false;
+                        informationMessage = workspaceUrl.isEmpty()?
+                                                 exposureFileUrls.isEmpty()?
+                                                     tr("No workspace or file exposure URL could be found for <a href=\"%1\">%2</a>."):
+                                                     tr("No workspace URL could be found for <a href=\"%1\">%2</a>."):
+                                                 tr("No file exposure URL could be found for <a href=\"%1\">%2</a>.");
 
                         break;
                     }
@@ -439,7 +434,6 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                     break;
                 case WorkspaceInformation: {
-                    QString informationMessage = QString();
                     QVariantList itemsList = collectionMap["items"].toList();
 
                     exposureUrl = mExposureUrls.value(url);
@@ -479,46 +473,55 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                         informationMessage = tr("No workspace information could be found for <a href=\"%1\">%2</a>.");
                     }
 
-                    if (!informationMessage.isEmpty()) {
-                        QMessageBox::information( Core::mainWindow(), tr("Exposure Information"),
-                                                  informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
-                                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
-                                                  QMessageBox::Ok);
-
-                        informationAvailable = false;
-                    }
-
                     break;
                 }
                 case ExposureFileInformation: {
-                    // Retrieve the exposure file name, from the exposure file
-                    // information, and keep track of it
-
-                    QString exposureFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
+                    QVariantList itemsList = collectionMap["items"].toList();
 
                     exposureUrl = mExposureUrls.value(url);
 
-                    mExposureFileNames.insertMulti(exposureUrl, exposureFile);
+                    if (itemsList.count()) {
+                        // Retrieve the exposure file name, from the exposure
+                        // file information, and keep track of it
 
-                    --mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                        QString exposureFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
 
-                    // Ask our widget to add our exposure files, should we have
-                    // no exposure file URL left to handle
+                        exposureUrl = mExposureUrls.value(url);
 
-                    if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
-                        QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
+                        mExposureFileNames.insertMulti(exposureUrl, exposureFile);
 
-                        std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
+                        --mNumberOfWorkspaceAndExposureFileUrlsLeft;
 
-                        mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFileNames);
+                        // Ask our widget to add our exposure files, should we
+                        // have no exposure file URL left to handle
 
-                        mExposureFileNames.remove(exposureUrl);
+                        if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
+                            QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
+
+                            std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
+
+                            mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFileNames);
+
+                            mExposureFileNames.remove(exposureUrl);
+                        }
+
+                        mExposureUrls.remove(url);
+                    } else {
+                        informationMessage = tr("No file exposure information could be found for <a href=\"%1\">%2</a>.");
                     }
-
-                    mExposureUrls.remove(url);
 
                     break;
                 }
+                }
+
+                // Check whether something wrong happened during the processing
+                // of our request
+
+                if (!informationMessage.isEmpty()) {
+                    QMessageBox::information( Core::mainWindow(), windowTitle(),
+                                              informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
+                                             +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
+                                              QMessageBox::Ok);
                 }
             } else {
                 errorMessage = jsonParseError.errorString();
@@ -574,11 +577,11 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     if (   (pmrRequest == ExposuresList)
         || (    (pmrRequest == ExposureInformation)
-            && !informationAvailable)
+            && !informationMessage.isEmpty())
         || (    (   (pmrRequest == WorkspaceInformation)
                  || (pmrRequest == ExposureFileInformation))
             && (   !mNumberOfWorkspaceAndExposureFileUrlsLeft
-                || !informationAvailable))) {
+                || !informationMessage.isEmpty()))) {
         busy(false);
     }
 

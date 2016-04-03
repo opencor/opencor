@@ -54,10 +54,6 @@
 <context>
     <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWindow</name>
     <message>
-        <source>Exposure Information</source>
-        <translation>Information Exposition</translation>
-    </message>
-    <message>
         <source>No workspace or file exposure URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
         <translation>Aucune URL pour un espace de travail ou pour un ou plusieurs fichiers d&apos;exposition n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
     </message>
@@ -96,6 +92,10 @@
     <message>
         <source>No workspace information could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
         <translation>Aucune information pour l&apos;espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <source>No file exposure information could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
