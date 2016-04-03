@@ -89,6 +89,14 @@
         <source>Clone Workspace</source>
         <translation>Cloner Espace De Travail</translation>
     </message>
+    <message>
+        <source>The workspace for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; is not a Git repository.</source>
+        <translation>L&apos;espace de travail pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; n&apos;est pas un répertoire Git.</translation>
+    </message>
+    <message>
+        <source>No workspace information could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
+        <translation>Aucune information pour l&apos;espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+    </message>
 </context>
 <context>
     <name>PhysiomeModelRepositoryWindowWidget</name>
