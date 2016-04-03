@@ -496,6 +496,10 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                                                    internetConnectionAvailable);
 
         break;
+    case ExposureInformation:
+        // No additional processing needed
+
+        break;
     case WorkspaceInformation:
     case ExposureFileInformation:
         // Clone the workspace or show the exposure files, if possible and
@@ -503,6 +507,10 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
         if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
             switch (Action(pNetworkReply->property(ActionProperty).toInt())) {
+            case None:
+                // No action, so do nothing
+
+                break;
             case CloneWorkspace:
                 doCloneWorkspace(mWorkspaces.value(exposureUrl));
 
@@ -511,18 +519,10 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                 mPhysiomeModelRepositoryWidget->showExposureFiles(exposureUrl);
 
                 break;
-            default:
-                // Not an action that we are interested, so do nothing
-
-                ;
             }
         }
 
         break;
-    default:
-        // Not a request that requires further processing, so do nothing
-
-        ;
     }
 
     // Show ourselves as not busy anymore, but only under certain conditions

@@ -72,7 +72,7 @@ private:
     };
 
     enum Action {
-        Default,
+        None,
         CloneWorkspace,
         ShowExposureFiles
     };
@@ -94,7 +94,7 @@ private:
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
                         const QString &pUrl = QString(),
-                        const Action pAction = Default);
+                        const Action pAction = None);
 
     void doCloneWorkspace(const QString &pWorkspace);
 
