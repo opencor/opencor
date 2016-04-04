@@ -420,7 +420,7 @@ void PhysiomeModelRepositoryWindowWidget::linkHovered()
 
         if (!linkList[0].compare("cloneWorkspace")) {
             linkToolTip = tr("Clone Workspace");
-        } else if (linkList.count() == 3) {
+        } else if (linkList.count() == 2) {
             if (page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(linkList[1]))).firstChild().isNull())
                 linkToolTip = tr("Show Exposure Files");
             else
