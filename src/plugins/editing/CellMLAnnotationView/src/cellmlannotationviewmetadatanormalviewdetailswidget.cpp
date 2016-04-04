@@ -445,6 +445,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     // Let people know that we want to look something up
 
     switch (pInformationType) {
+    case None:
+        emit noLookUpRequested();
+
+        break;
     case Qualifier:
         emit qualifierLookUpRequested(qualifier);
 
@@ -457,10 +461,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         emit idLookUpRequested(resource, id);
 
         break;
-    default:
-        // None
-
-        emit noLookUpRequested();
     }
 }
 

@@ -361,6 +361,8 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         return tr("the plugin is not wanted.");
     case Plugin::NotNeeded:
         return tr("the plugin is not needed.");
+    case Plugin::Loaded:
+        return tr("the plugin is loaded and fully functional.");
     case Plugin::NotLoaded:
         return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(pPlugin->statusErrors()));
     case Plugin::NotPlugin:
@@ -378,11 +380,11 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
             return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());
         else
             return tr("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(pPlugin->statusErrors());
-    default:
-        // Plugin::Loaded
-
-        return tr("the plugin is loaded and fully functional.");
     }
+
+    return "???";
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================

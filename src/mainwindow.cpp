@@ -493,15 +493,15 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 // doesn't have a name), so add the new menu to our menu bar
 
                 switch (menu.type()) {
+                case Gui::Menu::File:
+                    // Not a relevant type, so do nothing
+
+                    break;
                 case Gui::Menu::View:
                     mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                                 newMenu->menuAction());
 
                     break;
-                default:
-                    // Not a type in which we are interested, so do nothing
-
-                    ;
                 }
 
                 // Keep track of the new menu, but only if it has a name
@@ -556,8 +556,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                     mGui->menuFile->insertMenu(menu.action(), menu.menu());
 
                     break;
-                default:
-                    // Not a type in which we are interested, so do nothing
+                case Gui::Menu::View:
+                    // Not a relevant type, so do nothing
 
                     ;
                 }
@@ -572,6 +572,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
             // Insert the action to the right menu
 
             switch (menuAction.type()) {
+            case Gui::MenuAction::File:
+                // Not a relevant type, so do nothing
+
+                break;
             case Gui::MenuAction::FileNew:
                 // Check whether the File|New menu has been created and if not,
                 // then create it
@@ -604,10 +608,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 mFileNewMenu->addAction(menuAction.action());
 
                 break;
-            default:
-                // Not a type in which we are interested, so do nothing
+            case Gui::MenuAction::Tools:
+                // Not a relevant type, so do nothing
 
-                ;
+                break;
             }
         }
     }

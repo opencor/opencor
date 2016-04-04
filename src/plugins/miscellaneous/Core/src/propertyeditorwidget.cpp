@@ -299,6 +299,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
+    case Property::Section:
+        // A section, so no editor
+
+        return 0;
     case Property::String:
         editor = new TextEditorWidget(pParent);
 
@@ -346,10 +350,6 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         break;
     }
-    default:
-        // Property::Section
-
-        return 0;
     }
 
     // Propagate a few signals

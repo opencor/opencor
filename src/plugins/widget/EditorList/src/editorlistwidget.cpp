@@ -217,8 +217,18 @@ void EditorListWidget::copyToClipboard()
             itemType = tr("Warning");
 
             break;
-        default:
+        case EditorListItem::Hint:
             itemType = tr("Hint");
+
+            break;
+        case EditorListItem::Information:
+            itemType = tr("Information");
+
+            break;
+        case EditorListItem::Fatal:
+            itemType = tr("Fatal");
+
+            break;
         }
 
         list << "["+itemType+"] "+item->text();

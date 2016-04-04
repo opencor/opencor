@@ -258,7 +258,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         break;
     }
     default:
-        // Either no action or not a action we know how to handle
+        // Either no action or not an action we know how to handle
 
         ;
     }
@@ -1070,6 +1070,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     // Carry out the action
 
     switch (mAction) {
+    case None:
+        // No action, so do nothing
+
+        ;
     case Pan: {
         // Determine the X/Y shifts for our panning
 
@@ -1131,10 +1135,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         mOverlayWidget->setPoint(pEvent->pos());
 
         break;
-    default:
-        // None
-
-        ;
     }
 
     // The mouse has moved, so we definitely won't need to show our context menu
@@ -1250,7 +1250,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     }
     default:
         // An action that doesn't require anything specific to be done, except
-        // to reset our action
+        // being reset
 
         resetAction();
     }

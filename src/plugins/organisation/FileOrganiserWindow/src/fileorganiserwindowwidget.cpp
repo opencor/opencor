@@ -805,6 +805,16 @@ void FileOrganiserWindowWidget::dropItems(QStandardItem *pDropItem,
     // Drop pItems based on pDropPosition's value
 
     switch (pDropPosition) {
+    case QAbstractItemView::OnItem:
+    case QAbstractItemView::OnViewport:
+        pNewParentItem->appendRow(pItems);
+
+        // Expand pNewParentItem, so the user knows that the item has been moved
+        // to it (assuming that pNewParentItem was collapsed)
+
+        setExpanded(pNewParentItem->index(), true);
+
+        break;
     case QAbstractItemView::AboveItem:
         pNewParentItem->insertRow(pDropItem->row(), pItems);
 
@@ -813,13 +823,6 @@ void FileOrganiserWindowWidget::dropItems(QStandardItem *pDropItem,
         pNewParentItem->insertRow(pDropItem->row()+1, pItems);
 
         break;
-    default:
-        pNewParentItem->appendRow(pItems);
-
-        // Expand pNewParentItem, so the user knows that the item has been moved
-        // to it (assuming that pNewParentItem was collapsed)
-
-        setExpanded(pNewParentItem->index(), true);
     }
 }
 

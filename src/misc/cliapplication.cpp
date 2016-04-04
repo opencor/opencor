@@ -294,6 +294,11 @@ void CliApplication::status() const
             pluginInfo += "the plugin is not needed.";
 
             break;
+        case Plugin::Loaded:
+
+            pluginInfo += "the plugin is loaded and fully functional.";
+
+            break;
         case Plugin::NotLoaded:
             pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(plugin->statusErrors()));
 
@@ -325,10 +330,6 @@ void CliApplication::status() const
                 pluginInfo += QString("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(plugin->statusErrors());
 
             break;
-        default:
-            // Plugin::Loaded
-
-            pluginInfo += "the plugin is loaded and fully functional.";
         }
 
         // Add the plugin information to our list
@@ -446,6 +447,8 @@ bool CliApplication::run(int *pRes)
 
     if (!*pRes) {
         switch (option) {
+        case NoOption:
+            return false;
         case AboutOption:
             about();
 
@@ -494,11 +497,6 @@ bool CliApplication::run(int *pRes)
             version();
 
             break;
-        default:
-            // The user didn't provide any option that requires running OpenCOR
-            // as a CLI application
-
-            return false;
         }
     } else {
         help();

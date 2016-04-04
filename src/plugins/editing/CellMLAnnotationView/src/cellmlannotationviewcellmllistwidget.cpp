@@ -206,7 +206,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         break;
     }
     default:
-        // Another type of element which has a name
+        // Another type of element that has a name
 
         setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::NamedCellMLElement *>(pElement)->name()));
     }
@@ -293,7 +293,7 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 
         break;
     default:
-        // Type that doesn't require an icon
+        // A type that doesn't require an icon
 
         ;
     }
@@ -470,7 +470,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             break;
         default:
-            // Not a type we can retranslate, so do nothing...
+            // Not a type that we can retranslate, so do nothing...
 
             ;
         }
@@ -488,7 +488,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             break;
         default:
-            // Not a sub-type we can retranslate, so do nothing...
+            // Not a sub-type that we can retranslate, so do nothing...
 
             ;
         }

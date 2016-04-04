@@ -1283,7 +1283,8 @@ bool CentralWidget::canCloseFile(const int &pIndex)
             return saveFile(pIndex);
         case QMessageBox::No:
             return true;
-        default:   // QMessageBox::Cancel
+        case QMessageBox::Cancel:
+        default:
             return false;
         }
     } else {
