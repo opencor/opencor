@@ -418,9 +418,9 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     if (workspaceUrl.isEmpty() || exposureFileUrls.isEmpty()) {
                         informationMessage = workspaceUrl.isEmpty()?
                                                  exposureFileUrls.isEmpty()?
-                                                     tr("No workspace or file exposure URL could be found for <a href=\"%1\">%2</a>."):
+                                                     tr("No workspace or exposure file URL could be found for <a href=\"%1\">%2</a>."):
                                                      tr("No workspace URL could be found for <a href=\"%1\">%2</a>."):
-                                                 tr("No file exposure URL could be found for <a href=\"%1\">%2</a>.");
+                                                 tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.");
 
                         break;
                     }
@@ -486,39 +486,52 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     break;
                 }
                 case ExposureFileInformation: {
+                    bool hasExposureFileInformation = true;
                     QVariantList itemsList = collectionMap["items"].toList();
 
                     exposureUrl = mExposureUrls.value(url);
 
                     if (itemsList.count()) {
-                        // Retrieve the exposure file name, from the exposure
-                        // file information, and keep track of it
+                        QVariantList linksList = itemsList.first().toMap()["links"].toList();
 
-                        QString exposureFile = itemsList.first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
+                        if (linksList.count()) {
+                            // Retrieve the exposure file name, from the
+                            // exposure file information, and keep track of it
 
-                        exposureUrl = mExposureUrls.value(url);
+                            QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
 
-                        mExposureFileNames.insertMulti(exposureUrl, exposureFile);
+                            if (!exposureFile.isEmpty()) {
+                                exposureUrl = mExposureUrls.value(url);
 
-                        --mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                                mExposureFileNames.insertMulti(exposureUrl, exposureFile);
 
-                        // Ask our widget to add our exposure files, should we
-                        // have no exposure file URL left to handle
+                                --mNumberOfWorkspaceAndExposureFileUrlsLeft;
 
-                        if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
-                            QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
+                                // Ask our widget to add our exposure files,
+                                // should we have no exposure file URL left to
+                                // handle
 
-                            std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
+                                if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
+                                    QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
 
-                            mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFileNames);
+                                    std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
 
-                            mExposureFileNames.remove(exposureUrl);
+                                    mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFileNames);
+
+                                    mExposureFileNames.remove(exposureUrl);
+                                }
+
+                                mExposureUrls.remove(url);
+                            }
+                        } else {
+                            hasExposureFileInformation = false;
                         }
-
-                        mExposureUrls.remove(url);
                     } else {
-                        informationMessage = tr("No file exposure information could be found for <a href=\"%1\">%2</a>.");
+                        hasExposureFileInformation = false;
                     }
+
+                    if (!hasExposureFileInformation)
+                        informationMessage = tr("No exposure file information could be found for <a href=\"%1\">%2</a>.");
 
                     break;
                 }
