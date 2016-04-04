@@ -233,10 +233,10 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
                      "                        </ul>\n"
                      "                    </td>\n"
                      "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"|"+exposureName+"\"><img class=\"button clone\"/></a>\n"
+                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"/></a>\n"
                      "                    </td>\n"
                      "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"|"+exposureName+"\"><img id=\"exposure_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposure_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
                      "                    </td>\n"
                      "                </tr>\n"
                      "            </tbody>\n"
@@ -370,7 +370,7 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
         QStringList linkList = link.split("|");
 
         if (!linkList[0].compare("cloneWorkspace")) {
-            emit cloneWorkspace(linkList[1], linkList[2]);
+            emit cloneWorkspaceRequested(linkList[1]);
         } else {
             // Show/hide exposure files, if we have them, or let people know
             // that we want to show them
@@ -381,7 +381,7 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
             QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
 
             if (ulElement.firstChild().isNull()) {
-                emit showExposureFiles(linkList[1], linkList[2]);
+                emit showExposureFilesRequested(linkList[1]);
             } else {
                 showExposureFiles(linkList[1],
                                   documentElement.findFirst(QString("img[id=exposure_%1]").arg(id)).hasClass("button"));
@@ -420,7 +420,7 @@ void PhysiomeModelRepositoryWindowWidget::linkHovered()
 
         if (!linkList[0].compare("cloneWorkspace")) {
             linkToolTip = tr("Clone Workspace");
-        } else if (linkList.count() == 3) {
+        } else if (linkList.count() == 2) {
             if (page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(linkList[1]))).firstChild().isNull())
                 linkToolTip = tr("Show Exposure Files");
             else

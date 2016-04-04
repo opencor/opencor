@@ -64,32 +64,39 @@ public:
     virtual void retranslateUi();
 
 private:
+    enum PmrRequest {
+        ExposuresList,
+        ExposureInformation,
+        WorkspaceInformation,
+        ExposureFileInformation
+    };
+
+    enum Action {
+        None,
+        CloneWorkspace,
+        ShowExposureFiles
+    };
+
     Ui::PhysiomeModelRepositoryWindowWindow *mGui;
 
     PhysiomeModelRepositoryWindowWidget *mPhysiomeModelRepositoryWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
-    int mNumberOfExposureFilesLeft;
+    int mNumberOfWorkspaceAndExposureFileUrlsLeft;
 
     QMap<QString, QString> mWorkspaces;
-    QMap<QString, QString> mExposureFiles;
-
-    enum PmrRequest {
-        ExposuresList,
-        BookmarkUrlsForCloning,
-        BookmarkUrlsForExposureFiles,
-        ExposureFileForCloning,
-        ExposureFileForExposureFiles
-    };
+    QMap<QString, QString> mExposureUrls;
+    QMap<QString, QString> mExposureNames;
+    QMap<QString, QString> mExposureFileNames;
 
     void busy(const bool &pBusy);
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
                         const QString &pUrl = QString(),
-                        const QString &pExtra = QString());
+                        const Action pAction = None);
 
-    void cloneWorkspace(const QString &pWorkspace);
+    void doCloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &pText);
@@ -101,8 +108,8 @@ private Q_SLOTS:
 
     void retrieveExposuresList(const bool &pVisible);
 
-    void cloneWorkspace(const QString &pUrl, const QString &pDescription);
-    void showExposureFiles(const QString &pUrl, const QString &pDescription);
+    void cloneWorkspace(const QString &pUrl);
+    void showExposureFiles(const QString &pUrl);
 };
 
 //==============================================================================

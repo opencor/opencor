@@ -295,7 +295,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     // Create and return an editor for our item, based on its type
 
-    QWidget *editor;
+    QWidget *editor = 0;
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
