@@ -763,7 +763,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     switch (pInformationType) {
     case None:
-
         emit noLookUpRequested();
 
         break;
