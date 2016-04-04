@@ -373,9 +373,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                             QString exposureUrl = linksMap["href"].toString().trimmed();
                             QString exposureName = linksMap["prompt"].toString().simplified();
 
-                            mExposureNames.insert(exposureUrl, exposureName);
+                            if (   !exposureUrl.isEmpty()
+                                && !exposureName.isEmpty()) {
+                                mExposureNames.insert(exposureUrl, exposureName);
 
-                            exposures << PhysiomeModelRepositoryWindowExposure(exposureUrl, exposureName);
+                                exposures << PhysiomeModelRepositoryWindowExposure(exposureUrl, exposureName);
+                            }
                         }
                     }
 
@@ -396,11 +399,16 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                         if (!relValue.compare("via")) {
                             workspaceUrl = linksMap["href"].toString().trimmed();
 
-                            ++mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                            if (!workspaceUrl.isEmpty())
+                                ++mNumberOfWorkspaceAndExposureFileUrlsLeft;
                         } else if (!relValue.compare("bookmark")) {
-                            exposureFileUrls << linksMap["href"].toString().trimmed();
+                            QString exposureFileUrl = linksMap["href"].toString().trimmed();
 
-                            ++mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                            if (!exposureFileUrl.isEmpty()) {
+                                exposureFileUrls << exposureFileUrl;
+
+                                ++mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                            }
                         }
                     }
 
@@ -461,11 +469,13 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                             QString workspace = itemsList.first().toMap()["href"].toString().trimmed();
 
-                            mWorkspaces.insert(exposureUrl, workspace);
+                            if (!workspace.isEmpty()) {
+                                mWorkspaces.insert(exposureUrl, workspace);
 
-                            --mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                                --mNumberOfWorkspaceAndExposureFileUrlsLeft;
 
-                            mExposureUrls.remove(url);
+                                mExposureUrls.remove(url);
+                            }
                         } else {
                             informationMessage = tr("The workspace for <a href=\"%1\">%2</a> is not a Git repository.");
                         }
@@ -483,7 +493,6 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     if (itemsList.count()) {
                         // Retrieve the exposure file name, from the exposure
                         // file information, and keep track of it
-//---ISSUE930--- TO BE COMPLETED...
 
                         QString exposureFile = itemsList.first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
 
