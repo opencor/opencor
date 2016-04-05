@@ -658,8 +658,8 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl)
 
         busy(false);
     } else {
-        // To retrieve the workspace associated with the given exposure, we
-        // first need to retrieve some information about the exposure itself
+        // To clone the workspace associated with the given exposure, we first
+        // need to retrieve some information about the exposure itself
 
         mNumberOfWorkspaceAndExposureFileUrlsLeft = 0;
 
