@@ -159,15 +159,17 @@ void PhysiomeModelRepositoryWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
-    bool busyWidgetVisible = isBusyWidgetVisible();
+    static int counter = 0;
 
-    if (pBusy && !busyWidgetVisible) {
+    counter += pBusy?1:-1;
+
+    if (pBusy && (counter == 1)) {
         showSemiTransparentBusyWidget(mPhysiomeModelRepositoryWidget);
         // Note: the semi-transparency is to 'show' that our widget cannot be
         //       used since disabling it (in a Qt way) doesn't grey it out...
 
         mGui->dockWidgetContents->setEnabled(false);
-    } else if (!pBusy && busyWidgetVisible){
+    } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
         // to mGui->filterValue, but only if the current window already has the
         // focus
@@ -610,17 +612,9 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         break;
     }
 
-    // Show ourselves as not busy anymore, but only under certain conditions
+    // Show ourselves as not busy anymore
 
-    if (   (pmrRequest == ExposuresList)
-        || (    (pmrRequest == ExposureInformation)
-            && !informationMessage.isEmpty())
-        || (    (   (pmrRequest == WorkspaceInformation)
-                 || (pmrRequest == ExposureFileInformation))
-            && (   !mNumberOfWorkspaceAndExposureFileUrlsLeft
-                || !informationMessage.isEmpty()))) {
-        busy(false);
-    }
+    busy(false);
 
     // Delete (later) the network reply
 
