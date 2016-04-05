@@ -59,7 +59,7 @@ namespace PhysiomeModelRepositoryWindow {
 PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PhysiomeModelRepositoryWindowWindow),
-    mNumberOfWorkspaceAndExposureFileUrlsLeft(0),
+    mNumberOfExposureFileUrlsLeft(0),
     mWorkspaces(QMap<QString, QString>()),
     mExposureUrls(QMap<QString, QString>()),
     mExposureNames(QMap<QString, QString>()),
@@ -425,16 +425,13 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                         if (!relValue.compare("via")) {
                             workspaceUrl = linksMap["href"].toString().trimmed();
-
-                            if (!workspaceUrl.isEmpty())
-                                ++mNumberOfWorkspaceAndExposureFileUrlsLeft;
                         } else if (!relValue.compare("bookmark")) {
                             QString exposureFileUrl = linksMap["href"].toString().trimmed();
 
                             if (!exposureFileUrl.isEmpty()) {
                                 exposureFileUrls << exposureFileUrl;
 
-                                ++mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                                ++mNumberOfExposureFileUrlsLeft;
                             }
                         }
                     }
@@ -491,11 +488,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                             QString workspace = itemsList.first().toMap()["href"].toString().trimmed();
 
-                            if (!workspace.isEmpty()) {
+                            if (!workspace.isEmpty())
                                 mWorkspaces.insert(exposureUrl, workspace);
-
-                                --mNumberOfWorkspaceAndExposureFileUrlsLeft;
-                            }
                         } else {
                             informationMessage = tr("The workspace for <a href=\"%1\">%2</a> is not a Git repository.");
                         }
@@ -525,13 +519,13 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                                 mExposureFileNames.insertMulti(exposureUrl, exposureFile);
 
-                                --mNumberOfWorkspaceAndExposureFileUrlsLeft;
+                                --mNumberOfExposureFileUrlsLeft;
 
                                 // Ask our widget to add our exposure files,
                                 // should we have no exposure file URL left to
                                 // handle
 
-                                if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
+                                if (!mNumberOfExposureFileUrlsLeft) {
                                     QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
 
                                     std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
@@ -588,25 +582,20 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
         break;
     case WorkspaceInformation:
+        // Clone the workspace, if possible and requested
+
+        if (   mWorkspaces.contains(exposureUrl)
+            && (Action(pNetworkReply->property(ActionProperty).toInt()) == CloneWorkspace)) {
+            doCloneWorkspace(mWorkspaces.value(exposureUrl));
+        }
+
+        break;
     case ExposureFileInformation:
-        // Clone the workspace or show the exposure files, if possible and
-        // requested
+        // Show the exposure files, if possible and requested
 
-        if (!mNumberOfWorkspaceAndExposureFileUrlsLeft) {
-            switch (Action(pNetworkReply->property(ActionProperty).toInt())) {
-            case None:
-                // No action, so do nothing
-
-                break;
-            case CloneWorkspace:
-                doCloneWorkspace(mWorkspaces.value(exposureUrl));
-
-                break;
-            case ShowExposureFiles:
-                doShowExposureFiles(exposureUrl);
-
-                break;
-            }
+        if (   !mNumberOfExposureFileUrlsLeft
+            &&  (Action(pNetworkReply->property(ActionProperty).toInt()) == ShowExposureFiles)) {
+            doShowExposureFiles(exposureUrl);
         }
 
         break;
@@ -669,7 +658,7 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl)
         // To clone the workspace associated with the given exposure, we first
         // need to retrieve some information about the exposure itself
 
-        mNumberOfWorkspaceAndExposureFileUrlsLeft = 0;
+        mNumberOfExposureFileUrlsLeft = 0;
 
         sendPmrRequest(ExposureInformation, pUrl, CloneWorkspace);
     }
@@ -690,7 +679,7 @@ void PhysiomeModelRepositoryWindowWindow::showExposureFiles(const QString &pUrl)
         // To show the exposure files associated with the given exposure, we
         // first need to retrieve some information about the exposure itself
 
-        mNumberOfWorkspaceAndExposureFileUrlsLeft = 0;
+        mNumberOfExposureFileUrlsLeft = 0;
 
         sendPmrRequest(ExposureInformation, pUrl, ShowExposureFiles);
     }

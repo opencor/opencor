@@ -83,7 +83,7 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
-    int mNumberOfWorkspaceAndExposureFileUrlsLeft;
+    int mNumberOfExposureFileUrlsLeft;
 
     QMap<QString, QString> mWorkspaces;
     QMap<QString, QString> mExposureUrls;
