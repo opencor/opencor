@@ -49,8 +49,16 @@ public:
 
     bool isBusyWidgetVisible() const;
 
-    void showBusyWidget(QWidget *pParent, const bool &pGlobal = false,
-                        const double &pProgress = -1.0);
+    void showBusyWidget(QWidget *pParent);
+    void showProgressBusyWidget(QWidget *pParent);
+    void showSemiTransparentBusyWidget(QWidget *pParent);
+    void showSemiTransparentProgressBusyWidget(QWidget *pParent);
+
+    void showGlobalBusyWidget(QWidget *pParent);
+    void showGlobalProgressBusyWidget(QWidget *pParent);
+    void showGlobalSemiTransparentBusyWidget(QWidget *pParent);
+    void showGlobalSemiTransparentProgressBusyWidget(QWidget *pParent);
+
     void hideBusyWidget();
 
     void resizeBusyWidget();
@@ -59,6 +67,10 @@ public:
 
 private:
     BusyWidget *mBusyWidget;
+
+    void doShowBusyWidget(QWidget *pParent, const bool &pGlobal = false,
+                          const double &pProgress = -1.0,
+                          const bool &pSemiTransparent = false);
 };
 
 //==============================================================================

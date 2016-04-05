@@ -2315,7 +2315,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     // initialise our simulation, if we still have a valid simulation
     // environment
 
-    mPlugin->viewWidget()->showBusyWidget(this, true);
+    mPlugin->viewWidget()->showGlobalBusyWidget(this);
 
     bool validSimulationEnvironment = doFurtherInitialize();
 
@@ -2360,7 +2360,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 {
     // Export our simulation data results
 
-    mPlugin->viewWidget()->showBusyWidget(this, true);
+    mPlugin->viewWidget()->showGlobalBusyWidget(this);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();

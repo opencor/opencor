@@ -48,7 +48,7 @@ class CORE_EXPORT BusyWidget : public QWidget
 
 public:
     explicit BusyWidget(QWidget *pParent, const bool &pGlobal,
-                        const double &pProgress);
+                        const double &pProgress, const bool &pSemiTransparent);
 
     QWidget * effectiveParentWidget() const;
 
@@ -88,6 +88,9 @@ public:
     double progress() const;
     void setProgress(const double &pProgress);
 
+    bool semiTransparent() const;
+    void setSemiTransparent(const bool &pSemiTransparent);
+
     void resize();
 
 protected:
@@ -119,6 +122,8 @@ private:
     int mRadius;
 
     double mProgress;
+
+    bool mSemiTransparent;
 
 private Q_SLOTS:
     void rotate();
