@@ -306,7 +306,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Reset the tab order from our parent's CellML list's tree view widget
     // Note: ideally, we would take advantage of Qt's signal/slot approach with
     //       the signal being emitted here and the slot being implemented in
-    //       mParent, but this wouldn't work here since updateGui() gets called
+    //       pParent, but this wouldn't work here since updateGui() gets called
     //       as part of the creation of this metadata details widget...
 
     setTabOrder(qobject_cast<QWidget *>(mViewEditingWidget->cellmlList()->treeViewWidget()),
