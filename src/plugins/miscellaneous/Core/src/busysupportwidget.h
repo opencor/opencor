@@ -53,7 +53,7 @@ public:
                         const double &pProgress = -1.0);
     void hideBusyWidget();
 
-    void centerBusyWidget();
+    void resizeBusyWidget();
 
     void setBusyWidgetProgress(const double &pProgress);
 

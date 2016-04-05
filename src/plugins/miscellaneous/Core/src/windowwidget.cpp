@@ -43,9 +43,9 @@ void WindowWidget::resizeEvent(QResizeEvent *pEvent)
 
     QDockWidget::resizeEvent(pEvent);
 
-    // (Re)center our busy widget
+    // (Re)size our busy widget
 
-    centerBusyWidget();
+    resizeBusyWidget();
 }
 
 //==============================================================================

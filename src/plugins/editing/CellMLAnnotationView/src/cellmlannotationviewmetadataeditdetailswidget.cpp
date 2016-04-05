@@ -1149,9 +1149,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
 {
-    // Recenter our busy widget
+    // Resize our busy widget
 
-    mViewWidget->centerBusyWidget();
+    mViewWidget->resizeBusyWidget();
 }
 
 //==============================================================================

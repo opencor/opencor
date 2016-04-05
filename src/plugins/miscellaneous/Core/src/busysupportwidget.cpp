@@ -59,11 +59,11 @@ void BusySupportWidget::showBusyWidget(QWidget *pParent, const bool &pGlobal,
 
     hideBusyWidget();
 
-    // Create and show our new busy widget centered
+    // Create and show our new busy widget resized
 
     mBusyWidget = new BusyWidget(pParent, pGlobal, pProgress);
 
-    centerBusyWidget();
+    resizeBusyWidget();
 
     // Disable our parent widget (or OpenCOR itself in case our parent is the
     // central widget), if any
@@ -115,16 +115,16 @@ void BusySupportWidget::hideBusyWidget()
 
 //==============================================================================
 
-void BusySupportWidget::centerBusyWidget()
+void BusySupportWidget::resizeBusyWidget()
 {
     // Make sure that we have a busy widget
 
     if (!mBusyWidget)
         return;
 
-    // Center our busy widget
+    // Resize our busy widget
 
-    mBusyWidget->center();
+    mBusyWidget->resize();
 }
 
 //==============================================================================

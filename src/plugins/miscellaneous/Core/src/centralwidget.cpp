@@ -1570,9 +1570,9 @@ void CentralWidget::resizeEvent(QResizeEvent *pEvent)
 
     Widget::resizeEvent(pEvent);
 
-    // (Re)center our busy widget
+    // (Re)size our busy widget
 
-    centerBusyWidget();
+    resizeBusyWidget();
 }
 
 //==============================================================================

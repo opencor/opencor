@@ -88,12 +88,14 @@ public:
     double progress() const;
     void setProgress(const double &pProgress);
 
-    void center();
+    void resize();
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
+    QWidget *mParent;
+
     QTimer *mTimer;
 
     bool mGlobal;

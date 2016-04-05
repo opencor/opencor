@@ -55,6 +55,7 @@ static const int Margin = 5;
 BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
                        const double &pProgress) :
     QWidget(pParent),
+    mParent(pParent),
     mGlobal(pGlobal),
     mFps(0),
     mForegroundColor(Qt::white),
@@ -70,12 +71,6 @@ BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
     mRadius(15),
     mProgress(pProgress)
 {
-    // Set our default size
-
-    int size = 2*(mRadius+mLength+Margin);
-
-    resize(size, size);
-
     // Create our timer and a connection to handle its timing out
 
     mTimer = new QTimer(this);
@@ -399,15 +394,17 @@ void BusyWidget::setProgress(const double &pProgress)
 
 //==============================================================================
 
-void BusyWidget::center()
+void BusyWidget::resize()
 {
-    // Center ourselves against our parent or our desktop
+    // Resize ourselves against our parent/desktop
 
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    int parentWidth = parentWidget()?parentWidget()->width():desktopGeometry.width();
-    int parentHeight = parentWidget()?parentWidget()->height():desktopGeometry.height();
+    if (mParent) {
+        QWidget::resize(mParent->width(), mParent->height());
+    } else {
+        QRect desktopGeometry = qApp->desktop()->availableGeometry();
 
-    move(0.5*(parentWidth-width()), 0.5*(parentHeight-height()));
+        QWidget::resize(desktopGeometry.width(), desktopGeometry.height());
+    }
 }
 
 //==============================================================================
@@ -434,25 +431,28 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.setRenderHint(QPainter::Antialiasing, true);
 
+
+
+
+
     // Draw a background for ourselves
 
+    painter.translate(0.5*width(), 0.5*height());
+
     QPainterPath painterPath;
+    int backgroundSize = 2*(mRadius+mLength+Margin);
+    double backgroundCornerRadius = mBackgroundRoundness*(backgroundSize >> 1);
 
-    double backgroundCornerRadius = mBackgroundRoundness*(width() >> 1);
+    painterPath.addRoundedRect(QRectF(-0.5*backgroundSize, -0.5*backgroundSize,
+                                      backgroundSize, backgroundSize),
+                               backgroundCornerRadius, backgroundCornerRadius);
 
-    painterPath.addRoundedRect(rect(), backgroundCornerRadius, backgroundCornerRadius);
-
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(mBackgroundColor);
-
-    painter.drawPath(painterPath);
+    painter.fillPath(painterPath, mBackgroundColor);
 
     // Draw ourselves
 
     if (mProgress == -1.0) {
         double lineCornerRadius = mRoundness*(mThickness >> 1);
-
-        painter.translate(0.5*width(), 0.5*height());
 
         for (int i = 0; i < mCount; ++i) {
             painter.save();
@@ -479,11 +479,10 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
     } else {
         int size = 2*(mRadius+mLength);
 
-        painter.translate(Margin, Margin);
-
         painter.setBrush(mForegroundColor);
 
-        painter.drawPie(0.0, 0.0, size, size, 90*16, -mProgress*360*16);
+        painter.drawPie(QRectF(-0.5*size, -0.5*size, size, size),
+                        90*16, -mProgress*360*16);
     }
 
     // Accept the event
