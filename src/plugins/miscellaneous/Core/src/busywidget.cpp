@@ -431,10 +431,6 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-
-
-
-
     // Draw a background for ourselves
 
     painter.translate(0.5*width(), 0.5*height());
