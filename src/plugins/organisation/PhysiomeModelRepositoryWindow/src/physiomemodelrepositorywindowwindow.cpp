@@ -122,6 +122,11 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
 
     connect(mPhysiomeModelRepositoryWidget, SIGNAL(exposureFileOpenRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
+
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -137,9 +142,11 @@ PhysiomeModelRepositoryWindowWindow::~PhysiomeModelRepositoryWindowWindow()
 
 void PhysiomeModelRepositoryWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate the whole window and our information note message
 
     mGui->retranslateUi(this);
+
+    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 
     // Retranslate our PMR widget
 
@@ -263,6 +270,22 @@ void PhysiomeModelRepositoryWindowWindow::doCloneWorkspace(const QString &pWorks
         }
 
         git_libgit2_shutdown();
+    }
+}
+
+//==============================================================================
+
+void PhysiomeModelRepositoryWindowWindow::doShowExposureFiles(const QString &pExposureUrl)
+{
+    // Show the exposure files, but only if there are some
+
+    if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
+        mPhysiomeModelRepositoryWidget->showExposureFiles(pExposureUrl);
+    } else {
+        QMessageBox::information( Core::mainWindow(), windowTitle(),
+                                  tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
+                                 +"<br/><br/>"+mInformationNoteMessage,
+                                  QMessageBox::Ok);
     }
 }
 
@@ -412,15 +435,10 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                         }
                     }
 
-                    // Make sure that we have a workspace and at least one
-                    // exposure file URL
+                    // Make sure that we at least have a workspace
 
-                    if (workspaceUrl.isEmpty() || exposureFileUrls.isEmpty()) {
-                        informationMessage = workspaceUrl.isEmpty()?
-                                                 exposureFileUrls.isEmpty()?
-                                                     tr("No workspace or exposure file URL could be found for <a href=\"%1\">%2</a>."):
-                                                     tr("No workspace URL could be found for <a href=\"%1\">%2</a>."):
-                                                 tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.");
+                    if (workspaceUrl.isEmpty()) {
+                        informationMessage = tr("No workspace URL could be found for <a href=\"%1\">%2</a>.");
 
                         break;
                     }
@@ -473,8 +491,6 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                                 mWorkspaces.insert(exposureUrl, workspace);
 
                                 --mNumberOfWorkspaceAndExposureFileUrlsLeft;
-
-                                mExposureUrls.remove(url);
                             }
                         } else {
                             informationMessage = tr("The workspace for <a href=\"%1\">%2</a> is not a Git repository.");
@@ -517,11 +533,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                                     std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
 
                                     mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFileNames);
-
-                                    mExposureFileNames.remove(exposureUrl);
                                 }
-
-                                mExposureUrls.remove(url);
                             }
                         } else {
                             hasExposureFileInformation = false;
@@ -543,7 +555,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                 if (!informationMessage.isEmpty()) {
                     QMessageBox::information( Core::mainWindow(), windowTitle(),
                                               informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
-                                             +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
+                                             +"<br/><br/>"+mInformationNoteMessage,
                                               QMessageBox::Ok);
                 }
             } else {
@@ -587,7 +599,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                 break;
             case ShowExposureFiles:
-                mPhysiomeModelRepositoryWidget->showExposureFiles(exposureUrl);
+                doShowExposureFiles(exposureUrl);
 
                 break;
             }
@@ -671,12 +683,21 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl)
 
 void PhysiomeModelRepositoryWindowWindow::showExposureFiles(const QString &pUrl)
 {
-    // To show the exposure files, we first need to retrieve some information
-    // about the exposure
+    // Check whether we already know about the exposure URL for the given
+    // exposure
 
-    mNumberOfWorkspaceAndExposureFileUrlsLeft = 0;
+    QString exposureUrl = mExposureUrls.value(mWorkspaces.value(pUrl));
 
-    sendPmrRequest(ExposureInformation, pUrl, ShowExposureFiles);
+    if (!exposureUrl.isEmpty()) {
+        doShowExposureFiles(exposureUrl);
+    } else {
+        // To show the exposure files associated with the given exposure, we
+        // first need to retrieve some information about the exposure itself
+
+        mNumberOfWorkspaceAndExposureFileUrlsLeft = 0;
+
+        sendPmrRequest(ExposureInformation, pUrl, ShowExposureFiles);
+    }
 }
 
 //==============================================================================

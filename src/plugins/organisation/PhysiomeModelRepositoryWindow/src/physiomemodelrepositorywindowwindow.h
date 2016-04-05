@@ -90,6 +90,8 @@ private:
     QMap<QString, QString> mExposureNames;
     QMap<QString, QString> mExposureFileNames;
 
+    QString mInformationNoteMessage;
+
     void busy(const bool &pBusy);
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
@@ -97,6 +99,7 @@ private:
                         const Action pAction = None);
 
     void doCloneWorkspace(const QString &pWorkspace);
+    void doShowExposureFiles(const QString &pExposureUrl);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &pText);
