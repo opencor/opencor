@@ -310,10 +310,10 @@ void PhysiomeModelRepositoryWindowWindow::on_refreshButton_clicked()
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
 
-    mWorkspaces = QMap<QString, QString>();
-    mExposureUrls = QMap<QString, QString>();
-    mExposureNames = QMap<QString, QString>();
-    mExposureFileNames = QMap<QString, QString>();
+    mWorkspaces.clear();
+    mExposureUrls.clear();
+    mExposureNames.clear();
+    mExposureFileNames.clear();
 
     sendPmrRequest(ExposuresList);
 }
