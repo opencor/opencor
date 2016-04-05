@@ -120,7 +120,7 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
     connect(mPhysiomeModelRepositoryWidget, SIGNAL(showExposureFilesRequested(const QString &)),
             this, SLOT(showExposureFiles(const QString &)));
 
-    connect(mPhysiomeModelRepositoryWidget, SIGNAL(exposureFileOpenRequested(const QString &)),
+    connect(mPhysiomeModelRepositoryWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
 
     // Some further initialisations that are done as part of retranslating the

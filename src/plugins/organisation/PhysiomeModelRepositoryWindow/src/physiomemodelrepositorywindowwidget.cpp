@@ -392,7 +392,7 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
         // file to be opened in OpenCOR
 
         if (element.parent().hasClass("exposureFile"))
-            emit exposureFileOpenRequested(link);
+            emit openExposureFileRequested(link);
         else
             QDesktopServices::openUrl(link);
     }
