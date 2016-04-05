@@ -31,7 +31,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QColor>
+#include <QDesktopWidget>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPainterPath>
@@ -393,6 +395,19 @@ void BusyWidget::setProgress(const double &pProgress)
 
         update();
     }
+}
+
+//==============================================================================
+
+void BusyWidget::center()
+{
+    // Center ourselves against our parent or our desktop
+
+    QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    int parentWidth = parentWidget()?parentWidget()->width():desktopGeometry.width();
+    int parentHeight = parentWidget()?parentWidget()->height():desktopGeometry.height();
+
+    move(0.5*(parentWidth-width()), 0.5*(parentHeight-height()));
 }
 
 //==============================================================================

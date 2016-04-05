@@ -88,6 +88,8 @@ public:
     double progress() const;
     void setProgress(const double &pProgress);
 
+    void center();
+
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 

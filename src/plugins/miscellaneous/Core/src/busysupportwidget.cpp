@@ -27,9 +27,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QMainWindow>
-#include <QRect>
 
 //==============================================================================
 
@@ -126,12 +124,7 @@ void BusySupportWidget::centerBusyWidget()
 
     // Center our busy widget
 
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    int parentWidth = mBusyWidget->parentWidget()?mBusyWidget->parentWidget()->width():desktopGeometry.width();
-    int parentHeight = mBusyWidget->parentWidget()?mBusyWidget->parentWidget()->height():desktopGeometry.height();
-
-    mBusyWidget->move(0.5*(parentWidth-mBusyWidget->width()),
-                      0.5*(parentHeight-mBusyWidget->height()));
+    mBusyWidget->center();
 }
 
 //==============================================================================
