@@ -323,7 +323,7 @@ void PhysiomeModelRepositoryWindowWidget::showExposureFiles(const QString &pUrl,
 
     int id = mExposureUrlId.value(pUrl);
     QWebElement documentElement = page()->mainFrame()->documentElement();
-    QWebElement imgElement = documentElement.findFirst(QString("img[id=exposure_%1]").arg(id));
+    QWebElement imgElement = documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id));
     QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
 
     if (pShow) {
@@ -384,7 +384,7 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
                 emit showExposureFilesRequested(linkList[1]);
             } else {
                 showExposureFiles(linkList[1],
-                                  documentElement.findFirst(QString("img[id=exposure_%1]").arg(id)).hasClass("button"));
+                                  documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id)).hasClass("button"));
             }
         }
     } else {
