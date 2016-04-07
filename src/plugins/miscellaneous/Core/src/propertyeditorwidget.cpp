@@ -1063,7 +1063,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     mRightClicking = false;
 
-    mPropertyChecked = QMap<Property *, bool>();
+    mPropertyChecked.clear();
 
     // Customise ourselves
 

@@ -160,8 +160,8 @@ void File::reset(const bool &pResetDependencies)
     mModified = false;
 
     if (pResetDependencies) {
-        mDependencies = QStringList();
-        mDependenciesSha1 = QStringList();
+        mDependencies.clear();
+        mDependenciesSha1.clear();
     }
 }
 
@@ -363,7 +363,8 @@ bool File::setDependencies(const QStringList &pDependencies)
 
     if (pDependencies != mDependencies) {
         mDependencies = pDependencies;
-        mDependenciesSha1 = QStringList();
+
+        mDependenciesSha1.clear();
 
         foreach (const QString &dependency, pDependencies)
             mDependenciesSha1 << sha1(dependency);

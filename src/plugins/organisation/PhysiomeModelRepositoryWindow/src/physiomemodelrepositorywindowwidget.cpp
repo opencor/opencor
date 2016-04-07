@@ -200,9 +200,9 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
 {
     // Initialise / keep track of some properties
 
-    mExposureNames = QStringList();
-    mExposureDisplayed = QBoolList();
-    mExposureUrlId = QMap<QString, int>();
+    mExposureNames.clear();
+    mExposureDisplayed.clear();
+    mExposureUrlId.clear();
 
     mErrorMessage = pErrorMessage;
 

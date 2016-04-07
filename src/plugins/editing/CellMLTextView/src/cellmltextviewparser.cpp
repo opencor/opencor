@@ -314,7 +314,7 @@ void CellmlTextViewParser::initialize(const QString &pCellmlText)
 
     mMessages = CellmlTextViewParserMessages();
 
-    mNamespaces = QMap<QString, QString>();
+    mNamespaces.clear();
 
     mStatementType = Unknown;
 }
