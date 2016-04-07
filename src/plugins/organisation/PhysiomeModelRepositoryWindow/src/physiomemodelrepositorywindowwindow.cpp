@@ -444,6 +444,22 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                         break;
                     }
 
+                    // (Pretend) to show our exposure files in case this is what
+                    // we ultimately want to do and in case we have no exposure
+                    // files to show
+                    // Note: indeed, this will result in an information message
+                    //       being shown to tell us that there are no exposure
+                    //       files. If we were not do the below, then we would
+                    //       never get that message the first time we try to
+                    //       show our exposure files (since that first time, we
+                    //       would normally show our exposure files after having
+                    //       retrieved the last exposure file information)...
+
+                    if (   exposureFileUrls.isEmpty()
+                        && (Action(pNetworkReply->property(ActionProperty).toInt()) == ShowExposureFiles)) {
+                        doShowExposureFiles(exposureUrl);
+                    }
+
                     // Retrieve the workspace and exposure file information from
                     // PMR
 
