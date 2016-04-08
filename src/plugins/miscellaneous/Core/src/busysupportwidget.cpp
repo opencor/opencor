@@ -53,8 +53,7 @@ bool BusySupportWidget::isBusyWidgetVisible() const
 //==============================================================================
 
 void BusySupportWidget::doShowBusyWidget(QWidget *pParent, const bool &pGlobal,
-                                         const double &pProgress,
-                                         const bool &pSemiTransparent)
+                                         const double &pProgress)
 {
     // Make sure that our previous busy widget, if any, is hidden (and deleted)
 
@@ -62,7 +61,7 @@ void BusySupportWidget::doShowBusyWidget(QWidget *pParent, const bool &pGlobal,
 
     // Create and show our new busy widget resized
 
-    mBusyWidget = new BusyWidget(pParent, pGlobal, pProgress, pSemiTransparent);
+    mBusyWidget = new BusyWidget(pParent, pGlobal, pProgress);
 
     resizeBusyWidget();
 
@@ -111,24 +110,6 @@ void BusySupportWidget::showProgressBusyWidget(QWidget *pParent)
 
 //==============================================================================
 
-void BusySupportWidget::showSemiTransparentBusyWidget(QWidget *pParent)
-{
-    // Show a semi-transparent busy widget
-
-    doShowBusyWidget(pParent, false, -1.0, true);
-}
-
-//==============================================================================
-
-void BusySupportWidget::showSemiTransparentProgressBusyWidget(QWidget *pParent)
-{
-    // Show a semi-transparent progress busy widget
-
-    doShowBusyWidget(pParent, false, 0.0, true);
-}
-
-//==============================================================================
-
 void BusySupportWidget::showGlobalBusyWidget(QWidget *pParent)
 {
     // Show a global 'normal' busy widget
@@ -143,24 +124,6 @@ void BusySupportWidget::showGlobalProgressBusyWidget(QWidget *pParent)
     // Show a global progress busy widget
 
     doShowBusyWidget(pParent, true, 0.0);
-}
-
-//==============================================================================
-
-void BusySupportWidget::showGlobalSemiTransparentBusyWidget(QWidget *pParent)
-{
-    // Show a global semi-transparent busy widget
-
-    doShowBusyWidget(pParent, true, -1.0, true);
-}
-
-//==============================================================================
-
-void BusySupportWidget::showGlobalSemiTransparentProgressBusyWidget(QWidget *pParent)
-{
-    // Show a global semi-transparent progress busy widget
-
-    doShowBusyWidget(pParent, true, 0.0, true);
 }
 
 //==============================================================================

@@ -164,9 +164,7 @@ void PhysiomeModelRepositoryWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        showSemiTransparentBusyWidget(mPhysiomeModelRepositoryWidget);
-        // Note: the semi-transparency is to 'show' that our widget cannot be
-        //       used since disabling it (in a Qt way) doesn't grey it out...
+        showBusyWidget(mPhysiomeModelRepositoryWidget);
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {

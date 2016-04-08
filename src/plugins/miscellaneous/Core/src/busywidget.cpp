@@ -53,7 +53,7 @@ static const int Margin = 5;
 //==============================================================================
 
 BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
-                       const double &pProgress, const bool &pSemiTransparent) :
+                       const double &pProgress) :
     QWidget(pParent),
     mParent(pParent),
     mGlobal(pGlobal),
@@ -69,8 +69,7 @@ BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
     mTrail(100),
     mOpacity(0.25),
     mRadius(15),
-    mProgress(pProgress),
-    mSemiTransparent(pSemiTransparent)
+    mProgress(pProgress)
 {
     // Create our timer and a connection to handle its timing out
 
@@ -395,28 +394,6 @@ void BusyWidget::setProgress(const double &pProgress)
 
 //==============================================================================
 
-bool BusyWidget::semiTransparent() const
-{
-    // Return whether we are semi-transparent
-
-    return mSemiTransparent;
-}
-
-//==============================================================================
-
-void BusyWidget::setSemiTransparent(const bool &pSemiTransparent)
-{
-    // Set whether we are to be semi-transparent
-
-    if (pSemiTransparent != mSemiTransparent) {
-        mSemiTransparent = pSemiTransparent;
-
-        update();
-    }
-}
-
-//==============================================================================
-
 void BusyWidget::resize()
 {
     // Resize ourselves against our parent/desktop
@@ -453,16 +430,6 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
     QPainter painter(this);
 
     painter.setRenderHint(QPainter::Antialiasing, true);
-
-    // Draw a semi-transparent background, if needed
-
-    if (mSemiTransparent) {
-        QColor backgroundColor = Qt::black;
-
-        backgroundColor.setAlpha(13);
-
-        painter.fillRect(rect(), backgroundColor);
-    }
 
     // Draw a background for ourselves
 
