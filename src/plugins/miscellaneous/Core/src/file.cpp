@@ -113,7 +113,7 @@ File::Status File::check()
     foreach (const QString &dependency, mDependencies)
         newDependenciesSha1 << sha1(dependency);
 
-    bool dependenciesChanged = newDependenciesSha1 != mDependenciesSha1;
+    bool dependenciesChanged = !qSameStringLists(newDependenciesSha1, mDependenciesSha1);
 
     if (newSha1.isEmpty()) {
         // Our SHA-1 value is now empty, which means that either we have been
@@ -361,7 +361,7 @@ bool File::setDependencies(const QStringList &pDependencies)
 {
     // Set our dependencies
 
-    if (pDependencies != mDependencies) {
+    if (!qSameStringLists(pDependencies, mDependencies)) {
         mDependencies = pDependencies;
 
         mDependenciesSha1.clear();

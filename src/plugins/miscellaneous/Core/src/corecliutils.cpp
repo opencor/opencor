@@ -84,28 +84,14 @@ namespace Core {
 bool qSameStringLists(const QStringList &pStringList1,
                       const QStringList &pStringList2)
 {
-    // Note #1: normally, we would use QStringList::operator==(), but in debug
-    //          mode on Windows this generates a C4996 warning (because of
-    //          std::equal()), so instead we have this function to do the
-    //          comparison ourselves...
-    // Note #2: normally, we should be able to use QStringList::operator==()
-    //          after having temporarily disabled the C4996 warning, i.e.
-    //
-    //              #ifdef Q_OS_WIN
-    //                  #pragma warning(push)
-    //                  #pragma warning(disable: 4996)
-    //              #endif
-    //
-    //              if (stringList1 == stringList2) {
-    //                  ...
-    //              }
-    //
-    //              #ifdef Q_OS_WIN
-    //                  #pragma warning(pop)
-    //              #endif
-    //
-    //          but this doesn't work... (!?)
+    // Note: normally, we would use QStringList::operator==(), but it can result
+    //       in a C4996 warning on Windows (because of our use of std::equal();
+    //       see https://bugreports.qt.io/browse/QTBUG-47948 and
+    //       https://codereview.qt-project.org/#/c/153440/ for more
+    //       information), so instead we do the comparison ourselves in case we
+    //       are on Windows...
 
+#ifdef Q_OS_WIN
     // Check whether the two lists have the same size
 
     int stringList1Count = pStringList1.count();
@@ -120,6 +106,9 @@ bool qSameStringLists(const QStringList &pStringList1,
             return false;
 
     return true;
+#else
+    return pStringList1 == pStringList2;
+#endif
 }
 
 //==============================================================================
