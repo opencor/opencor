@@ -813,8 +813,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
 
-                    # Make sure that the plugin's tests refer to our embedded version of the
-                    # binary plugins on which they depend
+                    # Make sure that the plugin's tests refer to our embedded
+                    # version of the binary plugins on which they depend
 
                     FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
                         STRING(REGEX REPLACE "^.*/" "" PLUGIN_BINARY "${PLUGIN_BINARY}")
@@ -825,8 +825,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
 
-                    # Make sure that the plugin's tests refer to our embedded version of the
-                    # external binaries on which they depend
+                    # Make sure that the plugin's tests refer to our embedded
+                    # version of the external binaries on which they depend
 
                     FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
