@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Physiome Model Repository window:</strong> properly handle JSON responses from PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/930\">#930</a>)." }
+                       { "change": "<strong>Physiome Model Repository window:</strong> properly handle JSON responses from PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/930\">#930</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 2.2.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/934\">#934</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
