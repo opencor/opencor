@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Show/hide the PMR window</source>
-        <translation>Montrer/cacher la fenêtre du PMR</translation>
+        <translation>Montrer/cacher la fenêtre PMR</translation>
     </message>
 </context>
 <context>
