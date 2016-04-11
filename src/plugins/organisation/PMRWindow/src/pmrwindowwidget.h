@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Physiome Model Repository widget
+// PMR widget
 //==============================================================================
 
-#ifndef PHYSIOMEMODELREPOSITORYWINDOWWIDGET_H
-#define PHYSIOMEMODELREPOSITORYWINDOWWIDGET_H
+#ifndef PMRWINDOWWIDGET_H
+#define PMRWINDOWWIDGET_H
 
 //==============================================================================
 
@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PhysiomeModelRepositoryWindowWidget;
+    class PmrWindowWidget;
 }
 
 //==============================================================================
@@ -41,17 +41,16 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
-namespace PhysiomeModelRepositoryWindow {
+namespace PMRWindow {
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowExposure
+class PmrWindowExposure
 {
 public:
-    explicit PhysiomeModelRepositoryWindowExposure(const QString &pUrl,
-                                                   const QString &pName);
+    explicit PmrWindowExposure(const QString &pUrl, const QString &pName);
 
-    bool operator<(const PhysiomeModelRepositoryWindowExposure &pExposure) const;
+    bool operator<(const PmrWindowExposure &pExposure) const;
 
     QString url() const;
     QString name() const;
@@ -63,22 +62,21 @@ private:
 
 //==============================================================================
 
-typedef QList<PhysiomeModelRepositoryWindowExposure> PhysiomeModelRepositoryWindowExposures;
+typedef QList<PmrWindowExposure> PmrWindowExposures;
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowWidget : public Core::WebViewWidget,
-                                            public Core::CommonWidget
+class PmrWindowWidget : public Core::WebViewWidget, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit PhysiomeModelRepositoryWindowWidget(QWidget *pParent);
-    ~PhysiomeModelRepositoryWindowWidget();
+    explicit PmrWindowWidget(QWidget *pParent);
+    ~PmrWindowWidget();
 
     virtual void retranslateUi();
 
-    void initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
+    void initialize(const PmrWindowExposures &pExposures,
                     const QString &pErrorMessage, const QString &pFilter,
                     const bool &pInternetConnectionAvailable);
 
@@ -92,7 +90,7 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
-    Ui::PhysiomeModelRepositoryWindowWidget *mGui;
+    Ui::PmrWindowWidget *mGui;
 
     QMenu *mContextMenu;
 
@@ -129,7 +127,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace PhysiomeModelRepositoryWindow
+}   // namespace PMRWindow
 }   // namespace OpenCOR
 
 //==============================================================================

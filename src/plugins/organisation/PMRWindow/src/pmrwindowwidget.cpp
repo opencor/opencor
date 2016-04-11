@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Physiome Model Repository widget
+// PMR widget
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "physiomemodelrepositorywindowwidget.h"
+#include "pmrwindowwidget.h"
 
 //==============================================================================
 
-#include "ui_physiomemodelrepositorywindowwidget.h"
+#include "ui_pmrwindowwidget.h"
 
 //==============================================================================
 
@@ -39,12 +39,12 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PhysiomeModelRepositoryWindow {
+namespace PMRWindow {
 
 //==============================================================================
 
-PhysiomeModelRepositoryWindowExposure::PhysiomeModelRepositoryWindowExposure(const QString &pUrl,
-                                                                             const QString &pName) :
+PmrWindowExposure::PmrWindowExposure(const QString &pUrl,
+                                     const QString &pName) :
     mUrl(pUrl),
     mName(pName)
 {
@@ -52,7 +52,7 @@ PhysiomeModelRepositoryWindowExposure::PhysiomeModelRepositoryWindowExposure(con
 
 //==============================================================================
 
-bool PhysiomeModelRepositoryWindowExposure::operator<(const PhysiomeModelRepositoryWindowExposure &pExposure) const
+bool PmrWindowExposure::operator<(const PmrWindowExposure &pExposure) const
 {
     // Return whether the current exposure is lower than the given one (without
     // worrying about casing)
@@ -62,7 +62,7 @@ bool PhysiomeModelRepositoryWindowExposure::operator<(const PhysiomeModelReposit
 
 //==============================================================================
 
-QString PhysiomeModelRepositoryWindowExposure::url() const
+QString PmrWindowExposure::url() const
 {
     // Return our URL
 
@@ -71,7 +71,7 @@ QString PhysiomeModelRepositoryWindowExposure::url() const
 
 //==============================================================================
 
-QString PhysiomeModelRepositoryWindowExposure::name() const
+QString PmrWindowExposure::name() const
 {
     // Return our name
 
@@ -80,10 +80,10 @@ QString PhysiomeModelRepositoryWindowExposure::name() const
 
 //==============================================================================
 
-PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget *pParent) :
+PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     Core::WebViewWidget(pParent),
     Core::CommonWidget(),
-    mGui(new Ui::PhysiomeModelRepositoryWindowWidget),
+    mGui(new Ui::PmrWindowWidget),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
@@ -136,7 +136,7 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
 
 //==============================================================================
 
-PhysiomeModelRepositoryWindowWidget::~PhysiomeModelRepositoryWindowWidget()
+PmrWindowWidget::~PmrWindowWidget()
 {
     // Delete the GUI
 
@@ -145,7 +145,7 @@ PhysiomeModelRepositoryWindowWidget::~PhysiomeModelRepositoryWindowWidget()
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::retranslateUi()
+void PmrWindowWidget::retranslateUi()
 {
     // Retranslate our message, if we have been initialised
 
@@ -155,7 +155,7 @@ void PhysiomeModelRepositoryWindowWidget::retranslateUi()
 
 //==============================================================================
 
-QSize PhysiomeModelRepositoryWindowWidget::sizeHint() const
+QSize PmrWindowWidget::sizeHint() const
 {
     // Suggest a default size for our PMR widget
     // Note: this is critical if we want a docked widget, with a PMR widget on
@@ -166,7 +166,7 @@ QSize PhysiomeModelRepositoryWindowWidget::sizeHint() const
 
  //==============================================================================
 
-QString PhysiomeModelRepositoryWindowWidget::message() const
+QString PmrWindowWidget::message() const
 {
     // Determine the message to be displayed, if any
 
@@ -193,10 +193,10 @@ QString PhysiomeModelRepositoryWindowWidget::message() const
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
-                                                     const QString &pErrorMessage,
-                                                     const QString &pFilter,
-                                                     const bool &pInternetConnectionAvailable)
+void PmrWindowWidget::initialize(const PmrWindowExposures &pExposures,
+                                 const QString &pErrorMessage,
+                                 const QString &pFilter,
+                                 const bool &pInternetConnectionAvailable)
 {
     // Initialise / keep track of some properties
 
@@ -260,7 +260,7 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::filter(const QString &pFilter)
+void PmrWindowWidget::filter(const QString &pFilter)
 {
     // Filter our list of exposures and remove any duplicates (they will be
     // 'reintroduced' in the next step)
@@ -298,8 +298,8 @@ void PhysiomeModelRepositoryWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::addExposureFiles(const QString &pUrl,
-                                                           const QStringList &pExposureFiles)
+void PmrWindowWidget::addExposureFiles(const QString &pUrl,
+                                       const QStringList &pExposureFiles)
 {
     // Add the given exposure files to the exposure
 
@@ -316,8 +316,7 @@ void PhysiomeModelRepositoryWindowWidget::addExposureFiles(const QString &pUrl,
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::showExposureFiles(const QString &pUrl,
-                                                            const bool &pShow)
+void PmrWindowWidget::showExposureFiles(const QString &pUrl, const bool &pShow)
 {
     // Show the exposure files for the given exposure
 
@@ -343,7 +342,7 @@ void PhysiomeModelRepositoryWindowWidget::showExposureFiles(const QString &pUrl,
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::on_actionCopy_triggered()
+void PmrWindowWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the exposure to the clipboard
 
@@ -352,7 +351,7 @@ void PhysiomeModelRepositoryWindowWidget::on_actionCopy_triggered()
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::linkClicked()
+void PmrWindowWidget::linkClicked()
 {
     // Retrieve some information about the link
 
@@ -400,7 +399,7 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::linkHovered()
+void PmrWindowWidget::linkHovered()
 {
     // Retrieve some information about the link
 
@@ -438,7 +437,7 @@ void PhysiomeModelRepositoryWindowWidget::linkHovered()
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::showCustomContextMenu()
+void PmrWindowWidget::showCustomContextMenu()
 {
     // Retrieve some information about the link, if any
 
@@ -456,7 +455,7 @@ void PhysiomeModelRepositoryWindowWidget::showCustomContextMenu()
 
 //==============================================================================
 
-}   // namespace PhysiomeModelRepositoryWindow
+}   // namespace PMRWindow
 }   // namespace OpenCOR
 
 //==============================================================================

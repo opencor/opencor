@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Physiome Model Repository window
+// PMR window
 //==============================================================================
 
-#ifndef PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
-#define PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
+#ifndef PMRWINDOWWINDOW_H
+#define PMRWINDOWWINDOW_H
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PhysiomeModelRepositoryWindowWindow;
+    class PmrWindowWindow;
 }
 
 //==============================================================================
@@ -45,21 +45,21 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-namespace PhysiomeModelRepositoryWindow {
+namespace PMRWindow {
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowWidget;
+class PmrWindowWidget;
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowWindow : public Core::OrganisationWidget
+class PmrWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit PhysiomeModelRepositoryWindowWindow(QWidget *pParent);
-    ~PhysiomeModelRepositoryWindowWindow();
+    explicit PmrWindowWindow(QWidget *pParent);
+    ~PmrWindowWindow();
 
     virtual void retranslateUi();
 
@@ -77,9 +77,9 @@ private:
         ShowExposureFiles
     };
 
-    Ui::PhysiomeModelRepositoryWindowWindow *mGui;
+    Ui::PmrWindowWindow *mGui;
 
-    PhysiomeModelRepositoryWindowWidget *mPhysiomeModelRepositoryWidget;
+    PmrWindowWidget *mPmrWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
@@ -117,7 +117,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace PhysiomeModelRepositoryWindow
+}   // namespace PMRWindow
 }   // namespace OpenCOR
 
 //==============================================================================

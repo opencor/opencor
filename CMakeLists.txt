@@ -348,7 +348,7 @@ SET(PLUGINS
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
-    organisation/PhysiomeModelRepositoryWindow
+    organisation/PMRWindow
 
     simulation/SingleCellView
 

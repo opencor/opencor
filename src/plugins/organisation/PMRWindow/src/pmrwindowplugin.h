@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PhysiomeModelRepositoryWindow plugin
+// PMRWindow plugin
 //==============================================================================
 
-#ifndef PHYSIOMEMODELREPOSITORYWINDOWPLUGIN_H
-#define PHYSIOMEMODELREPOSITORYWINDOWPLUGIN_H
+#ifndef PMRWINDOWPLUGIN_H
+#define PMRWINDOWPLUGIN_H
 
 //==============================================================================
 
@@ -32,26 +32,24 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PhysiomeModelRepositoryWindow {
+namespace PMRWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo();
+PLUGININFO_FUNC PMRWindowPluginInfo();
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowWindow;
+class PmrWindowWindow;
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowPlugin : public QObject,
-                                            public I18nInterface,
-                                            public PluginInterface,
-                                            public WindowInterface
+class PMRWindowPlugin : public QObject, public I18nInterface,
+                        public PluginInterface, public WindowInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PhysiomeModelRepositoryWindowPlugin" FILE "physiomemodelrepositorywindowplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PMRWindowPlugin" FILE "pmrwindowplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -63,14 +61,14 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mPhysiomeModelRepositoryWindowAction;
+    QAction *mPmrWindowAction;
 
-    PhysiomeModelRepositoryWindowWindow *mPhysiomeModelRepositoryWindowWindow;
+    PmrWindowWindow *mPmrWindowWindow;
 };
 
 //==============================================================================
 
-}   // namespace PhysiomeModelRepositoryWindow
+}   // namespace PMRWindow
 }   // namespace OpenCOR
 
 //==============================================================================

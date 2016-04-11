@@ -2,18 +2,18 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowPlugin</name>
+    <name>OpenCOR::PMRWindow::PMRWindowPlugin</name>
     <message>
-        <source>Physiome Model Repository</source>
-        <translation>Répertoire De Modèles Physiome</translation>
+        <source>PMR</source>
+        <translation>PMR</translation>
     </message>
     <message>
-        <source>Show/hide the Physiome Model Repository window</source>
-        <translation>Montrer/cacher la fenêtre du Répertoire de Modèles Physiome</translation>
+        <source>Show/hide the PMR window</source>
+        <translation>Montrer/cacher la fenêtre du PMR</translation>
     </message>
 </context>
 <context>
-    <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWidget</name>
+    <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
         <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>
         <translation>&lt;strong&gt;1&lt;/strong&gt; exposition a été trouvée :</translation>
@@ -52,7 +52,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWindow</name>
+    <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
     <message>
         <source>No workspace URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
         <translation>Aucune URL pour un espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
@@ -95,7 +95,7 @@
     </message>
 </context>
 <context>
-    <name>PhysiomeModelRepositoryWindowWidget</name>
+    <name>PmrWindowWidget</name>
     <message>
         <source>Copy</source>
         <translation>Copier</translation>
@@ -106,10 +106,10 @@
     </message>
 </context>
 <context>
-    <name>PhysiomeModelRepositoryWindowWindow</name>
+    <name>PmrWindowWindow</name>
     <message>
-        <source>Physiome Model Repository</source>
-        <translation>Répertoire de Modèles Physiome</translation>
+        <source>PMR</source>
+        <translation>PMR</translation>
     </message>
     <message>
         <source>Filter:</source>

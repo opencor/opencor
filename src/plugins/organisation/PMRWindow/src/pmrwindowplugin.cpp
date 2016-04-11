@@ -16,12 +16,12 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PhysiomeModelRepositoryWindow plugin
+// PMRWindow plugin
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "physiomemodelrepositorywindowplugin.h"
-#include "physiomemodelrepositorywindowwindow.h"
+#include "pmrwindowplugin.h"
+#include "pmrwindowwindow.h"
 
 //==============================================================================
 
@@ -35,16 +35,16 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PhysiomeModelRepositoryWindow {
+namespace PMRWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo()
+PLUGININFO_FUNC PMRWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
 
     return new PluginInfo("Organisation", true, false,
                           QStringList() << "Core" << "libgit2" << "zlib",
@@ -56,44 +56,44 @@ PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo()
 // I18n interface
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::retranslateUi()
+void PMRWindowPlugin::retranslateUi()
 {
     // Retranslate our PMR window action
 
-    retranslateAction(mPhysiomeModelRepositoryWindowAction,
-                      tr("Physiome Model Repository"),
-                      tr("Show/hide the Physiome Model Repository window"));
+    retranslateAction(mPmrWindowAction,
+                      tr("PMR"),
+                      tr("Show/hide the PMR window"));
 
     // Retranslate our PMR window
 
-    mPhysiomeModelRepositoryWindowWindow->retranslateUi();
+    mPmrWindowWindow->retranslateUi();
 }
 
 //==============================================================================
 // Plugin interface
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::initializePlugin()
+void PMRWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our PMR window
 
-    mPhysiomeModelRepositoryWindowAction = Core::newAction(true, Core::mainWindow());
+    mPmrWindowAction = Core::newAction(true, Core::mainWindow());
 
     // Create our PMR window
 
-    mPhysiomeModelRepositoryWindowWindow = new PhysiomeModelRepositoryWindowWindow(Core::mainWindow());
+    mPmrWindowWindow = new PmrWindowWindow(Core::mainWindow());
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::finalizePlugin()
+void PMRWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PMRWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -102,29 +102,29 @@ void PhysiomeModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoa
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
+void PMRWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our PMR window settings
 
-    pSettings->beginGroup(mPhysiomeModelRepositoryWindowWindow->objectName());
-        mPhysiomeModelRepositoryWindowWindow->loadSettings(pSettings);
+    pSettings->beginGroup(mPmrWindowWindow->objectName());
+        mPmrWindowWindow->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
+void PMRWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our PMR window settings
 
-    pSettings->beginGroup(mPhysiomeModelRepositoryWindowWindow->objectName());
-        mPhysiomeModelRepositoryWindowWindow->saveSettings(pSettings);
+    pSettings->beginGroup(mPmrWindowWindow->objectName());
+        mPmrWindowWindow->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowPlugin::handleUrl(const QUrl &pUrl)
+void PMRWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -135,7 +135,7 @@ void PhysiomeModelRepositoryWindowPlugin::handleUrl(const QUrl &pUrl)
 // Window interface
 //==============================================================================
 
-Qt::DockWidgetArea PhysiomeModelRepositoryWindowPlugin::windowDefaultDockArea() const
+Qt::DockWidgetArea PMRWindowPlugin::windowDefaultDockArea() const
 {
     // Return our default dock area
 
@@ -144,25 +144,25 @@ Qt::DockWidgetArea PhysiomeModelRepositoryWindowPlugin::windowDefaultDockArea() 
 
 //==============================================================================
 
-QAction * PhysiomeModelRepositoryWindowPlugin::windowAction() const
+QAction * PMRWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mPhysiomeModelRepositoryWindowAction;
+    return mPmrWindowAction;
 }
 
 //==============================================================================
 
-QDockWidget * PhysiomeModelRepositoryWindowPlugin::windowWidget() const
+QDockWidget * PMRWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mPhysiomeModelRepositoryWindowWindow;
+    return mPmrWindowWindow;
 }
 
 //==============================================================================
 
-}   // namespace PhysiomeModelRepositoryWindow
+}   // namespace PMRWindow
 }   // namespace OpenCOR
 
 //==============================================================================

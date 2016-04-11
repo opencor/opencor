@@ -39,7 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Physiome Model Repository window:</strong> properly handle JSON responses from PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/930\">#930</a>)." },
+                       { "change": "<strong>PMR window:</strong> properly handle JSON responses from PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/930\">#930</a>). The plugin is now called PMRWindow (see issue <a href=\"https://github.com/opencor/opencor/issues/935\">#935</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 2.2.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/934\">#934</a>)." }
                      ]
                    },

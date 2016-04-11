@@ -16,18 +16,18 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Physiome Model Repository window
+// PMR window
 //==============================================================================
 
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "physiomemodelrepositorywindowwidget.h"
-#include "physiomemodelrepositorywindowwindow.h"
+#include "pmrwindowwidget.h"
+#include "pmrwindowwindow.h"
 
 //==============================================================================
 
-#include "ui_physiomemodelrepositorywindowwindow.h"
+#include "ui_pmrwindowwindow.h"
 
 //==============================================================================
 
@@ -52,13 +52,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PhysiomeModelRepositoryWindow {
+namespace PMRWindow {
 
 //==============================================================================
 
-PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget *pParent) :
+PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PhysiomeModelRepositoryWindowWindow),
+    mGui(new Ui::PmrWindowWindow),
     mNumberOfExposureFileUrlsLeft(0),
     mWorkspaces(QMap<QString, QString>()),
     mExposureUrls(QMap<QString, QString>()),
@@ -81,13 +81,13 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
 
     // Create and add the PMR widget
 
-    mPhysiomeModelRepositoryWidget = new PhysiomeModelRepositoryWindowWidget(this);
+    mPmrWidget = new PmrWindowWidget(this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPhysiomeModelRepositoryWidget,
+    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
                                                                            true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPhysiomeModelRepositoryWidget,
+    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
                                                                            true, false, false, false));
 #else
     #error Unsupported platform
@@ -115,12 +115,12 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
 
     // Some connections to know what our PMR widget wants from us
 
-    connect(mPhysiomeModelRepositoryWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
+    connect(mPmrWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
             this, SLOT(cloneWorkspace(const QString &)));
-    connect(mPhysiomeModelRepositoryWidget, SIGNAL(showExposureFilesRequested(const QString &)),
+    connect(mPmrWidget, SIGNAL(showExposureFilesRequested(const QString &)),
             this, SLOT(showExposureFiles(const QString &)));
 
-    connect(mPhysiomeModelRepositoryWidget, SIGNAL(openExposureFileRequested(const QString &)),
+    connect(mPmrWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
 
     // Some further initialisations that are done as part of retranslating the
@@ -131,7 +131,7 @@ PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget
 
 //==============================================================================
 
-PhysiomeModelRepositoryWindowWindow::~PhysiomeModelRepositoryWindowWindow()
+PmrWindowWindow::~PmrWindowWindow()
 {
     // Delete the GUI
 
@@ -140,7 +140,7 @@ PhysiomeModelRepositoryWindowWindow::~PhysiomeModelRepositoryWindowWindow()
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::retranslateUi()
+void PmrWindowWindow::retranslateUi()
 {
     // Retranslate the whole window and our information note message
 
@@ -150,12 +150,12 @@ void PhysiomeModelRepositoryWindowWindow::retranslateUi()
 
     // Retranslate our PMR widget
 
-    mPhysiomeModelRepositoryWidget->retranslateUi();
+    mPmrWidget->retranslateUi();
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::busy(const bool &pBusy)
+void PmrWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -164,7 +164,7 @@ void PhysiomeModelRepositoryWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        showBusyWidget(mPhysiomeModelRepositoryWidget);
+        showBusyWidget(mPmrWidget);
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
@@ -187,9 +187,9 @@ static const char *ActionProperty     = "Action";
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
-                                                         const QString &pUrl,
-                                                         const Action pAction)
+void PmrWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
+                                     const QString &pUrl,
+                                     const Action pAction)
 {
     // Let the user know that we are busy
 
@@ -231,7 +231,7 @@ void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrR
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::doCloneWorkspace(const QString &pWorkspace)
+void PmrWindowWindow::doCloneWorkspace(const QString &pWorkspace)
 {
     // Retrieve the name of an empty directory
 
@@ -277,12 +277,12 @@ void PhysiomeModelRepositoryWindowWindow::doCloneWorkspace(const QString &pWorks
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::doShowExposureFiles(const QString &pExposureUrl)
+void PmrWindowWindow::doShowExposureFiles(const QString &pExposureUrl)
 {
     // Show the exposure files, but only if there are some
 
     if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
-        mPhysiomeModelRepositoryWidget->showExposureFiles(pExposureUrl);
+        mPmrWidget->showExposureFiles(pExposureUrl);
     } else {
         QMessageBox::information( Core::mainWindow(), windowTitle(),
                                   tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
@@ -293,17 +293,17 @@ void PhysiomeModelRepositoryWindowWindow::doShowExposureFiles(const QString &pEx
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &pText)
+void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
 {
     // Ask our PMR widget to filter its output using the given regular
     // expression
 
-    mPhysiomeModelRepositoryWidget->filter(pText);
+    mPmrWidget->filter(pText);
 }
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::on_refreshButton_clicked()
+void PmrWindowWindow::on_refreshButton_clicked()
 {
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
@@ -329,7 +329,7 @@ bool sortExposureFiles(const QString &pExposureFile1,
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
+void PmrWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether our PMR request was successful
 
@@ -337,7 +337,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     bool internetConnectionAvailable = true;
     QString errorMessage = QString();
     QString informationMessage = QString();
-    PhysiomeModelRepositoryWindowExposures exposures = PhysiomeModelRepositoryWindowExposures();
+    PmrWindowExposures exposures = PmrWindowExposures();
     QString workspaceUrl = QString();
     QStringList exposureFileUrls = QStringList();
     QString exposureUrl = QString();
@@ -402,7 +402,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                                 && !exposureName.isEmpty()) {
                                 mExposureNames.insert(exposureUrl, exposureName);
 
-                                exposures << PhysiomeModelRepositoryWindowExposure(exposureUrl, exposureName);
+                                exposures << PmrWindowExposure(exposureUrl, exposureName);
                             }
                         }
                     }
@@ -544,7 +544,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                                     std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
 
-                                    mPhysiomeModelRepositoryWidget->addExposureFiles(exposureUrl, exposureFileNames);
+                                    mPmrWidget->addExposureFiles(exposureUrl, exposureFileNames);
                                 }
                             }
                         } else {
@@ -586,9 +586,9 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     case ExposuresList:
         // Ask our PMR widget to initialise itself
 
-        mPhysiomeModelRepositoryWidget->initialize(exposures, errorMessage,
-                                                   mGui->filterValue->text(),
-                                                   internetConnectionAvailable);
+        mPmrWidget->initialize(exposures, errorMessage,
+                               mGui->filterValue->text(),
+                               internetConnectionAvailable);
 
         break;
     case ExposureInformation:
@@ -627,8 +627,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
-                                                    const QList<QSslError> &pSslErrors)
+void PmrWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
+                                const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we trust the website and therefore its
     // certificate (even if it is invalid, e.g. it has expired)
@@ -638,7 +638,7 @@ void PhysiomeModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::retrieveExposuresList(const bool &pVisible)
+void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this
@@ -656,7 +656,7 @@ void PhysiomeModelRepositoryWindowWindow::retrieveExposuresList(const bool &pVis
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl)
+void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
 {
     // Check whether we already know about the workspace for the given exposure
 
@@ -680,7 +680,7 @@ void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWindow::showExposureFiles(const QString &pUrl)
+void PmrWindowWindow::showExposureFiles(const QString &pUrl)
 {
     // Check whether we already know about the exposure URL for the given
     // exposure
@@ -701,7 +701,7 @@ void PhysiomeModelRepositoryWindowWindow::showExposureFiles(const QString &pUrl)
 
 //==============================================================================
 
-}   // namespace PhysiomeModelRepositoryWindow
+}   // namespace PMRWindow
 }   // namespace OpenCOR
 
 //==============================================================================

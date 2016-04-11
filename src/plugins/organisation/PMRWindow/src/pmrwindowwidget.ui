@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PhysiomeModelRepositoryWindowWidget</class>
- <widget class="QWidget" name="PhysiomeModelRepositoryWindowWidget">
+ <class>PmrWindowWidget</class>
+ <widget class="QWidget" name="PmrWindowWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,7 +20,7 @@
   </layout>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="../res/PhysiomeModelRepositoryWindow_ui.qrc">
+    <iconset resource="../res/PMRWindow_ui.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
@@ -32,7 +32,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/PhysiomeModelRepositoryWindow_ui.qrc"/>
+  <include location="../res/PMRWindow_ui.qrc"/>
  </resources>
  <connections/>
 </ui>
