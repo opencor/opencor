@@ -5,18 +5,15 @@ dist: trusty
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
   - CONFIG=Release
-  - CONFIG=Debug
+#  - CONFIG=Debug
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         wget --no-check-certificate https://www.cmake.org/files/v3.5/cmake-3.5.1-Linux-i386.tar.gz
-      && tar -xzf cmake-3.5.1-Linux-i386.tar.gz
-      && sudo cp -fR cmake-3.5.1-Linux-i386/* /usr
-      && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+         sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
       && sudo apt-get -qq update
       && sudo apt-get -qq install g++-4.8 libc6-i386 qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webchannel qt54webkit
