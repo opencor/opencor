@@ -396,19 +396,20 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     FOREACH(PARAMETER ${ARGN})
         IF("${PARAMETER}" STREQUAL "THIRD_PARTY")
-            # We are dealing with a third-party plugin, so disable all warnings
-            # since it may generate some and this is not something we have
-            # control over
-            # Note: for some reasons, MSVC eventually uses /W1, so we can't
-            #       replace /W3 /WX with /w since this would conflict with
-            #       /W1 and generate a warning...
+            # Disable all C/C++ warnings since building a third-party plugin may
+            # generate some and this has nothing to do with us
+            # Note: on Windows, we can't simply add /w since it will otherwise
+            #       result in MSVC complaining about /W3 having been overridden
+            #       by /w...
 
             IF(WIN32)
-                STRING(REPLACE "/W3 /WX" ""
+                STRING(REPLACE "/W3" "/w"
+                       CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+                STRING(REPLACE "/W3" "/w"
                        CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ELSE()
-                STRING(REPLACE "-Wall -W -Werror" "-w"
-                       CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+                SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
+                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
             ENDIF()
 
             # Add a definition in case of compilation from within Qt Creator
