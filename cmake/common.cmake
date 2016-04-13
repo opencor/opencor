@@ -748,7 +748,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Plugins
 
-                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
+                FOREACH(PLUGIN ${PLUGINS})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         ${PLUGIN}Plugin
                     )
