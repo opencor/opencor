@@ -5,11 +5,11 @@ dist: trusty
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
-#  - CONFIG=Debug
+  - CONFIG=Debug
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
