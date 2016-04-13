@@ -12,7 +12,43 @@ env:
   - CONFIG=Debug
 
 install:
-  - cmake --version
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         wget --no-check-certificate https://www.cmake.org/files/v3.5/cmake-3.5.1-Linux-i386.tar.gz
+      && tar -xzf cmake-3.5.1-Linux-i386.tar.gz
+      && sudo cp -fR cmake-3.5.1-Linux-i386/* /usr
+      && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+      && sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
+      && sudo apt-get -qq update
+      && sudo apt-get -qq install g++-4.8 libc6-i386 qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webchannel qt54webkit
+      && export CXX="g++-4.8"
+      && export CC="gcc-4.8"
+      ;
+    else
+         brew update
+      && brew unlink cmake
+      && brew install cmake homebrew/versions/qt55
+      && chmod -R 755 /usr/local/opt/qt55/*
+      ;
+    fi
+
+script:
+  -    cd build
+    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         ;
+       else
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt55/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         ;
+       fi
+    && make -j 3
+    && cd ..
+    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         build/bin/runtests
+         ;
+       else
+         build/OpenCOR.app/Contents/MacOS/runtests
+         ;
+       fi
 
 notifications:
   email: team@opencor.ws
