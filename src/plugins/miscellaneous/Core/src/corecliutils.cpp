@@ -660,9 +660,11 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
     // Return the name of a 'new' file
     // Note: see Tests::newFileNameTests() for what we want to be able to get...
 
-    FileManager *fileManagerInstance = FileManager::instance();
-    QString fileName = fileManagerInstance->isRemote(pFileName)?
-                           fileManagerInstance->url(pFileName):
+    FileManager *fileManagerInstance = qApp?FileManager::instance():0;
+    QString fileName = fileManagerInstance?
+                           fileManagerInstance->isRemote(pFileName)?
+                               fileManagerInstance->url(pFileName):
+                               pFileName:
                            pFileName;
     QFileInfo fileInfo = fileName;
     QString fileCanonicalPath = fileInfo.canonicalPath();
