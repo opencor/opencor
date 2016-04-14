@@ -59,13 +59,11 @@ void Tests::initTestCase()
     //       those warnings and, if anything, they just pollute our test output,
     //       so...
 
-    qInstallMessageHandler(dummyMessageHandler);
-
+qInstallMessageHandler(dummyMessageHandler);
     QXmlSchema schema;
+qInstallMessageHandler(0);
 
     Q_UNUSED(schema);
-
-    qInstallMessageHandler(0);
 
     // Create a simple COMBINE archive that contains various files
 
