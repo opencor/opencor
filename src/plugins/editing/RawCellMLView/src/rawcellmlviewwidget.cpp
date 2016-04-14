@@ -28,8 +28,8 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
+#include "mathmlviewerwidget.h"
 #include "rawcellmlviewwidget.h"
-#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -516,7 +516,7 @@ void RawCellmlViewWidget::updateViewer()
         if (Core::cleanContentMathml(contentMathmlBlock).isEmpty()) {
             mContentMathmlEquation = QString();
 
-            mEditingWidget->viewer()->setError(true);
+            mEditingWidget->mathmlViewer()->setError(true);
         } else {
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
@@ -538,7 +538,7 @@ void RawCellmlViewWidget::updateViewer()
                     QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
                     if (!presentationMathmlEquation.isEmpty())
-                        mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                        mEditingWidget->mathmlViewer()->setContents(presentationMathmlEquation);
                     else
                         mMathmlConverter.convert(contentMathmlEquation);
                 }
@@ -547,7 +547,7 @@ void RawCellmlViewWidget::updateViewer()
 
                 mContentMathmlEquation = QString();
 
-                mEditingWidget->viewer()->setContents(QString());
+                mEditingWidget->mathmlViewer()->setContents(QString());
             }
         }
     } else {
@@ -555,7 +555,7 @@ void RawCellmlViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->viewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents(QString());
     }
 }
 
@@ -582,7 +582,7 @@ void RawCellmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
     //       which case the contents of our viewer shouldn't be updated...
 
     if (!pContentMathml.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(pPresentationMathml);
+        mEditingWidget->mathmlViewer()->setContents(pPresentationMathml);
 
     mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }

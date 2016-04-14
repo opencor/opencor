@@ -16,23 +16,44 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Viewer global
+// MathML viewer plugin
 //==============================================================================
 
-#ifndef VIEWERGLOBAL_H
-#define VIEWERGLOBAL_H
+#ifndef MATHMLVIEWERPLUGIN_H
+#define MATHMLVIEWERPLUGIN_H
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef Viewer_PLUGIN
-        #define VIEWER_EXPORT __declspec(dllexport)
-    #else
-        #define VIEWER_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define VIEWER_EXPORT
-#endif
+#include "i18ninterface.h"
+#include "plugininfo.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace MathMLViewer {
+
+//==============================================================================
+
+PLUGININFO_FUNC MathMLViewerPluginInfo();
+
+//==============================================================================
+
+class MathMLViewerPlugin : public QObject, public I18nInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.MathMLViewerPlugin" FILE "mathmlviewerplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "i18ninterface.inl"
+};
+
+//==============================================================================
+
+}   // namespace MathMLViewer
+}   // namespace OpenCOR
 
 //==============================================================================
 

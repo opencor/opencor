@@ -1,4 +1,4 @@
-PROJECT(ViewerPlugin)
+PROJECT(MathMLViewerPlugin)
 
 # Apply Qwt's build settings
 
@@ -12,16 +12,16 @@ ELSE()
     SET(XML)
 ENDIF()
 
-ADD_PLUGIN(Viewer
+ADD_PLUGIN(MathMLViewer
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/viewerplugin.cpp
-        src/viewerwidget.cpp
+        src/mathmlviewerplugin.cpp
+        src/mathmlviewerwidget.cpp
     HEADERS_MOC
-        src/viewerplugin.h
-        src/viewerwidget.h
+        src/mathmlviewerplugin.h
+        src/mathmlviewerwidget.h
     INCLUDE_DIRS
         src
     DEFINITIONS

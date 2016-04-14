@@ -16,46 +16,27 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Viewer plugin
+// MathML viewer global
 //==============================================================================
 
-#include "viewerplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace Viewer {
+#ifndef MATHMLVIEWERGLOBAL_H
+#define MATHMLVIEWERGLOBAL_H
 
 //==============================================================================
 
-PLUGININFO_FUNC ViewerPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to visualise mathematical equations."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des équations mathématiques."));
-
-    return new PluginInfo("Widget", false, false,
-                          QStringList() << "Core" << "Qwt",
-                          descriptions);
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void ViewerPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
+#ifdef _WIN32
+    #ifdef MathMLViewer_PLUGIN
+        #define MATHMLVIEWER_EXPORT __declspec(dllexport)
+    #else
+        #define MATHMLVIEWER_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define MATHMLVIEWER_EXPORT
+#endif
 
 //==============================================================================
 
-}   // namespace Viewer
-}   // namespace OpenCOR
+#endif
 
 //==============================================================================
 // End of file

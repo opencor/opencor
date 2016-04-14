@@ -16,48 +16,46 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Viewer plugin
+// MathML viewer plugin
 //==============================================================================
 
-#ifndef VIEWERPLUGIN_H
-#define VIEWERPLUGIN_H
-
-//==============================================================================
-
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "mathmlviewerplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Viewer {
+namespace MathMLViewer {
 
 //==============================================================================
 
-PLUGININFO_FUNC ViewerPluginInfo();
-
-//==============================================================================
-
-class ViewerPlugin : public QObject, public I18nInterface
+PLUGININFO_FUNC MathMLViewerPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.ViewerPlugin" FILE "viewerplugin.json")
+    descriptions.insert("en", QString::fromUtf8("a plugin to visualise MathML documents."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents MathML."));
 
-    Q_INTERFACES(OpenCOR::I18nInterface)
+    return new PluginInfo("Widget", false, false,
+                          QStringList() << "Core" << "Qwt",
+                          descriptions);
+}
 
-public:
-#include "i18ninterface.inl"
-};
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void MathMLViewerPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
 
 //==============================================================================
 
-}   // namespace Viewer
+}   // namespace MathMLViewer
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
