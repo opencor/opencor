@@ -572,7 +572,7 @@ void ConversionTests::warningConversionTests()
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(ConversionTests)
+QTEST_APPLESS_MAIN(ConversionTests)
 
 //==============================================================================
 // End of file
