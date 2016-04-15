@@ -382,7 +382,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       instance as a qApp property...
 
     QByteArray objectName = pObjectName.toUtf8();
-    QVariant res = qApp->property(objectName.constData());
+    QVariant res = qApp?qApp->property(objectName.constData()):qulonglong(pDefaultGlobalInstance);
 
     if (!res.isValid()) {
         // There is no 'global' instance associated with the given object, so
@@ -660,11 +660,9 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
     // Return the name of a 'new' file
     // Note: see Tests::newFileNameTests() for what we want to be able to get...
 
-    FileManager *fileManagerInstance = qApp?FileManager::instance():0;
-    QString fileName = fileManagerInstance?
-                           fileManagerInstance->isRemote(pFileName)?
-                               fileManagerInstance->url(pFileName):
-                               pFileName:
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = fileManagerInstance->isRemote(pFileName)?
+                           fileManagerInstance->url(pFileName):
                            pFileName;
     QFileInfo fileInfo = fileName;
     QString fileCanonicalPath = fileInfo.canonicalPath();
