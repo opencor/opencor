@@ -93,9 +93,6 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
     # On OS X, keep track of the Qt libraries against which we need to link
-    # Note: this is needed, among other things, to make sure that any Qt-based
-    #       file can properly refer to our embedded copy of the Qt libraries
-    #       (see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES())...
 
     IF(APPLE)
         IF(ENABLE_TESTS)
