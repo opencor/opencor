@@ -247,7 +247,7 @@ void GeneralTests::newFileNameTests()
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(GeneralTests)
+QTEST_GUILESS_MAIN(GeneralTests)
 
 //==============================================================================
 // End of file

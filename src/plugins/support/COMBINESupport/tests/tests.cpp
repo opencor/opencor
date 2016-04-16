@@ -237,7 +237,7 @@ qInstallMessageHandler(oldMessageHandler);
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(Tests)
+QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
 // End of file
