@@ -50,21 +50,6 @@ void dummyMessageHandler(QtMsgType pType, const QMessageLogContext &pContext,
 
 void Tests::initTestCase()
 {
-    // Quick trick to prevent warnings from Qt
-    // Note: indeed, to call CombineArchive::load() calls Core::validXml(),
-    //       which creates a QXmlSchema object. The first time a QXmlSchema
-    //       object is created, Qt generates some warnings about the current
-    //       thread not being the object's thread and therefore not being able
-    //       to move to the target thread. We clearly have nothing to do with
-    //       those warnings and, if anything, they just pollute our test output,
-    //       so...
-
-QtMessageHandler oldMessageHandler = qInstallMessageHandler(dummyMessageHandler);
-    QXmlSchema schema;
-qInstallMessageHandler(oldMessageHandler);
-
-    Q_UNUSED(schema);
-
     // Create a simple COMBINE archive that contains various files
 
     mCombineArchive = new OpenCOR::COMBINESupport::CombineArchive(OpenCOR::Core::temporaryFileName(), true);
@@ -143,9 +128,7 @@ void Tests::basicTests()
     QString yetAnotherFileName = OpenCOR::Core::temporaryFileName();
 
     QVERIFY(otherCombineArchive.load());
-QtMessageHandler oldMessageHandler = qInstallMessageHandler(dummyMessageHandler);
     QVERIFY(otherCombineArchive.isValid());
-qInstallMessageHandler(oldMessageHandler);
     QVERIFY(otherCombineArchive.save(yetAnotherFileName));
 
     QByteArray otherFileContents;
@@ -205,9 +188,7 @@ void Tests::loadingErrorTests()
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/notvalidomex.omex"));
 
     QVERIFY(combineArchive.reload());
-QtMessageHandler oldMessageHandler = qInstallMessageHandler(dummyMessageHandler);
     QVERIFY(!combineArchive.isValid());
-qInstallMessageHandler(oldMessageHandler);
     QVERIFY(combineArchive.issues().count() == 1);
     QCOMPARE(combineArchive.issues().first().message(), QString("the manifest is not a valid OMEX file"));
 
@@ -216,9 +197,7 @@ qInstallMessageHandler(oldMessageHandler);
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nonexistentfile.omex"));
 
     QVERIFY(combineArchive.reload());
-qInstallMessageHandler(dummyMessageHandler);
     QVERIFY(!combineArchive.isValid());
-qInstallMessageHandler(oldMessageHandler);
     QVERIFY(combineArchive.issues().count() == 1);
     QCOMPARE(combineArchive.issues().first().message(), QString("<strong>nonexistentfile.txt</strong> could not be found"));
 
@@ -228,9 +207,7 @@ qInstallMessageHandler(oldMessageHandler);
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nocombinearchivereference.omex"));
 
     QVERIFY(combineArchive.reload());
-qInstallMessageHandler(dummyMessageHandler);
     QVERIFY(!combineArchive.isValid());
-qInstallMessageHandler(oldMessageHandler);
     QVERIFY(combineArchive.issues().count() == 1);
     QCOMPARE(combineArchive.issues().first().message(), QString("no reference to the COMBINE archive itself could be found"));
 }

@@ -382,7 +382,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       instance as a qApp property...
 
     QByteArray objectName = pObjectName.toUtf8();
-    QVariant res = qApp?qApp->property(objectName.constData()):qulonglong(pDefaultGlobalInstance);
+    QVariant res = qApp->property(objectName.constData());
 
     if (!res.isValid()) {
         // There is no 'global' instance associated with the given object, so
