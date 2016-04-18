@@ -1019,7 +1019,7 @@ void MainWindow::handleArguments(const QStringList &pArguments)
         if (!url.scheme().compare("opencor"))
             handleUrl(url);
         else if (!argument.isEmpty())
-            arguments << argument;
+            arguments << stringFromPercentEncoding(argument);
     }
 
     if (!arguments.isEmpty() && mPluginManager->corePlugin())
