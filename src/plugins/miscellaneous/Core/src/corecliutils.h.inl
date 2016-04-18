@@ -69,6 +69,9 @@ QString CORE_EXPORT plainString(const QString &pString);
 
 QString CORE_EXPORT urlArguments(const QUrl &pUrl);
 
+QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
+QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
+
 //==============================================================================
 // End of file
 //==============================================================================

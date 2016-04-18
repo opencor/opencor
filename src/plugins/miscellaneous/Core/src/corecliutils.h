@@ -139,9 +139,6 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     bool &pOutIsLocalFile,
                                     QString &pOutFileNameOrUrl);
 
-QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
-QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
-
 QString CORE_EXPORT formatXml(const QString &pXml);
 
 QString CORE_EXPORT cleanContentMathml(const QString &pContentMathml);

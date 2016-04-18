@@ -518,5 +518,23 @@ QString urlArguments(const QUrl &pUrl)
 }
 
 //==============================================================================
+
+QString stringToPercentEncoding(const QString &pString)
+{
+    // Convert the given string to one with percent encoding
+
+    return QUrl::toPercentEncoding(pString);
+}
+
+//==============================================================================
+
+QString stringFromPercentEncoding(const QString &pString)
+{
+    // Remove the percent encoding from the given string
+
+    return QUrl::fromPercentEncoding(pString.toUtf8());
+}
+
+//==============================================================================
 // End of file
 //==============================================================================
