@@ -104,10 +104,13 @@ File::Status File::check()
     if (!mUrl.isEmpty())
         return Unchanged;
 
-    // Check whether the file has been modified
+    // Check whether the file and/or one or several of its dependencies has been
+    // modified
 
     if (mModified)
-        return Modified;
+        return mDependenciesModified?AllModified:Modified;
+    else if (mDependenciesModified)
+        return DependenciesModified;
 
     // Retrieve our 'new' SHA-1 value and that of our dependencies (if any), and
     // check whether they are different from the one(s) we currently have
@@ -167,6 +170,8 @@ void File::reset(const bool &pResetDependencies)
     if (pResetDependencies) {
         mDependencies.clear();
         mDependenciesSha1.clear();
+
+        mDependenciesModified = false;
     }
 }
 
@@ -373,6 +378,21 @@ bool File::setDependencies(const QStringList &pDependencies)
 
         foreach (const QString &dependency, pDependencies)
             mDependenciesSha1 << sha1(dependency);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool File::setDependenciesModified(const bool &pDependenciesModified)
+{
+    // Set our dependencies modified status
+
+    if (pDependenciesModified != mDependenciesModified) {
+        mDependenciesModified = pDependenciesModified;
 
         return true;
     } else {

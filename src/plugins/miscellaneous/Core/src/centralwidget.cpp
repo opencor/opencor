@@ -1935,11 +1935,17 @@ void CentralWidget::fileChanged(const QString &pFileName,
                     break;
                 }
             }
-        } else {
+        } else if (pFileChanged) {
             // The user doesn't want to reload the file, so consider it as
             // modified
 
             fileManagerInstance->setModified(pFileName, true);
+        } else {
+            // The user doesn't want to reload the file (after one or several of
+            // its dependencies has changed) , so consider its dependencies as
+            // modified
+
+            fileManagerInstance->setDependenciesModified(pFileName, true);
         }
     }
 }

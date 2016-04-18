@@ -311,6 +311,21 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
+void FileManager::setDependenciesModified(const QString &pFileName,
+                                          const bool &pModified)
+{
+    // Set the dependencies modified state of the given file, should it be
+    // managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *nativeFile = file(nativeFileName);
+
+    if (nativeFile)
+        nativeFile->setDependenciesModified(pModified);
+}
+
+//==============================================================================
+
 bool FileManager::isReadable(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is readable
