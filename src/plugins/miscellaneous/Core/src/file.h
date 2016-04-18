@@ -54,6 +54,7 @@ public:
         AllChanged,
         Unchanged,
         Deleted,
+        Modified,
 
         // As a result of setting the locked status of a file
 

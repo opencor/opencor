@@ -104,6 +104,11 @@ File::Status File::check()
     if (!mUrl.isEmpty())
         return Unchanged;
 
+    // Check whether the file has been modified
+
+    if (mModified)
+        return Modified;
+
     // Retrieve our 'new' SHA-1 value and that of our dependencies (if any), and
     // check whether they are different from the one(s) we currently have
 
