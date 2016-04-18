@@ -55,6 +55,8 @@ public:
         Unchanged,
         Deleted,
         Modified,
+        DependenciesModified,
+        AllModified,
 
         // As a result of setting the locked status of a file
 
@@ -102,6 +104,8 @@ public:
     QStringList dependencies() const;
     bool setDependencies(const QStringList &pDependencies);
 
+    bool setDependenciesModified(const bool &pDependenciesModified);
+
 private:
     QString mFileName;
     QString mUrl;
@@ -113,6 +117,8 @@ private:
 
     QStringList mDependencies;
     QStringList mDependenciesSha1;
+
+    bool mDependenciesModified;
 };
 
 //==============================================================================
