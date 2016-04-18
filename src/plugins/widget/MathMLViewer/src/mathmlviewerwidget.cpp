@@ -16,13 +16,13 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Viewer widget
+// MathML viewer widget
 //==============================================================================
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "i18ninterface.h"
-#include "viewerwidget.h"
+#include "mathmlviewerwidget.h"
 
 //==============================================================================
 
@@ -50,7 +50,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Viewer {
+namespace MathMLViewer {
 
 //==============================================================================
 
@@ -58,7 +58,7 @@ static QMap<QString, QString> GreekSymbols;
 
 //==============================================================================
 
-ViewerWidget::ViewerWidget(QWidget *pParent) :
+MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     Widget(pParent),
     mMathmlDocument(QwtMathMLDocument()),
     mOneOverMathmlDocumentWidth(0),
@@ -138,11 +138,11 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
             this, SLOT(update()));
 
     connect(mSubscriptsAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateViewer()));
+            this, SLOT(updateMathmlViewer()));
     connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateViewer()));
+            this, SLOT(updateMathmlViewer()));
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateViewer()));
+            this, SLOT(updateMathmlViewer()));
 
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
@@ -169,38 +169,38 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
-static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
-static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
-static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
+static const auto SettingsMathmlViewerOptimiseFontSizeEnabled = QStringLiteral("MathmlViewerOptimiseFontSizeEnabled");
+static const auto SettingsMathmlViewerSubscriptsEnabled       = QStringLiteral("MathmlViewerSubscriptsEnabled");
+static const auto SettingsMathmlViewerGreekSymbolsEnabled     = QStringLiteral("MathmlViewerGreekSymbolsEnabled");
+static const auto SettingsMathmlViewerDigitGroupingEnabled    = QStringLiteral("MathmlViewerDigitGroupingEnabled");
 
 //==============================================================================
 
-void ViewerWidget::loadSettings(QSettings *pSettings)
+void MathmlViewerWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
-    setOptimiseFontSize(pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool());
-    setSubscripts(pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool());
-    setGreekSymbols(pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool());
-    setDigitGrouping(pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool());
+    setOptimiseFontSize(pSettings->value(SettingsMathmlViewerOptimiseFontSizeEnabled, true).toBool());
+    setSubscripts(pSettings->value(SettingsMathmlViewerSubscriptsEnabled, true).toBool());
+    setGreekSymbols(pSettings->value(SettingsMathmlViewerGreekSymbolsEnabled, true).toBool());
+    setDigitGrouping(pSettings->value(SettingsMathmlViewerDigitGroupingEnabled, true).toBool());
 }
 
 //==============================================================================
 
-void ViewerWidget::saveSettings(QSettings *pSettings) const
+void MathmlViewerWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, optimiseFontSize());
-    pSettings->setValue(SettingsViewerSubscriptsEnabled, subscripts());
-    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, greekSymbols());
-    pSettings->setValue(SettingsViewerDigitGroupingEnabled, digitGrouping());
+    pSettings->setValue(SettingsMathmlViewerOptimiseFontSizeEnabled, optimiseFontSize());
+    pSettings->setValue(SettingsMathmlViewerSubscriptsEnabled, subscripts());
+    pSettings->setValue(SettingsMathmlViewerGreekSymbolsEnabled, greekSymbols());
+    pSettings->setValue(SettingsMathmlViewerDigitGroupingEnabled, digitGrouping());
 }
 
 //==============================================================================
 
-void ViewerWidget::retranslateUi()
+void MathmlViewerWidget::retranslateUi()
 {
     // Retranslate our actions
 
@@ -213,7 +213,7 @@ void ViewerWidget::retranslateUi()
     I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"),
                                      tr("Group the digits of a number in groups of thousands"));
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
-                                     tr("Copy the contents of the viewer to the clipboard"));
+                                     tr("Copy the contents of the MathML viewer to the clipboard"));
 
     // Retranslate our contents
     // Note: we do this because we may be displaying numbers using digit
@@ -224,24 +224,24 @@ void ViewerWidget::retranslateUi()
 
 //==============================================================================
 
-void ViewerWidget::updateSettings(ViewerWidget *pViewerWidget)
+void MathmlViewerWidget::updateSettings(MathmlViewerWidget *pMathmlViewerWidget)
 {
     // Make sure that we are given another widget
 
-    if (!pViewerWidget)
+    if (!pMathmlViewerWidget)
         return;
 
-    // Update our viewer settings
+    // Update our MathML viewer settings
 
-    setOptimiseFontSize(pViewerWidget->optimiseFontSize());
-    setSubscripts(pViewerWidget->subscripts());
-    setGreekSymbols(pViewerWidget->greekSymbols());
-    setDigitGrouping(pViewerWidget->digitGrouping());
+    setOptimiseFontSize(pMathmlViewerWidget->optimiseFontSize());
+    setSubscripts(pMathmlViewerWidget->subscripts());
+    setGreekSymbols(pMathmlViewerWidget->greekSymbols());
+    setDigitGrouping(pMathmlViewerWidget->digitGrouping());
 }
 
 //==============================================================================
 
-QString ViewerWidget::contents() const
+QString MathmlViewerWidget::contents() const
 {
     // Return our contents
 
@@ -250,7 +250,7 @@ QString ViewerWidget::contents() const
 
 //==============================================================================
 
-void ViewerWidget::setContents(const QString &pContents)
+void MathmlViewerWidget::setContents(const QString &pContents)
 {
     // Try to set our contents to our MathML document
     // Note: we don't check whether pContents has the same value as mContents
@@ -301,7 +301,7 @@ void ViewerWidget::setContents(const QString &pContents)
 
 //==============================================================================
 
-bool ViewerWidget::error() const
+bool MathmlViewerWidget::error() const
 {
     // Return whether there is an error
 
@@ -310,7 +310,7 @@ bool ViewerWidget::error() const
 
 //==============================================================================
 
-void ViewerWidget::setError(const bool &pError)
+void MathmlViewerWidget::setError(const bool &pError)
 {
     // Keep track of whether there is an error
 
@@ -327,7 +327,7 @@ void ViewerWidget::setError(const bool &pError)
 
 //==============================================================================
 
-bool ViewerWidget::optimiseFontSize() const
+bool MathmlViewerWidget::optimiseFontSize() const
 {
     // Return whether we optimise our font size
 
@@ -336,7 +336,7 @@ bool ViewerWidget::optimiseFontSize() const
 
 //==============================================================================
 
-void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
+void MathmlViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 {
     // Keep track of whether we should optimise our font size
 
@@ -348,7 +348,7 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 
 //==============================================================================
 
-bool ViewerWidget::subscripts() const
+bool MathmlViewerWidget::subscripts() const
 {
     // Return whether we use subscripts
 
@@ -357,7 +357,7 @@ bool ViewerWidget::subscripts() const
 
 //==============================================================================
 
-void ViewerWidget::setSubscripts(const bool &pSubscripts)
+void MathmlViewerWidget::setSubscripts(const bool &pSubscripts)
 {
     // Keep track of whether we use subscripts
 
@@ -369,7 +369,7 @@ void ViewerWidget::setSubscripts(const bool &pSubscripts)
 
 //==============================================================================
 
-bool ViewerWidget::greekSymbols() const
+bool MathmlViewerWidget::greekSymbols() const
 {
     // Return whether we use Greek symbols
 
@@ -378,7 +378,7 @@ bool ViewerWidget::greekSymbols() const
 
 //==============================================================================
 
-void ViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
+void MathmlViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
 {
     // Keep track of whether we use Greek symbols
 
@@ -390,7 +390,7 @@ void ViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
 
 //==============================================================================
 
-bool ViewerWidget::digitGrouping() const
+bool MathmlViewerWidget::digitGrouping() const
 {
     // Return whether we do digit grouping
 
@@ -399,7 +399,7 @@ bool ViewerWidget::digitGrouping() const
 
 //==============================================================================
 
-void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
+void MathmlViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
 {
     // Keep track of whether we do digit grouping
 
@@ -411,7 +411,7 @@ void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
 
 //==============================================================================
 
-void ViewerWidget::paintEvent(QPaintEvent *pEvent)
+void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Make sure that we have a width and height
 
@@ -498,27 +498,28 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-QSize ViewerWidget::minimumSizeHint() const
+QSize MathmlViewerWidget::minimumSizeHint() const
 {
-    // Suggest a default minimum size for our viewer widget
+    // Suggest a default minimum size for our MathML viewer widget
 
     return defaultSize(0.03);
 }
 
 //==============================================================================
 
-QSize ViewerWidget::sizeHint() const
+QSize MathmlViewerWidget::sizeHint() const
 {
-    // Suggest a default size for our viewer widget
-    // Note: this is critical if we want a docked widget, with a viewer widget
-    //       on it, to have a decent size when docked to the main window...
+    // Suggest a default size for our MathML viewer widget
+    // Note: this is critical if we want a docked widget, with a MathML viewer
+    //       widget on it, to have a decent size when docked to the main
+    //       window...
 
     return defaultSize(0.1);
 }
 
 //==============================================================================
 
-QAction * ViewerWidget::newAction()
+QAction * MathmlViewerWidget::newAction()
 {
     // Create and return a checkable and checked action
 
@@ -531,7 +532,7 @@ QAction * ViewerWidget::newAction()
 
 //==============================================================================
 
-QString ViewerWidget::greekSymbolize(const QString &pValue) const
+QString MathmlViewerWidget::greekSymbolize(const QString &pValue) const
 {
     // Convert the given value into a Greek symbol, if possible
 
@@ -540,8 +541,8 @@ QString ViewerWidget::greekSymbolize(const QString &pValue) const
 
 //==============================================================================
 
-QDomElement ViewerWidget::newMiNode(const QDomNode &pDomNode,
-                                    const QString &pValue) const
+QDomElement MathmlViewerWidget::newMiNode(const QDomNode &pDomNode,
+                                          const QString &pValue) const
 {
     // Create and return an mi element with a text child node, which value is
     // the one given
@@ -557,7 +558,7 @@ QDomElement ViewerWidget::newMiNode(const QDomNode &pDomNode,
 
 //==============================================================================
 
-void ViewerWidget::processNode(const QDomNode &pDomNode) const
+void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
 {
     // Go through the node's children and process them
 
@@ -702,7 +703,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
 //==============================================================================
 
-QString ViewerWidget::processedContents() const
+QString MathmlViewerWidget::processedContents() const
 {
     // Process and return our processed contents
 
@@ -725,7 +726,7 @@ QString ViewerWidget::processedContents() const
 
 //==============================================================================
 
-void ViewerWidget::showCustomContextMenu() const
+void MathmlViewerWidget::showCustomContextMenu() const
 {
     // Show our custom context menu
 
@@ -734,9 +735,9 @@ void ViewerWidget::showCustomContextMenu() const
 
 //==============================================================================
 
-void ViewerWidget::updateViewer()
+void MathmlViewerWidget::updateMathmlViewer()
 {
-    // Update our viewer by 'updating' our contents
+    // Update our MathML viewer by 'updating' our contents
 
     QString contents = mContents;
 
@@ -747,7 +748,7 @@ void ViewerWidget::updateViewer()
 
 //==============================================================================
 
-void ViewerWidget::copyToClipboard()
+void MathmlViewerWidget::copyToClipboard()
 {
     // Copy our contents to the clipboard
 
@@ -763,7 +764,7 @@ void ViewerWidget::copyToClipboard()
 
 //==============================================================================
 
-}   // namespace Viewer
+}   // namespace MathMLViewer
 }   // namespace OpenCOR
 
 //==============================================================================

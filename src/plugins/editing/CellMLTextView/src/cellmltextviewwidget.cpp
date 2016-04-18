@@ -32,8 +32,8 @@ specific language governing permissions and limitations under the License.
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
+#include "mathmlviewerwidget.h"
 #include "qscintillawidget.h"
-#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -1041,7 +1041,7 @@ void CellmlTextViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->viewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents(QString());
     } else {
         // There is a statement, so try to parse it
 
@@ -1065,7 +1065,7 @@ void CellmlTextViewWidget::updateViewer()
                 QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
                 if (!presentationMathmlEquation.isEmpty())
-                    mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                    mEditingWidget->mathmlViewer()->setContents(presentationMathmlEquation);
                 else
                     mMathmlConverter.convert(contentMathmlEquation);
             }
@@ -1074,7 +1074,7 @@ void CellmlTextViewWidget::updateViewer()
 
             mContentMathmlEquation = QString();
 
-            mEditingWidget->viewer()->setError(true);
+            mEditingWidget->mathmlViewer()->setError(true);
         }
     }
 }
@@ -1130,7 +1130,7 @@ void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
     //       which case the contents of our viewer shouldn't be updated...
 
     if (!pContentMathml.compare(mContentMathmlEquation))
-        mEditingWidget->viewer()->setContents(pPresentationMathml);
+        mEditingWidget->mathmlViewer()->setContents(pPresentationMathml);
 
     mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }

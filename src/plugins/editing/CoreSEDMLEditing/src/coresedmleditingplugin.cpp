@@ -47,7 +47,7 @@ PLUGININFO_FUNC CoreSEDMLEditingPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition SED-ML de base."));
 
     return new PluginInfo("Editing", false, false,
-                          QStringList() << "CoreEditing" << "SEDMLSupport" << "EditorList" << "Viewer",
+                          QStringList() << "CoreEditing" << "SEDMLSupport" << "EditorList",
                           descriptions);
 }
 

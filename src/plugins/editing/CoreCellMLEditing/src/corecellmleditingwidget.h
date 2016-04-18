@@ -56,9 +56,9 @@ namespace EditorList {
 
 //==============================================================================
 
-namespace Viewer {
-    class ViewerWidget;
-}   // namespace Viewer
+namespace MathMLViewer {
+    class MathmlViewerWidget;
+}   // namespace MathMLViewer
 
 //==============================================================================
 
@@ -83,14 +83,14 @@ public:
 
     void updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
 
-    Viewer::ViewerWidget * viewer() const;
+    MathMLViewer::MathmlViewerWidget * mathmlViewer() const;
     Editor::EditorWidget * editor() const;
     EditorList::EditorListWidget * editorList() const;
 
     QIntList editingWidgetSizes() const;
 
 private:
-    Viewer::ViewerWidget *mViewer;
+    MathMLViewer::MathmlViewerWidget *mMathmlViewer;
     Editor::EditorWidget *mEditor;
     EditorList::EditorListWidget *mEditorList;
 

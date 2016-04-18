@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
-#include "viewerwidget.h"
+#include "mathmlviewerwidget.h"
 
 //==============================================================================
 
@@ -59,7 +59,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     // Create our viewer, editor and editor list
 
-    mViewer = new Viewer::ViewerWidget(this);
+    mMathmlViewer = new MathMLViewer::MathmlViewerWidget(this);
     mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorList = new EditorList::EditorListWidget(this);
 
@@ -68,7 +68,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     // Add the bordered viewer, editor and editor list to ourselves
 
-    addWidget(new Core::BorderedWidget(mViewer, false, false, true, false));
+    addWidget(new Core::BorderedWidget(mMathmlViewer, false, false, true, false));
     addWidget(new Core::BorderedWidget(mEditor, true, false, true, false));
     addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
 
@@ -104,7 +104,7 @@ void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve our viewer's and editor's settings
 
-    mViewer->loadSettings(pSettings);
+    mMathmlViewer->loadSettings(pSettings);
     mEditor->loadSettings(pSettings);
 }
 
@@ -118,7 +118,7 @@ void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of our viewer's and editor's settings
 
-    mViewer->saveSettings(pSettings);
+    mMathmlViewer->saveSettings(pSettings);
     mEditor->saveSettings(pSettings);
 }
 
@@ -128,7 +128,7 @@ void CoreCellmlEditingWidget::retranslateUi()
 {
     // Retranslate our viewer, editor and editor list
 
-    mViewer->retranslateUi();
+    mMathmlViewer->retranslateUi();
     mEditor->retranslateUi();
     mEditorList->retranslateUi();
 }
@@ -148,17 +148,17 @@ void CoreCellmlEditingWidget::updateSettings(CoreCellmlEditingWidget *pCoreCellm
 
     setSizes(mEditingWidgetSizes);
 
-    mViewer->updateSettings(pCoreCellmlEditingWidget->viewer());
+    mMathmlViewer->updateSettings(pCoreCellmlEditingWidget->mathmlViewer());
     mEditor->updateSettings(pCoreCellmlEditingWidget->editor());
 }
 
 //==============================================================================
 
-Viewer::ViewerWidget * CoreCellmlEditingWidget::viewer() const
+MathMLViewer::MathmlViewerWidget *CoreCellmlEditingWidget::mathmlViewer() const
 {
-    // Return our viewer
+    // Return our MathML viewer
 
-    return mViewer;
+    return mMathmlViewer;
 }
 
 //==============================================================================

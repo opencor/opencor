@@ -93,9 +93,6 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
     # On OS X, keep track of the Qt libraries against which we need to link
-    # Note: this is needed, among other things, to make sure that any Qt-based
-    #       file can properly refer to our embedded copy of the Qt libraries
-    #       (see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES())...
 
     IF(APPLE)
         IF(ENABLE_TESTS)
@@ -748,7 +745,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Plugins
 
-                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
+                FOREACH(PLUGIN ${PLUGINS})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         ${PLUGIN}Plugin
                     )

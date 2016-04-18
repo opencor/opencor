@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Viewer widget
+// MathML viewer widget
 //==============================================================================
 
-#ifndef VIEWERWIDGET_H
-#define VIEWERWIDGET_H
+#ifndef MATHMLVIEWERWIDGET_H
+#define MATHMLVIEWERWIDGET_H
 
 //==============================================================================
 
-#include "viewerglobal.h"
+#include "mathmlviewerglobal.h"
 #include "widget.h"
 
 //==============================================================================
@@ -42,23 +42,23 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
-namespace Viewer {
+namespace MathMLViewer {
 
 //==============================================================================
 
-class VIEWER_EXPORT ViewerWidget : public Core::Widget
+class MATHMLVIEWER_EXPORT MathmlViewerWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit ViewerWidget(QWidget *pParent);
+    explicit MathmlViewerWidget(QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual void retranslateUi();
 
-    void updateSettings(ViewerWidget *pViewerWidget);
+    void updateSettings(MathmlViewerWidget *pMathmlViewerWidget);
 
     QString contents() const;
     void setContents(const QString &pContents);
@@ -114,14 +114,14 @@ private:
 private Q_SLOTS:
     void showCustomContextMenu() const;
 
-    void updateViewer();
+    void updateMathmlViewer();
 
     void copyToClipboard();
 };
 
 //==============================================================================
 
-}   // namespace Viewer
+}   // namespace MathMLViewer
 }   // namespace OpenCOR
 
 //==============================================================================

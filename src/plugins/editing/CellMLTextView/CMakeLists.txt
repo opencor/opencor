@@ -41,10 +41,10 @@ ADD_PLUGIN(CellMLTextView
         Editor
         EditorList
         ${LLVM_PLUGIN}
+        MathMLViewer
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
         ${QWT_PLUGIN}
-        Viewer
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
         ${QSCINTILLA_PLUGIN_BINARY}
