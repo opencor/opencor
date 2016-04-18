@@ -1902,10 +1902,10 @@ void CentralWidget::fileChanged(const QString &pFileName,
 
         if (QMessageBox::question(mainWindow(), tr("File Modified"),
                                   pFileChanged?
-                                      tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
                                       pDependenciesChanged?
-                                          tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName):
-                                          tr("<strong>%1</strong> and/or one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName),
+                                          tr("<strong>%1</strong> and one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName):
+                                          tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
+                                      tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName),
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes) == QMessageBox::Yes) {
             // The user wants to reload the file
