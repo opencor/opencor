@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // MathML viewer plugin
 //==============================================================================
 
-#ifndef MATHMLVIEWERPLUGIN_H
-#define MATHMLVIEWERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -54,10 +53,6 @@ public:
 
 }   // namespace MathMLViewer
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
