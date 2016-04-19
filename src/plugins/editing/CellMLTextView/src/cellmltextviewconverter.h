@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw CellML to CellML text converter
 //==============================================================================
 
-#ifndef CELLMLTEXTVIEWCONVERTER_H
-#define CELLMLTEXTVIEWCONVERTER_H
+#pragma once
 
 //==============================================================================
 
@@ -196,10 +195,6 @@ private:
 
 }   // namespace CellMLTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

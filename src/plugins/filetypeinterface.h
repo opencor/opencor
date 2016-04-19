@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // File type interface
 //==============================================================================
 
-#ifndef FILETYPEINTERFACE_H
-#define FILETYPEINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -90,10 +89,6 @@ protected:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::FileTypeInterface, "OpenCOR::FileTypeInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINE support tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -52,10 +51,6 @@ private Q_SLOTS:
     void basicTests();
     void loadingErrorTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

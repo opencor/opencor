@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata raw view details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATARAWVIEWDETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATARAWVIEWDETAILSWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -60,10 +59,6 @@ private:
 
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

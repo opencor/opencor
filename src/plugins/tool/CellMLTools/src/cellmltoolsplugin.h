@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellMLTools plugin
 //==============================================================================
 
-#ifndef CELLMLTOOLSPLUGIN_H
-#define CELLMLTOOLSPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -92,10 +91,6 @@ private Q_SLOTS:
 
 }   // namespace CellMLTools
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor plugin
 //==============================================================================
 
-#ifndef EDITORPLUGIN_H
-#define EDITORPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -54,10 +53,6 @@ public:
 
 }   // namespace Editor
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
-#ifndef COREGUIUTILS_H
-#define COREGUIUTILS_H
+#pragma once
 
 //==============================================================================
 
@@ -122,10 +121,6 @@ QStringList CORE_EXPORT filters(const FileTypes &pFileTypes,
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

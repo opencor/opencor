@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw SED-ML view widget
 //==============================================================================
 
-#ifndef RAWSEDMLVIEWWIDGET_H
-#define RAWSEDMLVIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -94,10 +93,6 @@ private:
 
 }   // namespace RawSEDMLView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

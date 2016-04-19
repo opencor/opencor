@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core interface
 //==============================================================================
 
-#ifndef COREINTERFACE_H
-#define COREINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -47,10 +46,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::CoreInterface, "OpenCOR::CoreInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

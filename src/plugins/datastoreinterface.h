@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Data store interface
 //==============================================================================
 
-#ifndef DATASTOREINTERFACE_H
-#define DATASTOREINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -152,10 +151,6 @@ typedef QList<DataStoreInterface *> DataStoreInterfaces;
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::DataStoreInterface, "OpenCOR::DataStoreInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

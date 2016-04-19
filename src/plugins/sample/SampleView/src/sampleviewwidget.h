@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample view widget
 //==============================================================================
 
-#ifndef SAMPLEVIEWWIDGET_H
-#define SAMPLEVIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -61,10 +60,6 @@ private:
 
 }   // namespace SampleView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Tab bar widget
 //==============================================================================
 
-#ifndef TABBARWIDGET_H
-#define TABBARWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -52,10 +51,6 @@ protected:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

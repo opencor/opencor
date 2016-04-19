@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // ZIP support tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -43,10 +42,6 @@ private Q_SLOTS:
     void compressTests();
     void uncompressTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

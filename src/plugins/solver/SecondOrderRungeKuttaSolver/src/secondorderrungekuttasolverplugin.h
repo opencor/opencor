@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SecondOrderRungeKuttaSolver plugin
 //==============================================================================
 
-#ifndef SECONDORDERRUNGEKUTTASOLVERPLUGIN_H
-#define SECONDORDERRUNGEKUTTASOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -59,10 +58,6 @@ public:
 
 }   // namespace SecondOrderRungeKuttaSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

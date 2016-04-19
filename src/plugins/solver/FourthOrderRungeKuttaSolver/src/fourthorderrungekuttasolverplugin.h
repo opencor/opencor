@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // FourthOrderRungeKuttaSolver plugin
 //==============================================================================
 
-#ifndef FOURTHORDERRUNGEKUTTASOLVERPLUGIN_H
-#define FOURTHORDERRUNGEKUTTASOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -59,10 +58,6 @@ public:
 
 }   // namespace FourthOrderRungeKuttaSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

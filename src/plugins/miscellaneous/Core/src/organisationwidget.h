@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Organisation widget
 //==============================================================================
 
-#ifndef ORGANISATIONWIDGET_H
-#define ORGANISATIONWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -54,10 +53,6 @@ protected Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

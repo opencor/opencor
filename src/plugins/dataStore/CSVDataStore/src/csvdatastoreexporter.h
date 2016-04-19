@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CSV data store exporter class
 //==============================================================================
 
-#ifndef CSVDATASTOREEXPORTER_H
-#define CSVDATASTOREEXPORTER_H
+#pragma once
 
 //==============================================================================
 
@@ -45,10 +44,6 @@ public:
 
 }   // namespace CSVDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

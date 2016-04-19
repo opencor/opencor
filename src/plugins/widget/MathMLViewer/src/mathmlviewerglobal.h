@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // MathML viewer global
 //==============================================================================
 
-#ifndef MATHMLVIEWERGLOBAL_H
-#define MATHMLVIEWERGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define MATHMLVIEWER_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

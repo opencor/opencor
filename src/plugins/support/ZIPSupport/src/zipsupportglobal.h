@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // ZIPSupport global
 //==============================================================================
 
-#ifndef ZIPSUPPORTGLOBAL_H
-#define ZIPSUPPORTGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define ZIPSUPPORT_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

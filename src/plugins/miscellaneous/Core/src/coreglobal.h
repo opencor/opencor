@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core global
 //==============================================================================
 
-#ifndef COREGLOBAL_H
-#define COREGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -36,10 +35,6 @@ specific language governing permissions and limitations under the License.
     #else
         #define CORE_EXPORT
     #endif
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

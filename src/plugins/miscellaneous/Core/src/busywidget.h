@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Busy widget
 //==============================================================================
 
-#ifndef BUSYWIDGET_H
-#define BUSYWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -128,10 +127,6 @@ private Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

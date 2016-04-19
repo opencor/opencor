@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // MathML conversion
 //==============================================================================
 
-#ifndef MATHMLCONVERTER_H
-#define MATHMLCONVERTER_H
+#pragma once
 
 //==============================================================================
 
@@ -67,10 +66,6 @@ private Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor find/replace widget
 //==============================================================================
 
-#ifndef EDITORFINDREPLACEWIDGET_H
-#define EDITORFINDREPLACEWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -137,10 +136,6 @@ private Q_SLOTS:
 
 }   // namespace Editor
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

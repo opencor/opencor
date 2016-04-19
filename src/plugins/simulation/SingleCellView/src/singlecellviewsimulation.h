@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation
 //==============================================================================
 
-#ifndef SINGLECELLVIEWSIMULATION_H
-#define SINGLECELLVIEWSIMULATION_H
+#pragma once
 
 //==============================================================================
 
@@ -277,10 +276,6 @@ typedef QList<SingleCellViewSimulation *> SingleCellViewSimulations;
 
 }   // namespace SingleCellView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

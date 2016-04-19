@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // KINSOLSolver plugin
 //==============================================================================
 
-#ifndef KINSOLSOLVERPLUGIN_H
-#define KINSOLSOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -54,10 +53,6 @@ public:
 
 }   // namespace KINSOLSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // FileBrowserWindow plugin
 //==============================================================================
 
-#ifndef FILEBROWSERWINDOWPLUGIN_H
-#define FILEBROWSERWINDOWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -70,10 +69,6 @@ private:
 
 }   // namespace FileBrowserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

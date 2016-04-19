@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Standard file manager
 //==============================================================================
 
-#ifndef STANDARDFILEMANAGER_H
-#define STANDARDFILEMANAGER_H
+#pragma once
 
 //==============================================================================
 
@@ -76,10 +75,6 @@ private Q_SLOTS:
 
 }   // namespace StandardSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

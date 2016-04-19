@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CVODESolver plugin
 //==============================================================================
 
-#ifndef CVODESOLVERPLUGIN_H
-#define CVODESOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -58,10 +57,6 @@ public:
 
 }   // namespace CVODESolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

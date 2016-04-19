@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Solver interface
 //==============================================================================
 
-#ifndef SOLVERINTERFACE_H
-#define SOLVERINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -239,10 +238,6 @@ typedef QList<SolverInterface *> SolverInterfaces;
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::SolverInterface, "OpenCOR::SolverInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

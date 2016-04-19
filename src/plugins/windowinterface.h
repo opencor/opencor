@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Window interface
 //==============================================================================
 
-#ifndef WINDOWINTERFACE_H
-#define WINDOWINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -51,10 +50,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::WindowInterface, "OpenCOR::WindowInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

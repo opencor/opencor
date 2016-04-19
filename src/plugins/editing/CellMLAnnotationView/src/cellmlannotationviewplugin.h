@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellMLAnnotationView plugin
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWPLUGIN_H
-#define CELLMLANNOTATIONVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -77,10 +76,6 @@ private:
 
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

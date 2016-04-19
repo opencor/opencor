@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML file exporter
 //==============================================================================
 
-#ifndef CELLMLFILEEXPORTER_H
-#define CELLMLFILEEXPORTER_H
+#pragma once
 
 //==============================================================================
 
@@ -60,10 +59,6 @@ protected:
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

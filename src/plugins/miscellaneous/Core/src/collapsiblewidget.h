@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Collapsible widget
 //==============================================================================
 
-#ifndef COLLAPSIBLEWIDGET_H
-#define COLLAPSIBLEWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -144,10 +143,6 @@ private Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core general tests
 //==============================================================================
 
-#ifndef GENERALTESTS_H
-#define GENERALTESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -46,10 +45,6 @@ private Q_SLOTS:
     void stringLineColumnAsPositionTests();
     void newFileNameTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

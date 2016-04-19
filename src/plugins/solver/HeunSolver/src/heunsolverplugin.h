@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // HeunSolver plugin
 //==============================================================================
 
-#ifndef HEUNSOLVERPLUGIN_H
-#define HEUNSOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -58,10 +57,6 @@ public:
 
 }   // namespace HeunSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

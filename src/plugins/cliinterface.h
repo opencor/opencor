@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CLI interface
 //==============================================================================
 
-#ifndef CLIINTERFACE_H
-#define CLIINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -47,10 +46,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::CliInterface, "OpenCOR::CliInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

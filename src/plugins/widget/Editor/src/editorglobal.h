@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor global
 //==============================================================================
 
-#ifndef EDITORGLOBAL_H
-#define EDITORGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define EDITOR_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

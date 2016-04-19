@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SampleWindow plugin
 //==============================================================================
 
-#ifndef SAMPLEWINDOWPLUGIN_H
-#define SAMPLEWINDOWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -70,10 +69,6 @@ private:
 
 }   // namespace SampleWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

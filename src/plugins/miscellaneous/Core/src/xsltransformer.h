@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // XSL transformation
 //==============================================================================
 
-#ifndef XSLTRANSFORMER_H
-#define XSLTRANSFORMER_H
+#pragma once
 
 //==============================================================================
 
@@ -91,10 +90,6 @@ private Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

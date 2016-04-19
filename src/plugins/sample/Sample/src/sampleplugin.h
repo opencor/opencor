@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample plugin
 //==============================================================================
 
-#ifndef SAMPLEPLUGIN_H
-#define SAMPLEPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class SamplePlugin : public QObject
 
 }   // namespace Sample
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

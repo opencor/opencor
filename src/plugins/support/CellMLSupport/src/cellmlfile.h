@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML file class
 //==============================================================================
 
-#ifndef CELLMLFILE_H
-#define CELLMLFILE_H
+#pragma once
 
 //==============================================================================
 
@@ -188,10 +187,6 @@ private:
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

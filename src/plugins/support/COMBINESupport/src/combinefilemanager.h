@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINE file manager
 //==============================================================================
 
-#ifndef COMBINEFILEMANAGER_H
-#define COMBINEFILEMANAGER_H
+#pragma once
 
 //==============================================================================
 
@@ -56,10 +55,6 @@ protected:
 
 }   // namespace COMBINESupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

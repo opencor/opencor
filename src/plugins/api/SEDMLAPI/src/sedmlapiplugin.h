@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML API plugin
 //==============================================================================
 
-#ifndef SEDMLAPIPLUGIN_H
-#define SEDMLAPIPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class SEDMLAPIPlugin : public QObject
 
 }   // namespace SEDMLAPI
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

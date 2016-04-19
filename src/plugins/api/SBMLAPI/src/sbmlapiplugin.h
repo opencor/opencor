@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SBML API plugin
 //==============================================================================
 
-#ifndef SBMLAPIPLUGIN_H
-#define SBMLAPIPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class SBMLAPIPlugin : public QObject
 
 }   // namespace SBMLAPI
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

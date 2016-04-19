@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core MathML tests
 //==============================================================================
 
-#ifndef MATHMLTESTS_H
-#define MATHMLTESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -81,10 +80,6 @@ private Q_SLOTS:
 
     void trigonometricTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

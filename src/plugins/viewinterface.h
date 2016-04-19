@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // View interface
 //==============================================================================
 
-#ifndef VIEWINTERFACE_H
-#define VIEWINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -66,10 +65,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::ViewInterface, "OpenCOR::ViewInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Lexer for the CellML text format
 //==============================================================================
 
-#ifndef CELLMLTEXTVIEWLEXER_H
-#define CELLMLTEXTVIEWLEXER_H
+#pragma once
 
 //==============================================================================
 
@@ -110,10 +109,6 @@ private:
 
 }   // namespace CellMLTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

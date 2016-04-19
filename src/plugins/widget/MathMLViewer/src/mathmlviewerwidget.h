@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // MathML viewer widget
 //==============================================================================
 
-#ifndef MATHMLVIEWERWIDGET_H
-#define MATHMLVIEWERWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -123,10 +122,6 @@ private Q_SLOTS:
 
 }   // namespace MathMLViewer
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

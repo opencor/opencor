@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SBML API tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -35,10 +34,6 @@ class Tests : public QObject
 private Q_SLOTS:
     void basicTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

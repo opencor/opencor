@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Standard file class
 //==============================================================================
 
-#ifndef STANDARDFILE_H
-#define STANDARDFILE_H
+#pragma once
 
 //==============================================================================
 
@@ -63,10 +62,6 @@ protected:
 
 }   // namespace StandardSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

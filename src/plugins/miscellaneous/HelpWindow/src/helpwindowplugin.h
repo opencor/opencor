@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // HelpWindow plugin
 //==============================================================================
 
-#ifndef HELPWINDOWPLUGIN_H
-#define HELPWINDOWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -70,10 +69,6 @@ private:
 
 }   // namespace HelpWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Property editor widget
 //==============================================================================
 
-#ifndef PROPERTYEDITORWIDGET_H
-#define PROPERTYEDITORWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -403,10 +402,6 @@ private Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

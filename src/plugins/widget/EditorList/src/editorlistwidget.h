@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor list widget
 //==============================================================================
 
-#ifndef EDITORLISTWIDGET_H
-#define EDITORLISTWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -93,10 +92,6 @@ private Q_SLOTS:
 
 }   // namespace EditorList
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

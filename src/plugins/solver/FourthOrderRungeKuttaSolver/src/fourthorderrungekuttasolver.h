@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Fourth-order Runge-Kutta solver class
 //==============================================================================
 
-#ifndef FOURTHORDERRUNGEKUTTASOLVER_H
-#define FOURTHORDERRUNGEKUTTASOLVER_H
+#pragma once
 
 //==============================================================================
 
@@ -66,10 +65,6 @@ private:
 
 }   // namespace FourthOrderRungeKuttaSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw CellML view widget
 //==============================================================================
 
-#ifndef RAWCELLMLVIEWWIDGET_H
-#define RAWCELLMLVIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -110,10 +109,6 @@ private Q_SLOTS:
 
 }   // namespace RawCellMLView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

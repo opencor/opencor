@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // ForwardEulerSolver plugin
 //==============================================================================
 
-#ifndef FORWARDEULERSOLVERPLUGIN_H
-#define FORWARDEULERSOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -58,10 +57,6 @@ public:
 
 }   // namespace ForwardEulerSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

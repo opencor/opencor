@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // File browser window
 //==============================================================================
 
-#ifndef FILEBROWSERWINDOWWINDOW_H
-#define FILEBROWSERWINDOWWINDOW_H
+#pragma once
 
 //==============================================================================
 
@@ -82,10 +81,6 @@ private Q_SLOTS:
 
 }   // namespace FileBrowserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

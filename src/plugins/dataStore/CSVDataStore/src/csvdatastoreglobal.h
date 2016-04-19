@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CSV data store global
 //==============================================================================
 
-#ifndef CSVDATASTOREGLOBAL_H
-#define CSVDATASTOREGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define CSVDATASTORE_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

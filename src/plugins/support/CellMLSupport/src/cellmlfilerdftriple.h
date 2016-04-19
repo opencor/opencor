@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML file RDF triple
 //==============================================================================
 
-#ifndef CELLMLFILERDFTRIPLE_H
-#define CELLMLFILERDFTRIPLE_H
+#pragma once
 
 //==============================================================================
 
@@ -200,10 +199,6 @@ private:
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

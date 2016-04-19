@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML file manager
 //==============================================================================
 
-#ifndef SEDMLFILEMANAGER_H
-#define SEDMLFILEMANAGER_H
+#pragma once
 
 //==============================================================================
 
@@ -56,10 +55,6 @@ protected:
 
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

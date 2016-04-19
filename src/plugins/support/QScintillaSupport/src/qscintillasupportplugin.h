@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // QScintillaSupport plugin
 //==============================================================================
 
-#ifndef QSCINTILLASUPPORTPLUGIN_H
-#define QSCINTILLASUPPORTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class QScintillaSupportPlugin : public QObject
 
 }   // namespace QScintillaSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

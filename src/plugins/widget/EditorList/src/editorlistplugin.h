@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // EditorList plugin
 //==============================================================================
 
-#ifndef EDITORLISTPLUGIN_H
-#define EDITORLISTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -54,10 +53,6 @@ public:
 
 }   // namespace EditorList
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

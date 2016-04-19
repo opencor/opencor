@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SUNDIALS plugin
 //==============================================================================
 
-#ifndef SUNDIALSPLUGIN_H
-#define SUNDIALSPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class SUNDIALSPlugin : public QObject
 
 }   // namespace SUNDIALS
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

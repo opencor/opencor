@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample window
 //==============================================================================
 
-#ifndef SAMPLEWINDOWWINDOW_H
-#define SAMPLEWINDOWWINDOW_H
+#pragma once
 
 //==============================================================================
 
@@ -58,10 +57,6 @@ private Q_SLOTS:
 
 }   // namespace SampleWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

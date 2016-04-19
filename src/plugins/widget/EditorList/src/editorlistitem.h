@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor list item
 //==============================================================================
 
-#ifndef EDITORLISTITEM_H
-#define EDITORLISTITEM_H
+#pragma once
 
 //==============================================================================
 
@@ -72,10 +71,6 @@ typedef QList<EditorListItem> EditorListItems;
 
 }   // namespace EditorList
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

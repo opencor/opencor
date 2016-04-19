@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view parsing tests
 //==============================================================================
 
-#ifndef PARSINGTESTS_H
-#define PARSINGTESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -41,10 +40,6 @@ private Q_SLOTS:
     void groupTests();
     void mapTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

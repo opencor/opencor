@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // FileOrganiserWindow plugin
 //==============================================================================
 
-#ifndef FILEORGANISERWINDOWPLUGIN_H
-#define FILEORGANISERWINDOWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -70,10 +69,6 @@ private:
 
 }   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

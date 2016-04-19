@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CVODE solver class
 //==============================================================================
 
-#ifndef CVODESOLVER_H
-#define CVODESOLVER_H
+#pragma once
 
 //==============================================================================
 
@@ -146,10 +145,6 @@ private:
 
 }   // namespace CVODESolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
