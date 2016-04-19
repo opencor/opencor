@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core SED-ML editing widget
 //==============================================================================
 
-#ifndef CORESEDMLEDITINGWIDGET_H
-#define CORESEDMLEDITINGWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -97,10 +96,6 @@ private Q_SLOTS:
 
 }   // namespace CoreSEDMLEditing
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

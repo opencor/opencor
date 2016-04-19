@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // RawCellMLView plugin
 //==============================================================================
 
-#ifndef RAWCELLMLVIEWPLUGIN_H
-#define RAWCELLMLVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -79,10 +78,6 @@ private:
 
 }   // namespace RawCellMLView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

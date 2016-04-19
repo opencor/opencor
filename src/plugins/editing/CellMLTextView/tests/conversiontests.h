@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view conversion tests
 //==============================================================================
 
-#ifndef CONVERSIONTESTS_H
-#define CONVERSIONTESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -37,10 +36,6 @@ private Q_SLOTS:
     void failingConversionTests();
     void warningConversionTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

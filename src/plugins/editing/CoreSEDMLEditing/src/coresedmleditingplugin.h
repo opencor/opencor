@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreSEDMLEditing plugin
 //==============================================================================
 
-#ifndef CORESEDMLEDITINGPLUGIN_H
-#define CORESEDMLEDITINGPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -87,10 +86,6 @@ private Q_SLOTS:
 
 }   // namespace CoreSEDMLEditing
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

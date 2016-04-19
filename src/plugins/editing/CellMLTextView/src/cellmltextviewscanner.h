@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Scanner for the CellML text format
 //==============================================================================
 
-#ifndef CELLMLTEXTVIEWSCANNER_H
-#define CELLMLTEXTVIEWSCANNER_H
+#pragma once
 
 //==============================================================================
 
@@ -190,10 +189,6 @@ private:
 
 }   // namespace CellMLTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

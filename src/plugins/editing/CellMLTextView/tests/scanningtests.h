@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view scanning tests
 //==============================================================================
 
-#ifndef SCANNINGTESTS_H
-#define SCANNINGTESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -41,10 +40,6 @@ private Q_SLOTS:
     void scanningStringTests();
     void scanningNumberTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view widget
 //==============================================================================
 
-#ifndef CELLMLTEXTVIEWWIDGET_H
-#define CELLMLTEXTVIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -182,10 +181,6 @@ private Q_SLOTS:
 
 }   // namespace CellMLTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // RawTextView plugin
 //==============================================================================
 
-#ifndef RAWTEXTVIEWPLUGIN_H
-#define RAWTEXTVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -75,10 +74,6 @@ private:
 
 }   // namespace RawTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

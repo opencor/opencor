@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // RawSEDMLView plugin
 //==============================================================================
 
-#ifndef RAWSEDMLVIEWPLUGIN_H
-#define RAWSEDMLVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -79,10 +78,6 @@ private:
 
 }   // namespace RawSEDMLView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

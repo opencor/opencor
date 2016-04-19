@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreSEDMLEditing global
 //==============================================================================
 
-#ifndef CORESEDMLEDITINGGLOBAL_H
-#define CORESEDMLEDITINGGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define CORESEDMLEDITING_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

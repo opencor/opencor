@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw text view widget
 //==============================================================================
 
-#ifndef RAWTEXTVIEWWIDGET_H
-#define RAWTEXTVIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -82,10 +81,6 @@ private:
 
 }   // namespace RawTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

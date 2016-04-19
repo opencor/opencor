@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editing interface
 //==============================================================================
 
-#ifndef EDITINGINTERFACE_H
-#define EDITINGINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -47,10 +46,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::EditingInterface, "OpenCOR::EditingInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

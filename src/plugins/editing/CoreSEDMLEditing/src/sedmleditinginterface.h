@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML editing interface
 //==============================================================================
 
-#ifndef SEDMLEDITINGINTERFACE_H
-#define SEDMLEDITINGINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -47,10 +46,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::SedmlEditingInterface, "OpenCOR::SedmlEditingInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

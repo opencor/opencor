@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreEditing plugin
 //==============================================================================
 
-#ifndef COREEDITINGPLUGIN_H
-#define COREEDITINGPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -130,10 +129,6 @@ private Q_SLOTS:
 
 }   // namespace CoreEditing
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

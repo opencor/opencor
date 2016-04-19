@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata normal view details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATANORMALVIEWDETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATANORMALVIEWDETAILSWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -166,10 +165,6 @@ private Q_SLOTS:
 
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

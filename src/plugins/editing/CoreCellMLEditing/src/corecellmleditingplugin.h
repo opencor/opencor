@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreCellMLEditing plugin
 //==============================================================================
 
-#ifndef CORECELLMLEDITINGPLUGIN_H
-#define CORECELLMLEDITINGPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -87,10 +86,6 @@ private Q_SLOTS:
 
 }   // namespace CoreCellMLEditing
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellMLTextView plugin
 //==============================================================================
 
-#ifndef CELLMLTEXTVIEWPLUGIN_H
-#define CELLMLTEXTVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -80,10 +79,6 @@ private:
 
 }   // namespace CellMLTextView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

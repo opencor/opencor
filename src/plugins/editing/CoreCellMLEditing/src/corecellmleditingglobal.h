@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreCellMLEditing global
 //==============================================================================
 
-#ifndef CORECELLMLEDITINGGLOBAL_H
-#define CORECELLMLEDITINGGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define CORECELLMLEDITING_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

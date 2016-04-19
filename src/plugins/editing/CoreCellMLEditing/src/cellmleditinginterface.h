@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML editing interface
 //==============================================================================
 
-#ifndef CELLMLEDITINGINTERFACE_H
-#define CELLMLEDITINGINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -47,10 +46,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::CellmlEditingInterface, "OpenCOR::CellmlEditingInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

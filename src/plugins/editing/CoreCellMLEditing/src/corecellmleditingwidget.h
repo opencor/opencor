@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core CellML editing widget
 //==============================================================================
 
-#ifndef CORECELLMLEDITINGWIDGET_H
-#define CORECELLMLEDITINGWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -105,10 +104,6 @@ private Q_SLOTS:
 
 }   // namespace CoreCellMLEditing
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
