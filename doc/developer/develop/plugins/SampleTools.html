@@ -106,12 +106,7 @@ ADD_PLUGIN(SampleTools
             Our <a href="index.html#Plugin information">plugin information</a> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.json"><code>sampletoolsplugin.json</code></a>. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a>, its contents is:
         </p>
 
-        <pre class="prettyprint linenums:22">#ifndef SAMPLETOOLSPLUGIN_H
-#define SAMPLETOOLSPLUGIN_H
-
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.h"><code>cliinterface.h</code></a>"
+        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.h"><code>cliinterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h"><code>guiinterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
@@ -160,14 +155,10 @@ private Q_SLOTS:
 //==============================================================================
 
 }   // namespace SampleTools
-}   // namespace OpenCOR
-
-//==============================================================================
-
-#endif</pre>
+}   // namespace OpenCOR</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 26-28 and 30). It also means that our plugin class inherits from those interfaces (lines 43-45), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 51-54). Finally, we include the inline files (lines 57-60) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
         </p>
 
         <p>
@@ -379,7 +370,7 @@ void SampleToolsPlugin::handleUrl(const QUrl &pUrl)
             Some extra methods are needed to get our plugin to do what it is supposed to be doing. They are declared in the <code>SampleToolsPlugin</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:63">private:
+        <pre class="prettyprint linenums:62">private:
     QAction *mAddTwoNumbersAction;
 
     void runHelpCommand();

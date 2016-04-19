@@ -104,12 +104,7 @@ ADD_PLUGIN(SampleView
             Our <a href="index.html#Plugin information">plugin information</a> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>sampleviewplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>sampleviewplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.json"><code>sampleviewplugin.json</code></a>. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>sampleviewplugin.h</code></a>, its contents is:
         </p>
 
-        <pre class="prettyprint linenums:22">#ifndef SAMPLEVIEWPLUGIN_H
-#define SAMPLEVIEWPLUGIN_H
-
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h"><code>filehandlinginterface.h</code></a>"
+        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h"><code>filehandlinginterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h"><code>plugininterface.h</code></a>"
@@ -160,14 +155,10 @@ private:
 //==============================================================================
 
 }   // namespace SampleView
-}   // namespace OpenCOR
-
-//==============================================================================
-
-#endif</pre>
+}   // namespace OpenCOR</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27,28, 30 and 31). It also means that our plugin class inherits from those interfaces (lines 48-50), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 56-59). Finally, we include the inline files (lines 64-67) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 26, 27, 29 and 30). It also means that our plugin class inherits from those interfaces (lines 47-49), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 55-58). Finally, we include the inline files (lines 63-66) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
         </p>
 
         <p>
@@ -506,12 +497,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
             Some extra work is needed to get our plugin to do what it is supposed to be doing, and this is done via the <code>SampleViewWidget</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.h"><code>sampleviewwidget.h</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:22">#ifndef SAMPLEVIEWWIDGET_H
-#define SAMPLEVIEWWIDGET_H
-
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/viewwidget.h"><code>viewwidget.h</code></a>"
+        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/viewwidget.h"><code>viewwidget.h</code></a>"
 
 //==============================================================================
 
@@ -547,14 +533,10 @@ private:
 //==============================================================================
 
 }   // namespace SampleView
-}   // namespace OpenCOR
-
-//==============================================================================
-
-#endif</pre>
+}   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file (line 52).
+            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QWidget</code> (line 41). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file (line 51).
         </p>
 
         <p>

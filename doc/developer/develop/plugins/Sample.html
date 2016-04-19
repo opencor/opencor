@@ -101,12 +101,7 @@ ADD_PLUGIN(Sample
             We want our plugin to be recognisable by OpenCOR, which means that it must provide some <a href="index.html#Plugin information">plugin information</a>. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>sampleplugin.cpp</code></a> therefore contains a C function that is called by OpenCOR to retrieve some <a href="index.html#Basic information">basic information</a> about our plugin. That function is declared in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.h"><code>sampleplugin.h</code></a>, which is also where our <a href="index.html#Plugin class">plugin class</a> is defined:
         </p>
 
-        <pre class="prettyprint linenums:22">#ifndef SAMPLEPLUGIN_H
-#define SAMPLEPLUGIN_H
-
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
+        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
 
 //==============================================================================
 
@@ -129,14 +124,10 @@ class SamplePlugin : public QObject
 //==============================================================================
 
 }   // namespace Sample
-}   // namespace OpenCOR
-
-//==============================================================================
-
-#endif</pre>
+}   // namespace OpenCOR</pre>
 
         <p>
-            We need to know about the data structure of our <a href="index.html#Basic information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 27). Then, we declare our C function (line 36). Finally, we have the definition of our <a href="index.html#Plugin class">plugin class</a> (lines 40-45). The call to the <code>Q_PLUGIN_METADATA()</code> macro (line 44) requires to pass both an IID (<code>OpenCOR.SamplePlugin</code>) and the name of a <a href="http://www.json.org/">JSON</a> file (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.json"><code>sampleplugin.json</code></a>). As mentioned <a href="index.html#.json file">here</a>, the JSON file simply references the name of our plugin class (<code>SamplePlugin</code>):
+            We need to know about the data structure of our <a href="index.html#Basic information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 26). Then, we declare our C function (line 35). Finally, we have the definition of our <a href="index.html#Plugin class">plugin class</a> (lines 39-44). The call to the <code>Q_PLUGIN_METADATA()</code> macro (line 43) requires to pass both an IID (<code>OpenCOR.SamplePlugin</code>) and the name of a <a href="http://www.json.org/">JSON</a> file (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.json"><code>sampleplugin.json</code></a>). As mentioned <a href="index.html#.json file">here</a>, the JSON file simply references the name of our plugin class (<code>SamplePlugin</code>):
         </p>
 
         <pre class="prettyprint linenums">{
@@ -189,12 +180,7 @@ PLUGININFO_FUNC SamplePluginInfo()
             Finally, we need to deal with our plugin's <code>add()</code> function. It is declared in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:22">#ifndef SAMPLEUTILS_H
-#define SAMPLEUTILS_H
-
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>"
+        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>"
 
 //==============================================================================
 
@@ -208,14 +194,10 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
 //==============================================================================
 
 }   // namespace Sample
-}   // namespace OpenCOR
-
-//==============================================================================
-
-#endif</pre>
+}   // namespace OpenCOR</pre>
 
         <p>
-            We start by including <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This header file defines the <code>SAMPLE_EXPORT</code> macro (click <a href="index.html#Global header file">here</a> for some information on plugins' global header file in OpenCOR), which we use to declare our plugin's <code>add()</code> function (line 36).
+            We start by including <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 26). This header file defines the <code>SAMPLE_EXPORT</code> macro (click <a href="index.html#Global header file">here</a> for some information on plugins' global header file in OpenCOR), which we use to declare our plugin's <code>add()</code> function (line 35).
         </p>
 
         <p>
