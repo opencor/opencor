@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample utilities
 //==============================================================================
 
-#ifndef SAMPLEUTILS_H
-#define SAMPLEUTILS_H
+#pragma once
 
 //==============================================================================
 
@@ -39,10 +38,6 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
 
 }   // namespace Sample
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

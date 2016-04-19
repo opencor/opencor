@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SampleTools plugin
 //==============================================================================
 
-#ifndef SAMPLETOOLSPLUGIN_H
-#define SAMPLETOOLSPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -74,10 +73,6 @@ private Q_SLOTS:
 
 }   // namespace SampleTools
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

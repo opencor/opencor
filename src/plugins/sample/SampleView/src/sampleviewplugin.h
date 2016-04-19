@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SampleView plugin
 //==============================================================================
 
-#ifndef SAMPLEVIEWPLUGIN_H
-#define SAMPLEVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -76,10 +75,6 @@ private:
 
 }   // namespace SampleView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

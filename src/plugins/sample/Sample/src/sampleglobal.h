@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample global
 //==============================================================================
 
-#ifndef SAMPLEGLOBAL_H
-#define SAMPLEGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define SAMPLE_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================
