@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // PMRWindow plugin
 //==============================================================================
 
-#ifndef PMRWINDOWPLUGIN_H
-#define PMRWINDOWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -70,10 +69,6 @@ private:
 
 }   // namespace PMRWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

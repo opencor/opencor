@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // File organiser window
 //==============================================================================
 
-#ifndef FILEORGANISERWINDOWWINDOW_H
-#define FILEORGANISERWINDOWWINDOW_H
+#pragma once
 
 //==============================================================================
 
@@ -83,10 +82,6 @@ private Q_SLOTS:
 
 }   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

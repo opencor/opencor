@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // File organiser model
 //==============================================================================
 
-#ifndef FILEORGANISERWINDOWMODEL_H
-#define FILEORGANISERWINDOWMODEL_H
+#pragma once
 
 //==============================================================================
 
@@ -80,10 +79,6 @@ private:
 
 }   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

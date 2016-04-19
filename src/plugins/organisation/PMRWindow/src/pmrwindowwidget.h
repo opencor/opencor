@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // PMR widget
 //==============================================================================
 
-#ifndef PMRWINDOWWIDGET_H
-#define PMRWINDOWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -129,10 +128,6 @@ private Q_SLOTS:
 
 }   // namespace PMRWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

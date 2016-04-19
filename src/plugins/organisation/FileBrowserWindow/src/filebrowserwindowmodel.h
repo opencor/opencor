@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // File browser model
 //==============================================================================
 
-#ifndef FILEBROWSERWINDOWMODEL_H
-#define FILEBROWSERWINDOWMODEL_H
+#pragma once
 
 //==============================================================================
 
@@ -51,10 +50,6 @@ public:
 
 }   // namespace FileBrowserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
