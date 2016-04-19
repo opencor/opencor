@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Help widget
 //==============================================================================
 
-#ifndef HELPWINDOWWIDGET_H
-#define HELPWINDOWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -163,10 +162,6 @@ private Q_SLOTS:
 
 }   // namespace HelpWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

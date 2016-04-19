@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core CLI utilities
 //==============================================================================
 
-#ifndef CORECLIUTILS_H
-#define CORECLIUTILS_H
+#pragma once
 
 //==============================================================================
 
@@ -164,10 +163,6 @@ QByteArray CORE_EXPORT serialiseDomDocument(const QDomDocument &pDomDocument);
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

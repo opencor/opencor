@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // User message widget
 //==============================================================================
 
-#ifndef USERMESSAGEWIDGET_H
-#define USERMESSAGEWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -73,10 +72,6 @@ private:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

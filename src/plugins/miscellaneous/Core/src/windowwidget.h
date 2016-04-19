@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Window widget
 //==============================================================================
 
-#ifndef WINDOWWIDGET_H
-#define WINDOWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -55,10 +54,6 @@ protected:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Bordered widget
 //==============================================================================
 
-#ifndef BORDEREDWIDGET_H
-#define BORDEREDWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -67,10 +66,6 @@ private:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

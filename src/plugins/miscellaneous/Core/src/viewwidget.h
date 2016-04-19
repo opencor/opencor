@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // View widget
 //==============================================================================
 
-#ifndef VIEWWIDGET_H
-#define VIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -56,10 +55,6 @@ Q_SIGNALS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

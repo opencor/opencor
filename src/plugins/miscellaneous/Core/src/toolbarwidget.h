@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Tool bar widget
 //==============================================================================
 
-#ifndef TOOLBARWIDGET_H
-#define TOOLBARWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -49,10 +48,6 @@ public:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

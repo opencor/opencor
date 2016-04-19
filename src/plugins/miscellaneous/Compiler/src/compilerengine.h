@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Compiler engine class
 //==============================================================================
 
-#ifndef COMPILERENGINE_H
-#define COMPILERENGINE_H
+#pragma once
 
 //==============================================================================
 
@@ -71,10 +70,6 @@ private:
 
 }   // namespace Compiler
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

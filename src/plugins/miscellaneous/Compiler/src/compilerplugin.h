@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Compiler plugin
 //==============================================================================
 
-#ifndef COMPILERPLUGIN_H
-#define COMPILERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class CompilerPlugin : public QObject
 
 }   // namespace Compiler
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Compiler mathematical functions
 //==============================================================================
 
-#ifndef COMPILERMATH_H
-#define COMPILERMATH_H
+#pragma once
 
 //==============================================================================
 
@@ -81,10 +80,6 @@ extern "C" double COMPILER_EXPORT compiler_multi_max(int pCount, ...);
 
 extern "C" double COMPILER_EXPORT compiler_gcd_multi(int pCount, ...);
 extern "C" double COMPILER_EXPORT compiler_lcm_multi(int pCount, ...);
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

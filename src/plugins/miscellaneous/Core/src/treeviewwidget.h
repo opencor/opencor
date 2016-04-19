@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Enhanced tree view widget
 //==============================================================================
 
-#ifndef TREEVIEWWIDGET_H
-#define TREEVIEWWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -65,10 +64,6 @@ protected:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

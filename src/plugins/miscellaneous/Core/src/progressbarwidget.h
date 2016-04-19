@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Progress bar widget
 //==============================================================================
 
-#ifndef PROGRESSBARWIDGET_H
-#define PROGRESSBARWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -62,10 +61,6 @@ private:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

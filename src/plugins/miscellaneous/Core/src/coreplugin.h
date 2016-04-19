@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core plugin
 //==============================================================================
 
-#ifndef COREPLUGIN_H
-#define COREPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -126,10 +125,6 @@ private Q_SLOTS:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Compiler tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -124,10 +123,6 @@ private Q_SLOTS:
     void gcdFunctionTests();
     void lcmFunctionTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

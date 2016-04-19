@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Busy support widget
 //==============================================================================
 
-#ifndef BUSYSUPPORTWIDGET_H
-#define BUSYSUPPORTWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -72,10 +71,6 @@ private:
 
 }   // namespace Core
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

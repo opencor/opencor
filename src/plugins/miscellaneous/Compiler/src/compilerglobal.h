@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Compiler global
 //==============================================================================
 
-#ifndef COMPILERGLOBAL_H
-#define COMPILERGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define COMPILER_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================
