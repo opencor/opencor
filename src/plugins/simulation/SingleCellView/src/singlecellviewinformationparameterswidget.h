@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Single cell view information parameters widget
 //==============================================================================
 
-#ifndef SINGLECELLVIEWINFORMATIONPARAMETERSWIDGET_H
-#define SINGLECELLVIEWINFORMATIONPARAMETERSWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -97,10 +96,6 @@ private Q_SLOTS:
 
 }   // namespace SingleCellView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

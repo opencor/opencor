@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation worker
 //==============================================================================
 
-#ifndef SINGLECELLVIEWSIMULATIONWORKER_H
-#define SINGLECELLVIEWSIMULATIONWORKER_H
+#pragma once
 
 //==============================================================================
 
@@ -105,10 +104,6 @@ private Q_SLOTS:
 
 }   // namespace SingleCellView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

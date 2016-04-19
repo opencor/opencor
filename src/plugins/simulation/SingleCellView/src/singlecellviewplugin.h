@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SingleCellView plugin
 //==============================================================================
 
-#ifndef SINGLECELLVIEWPLUGIN_H
-#define SINGLECELLVIEWPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -93,10 +92,6 @@ private:
 
 }   // namespace SingleCellView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
