@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML tools tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 //==============================================================================
 
@@ -42,10 +41,6 @@ private Q_SLOTS:
     void cliHelpTests();
     void cliCellmlExportTests();
 };
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
