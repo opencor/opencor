@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Qwt plugin
 //==============================================================================
 
-#ifndef QWTPLUGIN_H
-#define QWTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class QwtPlugin : public QObject
 
 }   // namespace Qwt
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

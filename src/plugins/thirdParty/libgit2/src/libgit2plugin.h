@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // libgit2 plugin
 //==============================================================================
 
-#ifndef LIBGIT2PLUGIN_H
-#define LIBGIT2PLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class libgit2Plugin : public QObject
 
 }   // namespace libgit2
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

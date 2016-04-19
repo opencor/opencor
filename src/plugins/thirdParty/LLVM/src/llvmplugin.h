@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // LLVM plugin
 //==============================================================================
 
-#ifndef LLVMPLUGIN_H
-#define LLVMPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class LLVMPlugin : public QObject
 
 }   // namespace LLVM
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

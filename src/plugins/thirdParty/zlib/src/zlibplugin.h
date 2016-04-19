@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // zlib plugin
 //==============================================================================
 
-#ifndef ZLIBPLUGIN_H
-#define ZLIBPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class zlibPlugin : public QObject
 
 }   // namespace zlib
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
