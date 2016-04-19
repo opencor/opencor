@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CSVDataStore plugin
 //==============================================================================
 
-#ifndef CSVDATASTOREPLUGIN_H
-#define CSVDATASTOREPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -68,10 +67,6 @@ private:
 
 }   // namespace CSVDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
