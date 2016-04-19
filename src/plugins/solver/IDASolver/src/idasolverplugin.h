@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // IDASolver plugin
 //==============================================================================
 
-#ifndef IDASOLVERPLUGIN_H
-#define IDASOLVERPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -58,10 +57,6 @@ public:
 
 }   // namespace IDASolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

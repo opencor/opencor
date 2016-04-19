@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Forward Euler solver class
 //==============================================================================
 
-#ifndef FORWARDEULERSOLVER_H
-#define FORWARDEULERSOLVER_H
+#pragma once
 
 //==============================================================================
 
@@ -61,10 +60,6 @@ private:
 
 }   // namespace ForwardEulerSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

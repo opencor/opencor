@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Second-order Runge-Kutta solver class
 //==============================================================================
 
-#ifndef SECONDORDERRUNGEKUTTASOLVER_H
-#define SECONDORDERRUNGEKUTTASOLVER_H
+#pragma once
 
 //==============================================================================
 
@@ -64,10 +63,6 @@ private:
 
 }   // namespace SecondOrderRungeKuttaSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Heun solver class
 //==============================================================================
 
-#ifndef HEUNSOLVER_H
-#define HEUNSOLVER_H
+#pragma once
 
 //==============================================================================
 
@@ -65,10 +64,6 @@ private:
 
 }   // namespace HeunSolver
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
