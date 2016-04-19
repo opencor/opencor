@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Internationalisation interface
 //==============================================================================
 
-#ifndef I18NINTERFACE_H
-#define I18NINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -65,10 +64,6 @@ private:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::I18nInterface, "OpenCOR::I18nInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

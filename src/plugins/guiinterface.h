@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // GUI interface
 //==============================================================================
 
-#ifndef GUIINTERFACE_H
-#define GUIINTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -122,10 +121,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::GuiInterface, "OpenCOR::GuiInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

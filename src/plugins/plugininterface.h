@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Plugin interface
 //==============================================================================
 
-#ifndef PLUGININTERFACE_H
-#define PLUGININTERFACE_H
+#pragma once
 
 //==============================================================================
 
@@ -56,10 +55,6 @@ public:
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::PluginInterface, "OpenCOR::PluginInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
