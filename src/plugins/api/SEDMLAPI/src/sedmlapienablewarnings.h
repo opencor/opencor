@@ -19,11 +19,6 @@ specific language governing permissions and limitations under the License.
 // SED-ML API enable warnings
 //==============================================================================
 
-#if defined(SEDMLAPIENABLEWARNINGS_H) && !defined(SEDMLAPIDISABLEWARNINGS_H)
-#define SEDMLAPIENABLEWARNINGS_H
-
-//==============================================================================
-
 #if defined(Q_OS_WIN)
     #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
@@ -32,10 +27,6 @@ specific language governing permissions and limitations under the License.
     #pragma clang diagnostic pop
 #else
     #error Unsupported platform
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

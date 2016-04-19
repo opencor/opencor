@@ -19,19 +19,10 @@ specific language governing permissions and limitations under the License.
 // CellML API disable warnings
 //==============================================================================
 
-#if !defined(CELLMLAPIENABLEWARNINGS_H) && !defined(CELLMLAPIDISABLEWARNINGS_H)
-#define CELLMLAPIDISABLEWARNINGS_H
-
-//==============================================================================
-
 #ifdef Q_OS_WIN
     #pragma warning(push)
     #pragma warning(disable: 4091)
     #pragma warning(disable: 4290)
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

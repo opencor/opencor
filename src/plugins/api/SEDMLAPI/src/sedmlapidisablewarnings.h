@@ -19,11 +19,6 @@ specific language governing permissions and limitations under the License.
 // SED-ML API disable warnings
 //==============================================================================
 
-#if !defined(SEDMLAPIENABLEWARNINGS_H) && !defined(SEDMLAPIDISABLEWARNINGS_H)
-#define SEDMLAPIDISABLEWARNINGS_H
-
-//==============================================================================
-
 #if defined(Q_OS_WIN)
     #pragma warning(push)
     #pragma warning(disable: 4005)
@@ -35,10 +30,6 @@ specific language governing permissions and limitations under the License.
     #pragma clang diagnostic ignored "-Wignored-qualifiers"
 #else
     #error Unsupported platform
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

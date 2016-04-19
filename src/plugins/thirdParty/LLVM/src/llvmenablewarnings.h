@@ -19,11 +19,6 @@ specific language governing permissions and limitations under the License.
 // LLVM enable warnings
 //==============================================================================
 
-#if defined(LLVMENABLEWARNINGS_H) && !defined(LLVMDISABLEWARNINGS_H)
-#define LLVMENABLEWARNINGS_H
-
-//==============================================================================
-
 #if defined(Q_OS_WIN)
     #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
@@ -34,10 +29,6 @@ specific language governing permissions and limitations under the License.
     #pragma GCC diagnostic error "-Wunused-parameter"
 #else
     #error Unsupported platform
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

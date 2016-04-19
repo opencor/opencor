@@ -19,17 +19,8 @@ specific language governing permissions and limitations under the License.
 // SBML API enable warnings
 //==============================================================================
 
-#if defined(SBMLAPIENABLEWARNINGS_H) && !defined(SBMLAPIDISABLEWARNINGS_H)
-#define SBMLAPIENABLEWARNINGS_H
-
-//==============================================================================
-
 #ifdef Q_OS_WIN
     #pragma warning(pop)
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================
