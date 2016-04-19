@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // Some useful tests-related functions
 //==============================================================================
 
-#ifndef TESTSUTILS_H
-#define TESTSUTILS_H
+#pragma once
 
 //==============================================================================
 
@@ -49,10 +48,6 @@ QStringList runCli(const QStringList pArguments);
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

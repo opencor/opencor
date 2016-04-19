@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CLI utilities
 //==============================================================================
 
-#ifndef CLIUTILS_H
-#define CLIUTILS_H
+#pragma once
 
 //==============================================================================
 
@@ -82,10 +81,6 @@ QString applicationBuildInformation(const bool &pGuiMode = true);
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
