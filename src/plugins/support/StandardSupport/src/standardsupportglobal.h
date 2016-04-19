@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // StandardSupport global
 //==============================================================================
 
-#ifndef STANDARDSUPPORTGLOBAL_H
-#define STANDARDSUPPORTGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define STANDARDSUPPORT_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

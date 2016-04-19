@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML file manager
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#pragma once
 
 //==============================================================================
 
@@ -60,10 +59,6 @@ protected:
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

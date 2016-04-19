@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML file issue
 //==============================================================================
 
-#ifndef SEDMLFILEISSUE_H
-#define SEDMLFILEISSUE_H
+#pragma once
 
 //==============================================================================
 
@@ -77,10 +76,6 @@ typedef QList<SedmlFileIssue> SedmlFileIssues;
 
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINE archive class
 //==============================================================================
 
-#ifndef COMBINEARCHIVE_H
-#define COMBINEARCHIVE_H
+#pragma once
 
 //==============================================================================
 
@@ -119,10 +118,6 @@ private:
 
 }   // namespace COMBINESupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

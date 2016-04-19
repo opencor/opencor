@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SEDMLSupport global
 //==============================================================================
 
-#ifndef SEDMLSUPPORTGLOBAL_H
-#define SEDMLSUPPORTGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define SEDMLSUPPORT_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

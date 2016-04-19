@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINESupport global
 //==============================================================================
 
-#ifndef COMBINESUPPORTGLOBAL_H
-#define COMBINESUPPORTGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define COMBINESUPPORT_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

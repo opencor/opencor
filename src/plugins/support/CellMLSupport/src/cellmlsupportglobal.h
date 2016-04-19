@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellMLSupport global
 //==============================================================================
 
-#ifndef CELLMLSUPPORTGLOBAL_H
-#define CELLMLSUPPORTGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define CELLMLSUPPORT_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

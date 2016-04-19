@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // QScintillaWidget class
 //==============================================================================
 
-#ifndef QSCINTILLAWIDGET_H
-#define QSCINTILLAWIDGET_H
+#pragma once
 
 //==============================================================================
 
@@ -147,10 +146,6 @@ private Q_SLOTS:
 
 }   // namespace QScintillaSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML file issue
 //==============================================================================
 
-#ifndef CELLMLFILEISSUE_H
-#define CELLMLFILEISSUE_H
+#pragma once
 
 //==============================================================================
 
@@ -80,10 +79,6 @@ typedef QList<CellmlFileIssue> CellmlFileIssues;
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

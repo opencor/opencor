@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // StandardSupport plugin
 //==============================================================================
 
-#ifndef STANDARDSUPPORTPLUGIN_H
-#define STANDARDSUPPORTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class StandardSupportPlugin : public QObject
 
 }   // namespace StandardSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

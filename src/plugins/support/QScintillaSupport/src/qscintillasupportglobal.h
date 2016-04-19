@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // QScintillaSupport global
 //==============================================================================
 
-#ifndef QSCINTILLASUPPORTGLOBAL_H
-#define QSCINTILLASUPPORTGLOBAL_H
+#pragma once
 
 //==============================================================================
 
@@ -32,10 +31,6 @@ specific language governing permissions and limitations under the License.
     #endif
 #else
     #define QSCINTILLASUPPORT_EXPORT
-#endif
-
-//==============================================================================
-
 #endif
 
 //==============================================================================

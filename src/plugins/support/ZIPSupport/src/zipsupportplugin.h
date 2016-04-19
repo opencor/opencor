@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // ZIPSupport plugin
 //==============================================================================
 
-#ifndef ZIPSUPPORTPLUGIN_H
-#define ZIPSUPPORTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class ZIPSupportPlugin : public QObject
 
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

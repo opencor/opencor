@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // COMBINESupport plugin
 //==============================================================================
 
-#ifndef COMBINESUPPORTPLUGIN_H
-#define COMBINESUPPORTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -68,10 +67,6 @@ public:
 
 }   // namespace COMBINESupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

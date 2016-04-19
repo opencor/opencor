@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SEDMLSupport plugin
 //==============================================================================
 
-#ifndef SEDMLSUPPORTPLUGIN_H
-#define SEDMLSUPPORTPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -78,10 +77,6 @@ private Q_SLOTS:
 
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

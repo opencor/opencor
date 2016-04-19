@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // SED-ML file class
 //==============================================================================
 
-#ifndef SEDMLFILE_H
-#define SEDMLFILE_H
+#pragma once
 
 //==============================================================================
 
@@ -95,10 +94,6 @@ private:
 
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
