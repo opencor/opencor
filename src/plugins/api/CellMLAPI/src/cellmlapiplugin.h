@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML API plugin
 //==============================================================================
 
-#ifndef CELLMLAPIPLUGIN_H
-#define CELLMLAPIPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class CellMLAPIPlugin : public QObject
 
 }   // namespace CellMLAPI
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
