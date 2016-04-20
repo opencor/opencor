@@ -74,7 +74,7 @@ int main(int pArgC, char *pArgV[])
 
         static const QString DotExe = ".exe";
 
-        if (cliApp->applicationFilePath().right(DotExe.size()) == DotExe) {
+        if (qApp->applicationFilePath().right(DotExe.size()) == DotExe) {
             // This is a safeguard from accidentally running a non-renamed (to
             // '.com') CLI version of OpenCOR
 
@@ -82,7 +82,7 @@ int main(int pArgC, char *pArgV[])
 
             res = -1;
         } else {
-            QString guiAppFilePath = cliApp->applicationDirPath()+QDir::separator()+qAppName()+DotExe;
+            QString guiAppFilePath = qApp->applicationDirPath()+QDir::separator()+qAppName()+DotExe;
 
             if (!QFile::exists(guiAppFilePath)) {
                 // We can't find the GUI version of OpenCOR, so...
@@ -95,7 +95,7 @@ int main(int pArgC, char *pArgV[])
                 // arguments, minus the first one since it corresponds to the
                 // full path to our executable, which we are not interested in
 
-                QStringList appArguments = cliApp->arguments();
+                QStringList appArguments = qApp->arguments();
 
                 appArguments.removeFirst();
 
