@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // CLI utilities
 //==============================================================================
 
-#include "cliapplication.h"
 #include "cliutils.h"
 
 //==============================================================================
@@ -142,21 +141,6 @@ void initApplication(QString *pAppDate)
 
     if (pAppDate)
         *pAppDate = versionDataList.last();
-}
-
-//==============================================================================
-
-bool cliApplication(int *pRes)
-{
-    // Create and run our CLI application object
-
-    CliApplication *cliApp = new CliApplication();
-
-    bool res = cliApp->run(pRes);
-
-    delete cliApp;
-
-    return res;
 }
 
 //==============================================================================

@@ -43,10 +43,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication() :
+CliApplication::CliApplication(int &pArgC, char **pArgV) :
     mPluginManager(0),
     mLoadedCliPlugins(Plugins())
 {
+    // Create our CLI application
+
+    mCliApplication = new QCoreApplication(pArgC, pArgV);
 }
 
 //==============================================================================
@@ -55,6 +58,7 @@ CliApplication::~CliApplication()
 {
     // Delete some internal objects
 
+    delete mCliApplication;
     delete mPluginManager;
 }
 

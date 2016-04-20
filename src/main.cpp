@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "checkforupdateswindow.h"
+#include "cliapplication.h"
 #include "cliutils.h"
 #include "guiapplication.h"
 #include "guiutils.h"
@@ -95,15 +96,14 @@ int main(int pArgC, char *pArgV[])
 
         // Create and initialise the CLI version of OpenCOR
 
-        QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
+        OpenCOR::CliApplication *cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
 
         OpenCOR::initApplication();
 
         // Try to run the CLI version of OpenCOR
 
         int res;
-
-        bool runCliApplication = OpenCOR::cliApplication(&res);
+        bool runCliApplication = cliApp->run(&res);
 
         delete cliApp;
 

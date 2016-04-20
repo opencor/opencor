@@ -73,8 +73,6 @@ void initPluginsPath(const QString &pAppFileName);
 
 void initApplication(QString *pAppDate = 0);
 
-bool cliApplication(int *pRes);
-
 QString applicationDescription(const bool &pGuiMode = true);
 QString applicationBuildInformation(const bool &pGuiMode = true);
 

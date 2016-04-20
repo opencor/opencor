@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Main
 //==============================================================================
 
+#include "cliapplication.h"
 #include "cliutils.h"
 
 //==============================================================================
@@ -57,7 +58,7 @@ int main(int pArgC, char *pArgV[])
 
     // Create our application
 
-    QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
+    OpenCOR::CliApplication *cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
 
     // Some general initialisations
 
@@ -67,7 +68,7 @@ int main(int pArgC, char *pArgV[])
 
     int res;
 
-    if (!OpenCOR::cliApplication(&res)) {
+    if (!cliApp->run(&res)) {
         // OpenCOR isn't meant to be run as a CLI application, so start its GUI
         // version instead
 
