@@ -84,13 +84,15 @@ MACRO(INITIALISE_PROJECT)
 
     # Keep track of some information about Qt
 
-    SET(QT_BINARY_DIR ${_qt5Widgets_install_prefix}/bin)
-    SET(QT_LIBRARY_DIR ${_qt5Widgets_install_prefix}/lib)
-    SET(QT_PLUGINS_DIR ${_qt5Widgets_install_prefix}/plugins)
     SET(QT_VERSION ${Qt5Widgets_VERSION})
     SET(QT_VERSION_MAJOR ${Qt5Widgets_VERSION_MAJOR})
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
+
+    SET(QT_DIR ${_qt5Widgets_install_prefix})
+    SET(QT_BINARY_DIR ${QT_DIR}/bin)
+    SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
+    SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
     # On OS X, keep track of the Qt libraries against which we need to link
 
