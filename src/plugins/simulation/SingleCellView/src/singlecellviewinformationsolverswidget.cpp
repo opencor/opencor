@@ -228,7 +228,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
             // Add the solver's properties
 
-            Core::Property *property;
+            Core::Property *property = 0;
             Core::Properties properties = Core::Properties();
 
             foreach (const Solver::Property &solverInterfaceProperty,
