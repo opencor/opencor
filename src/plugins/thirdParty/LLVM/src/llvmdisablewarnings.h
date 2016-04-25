@@ -32,9 +32,6 @@ specific language governing permissions and limitations under the License.
     #error Unsupported platform
 #endif
 
-#define __STDC_CONSTANT_MACROS
-#define __STDC_LIMIT_MACROS
-
 //==============================================================================
 // End of file
 //==============================================================================

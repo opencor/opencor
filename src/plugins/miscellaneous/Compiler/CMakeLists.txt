@@ -15,6 +15,8 @@ ADD_PLUGIN(Compiler
         src/compilerplugin.h
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${LLVM_DEFINITIONS}
     PLUGINS
         Core
         ${LLVM_PLUGIN}

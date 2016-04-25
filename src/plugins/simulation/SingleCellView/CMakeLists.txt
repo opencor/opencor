@@ -52,6 +52,8 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewsimulationwidget.ui
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport
