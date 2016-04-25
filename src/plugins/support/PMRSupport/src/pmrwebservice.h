@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "pmrsupportglobal.h"
+
+//==============================================================================
+
 #include <QList>
 #include <QSslError>
 
@@ -38,7 +42,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWebService : public QObject
+class PMRSUPPORT_EXPORT PmrWebService : public QObject
 {
     Q_OBJECT
 
