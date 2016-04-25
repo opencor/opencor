@@ -1,9 +1,5 @@
 PROJECT(RawSEDMLViewPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(RawSEDMLView
@@ -19,8 +15,6 @@ ADD_PLUGIN(RawSEDMLView
         src/rawsedmlviewwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

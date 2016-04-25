@@ -1,9 +1,5 @@
 PROJECT(RawCellMLViewPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(RawCellMLView
@@ -17,8 +13,6 @@ ADD_PLUGIN(RawCellMLView
     HEADERS_MOC
         src/rawcellmlviewplugin.h
         src/rawcellmlviewwidget.h
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS

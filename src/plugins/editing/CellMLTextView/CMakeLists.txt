@@ -1,9 +1,5 @@
 PROJECT(CellMLTextViewPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(CellMLTextView
@@ -21,8 +17,6 @@ ADD_PLUGIN(CellMLTextView
     HEADERS_MOC
         src/cellmltextviewplugin.h
         src/cellmltextviewwidget.h
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS

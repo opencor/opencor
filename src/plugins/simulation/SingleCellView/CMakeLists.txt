@@ -1,9 +1,5 @@
 PROJECT(SingleCellViewPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(SingleCellView
@@ -56,8 +52,6 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewsimulationwidget.ui
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

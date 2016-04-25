@@ -1,9 +1,5 @@
 PROJECT(SEDMLSupportPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(SEDMLSupport
@@ -23,8 +19,6 @@ ADD_PLUGIN(SEDMLSupport
         src/sedmlsupportplugin.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

@@ -1,9 +1,5 @@
 PROJECT(COMBINESupportPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(COMBINESupport
@@ -22,8 +18,6 @@ ADD_PLUGIN(COMBINESupport
         src/combinesupportplugin.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

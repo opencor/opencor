@@ -1,9 +1,5 @@
 PROJECT(CoreCellMLEditingPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(CoreCellMLEditing
@@ -24,8 +20,6 @@ ADD_PLUGIN(CoreCellMLEditing
         src/corecellmleditingwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

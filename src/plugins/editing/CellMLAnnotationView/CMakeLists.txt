@@ -1,9 +1,5 @@
 PROJECT(CellMLAnnotationViewPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(CellMLAnnotationView
@@ -42,8 +38,6 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewmetadatanormalviewdetailswidget.ui
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

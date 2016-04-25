@@ -1,9 +1,5 @@
 PROJECT(CellMLSupportPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(CellMLSupport
@@ -33,8 +29,6 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlsupportplugin.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         Compiler

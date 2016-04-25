@@ -1,9 +1,5 @@
 PROJECT(CellMLToolsPlugin)
 
-# Retrieve LLVM's definitions
-
-RETRIEVE_LLVM_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(CellMLTools
@@ -21,8 +17,6 @@ ADD_PLUGIN(CellMLTools
         ../../pluginmanager.h
 
         src/cellmltoolsplugin.h
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS
