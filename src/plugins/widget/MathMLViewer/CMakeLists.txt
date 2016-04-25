@@ -1,8 +1,8 @@
 PROJECT(MathMLViewerPlugin)
 
-# Apply Qwt's build settings
+# Retrieve Qwt's definitions
 
-APPLY_QWT_BUILD_SETTINGS()
+RETRIEVE_QWT_DEFINITIONS()
 
 # Add the plugin
 

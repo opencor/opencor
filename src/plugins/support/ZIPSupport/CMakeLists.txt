@@ -1,8 +1,8 @@
 PROJECT(ZIPSupportPlugin)
 
-# Apply zlib's build settings
+# Retrieve zlib's definitions
 
-APPLY_ZLIB_BUILD_SETTINGS()
+RETRIEVE_ZLIB_DEFINITIONS()
 
 # Add the plugin
 

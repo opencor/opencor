@@ -1,7 +1,7 @@
 PROJECT(libgit2Plugin)
 
-MACRO(APPLY_LIBGIT2_BUILD_SETTINGS)
-    # Apply libgit2's build settings
+MACRO(RETRIEVE_LIBGIT2_DEFINITIONS)
+    # Retrieve libgit2's definitions
 
     IF(WIN32)
         SET(LIBGIT2_DEFINITIONS
@@ -107,9 +107,9 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
             src
     )
 ELSE()
-    # Apply libgit2's build settings
+    # Retrieve libgit2's definitions
 
-    APPLY_LIBGIT2_BUILD_SETTINGS()
+    RETRIEVE_LIBGIT2_DEFINITIONS()
 
     # Ignore some warnings on Windows and OS X
 

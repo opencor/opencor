@@ -1,13 +1,9 @@
 PROJECT(CellMLTextViewPlugin)
 
-# Retrieve the CellML API external binaries
+# Retrieve LLVM's and Qwt's definitions
 
-RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
-
-# Apply LLVM's and Qwt's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
-APPLY_QWT_BUILD_SETTINGS()
+RETRIEVE_LLVM_DEFINITIONS()
+RETRIEVE_QWT_DEFINITIONS()
 
 # Add the plugin
 

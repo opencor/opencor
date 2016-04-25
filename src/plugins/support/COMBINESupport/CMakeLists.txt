@@ -1,13 +1,9 @@
 PROJECT(COMBINESupportPlugin)
 
-# Retrieve the CellML API's external binaries
+# Retrieve LLVM and zlib's definitions
 
-RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
-
-# Apply LLVM and zlib's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
-APPLY_ZLIB_BUILD_SETTINGS()
+RETRIEVE_LLVM_DEFINITIONS()
+RETRIEVE_ZLIB_DEFINITIONS()
 
 # Add the plugin
 

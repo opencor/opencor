@@ -1,12 +1,8 @@
 PROJECT(CellMLAnnotationViewPlugin)
 
-# Retrieve the CellML API external binaries
+# Retrieve LLVM's definitions
 
-RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
-
-# Apply LLVM's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
+RETRIEVE_LLVM_DEFINITIONS()
 
 # Add the plugin
 

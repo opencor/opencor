@@ -1,9 +1,9 @@
 PROJECT(PMRWindowPlugin)
 
-# Apply libgit2's and zlib's build settings
+# Retrieve libgit2's and zlib's definitions
 
-APPLY_LIBGIT2_BUILD_SETTINGS()
-APPLY_ZLIB_BUILD_SETTINGS()
+RETRIEVE_LIBGIT2_DEFINITIONS()
+RETRIEVE_ZLIB_DEFINITIONS()
 
 # Add the plugin
 
