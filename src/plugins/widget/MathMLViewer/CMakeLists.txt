@@ -1,9 +1,5 @@
 PROJECT(MathMLViewerPlugin)
 
-# Apply Qwt's build settings
-
-APPLY_QWT_BUILD_SETTINGS()
-
 # Add the plugin
 
 IF(USE_PREBUILT_QWT_PLUGIN)
@@ -24,8 +20,6 @@ ADD_PLUGIN(MathMLViewer
         src/mathmlviewerwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${QWT_DEFINITIONS}
     PLUGINS
         Core
         ${QWT_PLUGIN}

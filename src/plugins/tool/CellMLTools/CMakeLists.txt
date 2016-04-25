@@ -1,13 +1,5 @@
 PROJECT(CellMLToolsPlugin)
 
-# Retrieve the CellML API external binaries
-
-RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
-
-# Apply LLVM's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
-
 # Add the plugin
 
 ADD_PLUGIN(CellMLTools
@@ -25,8 +17,6 @@ ADD_PLUGIN(CellMLTools
         ../../pluginmanager.h
 
         src/cellmltoolsplugin.h
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS

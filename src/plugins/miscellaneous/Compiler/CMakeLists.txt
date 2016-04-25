@@ -1,9 +1,5 @@
 PROJECT(CompilerPlugin)
 
-# Apply LLVM's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
-
 # Add the plugin
 
 ADD_PLUGIN(Compiler

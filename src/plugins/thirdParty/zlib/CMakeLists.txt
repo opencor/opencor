@@ -1,17 +1,5 @@
 PROJECT(zlibPlugin)
 
-MACRO(APPLY_ZLIB_BUILD_SETTINGS)
-    # Apply zlib's build settings
-
-    IF(WIN32)
-        SET(ZLIB_DEFINITIONS
-            ZLIB_DLL
-        )
-    ELSE()
-        SET(ZLIB_DEFINITIONS)
-    ENDIF()
-ENDMACRO()
-
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
@@ -56,9 +44,15 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
             src
     )
 ELSE()
-    # Apply zlib's build settings
+    # Retrieve zlib's definitions
 
-    APPLY_ZLIB_BUILD_SETTINGS()
+    IF(WIN32)
+        SET(DEFINITIONS
+            ZLIB_DLL
+        )
+    ELSE()
+        SET(DEFINITIONS)
+    ENDIF()
 
     # Ignore some warnings on Windows and OS X
 
@@ -96,7 +90,7 @@ ELSE()
         INCLUDE_DIRS
             src
         DEFINITIONS
-            ${ZLIB_DEFINITIONS}
+            ${DEFINITIONS}
         QT_MODULES
             Core
     )

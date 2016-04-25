@@ -1,28 +1,5 @@
 PROJECT(LLVMPlugin)
 
-MACRO(APPLY_LLVM_BUILD_SETTINGS)
-    # Apply LLVM's build settings
-    # Note: check the calls to the add_llvm_definitions() macro in the original
-    #       [LLVM]/cmake/modules/HandleLLVMOptions.cmake file...
-
-    SET(LLVM_DEFINITIONS
-        __STDC_CONSTANT_MACROS
-        __STDC_FORMAT_MACROS
-        __STDC_LIMIT_MACROS
-    )
-
-    IF(WIN32)
-        LIST(APPEND LLVM_DEFINITIONS
-            _CRT_SECURE_NO_DEPRECATE
-            _CRT_SECURE_NO_WARNINGS
-            _CRT_NONSTDC_NO_DEPRECATE
-            _CRT_NONSTDC_NO_WARNINGS
-            _SCL_SECURE_NO_DEPRECATE
-            _SCL_SECURE_NO_WARNINGS
-        )
-    ENDIF()
-ENDMACRO()
-
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
@@ -33,6 +10,29 @@ RETRIEVE_CONFIG_FILES(
 
     tools/clang/include/clang/Config/PLATFORM_DIR/config.h
 )
+
+# Retrieve LLVM's definitions
+# Note: check the calls to the add_llvm_definitions() macro in the original
+#       [LLVM]/cmake/modules/HandleLLVMOptions.cmake file...
+
+SET(DEFINITIONS
+    __STDC_CONSTANT_MACROS
+    __STDC_FORMAT_MACROS
+    __STDC_LIMIT_MACROS
+)
+
+IF(WIN32)
+    LIST(APPEND DEFINITIONS
+        _CRT_SECURE_NO_DEPRECATE
+        _CRT_SECURE_NO_WARNINGS
+        _CRT_NONSTDC_NO_DEPRECATE
+        _CRT_NONSTDC_NO_WARNINGS
+        _SCL_SECURE_NO_DEPRECATE
+        _SCL_SECURE_NO_WARNINGS
+    )
+ENDIF()
+
+SET(LLVM_DEFINITIONS ${DEFINITIONS} PARENT_SCOPE)
 
 # Use our pre-built version unless instructed otherwise
 
@@ -91,10 +91,6 @@ ELSE()
         EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
                                                          ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST})
     ENDFOREACH()
-
-    # Apply LLVM's build settings
-
-    APPLY_LLVM_BUILD_SETTINGS()
 
     # Ignore some warnings on Windows, as well as allow for big objects
 
@@ -1483,8 +1479,7 @@ ELSE()
             src
             tools/clang/include
         DEFINITIONS
-            ${LLVM_DEFINITIONS}
-            OPENCOR_BUILD
+            ${DEFINITIONS}
         QT_MODULES
             Core
     )

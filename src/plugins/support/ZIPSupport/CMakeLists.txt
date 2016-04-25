@@ -1,9 +1,5 @@
 PROJECT(ZIPSupportPlugin)
 
-# Apply zlib's build settings
-
-APPLY_ZLIB_BUILD_SETTINGS()
-
 # Add the plugin
 
 ADD_PLUGIN(ZIPSupport
@@ -16,8 +12,6 @@ ADD_PLUGIN(ZIPSupport
         src/zipsupportplugin.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${ZLIB_DEFINITIONS}
     PLUGINS
         Core
         ${ZLIB_PLUGIN}

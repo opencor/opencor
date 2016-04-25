@@ -1,14 +1,5 @@
 PROJECT(RawCellMLViewPlugin)
 
-# Retrieve the CellML API external binaries
-
-RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
-
-# Apply LLVM's and Qwt's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
-APPLY_QWT_BUILD_SETTINGS()
-
 # Add the plugin
 
 ADD_PLUGIN(RawCellMLView
@@ -22,9 +13,6 @@ ADD_PLUGIN(RawCellMLView
     HEADERS_MOC
         src/rawcellmlviewplugin.h
         src/rawcellmlviewwidget.h
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
-        ${QWT_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS
