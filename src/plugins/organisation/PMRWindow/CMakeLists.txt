@@ -21,5 +21,10 @@ ADD_PLUGIN(PMRWindow
         src
     PLUGINS
         Core
+        ${LIBGIT2_PLUGIN}
         PMRSupport
+        ${ZLIB_PLUGIN}
+    PLUGIN_BINARIES
+        ${LIBGIT2_PLUGIN_BINARY}
+        ${ZLIB_PLUGIN_BINARY}
 )
