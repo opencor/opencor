@@ -309,6 +309,7 @@ SET(PLUGINS
     # Plugins that provide support for some third-party libraries
 
     support/CellMLSupport
+    support/PMRSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/ZIPSupport

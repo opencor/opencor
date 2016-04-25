@@ -16,26 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR window
+// PMR web service
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "organisationwidget.h"
-#include "pmrwindowwidget.h"
-#include "pmrwebservice.h"
-
-//==============================================================================
-
 #include <QList>
-
-//==============================================================================
-
-namespace Ui {
-    class PmrWindowWindow;
-}
+#include <QSslError>
 
 //==============================================================================
 
@@ -45,36 +34,54 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWindow {
+namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWindowWidget;
-
-//==============================================================================
-
-class PmrWindowWindow : public Core::OrganisationWidget
+class PmrWebService : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
+    explicit PmrWebService();
+    ~PmrWebService();
 
-    virtual void retranslateUi();
+    void cloneWorkspace(const QString &pUrl, const QString &pDirName);
+    void requestExposuresList(void);
+    void requestExposureFiles(const QString &pUrl);
 
 private:
-    Ui::PmrWindowWindow *mGui;
+    enum PmrRequest {
+        ExposuresList,
+        ExposureInformation,
+        WorkspaceInformation,
+        ExposureFileInformation
+    };
 
-    QString mInformationNoteMessage;
+    enum Action {
+        None,
+        CloneWorkspace,
+        ShowExposureFiles
+    };
 
-    PMRSupport::PmrWebService *mPmrWebService;
+    QNetworkAccessManager *mNetworkAccessManager;
 
-    PmrWindowExposures mExposures;
-    
-    PmrWindowWidget *mPmrWidget;
+    int mNumberOfExposureFileUrlsLeft;
 
-public Q_SLOTS:
+    QMap<QString, QString> mWorkspaces;
+    QMap<QString, QString> mExposureUrls;
+    QMap<QString, QString> mExposureNames;
+    QMap<QString, QString> mExposureFileNames;
+
+    void doCloneWorkspace(const QString &pWorkspace, const QString &pDirName);
+    void doShowExposureFiles(const QString &pExposureUrl);
+
+    void sendPmrRequest(const PmrRequest &pPmrRequest,
+                        const QString &pUrl = QString(),
+                        const Action pAction = None,
+                        const QString &pName = QString());
+
+Q_SIGNALS:
     void busy(const bool &pBusy);
 
     void showWarning(const QString &pWhere, const QString &pMessage);
@@ -85,16 +92,14 @@ public Q_SLOTS:
                              const bool &pInternetConnectionAvailable);
 
     void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFileNames);
+                          QStringList &pExposureFiles);
+    void showExposureFiles(const QString &pUrl);
 
 private Q_SLOTS:
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
+    void finished(QNetworkReply *pNetworkReply = 0);
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
 
-    void retrieveExposuresList(const bool &pVisible);
-
-    void cloneWorkspace(const QString &pUrl);
-    void showExposureFiles(const QString &pUrl);
 };
 
 //==============================================================================

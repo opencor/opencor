@@ -16,90 +16,96 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR window
+// PMR Support plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "organisationwidget.h"
-#include "pmrwindowwidget.h"
-#include "pmrwebservice.h"
+#include "coreguiutils.h"
+#include "pmrsupportplugin.h"
 
 //==============================================================================
 
-#include <QList>
+#include <Qt>
 
 //==============================================================================
 
-namespace Ui {
-    class PmrWindowWindow;
-}
-
-//==============================================================================
-
-class QNetworkAccessManager;
-class QNetworkReply;
+#include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWindow {
+namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWindowWidget;
-
-//==============================================================================
-
-class PmrWindowWindow : public Core::OrganisationWidget
+PLUGININFO_FUNC PMRSupportPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
 
-    virtual void retranslateUi();
+    return new PluginInfo("Support", true, false,
+                          QStringList() << "Core" << "libgit2" << "zlib",
+                          descriptions,
+                          QStringList());
+}
 
-private:
-    Ui::PmrWindowWindow *mGui;
+//==============================================================================
+// Plugin interface
+//==============================================================================
 
-    QString mInformationNoteMessage;
-
-    PMRSupport::PmrWebService *mPmrWebService;
-
-    PmrWindowExposures mExposures;
-    
-    PmrWindowWidget *mPmrWidget;
-
-public Q_SLOTS:
-    void busy(const bool &pBusy);
-
-    void showWarning(const QString &pWhere, const QString &pMessage);
-    void showInformation(const QString &pMessage);
-
-    void addExposure(const QString &pUrl, const QString &pName);
-    void initializeExposures(const QString &pErrorMessage,
-                             const bool &pInternetConnectionAvailable);
-
-    void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFileNames);
-
-private Q_SLOTS:
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
-
-    void retrieveExposuresList(const bool &pVisible);
-
-    void cloneWorkspace(const QString &pUrl);
-    void showExposureFiles(const QString &pUrl);
-};
+void PMRSupportPlugin::initializePlugin()
+{
+    // We don't handle this interface...
+}
 
 //==============================================================================
 
-}   // namespace PMRWindow
+void PMRSupportPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PMRSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PMRSupportPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PMRSupportPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PMRSupportPlugin::handleUrl(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================
