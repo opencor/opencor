@@ -1,9 +1,8 @@
 PROJECT(CoreCellMLEditingPlugin)
 
-# Retrieve LLVM's and Qwt's definitions
+# Retrieve LLVM's definitions
 
 RETRIEVE_LLVM_DEFINITIONS()
-RETRIEVE_QWT_DEFINITIONS()
 
 # Add the plugin
 
@@ -27,7 +26,6 @@ ADD_PLUGIN(CoreCellMLEditing
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

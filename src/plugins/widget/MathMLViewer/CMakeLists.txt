@@ -1,9 +1,5 @@
 PROJECT(MathMLViewerPlugin)
 
-# Retrieve Qwt's definitions
-
-RETRIEVE_QWT_DEFINITIONS()
-
 # Add the plugin
 
 IF(USE_PREBUILT_QWT_PLUGIN)
@@ -24,8 +20,6 @@ ADD_PLUGIN(MathMLViewer
         src/mathmlviewerwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${QWT_DEFINITIONS}
     PLUGINS
         Core
         ${QWT_PLUGIN}

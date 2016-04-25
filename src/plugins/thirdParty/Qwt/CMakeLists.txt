@@ -1,21 +1,5 @@
 PROJECT(QwtPlugin)
 
-MACRO(RETRIEVE_QWT_DEFINITIONS)
-    # Retrieve Qwt's definitions
-
-    SET(QWT_DEFINITIONS
-        MML_TEST
-    )
-
-    IF(WIN32)
-        LIST(APPEND QWT_DEFINITIONS
-            _SCL_SECURE_NO_WARNINGS
-
-            QWT_DLL
-        )
-    ENDIF()
-ENDMACRO()
-
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_QWT_PLUGIN)
@@ -57,7 +41,17 @@ IF(USE_PREBUILT_QWT_PLUGIN)
 ELSE()
     # Retrieve Qwt's definitions
 
-    RETRIEVE_QWT_DEFINITIONS()
+    SET(DEFINITIONS
+        MML_TEST
+    )
+
+    IF(WIN32)
+        LIST(APPEND DEFINITIONS
+            _SCL_SECURE_NO_WARNINGS
+
+            QWT_DLL
+        )
+    ENDIF()
 
     # Add the plugin
 
@@ -202,7 +196,7 @@ ELSE()
             src
             textengines/mathml
         DEFINITIONS
-            ${QWT_DEFINITIONS}
+            ${DEFINITIONS}
             QWT_MAKEDLL
         QT_MODULES
             Concurrent

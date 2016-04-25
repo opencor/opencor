@@ -1,9 +1,8 @@
 PROJECT(CellMLTextViewPlugin)
 
-# Retrieve LLVM's and Qwt's definitions
+# Retrieve LLVM's definitions
 
 RETRIEVE_LLVM_DEFINITIONS()
-RETRIEVE_QWT_DEFINITIONS()
 
 # Add the plugin
 
@@ -24,7 +23,6 @@ ADD_PLUGIN(CellMLTextView
         src/cellmltextviewwidget.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-        ${QWT_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS
