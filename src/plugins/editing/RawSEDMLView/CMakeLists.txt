@@ -1,15 +1,5 @@
 PROJECT(RawSEDMLViewPlugin)
 
-# Retrieve the CellML, SBML and SED-ML APIs' external binaries
-
-RETRIEVE_CELLML_API_EXTERNAL_BINARIES()
-RETRIEVE_SBML_API_EXTERNAL_BINARIES()
-RETRIEVE_SEDML_API_EXTERNAL_BINARIES()
-
-# Apply LLVM's build settings
-
-APPLY_LLVM_BUILD_SETTINGS()
-
 # Add the plugin
 
 ADD_PLUGIN(RawSEDMLView
@@ -25,8 +15,6 @@ ADD_PLUGIN(RawSEDMLView
         src/rawsedmlviewwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

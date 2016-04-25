@@ -1,20 +1,20 @@
 PROJECT(QwtPlugin)
 
-MACRO(APPLY_QWT_BUILD_SETTINGS)
-    # Apply Qwt's build settings
+# Retrieve Qwt's definitions
 
-    SET(QWT_DEFINITIONS
-        MML_TEST
+SET(DEFINITIONS
+    MML_TEST
+)
+
+IF(WIN32)
+    LIST(APPEND DEFINITIONS
+        _SCL_SECURE_NO_WARNINGS
+
+        QWT_DLL
     )
+ENDIF()
 
-    IF(WIN32)
-        LIST(APPEND QWT_DEFINITIONS
-            _SCL_SECURE_NO_WARNINGS
-
-            QWT_DLL
-        )
-    ENDIF()
-ENDMACRO()
+SET(QWT_DEFINITIONS ${DEFINITIONS} PARENT_SCOPE)
 
 # Use our pre-built version unless instructed otherwise
 
@@ -55,10 +55,6 @@ IF(USE_PREBUILT_QWT_PLUGIN)
             textengines/mathml
     )
 ELSE()
-    # Apply Qwt's build settings
-
-    APPLY_QWT_BUILD_SETTINGS()
-
     # Add the plugin
 
     SET(QWT_PLUGIN Qwt PARENT_SCOPE)
@@ -202,7 +198,7 @@ ELSE()
             src
             textengines/mathml
         DEFINITIONS
-            ${QWT_DEFINITIONS}
+            ${DEFINITIONS}
             QWT_MAKEDLL
         QT_MODULES
             Concurrent

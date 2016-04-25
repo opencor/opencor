@@ -1,40 +1,5 @@
 PROJECT(libgit2Plugin)
 
-MACRO(APPLY_LIBGIT2_BUILD_SETTINGS)
-    # Apply libgit2's build settings
-
-    IF(WIN32)
-        SET(LIBGIT2_DEFINITIONS
-            _CRT_NONSTDC_NO_DEPRECATE
-            _CRT_SECURE_NO_DEPRECATE
-            _SCL_SECURE_NO_WARNINGS
-            _WIN32_WINNT=0x0501
-
-            GIT_WINHTTP
-            WIN32
-            WIN32_SHA1
-        )
-    ELSEIF(APPLE)
-        SET(LIBGIT2_DEFINITIONS
-            GIT_COMMON_CRYPTO
-            GIT_OPENSSL
-        )
-    ELSE()
-        SET(LIBGIT2_DEFINITIONS
-            GIT_OPENSSL
-            OPENSSL_SHA1
-        )
-    ENDIF()
-
-    LIST(APPEND LIBGIT2_DEFINITIONS
-        _FILE_OFFSET_BITS=64
-
-        GIT_ARCH_64
-        GIT_THREADS
-        STDC
-    )
-ENDMACRO()
-
 # Make sure that OpenSSL is available on Linux and OS X
 
 IF(NOT WIN32)
@@ -107,9 +72,38 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
             src
     )
 ELSE()
-    # Apply libgit2's build settings
+    # Retrieve libgit2's definitions
 
-    APPLY_LIBGIT2_BUILD_SETTINGS()
+    IF(WIN32)
+        SET(DEFINITIONS
+            _CRT_NONSTDC_NO_DEPRECATE
+            _CRT_SECURE_NO_DEPRECATE
+            _SCL_SECURE_NO_WARNINGS
+            _WIN32_WINNT=0x0501
+
+            GIT_WINHTTP
+            WIN32
+            WIN32_SHA1
+        )
+    ELSEIF(APPLE)
+        SET(DEFINITIONS
+            GIT_COMMON_CRYPTO
+            GIT_OPENSSL
+        )
+    ELSE()
+        SET(DEFINITIONS
+            GIT_OPENSSL
+            OPENSSL_SHA1
+        )
+    ENDIF()
+
+    LIST(APPEND DEFINITIONS
+        _FILE_OFFSET_BITS=64
+
+        GIT_ARCH_64
+        GIT_THREADS
+        STDC
+    )
 
     # Ignore some warnings on Windows and OS X
 
@@ -317,7 +311,7 @@ ELSE()
             include
             src
         DEFINITIONS
-            ${LIBGIT2_DEFINITIONS}
+            ${DEFINITIONS}
         QT_MODULES
             Core
     )
