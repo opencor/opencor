@@ -1,10 +1,5 @@
 PROJECT(PMRWindowPlugin)
 
-# Retrieve libgit2's and zlib's definitions
-
-RETRIEVE_LIBGIT2_DEFINITIONS()
-RETRIEVE_ZLIB_DEFINITIONS()
-
 # Add the plugin
 
 ADD_PLUGIN(PMRWindow
@@ -24,9 +19,6 @@ ADD_PLUGIN(PMRWindow
         src/pmrwindowwindow.ui
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LIBGIT2_DEFINITIONS}
-        ${ZLIB_DEFINITIONS}
     PLUGINS
         Core
         ${LIBGIT2_PLUGIN}

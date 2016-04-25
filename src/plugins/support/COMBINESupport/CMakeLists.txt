@@ -1,9 +1,8 @@
 PROJECT(COMBINESupportPlugin)
 
-# Retrieve LLVM and zlib's definitions
+# Retrieve LLVM's definitions
 
 RETRIEVE_LLVM_DEFINITIONS()
-RETRIEVE_ZLIB_DEFINITIONS()
 
 # Add the plugin
 
@@ -25,7 +24,6 @@ ADD_PLUGIN(COMBINESupport
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-        ${ZLIB_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

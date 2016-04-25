@@ -1,10 +1,9 @@
 PROJECT(SingleCellViewPlugin)
 
-# Retrieve LLVM's, Qwt's and zlib's definitions
+# Retrieve LLVM's and Qwt's definitions
 
 RETRIEVE_LLVM_DEFINITIONS()
 RETRIEVE_QWT_DEFINITIONS()
-RETRIEVE_ZLIB_DEFINITIONS()
 
 # Add the plugin
 
@@ -61,7 +60,6 @@ ADD_PLUGIN(SingleCellView
     DEFINITIONS
         ${LLVM_DEFINITIONS}
         ${QWT_DEFINITIONS}
-        ${ZLIB_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport
