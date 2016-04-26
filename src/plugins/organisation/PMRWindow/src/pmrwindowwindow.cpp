@@ -261,7 +261,7 @@ void PmrWindowWindow::doCloneWorkspace(const QString &pWorkspace)
         if (res) {
             const git_error *gitError = giterr_last();
 
-            QMessageBox::warning(Core::mainWindow(), tr("Clone Workspace"),
+            QMessageBox::warning(Core::mainWindow(), windowTitle(),
                                  gitError?
                                      tr("Error %1: %2.").arg(QString::number(gitError->klass),
                                                              Core::formatMessage(gitError->message)):
