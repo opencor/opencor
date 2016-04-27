@@ -11,6 +11,10 @@ env:
   - CONFIG=Release
   - CONFIG=Debug
 
+branches:
+  only:
+    - master
+
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
