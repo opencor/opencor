@@ -45,7 +45,7 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
     static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
 
     if ((pLine == -1) && (pColumn == -1))
-        setText(QString("%1").arg(pMessage));
+        setText(pMessage);
     else if (pColumn == -1)
         setText(QString("[%1] %2").arg(pLine).arg(pMessage));
     else
