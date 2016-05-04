@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata normal view details widget
 //==============================================================================
 
+#include "cellmlannotationviewwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "corecliutils.h"
@@ -333,8 +334,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Keep track of some information
 
-    QString resourceUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/?redirect=true";
-    QString idUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/"+pRdfTriple->id()+"/?profile=most_reliable&redirect=true";
+    QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(pRdfTriple->resource());
+    QString idUrl = CellmlAnnotationViewWidget::idUrl(pRdfTriple->resource(), pRdfTriple->id());
 
     if (!mUrls.contains(pRdfTriple->resource()))
         mUrls.insert(pRdfTriple->resource(), resourceUrl);

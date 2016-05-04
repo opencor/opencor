@@ -236,6 +236,25 @@ CellmlAnnotationViewEditingWidget * CellmlAnnotationViewWidget::editingWidget(co
 
 //==============================================================================
 
+QString CellmlAnnotationViewWidget::resourceUrl(const QString &pResource)
+{
+    // Return the URL for the given resource
+
+    return "http://identifiers.org/"+pResource+"/?redirect=true";
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewWidget::idUrl(const QString &pResource,
+                                          const QString &pId)
+{
+    // Return the URL for the given resource
+
+    return "http://identifiers.org/"+pResource+"/"+pId+"/?profile=most_reliable&redirect=true";
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewWidget::editingWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our editing widget has moved, so keep track of its new
