@@ -77,7 +77,13 @@ PmrWebService::PmrWebService() :
 PmrWebService::~PmrWebService()
 {
     // Delete the web service
+}
 
+//==============================================================================
+
+void PmrWebService::retranslateUi()
+{
+    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 }
 
 //==============================================================================
@@ -149,11 +155,11 @@ void PmrWebService::doCloneWorkspace(const QString &pWorkspace, const QString &p
 
    if (res) {
        const git_error *gitError = giterr_last();
-       emit showWarning(tr("Clone Workspace"),
-                        gitError?
-                            tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                    Core::formatMessage(gitError->message)):
-                            tr("An error occurred while trying to clone the workspace."));
+
+       emit warning(gitError?
+                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                Core::formatMessage(gitError->message)):
+                        tr("An error occurred while trying to clone the workspace."));
    } else if (gitRepository) {
        git_repository_free(gitRepository);
    }
@@ -167,11 +173,11 @@ void PmrWebService::doShowExposureFiles(const QString &pExposureUrl)
 {
     // Show the exposure files, but only if there are some
 
-    if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
+    if (!mExposureFileNames.values(pExposureUrl).isEmpty())
         emit showExposureFiles(pExposureUrl);
-    } else {
-        emit showInformation(tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl)));
-    }
+    else
+        emit information(tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
+                         +"<br/><br/>"+mInformationNoteMessage);
 }
 
 //==============================================================================
@@ -409,9 +415,9 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                 // Check whether something wrong happened during the processing
                 // of our request
 
-                if (!informationMessage.isEmpty()) {
-                    emit showInformation(informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl)));
-                }
+                if (!informationMessage.isEmpty())
+                    emit information(informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
+                                     +"<br/><br/>"+mInformationNoteMessage);
             } else {
                 errorMessage = jsonParseError.errorString();
             }

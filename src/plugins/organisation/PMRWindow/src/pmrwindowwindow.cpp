@@ -93,10 +93,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
 
-    connect(mPmrWebService, SIGNAL(showWarning(const QString &)),
+    connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
-    connect(mPmrWebService, SIGNAL(showWarning(const QString &, const QString &)),
-            this, SLOT(showInformation(const QString &, const QString &)));
+    connect(mPmrWebService, SIGNAL(warning(const QString &)),
+            this, SLOT(showWarning(const QString &)));
 
     connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &,
                                                  const QString &,
@@ -147,8 +147,6 @@ void PmrWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
-
     // Retranslate our PMR widget
 
     mPmrWidget->retranslateUi();
@@ -183,11 +181,11 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-void PmrWindowWindow::showWarning(const QString &pWhere, const QString &pMessage)
+void PmrWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show a message box with a warning
+    // Show a message box with a warning message
 
-    QMessageBox::information(Core::mainWindow(), pWhere, pMessage, QMessageBox::Ok);
+    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
 }
 
 //==============================================================================
@@ -196,9 +194,7 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 {
     // Show a message box with informative text
 
-    QMessageBox::information(Core::mainWindow(), windowTitle(),
-                             pMessage+"<br/><br/>"+mInformationNoteMessage,
-                             QMessageBox::Ok);
+    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
 }
 
 //==============================================================================

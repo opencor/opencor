@@ -71,6 +71,8 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
+    QString mInformationNoteMessage;
+
     int mNumberOfExposureFileUrlsLeft;
 
     QMap<QString, QString> mWorkspaces;
@@ -89,8 +91,8 @@ private:
 Q_SIGNALS:
     void busy(const bool &pBusy);
 
-    void showWarning(const QString &pWhere, const QString &pMessage);
-    void showInformation(const QString &pMessage);
+    void warning(const QString &pMessage);
+    void information(const QString &pMessage);
 
     void exposuresList(const PMRSupport::PmrExposures &pExposures,
                        const QString &pErrorMessage,

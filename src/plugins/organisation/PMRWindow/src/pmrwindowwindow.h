@@ -66,8 +66,6 @@ public:
 private:
     Ui::PmrWindowWindow *mGui;
 
-    QString mInformationNoteMessage;
-
     PMRSupport::PmrWebService *mPmrWebService;
 
     PmrWindowWidget *mPmrWidget;
@@ -75,7 +73,7 @@ private:
 public Q_SLOTS:
     void busy(const bool &pBusy);
 
-    void showWarning(const QString &pWhere, const QString &pMessage);
+    void showWarning(const QString &pMessage);
     void showInformation(const QString &pMessage);
 
     void initializeWidget(const PMRSupport::PmrExposures &pExposures,
