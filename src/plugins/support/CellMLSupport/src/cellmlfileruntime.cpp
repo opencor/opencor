@@ -999,7 +999,7 @@ void CellmlFileRuntime::update()
                                    QObject::tr("definite integrals are not yet supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   QString("%1").arg(mCompilerEngine->error()));
+                                   mCompilerEngine->error());
     }
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported

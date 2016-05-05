@@ -68,7 +68,6 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
     setContextMenuPolicy(Qt::NoContextMenu);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setTextInteractionFlags(Qt::NoTextInteraction);
     setWordWrap(true);
 
     // 'Initialise' our message
@@ -147,9 +146,9 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
         //       therefore ugly image. So, instead, we retrieve a data URI for
         //       our resized icon...
 
-        if (pIcon.isEmpty() && pMessage.isEmpty() && pExtraMessage.isEmpty())
+        if (pIcon.isEmpty() && pMessage.isEmpty() && pExtraMessage.isEmpty()) {
             setText(QString());
-        else if (pExtraMessage.isEmpty())
+        } else if (pExtraMessage.isEmpty()) {
             setText(QString("<table align=center>\n"
                             "    <tbody>\n"
                             "        <tr valign=middle>\n"
@@ -162,7 +161,7 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
                             "        </tr>\n"
                             "    </tbody>\n"
                             "</table>\n").arg(iconDataUri(pIcon, 32, 32), pMessage));
-        else
+        } else {
             setText(QString("<table align=center>\n"
                             "    <tbody>\n"
                             "        <tr valign=middle>\n"
@@ -181,6 +180,7 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
                             "        </tr>\n"
                             "    </tbody>\n"
                             "</table>\n").arg(iconDataUri(pIcon, 32, 32), pMessage, pExtraMessage));
+        }
     }
 }
 

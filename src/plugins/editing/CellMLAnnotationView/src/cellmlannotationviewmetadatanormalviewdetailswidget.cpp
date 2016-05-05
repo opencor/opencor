@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata normal view details widget
 //==============================================================================
 
+#include "cellmlannotationviewwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "corecliutils.h"
@@ -210,18 +211,19 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(c
             // Request for the first resource id, the last resource id or an
             // 'old' qualifier, resource or resource id to be looked up
 
-            if (pLookUpRdfTripleInformation == First)
+            if (pLookUpRdfTripleInformation == First) {
                 // Look up the first resource id
 
                 genericLookUp(mFirstRdfTripleInformation, Id);
-            else if (pLookUpRdfTripleInformation == Last)
+            } else if (pLookUpRdfTripleInformation == Last) {
                 // Look up the last resource id
 
                 genericLookUp(mLastRdfTripleInformation, Id);
-            else
+            } else {
                 // Look up any 'old' qualifier, resource or resource id
 
                 genericLookUp(pRdfTripleInformation, pInformationType);
+            }
         } else {
             // No RDF triple left, so ask for 'nothing' to be looked up
             // Note: we do this to let people know that there is nothing to look
@@ -292,9 +294,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Initialise our web view, if needed
 
-    if (!mItemsCount)
+    if (!mItemsCount) {
         mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
                                                                              Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled)));
+    }
 
     // Add the item
 
@@ -331,8 +334,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Keep track of some information
 
-    QString resourceUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/?redirect=true";
-    QString idUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/"+pRdfTriple->id()+"/?profile=most_reliable&redirect=true";
+    QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(pRdfTriple->resource());
+    QString idUrl = CellmlAnnotationViewWidget::idUrl(pRdfTriple->resource(), pRdfTriple->id());
 
     if (!mUrls.contains(pRdfTriple->resource()))
         mUrls.insert(pRdfTriple->resource(), resourceUrl);
@@ -426,9 +429,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     // Check whether we have something to look up
     // Note: there is nothing nothing do for Any...
 
-    if (mLookUpRdfTripleInformation == First)
+    if (mLookUpRdfTripleInformation == First) {
         mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToStartOfDocument);
-    else if (mLookUpRdfTripleInformation == Last)
+    } else if (mLookUpRdfTripleInformation == Last) {
         // Note #1: normally, we would use
         //             mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToEndOfDocument);
         //          but this doesn't work...
@@ -439,8 +442,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         //          but this doesnt' get us exactly to the bottom of the page...
 
         QTimer::singleShot(1, this, SLOT(showLastRdfTriple()));
-    else if (mLookUpRdfTripleInformation == No)
+    } else if (mLookUpRdfTripleInformation == No) {
         return;
+    }
 
     // Let people know that we want to look something up
 
@@ -555,15 +559,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         mLookUpRdfTripleInformation = Any;
 
-        if (!mLink.compare(mRdfTripleInformationSha1))
+        if (!mLink.compare(mRdfTripleInformationSha1)) {
             additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
-        else
+        } else {
             // The looked up information is the same, so no need to look it up
             // again
             // Note: indeed, to look it up again would result in the web view
             //       flashing (since a 'new' web page would be loaded)...
 
             additionalGuiUpdates(mRdfTripleInformation, mInformationType, No);
+        }
 
         // Remove the RDF triple from the CellML file
 

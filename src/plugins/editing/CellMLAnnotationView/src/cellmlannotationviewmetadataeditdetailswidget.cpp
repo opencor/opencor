@@ -610,8 +610,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
             QString itemInformation = item.resource()+"|"+item.id();
             QString itemInformationSha1 = Core::sha1(itemInformation.toUtf8());
-            QString resourceUrl = "http://identifiers.org/"+item.resource()+"/?redirect=true";
-            QString idUrl = "http://identifiers.org/"+item.resource()+"/"+item.id()+"/?profile=most_reliable&redirect=true";
+            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item.resource());
+            QString idUrl = CellmlAnnotationViewWidget::idUrl(item.resource(), item.id());
 
             if (!mUrls.contains(item.resource()))
                 mUrls.insert(item.resource(), resourceUrl);

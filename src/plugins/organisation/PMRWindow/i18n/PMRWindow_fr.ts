@@ -78,10 +78,6 @@
         <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
     </message>
     <message>
-        <source>Clone Workspace</source>
-        <translation>Cloner Espace De Travail</translation>
-    </message>
-    <message>
         <source>The workspace for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; is not a Git repository.</source>
         <translation>L&apos;espace de travail pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; n&apos;est pas un répertoire Git.</translation>
     </message>
