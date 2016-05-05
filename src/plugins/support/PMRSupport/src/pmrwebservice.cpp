@@ -184,6 +184,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
     bool internetConnectionAvailable = true;
     QString errorMessage = QString();
     QString informationMessage = QString();
+    PmrExposures exposures = PmrExposures();
     QString workspaceUrl = QString();
     QStringList exposureFileUrls = QStringList();
     QString exposureUrl = QString();
@@ -248,10 +249,12 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                                 && !exposureName.isEmpty()) {
                                 mExposureNames.insert(exposureUrl, exposureName);
 
-                                emit addExposure(exposureUrl, exposureName);
+                                exposures.append(exposureUrl, exposureName);
                             }
                         }
                     }
+
+                    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
 
                     break;
                 case ExposureInformation:
@@ -423,9 +426,8 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
 
     switch (pmrRequest) {
     case ExposuresList:
-        // Ask our PMR widget to initialise itself
-
-        emit initializeExposures(errorMessage, internetConnectionAvailable);
+        // Respond with a list of exposures
+        emit exposuresList(exposures, errorMessage, internetConnectionAvailable);
 
         break;
     case ExposureInformation:

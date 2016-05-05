@@ -6,6 +6,7 @@ ADD_PLUGIN(PMRSupport
     SOURCES
         ../../plugininfo.cpp
 
+        src/pmrexposure.cpp
         src/pmrsupportplugin.cpp
         src/pmrwebservice.cpp
     HEADERS_MOC

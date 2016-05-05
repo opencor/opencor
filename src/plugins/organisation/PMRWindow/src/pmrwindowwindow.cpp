@@ -48,8 +48,7 @@ namespace PMRWindow {
 
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWindowWindow),
-    mExposures(PmrWindowExposures())
+    mGui(new Ui::PmrWindowWindow)
 {
     // Set up the GUI
 
@@ -99,10 +98,12 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(showWarning(const QString &, const QString &)),
             this, SLOT(showInformation(const QString &, const QString &)));
 
-    connect(mPmrWebService, SIGNAL(addExposure(const QString &, const QString &)),
-            this, SLOT(addExposure(const QString &, const QString &)));
-    connect(mPmrWebService, SIGNAL(initializeExposures(const QString &, const bool &)),
-            this, SLOT(initializeExposures(const QString &, const bool &)));
+    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &,
+                                                 const QString &,
+                                                 const bool &)),
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &,
+                                        const QString &,
+                                        const bool &)));
 
     connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, QStringList &)),
             this, SLOT(addExposureFiles(const QString &, QStringList &)));
@@ -214,10 +215,6 @@ void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
 
 void PmrWindowWindow::on_refreshButton_clicked()
 {
-    // Clear current list of exposures
-
-    mExposures = PmrWindowExposures();
-
     // Get the list of exposures from the PMR
 
     mPmrWebService->requestExposuresList();
@@ -225,21 +222,13 @@ void PmrWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void PmrWindowWindow::addExposure(const QString &pUrl, const QString &pName)
-{
-    // Add an exposure to our list of exposures
-
-    mExposures << PmrWindowExposure(pUrl, pName);
-}
-
-//==============================================================================
-
-void PmrWindowWindow::initializeExposures(const QString &pErrorMessage,
-                                          const bool &pInternetConnectionAvailable)
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures,
+                                       const QString &pErrorMessage,
+                                       const bool &pInternetConnectionAvailable)
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWidget->initialize(mExposures, pErrorMessage,
+    mPmrWidget->initialize(pExposures, pErrorMessage,
                            mGui->filterValue->text(),
                            pInternetConnectionAvailable);
 }

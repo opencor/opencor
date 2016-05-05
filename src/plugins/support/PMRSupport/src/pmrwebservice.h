@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "pmrexposure.h"
 #include "pmrsupportglobal.h"
 
 //==============================================================================
@@ -91,9 +92,9 @@ Q_SIGNALS:
     void showWarning(const QString &pWhere, const QString &pMessage);
     void showInformation(const QString &pMessage);
 
-    void addExposure(const QString &pUrl, const QString &pName);
-    void initializeExposures(const QString &pErrorMessage,
-                             const bool &pInternetConnectionAvailable);
+    void exposuresList(const PMRSupport::PmrExposures &pExposures,
+                       const QString &pErrorMessage,
+                       const bool &pInternetConnectionAvailable);
 
     void addExposureFiles(const QString &pUrl,
                           QStringList &pExposureFiles);
