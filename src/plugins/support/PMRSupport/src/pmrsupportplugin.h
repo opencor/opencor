@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "plugininfo.h"
-#include "plugininterface.h"
 
 //==============================================================================
 
@@ -37,18 +36,11 @@ PLUGININFO_FUNC PMRSupportPluginInfo();
 
 //==============================================================================
 
-class PMRSupportPlugin : public QObject,
-                         public PluginInterface
+class PMRSupportPlugin : public QObject
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.PMRSupportPlugin" FILE "pmrsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-#include "plugininterface.inl"
-
 };
 
 //==============================================================================

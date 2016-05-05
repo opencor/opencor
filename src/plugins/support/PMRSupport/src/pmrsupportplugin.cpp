@@ -52,58 +52,6 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
 }
 
 //==============================================================================
-// Plugin interface
-//==============================================================================
-
-void PMRSupportPlugin::initializePlugin()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PMRSupportPlugin::finalizePlugin()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PMRSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PMRSupportPlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PMRSupportPlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PMRSupportPlugin::handleUrl(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 
 }   // namespace PMRSupport
 }   // namespace OpenCOR
