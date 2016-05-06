@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "pmrsupportglobal.h"
+
+//==============================================================================
+
 #include <QList>
 #include <QString>
 
@@ -33,7 +37,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrExposure
+class PMRSUPPORT_EXPORT PmrExposure
 {
 public:
     explicit PmrExposure(const QString &pUrl, const QString &pName);
