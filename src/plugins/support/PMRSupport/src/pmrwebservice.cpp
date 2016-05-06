@@ -70,6 +70,8 @@ PmrWebService::PmrWebService() :
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
+    // Specify a note to add to information messages
+    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 }
 
 //==============================================================================
@@ -77,13 +79,6 @@ PmrWebService::PmrWebService() :
 PmrWebService::~PmrWebService()
 {
     // Delete the web service
-}
-
-//==============================================================================
-
-void PmrWebService::retranslateUi()
-{
-    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 }
 
 //==============================================================================
