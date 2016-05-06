@@ -4,6 +4,7 @@ PROJECT(PMRSupportPlugin)
 
 ADD_PLUGIN(PMRSupport
     SOURCES
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/pmrexposure.cpp

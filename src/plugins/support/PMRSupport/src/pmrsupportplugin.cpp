@@ -52,6 +52,18 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void PMRSupportPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
+
+//==============================================================================
 
 }   // namespace PMRSupport
 }   // namespace OpenCOR
