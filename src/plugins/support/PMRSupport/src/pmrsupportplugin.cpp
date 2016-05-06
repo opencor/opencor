@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // PMR Support plugin
 //==============================================================================
 
-#include "coreguiutils.h"
 #include "pmrsupportplugin.h"
 
 //==============================================================================
@@ -47,8 +46,7 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
 
     return new PluginInfo("Support", true, false,
                           QStringList() << "Core" << "libgit2" << "zlib",
-                          descriptions,
-                          QStringList());
+                          descriptions);
 }
 
 //==============================================================================

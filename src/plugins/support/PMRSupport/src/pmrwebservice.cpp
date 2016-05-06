@@ -55,7 +55,6 @@ PmrWebService::PmrWebService() :
     mExposureNames(QMap<QString, QString>()),
     mExposureFileNames(QMap<QString, QString>())
 {
-
     // Create a network access manager so that we can then retrieve various
     // things from the PMR
 
@@ -78,7 +77,6 @@ PmrWebService::PmrWebService() :
 
 PmrWebService::~PmrWebService()
 {
-    // Delete the web service
 }
 
 //==============================================================================

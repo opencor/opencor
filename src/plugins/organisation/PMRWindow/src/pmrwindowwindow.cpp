@@ -88,7 +88,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mPmrWebService = new PMRSupport::PmrWebService();
 
-    // Some connections to process responses from the web service
+    // Some connections to process responses from the PMR web service
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));

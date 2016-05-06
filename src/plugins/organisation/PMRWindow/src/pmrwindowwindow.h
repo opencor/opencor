@@ -24,8 +24,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "organisationwidget.h"
-#include "pmrwindowwidget.h"
 #include "pmrwebservice.h"
+#include "pmrwindowwidget.h"
 
 //==============================================================================
 
@@ -70,11 +70,16 @@ private:
 
     PmrWindowWidget *mPmrWidget;
 
-public Q_SLOTS:
+private Q_SLOTS:
     void busy(const bool &pBusy);
 
     void showWarning(const QString &pMessage);
     void showInformation(const QString &pMessage);
+
+    void on_filterValue_textChanged(const QString &pText);
+    void on_refreshButton_clicked();
+
+    void retrieveExposuresList(const bool &pVisible);
 
     void initializeWidget(const PMRSupport::PmrExposures &pExposures,
                           const QString &pErrorMessage,
@@ -82,15 +87,9 @@ public Q_SLOTS:
 
     void addExposureFiles(const QString &pUrl,
                           QStringList &pExposureFileNames);
-
-private Q_SLOTS:
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
-
-    void retrieveExposuresList(const bool &pVisible);
+    void showExposureFiles(const QString &pUrl);
 
     void cloneWorkspace(const QString &pUrl);
-    void showExposureFiles(const QString &pUrl);
 };
 
 //==============================================================================
