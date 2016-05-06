@@ -63,8 +63,6 @@ public:
 
     void addExposureFiles(const QString &pUrl,
                           const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
-
 protected:
     virtual QSize sizeHint() const;
 
@@ -94,6 +92,9 @@ Q_SIGNALS:
     void showExposureFilesRequested(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
+
+public Q_SLOTS:
+    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
