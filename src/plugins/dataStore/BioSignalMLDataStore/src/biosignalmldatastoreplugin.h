@@ -45,7 +45,8 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo();
 //==============================================================================
 
 class BioSignalMLDataStorePlugin : public QObject, public I18nInterface,
-                                   public PluginInterface, public DataStoreInterface
+                                   public PluginInterface,
+                                   public DataStoreInterface
 {
     Q_OBJECT
 
