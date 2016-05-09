@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
+#include "pmrexposure.h"
 #include "webviewwidget.h"
 
 //==============================================================================
@@ -44,27 +45,6 @@ namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowExposure
-{
-public:
-    explicit PmrWindowExposure(const QString &pUrl, const QString &pName);
-
-    bool operator<(const PmrWindowExposure &pExposure) const;
-
-    QString url() const;
-    QString name() const;
-
-private:
-    QString mUrl;
-    QString mName;
-};
-
-//==============================================================================
-
-typedef QList<PmrWindowExposure> PmrWindowExposures;
-
-//==============================================================================
-
 class PmrWindowWidget : public Core::WebViewWidget, public Core::CommonWidget
 {
     Q_OBJECT
@@ -75,7 +55,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PmrWindowExposures &pExposures,
+    void initialize(const PMRSupport::PmrExposures &pExposures,
                     const QString &pErrorMessage, const QString &pFilter,
                     const bool &pInternetConnectionAvailable);
 
@@ -83,8 +63,6 @@ public:
 
     void addExposureFiles(const QString &pUrl,
                           const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
-
 protected:
     virtual QSize sizeHint() const;
 
@@ -114,6 +92,9 @@ Q_SIGNALS:
     void showExposureFilesRequested(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
+
+public Q_SLOTS:
+    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

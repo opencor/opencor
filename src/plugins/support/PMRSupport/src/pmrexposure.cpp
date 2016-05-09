@@ -16,85 +16,91 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR window
+// PMR exposure
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "organisationwidget.h"
-#include "pmrwebservice.h"
-#include "pmrwindowwidget.h"
-
-//==============================================================================
-
-#include <QList>
-
-//==============================================================================
-
-namespace Ui {
-    class PmrWindowWindow;
-}
-
-//==============================================================================
-
-class QNetworkAccessManager;
-class QNetworkReply;
+#include "pmrexposure.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWindow {
+namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWindowWidget;
-
-//==============================================================================
-
-class PmrWindowWindow : public Core::OrganisationWidget
+PmrExposure::PmrExposure(const QString &pUrl,
+                         const QString &pName) :
+    mUrl(pUrl),
+    mName(pName)
 {
-    Q_OBJECT
-
-public:
-    explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
-
-    virtual void retranslateUi();
-
-private:
-    Ui::PmrWindowWindow *mGui;
-
-    PMRSupport::PmrWebService *mPmrWebService;
-
-    PmrWindowWidget *mPmrWidget;
-
-private Q_SLOTS:
-    void busy(const bool &pBusy);
-
-    void showWarning(const QString &pMessage);
-    void showInformation(const QString &pMessage);
-
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
-
-    void retrieveExposuresList(const bool &pVisible);
-
-    void initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                          const QString &pErrorMessage,
-                          const bool &pInternetConnectionAvailable);
-
-    void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFileNames);
-    void showExposureFiles(const QString &pUrl);
-
-    void cloneWorkspace(const QString &pUrl);
-};
+}
 
 //==============================================================================
 
-}   // namespace PMRWindow
+bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pSecond)
+{
+    // Return whether the first exposure is lower than the second one (without
+    // worrying about casing)
+
+    return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+QString PmrExposure::url() const
+{
+    // Return our URL
+
+    return mUrl;
+}
+
+//==============================================================================
+
+QString PmrExposure::name() const
+{
+    // Return our name
+
+    return mName;
+}
+
+//==============================================================================
+
+PmrExposures::PmrExposures()
+: QList<PmrExposure *>()
+{
+    // Default constructor
+}
+
+//==============================================================================
+
+PmrExposures::PmrExposures(const PmrExposures &other)
+: QList<PmrExposure *>(other)
+{
+    // Default copy constructor
+}
+
+//==============================================================================
+
+PmrExposures::~PmrExposures()
+{
+    // Delete the list of exposures
+
+    while (!isEmpty())
+        delete takeFirst();
+}
+
+//==============================================================================
+
+void PmrExposures::append(const QString &pUrl, const QString &pName)
+{
+    // Add a new exposure to the list
+
+    QList::append(new PmrExposure(pUrl, pName));
+}
+
+//==============================================================================
+
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

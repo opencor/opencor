@@ -35,19 +35,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
 #include <QTimer>
-
-//==============================================================================
-
-#include "git2.h"
-#include "zlib.h"
 
 //==============================================================================
 
@@ -58,12 +48,7 @@ namespace PMRWindow {
 
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWindowWindow),
-    mNumberOfExposureFileUrlsLeft(0),
-    mWorkspaces(QMap<QString, QString>()),
-    mExposureUrls(QMap<QString, QString>()),
-    mExposureNames(QMap<QString, QString>()),
-    mExposureFileNames(QMap<QString, QString>())
+    mGui(new Ui::PmrWindowWindow)
 {
     // Set up the GUI
 
@@ -99,19 +84,31 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveExposuresList(const bool &)));
 
-    // Create a network access manager so that we can then retrieve various
-    // things from the PMR
+    // Create and add the PMR web service
 
-    mNetworkAccessManager = new QNetworkAccessManager(this);
+    mPmrWebService = new PMRSupport::PmrWebService();
 
-    // Make sure that we get told when our PMR requests are finished, as well as
-    // if there are SSL errors (which would happen if the website's certificate
-    // is invalid, e.g. it has expired)
+    // Some connections to process responses from the PMR web service
 
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(finished(QNetworkReply *)));
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
+    connect(mPmrWebService, SIGNAL(busy(const bool &)),
+            this, SLOT(busy(const bool &)));
+
+    connect(mPmrWebService, SIGNAL(information(const QString &)),
+            this, SLOT(showInformation(const QString &)));
+    connect(mPmrWebService, SIGNAL(warning(const QString &)),
+            this, SLOT(showWarning(const QString &)));
+
+    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &,
+                                                 const QString &,
+                                                 const bool &)),
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &,
+                                        const QString &,
+                                        const bool &)));
+
+    connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, QStringList &)),
+            this, SLOT(addExposureFiles(const QString &, QStringList &)));
+    connect(mPmrWebService, SIGNAL(showExposureFiles(const QString &)),
+            mPmrWidget, SLOT(showExposureFiles(const QString &)));
 
     // Some connections to know what our PMR widget wants from us
 
@@ -133,6 +130,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 PmrWindowWindow::~PmrWindowWindow()
 {
+    // Delete the web service
+
+    delete mPmrWebService;
+
     // Delete the GUI
 
     delete mGui;
@@ -145,8 +146,6 @@ void PmrWindowWindow::retranslateUi()
     // Retranslate the whole window and our information note message
 
     mGui->retranslateUi(this);
-
-    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 
     // Retranslate our PMR widget
 
@@ -182,113 +181,20 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-static const char *PmrRequestProperty = "PmrRequest";
-static const char *ActionProperty     = "Action";
-
-//==============================================================================
-
-void PmrWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
-                                     const QString &pUrl,
-                                     const Action pAction)
+void PmrWindowWindow::showWarning(const QString &pMessage)
 {
-    // Let the user know that we are busy
+    // Show a message box with a warning message
 
-    busy(true);
-
-    // Send our request to the PMR, asking for the response to be compressed,
-    // but only if we are connected to the Internet
-
-    if (Core::internetConnectionAvailable()) {
-        QNetworkRequest networkRequest;
-
-        networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
-        networkRequest.setRawHeader("Accept-Encoding", "gzip");
-
-        switch (pPmrRequest) {
-        case ExposuresList:
-            networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
-
-            break;
-        case ExposureInformation:
-        case WorkspaceInformation:
-        case ExposureFileInformation:
-            networkRequest.setUrl(QUrl(pUrl));
-
-            break;
-        }
-
-        QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
-
-        // Keep track of the type of our PMR request and of the action to carry
-        // out (once we have retrieved everything we need from PMR)
-
-        networkReply->setProperty(PmrRequestProperty, pPmrRequest);
-        networkReply->setProperty(ActionProperty, pAction);
-    } else {
-        finished();
-    }
+    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
 }
 
 //==============================================================================
 
-void PmrWindowWindow::doCloneWorkspace(const QString &pWorkspace)
+void PmrWindowWindow::showInformation(const QString &pMessage)
 {
-    // Retrieve the name of an empty directory
+    // Show a message box with informative text
 
-    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
-                                                 QString(), true);
-
-    if (!dirName.isEmpty()) {
-        // We have got a directory name, so before cloning the workspace, make
-        // sure that the dialog box has gone (indeed, otherwise, on OS X at
-        // least, we will see a blank area where the dialog box used to be)
-        // Note: this is a temporary solution until we implement issue #848...
-
-        QCoreApplication::processEvents();
-
-        // We have got a directory name where we can clone the workspace, so
-        // clone it
-
-        git_libgit2_init();
-
-        git_repository *gitRepository = 0;
-        QByteArray workspaceByteArray = pWorkspace.toUtf8();
-        QByteArray dirNameByteArray = dirName.toUtf8();
-
-        int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                            dirNameByteArray.constData(), 0);
-
-        if (res) {
-            const git_error *gitError = giterr_last();
-
-            QMessageBox::warning(Core::mainWindow(), windowTitle(),
-                                 gitError?
-                                     tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                             Core::formatMessage(gitError->message)):
-                                     tr("An error occurred while trying to clone the workspace."),
-                                 QMessageBox::Ok);
-        } else if (gitRepository) {
-            git_repository_free(gitRepository);
-        }
-
-        git_libgit2_shutdown();
-    }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::doShowExposureFiles(const QString &pExposureUrl)
-{
-    // Show the exposure files, but only if there are some
-
-    if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
-        mPmrWidget->showExposureFiles(pExposureUrl);
-    } else {
-        QMessageBox::information( Core::mainWindow(), windowTitle(),
-                                  tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
-                                 +"<br/><br/>"+mInformationNoteMessage,
-                                  QMessageBox::Ok);
-    }
+    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
 }
 
 //==============================================================================
@@ -305,335 +211,22 @@ void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
 
 void PmrWindowWindow::on_refreshButton_clicked()
 {
-    // Get the list of exposures from the PMR after making sure that our
-    // internal data has been reset
+    // Get the list of exposures from the PMR
 
-    mWorkspaces.clear();
-    mExposureUrls.clear();
-    mExposureNames.clear();
-    mExposureFileNames.clear();
-
-    sendPmrRequest(ExposuresList);
+    mPmrWebService->requestExposuresList();
 }
 
 //==============================================================================
 
-bool sortExposureFiles(const QString &pExposureFile1,
-                       const QString &pExposureFile2)
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures,
+                                       const QString &pErrorMessage,
+                                       const bool &pInternetConnectionAvailable)
 {
-    // Determine which of the two exposure files should be first (without
-    // worrying about casing)
-
-    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void PmrWindowWindow::finished(QNetworkReply *pNetworkReply)
-{
-    // Check whether our PMR request was successful
-
-    PmrRequest pmrRequest = pNetworkReply?PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt()):ExposuresList;
-    bool internetConnectionAvailable = true;
-    QString errorMessage = QString();
-    QString informationMessage = QString();
-    PmrWindowExposures exposures = PmrWindowExposures();
-    QString workspaceUrl = QString();
-    QStringList exposureFileUrls = QStringList();
-    QString exposureUrl = QString();
-
-    if (pNetworkReply) {
-        if (pNetworkReply->error() == QNetworkReply::NoError) {
-            // Retrieve and uncompress our JSON data
-
-            QByteArray compressedData = pNetworkReply->readAll();
-            QByteArray uncompressedData = QByteArray();
-            z_stream stream;
-
-            memset(&stream, 0, sizeof(z_stream));
-
-            if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
-                static const int BufferSize = 32768;
-
-                Bytef buffer[BufferSize];
-
-                stream.next_in = (Bytef *) compressedData.data();
-                stream.avail_in = compressedData.size();
-
-                do {
-                    stream.next_out = buffer;
-                    stream.avail_out = BufferSize;
-
-                    inflate(&stream, Z_NO_FLUSH);
-
-                    if (!stream.msg)
-                        uncompressedData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
-                    else
-                        uncompressedData = QByteArray();
-                } while (!stream.avail_out);
-
-                inflateEnd(&stream);
-            }
-
-            // Parse our uncompressed JSON data
-
-            QJsonParseError jsonParseError;
-            QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
-            QString url = pNetworkReply->url().toString();
-
-            if (jsonParseError.error == QJsonParseError::NoError) {
-                // Check our PMR request to determine what we should do with the
-                // data
-
-                QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
-
-                switch (pmrRequest) {
-                case ExposuresList:
-                    // Retrieve the list of exposures
-
-                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-                        QVariantMap linksMap = linksVariant.toMap();
-
-                        if (!linksMap["rel"].toString().compare("bookmark")) {
-                            QString exposureUrl = linksMap["href"].toString().trimmed();
-                            QString exposureName = linksMap["prompt"].toString().simplified();
-
-                            if (   !exposureUrl.isEmpty()
-                                && !exposureName.isEmpty()) {
-                                mExposureNames.insert(exposureUrl, exposureName);
-
-                                exposures << PmrWindowExposure(exposureUrl, exposureName);
-                            }
-                        }
-                    }
-
-                    std::sort(exposures.begin(), exposures.end());
-
-                    break;
-                case ExposureInformation:
-                    // Retrieve the URLs that will help us to retrieve some
-                    // information about the exposure's workspace and exposure
-                    // files
-
-                    exposureUrl = url;
-
-                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-                        QVariantMap linksMap = linksVariant.toMap();
-                        QString relValue = linksMap["rel"].toString();
-
-                        if (!relValue.compare("via")) {
-                            workspaceUrl = linksMap["href"].toString().trimmed();
-                        } else if (!relValue.compare("bookmark")) {
-                            QString exposureFileUrl = linksMap["href"].toString().trimmed();
-
-                            if (!exposureFileUrl.isEmpty()) {
-                                exposureFileUrls << exposureFileUrl;
-
-                                ++mNumberOfExposureFileUrlsLeft;
-                            }
-                        }
-                    }
-
-                    // Make sure that we at least have a workspace
-
-                    if (workspaceUrl.isEmpty()) {
-                        informationMessage = tr("No workspace URL could be found for <a href=\"%1\">%2</a>.");
-
-                        break;
-                    }
-
-                    // (Pretend) to show our exposure files in case this is what
-                    // we ultimately want to do and in case we have no exposure
-                    // files to show
-                    // Note: indeed, this will result in an information message
-                    //       being shown to tell us that there are no exposure
-                    //       files. If we were not do the below, then we would
-                    //       never get that message the first time we try to
-                    //       show our exposure files (since that first time, we
-                    //       would normally show our exposure files after having
-                    //       retrieved the last exposure file information)...
-
-                    if (   exposureFileUrls.isEmpty()
-                        && (Action(pNetworkReply->property(ActionProperty).toInt()) == ShowExposureFiles)) {
-                        doShowExposureFiles(exposureUrl);
-                    }
-
-                    // Retrieve the workspace and exposure file information from
-                    // PMR
-
-                    mExposureUrls.insert(workspaceUrl, url);
-
-                    sendPmrRequest(WorkspaceInformation, workspaceUrl,
-                                   Action(pNetworkReply->property(ActionProperty).toInt()));
-
-                    foreach (const QString &exposureFileUrl, exposureFileUrls) {
-                        mExposureUrls.insert(exposureFileUrl, url);
-
-                        sendPmrRequest(ExposureFileInformation, exposureFileUrl,
-                                       Action(pNetworkReply->property(ActionProperty).toInt()));
-                    }
-
-                    break;
-                case WorkspaceInformation: {
-                    QVariantList itemsList = collectionMap["items"].toList();
-
-                    exposureUrl = mExposureUrls.value(url);
-
-                    if (itemsList.count()) {
-                        // Retrieve the ype of workspace we are dealing with
-
-                        QString storageValue = QString();
-
-                        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
-                            QVariantMap dataMap = dataVariant.toMap();
-
-                            if (!dataMap["name"].toString().compare("storage")) {
-                                storageValue = dataMap["value"].toString();
-
-                                break;
-                            }
-                        }
-
-                        // Make sure that our workspace is a Git repository
-
-                        if (!storageValue.compare("git")) {
-                            // Retrieve the workspace URL from the workspace
-                            // information, and keep track of it
-
-                            QString workspace = itemsList.first().toMap()["href"].toString().trimmed();
-
-                            if (!workspace.isEmpty())
-                                mWorkspaces.insert(exposureUrl, workspace);
-                        } else {
-                            informationMessage = tr("The workspace for <a href=\"%1\">%2</a> is not a Git repository.");
-                        }
-                    } else {
-                        informationMessage = tr("No workspace information could be found for <a href=\"%1\">%2</a>.");
-                    }
-
-                    break;
-                }
-                case ExposureFileInformation: {
-                    bool hasExposureFileInformation = true;
-                    QVariantList itemsList = collectionMap["items"].toList();
-
-                    exposureUrl = mExposureUrls.value(url);
-
-                    if (itemsList.count()) {
-                        QVariantList linksList = itemsList.first().toMap()["links"].toList();
-
-                        if (linksList.count()) {
-                            // Retrieve the exposure file name, from the
-                            // exposure file information, and keep track of it
-
-                            QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
-
-                            if (!exposureFile.isEmpty()) {
-                                exposureUrl = mExposureUrls.value(url);
-
-                                mExposureFileNames.insertMulti(exposureUrl, exposureFile);
-
-                                --mNumberOfExposureFileUrlsLeft;
-
-                                // Ask our widget to add our exposure files,
-                                // should we have no exposure file URL left to
-                                // handle
-
-                                if (!mNumberOfExposureFileUrlsLeft) {
-                                    QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
-
-                                    std::sort(exposureFileNames.begin(), exposureFileNames.end(), sortExposureFiles);
-
-                                    mPmrWidget->addExposureFiles(exposureUrl, exposureFileNames);
-                                }
-                            }
-                        } else {
-                            hasExposureFileInformation = false;
-                        }
-                    } else {
-                        hasExposureFileInformation = false;
-                    }
-
-                    if (!hasExposureFileInformation)
-                        informationMessage = tr("No exposure file information could be found for <a href=\"%1\">%2</a>.");
-
-                    break;
-                }
-                }
-
-                // Check whether something wrong happened during the processing
-                // of our request
-
-                if (!informationMessage.isEmpty()) {
-                    QMessageBox::information( Core::mainWindow(), windowTitle(),
-                                              informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
-                                             +"<br/><br/>"+mInformationNoteMessage,
-                                              QMessageBox::Ok);
-                }
-            } else {
-                errorMessage = jsonParseError.errorString();
-            }
-        } else {
-            errorMessage = pNetworkReply->errorString();
-        }
-    } else {
-        internetConnectionAvailable = false;
-    }
-
-    // Some additional processing based on our PMR request
-
-    switch (pmrRequest) {
-    case ExposuresList:
-        // Ask our PMR widget to initialise itself
-
-        mPmrWidget->initialize(exposures, errorMessage,
-                               mGui->filterValue->text(),
-                               internetConnectionAvailable);
-
-        break;
-    case ExposureInformation:
-        // No additional processing needed
-
-        break;
-    case WorkspaceInformation:
-        // Clone the workspace, if possible and requested
-
-        if (   mWorkspaces.contains(exposureUrl)
-            && (Action(pNetworkReply->property(ActionProperty).toInt()) == CloneWorkspace)) {
-            doCloneWorkspace(mWorkspaces.value(exposureUrl));
-        }
-
-        break;
-    case ExposureFileInformation:
-        // Show the exposure files, if possible and requested
-
-        if (   !mNumberOfExposureFileUrlsLeft
-            &&  (Action(pNetworkReply->property(ActionProperty).toInt()) == ShowExposureFiles)) {
-            doShowExposureFiles(exposureUrl);
-        }
-
-        break;
-    }
-
-    // Show ourselves as not busy anymore
-
-    busy(false);
-
-    // Delete (later) the network reply
-
-    if (pNetworkReply)
-        pNetworkReply->deleteLater();
-}
-
-//==============================================================================
-
-void PmrWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
-                                const QList<QSslError> &pSslErrors)
-{
-    // Ignore the SSL errors since we trust the website and therefore its
-    // certificate (even if it is invalid, e.g. it has expired)
-
-    pNetworkReply->ignoreSslErrors(pSslErrors);
+    // Ask our PMR widget to initialise itself
+
+    mPmrWidget->initialize(pExposures, pErrorMessage,
+                           mGui->filterValue->text(),
+                           pInternetConnectionAvailable);
 }
 
 //==============================================================================
@@ -658,45 +251,47 @@ void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
 
 void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
 {
-    // Check whether we already know about the workspace for the given exposure
+    // Retrieve the name of an empty directory
 
-    QString workspace = mWorkspaces.value(pUrl);
+    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
+                                                 QString(), true);
 
-    if (!workspace.isEmpty()) {
-        busy(true);
+    if (!dirName.isEmpty()) {
+        // We have got a directory name where we can clone the workspace, so
+        // request a clone of it
 
-        doCloneWorkspace(workspace);
-
-        busy(false);
-    } else {
-        // To clone the workspace associated with the given exposure, we first
-        // need to retrieve some information about the exposure itself
-
-        mNumberOfExposureFileUrlsLeft = 0;
-
-        sendPmrRequest(ExposureInformation, pUrl, CloneWorkspace);
+        mPmrWebService->cloneWorkspace(pUrl, dirName);
     }
+}
+
+//==============================================================================
+
+bool sortExposureFiles(const QString &pExposureFile1,
+                       const QString &pExposureFile2)
+{
+    // Determine which of the two exposure files should be first (without
+    // worrying about casing)
+
+    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+void PmrWindowWindow::addExposureFiles(const QString &pUrl,
+                                       QStringList &pExposureFileNames)
+{
+    std::sort(pExposureFileNames.begin(), pExposureFileNames.end(), sortExposureFiles);
+
+    mPmrWidget->addExposureFiles(pUrl, pExposureFileNames);
 }
 
 //==============================================================================
 
 void PmrWindowWindow::showExposureFiles(const QString &pUrl)
 {
-    // Check whether we already know about the exposure URL for the given
-    // exposure
+    // Request a list of the exposure's files from the PMR
 
-    QString exposureUrl = mExposureUrls.value(mWorkspaces.value(pUrl));
-
-    if (!exposureUrl.isEmpty()) {
-        doShowExposureFiles(exposureUrl);
-    } else {
-        // To show the exposure files associated with the given exposure, we
-        // first need to retrieve some information about the exposure itself
-
-        mNumberOfExposureFileUrlsLeft = 0;
-
-        sendPmrRequest(ExposureInformation, pUrl, ShowExposureFiles);
-    }
+    mPmrWebService->requestExposureFiles(pUrl);
 }
 
 //==============================================================================

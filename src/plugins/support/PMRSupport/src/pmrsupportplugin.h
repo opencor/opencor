@@ -16,85 +16,42 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR window
+// PMR Support plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "organisationwidget.h"
-#include "pmrwebservice.h"
-#include "pmrwindowwidget.h"
-
-//==============================================================================
-
-#include <QList>
-
-//==============================================================================
-
-namespace Ui {
-    class PmrWindowWindow;
-}
-
-//==============================================================================
-
-class QNetworkAccessManager;
-class QNetworkReply;
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWindow {
+namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWindowWidget;
+PLUGININFO_FUNC PMRSupportPluginInfo();
 
 //==============================================================================
 
-class PmrWindowWindow : public Core::OrganisationWidget
+class PMRSupportPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.PMRSupportPlugin" FILE "pmrsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
 public:
-    explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
-
-    virtual void retranslateUi();
-
-private:
-    Ui::PmrWindowWindow *mGui;
-
-    PMRSupport::PmrWebService *mPmrWebService;
-
-    PmrWindowWidget *mPmrWidget;
-
-private Q_SLOTS:
-    void busy(const bool &pBusy);
-
-    void showWarning(const QString &pMessage);
-    void showInformation(const QString &pMessage);
-
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
-
-    void retrieveExposuresList(const bool &pVisible);
-
-    void initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                          const QString &pErrorMessage,
-                          const bool &pInternetConnectionAvailable);
-
-    void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFileNames);
-    void showExposureFiles(const QString &pUrl);
-
-    void cloneWorkspace(const QString &pUrl);
+#include "i18ninterface.inl"
 };
 
 //==============================================================================
 
-}   // namespace PMRWindow
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

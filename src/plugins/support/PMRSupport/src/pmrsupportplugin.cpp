@@ -16,85 +16,54 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR window
+// PMR Support plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "organisationwidget.h"
-#include "pmrwebservice.h"
-#include "pmrwindowwidget.h"
+#include "pmrsupportplugin.h"
 
 //==============================================================================
 
-#include <QList>
+#include <Qt>
 
 //==============================================================================
 
-namespace Ui {
-    class PmrWindowWindow;
-}
-
-//==============================================================================
-
-class QNetworkAccessManager;
-class QNetworkReply;
+#include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWindow {
+namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWindowWidget;
-
-//==============================================================================
-
-class PmrWindowWindow : public Core::OrganisationWidget
+PLUGININFO_FUNC PMRSupportPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
+    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
 
-    virtual void retranslateUi();
+    return new PluginInfo("Support", true, false,
+                          QStringList() << "Core" << "libgit2" << "zlib",
+                          descriptions);
+}
 
-private:
-    Ui::PmrWindowWindow *mGui;
+//==============================================================================
+// I18n interface
+//==============================================================================
 
-    PMRSupport::PmrWebService *mPmrWebService;
-
-    PmrWindowWidget *mPmrWidget;
-
-private Q_SLOTS:
-    void busy(const bool &pBusy);
-
-    void showWarning(const QString &pMessage);
-    void showInformation(const QString &pMessage);
-
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
-
-    void retrieveExposuresList(const bool &pVisible);
-
-    void initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                          const QString &pErrorMessage,
-                          const bool &pInternetConnectionAvailable);
-
-    void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFileNames);
-    void showExposureFiles(const QString &pUrl);
-
-    void cloneWorkspace(const QString &pUrl);
-};
+void PMRSupportPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
 
 //==============================================================================
 
-}   // namespace PMRWindow
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================
