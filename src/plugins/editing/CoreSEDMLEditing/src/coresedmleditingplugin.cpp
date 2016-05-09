@@ -334,8 +334,7 @@ void CoreSEDMLEditingPlugin::sedmlValidation()
                                       tr("The SED-ML file is valid.")
                                      +(extra.isEmpty()?
                                           QString():
-                                          "<br/><br/>"+tr("<strong>Note:</strong> %1.").arg(Core::formatMessage(extra))),
-                                      QMessageBox::Ok);
+                                          "<br/><br/>"+tr("<strong>Note:</strong> %1.").arg(Core::formatMessage(extra))));
         }
     }
 }

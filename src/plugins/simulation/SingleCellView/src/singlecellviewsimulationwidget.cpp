@@ -1060,8 +1060,7 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
         if (!importedParameters.isEmpty()) {
             QMessageBox::information(Core::mainWindow(),
                                      tr("Save File"),
-                                     tr("The following parameters are imported and cannot therefore be saved:")+importedParameters,
-                                     QMessageBox::Ok);
+                                     tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
         }
     }
 

@@ -233,8 +233,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             if (Core::FileManager::instance()->file(res)) {
                 QMessageBox::warning(qApp->activeWindow(), pCaption,
-                                     QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res),
-                                     QMessageBox::Ok);
+                                     QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
 
                 continue;
             }

@@ -185,7 +185,7 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 {
     // Show a message box with a warning message
 
-    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
+    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -194,7 +194,7 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 {
     // Show a message box with informative text
 
-    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
+    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
