@@ -43,8 +43,8 @@ PLUGININFO_FUNC PMRWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
 
     return new PluginInfo("Organisation", true, false,
                           QStringList() << "PMRSupport",
@@ -61,8 +61,8 @@ void PMRWindowPlugin::retranslateUi()
     // Retranslate our PMR window action
 
     retranslateAction(mPmrWindowAction,
-                      tr("PMR"),
-                      tr("Show/hide the PMR window"));
+                      tr("Physiome Model Repository"),
+                      tr("Show/hide the Physiome Model Repository window"));
 
     // Retranslate our PMR window
 

@@ -67,7 +67,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Organisation",
                          "entries": [
-                           { "type": "subCategory", "name": "PMR window (formerly known as the CellML Model Repository window)",
+                           { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
                              "entries": [
                                { "type": "Added", "description": "Cloning of a workspace." },
                                { "type": "Added", "description": "Open a file from a published exposure." }
