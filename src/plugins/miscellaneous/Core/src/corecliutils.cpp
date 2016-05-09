@@ -813,7 +813,8 @@ void cleanDomElement(QDomElement &pDomElement,
         // Sort the serialised attributes, using the attributes' name, and
         // remove duplicates, if any
 
-        std::sort(serialisedAttributes.begin(), serialisedAttributes.end(), sortSerialisedAttributes);
+        std::sort(serialisedAttributes.begin(), serialisedAttributes.end(),
+                  sortSerialisedAttributes);
 
         serialisedAttributes.removeDuplicates();
 

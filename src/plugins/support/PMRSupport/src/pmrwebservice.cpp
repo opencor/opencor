@@ -253,7 +253,8 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                         }
                     }
 
-                    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
+                    std::sort(exposures.begin(), exposures.end(),
+                              PmrExposure::compare);
 
                     break;
                 case ExposureInformation:
