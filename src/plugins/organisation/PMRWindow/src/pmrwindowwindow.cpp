@@ -98,15 +98,11 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &,
-                                                 const QString &,
-                                                 const bool &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &,
-                                        const QString &,
-                                        const bool &)));
+    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &, const QString &, const bool &)),
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &, const QString &, const bool &)));
 
-    connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, QStringList &)),
-            this, SLOT(addExposureFiles(const QString &, QStringList &)));
+    connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, const QStringList &)),
+            mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
     connect(mPmrWebService, SIGNAL(showExposureFiles(const QString &)),
             mPmrWidget, SLOT(showExposureFiles(const QString &)));
 
@@ -130,7 +126,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 PmrWindowWindow::~PmrWindowWindow()
 {
-    // Delete the web service
+    // Delete our PMR web service
 
     delete mPmrWebService;
 
@@ -183,7 +179,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 void PmrWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show a message box with a warning message
+    // Show the given message as a warning
 
     QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
 }
@@ -192,7 +188,7 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 
 void PmrWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show a message box with informative text
+    // Show the given message as informative text
 
     QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
 }
@@ -211,7 +207,7 @@ void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
 
 void PmrWindowWindow::on_refreshButton_clicked()
 {
-    // Get the list of exposures from the PMR
+    // Get the list of exposures from our PMR web service
 
     mPmrWebService->requestExposuresList();
 }
@@ -266,30 +262,9 @@ void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-bool sortExposureFiles(const QString &pExposureFile1,
-                       const QString &pExposureFile2)
-{
-    // Determine which of the two exposure files should be first (without
-    // worrying about casing)
-
-    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void PmrWindowWindow::addExposureFiles(const QString &pUrl,
-                                       QStringList &pExposureFileNames)
-{
-    std::sort(pExposureFileNames.begin(), pExposureFileNames.end(), sortExposureFiles);
-
-    mPmrWidget->addExposureFiles(pUrl, pExposureFileNames);
-}
-
-//==============================================================================
-
 void PmrWindowWindow::showExposureFiles(const QString &pUrl)
 {
-    // Request a list of the exposure's files from the PMR
+    // Request a list of the exposure's files from our PMR web service
 
     mPmrWebService->requestExposureFiles(pUrl);
 }

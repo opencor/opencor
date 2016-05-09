@@ -61,8 +61,6 @@ public:
 
     void filter(const QString &pFilter);
 
-    void addExposureFiles(const QString &pUrl,
-                          const QStringList &pExposureFiles);
 protected:
     virtual QSize sizeHint() const;
 
@@ -94,6 +92,8 @@ Q_SIGNALS:
     void openExposureFileRequested(const QString &pUrl);
 
 public Q_SLOTS:
+    void addExposureFiles(const QString &pUrl,
+                          const QStringList &pExposureFiles);
     void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 private Q_SLOTS:

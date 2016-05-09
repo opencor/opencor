@@ -71,13 +71,13 @@ private:
     PmrWindowWidget *mPmrWidget;
 
 private Q_SLOTS:
+    void on_filterValue_textChanged(const QString &pText);
+    void on_refreshButton_clicked();
+
     void busy(const bool &pBusy);
 
     void showWarning(const QString &pMessage);
     void showInformation(const QString &pMessage);
-
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
 
     void retrieveExposuresList(const bool &pVisible);
 
@@ -85,8 +85,6 @@ private Q_SLOTS:
                           const QString &pErrorMessage,
                           const bool &pInternetConnectionAvailable);
 
-    void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFileNames);
     void showExposureFiles(const QString &pUrl);
 
     void cloneWorkspace(const QString &pUrl);

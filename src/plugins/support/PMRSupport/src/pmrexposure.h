@@ -57,13 +57,12 @@ private:
 class PmrExposures : public QList<PmrExposure *>
 {
 public:
-  PmrExposures();
-  PmrExposures(const PmrExposures &other);
-  virtual ~PmrExposures();
-  
-  void append(const QString &pUrl, const QString &pName);
+    PmrExposures();
+    virtual ~PmrExposures();
+
+    void add(const QString &pUrl, const QString &pName);
 };
-  
+
 //==============================================================================
 
 }   // namespace PMRSupport

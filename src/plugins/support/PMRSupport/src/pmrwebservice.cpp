@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR webservice
+// PMR web service
 //==============================================================================
 
 #include "corecliutils.h"
@@ -68,9 +68,6 @@ PmrWebService::PmrWebService() :
             this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
-
-    // Specify a note to add to information messages
-    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 }
 
 //==============================================================================
@@ -133,7 +130,17 @@ void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
 
 //==============================================================================
 
-void PmrWebService::doCloneWorkspace(const QString &pWorkspace, const QString &pDirName)
+QString PmrWebService::informationNoteMessage() const
+{
+    // Return some information note
+
+    return tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
+}
+
+//==============================================================================
+
+void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
+                                     const QString &pDirName)
 {
    // Clone the workspace
 
@@ -166,11 +173,23 @@ void PmrWebService::doShowExposureFiles(const QString &pExposureUrl)
 {
     // Show the exposure files, but only if there are some
 
-    if (!mExposureFileNames.values(pExposureUrl).isEmpty())
+    if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
         emit showExposureFiles(pExposureUrl);
-    else
-        emit information(tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
-                         +"<br/><br/>"+mInformationNoteMessage);
+    } else {
+        emit information( tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
+                         +"<br/><br/>"+informationNoteMessage());
+    }
+}
+
+//==============================================================================
+
+bool sortExposureFiles(const QString &pExposureFile1,
+                       const QString &pExposureFile2)
+{
+    // Determine which of the two exposure files should be first (without
+    // worrying about casing)
+
+    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -248,7 +267,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                                 && !exposureName.isEmpty()) {
                                 mExposureNames.insert(exposureUrl, exposureName);
 
-                                exposures.append(exposureUrl, exposureName);
+                                exposures.add(exposureUrl, exposureName);
                             }
                         }
                     }
@@ -389,6 +408,9 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                                 if (!mNumberOfExposureFileUrlsLeft) {
                                     QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
 
+                                    std::sort(exposureFileNames.begin(), exposureFileNames.end(),
+                                              sortExposureFiles);
+
                                     emit addExposureFiles(exposureUrl, exposureFileNames);
                                 }
                             }
@@ -409,9 +431,10 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                 // Check whether something wrong happened during the processing
                 // of our request
 
-                if (!informationMessage.isEmpty())
-                    emit information(informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
-                                     +"<br/><br/>"+mInformationNoteMessage);
+                if (!informationMessage.isEmpty()) {
+                    emit information( informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
+                                     +"<br/><br/>"+informationNoteMessage());
+                }
             } else {
                 errorMessage = jsonParseError.errorString();
             }
@@ -427,6 +450,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
     switch (pmrRequest) {
     case ExposuresList:
         // Respond with a list of exposures
+
         emit exposuresList(exposures, errorMessage, internetConnectionAvailable);
 
         break;

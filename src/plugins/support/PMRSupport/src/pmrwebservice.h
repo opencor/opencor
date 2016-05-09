@@ -71,14 +71,14 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
-    QString mInformationNoteMessage;
-
     int mNumberOfExposureFileUrlsLeft;
 
     QMap<QString, QString> mWorkspaces;
     QMap<QString, QString> mExposureUrls;
     QMap<QString, QString> mExposureNames;
     QMap<QString, QString> mExposureFileNames;
+
+    QString informationNoteMessage() const;
 
     void doCloneWorkspace(const QString &pWorkspace, const QString &pDirName);
     void doShowExposureFiles(const QString &pExposureUrl);
@@ -99,7 +99,7 @@ Q_SIGNALS:
                        const bool &pInternetConnectionAvailable);
 
     void addExposureFiles(const QString &pUrl,
-                          QStringList &pExposureFiles);
+                          const QStringList &pExposureFiles);
     void showExposureFiles(const QString &pUrl);
 
 private Q_SLOTS:
