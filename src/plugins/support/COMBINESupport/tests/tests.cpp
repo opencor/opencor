@@ -136,6 +136,30 @@ void Tests::basicTests()
 
     QVERIFY(OpenCOR::Core::readFileContentsFromFile(otherFileName, otherFileContents));
     QVERIFY(OpenCOR::Core::readFileContentsFromFile(yetAnotherFileName, yetAnotherFileContents));
+//---GRY--- THE BELOW IS TO BE REMOVED ONCE WE HAVE DETERMINED WHY (ON Travis CI
+//          ONLY?) WE SOMETIMES GET A DIFFERENT SHA-1 VALUE...
+if (OpenCOR::Core::sha1(otherFileContents).compare(OpenCOR::Core::sha1(yetAnotherFileContents))) {
+    qDebug("---------");
+
+    QProcess process;
+
+    process.start("ls", QStringList() << "-l" << otherFileName);
+    process.waitForFinished();
+
+    qDebug("%s", qPrintable(process.readAll().trimmed()));
+
+    process.start("ls", QStringList() << "-l" << yetAnotherFileName);
+    process.waitForFinished();
+
+    qDebug("%s", qPrintable(process.readAll().trimmed()));
+    qDebug("---------");
+
+    process.start("ls", QStringList() << "-lR" << otherCombineArchive.location(otherCombineArchive.masterFiles().first()).remove("/dir01/file01.txt"));
+    process.waitForFinished();
+
+    qDebug("%s", qPrintable(process.readAll().trimmed()));
+    qDebug("---------");
+}
 
     QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
              OpenCOR::Core::sha1(yetAnotherFileContents));
