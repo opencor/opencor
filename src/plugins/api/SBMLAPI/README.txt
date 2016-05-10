@@ -25,3 +25,5 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
     ===> CMAKE_INSTALL_PREFIX=<InstallationDestination>
 
 Once we have built and 'installed' libSBML, we can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively.
+
+Note: on Linux and OS X, we want to strip the binary file off its non-global symbols (using strip -x)...
