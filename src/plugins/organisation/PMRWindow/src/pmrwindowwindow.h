@@ -24,8 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "organisationwidget.h"
-#include "pmrwebservice.h"
-#include "pmrwindowwidget.h"
+#include "pmrexposure.h"
 
 //==============================================================================
 
@@ -45,6 +44,15 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace PMRSupport {
+    class PmrWebService;
+}   // namespace PMRSupport
+
+//==============================================================================
+
 namespace PMRWindow {
 
 //==============================================================================
