@@ -1,6 +1,5 @@
 We build our own copy of libSBML, which requires the following:
- - libSBML's core source code (see http://sourceforge.net/projects/sbml/files/libsbml/):
-    - Linux: replace "isnan" with "std::isnan" in src/sbml/math/ASTNumber.cpp (lines 1732 and 1741)
+ - libSBML's core source code (see http://sourceforge.net/projects/sbml/files/libsbml/); and
  - libSBML dependencies (Windows only; the contents of which is to be located under [libSBML]/dependencies):
     - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x64.zip
     - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x64.zip
