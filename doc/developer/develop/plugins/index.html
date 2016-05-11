@@ -229,19 +229,19 @@ namespace Core {
         </p>
 
         <pre class="prettyprint">...
-class CorePlugin : public QObject, public CoreInterface,
-                   public FileHandlingInterface, public GuiInterface,
-                   public I18nInterface, public PluginInterface
+class CorePlugin : public QObject, public <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h">CoreInterface</a>,
+                   public <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h">FileHandlingInterface</a>, public <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h">GuiInterface</a>,
+                   public <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a>, public <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h">PluginInterface</a>
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CorePlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.json"><code>coreplugin.json</code></a>")
 
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h">CoreInterface</a>)
+    Q_INTERFACES(OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h">FileHandlingInterface</a>)
+    Q_INTERFACES(OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h">GuiInterface</a>)
+    Q_INTERFACES(OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a>)
+    Q_INTERFACES(OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h">PluginInterface</a>)
 
 public:
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">coreinterface.inl</a>"
