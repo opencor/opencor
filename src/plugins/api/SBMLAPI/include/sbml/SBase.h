@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2015 jointly by the following organizations:
+ * Copyright (C) 2013-2016 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -371,7 +371,7 @@ public:
    * Add the given string to all identifiers (but not identifier references) in the object.  If the string
    * is added to anything other than an id or a metaid, this code is
    * responsible for tracking down and renaming all *idRefs in the package
-   * extention that identifier comes from.
+   * extension that identifier comes from.
    */
   virtual int prependStringToAllIdentifiers(const std::string& prefix);
   /** @endcond */
@@ -2545,7 +2545,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * "model", CompartmentType defines it as returning @c "compartmentType",
    * and so on.
    */
-  virtual const std::string& getElementName () const = 0;
+  virtual const std::string& getElementName () const;
 
 
   /**
