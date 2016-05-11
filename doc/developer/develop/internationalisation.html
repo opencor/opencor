@@ -39,8 +39,8 @@
             </li>
             <li>
                 <strong>OpenCOR-specific translation files:</strong> for each supported language (again, except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about it is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
-                <pre class="prettyprint">&lt;TS version=&quot;2.0&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
-                and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific translation file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/i18n.qrc.in"><code>[OpenCOR]/res/i18n.qrc.in</code></a>:
+                <pre class="prettyprint">&lt;TS version=&quot;2.1&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
+                and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific translation file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/i18n.qrc.in"><code>[OpenCOR]/res/i18n.qrc.in</code></a> (<code>PROJECT_BUILD_DIR</code> is automatically replaced during the build process):
                 <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;${PROJECT_BUILD_DIR}/OpenCOR_xx.qm&lt;/file&gt;</pre>
                 <code>OpenCOR_xx.qm</code> gets automatically generated from <code>OpenCOR_xx.ts</code> when <a href="../buildTestAndRun.html">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> as follows:
                 <pre class="prettyprint">MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
