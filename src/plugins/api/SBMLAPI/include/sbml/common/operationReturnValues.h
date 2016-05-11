@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2015 jointly by the following organizations:
+ * Copyright (C) 2013-2016 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -156,6 +156,11 @@ typedef enum
      , LIBSBML_MISSING_METAID   = -14
     /*!< The requested action cannot be performed as the target object does not have
      * the metaid attribute set. */
+
+     , LIBSBML_DEPRECATED_ATTRIBUTE   = -15
+    /*!< The attribute that is the subject of this operation has been deprecated
+     * for the combination of SBML Level and Version for the underlying
+     * object. */
 
    /* ---------------------------------------------------------------------------
     *
