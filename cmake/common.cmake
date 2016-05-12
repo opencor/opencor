@@ -46,18 +46,21 @@ MACRO(INITIALISE_PROJECT)
     # By default, we are building a release version of OpenCOR, unless we are
     # explicitly asked for a debug version
 
-    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    IF(   "${CMAKE_BUILD_TYPE}" STREQUAL ""
+       OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+        IF(SHOW_INFORMATION_MESSAGE)
+            SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
+        ENDIF()
+
+        SET(RELEASE_MODE TRUE)
+    ELSEIF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         IF(SHOW_INFORMATION_MESSAGE)
             SET(BUILD_INFORMATION "Building a debug version of ${CMAKE_PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
-        IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
-        ENDIF()
-
-        SET(RELEASE_MODE TRUE)
+        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
     # Required packages
