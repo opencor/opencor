@@ -21,6 +21,7 @@ namespace llvm {
 
 class APSInt : public APInt {
   bool IsUnsigned;
+
 public:
   /// Default constructor that creates an uninitialized APInt.
   explicit APSInt() : IsUnsigned(false) {}
@@ -246,8 +247,7 @@ public:
     return this->operator|(RHS);
   }
 
-
-  APSInt operator^(const APSInt& RHS) const {
+  APSInt operator^(const APSInt &RHS) const {
     assert(IsUnsigned == RHS.IsUnsigned && "Signedness mismatch!");
     return APSInt(static_cast<const APInt&>(*this) ^ RHS, IsUnsigned);
   }

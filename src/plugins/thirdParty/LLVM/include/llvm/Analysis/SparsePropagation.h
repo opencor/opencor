@@ -21,18 +21,18 @@
 #include <vector>
 
 namespace llvm {
-  class Value;
-  class Constant;
-  class Argument;
-  class Instruction;
-  class PHINode;
-  class TerminatorInst;
-  class BasicBlock;
-  class Function;
-  class SparseSolver;
-  class raw_ostream;
+class Value;
+class Constant;
+class Argument;
+class Instruction;
+class PHINode;
+class TerminatorInst;
+class BasicBlock;
+class Function;
+class SparseSolver;
+class raw_ostream;
 
-  template<typename T> class SmallVectorImpl;
+template <typename T> class SmallVectorImpl;
 
 /// AbstractLatticeFunction - This class is implemented by the dataflow instance
 /// to specify what the lattice values are and how they handle merges etc.
@@ -44,8 +44,10 @@ namespace llvm {
 class AbstractLatticeFunction {
 public:
   typedef void *LatticeVal;
+
 private:
   LatticeVal UndefVal, OverdefinedVal, UntrackedVal;
+
 public:
   AbstractLatticeFunction(LatticeVal undefVal, LatticeVal overdefinedVal,
                           LatticeVal untrackedVal) {
@@ -62,9 +64,7 @@ public:
   /// IsUntrackedValue - If the specified Value is something that is obviously
   /// uninteresting to the analysis (and would always return UntrackedVal),
   /// this function can return true to avoid pointless work.
-  virtual bool IsUntrackedValue(Value *V) {
-    return false;
-  }
+  virtual bool IsUntrackedValue(Value *V) { return false; }
 
   /// ComputeConstant - Given a constant value, compute and return a lattice
   /// value corresponding to the specified constant.
@@ -74,9 +74,7 @@ public:
 
   /// IsSpecialCasedPHI - Given a PHI node, determine whether this PHI node is
   /// one that the we want to handle through ComputeInstructionState.
-  virtual bool IsSpecialCasedPHI(PHINode *PN) {
-    return false;
-  }
+  virtual bool IsSpecialCasedPHI(PHINode *PN) { return false; }
 
   /// GetConstant - If the specified lattice value is representable as an LLVM
   /// constant value, return it.  Otherwise return null.  The returned value
@@ -108,7 +106,6 @@ public:
   virtual void PrintValue(LatticeVal V, raw_ostream &OS);
 };
 
-
 /// SparseSolver - This class is a general purpose solver for Sparse Conditional
 /// Propagation with a programmable lattice function.
 ///
@@ -119,12 +116,12 @@ class SparseSolver {
   /// compute transfer functions.
   AbstractLatticeFunction *LatticeFunc;
 
-  DenseMap<Value*, LatticeVal> ValueState;  // The state each value is in.
-  SmallPtrSet<BasicBlock*, 16> BBExecutable;   // The bbs that are executable.
+  DenseMap<Value *, LatticeVal> ValueState;   // The state each value is in.
+  SmallPtrSet<BasicBlock *, 16> BBExecutable; // The bbs that are executable.
 
-  std::vector<Instruction*> InstWorkList;   // Worklist of insts to process.
+  std::vector<Instruction *> InstWorkList; // Worklist of insts to process.
 
-  std::vector<BasicBlock*> BBWorkList;  // The BasicBlock work list
+  std::vector<BasicBlock *> BBWorkList; // The BasicBlock work list
 
   /// KnownFeasibleEdges - Entries in this set are edges which have already had
   /// PHI nodes retriggered.
@@ -133,12 +130,11 @@ class SparseSolver {
 
   SparseSolver(const SparseSolver&) = delete;
   void operator=(const SparseSolver&) = delete;
+
 public:
   explicit SparseSolver(AbstractLatticeFunction *Lattice)
-    : LatticeFunc(Lattice) {}
-  ~SparseSolver() {
-    delete LatticeFunc;
-  }
+      : LatticeFunc(Lattice) {}
+  ~SparseSolver() { delete LatticeFunc; }
 
   /// Solve - Solve for constants and executable blocks.
   ///
@@ -198,7 +194,6 @@ private:
   void visitInst(Instruction &I);
   void visitPHINode(PHINode &I);
   void visitTerminatorInst(TerminatorInst &TI);
-
 };
 
 } // end namespace llvm
