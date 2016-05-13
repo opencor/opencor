@@ -27,7 +27,6 @@ In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to O
     - LLVM_INCLUDE_EXAMPLES:          OFF
     - LLVM_INCLUDE_GO_TESTS:          OFF
     - LLVM_INCLUDE_TESTS:             OFF
-    - LLVM_INCLUDE_TOOLS:             OFF
     - LLVM_INCLUDE_UTILS:             OFF
     - LLVM_TARGETS_TO_BUILD:          X86
    Note that to enable TERMINFO and ZLIB would require a more complicated build process and it is not worth it.
