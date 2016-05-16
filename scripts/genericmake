@@ -41,7 +41,7 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
-if [ $ninjaFound ]; then
+if [ $ninjaFound = true ]; then
     ninja
 else
     make $*
