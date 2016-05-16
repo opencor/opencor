@@ -40,7 +40,12 @@ class User : public Value {
   friend struct HungoffOperandTraits;
   virtual void anchor();
 
+/*---OPENCOR---
   LLVM_ATTRIBUTE_ALWAYS_INLINE inline static void *
+*/
+//---OPENCOR--- BEGIN
+  LLVM_ATTRIBUTE_ALWAYS_INLINE static void *
+//---OPENCOR--- END
   allocateFixedOperandUser(size_t, unsigned, unsigned);
 
 protected:
