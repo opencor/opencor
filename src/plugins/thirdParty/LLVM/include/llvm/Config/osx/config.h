@@ -343,7 +343,7 @@
 #define HAVE_U_INT64_T 1
 
 /* Define to 1 if you have the <valgrind/valgrind.h> header file. */
-#define HAVE_VALGRIND_VALGRIND_H 1
+/* #undef HAVE_VALGRIND_VALGRIND_H */
 
 /* Define to 1 if you have the `writev' function. */
 #define HAVE_WRITEV 1
@@ -423,7 +423,7 @@
 /* Target triple LLVM will generate code for by default
  * Doesn't use `cmakedefine` because it is allowed to be empty.
  */
-#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.4.0"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.5.0"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
@@ -445,7 +445,7 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOST_TRIPLE "x86_64-apple-darwin15.4.0"
+#define LLVM_HOST_TRIPLE "x86_64-apple-darwin15.5.0"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */

@@ -24,7 +24,7 @@
 /* #undef LLVM_DATADIR */
 
 /* Target triple LLVM will generate code for by default */
-#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.4.0"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin15.5.0"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
