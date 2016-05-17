@@ -155,7 +155,27 @@ if (OpenCOR::Core::sha1(otherFileContents).compare(OpenCOR::Core::sha1(yetAnothe
     qDebug("%s", qPrintable(process.readAll().trimmed()));
     qDebug("---------");
 
-    process.start("ls", QStringList() << "-lR" << otherCombineArchive.location(otherCombineArchive.masterFiles().first()).remove("/dir01/file01.txt"));
+    QString baseDir = otherCombineArchive.location(otherCombineArchive.masterFiles().first()).remove("/dir01/file01.txt");
+
+    process.start("ls", QStringList() << "-lR" << baseDir);
+    process.waitForFinished();
+
+    qDebug("%s", qPrintable(process.readAll().trimmed()));
+    qDebug("---------");
+
+    process.start("unzip", QStringList() << otherFileName << "-d" << baseDir+"/OLD");
+    process.waitForFinished();
+
+    process.start("unzip", QStringList() << yetAnotherFileName << "-d" << baseDir+"/NEW");
+    process.waitForFinished();
+
+    process.start("ls", QStringList() << "-lR" << baseDir+"/OLD");
+    process.waitForFinished();
+
+    qDebug("%s", qPrintable(process.readAll().trimmed()));
+    qDebug("---------");
+
+    process.start("ls", QStringList() << "-lR" << baseDir+"/NEW");
     process.waitForFinished();
 
     qDebug("%s", qPrintable(process.readAll().trimmed()));
