@@ -564,21 +564,27 @@ namespace llvm {
   /// @{
 
   LLVM_ATTRIBUTE_ALWAYS_INLINE
-/*---OPENCOR---
-  inline bool operator==(StringRef LHS, StringRef RHS) {
-*/
 //---OPENCOR--- BEGIN
+#if defined(_MSC_VER)
   bool operator==(StringRef LHS, StringRef RHS) {
+#else
+//---OPENCOR--- END
+  inline bool operator==(StringRef LHS, StringRef RHS) {
+//---OPENCOR--- BEGIN
+#endif
 //---OPENCOR--- END
     return LHS.equals(RHS);
   }
 
   LLVM_ATTRIBUTE_ALWAYS_INLINE
-/*---OPENCOR---
-  inline bool operator!=(StringRef LHS, StringRef RHS) {
-*/
 //---OPENCOR--- BEGIN
+#if defined(_MSC_VER)
   bool operator!=(StringRef LHS, StringRef RHS) {
+#else
+//---OPENCOR--- END
+  inline bool operator!=(StringRef LHS, StringRef RHS) {
+//---OPENCOR--- BEGIN
+#endif
 //---OPENCOR--- END
     return !(LHS == RHS);
   }
