@@ -18,7 +18,8 @@ branches:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
+         sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
+      && sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
       && sudo apt-get -qq update
       && sudo apt-get -qq install qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webchannel qt54webkit
       ;
