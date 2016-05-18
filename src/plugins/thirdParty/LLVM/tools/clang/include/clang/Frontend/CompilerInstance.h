@@ -86,6 +86,9 @@ class LLVM_EXPORT CompilerInstance : public ModuleLoader {
   /// The target being compiled for.
   IntrusiveRefCntPtr<TargetInfo> Target;
 
+  /// Auxiliary Target info.
+  IntrusiveRefCntPtr<TargetInfo> AuxTarget;
+
   /// The virtual file system.
   IntrusiveRefCntPtr<vfs::FileSystem> VirtualFileSystem;
 
@@ -133,13 +136,6 @@ class LLVM_EXPORT CompilerInstance : public ModuleLoader {
   /// \brief The set of top-level modules that has already been loaded,
   /// along with the module map
   llvm::DenseMap<const IdentifierInfo *, Module *> KnownModules;
-
-  /// \brief Module names that have an override for the target file.
-  llvm::StringMap<std::string> ModuleFileOverrides;
-
-  /// \brief Module files that we've explicitly loaded via \ref loadModuleFile,
-  /// and their dependencies.
-  llvm::StringSet<> ExplicitlyLoadedModuleFiles;
 
   /// \brief The location of the module-import keyword for the last module
   /// import.
@@ -363,8 +359,17 @@ public:
     return *Target;
   }
 
-  /// Replace the current diagnostics engine.
+  /// Replace the current Target.
   void setTarget(TargetInfo *Value);
+
+  /// }
+  /// @name AuxTarget Info
+  /// {
+
+  TargetInfo *getAuxTarget() const { return AuxTarget.get(); }
+
+  /// Replace the current AuxTarget.
+  void setAuxTarget(TargetInfo *Value);
 
   /// }
   /// @name Virtual File System
@@ -658,6 +663,7 @@ public:
       StringRef Path, StringRef Sysroot, bool DisablePCHValidation,
       bool AllowPCHWithCompilerErrors, Preprocessor &PP, ASTContext &Context,
       const PCHContainerReader &PCHContainerRdr,
+      ArrayRef<IntrusiveRefCntPtr<ModuleFileExtension>> Extensions,
       void *DeserializationListener, bool OwnDeserializationListener,
       bool Preamble, bool UseGlobalModuleIndex);
 

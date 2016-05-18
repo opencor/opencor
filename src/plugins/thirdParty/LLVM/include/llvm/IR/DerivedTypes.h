@@ -41,6 +41,7 @@ protected:
   explicit IntegerType(LLVMContext &C, unsigned NumBits) : Type(C, IntegerTyID){
     setSubclassData(NumBits);
   }
+
 public:
   /// This enum is just used to hold constants we need for IntegerType.
   enum {
@@ -90,6 +91,9 @@ public:
   }
 };
 
+unsigned Type::getIntegerBitWidth() const {
+  return cast<IntegerType>(this)->getBitWidth();
+}
 
 /// FunctionType - Class to represent function types
 ///
@@ -143,18 +147,30 @@ public:
 static_assert(AlignOf<FunctionType>::Alignment >= AlignOf<Type *>::Alignment,
               "Alignment sufficient for objects appended to FunctionType");
 
+bool Type::isFunctionVarArg() const {
+  return cast<FunctionType>(this)->isVarArg();
+}
+
+Type *Type::getFunctionParamType(unsigned i) const {
+  return cast<FunctionType>(this)->getParamType(i);
+}
+
+unsigned Type::getFunctionNumParams() const {
+  return cast<FunctionType>(this)->getNumParams();
+}
+
 /// CompositeType - Common super class of ArrayType, StructType, PointerType
 /// and VectorType.
 class CompositeType : public Type {
 protected:
-  explicit CompositeType(LLVMContext &C, TypeID tid) : Type(C, tid) { }
-public:
+  explicit CompositeType(LLVMContext &C, TypeID tid) : Type(C, tid) {}
 
+public:
   /// getTypeAtIndex - Given an index value into the type, return the type of
   /// the element.
   ///
-  Type *getTypeAtIndex(const Value *V);
-  Type *getTypeAtIndex(unsigned Idx);
+  Type *getTypeAtIndex(const Value *V) const;
+  Type *getTypeAtIndex(unsigned Idx) const;
   bool indexValid(const Value *V) const;
   bool indexValid(unsigned Idx) const;
 
@@ -166,7 +182,6 @@ public:
            T->getTypeID() == VectorTyID;
   }
 };
-
 
 /// StructType - Class to represent struct types.  There are two different kinds
 /// of struct types: Literal structs and Identified structs.
@@ -207,21 +222,18 @@ class StructType : public CompositeType {
   /// a identified type that has an empty name.
   ///
   void *SymbolTableEntry;
-public:
 
+public:
   /// StructType::create - This creates an identified struct.
   static StructType *create(LLVMContext &Context, StringRef Name);
   static StructType *create(LLVMContext &Context);
 
-  static StructType *create(ArrayRef<Type*> Elements,
-                            StringRef Name,
+  static StructType *create(ArrayRef<Type *> Elements, StringRef Name,
                             bool isPacked = false);
-  static StructType *create(ArrayRef<Type*> Elements);
-  static StructType *create(LLVMContext &Context,
-                            ArrayRef<Type*> Elements,
-                            StringRef Name,
-                            bool isPacked = false);
-  static StructType *create(LLVMContext &Context, ArrayRef<Type*> Elements);
+  static StructType *create(ArrayRef<Type *> Elements);
+  static StructType *create(LLVMContext &Context, ArrayRef<Type *> Elements,
+                            StringRef Name, bool isPacked = false);
+  static StructType *create(LLVMContext &Context, ArrayRef<Type *> Elements);
   static StructType *create(StringRef Name, Type *elt1, ...) LLVM_END_WITH_NULL;
 
   /// StructType::get - This static method is the primary way to create a
@@ -250,7 +262,7 @@ public:
   bool isOpaque() const { return (getSubclassData() & SCDB_HasBody) == 0; }
 
   /// isSized - Return true if this is a sized type.
-  bool isSized(SmallPtrSetImpl<const Type*> *Visited = nullptr) const;
+  bool isSized(SmallPtrSetImpl<Type *> *Visited = nullptr) const;
 
   /// hasName - Return true if this is a named struct that has a non-empty name.
   bool hasName() const { return SymbolTableEntry != nullptr; }
@@ -272,7 +284,6 @@ public:
   /// isValidElementType - Return true if the specified type is valid as a
   /// element type.
   static bool isValidElementType(Type *ElemTy);
-
 
   // Iterator access to the elements.
   typedef Type::subtype_iterator element_iterator;
@@ -298,6 +309,18 @@ public:
     return T->getTypeID() == StructTyID;
   }
 };
+
+StringRef Type::getStructName() const {
+  return cast<StructType>(this)->getName();
+}
+
+unsigned Type::getStructNumElements() const {
+  return cast<StructType>(this)->getNumElements();
+}
+
+Type *Type::getStructElementType(unsigned N) const {
+  return cast<StructType>(this)->getElementType(N);
+}
 
 /// SequentialType - This is the superclass of the array, pointer and vector
 /// type classes.  All of these represent "arrays" in memory.  The array type
@@ -330,6 +353,9 @@ public:
   }
 };
 
+Type *Type::getSequentialElementType() const {
+  return cast<SequentialType>(this)->getElementType();
+}
 
 /// ArrayType - Class to represent array types.
 ///
@@ -339,6 +365,7 @@ class ArrayType : public SequentialType {
   ArrayType(const ArrayType &) = delete;
   const ArrayType &operator=(const ArrayType &) = delete;
   ArrayType(Type *ElType, uint64_t NumEl);
+
 public:
   /// ArrayType::get - This static method is the primary way to construct an
   /// ArrayType
@@ -357,6 +384,10 @@ public:
   }
 };
 
+uint64_t Type::getArrayNumElements() const {
+  return cast<ArrayType>(this)->getNumElements();
+}
+
 /// VectorType - Class to represent vector types.
 ///
 class VectorType : public SequentialType {
@@ -365,6 +396,7 @@ class VectorType : public SequentialType {
   VectorType(const VectorType &) = delete;
   const VectorType &operator=(const VectorType &) = delete;
   VectorType(Type *ElType, unsigned NumEl);
+
 public:
   /// VectorType::get - This static method is the primary way to construct an
   /// VectorType.
@@ -443,6 +475,9 @@ public:
   }
 };
 
+unsigned Type::getVectorNumElements() const {
+  return cast<VectorType>(this)->getNumElements();
+}
 
 /// PointerType - Class to represent pointers.
 ///
@@ -450,6 +485,7 @@ class PointerType : public SequentialType {
   PointerType(const PointerType &) = delete;
   const PointerType &operator=(const PointerType &) = delete;
   explicit PointerType(Type *ElType, unsigned AddrSpace);
+
 public:
   /// PointerType::get - This constructs a pointer to an object of the specified
   /// type in a numbered address space.
@@ -476,6 +512,10 @@ public:
     return T->getTypeID() == PointerTyID;
   }
 };
+
+unsigned Type::getPointerAddressSpace() const {
+  return cast<PointerType>(getScalarType())->getAddressSpace();
+}
 
 } // End llvm namespace
 

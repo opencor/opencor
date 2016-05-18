@@ -11,10 +11,10 @@
 
 #ifdef PREFIX
 #define COMMA ,
-PREFIX(prefix_0, {0})
-PREFIX(prefix_1, {"/" COMMA "-" COMMA "-?" COMMA 0})
+PREFIX(prefix_0, {nullptr})
+PREFIX(prefix_1, {"/" COMMA "-" COMMA "-?" COMMA nullptr})
 #undef COMMA
-#endif
+#endif // PREFIX
 
 /////////
 // Groups
@@ -24,13 +24,14 @@ PREFIX(prefix_1, {"/" COMMA "-" COMMA "-?" COMMA 0})
 //////////
 // Options
 
-OPTION(prefix_0, "<input>", INPUT, Input, INVALID, INVALID, 0, 0, 0, 0, 0)
-OPTION(prefix_0, "<unknown>", UNKNOWN, Unknown, INVALID, INVALID, 0, 0, 0, 0, 0)
-OPTION(prefix_1, "ignore:", ignore, Joined, INVALID, INVALID, 0, 0, 0, 0, 0)
-OPTION(prefix_1, "libpath:", libpath, Joined, INVALID, INVALID, 0, 0, 0,
-       "Object file search path", 0)
-OPTION(prefix_1, "machine:", machine, Joined, INVALID, INVALID, 0, 0, 0, 0, 0)
-OPTION(prefix_1, "nologo", nologo, Flag, INVALID, INVALID, 0, 0, 0, 0, 0)
-OPTION(prefix_1, "out:", out, Joined, INVALID, INVALID, 0, 0, 0,
-       "Path to file to write output", 0)
-#endif
+OPTION(prefix_0, "<input>", INPUT, Input, INVALID, INVALID, nullptr, 0, 0, nullptr, nullptr)
+OPTION(prefix_0, "<unknown>", UNKNOWN, Unknown, INVALID, INVALID, nullptr, 0, 0, nullptr, nullptr)
+OPTION(prefix_1, "ignore:", ignore, Joined, INVALID, INVALID, nullptr, 0, 0, nullptr, nullptr)
+OPTION(prefix_1, "libpath:", libpath, Joined, INVALID, INVALID, nullptr, 0, 0,
+       "Object file search path", nullptr)
+OPTION(prefix_1, "llvmlibthin", llvmlibthin, Flag, INVALID, INVALID, nullptr, 0, 0, nullptr, nullptr)
+OPTION(prefix_1, "machine:", machine, Joined, INVALID, INVALID, nullptr, 0, 0, nullptr, nullptr)
+OPTION(prefix_1, "nologo", nologo, Flag, INVALID, INVALID, nullptr, 0, 0, nullptr, nullptr)
+OPTION(prefix_1, "out:", out, Joined, INVALID, INVALID, nullptr, 0, 0,
+       "Path to file to write output", nullptr)
+#endif // OPTION

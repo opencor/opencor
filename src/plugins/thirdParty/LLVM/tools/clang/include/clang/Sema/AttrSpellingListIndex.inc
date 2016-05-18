@@ -336,6 +336,13 @@
         return 1;
     break;
   }
+  case AT_DisableTailCalls: {
+    if (Name == "disable_tail_calls" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "disable_tail_calls" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
+    break;
+  }
   case AT_EnableIf: {
     if (Name == "enable_if" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -440,6 +447,13 @@
   case AT_IntelOclBicc: {
     if (Name == "intel_ocl_bicc" && SyntaxUsed == 0 && Scope == "")
         return 0;
+    break;
+  }
+  case AT_InternalLinkage: {
+    if (Name == "internal_linkage" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "internal_linkage" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
     break;
   }
   case AT_LockReturned: {
@@ -566,6 +580,11 @@
         return 0;
     break;
   }
+  case AT_NoAlias: {
+    if (Name == "noalias" && SyntaxUsed == 2 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_NoCommon: {
     if (Name == "nocommon" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -668,6 +687,13 @@
     if (Name == "nonnull" && SyntaxUsed == 0 && Scope == "")
         return 0;
     if (Name == "nonnull" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
+  case AT_NotTailCalled: {
+    if (Name == "not_tail_called" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "not_tail_called" && SyntaxUsed == 1 && Scope == "clang")
         return 1;
     break;
   }
@@ -863,6 +889,11 @@
         return 1;
     if (Name == "_pascal" && SyntaxUsed == 3 && Scope == "")
         return 2;
+    break;
+  }
+  case AT_PassObjectSize: {
+    if (Name == "pass_object_size" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_Pcs: {

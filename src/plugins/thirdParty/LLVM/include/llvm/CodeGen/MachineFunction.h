@@ -38,10 +38,12 @@ class MachineJumpTableInfo;
 class MachineModuleInfo;
 class MCContext;
 class Pass;
+class PseudoSourceValueManager;
 class TargetMachine;
 class TargetSubtargetInfo;
 class TargetRegisterClass;
 struct MachinePointerInfo;
+struct WinEHFuncInfo;
 
 template <>
 struct ilist_traits<MachineBasicBlock>
@@ -106,6 +108,10 @@ class MachineFunction {
   // Keep track of jump tables for switch instructions
   MachineJumpTableInfo *JumpTableInfo;
 
+  // Keeps track of Windows exception handling related data. This will be null
+  // for functions that aren't using a funclet-based EH personality.
+  WinEHFuncInfo *WinEHInfo = nullptr;
+
   // Function-level unique numbering for MachineBasicBlocks.  When a
   // MachineBasicBlock is inserted into a MachineFunction is it automatically
   // numbered and this vector keeps track of the mapping from ID's to MBB's.
@@ -145,6 +151,9 @@ class MachineFunction {
   /// True if the function includes any inline assembly.
   bool HasInlineAsm;
 
+  // Allocation management for pseudo source values.
+  std::unique_ptr<PseudoSourceValueManager> PSVManager;
+
   MachineFunction(const MachineFunction &) = delete;
   void operator=(const MachineFunction&) = delete;
 public:
@@ -154,6 +163,8 @@ public:
 
   MachineModuleInfo &getMMI() const { return MMI; }
   MCContext &getContext() const { return Ctx; }
+
+  PseudoSourceValueManager &getPSVManager() const { return *PSVManager; }
 
   /// Return the DataLayout attached to the Module associated to this MF.
   const DataLayout &getDataLayout() const;
@@ -209,12 +220,17 @@ public:
   /// does already exist, allocate one.
   MachineJumpTableInfo *getOrCreateJumpTableInfo(unsigned JTEntryKind);
 
-
   /// getConstantPool - Return the constant pool object for the current
   /// function.
   ///
   MachineConstantPool *getConstantPool() { return ConstantPool; }
   const MachineConstantPool *getConstantPool() const { return ConstantPool; }
+
+  /// getWinEHFuncInfo - Return information about how the current function uses
+  /// Windows exception handling. Returns null for functions that don't use
+  /// funclets for exception handling.
+  const WinEHFuncInfo *getWinEHFuncInfo() const { return WinEHInfo; }
+  WinEHFuncInfo *getWinEHFuncInfo() { return WinEHInfo; }
 
   /// getAlignment - Return the alignment (log2, not bytes) of the function.
   ///
@@ -279,7 +295,7 @@ public:
   }
 
   /// Should we be emitting segmented stack stuff for the function
-  bool shouldSplitStack();
+  bool shouldSplitStack() const;
 
   /// getNumBlockIDs - Return the number of MBB ID's allocated.
   ///
@@ -326,6 +342,12 @@ public:
   typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
   typedef std::reverse_iterator<iterator>             reverse_iterator;
 
+  /// Support for MachineBasicBlock::getNextNode().
+  static BasicBlockListType MachineFunction::*
+  getSublistAccess(MachineBasicBlock *) {
+    return &MachineFunction::BasicBlocks;
+  }
+
   /// addLiveIn - Add the specified physical register as a live-in value and
   /// create a corresponding virtual register for it.
   unsigned addLiveIn(unsigned PReg, const TargetRegisterClass *RC);
@@ -358,15 +380,21 @@ public:
   void splice(iterator InsertPt, iterator MBBI) {
     BasicBlocks.splice(InsertPt, BasicBlocks, MBBI);
   }
+  void splice(iterator InsertPt, MachineBasicBlock *MBB) {
+    BasicBlocks.splice(InsertPt, BasicBlocks, MBB);
+  }
   void splice(iterator InsertPt, iterator MBBI, iterator MBBE) {
     BasicBlocks.splice(InsertPt, BasicBlocks, MBBI, MBBE);
   }
 
-  void remove(iterator MBBI) {
-    BasicBlocks.remove(MBBI);
-  }
-  void erase(iterator MBBI) {
-    BasicBlocks.erase(MBBI);
+  void remove(iterator MBBI) { BasicBlocks.remove(MBBI); }
+  void remove(MachineBasicBlock *MBBI) { BasicBlocks.remove(MBBI); }
+  void erase(iterator MBBI) { BasicBlocks.erase(MBBI); }
+  void erase(MachineBasicBlock *MBBI) { BasicBlocks.erase(MBBI); }
+
+  template <typename Comp>
+  void sort(Comp comp) {
+    BasicBlocks.sort(comp);
   }
 
   //===--------------------------------------------------------------------===//
@@ -474,6 +502,9 @@ public:
             MachineInstr::mmo_iterator>
     extractStoreMemRefs(MachineInstr::mmo_iterator Begin,
                         MachineInstr::mmo_iterator End);
+
+  /// Allocate a string and populate it with the given external symbol name.
+  const char *createExternalSymbolName(StringRef Name);
 
   //===--------------------------------------------------------------------===//
   // Label Manipulation.

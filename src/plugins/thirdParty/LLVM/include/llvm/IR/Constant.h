@@ -86,27 +86,12 @@ public:
   /// exprs and other dangling things.
   bool isConstantUsed() const;
 
-  enum PossibleRelocationsTy {
-    NoRelocation = 0,
-    LocalRelocation = 1,
-    GlobalRelocations = 2
-  };
-
-  /// getRelocationInfo - This method classifies the entry according to
-  /// whether or not it may generate a relocation entry.  This must be
-  /// conservative, so if it might codegen to a relocatable entry, it should say
-  /// so.  The return values are:
+  /// This method classifies the entry according to whether or not it may
+  /// generate a relocation entry.  This must be conservative, so if it might
+  /// codegen to a relocatable entry, it should say so.
   ///
-  ///  NoRelocation: This constant pool entry is guaranteed to never have a
-  ///     relocation applied to it (because it holds a simple constant like
-  ///     '4').
-  ///  LocalRelocation: This entry has relocations, but the entries are
-  ///     guaranteed to be resolvable by the static linker, so the dynamic
-  ///     linker will never see them.
-  ///  GlobalRelocations: This entry may have arbitrary relocations.
-  ///
-  /// FIXME: This really should not be in VMCore.
-  PossibleRelocationsTy getRelocationInfo() const;
+  /// FIXME: This really should not be in IR.
+  bool needsRelocation() const;
 
   /// getAggregateElement - For aggregates (struct/array/vector) return the
   /// constant that corresponds to the specified element if possible, or null if
@@ -159,7 +144,7 @@ public:
 
   /// getIntegerValue - Return the value for an integer or pointer constant,
   /// or a vector thereof, with the given scalar value.
-  static Constant *getIntegerValue(Type* Ty, const APInt &V);
+  static Constant *getIntegerValue(Type *Ty, const APInt &V);
 
   /// removeDeadConstantUsers - If there are any dead constant users dangling
   /// off of this constant, remove them.  This method is useful for clients

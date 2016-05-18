@@ -421,7 +421,8 @@ bool ExprEngine::inlineCall(const CallEvent &Call, const Decl *D,
   const LocationContext *CurLC = Pred->getLocationContext();
   const StackFrameContext *CallerSFC = CurLC->getCurrentStackFrame();
   const LocationContext *ParentOfCallee = CallerSFC;
-  if (Call.getKind() == CE_Block) {
+  if (Call.getKind() == CE_Block &&
+      !cast<BlockCall>(Call).isConversionFromLambda()) {
     const BlockDataRegion *BR = cast<BlockCall>(Call).getBlockRegion();
     assert(BR && "If we have the block definition we should have its region");
     AnalysisDeclContext *BlockCtx = AMgr.getAnalysisDeclContext(D);
@@ -690,9 +691,11 @@ static bool hasMember(const ASTContext &Ctx, const CXXRecordDecl *RD,
     return true;
 
   CXXBasePaths Paths(false, false, false);
-  if (RD->lookupInBases(&CXXRecordDecl::FindOrdinaryMember,
-                        DeclName.getAsOpaquePtr(),
-                        Paths))
+  if (RD->lookupInBases(
+          [DeclName](const CXXBaseSpecifier *Specifier, CXXBasePath &Path) {
+            return CXXRecordDecl::FindOrdinaryMember(Specifier, Path, DeclName);
+          },
+          Paths))
     return true;
 
   return false;
@@ -868,7 +871,8 @@ bool ExprEngine::shouldInlineCall(const CallEvent &Call, const Decl *D,
   // Do not inline large functions too many times.
   if ((Engine.FunctionSummaries->getNumTimesInlined(D) >
        Opts.getMaxTimesInlineLarge()) &&
-      CalleeCFG->getNumBlockIDs() > 13) {
+       CalleeCFG->getNumBlockIDs() >=
+       Opts.getMinCFGSizeTreatFunctionsAsLarge()) {
     NumReachedInlineCountMax++;
     return false;
   }

@@ -247,7 +247,6 @@ private:
   const RelocAddrMap *RelocMap;
   LineTableMapTy LineTableMap;
 };
-
 }
 
 #endif

@@ -94,7 +94,7 @@ SourceRange StackAddrEscapeChecker::genName(raw_ostream &os, const MemRegion *R,
 
 void StackAddrEscapeChecker::EmitStackError(CheckerContext &C, const MemRegion *R,
                                           const Expr *RetE) const {
-  ExplodedNode *N = C.generateSink();
+  ExplodedNode *N = C.generateErrorNode();
 
   if (!N)
     return;
@@ -156,6 +156,15 @@ void StackAddrEscapeChecker::checkPreStmt(const ReturnStmt *RS,
   if (isa<CXXConstructExpr>(RetE) && RetE->getType()->isRecordType())
     return;
 
+  // The CK_CopyAndAutoreleaseBlockObject cast causes the block to be copied
+  // so the stack address is not escaping here.
+  if (auto *ICE = dyn_cast<ImplicitCastExpr>(RetE)) {
+    if (isa<BlockDataRegion>(R) &&
+        ICE->getCastKind() == CK_CopyAndAutoreleaseBlockObject) {
+      return;
+    }
+  }
+
   EmitStackError(C, R, RetE);
 }
 
@@ -211,7 +220,7 @@ void StackAddrEscapeChecker::checkEndFunction(CheckerContext &Ctx) const {
     return;
 
   // Generate an error node.
-  ExplodedNode *N = Ctx.addTransition(state);
+  ExplodedNode *N = Ctx.generateNonFatalErrorNode(state);
   if (!N)
     return;
 
