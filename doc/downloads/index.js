@@ -39,7 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> renamed the Viewer plugin to MathMLViewer (see issue <a href=\"https://github.com/opencor/opencor/issues/940\">#940</a>)." },
+                       { "change": "<strong>General:</strong> added support for Ubuntu 16.04 LTS (Xenial Xerus; see issue <a href=\"https://github.com/opencor/opencor/issues/965\">#965</a>) and renamed the Viewer plugin to MathMLViewer (see issue <a href=\"https://github.com/opencor/opencor/issues/940\">#940</a>)." },
                        { "change": "<strong>Physiome Model Repository window:</strong> properly handle JSON responses from PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/930\">#930</a>). The plugin is now called PMRWindow (see issues <a href=\"https://github.com/opencor/opencor/issues/935\">#935</a> and <a href=\"https://github.com/opencor/opencor/issues/958\">#958</a>)." },
                        { "change": "<strong>Single Cell view:</strong> fixed a problem with an infinite loop in modification prompting (see issue <a href=\"https://github.com/opencor/opencor/issues/941\">#941</a>). Fixed a problem with opening CellML models from SED-ML documents (see issue <a href=\"https://github.com/opencor/opencor/issues/942\">#942</a>)." },
                        { "change": "<strong>Support:</strong> added a PMR web service plugin ((see issue <a href=\"https://github.com/opencor/opencor/issues/931\">#931</a>)." },

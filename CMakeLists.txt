@@ -693,6 +693,19 @@ ELSE()
 
     INSTALL(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
+    # System libraries required by OpenCOR
+    # Note: not needed on Ubuntu 14.04 LTS, but it is on Ubuntu 16.04 LTS...
+
+    FOREACH(SYSTEM_LIBRARY app base interfaces pbutils reamer video)
+        SET(FULL_SYSTEM_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${SYSTEM_LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
+
+        GET_FILENAME_COMPONENT(REAL_FULL_SYSTEM_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_SYSTEM_LIBRARY} REALPATH)
+
+        INSTALL(FILES ${REAL_FULL_SYSTEM_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_SYSTEM_LIBRARY})
+    ENDFOREACH()
+
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and OS X, we don't have a macro for deploying all
     #       of our Qt libraries at once. Indeed, on Linux, the version of a file
