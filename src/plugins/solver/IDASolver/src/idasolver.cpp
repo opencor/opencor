@@ -49,6 +49,12 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
     double *states    = N_VGetArrayPointer(pStates);
     double *residuals = N_VGetArrayPointer(pResiduals);
 
+    userData->computeRootInformation()(pVoi, userData->constants(), rates,
+                                       userData->oldRates(), states,
+                                       userData->oldStates(),
+                                       userData->algebraic(),
+                                       userData->condVar());
+
     userData->computeEssentialVariables()(pVoi, userData->constants(), rates,
                                           userData->oldRates(), states,
                                           userData->oldStates(),
