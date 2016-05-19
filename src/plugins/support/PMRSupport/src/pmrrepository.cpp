@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coreguiutils.h"
 #include "pmrrepository.h"
 
 //==============================================================================
@@ -31,7 +30,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
