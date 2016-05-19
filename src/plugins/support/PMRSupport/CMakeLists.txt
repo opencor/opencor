@@ -8,11 +8,11 @@ ADD_PLUGIN(PMRSupport
         ../../plugininfo.cpp
 
         src/pmrexposure.cpp
+        src/pmrrepository.cpp
         src/pmrsupportplugin.cpp
-        src/pmrwebservice.cpp
     HEADERS_MOC
+        src/pmrrepository.h
         src/pmrsupportplugin.h
-        src/pmrwebservice.h
     INCLUDE_DIRS
         src
     PLUGINS

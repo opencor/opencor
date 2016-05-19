@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::PMRSupport::PmrWebService</name>
+    <name>OpenCOR::PMRSupport::PmrRepository</name>
     <message>
         <source>No workspace URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
         <translation>Aucune URL pour un espace de travail n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>

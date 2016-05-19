@@ -43,13 +43,13 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrWebService : public QObject
+class PMRSUPPORT_EXPORT PmrRepository : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrWebService();
-    ~PmrWebService();
+    explicit PmrRepository();
+    ~PmrRepository();
 
     void cloneWorkspace(const QString &pUrl, const QString &pDirName);
     void requestExposuresList(void);

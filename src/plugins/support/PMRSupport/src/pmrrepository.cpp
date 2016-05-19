@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "pmrwebservice.h"
+#include "pmrrepository.h"
 
 //==============================================================================
 
@@ -48,7 +48,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebService::PmrWebService() :
+PmrRepository::PmrRepository() :
     mNumberOfExposureFileUrlsLeft(0),
     mWorkspaces(QMap<QString, QString>()),
     mExposureUrls(QMap<QString, QString>()),
@@ -75,7 +75,7 @@ PmrWebService::PmrWebService() :
 
 //==============================================================================
 
-PmrWebService::~PmrWebService()
+PmrRepository::~PmrRepository()
 {
 }
 
@@ -87,7 +87,7 @@ static const char *NameProperty       = "Name";
 
 //==============================================================================
 
-void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
+void PmrRepository::sendPmrRequest(const PmrRequest &pPmrRequest,
                                    const QString &pUrl,
                                    const Action pAction,
                                    const QString &pName)
@@ -133,7 +133,7 @@ void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
 
 //==============================================================================
 
-void PmrWebService::doCloneWorkspace(const QString &pWorkspace, const QString &pDirName)
+void PmrRepository::doCloneWorkspace(const QString &pWorkspace, const QString &pDirName)
 {
    // Clone the workspace
 
@@ -162,7 +162,7 @@ void PmrWebService::doCloneWorkspace(const QString &pWorkspace, const QString &p
 
 //==============================================================================
 
-void PmrWebService::doShowExposureFiles(const QString &pExposureUrl)
+void PmrRepository::doShowExposureFiles(const QString &pExposureUrl)
 {
     // Show the exposure files, but only if there are some
 
@@ -175,7 +175,7 @@ void PmrWebService::doShowExposureFiles(const QString &pExposureUrl)
 
 //==============================================================================
 
-void PmrWebService::finished(QNetworkReply *pNetworkReply)
+void PmrRepository::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether our PMR request was successful
 
@@ -466,7 +466,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void PmrWebService::sslErrors(QNetworkReply *pNetworkReply,
+void PmrRepository::sslErrors(QNetworkReply *pNetworkReply,
                                 const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we trust the website and therefore its
@@ -477,7 +477,7 @@ void PmrWebService::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-void PmrWebService::requestExposuresList(void)
+void PmrRepository::requestExposuresList(void)
 {
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
@@ -492,7 +492,7 @@ void PmrWebService::requestExposuresList(void)
 
 //==============================================================================
 
-void PmrWebService::cloneWorkspace(const QString &pUrl, const QString &pDirName)
+void PmrRepository::cloneWorkspace(const QString &pUrl, const QString &pDirName)
 {
     // Check whether we already know about the workspace for the given exposure
 
@@ -516,7 +516,7 @@ void PmrWebService::cloneWorkspace(const QString &pUrl, const QString &pDirName)
 
 //==============================================================================
 
-void PmrWebService::requestExposureFiles(const QString &pUrl)
+void PmrRepository::requestExposureFiles(const QString &pUrl)
 {
     // Check whether we already know about the exposure URL for the given
     // exposure

@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "organisationwidget.h"
-#include "pmrwebservice.h"
+#include "pmrrepository.h"
 #include "pmrwindowwidget.h"
 
 //==============================================================================
@@ -66,7 +66,7 @@ public:
 private:
     Ui::PmrWindowWindow *mGui;
 
-    PMRSupport::PmrWebService *mPmrWebService;
+    PMRSupport::PmrRepository *mPmrRepository;
 
     PmrWindowWidget *mPmrWidget;
 
