@@ -697,7 +697,7 @@ ELSE()
     # Note: unlike for Windows and OS X, we don't have a macro for deploying all
     #       of our Qt libraries at once. Indeed, on Linux, the version of a file
     #       is appended to its suffix, so unless making the macro unnecessarily
-    #       cumbersome to use, it's better deploy one Qt library at once...
+    #       cumbersome to use, it's better to deploy one Qt library at a time...
 
     IF(ENABLE_TESTS)
         SET(TEST Test)
