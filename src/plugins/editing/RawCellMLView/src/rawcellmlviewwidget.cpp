@@ -340,6 +340,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         }
 
         if (   (cellmlFile->version() != CellMLSupport::CellmlFile::Cellml_1_0)
+            && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
             editorList->addItem(EditorList::EditorListItem::Information,
                                 (nbOfReportedIssues == 1)?
