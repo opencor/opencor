@@ -1,0 +1,3 @@
+[submodule "src/plugins/thirdParty/OAuth/o2"]
+	path = src/plugins/thirdParty/OAuth/o2
+	url = git@github.com:pipacs/o2.git

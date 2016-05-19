@@ -297,6 +297,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LLVM
+    thirdParty/OAuth
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS

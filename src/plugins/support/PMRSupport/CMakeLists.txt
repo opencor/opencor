@@ -18,6 +18,7 @@ ADD_PLUGIN(PMRSupport
     PLUGINS
         Core
         ${LIBGIT2_PLUGIN}
+        OAuth
         ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
         ${LIBGIT2_PLUGIN_BINARY}

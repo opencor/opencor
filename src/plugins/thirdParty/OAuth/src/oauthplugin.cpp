@@ -16,54 +16,32 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Support plugin
+// OAuth plugin
 //==============================================================================
 
-#include "pmrsupportplugin.h"
-
-//==============================================================================
-
-#include <Qt>
-
-//==============================================================================
-
-#include <QMainWindow>
-#include <QSettings>
+#include "oauthplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRSupport {
+namespace OAuth {
 
 //==============================================================================
 
-PLUGININFO_FUNC PMRSupportPluginInfo()
+PLUGININFO_FUNC OAuthPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access a <a href=\"https://github.com/pipacs/o2\">OAuth library for Qt</a>."));
 
-    return new PluginInfo("Support", true, false,
-                          QStringList() << "Core" << "libgit2" << "OAuth" << "zlib",
+    return new PluginInfo("Third-party", false, false,
+                          QStringList(),
                           descriptions);
 }
 
 //==============================================================================
-// I18n interface
-//==============================================================================
 
-void PMRSupportPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
-
-//==============================================================================
-
-}   // namespace PMRSupport
+}   // namespace OAuth
 }   // namespace OpenCOR
 
 //==============================================================================
