@@ -770,7 +770,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(NOT "${EXTERNAL_BINARIES_DIR}" STREQUAL "")
                     FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
                         IF(WIN32)
-                            STRING(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                            STRING(REPLACE "^${CMAKE_SHARED_LIBRARY_PREFIX}" "${CMAKE_IMPORT_LIBRARY_PREFIX}"
+                                   IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
+                            STRING(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                                    IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
 
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
