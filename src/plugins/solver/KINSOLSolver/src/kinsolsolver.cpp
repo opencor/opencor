@@ -55,10 +55,11 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != KIN_WARNING)
+    if (pErrorCode != KIN_WARNING) {
         // KINSOL generated an error, so forward it to the KinsolSolver object
 
         static_cast<KinsolSolver *>(pUserData)->emitError(pErrorMessage);
+    }
 }
 
 //==============================================================================

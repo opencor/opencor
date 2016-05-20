@@ -96,10 +96,11 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != IDA_WARNING)
+    if (pErrorCode != IDA_WARNING) {
         // IDA generated an error, so forward it to the IdaSolver object
 
         static_cast<IdaSolver *>(pUserData)->emitError(pErrorMessage);
+    }
 }
 
 //==============================================================================
