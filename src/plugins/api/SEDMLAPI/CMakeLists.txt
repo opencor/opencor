@@ -66,19 +66,3 @@ ADD_PLUGIN(SEDMLAPI
     TESTS
         tests
 )
-
-# Deploy the plugin's external binaries
-# Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
-#       external binary may have dependencies (something that is important on OS
-#       X)...
-
-IF(WIN32)
-    WINDOWS_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR}
-                           libsedml${CMAKE_SHARED_LIBRARY_SUFFIX})
-ELSEIF(APPLE)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} sedml.0)
-ELSE()
-    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-        LINUX_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
-    ENDFOREACH()
-ENDIF()

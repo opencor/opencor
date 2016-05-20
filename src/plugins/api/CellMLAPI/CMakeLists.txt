@@ -140,32 +140,3 @@ ADD_PLUGIN(CellMLAPI
     TESTS
         tests
 )
-
-# Deploy the plugin's external binaries
-# Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
-#       external binary may have dependencies (something that is important on OS
-#       X)...
-
-IF(WIN32)
-    SET(EXTERNAL_BINARIES_FOR_DEPLOYMENT
-        annotools ccgs celeds celedsexporter cellml cevas cuses malaes vacss)
-
-    FOREACH(EXTERNAL_BINARY_FOR_DEPLOYMENT ${EXTERNAL_BINARIES_FOR_DEPLOYMENT})
-        WINDOWS_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR}
-                               ${CMAKE_SHARED_LIBRARY_PREFIX}${EXTERNAL_BINARY_FOR_DEPLOYMENT}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
-ELSEIF(APPLE)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} annotools.2)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} ccgs.3)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} celeds.1)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} celedsexporter.1)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} cellml.2)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} cevas.1)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} cuses.1)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} malaes.1)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} vacss.1)
-ELSE()
-    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-        LINUX_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
-    ENDFOREACH()
-ENDIF()
