@@ -31,7 +31,7 @@ SET(EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
 
 IF(WIN32)
     SET(EXTERNAL_BINARIES
-        libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX}
+        libsbml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
 ELSEIF(APPLE)
     SET(EXTERNAL_BINARIES
@@ -66,19 +66,3 @@ ADD_PLUGIN(SBMLAPI
     TESTS
         tests
 )
-
-# Deploy the plugin's external binaries
-# Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
-#       external binary may have dependencies (something that is important on OS
-#       X)...
-
-IF(WIN32)
-    WINDOWS_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR}
-                           libsbml${CMAKE_SHARED_LIBRARY_SUFFIX})
-ELSEIF(APPLE)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} sbml.5)
-ELSE()
-    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-        LINUX_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
-    ENDFOREACH()
-ENDIF()

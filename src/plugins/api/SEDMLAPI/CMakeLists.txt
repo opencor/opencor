@@ -20,7 +20,7 @@ IF(WIN32)
         RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libsedml.lib 92fd72a183deeb3a2cb829571c6c182a1d29fe4b)
     ENDIF()
 ELSEIF(APPLE)
-    RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libsedml.0.dylib 779c63627f34a8241fccc21ca861a94a35c5ab8e)
+    RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libsedml.0.dylib cee8eb4de4120fb3a41ce30514e5bd9afd6bded4)
 ELSE()
     RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libsedml.so.0 f25318c3523a82d331e30c16d934e19aa556bd95)
 ENDIF()
@@ -31,7 +31,7 @@ SET(EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
 
 IF(WIN32)
     SET(EXTERNAL_BINARIES
-        libsedml${CMAKE_IMPORT_LIBRARY_SUFFIX}
+        libsedml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
 ELSEIF(APPLE)
     SET(EXTERNAL_BINARIES
@@ -66,20 +66,3 @@ ADD_PLUGIN(SEDMLAPI
     TESTS
         tests
 )
-
-# Deploy the plugin's external binaries
-# Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
-#       external binary may have dependencies (something that is important on OS
-#       X)...
-
-IF(WIN32)
-    WINDOWS_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR}
-                           libsedml${CMAKE_SHARED_LIBRARY_SUFFIX})
-ELSEIF(APPLE)
-    OS_X_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} sedml.0
-                        sbml.5)
-ELSE()
-    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-        LINUX_DEPLOY_LIBRARY(${EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
-    ENDFOREACH()
-ENDIF()
