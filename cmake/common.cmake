@@ -599,28 +599,23 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             # Copy the external binary to its destination directory, so we can
             # test things without first having to deploy OpenCOR
-            # Note: on Windows, we also need to copy the build directory so that
-            #       we can test things from within Qt Creator...
-
-            SET(REAL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+            # Note: on Windows, we also need to copy it to the build directory
+            #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                # On Windows, we need to replace the extension of the external
-                # library
-
-                STRING(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
-                       REAL_EXTERNAL_BINARY "${REAL_EXTERNAL_BINARY}")
-
-                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${REAL_EXTERNAL_BINARY})
+                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${REAL_EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
 
             # Link the plugin to the external library
 
             IF(WIN32)
+                STRING(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                       IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
+
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_EXTERNAL_BINARY}
+                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                 )
             ELSE()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
@@ -1170,18 +1165,6 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND strip -x ${LIBRARY_FILEPATH})
     ENDIF()
-
-    # Make sure that the library refers to our embedded version of the libraries
-    # on which it depends
-
-    FOREACH(DEPENDENCY_NAME ${ARGN})
-        SET(DEPENDENCY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${DEPENDENCY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${DEPENDENCY_FILENAME}
-                                                             @rpath/${DEPENDENCY_FILENAME}
-                                                             ${LIBRARY_FILEPATH})
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
