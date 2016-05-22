@@ -547,6 +547,15 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::DisableTailCalls: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) DisableTailCallsAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::EnableIf: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -730,6 +739,15 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::InternalLinkage: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) InternalLinkageAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::LockReturned: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -858,6 +876,16 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::MipsInterrupt: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    MipsInterruptAttr::InterruptType interrupt(static_cast<MipsInterruptAttr::InterruptType>(Record[Idx++]));
+    New = new (Context) MipsInterruptAttr(Range, Context, interrupt, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::Mode: {
     bool isImplicit = Record[Idx++];
     unsigned Spelling = Record[Idx++];
@@ -916,6 +944,15 @@
     bool isImplicit = Record[Idx++];
     unsigned Spelling = Record[Idx++];
     New = new (Context) NakedAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::NoAlias: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) NoAliasAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -1034,6 +1071,15 @@
     for (unsigned i = argsSize; i; --i)
     args.push_back(Record[Idx++]);
     New = new (Context) NonNullAttr(Range, Context, args.data(), argsSize, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::NotTailCalled: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) NotTailCalledAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -1276,6 +1322,16 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::PassObjectSize: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    int type = Record[Idx++];
+    New = new (Context) PassObjectSizeAttr(Range, Context, type, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::Pcs: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -1487,8 +1543,8 @@
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
     unsigned Spelling = Record[Idx++];
-    std::string features= ReadString(Record, Idx);
-    New = new (Context) TargetAttr(Range, Context, features, Spelling);
+    std::string featuresStr= ReadString(Record, Idx);
+    New = new (Context) TargetAttr(Range, Context, featuresStr, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -1571,7 +1627,8 @@
     bool isImplicit = Record[Idx++];
     unsigned Spelling = Record[Idx++];
     std::string message= ReadString(Record, Idx);
-    New = new (Context) UnavailableAttr(Range, Context, message, Spelling);
+    UnavailableAttr::ImplicitReason implicitReason(static_cast<UnavailableAttr::ImplicitReason>(Record[Idx++]));
+    New = new (Context) UnavailableAttr(Range, Context, message, implicitReason, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;

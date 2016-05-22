@@ -1,22 +1,23 @@
 /*******************************************************************************
 
-Licensed to the OpenCOR team under one or more contributor license agreements.
-See the NOTICE.txt file distributed with this work for additional information
-regarding copyright ownership. The OpenCOR team licenses this file to you under
-the Apache License, Version 2.0 (the "License"); you may not use this file
-except in compliance with the License. You may obtain a copy of the License at
+Copyright The University of Auckland
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 *******************************************************************************/
 
 //==============================================================================
-// PMR webservice
+// PMR repository
 //==============================================================================
 
 #include "corecliutils.h"
@@ -66,9 +67,6 @@ PmrRepository::PmrRepository() :
             this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
-
-    // Specify a note to add to information messages
-    mInformationNoteMessage = tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
 }
 
 //==============================================================================
@@ -131,6 +129,15 @@ void PmrRepository::sendPmrRequest(const PmrRequest &pPmrRequest,
 
 //==============================================================================
 
+QString PmrRepository::informationNoteMessage() const
+{
+    // Return some information note
+
+    return tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
+}
+
+//==============================================================================
+
 void PmrRepository::doCloneWorkspace(const QString &pWorkspace, const QString &pDirName)
 {
    // Clone the workspace
@@ -164,11 +171,23 @@ void PmrRepository::doShowExposureFiles(const QString &pExposureUrl)
 {
     // Show the exposure files, but only if there are some
 
-    if (!mExposureFileNames.values(pExposureUrl).isEmpty())
+    if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
         emit showExposureFiles(pExposureUrl);
-    else
-        emit information(tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
-                         +"<br/><br/>"+mInformationNoteMessage);
+    } else {
+        emit information( tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
+                         +"<br/><br/>"+informationNoteMessage());
+    }
+}
+
+//==============================================================================
+
+bool sortExposureFiles(const QString &pExposureFile1,
+                       const QString &pExposureFile2)
+{
+    // Determine which of the two exposure files should be first (without
+    // worrying about casing)
+
+    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -246,12 +265,13 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
                                 && !exposureName.isEmpty()) {
                                 mExposureNames.insert(exposureUrl, exposureName);
 
-                                exposures.append(exposureUrl, exposureName);
+                                exposures.add(exposureUrl, exposureName);
                             }
                         }
                     }
 
-                    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
+                    std::sort(exposures.begin(), exposures.end(),
+                              PmrExposure::compare);
 
                     break;
                 case ExposureInformation:
@@ -386,6 +406,9 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
                                 if (!mNumberOfExposureFileUrlsLeft) {
                                     QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
 
+                                    std::sort(exposureFileNames.begin(), exposureFileNames.end(),
+                                              sortExposureFiles);
+
                                     emit addExposureFiles(exposureUrl, exposureFileNames);
                                 }
                             }
@@ -406,9 +429,10 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
                 // Check whether something wrong happened during the processing
                 // of our request
 
-                if (!informationMessage.isEmpty())
-                    emit information(informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
-                                     +"<br/><br/>"+mInformationNoteMessage);
+                if (!informationMessage.isEmpty()) {
+                    emit information( informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
+                                     +"<br/><br/>"+informationNoteMessage());
+                }
             } else {
                 errorMessage = jsonParseError.errorString();
             }
@@ -424,6 +448,7 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
     switch (pmrRequest) {
     case ExposuresList:
         // Respond with a list of exposures
+
         emit exposuresList(exposures, errorMessage, internetConnectionAvailable);
 
         break;

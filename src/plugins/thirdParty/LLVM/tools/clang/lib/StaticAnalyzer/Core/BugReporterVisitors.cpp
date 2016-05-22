@@ -117,7 +117,7 @@ std::unique_ptr<PathDiagnosticPiece> BugReporterVisitor::getDefaultEndPath(
   // special ranges for this report.
   auto P = llvm::make_unique<PathDiagnosticEventPiece>(
       L, BR.getDescription(), Ranges.begin() == Ranges.end());
-  for (const SourceRange &Range : Ranges)
+  for (SourceRange Range : Ranges)
     P->addRange(Range);
 
   return std::move(P);
@@ -1537,6 +1537,16 @@ LikelyFalsePositiveSuppressionBRVisitor::getEndPath(BugReporterContext &BRC,
       if (const CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(D)) {
         const CXXRecordDecl *CD = MD->getParent();
         if (CD->getName() == "list") {
+          BR.markInvalid(getTag(), nullptr);
+          return nullptr;
+        }
+      }
+
+      // The analyzer issues a false positive when the constructor of
+      // std::__independent_bits_engine from algorithms is used.
+      if (const CXXConstructorDecl *MD = dyn_cast<CXXConstructorDecl>(D)) {
+        const CXXRecordDecl *CD = MD->getParent();
+        if (CD->getName() == "__independent_bits_engine") {
           BR.markInvalid(getTag(), nullptr);
           return nullptr;
         }

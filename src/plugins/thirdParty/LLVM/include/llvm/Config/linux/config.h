@@ -324,9 +324,6 @@
 /* Define to 1 if you have the <sys/uio.h> header file. */
 #define HAVE_SYS_UIO_H 1
 
-/* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
-#define HAVE_SYS_WAIT_H 1
-
 /* Define if the setupterm() function is supported this platform. */
 /* #undef HAVE_TERMINFO */
 
@@ -423,7 +420,9 @@
 /* Installation directory for data files */
 /* #undef LLVM_DATADIR */
 
-/* Target triple LLVM will generate code for by default */
+/* Target triple LLVM will generate code for by default
+ * Doesn't use `cmakedefine` because it is allowed to be empty.
+ */
 #define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-unknown-linux-gnu"
 
 /* Installation directory for documentation */
@@ -497,13 +496,13 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 7
+#define LLVM_VERSION_MINOR 8
 
 /* Patch version of the LLVM API */
-#define LLVM_VERSION_PATCH 1
+#define LLVM_VERSION_PATCH 0
 
 /* LLVM version string */
-#define LLVM_VERSION_STRING "3.7.1"
+#define LLVM_VERSION_STRING "3.8.0"
 
 /* Define if we link Polly to the tools */
 /* #undef LINK_POLLY_INTO_TOOLS */
@@ -535,13 +534,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.7.1"
+#define PACKAGE_STRING "LLVM 3.8.0"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.7.1"
+#define PACKAGE_VERSION "3.8.0"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

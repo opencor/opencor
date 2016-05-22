@@ -44,16 +44,16 @@ IF(USE_PREBUILT_LLVM_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll bdb5d62b8223d242dcc5bf0516021069315b0b40)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib d213dadb95fff5183be68a15e364896fbe70e54c)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll e6be60b8ea54e7814b015160e75a5518892a8ec8)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 08405e39336b19eb770bb6515d42efe5a72d42ae)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 7f37ec3ecf8b91df2981043aa4d7b6844de3e1f5)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 98526913488d2e9c27aa89e00f63ac6e4cfdd156)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll b5a0b1ae1b30c59764649bfe12841b796b790e2d)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib ac0d1ec75ceb6f8692c9f8de4c61bdc870871367)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.dylib 1dad0d6e0118bdc027436c02c16d0cf317b15c03)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.dylib 785998e802cb62b27984af8492c65c25e1e4e14c)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.so 366e041f137b2d28aa7e1facc19cc8141e1d966a)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.so 253615ad7caff81c47cab57f294a282f6a4d0976)
     ENDIF()
 
     # Add the plugin as a binary
@@ -111,9 +111,7 @@ ELSE()
             ../../plugininfo.cpp
 
             lib/Analysis/AliasAnalysis.cpp
-            lib/Analysis/AliasAnalysisCounter.cpp
             lib/Analysis/AliasAnalysisEvaluator.cpp
-            lib/Analysis/AliasDebugger.cpp
             lib/Analysis/AliasSetTracker.cpp
             lib/Analysis/Analysis.cpp
             lib/Analysis/AssumptionCache.cpp
@@ -121,6 +119,9 @@ ELSE()
             lib/Analysis/BlockFrequencyInfo.cpp
             lib/Analysis/BlockFrequencyInfoImpl.cpp
             lib/Analysis/BranchProbabilityInfo.cpp
+            lib/Analysis/CallGraph.cpp
+            lib/Analysis/CallGraphSCCPass.cpp
+            lib/Analysis/CallPrinter.cpp
             lib/Analysis/CaptureTracking.cpp
             lib/Analysis/CFG.cpp
             lib/Analysis/CFGPrinter.cpp
@@ -130,26 +131,22 @@ ELSE()
             lib/Analysis/ConstantFolding.cpp
             lib/Analysis/CostModel.cpp
             lib/Analysis/Delinearization.cpp
+            lib/Analysis/DemandedBits.cpp
             lib/Analysis/DependenceAnalysis.cpp
             lib/Analysis/DivergenceAnalysis.cpp
             lib/Analysis/DominanceFrontier.cpp
             lib/Analysis/DomPrinter.cpp
+            lib/Analysis/EHPersonalities.cpp
+            lib/Analysis/GlobalsModRef.cpp
+            lib/Analysis/InlineCost.cpp
             lib/Analysis/InstCount.cpp
             lib/Analysis/InstructionSimplify.cpp
             lib/Analysis/Interval.cpp
             lib/Analysis/IntervalPartition.cpp
-            lib/Analysis/IPA/CallGraph.cpp
-            lib/Analysis/IPA/CallGraphSCCPass.cpp
-            lib/Analysis/IPA/CallPrinter.cpp
-            lib/Analysis/IPA/GlobalsModRef.cpp
-            lib/Analysis/IPA/InlineCost.cpp
-            lib/Analysis/IPA/IPA.cpp
             lib/Analysis/IteratedDominanceFrontier.cpp
             lib/Analysis/IVUsers.cpp
             lib/Analysis/LazyCallGraph.cpp
             lib/Analysis/LazyValueInfo.cpp
-            lib/Analysis/LibCallAliasAnalysis.cpp
-            lib/Analysis/LibCallSemantics.cpp
             lib/Analysis/Lint.cpp
             lib/Analysis/Loads.cpp
             lib/Analysis/LoopAccessAnalysis.cpp
@@ -161,7 +158,10 @@ ELSE()
             lib/Analysis/MemoryDependenceAnalysis.cpp
             lib/Analysis/MemoryLocation.cpp
             lib/Analysis/ModuleDebugInfoPrinter.cpp
-            lib/Analysis/NoAliasAnalysis.cpp
+            lib/Analysis/ObjCARCAliasAnalysis.cpp
+            lib/Analysis/ObjCARCAnalysisUtils.cpp
+            lib/Analysis/ObjCARCInstKind.cpp
+            lib/Analysis/OrderedBasicBlock.cpp
             lib/Analysis/PHITransAddr.cpp
             lib/Analysis/PostDominators.cpp
             lib/Analysis/PtrUseVisitor.cpp
@@ -216,6 +216,7 @@ ELSE()
             lib/CodeGen/ExpandISelPseudos.cpp
             lib/CodeGen/ExpandPostRAPseudos.cpp
             lib/CodeGen/FaultMaps.cpp
+            lib/CodeGen/FuncletLayout.cpp
             lib/CodeGen/GCMetadata.cpp
             lib/CodeGen/GCMetadataPrinter.cpp
             lib/CodeGen/GCRootLowering.cpp
@@ -229,6 +230,7 @@ ELSE()
             lib/CodeGen/IntrinsicLowering.cpp
             lib/CodeGen/LatencyPriorityQueue.cpp
             lib/CodeGen/LexicalScopes.cpp
+            lib/CodeGen/LiveDebugValues.cpp
             lib/CodeGen/LiveDebugVariables.cpp
             lib/CodeGen/LiveInterval.cpp
             lib/CodeGen/LiveIntervalAnalysis.cpp
@@ -273,6 +275,7 @@ ELSE()
             lib/CodeGen/MIRPrintingPass.cpp
             lib/CodeGen/OcamlGC.cpp
             lib/CodeGen/OptimizePHIs.cpp
+            lib/CodeGen/ParallelCG.cpp
             lib/CodeGen/Passes.cpp
             lib/CodeGen/PeepholeOptimizer.cpp
             lib/CodeGen/PHIElimination.cpp
@@ -372,6 +375,14 @@ ELSE()
             lib/CodeGen/SelectionDAG/TargetLowering.cpp
             lib/CodeGen/SelectionDAG/TargetSelectionDAGInfo.cpp
 
+            lib/DebugInfo/CodeView/FieldListRecordBuilder.cpp
+            lib/DebugInfo/CodeView/Line.cpp
+            lib/DebugInfo/CodeView/ListRecordBuilder.cpp
+            lib/DebugInfo/CodeView/MemoryTypeTableBuilder.cpp
+            lib/DebugInfo/CodeView/MethodListRecordBuilder.cpp
+            lib/DebugInfo/CodeView/TypeRecordBuilder.cpp
+            lib/DebugInfo/CodeView/TypeTableBuilder.cpp
+
             lib/DebugInfo/DWARF/DWARFAbbreviationDeclaration.cpp
             lib/DebugInfo/DWARF/DWARFAcceleratorTable.cpp
             lib/DebugInfo/DWARF/DWARFCompileUnit.cpp
@@ -383,10 +394,12 @@ ELSE()
             lib/DebugInfo/DWARF/DWARFDebugInfoEntry.cpp
             lib/DebugInfo/DWARF/DWARFDebugLine.cpp
             lib/DebugInfo/DWARF/DWARFDebugLoc.cpp
+            lib/DebugInfo/DWARF/DWARFDebugMacro.cpp
             lib/DebugInfo/DWARF/DWARFDebugRangeList.cpp
             lib/DebugInfo/DWARF/DWARFFormValue.cpp
             lib/DebugInfo/DWARF/DWARFTypeUnit.cpp
             lib/DebugInfo/DWARF/DWARFUnit.cpp
+            lib/DebugInfo/DWARF/DWARFUnitIndex.cpp
             lib/DebugInfo/DWARF/SyntaxHighlighting.cpp
 
             lib/DebugInfo/PDB/IPDBSourceFile.cpp
@@ -441,6 +454,10 @@ ELSE()
 #       time we update LLVM. Indeed, the DIA SDK is only available on Windows,
 #       and it may or not be present on a build machine...
 
+            lib/DebugInfo/Symbolize/DIPrinter.cpp
+            lib/DebugInfo/Symbolize/SymbolizableObjectFile.cpp
+            lib/DebugInfo/Symbolize/Symbolize.cpp
+
             lib/ExecutionEngine/ExecutionEngine.cpp
             lib/ExecutionEngine/ExecutionEngineBindings.cpp
             lib/ExecutionEngine/GDBRegistrationListener.cpp
@@ -470,8 +487,12 @@ ELSE()
             lib/ExecutionEngine/Orc/ExecutionUtils.cpp
             lib/ExecutionEngine/Orc/IndirectionUtils.cpp
             lib/ExecutionEngine/Orc/NullResolver.cpp
+            lib/ExecutionEngine/Orc/OrcArchitectureSupport.cpp
+            lib/ExecutionEngine/Orc/OrcCBindings.cpp
+            lib/ExecutionEngine/Orc/OrcCBindingsStack.cpp
+            lib/ExecutionEngine/Orc/OrcError.cpp
             lib/ExecutionEngine/Orc/OrcMCJITReplacement.cpp
-            lib/ExecutionEngine/Orc/OrcTargetSupport.cpp
+            lib/ExecutionEngine/Orc/OrcRemoteTargetRPCAPI.cpp
 
             lib/ExecutionEngine/RuntimeDyld/RTDyldMemoryManager.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
@@ -514,6 +535,7 @@ ELSE()
             lib/IR/DIBuilder.cpp
             lib/IR/Dominators.cpp
             lib/IR/Function.cpp
+            lib/IR/FunctionInfo.cpp
             lib/IR/GCOV.cpp
             lib/IR/Globals.cpp
             lib/IR/GVMaterializer.cpp
@@ -529,7 +551,6 @@ ELSE()
             lib/IR/Mangler.cpp
             lib/IR/MDBuilder.cpp
             lib/IR/Metadata.cpp
-            lib/IR/MetadataTracking.cpp
             lib/IR/Module.cpp
             lib/IR/Operator.cpp
             lib/IR/Pass.cpp
@@ -551,6 +572,7 @@ ELSE()
 
             lib/LineEditor/LineEditor.cpp
 
+            lib/Linker/IRMover.cpp
             lib/Linker/LinkModules.cpp
 
             lib/LTO/LTOCodeGenerator.cpp
@@ -573,6 +595,7 @@ ELSE()
             lib/MC/MCELFObjectTargetWriter.cpp
             lib/MC/MCELFStreamer.cpp
             lib/MC/MCExpr.cpp
+            lib/MC/MCFragment.cpp
             lib/MC/MCInst.cpp
             lib/MC/MCInstPrinter.cpp
             lib/MC/MCInstrAnalysis.cpp
@@ -630,6 +653,7 @@ ELSE()
             lib/Object/ELFObjectFile.cpp
             lib/Object/ELFYAML.cpp
             lib/Object/Error.cpp
+            lib/Object/FunctionIndexObjectFile.cpp
             lib/Object/IRObjectFile.cpp
             lib/Object/MachOObjectFile.cpp
             lib/Object/MachOUniversal.cpp
@@ -691,6 +715,7 @@ ELSE()
             lib/Support/IntEqClasses.cpp
             lib/Support/IntervalMap.cpp
             lib/Support/IntrusiveRefCntPtr.cpp
+            lib/Support/JamCRC.cpp
             lib/Support/LEB128.cpp
             lib/Support/LineIterator.cpp
             lib/Support/Locale.cpp
@@ -737,6 +762,7 @@ ELSE()
             lib/Support/TargetRegistry.cpp
             lib/Support/Threading.cpp
             lib/Support/ThreadLocal.cpp
+            lib/Support/ThreadPool.cpp
             lib/Support/Timer.cpp
             lib/Support/TimeValue.cpp
             lib/Support/ToolOutputFile.cpp
@@ -777,9 +803,11 @@ ELSE()
             lib/Target/X86/X86ISelLowering.cpp
             lib/Target/X86/X86MachineFunctionInfo.cpp
             lib/Target/X86/X86MCInstLower.cpp
+            lib/Target/X86/X86OptimizeLEAs.cpp
             lib/Target/X86/X86PadShortFunction.cpp
             lib/Target/X86/X86RegisterInfo.cpp
             lib/Target/X86/X86SelectionDAGInfo.cpp
+            lib/Target/X86/X86ShuffleDecodeConstantPool.cpp
             lib/Target/X86/X86Subtarget.cpp
             lib/Target/X86/X86TargetMachine.cpp
             lib/Target/X86/X86TargetObjectFile.cpp
@@ -837,6 +865,7 @@ ELSE()
             lib/Transforms/Instrumentation/InstrProfiling.cpp
             lib/Transforms/Instrumentation/Instrumentation.cpp
             lib/Transforms/Instrumentation/MemorySanitizer.cpp
+            lib/Transforms/Instrumentation/PGOInstrumentation.cpp
             lib/Transforms/Instrumentation/SafeStack.cpp
             lib/Transforms/Instrumentation/SanitizerCoverage.cpp
             lib/Transforms/Instrumentation/ThreadSanitizer.cpp
@@ -844,12 +873,16 @@ ELSE()
             lib/Transforms/IPO/ArgumentPromotion.cpp
             lib/Transforms/IPO/BarrierNoopPass.cpp
             lib/Transforms/IPO/ConstantMerge.cpp
+            lib/Transforms/IPO/CrossDSOCFI.cpp
             lib/Transforms/IPO/DeadArgumentElimination.cpp
             lib/Transforms/IPO/ElimAvailExtern.cpp
             lib/Transforms/IPO/ExtractGV.cpp
+            lib/Transforms/IPO/ForceFunctionAttrs.cpp
             lib/Transforms/IPO/FunctionAttrs.cpp
+            lib/Transforms/IPO/FunctionImport.cpp
             lib/Transforms/IPO/GlobalDCE.cpp
             lib/Transforms/IPO/GlobalOpt.cpp
+            lib/Transforms/IPO/InferFunctionAttrs.cpp
             lib/Transforms/IPO/InlineAlways.cpp
             lib/Transforms/IPO/Inliner.cpp
             lib/Transforms/IPO/InlineSimple.cpp
@@ -862,13 +895,12 @@ ELSE()
             lib/Transforms/IPO/PartialInlining.cpp
             lib/Transforms/IPO/PassManagerBuilder.cpp
             lib/Transforms/IPO/PruneEH.cpp
+            lib/Transforms/IPO/SampleProfile.cpp
             lib/Transforms/IPO/StripDeadPrototypes.cpp
             lib/Transforms/IPO/StripSymbols.cpp
 
-            lib/Transforms/ObjCARC/ARCInstKind.cpp
             lib/Transforms/ObjCARC/DependencyAnalysis.cpp
             lib/Transforms/ObjCARC/ObjCARC.cpp
-            lib/Transforms/ObjCARC/ObjCARCAliasAnalysis.cpp
             lib/Transforms/ObjCARC/ObjCARCAPElim.cpp
             lib/Transforms/ObjCARC/ObjCARCContract.cpp
             lib/Transforms/ObjCARC/ObjCARCExpand.cpp
@@ -899,6 +931,7 @@ ELSE()
             lib/Transforms/Scalar/LoopIdiomRecognize.cpp
             lib/Transforms/Scalar/LoopInstSimplify.cpp
             lib/Transforms/Scalar/LoopInterchange.cpp
+            lib/Transforms/Scalar/LoopLoadElimination.cpp
             lib/Transforms/Scalar/LoopRerollPass.cpp
             lib/Transforms/Scalar/LoopRotation.cpp
             lib/Transforms/Scalar/LoopStrengthReduce.cpp
@@ -914,7 +947,6 @@ ELSE()
             lib/Transforms/Scalar/Reassociate.cpp
             lib/Transforms/Scalar/Reg2Mem.cpp
             lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
-            lib/Transforms/Scalar/SampleProfile.cpp
             lib/Transforms/Scalar/Scalar.cpp
             lib/Transforms/Scalar/Scalarizer.cpp
             lib/Transforms/Scalar/ScalarReplAggregates.cpp
@@ -962,6 +994,7 @@ ELSE()
             lib/Transforms/Utils/SimplifyIndVar.cpp
             lib/Transforms/Utils/SimplifyInstructions.cpp
             lib/Transforms/Utils/SimplifyLibCalls.cpp
+            lib/Transforms/Utils/SplitModule.cpp
             lib/Transforms/Utils/SSAUpdater.cpp
             lib/Transforms/Utils/SymbolRewriter.cpp
             lib/Transforms/Utils/UnifyFunctionExitNodes.cpp
@@ -1052,6 +1085,7 @@ ELSE()
             tools/clang/lib/AST/ExprClassification.cpp
             tools/clang/lib/AST/ExprConstant.cpp
             tools/clang/lib/AST/ExprCXX.cpp
+            tools/clang/lib/AST/ExprObjC.cpp
             tools/clang/lib/AST/ExternalASTSource.cpp
             tools/clang/lib/AST/InheritViz.cpp
             tools/clang/lib/AST/ItaniumCXXABI.cpp
@@ -1061,13 +1095,17 @@ ELSE()
             tools/clang/lib/AST/MicrosoftMangle.cpp
             tools/clang/lib/AST/NestedNameSpecifier.cpp
             tools/clang/lib/AST/NSAPI.cpp
+            tools/clang/lib/AST/OpenMPClause.cpp
             tools/clang/lib/AST/ParentMap.cpp
             tools/clang/lib/AST/RawCommentList.cpp
             tools/clang/lib/AST/RecordLayout.cpp
             tools/clang/lib/AST/RecordLayoutBuilder.cpp
             tools/clang/lib/AST/SelectorLocationsKind.cpp
             tools/clang/lib/AST/Stmt.cpp
+            tools/clang/lib/AST/StmtCXX.cpp
             tools/clang/lib/AST/StmtIterator.cpp
+            tools/clang/lib/AST/StmtObjC.cpp
+            tools/clang/lib/AST/StmtOpenMP.cpp
             tools/clang/lib/AST/StmtPrinter.cpp
             tools/clang/lib/AST/StmtProfile.cpp
             tools/clang/lib/AST/StmtViz.cpp
@@ -1219,6 +1257,7 @@ ELSE()
             tools/clang/lib/Frontend/PrintPreprocessedOutput.cpp
             tools/clang/lib/Frontend/SerializedDiagnosticPrinter.cpp
             tools/clang/lib/Frontend/SerializedDiagnosticReader.cpp
+            tools/clang/lib/Frontend/TestModuleFileExtension.cpp
             tools/clang/lib/Frontend/TextDiagnostic.cpp
             tools/clang/lib/Frontend/TextDiagnosticBuffer.cpp
             tools/clang/lib/Frontend/TextDiagnosticPrinter.cpp
@@ -1300,6 +1339,7 @@ ELSE()
             tools/clang/lib/Sema/SemaChecking.cpp
             tools/clang/lib/Sema/SemaCodeComplete.cpp
             tools/clang/lib/Sema/SemaConsumer.cpp
+            tools/clang/lib/Sema/SemaCoroutine.cpp
             tools/clang/lib/Sema/SemaCUDA.cpp
             tools/clang/lib/Sema/SemaCXXScopeSpec.cpp
             tools/clang/lib/Sema/SemaDecl.cpp
@@ -1340,6 +1380,7 @@ ELSE()
             tools/clang/lib/Serialization/GeneratePCH.cpp
             tools/clang/lib/Serialization/GlobalModuleIndex.cpp
             tools/clang/lib/Serialization/Module.cpp
+            tools/clang/lib/Serialization/ModuleFileExtension.cpp
             tools/clang/lib/Serialization/ModuleManager.cpp
 
 #            tools/clang/lib/StaticAnalyzer/Checkers/AllocationDiagnostics.cpp
@@ -1366,6 +1407,7 @@ ELSE()
 #            tools/clang/lib/StaticAnalyzer/Checkers/DereferenceChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/DirectIvarAssignment.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/DivZeroChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/DynamicTypeChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/DynamicTypePropagation.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ExprInspectionChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/FixedAddressChecker.cpp
@@ -1373,6 +1415,7 @@ ELSE()
 #            tools/clang/lib/StaticAnalyzer/Checkers/IdenticalExprChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/IvarInvalidationChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/LLVMConventionsChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/LocalizationChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/MacOSKeychainAPIChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/MacOSXAPIChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/MallocChecker.cpp
@@ -1382,12 +1425,14 @@ ELSE()
 #            tools/clang/lib/StaticAnalyzer/Checkers/NoReturnFunctionChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/NSAutoreleasePoolChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/NSErrorChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/NullabilityChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ObjCAtSyncChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ObjCContainersASTChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ObjCContainersChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ObjCMissingSuperCallChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ObjCSelfInitChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/ObjCUnusedIVarsChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/PaddingChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/PointerArithChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/PointerSubChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/PthreadLockChecker.cpp
@@ -1407,6 +1452,7 @@ ELSE()
 #            tools/clang/lib/StaticAnalyzer/Checkers/UndefResultChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/UnixAPIChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/UnreachableCodeChecker.cpp
+#            tools/clang/lib/StaticAnalyzer/Checkers/VforkChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/VirtualCallChecker.cpp
 #            tools/clang/lib/StaticAnalyzer/Checkers/VLASizeChecker.cpp
 # Note: we don't need the above, but we leave them so we know about them next
@@ -1428,6 +1474,7 @@ ELSE()
 #            tools/clang/lib/StaticAnalyzer/Core/CommonBugCategories.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/ConstraintManager.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/CoreEngine.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/DynamicTypeMap.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/Environment.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/ExplodedGraph.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/ExprEngine.cpp
@@ -1437,6 +1484,8 @@ ELSE()
 #            tools/clang/lib/StaticAnalyzer/Core/ExprEngineObjC.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/FunctionSummary.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/HTMLDiagnostics.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/IssueHash.cpp
+#            tools/clang/lib/StaticAnalyzer/Core/LoopWidening.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/MemRegion.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/PathDiagnostic.cpp
 #            tools/clang/lib/StaticAnalyzer/Core/PlistDiagnostics.cpp
@@ -1470,6 +1519,7 @@ ELSE()
             tools/clang/lib/Tooling/RefactoringCallbacks.cpp
             tools/clang/lib/Tooling/Tooling.cpp
 
+            tools/clang/lib/Tooling/Core/Lookup.cpp
             tools/clang/lib/Tooling/Core/Replacement.cpp
         HEADERS_MOC
             src/llvmplugin.h

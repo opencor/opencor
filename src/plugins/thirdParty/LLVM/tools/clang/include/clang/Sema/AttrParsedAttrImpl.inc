@@ -14,7 +14,7 @@ static bool defaultDiagnoseLangOpts(Sema &, const AttributeList &) {
   return true;
 }
 
-static bool defaultTargetRequirements(const llvm::Triple &) {
+static bool defaultTargetRequirements(const TargetInfo &) {
   return true;
 }
 
@@ -40,9 +40,9 @@ static bool checkAMDGPUNumVGPRAppertainsTo(Sema &S, const AttributeList &Attr, c
   return true;
 }
 
-static bool isTargetarmthumbmsp430(const llvm::Triple &T) {
-  llvm::Triple::ArchType Arch = T.getArch();
-  return (Arch == llvm::Triple::arm || Arch == llvm::Triple::thumb || Arch == llvm::Triple::msp430);
+static bool isTargetarmthumbmsp430mipsmipsel(const TargetInfo &Target) {
+  const llvm::Triple &T = Target.getTriple();
+  return (T.getArch() == llvm::Triple::arm || T.getArch() == llvm::Triple::thumb || T.getArch() == llvm::Triple::msp430 || T.getArch() == llvm::Triple::mips || T.getArch() == llvm::Triple::mipsel);
 }
 
 static bool checkAcquireCapabilityAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
@@ -77,7 +77,7 @@ static unsigned AcquireCapabilityAttrSpellingMap(const AttributeList &Attr) {
 }
 
 static bool isSharedVar(const Decl *D) {
-  if (const VarDecl *S = dyn_cast<VarDecl>(D))
+  if (const auto *S = dyn_cast<VarDecl>(D))
     return S->hasGlobalStorage() && !S->getTLSKind();
   return false;
 }
@@ -101,7 +101,7 @@ static bool checkAcquiredBeforeAppertainsTo(Sema &S, const AttributeList &Attr, 
 }
 
 static bool isGlobalVar(const Decl *D) {
-  if (const VarDecl *S = dyn_cast<VarDecl>(D))
+  if (const auto *S = dyn_cast<VarDecl>(D))
     return S->hasGlobalStorage();
   return false;
 }
@@ -327,8 +327,8 @@ static bool checkCUDAInvalidTargetAppertainsTo(Sema &S, const AttributeList &Att
 }
 
 static bool isFunctionLike(const Decl *D) {
-  if (const Decl *S = dyn_cast<Decl>(D))
-    return S->getFunctionType(false) != NULL;
+  if (const auto *S = dyn_cast<Decl>(D))
+    return S->getFunctionType(false) != nullptr;
   return false;
 }
 
@@ -368,16 +368,10 @@ static bool checkCallableWhenAppertainsTo(Sema &S, const AttributeList &Attr, co
   return true;
 }
 
-static bool isStruct(const Decl *D) {
-  if (const RecordDecl *S = dyn_cast<RecordDecl>(D))
-    return !S->isUnion();
-  return false;
-}
-
 static bool checkCapabilityAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
-  if (!isStruct(D) && !isa<TypedefNameDecl>(D)) {
+  if (!isa<RecordDecl>(D) && !isa<TypedefNameDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::err_attribute_wrong_decl_type)
-      << Attr.getName() << ExpectedStructOrTypedef;
+      << Attr.getName() << ExpectedStructOrUnionOrTypedef;
     return false;
   }
   return true;
@@ -482,10 +476,9 @@ static bool checkDLLExportAppertainsTo(Sema &S, const AttributeList &Attr, const
   return true;
 }
 
-static bool isTargetx86x86_64armthumbWin32(const llvm::Triple &T) {
-  llvm::Triple::ArchType Arch = T.getArch();
-  llvm::Triple::OSType OS = T.getOS();
-  return (Arch == llvm::Triple::x86 || Arch == llvm::Triple::x86_64 || Arch == llvm::Triple::arm || Arch == llvm::Triple::thumb) && (OS == llvm::Triple::Win32);
+static bool isTargetx86x86_64armthumbWin32(const TargetInfo &Target) {
+  const llvm::Triple &T = Target.getTriple();
+  return (T.getArch() == llvm::Triple::x86 || T.getArch() == llvm::Triple::x86_64 || T.getArch() == llvm::Triple::arm || T.getArch() == llvm::Triple::thumb) && (T.getOS() == llvm::Triple::Win32);
 }
 
 static bool checkDLLImportAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
@@ -501,6 +494,15 @@ static bool checkDestructorAppertainsTo(Sema &S, const AttributeList &Attr, cons
   if (!isa<FunctionDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
       << Attr.getName() << ExpectedFunction;
+    return false;
+  }
+  return true;
+}
+
+static bool checkDisableTailCallsAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
+  if (!isa<FunctionDecl>(D) && !isa<ObjCMethodDecl>(D)) {
+    S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
+      << Attr.getName() << ExpectedFunctionOrMethod;
     return false;
   }
   return true;
@@ -560,8 +562,8 @@ static bool checkFlattenAppertainsTo(Sema &S, const AttributeList &Attr, const D
 }
 
 static bool isHasFunctionProto(const Decl *D) {
-  if (const Decl *S = dyn_cast<Decl>(D))
-    return (S->getFunctionType(true) != NULL &&
+  if (const auto *S = dyn_cast<Decl>(D))
+    return (S->getFunctionType(true) != nullptr &&
                               isa<FunctionProtoType>(S->getFunctionType())) ||
                                        isa<ObjCMethodDecl>(S) ||
                                        isa<BlockDecl>(S);
@@ -571,7 +573,7 @@ static bool isHasFunctionProto(const Decl *D) {
 static bool checkFormatAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isa<ObjCMethodDecl>(D) && !isa<BlockDecl>(D) && !isHasFunctionProto(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
-      << Attr.getName() << ExpectedFunction;
+      << Attr.getName() << ExpectedFunctionWithProtoType;
     return false;
   }
   return true;
@@ -580,7 +582,7 @@ static bool checkFormatAppertainsTo(Sema &S, const AttributeList &Attr, const De
 static bool checkFormatArgAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isa<ObjCMethodDecl>(D) && !isHasFunctionProto(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
-      << Attr.getName() << ExpectedFunction;
+      << Attr.getName() << ExpectedFunctionWithProtoType;
     return false;
   }
   return true;
@@ -623,7 +625,7 @@ static bool checkHotAppertainsTo(Sema &S, const AttributeList &Attr, const Decl 
 }
 
 static bool isObjCInstanceMethod(const Decl *D) {
-  if (const ObjCMethodDecl *S = dyn_cast<ObjCMethodDecl>(D))
+  if (const auto *S = dyn_cast<ObjCMethodDecl>(D))
     return S->isInstanceMethod();
   return false;
 }
@@ -641,6 +643,15 @@ static bool checkInitPriorityAppertainsTo(Sema &S, const AttributeList &Attr, co
   if (!isa<VarDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::err_attribute_wrong_decl_type)
       << Attr.getName() << ExpectedVariable;
+    return false;
+  }
+  return true;
+}
+
+static bool checkInternalLinkageAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
+  if (!isa<VarDecl>(D) && !isa<FunctionDecl>(D) && !isa<CXXRecordDecl>(D)) {
+    S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
+      << Attr.getName() << (S.getLangOpts().CPlusPlus ? ExpectedFunctionVariableOrClass : ExpectedVariableOrFunction);
     return false;
   }
   return true;
@@ -724,6 +735,11 @@ static bool checkMSNoVTableAppertainsTo(Sema &S, const AttributeList &Attr, cons
   return true;
 }
 
+static bool isTargetx86x86_64armthumbMicrosoft(const TargetInfo &Target) {
+  const llvm::Triple &T = Target.getTriple();
+  return (T.getArch() == llvm::Triple::x86 || T.getArch() == llvm::Triple::x86_64 || T.getArch() == llvm::Triple::arm || T.getArch() == llvm::Triple::thumb) && (Target.getCXXABI().getKind() == TargetCXXABI::Microsoft);
+}
+
 static bool checkMSStructAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isa<RecordDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
@@ -751,9 +767,9 @@ static bool checkMips16AppertainsTo(Sema &S, const AttributeList &Attr, const De
   return true;
 }
 
-static bool isTargetmipsmipsel(const llvm::Triple &T) {
-  llvm::Triple::ArchType Arch = T.getArch();
-  return (Arch == llvm::Triple::mips || Arch == llvm::Triple::mipsel);
+static bool isTargetmipsmipsel(const TargetInfo &Target) {
+  const llvm::Triple &T = Target.getTriple();
+  return (T.getArch() == llvm::Triple::mips || T.getArch() == llvm::Triple::mipsel);
 }
 
 static bool checkNSConsumedAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
@@ -775,6 +791,15 @@ static bool checkNSConsumesSelfAppertainsTo(Sema &S, const AttributeList &Attr, 
 }
 
 static bool checkNakedAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
+  if (!isa<FunctionDecl>(D)) {
+    S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
+      << Attr.getName() << ExpectedFunction;
+    return false;
+  }
+  return true;
+}
+
+static bool checkNoAliasAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isa<FunctionDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
       << Attr.getName() << ExpectedFunction;
@@ -873,6 +898,15 @@ static bool checkNonNullAppertainsTo(Sema &S, const AttributeList &Attr, const D
   return true;
 }
 
+static bool checkNotTailCalledAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
+  if (!isa<FunctionDecl>(D)) {
+    S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
+      << Attr.getName() << ExpectedFunction;
+    return false;
+  }
+  return true;
+}
+
 static bool checkObjCBoxableAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isa<RecordDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::err_attribute_wrong_decl_type)
@@ -910,7 +944,7 @@ static bool checkObjCBridgeRelatedAppertainsTo(Sema &S, const AttributeList &Att
 }
 
 static bool isObjCInterfaceDeclInitMethod(const Decl *D) {
-  if (const ObjCMethodDecl *S = dyn_cast<ObjCMethodDecl>(D))
+  if (const auto *S = dyn_cast<ObjCMethodDecl>(D))
     return S->getMethodFamily() == OMF_init &&
                                  (isa<ObjCInterfaceDecl>(S->getDeclContext()) ||
                                   (isa<ObjCCategoryDecl>(S->getDeclContext()) &&
@@ -1066,7 +1100,7 @@ static bool checkOverloadableAppertainsTo(Sema &S, const AttributeList &Attr, co
 static bool checkOwnershipAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isHasFunctionProto(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
-      << Attr.getName() << ExpectedFunction;
+      << Attr.getName() << ExpectedFunctionWithProtoType;
     return false;
   }
   return true;
@@ -1089,6 +1123,15 @@ static unsigned OwnershipAttrSpellingMap(const AttributeList &Attr) {
 }
 
 static bool checkParamTypestateAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
+  if (!isa<ParmVarDecl>(D)) {
+    S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
+      << Attr.getName() << ExpectedParameter;
+    return false;
+  }
+  return true;
+}
+
+static bool checkPassObjectSizeAppertainsTo(Sema &S, const AttributeList &Attr, const Decl *D) {
   if (!isa<ParmVarDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_wrong_decl_type)
       << Attr.getName() << ExpectedParameter;
@@ -1293,7 +1336,7 @@ static bool checkSharedTrylockFunctionAppertainsTo(Sema &S, const AttributeList 
 }
 
 static bool isTLSVar(const Decl *D) {
-  if (const VarDecl *S = dyn_cast<VarDecl>(D))
+  if (const auto *S = dyn_cast<VarDecl>(D))
     return S->getTLSKind() != 0;
   return false;
 }
@@ -1441,15 +1484,15 @@ static bool checkWorkGroupSizeHintAppertainsTo(Sema &S, const AttributeList &Att
   return true;
 }
 
-static bool isTargetx86(const llvm::Triple &T) {
-  llvm::Triple::ArchType Arch = T.getArch();
-  return (Arch == llvm::Triple::x86);
+static bool isTargetx86(const TargetInfo &Target) {
+  const llvm::Triple &T = Target.getTriple();
+  return (T.getArch() == llvm::Triple::x86);
 }
 
 static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 1, 0, 0, 0, 0, 0, checkAMDGPUNumSGPRAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_AMDGPUNumSGPR
   { 1, 0, 0, 0, 0, 0, checkAMDGPUNumVGPRAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_AMDGPUNumVGPR
-  { 0, 1, 1, 1, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, isTargetarmthumbmsp430, defaultSpellingIndexToSemanticSpelling },  // AT_Interrupt
+  { 0, 1, 1, 1, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, isTargetarmthumbmsp430mipsmipsel, defaultSpellingIndexToSemanticSpelling },  // AT_Interrupt
   { 0, 15, 0, 0, 0, 0, checkAcquireCapabilityAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, AcquireCapabilityAttrSpellingMap },  // AT_AcquireCapability
   { 0, 15, 0, 0, 0, 0, checkAcquiredAfterAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_AcquiredAfter
   { 0, 15, 0, 0, 0, 0, checkAcquiredBeforeAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_AcquiredBefore
@@ -1497,6 +1540,7 @@ static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 0, 0, 0, 1, 0, 1, checkDLLImportAppertainsTo, defaultDiagnoseLangOpts, isTargetx86x86_64armthumbWin32, defaultSpellingIndexToSemanticSpelling },  // AT_DLLImport
   { 0, 1, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Deprecated
   { 0, 1, 0, 0, 0, 1, checkDestructorAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Destructor
+  { 0, 0, 0, 0, 0, 0, checkDisableTailCallsAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_DisableTailCalls
   { 2, 0, 0, 0, 0, 0, checkEnableIfAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_EnableIf
   { 1, 15, 0, 0, 0, 0, checkExclusiveTrylockFunctionAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ExclusiveTrylockFunction
   { 1, 0, 0, 0, 0, 0, checkExtVectorTypeAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ExtVectorType
@@ -1515,13 +1559,14 @@ static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 0, 1, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_IBOutletCollection
   { 1, 0, 0, 0, 0, 0, checkInitPriorityAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_InitPriority
   { 0, 0, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_IntelOclBicc
+  { 0, 0, 0, 0, 0, 0, checkInternalLinkageAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_InternalLinkage
   { 1, 0, 0, 0, 0, 0, checkLockReturnedAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_LockReturned
   { 0, 0, 0, 0, 0, 0, checkLockableAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Lockable
   { 0, 15, 0, 0, 0, 0, checkLocksExcludedAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_LocksExcluded
   { 3, 0, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, LoopHintAttrSpellingMap },  // AT_LoopHint
   { 0, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_MSABI
   { 0, 1, 0, 0, 0, 0, defaultAppertainsTo, checkMicrosoftExtLangOpts, defaultTargetRequirements, MSInheritanceAttrSpellingMap },  // AT_MSInheritance
-  { 0, 0, 0, 0, 0, 0, checkMSNoVTableAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_MSNoVTable
+  { 0, 0, 0, 1, 0, 0, checkMSNoVTableAppertainsTo, defaultDiagnoseLangOpts, isTargetx86x86_64armthumbMicrosoft, defaultSpellingIndexToSemanticSpelling },  // AT_MSNoVTable
   { 0, 0, 0, 0, 0, 1, checkMSStructAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_MSStruct
   { 0, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_MayAlias
   { 0, 0, 0, 0, 0, 0, checkMinSizeAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_MinSize
@@ -1535,6 +1580,7 @@ static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 0, 0, 0, 0, 0, 1, checkNakedAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Naked
   { 1, 0, 0, 0, 1, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NeonPolyVectorType
   { 1, 0, 0, 0, 1, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NeonVectorType
+  { 0, 0, 0, 0, 0, 0, checkNoAliasAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NoAlias
   { 0, 0, 0, 0, 0, 1, checkNoCommonAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NoCommon
   { 0, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NoDebug
   { 0, 0, 0, 0, 0, 0, checkNoDuplicateAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NoDuplicate
@@ -1548,10 +1594,11 @@ static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 0, 0, 0, 0, 0, 0, checkNoThreadSafetyAnalysisAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NoThreadSafetyAnalysis
   { 0, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NoThrow
   { 0, 15, 0, 0, 0, 1, checkNonNullAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NonNull
+  { 0, 0, 0, 0, 0, 0, checkNotTailCalledAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_NotTailCalled
   { 0, 0, 0, 0, 0, 0, checkObjCBoxableAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCBoxable
   { 1, 0, 0, 0, 0, 0, checkObjCBridgeAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCBridge
   { 1, 0, 0, 0, 0, 0, checkObjCBridgeMutableAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCBridgeMutable
-  { 3, 0, 1, 0, 0, 0, checkObjCBridgeRelatedAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCBridgeRelated
+  { 1, 2, 1, 0, 0, 0, checkObjCBridgeRelatedAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCBridgeRelated
   { 0, 0, 0, 0, 0, 0, checkObjCDesignatedInitializerAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCDesignatedInitializer
   { 0, 0, 0, 0, 0, 0, checkObjCExceptionAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCException
   { 0, 0, 0, 0, 0, 0, checkObjCExplicitProtocolImplAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ObjCExplicitProtocolImpl
@@ -1580,6 +1627,7 @@ static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 0, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Packed
   { 1, 0, 0, 0, 0, 0, checkParamTypestateAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_ParamTypestate
   { 0, 0, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Pascal
+  { 1, 0, 0, 0, 0, 0, checkPassObjectSizeAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_PassObjectSize
   { 1, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Pcs
   { 1, 0, 0, 0, 0, 0, checkPtGuardedByAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_PtGuardedBy
   { 0, 0, 0, 0, 0, 0, checkPtGuardedVarAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_PtGuardedVar
@@ -1616,7 +1664,7 @@ static const ParsedAttrInfo AttrInfoMap[AttributeList::UnknownAttribute + 1] = {
   { 4, 0, 1, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_TypeTagForDatatype
   { 1, 0, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_TypeVisibility
   { 0, 0, 0, 0, 1, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_UPtr
-  { 0, 1, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Unavailable
+  { 0, 2, 0, 0, 0, 0, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Unavailable
   { 0, 0, 0, 0, 0, 1, checkUnusedAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Unused
   { 0, 0, 0, 0, 0, 1, defaultAppertainsTo, defaultDiagnoseLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Used
   { 1, 0, 0, 0, 0, 0, defaultAppertainsTo, checkMicrosoftExtBorlandLangOpts, defaultTargetRequirements, defaultSpellingIndexToSemanticSpelling },  // AT_Uuid

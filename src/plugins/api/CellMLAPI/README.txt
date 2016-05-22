@@ -29,3 +29,5 @@ Once we have built and 'installed' the CellML API, we can replace the OpenCOR ve
  - the cda_config.h, IfaceCellML_events.hxx and IfaceDOM_events.hxx files are to be discarded;
  - the cda_compiler_support.h file shouldn't include the cda_config.h file; and
  - the cellml-api-cxx-support.hpp file shouldn't include the windows.h file and it shouldn't define the CDAMutex, CDALock and CDA_RefCount classes, and the CDA_IMPL_REFCOUNT macro (all of these will otherwise cause various problems with LLVM on Windows).
+
+Note: on Linux and OS X, we want to strip the binary files off their non-global symbols (using strip -x)...

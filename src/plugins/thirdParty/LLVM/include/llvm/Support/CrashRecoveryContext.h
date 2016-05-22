@@ -39,8 +39,6 @@ class CrashRecoveryContextCleanup;
 ///
 ///      ... no crash was detected ...
 ///    }
-///
-/// Crash recovery contexts may not be nested.
 class CrashRecoveryContext {
   void *Impl;
   CrashRecoveryContextCleanup *head;
@@ -109,7 +107,8 @@ class CrashRecoveryContextCleanup {
 protected:
   CrashRecoveryContext *context;
   CrashRecoveryContextCleanup(CrashRecoveryContext *context)
-    : context(context), cleanupFired(false) {}
+      : context(context), cleanupFired(false) {}
+
 public:
   bool cleanupFired;
 
@@ -129,15 +128,16 @@ template<typename DERIVED, typename T>
 class CrashRecoveryContextCleanupBase : public CrashRecoveryContextCleanup {
 protected:
   T *resource;
-  CrashRecoveryContextCleanupBase(CrashRecoveryContext *context, T* resource)
-    : CrashRecoveryContextCleanup(context), resource(resource) {}
+  CrashRecoveryContextCleanupBase(CrashRecoveryContext *context, T *resource)
+      : CrashRecoveryContextCleanup(context), resource(resource) {}
+
 public:
   static DERIVED *create(T *x) {
     if (x) {
       if (CrashRecoveryContext *context = CrashRecoveryContext::GetCurrent())
         return new DERIVED(context, x);
     }
-    return 0;
+    return nullptr;
   }
 };
 
@@ -147,8 +147,8 @@ class CrashRecoveryContextDestructorCleanup : public
 public:
   CrashRecoveryContextDestructorCleanup(CrashRecoveryContext *context,
                                         T *resource)
-    : CrashRecoveryContextCleanupBase<
-        CrashRecoveryContextDestructorCleanup<T>, T>(context, resource) {}
+      : CrashRecoveryContextCleanupBase<
+            CrashRecoveryContextDestructorCleanup<T>, T>(context, resource) {}
 
   virtual void recoverResources() {
     this->resource->~T();
@@ -182,6 +182,7 @@ public:
 template <typename T, typename Cleanup = CrashRecoveryContextDeleteCleanup<T> >
 class CrashRecoveryContextCleanupRegistrar {
   CrashRecoveryContextCleanup *cleanup;
+
 public:
   CrashRecoveryContextCleanupRegistrar(T *x)
     : cleanup(Cleanup::create(x)) {
@@ -189,16 +190,14 @@ public:
       cleanup->getContext()->registerCleanup(cleanup);
   }
 
-  ~CrashRecoveryContextCleanupRegistrar() {
-    unregister();
-  }
+  ~CrashRecoveryContextCleanupRegistrar() { unregister(); }
 
   void unregister() {
     if (cleanup && !cleanup->cleanupFired)
       cleanup->getContext()->unregisterCleanup(cleanup);
-    cleanup = 0;
+    cleanup = nullptr;
   }
 };
-}
+} // end namespace llvm
 
-#endif
+#endif // LLVM_SUPPORT_CRASHRECOVERYCONTEXT_H

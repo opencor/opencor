@@ -46,18 +46,21 @@ MACRO(INITIALISE_PROJECT)
     # By default, we are building a release version of OpenCOR, unless we are
     # explicitly asked for a debug version
 
-    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    IF(   "${CMAKE_BUILD_TYPE}" STREQUAL ""
+       OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+        IF(SHOW_INFORMATION_MESSAGE)
+            SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
+        ENDIF()
+
+        SET(RELEASE_MODE TRUE)
+    ELSEIF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         IF(SHOW_INFORMATION_MESSAGE)
             SET(BUILD_INFORMATION "Building a debug version of ${CMAKE_PROJECT_NAME}")
         ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
-        IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
-        ENDIF()
-
-        SET(RELEASE_MODE TRUE)
+        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
     # Required packages
@@ -202,13 +205,7 @@ MACRO(INITIALISE_PROJECT)
         IF(WIN32)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNDEBUG /MD /O2 /Ob2")
         ELSE()
-            IF(APPLE)
-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -flto")
-            ELSE()
-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-            ENDIF()
-
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
         ENDIF()
 
         IF(NOT WIN32 AND NOT APPLE)
@@ -602,33 +599,45 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             # Copy the external binary to its destination directory, so we can
             # test things without first having to deploy OpenCOR
-            # Note: on Windows, we also need to copy the build directory so that
-            #       we can test things from within Qt Creator...
-
-            SET(REAL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+            # Note: on Windows, we also need to copy it to the build directory
+            #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                # On Windows, we need to replace the extension of the external
-                # library
-
-                STRING(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
-                       REAL_EXTERNAL_BINARY "${REAL_EXTERNAL_BINARY}")
-
-                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${REAL_EXTERNAL_BINARY})
+                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${REAL_EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
+
+            # Strip the library of all its local symbols, if possible
+
+            IF(NOT WIN32 AND RELEASE_MODE)
+                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                                   COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY})
+            ENDIF()
 
             # Link the plugin to the external library
 
             IF(WIN32)
+                STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                       IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
+
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_EXTERNAL_BINARY}
+                    ${EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                 )
             ELSE()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
                 )
+            ENDIF()
+
+            # Package the external library, if needed
+
+            IF(WIN32)
+                INSTALL(FILES ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                        DESTINATION bin)
+            ELSEIF(NOT APPLE)
+                INSTALL(FILES ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                        DESTINATION lib)
             ENDIF()
         ENDFOREACH()
     ENDIF()
@@ -776,8 +785,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(NOT "${EXTERNAL_BINARIES_DIR}" STREQUAL "")
                     FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
                         IF(WIN32)
+                            STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                                   IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
+
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                                ${EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                             )
                         ELSE()
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
@@ -1004,15 +1016,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Deploy the library file
-
-    INSTALL(FILES ${DIRNAME}/${FILENAME}
-            DESTINATION bin)
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
@@ -1058,22 +1061,6 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         INSTALL(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION ${PLUGIN_DEST_DIRNAME})
     ENDFOREACH()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Strip the library of all its local symbols
-
-    IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND strip -x ${DIRNAME}/${FILENAME})
-    ENDIF()
-
-    # Deploy the library file
-
-    INSTALL(FILES ${DIRNAME}/${FILENAME}
-            DESTINATION lib)
 ENDMACRO()
 
 #===============================================================================
@@ -1159,31 +1146,6 @@ MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
                             ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
                             ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
-    # Strip the library of all its local symbols
-
-    SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-    IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND strip -x ${LIBRARY_FILEPATH})
-    ENDIF()
-
-    # Make sure that the library refers to our embedded version of the libraries
-    # on which it depends
-
-    FOREACH(DEPENDENCY_NAME ${ARGN})
-        SET(DEPENDENCY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${DEPENDENCY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${DEPENDENCY_FILENAME}
-                                                             @rpath/${DEPENDENCY_FILENAME}
-                                                             ${LIBRARY_FILEPATH})
     ENDFOREACH()
 ENDMACRO()
 

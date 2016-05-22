@@ -1,4 +1,4 @@
-//===- llvm/Support/Memory.h - Memory Support --------------------*- C++ -*-===//
+//===- llvm/Support/Memory.h - Memory Support -------------------*- C++ -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -32,6 +32,7 @@ namespace sys {
     MemoryBlock(void *addr, size_t size) : Address(addr), Size(size) { }
     void *base() const { return Address; }
     size_t size() const { return Size; }
+
   private:
     void *Address;    ///< Address of first byte of memory area
     size_t Size;      ///< Size, in bytes of the memory area
@@ -131,7 +132,6 @@ namespace sys {
     /// @brief Release Read/Write/Execute memory.
     static bool ReleaseRWX(MemoryBlock &block, std::string *ErrMsg = nullptr);
 
-
     /// InvalidateInstructionCache - Before the JIT can run a block of code
     /// that has been emitted it must invalidate the instruction cache on some
     /// platforms.
@@ -155,6 +155,31 @@ namespace sys {
     /// as writable.
     static bool setRangeWritable(const void *Addr, size_t Size);
   };
+
+  /// Owning version of MemoryBlock.
+  class OwningMemoryBlock {
+  public:
+    OwningMemoryBlock() = default;
+    explicit OwningMemoryBlock(MemoryBlock M) : M(M) {}
+    OwningMemoryBlock(OwningMemoryBlock &&Other) {
+      M = Other.M;
+      Other.M = MemoryBlock();
+    }
+    OwningMemoryBlock& operator=(OwningMemoryBlock &&Other) {
+      M = Other.M;
+      Other.M = MemoryBlock();
+      return *this;
+    }
+    ~OwningMemoryBlock() {
+      Memory::releaseMappedMemory(M);
+    }
+    void *base() const { return M.base(); }
+    size_t size() const { return M.size(); }
+    MemoryBlock getMemoryBlock() const { return M; }
+  private:
+    MemoryBlock M;
+  };
+
 }
 }
 

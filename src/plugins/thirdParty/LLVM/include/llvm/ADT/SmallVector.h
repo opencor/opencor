@@ -117,9 +117,13 @@ public:
   typedef const T *const_pointer;
 
   // forward iterator creation methods.
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   iterator begin() { return (iterator)this->BeginX; }
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   const_iterator begin() const { return (const_iterator)this->BeginX; }
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   iterator end() { return (iterator)this->EndX; }
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   const_iterator end() const { return (const_iterator)this->EndX; }
 protected:
   iterator capacity_ptr() { return (iterator)this->CapacityX; }
@@ -132,6 +136,7 @@ public:
   reverse_iterator rend()              { return reverse_iterator(begin()); }
   const_reverse_iterator rend() const { return const_reverse_iterator(begin());}
 
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   size_type size() const { return end()-begin(); }
   size_type max_size() const { return size_type(-1) / sizeof(T); }
 
@@ -143,10 +148,12 @@ public:
   /// Return a pointer to the vector's buffer, even if empty().
   const_pointer data() const { return const_pointer(begin()); }
 
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   reference operator[](size_type idx) {
     assert(idx < size());
     return begin()[idx];
   }
+  LLVM_ATTRIBUTE_ALWAYS_INLINE
   const_reference operator[](size_type idx) const {
     assert(idx < size());
     return begin()[idx];

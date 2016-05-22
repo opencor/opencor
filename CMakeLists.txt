@@ -534,8 +534,8 @@ ELSE()
             )
         ENDIF()
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll f6fd2f79bd6900a020b7092e5189d6e1e085495e)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 0735ac67e3bd844e6df0cf8709b584655ca71bd3)
+        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 247fad7f3ff9a5eb7ee328c8f930e40aa26f2bf2)
+        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 42abe98a74ad39cea66fe755350da4e97f5711ef)
 
         LIST(APPEND ADDITIONAL_FILES
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
@@ -694,11 +694,24 @@ ELSE()
 
     INSTALL(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
+    # System libraries required by OpenCOR
+    # Note: not needed on Ubuntu 14.04 LTS, but it is on Ubuntu 16.04 LTS...
+
+    FOREACH(SYSTEM_LIBRARY app base interfaces pbutils reamer video)
+        SET(FULL_SYSTEM_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${SYSTEM_LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
+
+        GET_FILENAME_COMPONENT(REAL_FULL_SYSTEM_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_SYSTEM_LIBRARY} REALPATH)
+
+        INSTALL(FILES ${REAL_FULL_SYSTEM_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_SYSTEM_LIBRARY})
+    ENDFOREACH()
+
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and OS X, we don't have a macro for deploying all
     #       of our Qt libraries at once. Indeed, on Linux, the version of a file
     #       is appended to its suffix, so unless making the macro unnecessarily
-    #       cumbersome to use, it's better deploy one Qt library at once...
+    #       cumbersome to use, it's better to deploy one Qt library at a time...
 
     IF(ENABLE_TESTS)
         SET(TEST Test)
@@ -763,13 +776,18 @@ ENDIF()
 
 # Notice and license files
 
+SET(NOTICE_FILENAME ${PROJECT_BUILD_DIR}/NOTICE.txt)
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/NOTICE.txt.in
+               ${NOTICE_FILENAME})
+
 SET(FILES
-    LICENSE.txt
-    NOTICE.txt
+    ${CMAKE_SOURCE_DIR}/LICENSE.txt
+    ${NOTICE_FILENAME}
 )
 
 FOREACH(FILE ${FILES})
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/${FILE}
+    INSTALL(FILES ${FILE}
             DESTINATION .
             PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 ENDFOREACH()

@@ -46,7 +46,6 @@ public:
     Unknown = -1, False = 0, True = 1
   };
 
-
   // Public query interface.
 
   /// Determine whether the specified value comparison with a constant is known

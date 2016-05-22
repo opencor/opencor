@@ -44,11 +44,12 @@ private:
   void operator=(const InlineAsm&) = delete;
 
   std::string AsmString, Constraints;
+  FunctionType *FTy;
   bool HasSideEffects;
   bool IsAlignStack;
   AsmDialect Dialect;
 
-  InlineAsm(PointerType *Ty, const std::string &AsmString,
+  InlineAsm(FunctionType *Ty, const std::string &AsmString,
             const std::string &Constraints, bool hasSideEffects,
             bool isAlignStack, AsmDialect asmDialect);
   ~InlineAsm() override;
@@ -56,8 +57,8 @@ private:
   /// When the ConstantUniqueMap merges two types and makes two InlineAsms
   /// identical, it destroys one of them with this method.
   void destroyConstant();
-public:
 
+public:
   /// InlineAsm::get - Return the specified uniqued inline asm string.
   ///
   static InlineAsm *get(FunctionType *Ty, StringRef AsmString,
@@ -157,7 +158,7 @@ public:
     /// The currently selected alternative constraint index.
     unsigned currentAlternativeIndex;
 
-    ///Default constructor.
+    /// Default constructor.
     ConstraintInfo();
 
     /// Parse - Analyze the specified string (e.g. "=*&{eax}") and fill in the
@@ -185,7 +186,6 @@ public:
   static inline bool classof(const Value *V) {
     return V->getValueID() == Value::InlineAsmVal;
   }
-
 
   // These are helper methods for dealing with flags in the INLINEASM SDNode
   // in the backend.
@@ -355,7 +355,6 @@ public:
     RC = High - 1;
     return true;
   }
-
 };
 
 } // End llvm namespace

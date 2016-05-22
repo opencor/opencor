@@ -536,19 +536,19 @@ bool ScanReachableSymbols::scan(const SymExpr *sym) {
 
   // TODO: should be rewritten using SymExpr::symbol_iterator.
   switch (sym->getKind()) {
-    case SymExpr::RegionValueKind:
-    case SymExpr::ConjuredKind:
-    case SymExpr::DerivedKind:
-    case SymExpr::ExtentKind:
-    case SymExpr::MetadataKind:
+    case SymExpr::SymbolRegionValueKind:
+    case SymExpr::SymbolConjuredKind:
+    case SymExpr::SymbolDerivedKind:
+    case SymExpr::SymbolExtentKind:
+    case SymExpr::SymbolMetadataKind:
       break;
-    case SymExpr::CastSymbolKind:
+    case SymExpr::SymbolCastKind:
       return scan(cast<SymbolCast>(sym)->getOperand());
-    case SymExpr::SymIntKind:
+    case SymExpr::SymIntExprKind:
       return scan(cast<SymIntExpr>(sym)->getLHS());
-    case SymExpr::IntSymKind:
+    case SymExpr::IntSymExprKind:
       return scan(cast<IntSymExpr>(sym)->getRHS());
-    case SymExpr::SymSymKind: {
+    case SymExpr::SymSymExprKind: {
       const SymSymExpr *x = cast<SymSymExpr>(sym);
       return scan(x->getLHS()) && scan(x->getRHS());
     }
@@ -752,36 +752,3 @@ bool ProgramState::isTainted(SymbolRef Sym, TaintTagType Kind) const {
   return Tainted;
 }
 
-/// The GDM component containing the dynamic type info. This is a map from a
-/// symbol to its most likely type.
-REGISTER_TRAIT_WITH_PROGRAMSTATE(DynamicTypeMap,
-                                 CLANG_ENTO_PROGRAMSTATE_MAP(const MemRegion *,
-                                                             DynamicTypeInfo))
-
-DynamicTypeInfo ProgramState::getDynamicTypeInfo(const MemRegion *Reg) const {
-  Reg = Reg->StripCasts();
-
-  // Look up the dynamic type in the GDM.
-  const DynamicTypeInfo *GDMType = get<DynamicTypeMap>(Reg);
-  if (GDMType)
-    return *GDMType;
-
-  // Otherwise, fall back to what we know about the region.
-  if (const TypedRegion *TR = dyn_cast<TypedRegion>(Reg))
-    return DynamicTypeInfo(TR->getLocationType(), /*CanBeSubclass=*/false);
-
-  if (const SymbolicRegion *SR = dyn_cast<SymbolicRegion>(Reg)) {
-    SymbolRef Sym = SR->getSymbol();
-    return DynamicTypeInfo(Sym->getType());
-  }
-
-  return DynamicTypeInfo();
-}
-
-ProgramStateRef ProgramState::setDynamicTypeInfo(const MemRegion *Reg,
-                                                 DynamicTypeInfo NewTy) const {
-  Reg = Reg->StripCasts();
-  ProgramStateRef NewState = set<DynamicTypeMap>(Reg, NewTy);
-  assert(NewState);
-  return NewState;
-}

@@ -14,11 +14,12 @@
 #ifndef LLVM_ANALYSIS_LOADS_H
 #define LLVM_ANALYSIS_LOADS_H
 
+#include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/IR/BasicBlock.h"
+#include "llvm/Support/CommandLine.h"
 
 namespace llvm {
 
-class AliasAnalysis;
 class DataLayout;
 class MDNode;
 
@@ -28,6 +29,10 @@ class MDNode;
 /// ScanFrom, to determine if the address is already accessed.
 bool isSafeToLoadUnconditionally(Value *V, Instruction *ScanFrom,
                                  unsigned Align);
+
+/// DefMaxInstsToScan - the default number of maximum instructions
+/// to scan in the block, used by FindAvailableLoadedValue().
+extern cl::opt<unsigned> DefMaxInstsToScan;
 
 /// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at
 /// the instruction before ScanFrom) checking to see if we have the value at
@@ -48,7 +53,7 @@ bool isSafeToLoadUnconditionally(Value *V, Instruction *ScanFrom,
 /// is found, it is left unmodified.
 Value *FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
                                 BasicBlock::iterator &ScanFrom,
-                                unsigned MaxInstsToScan = 6,
+                                unsigned MaxInstsToScan = DefMaxInstsToScan,
                                 AliasAnalysis *AA = nullptr,
                                 AAMDNodes *AATags = nullptr);
 

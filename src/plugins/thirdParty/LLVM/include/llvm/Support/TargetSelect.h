@@ -173,7 +173,6 @@ namespace llvm {
     return true;
 #endif
   }
-
 }
 
 #endif

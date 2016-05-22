@@ -1,17 +1,18 @@
 /*******************************************************************************
 
-Licensed to the OpenCOR team under one or more contributor license agreements.
-See the NOTICE.txt file distributed with this work for additional information
-regarding copyright ownership. The OpenCOR team licenses this file to you under
-the Apache License, Version 2.0 (the "License"); you may not use this file
-except in compliance with the License. You may obtain a copy of the License at
+Copyright The University of Auckland
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 *******************************************************************************/
 
@@ -84,11 +85,11 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveExposuresList(const bool &)));
 
-    // Create and add the PMR web service
+    // Create and add the PMR repository
 
     mPmrRepository = new PMRSupport::PmrRepository();
 
-    // Some connections to process responses from the PMR web service
+    // Some connections to process responses from the PMR repository
 
     connect(mPmrRepository, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
@@ -98,12 +99,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposures &,
-                                                 const QString &,
-                                                 const bool &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &,
-                                        const QString &,
-                                        const bool &)));
+    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposures &, const QString &, const bool &)),
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &, const QString &, const bool &)));
 
     connect(mPmrRepository, SIGNAL(addExposureFiles(const QString &, QStringList &)),
             this, SLOT(addExposureFiles(const QString &, QStringList &)));
@@ -130,7 +127,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 PmrWindowWindow::~PmrWindowWindow()
 {
-    // Delete the web service
+    // Delete our PMR repository
 
     delete mPmrRepository;
 
@@ -183,18 +180,18 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 void PmrWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show a message box with a warning message
+    // Show the given message as a warning
 
-    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
+    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
 
 void PmrWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show a message box with informative text
+    // Show the given message as informative text
 
-    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage, QMessageBox::Ok);
+    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -211,7 +208,7 @@ void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
 
 void PmrWindowWindow::on_refreshButton_clicked()
 {
-    // Get the list of exposures from the PMR
+    // Get the list of exposures from our PMR repository
 
     mPmrRepository->requestExposuresList();
 }
@@ -266,30 +263,9 @@ void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-bool sortExposureFiles(const QString &pExposureFile1,
-                       const QString &pExposureFile2)
-{
-    // Determine which of the two exposure files should be first (without
-    // worrying about casing)
-
-    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void PmrWindowWindow::addExposureFiles(const QString &pUrl,
-                                       QStringList &pExposureFileNames)
-{
-    std::sort(pExposureFileNames.begin(), pExposureFileNames.end(), sortExposureFiles);
-
-    mPmrWidget->addExposureFiles(pUrl, pExposureFileNames);
-}
-
-//==============================================================================
-
 void PmrWindowWindow::showExposureFiles(const QString &pUrl)
 {
-    // Request a list of the exposure's files from the PMR
+    // Request a list of the exposure's files from our PMR repository
 
     mPmrRepository->requestExposureFiles(pUrl);
 }

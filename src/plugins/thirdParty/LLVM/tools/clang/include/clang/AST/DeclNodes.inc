@@ -173,6 +173,12 @@ OBJCPROPERTY(ObjCProperty, NamedDecl)
 #  define TEMPLATE(Type, Base) NAMED(Type, Base)
 #endif
 ABSTRACT_DECL(TEMPLATE(Template, NamedDecl))
+#ifndef BUILTINTEMPLATE
+#  define BUILTINTEMPLATE(Type, Base) TEMPLATE(Type, Base)
+#endif
+BUILTINTEMPLATE(BuiltinTemplate, TemplateDecl)
+#undef BUILTINTEMPLATE
+
 #ifndef REDECLARABLETEMPLATE
 #  define REDECLARABLETEMPLATE(Type, Base) TEMPLATE(Type, Base)
 #endif
@@ -211,7 +217,7 @@ DECL_RANGE(RedeclarableTemplate, ClassTemplate, VarTemplate)
 TEMPLATETEMPLATEPARM(TemplateTemplateParm, TemplateDecl)
 #undef TEMPLATETEMPLATEPARM
 
-DECL_RANGE(Template, ClassTemplate, TemplateTemplateParm)
+DECL_RANGE(Template, BuiltinTemplate, TemplateTemplateParm)
 
 #undef TEMPLATE
 

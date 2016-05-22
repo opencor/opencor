@@ -39,8 +39,8 @@
             </li>
             <li>
                 <strong>OpenCOR-specific translation files:</strong> for each supported language (again, except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about it is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
-                <pre class="prettyprint">&lt;TS version=&quot;2.0&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
-                and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific translation file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/i18n.qrc.in"><code>[OpenCOR]/res/i18n.qrc.in</code></a>:
+                <pre class="prettyprint">&lt;TS version=&quot;2.1&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
+                and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific translation file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/i18n.qrc.in"><code>[OpenCOR]/res/i18n.qrc.in</code></a> (<code>PROJECT_BUILD_DIR</code> is automatically replaced during the build process):
                 <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;${PROJECT_BUILD_DIR}/OpenCOR_xx.qm&lt;/file&gt;</pre>
                 <code>OpenCOR_xx.qm</code> gets automatically generated from <code>OpenCOR_xx.ts</code> when <a href="../buildTestAndRun.html">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> as follows:
                 <pre class="prettyprint">MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
@@ -60,8 +60,66 @@
         </div>
 
         <p>
-            A file called <code>&lt;PluginName&gt;_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[PluginName]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/miscellaneous/Core/i18n/Core_fr.ts</code></a>). A <code>[PluginName]_i18n.qrc.in</code> file must also be created in <code>[PluginName]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/res/Core_i18n.qrc.in"><code>[OpenCOR]/src/plugins/miscellaneous/Core/res/Core_i18n.qrc.in</code></a>) and an entry for the translation file added to it, e.g. (<code>PLUGIN_NAME</code> and <code>PROJECT_BUILD_DIR</code> are automatically replaced during the build process):
-            <pre class="prettyprint">&lt;file alias=&quot;${PLUGIN_NAME}_fr&quot;&gt;${PROJECT_BUILD_DIR}/${PLUGIN_NAME}_fr.qm&lt;/file&gt;</pre>
+            A file called <code>[PluginName]_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[PluginName]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/miscellaneous/Core/i18n/Core_fr.ts</code></a>; see <a href="http://doc.qt.io/qt-5/linguist-ts-file-format.html">here</a> for more information on the TS file format):
+        </p>
+
+        <pre class="prettyprint">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;!DOCTYPE TS&gt;
+&lt;TS version=&quot;2.1&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;
+&lt;context&gt;
+&lt;/context&gt;
+&lt;/TS&gt;
+</pre>
+
+        <p>
+             A <code>[PluginName]_i18n.qrc.in</code> file must also be created in <code>[PluginName]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/res/Core_i18n.qrc.in"><code>[OpenCOR]/src/plugins/miscellaneous/Core/res/Core_i18n.qrc.in</code></a>; <code>PLUGIN_NAME</code> and <code>PROJECT_BUILD_DIR</code> are automatically replaced during the build process):
+        </p>
+
+        <pre class="prettyprint">&lt;RCC&gt;
+    &lt;qresource prefix=&quot;/&quot;&gt;
+        &lt;file alias=&quot;${PLUGIN_NAME}_xx&quot;&gt;${PROJECT_BUILD_DIR}/${PLUGIN_NAME}_xx.qm&lt;/file&gt;
+    &lt;/qresource&gt;
+&lt;/RCC&gt;</pre>
+
+        <p>
+            A plugin requires a <a href="plugins/index.html#Plugin class">plugin class</a> and for internationalisation to be supported, it needs to inherit from <code><a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a></code>, as well as reference <code>OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a></code> and include the <code><a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">i18ninterface.inl</a></code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a>):
+        </p>
+
+        <pre class="prettyprint">...
+class [PluginName]Plugin : ..., public <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a>, ...
+{
+    ...
+    Q_INTERFACES(OpenCOR::<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a>)
+    ...
+
+public:
+...
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">i18ninterface.inl</a>"
+...
+};
+...</pre>
+
+        <p>
+            The internationalisation interface has only one method that needs to be implemented (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.cpp</code></a>):
+        </p>
+
+        <pre class="prettyprint">...
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void [PluginName]Plugin::retranslateUi()
+{
+    ...
+}
+...</pre>
+
+        <p>
+            Qt objects (e.g. menus, actions) need to be retranslated either by the plugin class itself or by an object owned directly or indirectly by the plugin class (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.cpp</code></a>). To help with this process, <code><a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">I18nInterface</a></code> comes with two methods that ensure that menus and actions get properly retranslated: <code>retranslateMenu(QMenu *pMenu, const QString &pTitle)</code> and <code>retranslateAction(QAction *pAction, const QString &pText, const QString &pStatusTip)</code>.
+        </p>
+
+        <p>
+            It may happen that a plugin does not own any Qt objects, but still needs to support internationalisation. This is the case with the <strong>Editor</strong> plugin, which implements a Qt widget that can be both instantiated and retranslated by others. This means that its <code>retranslateUi()</code> method is empty (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/widget/Editor/src/editorplugin.cpp"><code>[OpenCOR]/src/plugins/widget/Editor/src/editorplugin.cpp</code></a>).
         </p>
 
         <script type="text/javascript">

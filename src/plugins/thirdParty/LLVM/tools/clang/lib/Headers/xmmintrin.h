@@ -24,10 +24,6 @@
 #ifndef __XMMINTRIN_H
 #define __XMMINTRIN_H
 
-#ifndef __SSE__
-#error "SSE instruction set not enabled"
-#else
-
 #include <mmintrin.h>
 
 typedef int __v4si __attribute__((__vector_size__(16)));
@@ -41,7 +37,7 @@ typedef float __m128 __attribute__((__vector_size__(16)));
 #endif
 
 /* Define the default attributes for the functions in this file. */
-#define __DEFAULT_FN_ATTRS __attribute__((__always_inline__, __nodebug__))
+#define __DEFAULT_FN_ATTRS __attribute__((__always_inline__, __nodebug__, __target__("sse")))
 
 static __inline__ __m128 __DEFAULT_FN_ATTRS
 _mm_add_ss(__m128 __a, __m128 __b)
@@ -581,6 +577,12 @@ _mm_loadr_ps(const float *__p)
 }
 
 static __inline__ __m128 __DEFAULT_FN_ATTRS
+_mm_undefined_ps()
+{
+  return (__m128)__builtin_ia32_undef128();
+}
+
+static __inline__ __m128 __DEFAULT_FN_ATTRS
 _mm_set_ss(float __w)
 {
   return (__m128){ __w, 0, 0, 0 };
@@ -752,8 +754,7 @@ _mm_mulhi_pu16(__m64 __a, __m64 __b)
 }
 
 #define _mm_shuffle_pi16(a, n) __extension__ ({ \
-  __m64 __a = (a); \
-  (__m64)__builtin_ia32_pshufw((__v4hi)__a, (n)); })
+  (__m64)__builtin_ia32_pshufw((__v4hi)(__m64)(a), (n)); })
 
 static __inline__ void __DEFAULT_FN_ATTRS
 _mm_maskmove_si64(__m64 __d, __m64 __n, char *__p)
@@ -792,9 +793,7 @@ _mm_setcsr(unsigned int __i)
 }
 
 #define _mm_shuffle_ps(a, b, mask) __extension__ ({ \
-  __m128 __a = (a); \
-  __m128 __b = (b); \
-  (__m128)__builtin_shufflevector((__v4sf)__a, (__v4sf)__b, \
+  (__m128)__builtin_shufflevector((__v4sf)(__m128)(a), (__v4sf)(__m128)(b), \
                                   (mask) & 0x3, ((mask) & 0xc) >> 2, \
                                   (((mask) & 0x30) >> 4) + 4, \
                                   (((mask) & 0xc0) >> 6) + 4); })
@@ -928,6 +927,11 @@ _mm_movemask_ps(__m128 __a)
   return __builtin_ia32_movmskps(__a);
 }
 
+
+#ifdef _MSC_VER
+#define _MM_ALIGN16 __declspec(align(16))
+#endif
+
 #define _MM_SHUFFLE(z, y, x, w) (((z) << 6) | ((y) << 4) | ((x) << 2) | (w))
 
 #define _MM_EXCEPT_INVALID    (0x0001)
@@ -1002,7 +1006,5 @@ do { \
 #if defined(__SSE2__) && !__has_feature(modules)
 #include <emmintrin.h>
 #endif
-
-#endif /* __SSE__ */
 
 #endif /* __XMMINTRIN_H */
