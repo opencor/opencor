@@ -232,7 +232,7 @@ bool CombineArchive::save(const QString &pFileName)
     if (mLoadingNeeded || !mIssues.isEmpty())
         return false;
 
-    // Generate the contents our manifest
+    // Generate the contents of our manifest
 
     QByteArray fileList = QByteArray();
     QString fileFormat;
