@@ -418,9 +418,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                 }
 
                 // We are done (whether the export was successful or not), so
-                // delete our input CellML file object
+                // delete our input CellML file object and unmanage our input
+                // file
 
                 delete inCellmlFile;
+
+                Core::FileManager::instance()->unmanage(inFileName);
             }
         }
     }
