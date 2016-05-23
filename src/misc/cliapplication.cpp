@@ -73,9 +73,10 @@ void CliApplication::loadPlugins()
 
     // Keep track of our loaded CLI plugins
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         if (qobject_cast<CliInterface *>(plugin->instance()))
             mLoadedCliPlugins << plugin;
+    }
 }
 
 //==============================================================================
@@ -132,13 +133,14 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
             bool pluginFound = false;
             bool pluginHasCliSupport = false;
 
-            foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+            foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
                 if (!commandPlugin.compare(plugin->name())) {
                     pluginFound = true;
                     pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
 
                     break;
                 }
+            }
 
             if (!pluginFound) {
                 std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
