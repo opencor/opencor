@@ -258,8 +258,7 @@ showEnableAction(mGui->actionPreferences, false);
     foreach (Plugin *plugin, mPluginManager->loadedPlugins())
         initializeGuiPlugin(plugin);
 
-    // Keep track of the plugin's name in case we support
-    // internationalisation
+    // Keep track of the plugin's name in case we support internationalisation
 
     foreach (Plugin *plugin, mLoadedI18nPlugins)
         qobject_cast<I18nInterface *>(plugin->instance())->setPluginName(plugin->name());
