@@ -19,7 +19,7 @@
         </script>
 
         <p>
-            The CVODESolver plugin uses <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> to solve ODEs and it can be customised through the following properties:
+            The CVODESolver plugin uses <a href="http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software">CVODE</a> to solve ODEs and it can be customised through the following properties:
         </p>
 
         <ul>
@@ -27,7 +27,7 @@
                 <strong>Maximum step:</strong> the maximum step used by the solver (default: <code>0</code>).
 
                 <p class="nomargins note">
-                    the default value of <code>0</code> means that <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> will try to use as big a step as possible.
+                    the default value of <code>0</code> means that <a href="http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software">CVODE</a> will try to use as big a step as possible.
                 </p>
             </li>
         </ul>
@@ -139,7 +139,7 @@
         </ul>
 
         <p>
-            The default settings should work with most models. However, some models may require some minor adjustments. This is the case with cardiac cellular electrophysiological models that need a stimulus protocol to generate an action potential. Such a protocol is likely to be ignored by <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, if <strong>Maximum step</strong> and <strong>Interpolate solution</strong> are set to their default values of <code>0</code> and <code>True</code>, respectively. To address this issue, you can either set <strong>Maximum step</strong> to the length of the stimulus protocol or set <strong>Interpolate solution</strong> to <code>False</code>. The former approach will yield (slightly) less accurate results, but they will be obtained (much) faster.
+            The default settings should work with most models. However, some models may require some minor adjustments. This is the case with cardiac cellular electrophysiological models that need a stimulus protocol to generate an action potential. Such a protocol is likely to be ignored by <a href="http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software">CVODE</a>, if <strong>Maximum step</strong> and <strong>Interpolate solution</strong> are set to their default values of <code>0</code> and <code>True</code>, respectively. To address this issue, you can either set <strong>Maximum step</strong> to the length of the stimulus protocol or set <strong>Interpolate solution</strong> to <code>False</code>. The former approach will yield (slightly) less accurate results, but they will be obtained (much) faster.
         </p>
 
         <script type="text/javascript">
