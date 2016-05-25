@@ -48,7 +48,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-QString PmrRepository::Url() const
+QString PmrRepository::url() const
 {
     return "https://models.physiomeproject.org";
 }
@@ -78,7 +78,7 @@ PmrRepository::PmrRepository() :
 
     // Create an OAuth client for authenticated requests to the Physiome Model Repository
 
-    mPmrOAuthClient = new PmrOAuthClient(Url(), this);
+    mPmrOAuthClient = new PmrOAuthClient(url(), this);
 
     // Connect some signals
     connect(mPmrOAuthClient, SIGNAL(linkingFailed()), this, SLOT(authenticationFailed()));
@@ -158,7 +158,7 @@ void PmrRepository::sendPmrRequest(const PmrRequest &pPmrRequest,
 
         switch (pPmrRequest) {
         case ExposuresList:
-            networkRequest.setUrl(QUrl(QString("%1/exposure").arg(Url())));
+            networkRequest.setUrl(QUrl(QString("%1/exposure").arg(url())));
 
             break;
         case ExposureInformation:

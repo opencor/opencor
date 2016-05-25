@@ -60,7 +60,7 @@ public:
     explicit PmrRepository();
     ~PmrRepository();
 
-    QString Url(void) const;
+    QString url(void) const;
 
     void cloneWorkspace(const QString &pUrl, const QString &pDirName);
     void requestExposuresList(void);
