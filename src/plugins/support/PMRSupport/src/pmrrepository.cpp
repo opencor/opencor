@@ -354,13 +354,15 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
                     mExposureUrls.insert(workspaceUrl, url);
 
                     sendPmrRequest(WorkspaceInformation, workspaceUrl,
-                                   Action(pNetworkReply->property(ActionProperty).toInt()));
+                                   Action(pNetworkReply->property(ActionProperty).toInt()),
+                                   pNetworkReply->property(NameProperty).toString());
 
                     foreach (const QString &exposureFileUrl, exposureFileUrls) {
                         mExposureUrls.insert(exposureFileUrl, url);
 
                         sendPmrRequest(ExposureFileInformation, exposureFileUrl,
-                                       Action(pNetworkReply->property(ActionProperty).toInt()));
+                                       Action(pNetworkReply->property(ActionProperty).toInt()),
+                                       pNetworkReply->property(NameProperty).toString());
                     }
 
                     break;
