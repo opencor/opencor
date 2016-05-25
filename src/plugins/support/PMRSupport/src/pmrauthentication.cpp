@@ -46,134 +46,55 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrOAuthClient::PmrOAuthClient(QObject *parent) : O1(parent)
+PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *parent) : O1(parent)
 {
-    setClientId(PmrOAuthClient::ConsumerKey);
-    setClientSecret(PmrOAuthClient::ConsumerSecret);
+    setClientId(ConsumerKey());
+    setClientSecret(PmrOAuthClient::ConsumerSecret());
 
     setCallbackUrl(PmrOAuthClient::CallbackUrl);
     setLocalPort(PmrOAuthClient::CallbackPort);
 
     // Set the urls used to get authentication tokens
 
-    setAccessTokenUrl(QUrl(QString(AccessTokenUrl).arg(Url)));
-    setAuthorizeUrl(QUrl(QString(AuthorizeUrl).arg(Url)));
-    setRequestTokenUrl(QUrl(QString(RequestTokenUrl).arg(Url)));
+    setAccessTokenUrl(QUrl(QString(AccessTokenUrl).arg(pUrl)));
+    setAuthorizeUrl(QUrl(QString(AuthorizeUrl).arg(pUrl)));
+    setRequestTokenUrl(QUrl(QString(RequestTokenUrl).arg(pUrl)));
 
     // Specify the scope of token requests
 
     QList<O0RequestParameter> reqParams = QList<O0RequestParameter>();
     reqParams << O0RequestParameter(QByteArray("scope"),
-                                    QString(RequestScope).arg(Url).toUtf8());
+                                    QString(RequestScope).arg(pUrl).toUtf8());
     setRequestParameters(reqParams);
 
     // Create a store object for writing the received authentication tokens
 
-    O0SettingsStore *store = new O0SettingsStore(EncryptionKey);
+    O0SettingsStore *store = new O0SettingsStore(EncryptionKey());
     store->setGroupKey("PhysiomeModelRepository");
     setStore(store);
 }
 
 //==============================================================================
 
-PmrAuthentication::PmrAuthentication(QObject *parent) : QObject(parent)
+const char *PmrOAuthClient::ConsumerKey(void)
 {
+    return "9uuENvnELA1cdoy7WhFg4Gsq";
 }
 
 //==============================================================================
 
-void PmrAuthentication::doOAuth()
+const char *PmrOAuthClient::ConsumerSecret(void)
 {
-    // Create an OAuth client for the Physiome Model Repository
-
-    mPmrOAuthClient = new PmrOAuthClient(this);
-
-    // Connect signals
-    connect(mPmrOAuthClient, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
-    connect(mPmrOAuthClient, SIGNAL(linkingFailed()), this, SIGNAL(linkingFailed()));
-    connect(mPmrOAuthClient, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
-    connect(mPmrOAuthClient, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
-    connect(mPmrOAuthClient, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
-
-    qWarning() << "Starting OAuth...";
-
-    mPmrOAuthClient->unlink();  // For the sake of this demo
-    mPmrOAuthClient->link();
+    return "IqCnqYJZmYzVbFmMsRE_C66F";
 }
 
 //==============================================================================
 
-void PmrAuthentication::onOpenBrowser(const QUrl &url) {
-    qWarning() << "Opening browser with URL" << url.toString();
-    QDesktopServices::openUrl(url);
-}
+const char *PmrOAuthClient::EncryptionKey(void)
+{
+    // Used to encrypt saved access tokens
 
-//==============================================================================
-
-void PmrAuthentication::onCloseBrowser() {
-    qWarning() << "Browser closed...";
-}
-
-//==============================================================================
-
-void PmrAuthentication::onLinkedChanged() {
-    qWarning() << "Linked changed!";
-}
-
-//==============================================================================
-
-void PmrAuthentication::onLinkingSucceeded() {
-    qWarning() << "Linking succeeded...";
-    PmrOAuthClient *o1t = qobject_cast<PmrOAuthClient *>(sender());
-    if (!o1t->linked()) {
-        return;
-    }
-    QVariantMap extraTokens = o1t->extraTokens();
-    if (!extraTokens.isEmpty()) {
-        emit extraTokensReady(extraTokens);
-        qWarning() << "Extra tokens in response:";
-        foreach (QString key, extraTokens.keys()) {
-            qWarning() << "\t" << key << ":" << (extraTokens.value(key).toString().left(3) + "...");
-        }
-    }
-    emit linkingSucceeded();
-}
-
-//==============================================================================
-
-void PmrAuthentication::getWorkspaceList(void) {
-    qWarning() << "Workspace list";
-    if (!mPmrOAuthClient->linked()) {
-        qWarning() << "Application is not linked to PMR!";
-        emit gotWorkspaces();
-        return;
-    }
-
-    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-    PmrOAuthClient* o1 = mPmrOAuthClient;
-    O1Requestor* requestor = new O1Requestor(manager, o1, this);
-
-    QNetworkRequest networkRequest;
-
-    networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
-//    networkRequest.setRawHeader("Accept-Encoding", "gzip");  // *************
-
-    networkRequest.setUrl(QUrl(QString("%1/my-workspaces").arg(PmrOAuthClient::Url)));
-
-    QNetworkReply *networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
-
-    connect(networkReply, SIGNAL(finished()), this, SLOT(gotWorkspaceList()));
-    qWarning() << "Requesting workspaces. Please wait...";
-}
-
-//==============================================================================
-
-void PmrAuthentication::gotWorkspaceList(void) {
-    qWarning() << "Reply done...";
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    qWarning() << "ERROR:" << reply->errorString();
-    qWarning() << "Content:" << reply->readAll();
-    emit gotWorkspaces();
+    return "hgh189;;099!@7878";
 }
 
 //==============================================================================

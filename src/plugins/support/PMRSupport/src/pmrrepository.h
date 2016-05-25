@@ -24,13 +24,20 @@ limitations under the License.
 
 //==============================================================================
 
+#include "pmrauthentication.h"
 #include "pmrexposure.h"
 #include "pmrsupportglobal.h"
 
 //==============================================================================
 
+#include "o1.h"
+
+//==============================================================================
+
 #include <QList>
 #include <QSslError>
+#include <QUrl>
+#include <QVariantMap>
 
 //==============================================================================
 
@@ -52,6 +59,8 @@ public:
     explicit PmrRepository();
     ~PmrRepository();
 
+    QString Url(void) const;
+
     void cloneWorkspace(const QString &pUrl, const QString &pDirName);
     void requestExposuresList(void);
     void requestExposureFiles(const QString &pUrl);
@@ -72,6 +81,8 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
+    PmrOAuthClient *mPmrOAuthClient;
+
     int mNumberOfExposureFileUrlsLeft;
 
     QMap<QString, QString> mWorkspaces;
@@ -90,6 +101,7 @@ private:
                         const QString &pName = QString());
 
 Q_SIGNALS:
+    void authenticated(const bool &pAuthenticated);
     void busy(const bool &pBusy);
 
     void warning(const QString &pMessage);
@@ -103,11 +115,18 @@ Q_SIGNALS:
                           const QStringList &pExposureFiles);
     void showExposureFiles(const QString &pUrl);
 
+public Q_SLOTS:
+    void authenticate(const bool &pLink = true);
+    void getAuthenticationStatus(void);
+
 private Q_SLOTS:
+    void authenticationFailed();
+    void authenticationSucceeded();
+    void openBrowser(const QUrl &pUrl);
+
     void finished(QNetworkReply *pNetworkReply = 0);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
-
 };
 
 //==============================================================================

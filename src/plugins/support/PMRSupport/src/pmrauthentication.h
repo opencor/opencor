@@ -48,25 +48,18 @@ namespace PMRSupport {
 
 
 // PMR OAuth 1.0 client
+// Constants must match values assigned to the Physiome Model Repository
 
 class PmrOAuthClient: public O1
 {
     Q_OBJECT
 
 public:
-    explicit PmrOAuthClient(QObject *parent = 0);
-
-    static constexpr auto Url = "https://models.physiomeproject.org";
+    explicit PmrOAuthClient(const QString &pUrl, QObject *parent = 0);
 
 private:
-    static constexpr auto ConsumerKey = "9uuENvnELA1cdoy7WhFg4Gsq";
-    static constexpr auto ConsumerSecret = "IqCnqYJZmYzVbFmMsRE_C66F";
     static constexpr auto CallbackUrl = "http://localhost:%1/";
     static constexpr auto CallbackPort = 1234;
-
-    // Used to encrypt saved access tokens
-
-    static constexpr auto EncryptionKey = "hgh189;;099!@7878";
 
     // Authorisation Url templates
 
@@ -80,38 +73,12 @@ private:
                                          "%1/oauth_scope/search,"
                                          "%1/oauth_scope/workspace_tempauth,"
                                          "%1/oauth_scope/workspace_full";
-};
 
-//==============================================================================
+    // Keep these out of the header file
 
-
-class PMRSUPPORT_EXPORT PmrAuthentication : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit PmrAuthentication(QObject *parent = 0);
-
-signals:
-    void extraTokensReady(const QVariantMap &extraTokens);
-    void linkingFailed();
-    void linkingSucceeded();
-    void gotWorkspaces();
-
-public slots:
-    void doOAuth();
-    void getWorkspaceList(void);
-
-private slots:
-    void onLinkedChanged();
-    void onLinkingSucceeded();
-    void onOpenBrowser(const QUrl &url);
-    void onCloseBrowser();
-
-    void gotWorkspaceList(void);
-
-private:
-    PmrOAuthClient *mPmrOAuthClient;
+    static const char *ConsumerKey(void);
+    static const char *ConsumerSecret(void);
+    static const char *EncryptionKey(void);
 };
 
 //==============================================================================

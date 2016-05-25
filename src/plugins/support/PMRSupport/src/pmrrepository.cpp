@@ -29,6 +29,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkAccessManager>
@@ -44,6 +45,13 @@ limitations under the License.
 
 namespace OpenCOR {
 namespace PMRSupport {
+
+//==============================================================================
+
+QString PmrRepository::Url() const
+{
+    return "https://models.physiomeproject.org";
+}
 
 //==============================================================================
 
@@ -67,12 +75,59 @@ PmrRepository::PmrRepository() :
             this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
+
+    // Create an OAuth client for authenticated requests to the Physiome Model Repository
+
+    mPmrOAuthClient = new PmrOAuthClient(Url(), this);
+
+    // Connect some signals
+    connect(mPmrOAuthClient, SIGNAL(linkingFailed()), this, SLOT(authenticationFailed()));
+    connect(mPmrOAuthClient, SIGNAL(linkingSucceeded()), this, SLOT(authenticationSucceeded()));
+    connect(mPmrOAuthClient, SIGNAL(openBrowser(QUrl)), this, SLOT(openBrowser(QUrl)));
 }
 
 //==============================================================================
 
 PmrRepository::~PmrRepository()
 {
+}
+
+//==============================================================================
+
+void PmrRepository::authenticate(const bool &pLink)
+{
+    if (pLink) mPmrOAuthClient->link();
+    else       mPmrOAuthClient->unlink();
+}
+
+//==============================================================================
+
+void PmrRepository::getAuthenticationStatus(void)
+{
+    emit authenticated(mPmrOAuthClient->linked());
+}
+
+//==============================================================================
+
+void PmrRepository::openBrowser(const QUrl &pUrl)
+{
+    QDesktopServices::openUrl(pUrl);
+}
+
+//==============================================================================
+
+void PmrRepository::authenticationFailed()
+{
+    emit authenticated(false);
+}
+
+//==============================================================================
+
+void PmrRepository::authenticationSucceeded()
+{
+    PmrOAuthClient *o1t = qobject_cast<PmrOAuthClient *>(sender());
+
+    emit authenticated(o1t->linked());
 }
 
 //==============================================================================
@@ -103,7 +158,7 @@ void PmrRepository::sendPmrRequest(const PmrRequest &pPmrRequest,
 
         switch (pPmrRequest) {
         case ExposuresList:
-            networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
+            networkRequest.setUrl(QUrl(QString("%1/exposure").arg(Url())));
 
             break;
         case ExposureInformation:
