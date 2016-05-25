@@ -27,6 +27,7 @@ limitations under the License.
 #include "pmrauthentication.h"
 #include "pmrexposure.h"
 #include "pmrsupportglobal.h"
+#include "pmrworkspace.h"
 
 //==============================================================================
 
@@ -85,14 +86,13 @@ private:
 
     int mNumberOfExposureFileUrlsLeft;
 
-    QMap<QString, QString> mWorkspaces;
+    QMap<QString, PmrWorkspace *> mWorkspaces;
     QMap<QString, QString> mExposureUrls;
     QMap<QString, QString> mExposureNames;
     QMap<QString, QString> mExposureFileNames;
 
     QString informationNoteMessage() const;
 
-    void doCloneWorkspace(const QString &pWorkspace, const QString &pDirName);
     void doShowExposureFiles(const QString &pExposureUrl);
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,

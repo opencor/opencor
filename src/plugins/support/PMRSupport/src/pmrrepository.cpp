@@ -57,7 +57,7 @@ QString PmrRepository::Url() const
 
 PmrRepository::PmrRepository() :
     mNumberOfExposureFileUrlsLeft(0),
-    mWorkspaces(QMap<QString, QString>()),
+    mWorkspaces(QMap<QString, PmrWorkspace *>()),
     mExposureUrls(QMap<QString, QString>()),
     mExposureNames(QMap<QString, QString>()),
     mExposureFileNames(QMap<QString, QString>())
@@ -189,35 +189,6 @@ QString PmrRepository::informationNoteMessage() const
     // Return some information note
 
     return tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
-}
-
-//==============================================================================
-
-void PmrRepository::doCloneWorkspace(const QString &pWorkspace, const QString &pDirName)
-{
-   // Clone the workspace
-
-   git_libgit2_init();
-
-   git_repository *gitRepository = 0;
-   QByteArray workspaceByteArray = pWorkspace.toUtf8();
-   QByteArray dirNameByteArray = pDirName.toUtf8();
-
-   int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                       dirNameByteArray.constData(), 0);
-
-   if (res) {
-       const git_error *gitError = giterr_last();
-
-       emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                Core::formatMessage(gitError->message)):
-                        tr("An error occurred while trying to clone the workspace."));
-   } else if (gitRepository) {
-       git_repository_free(gitRepository);
-   }
-
-   git_libgit2_shutdown();
 }
 
 //==============================================================================
@@ -422,7 +393,7 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
                             QString workspace = itemsList.first().toMap()["href"].toString().trimmed();
 
                             if (!workspace.isEmpty())
-                                mWorkspaces.insert(exposureUrl, workspace);
+                                mWorkspaces.insert(exposureUrl, new PmrWorkspace(workspace, "", this));
                         } else {
                             informationMessage = tr("The workspace for <a href=\"%1\">%2</a> is not a Git repository.");
                         }
@@ -516,8 +487,7 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
 
         if (   mWorkspaces.contains(exposureUrl)
             && (Action(pNetworkReply->property(ActionProperty).toInt()) == CloneWorkspace)) {
-            doCloneWorkspace(mWorkspaces.value(exposureUrl),
-                             pNetworkReply->property(NameProperty).toString());
+            mWorkspaces.value(exposureUrl)->clone(pNetworkReply->property(NameProperty).toString());
         }
 
         break;
@@ -574,12 +544,12 @@ void PmrRepository::cloneWorkspace(const QString &pUrl, const QString &pDirName)
 {
     // Check whether we already know about the workspace for the given exposure
 
-    QString workspace = mWorkspaces.value(pUrl);
+    PmrWorkspace *workspace = mWorkspaces.value(pUrl);
 
-    if (!workspace.isEmpty()) {
+    if (workspace && !workspace->url().isEmpty()) {
         emit busy(true);
 
-        doCloneWorkspace(workspace, pDirName);
+        workspace->clone(pDirName);
 
         emit busy(false);
     } else {
@@ -599,7 +569,8 @@ void PmrRepository::requestExposureFiles(const QString &pUrl)
     // Check whether we already know about the exposure URL for the given
     // exposure
 
-    QString exposureUrl = mExposureUrls.value(mWorkspaces.value(pUrl));
+    PmrWorkspace *workspace = mWorkspaces.value(pUrl);
+    QString exposureUrl = workspace ? mExposureUrls.value(workspace->url()) : "";
 
     if (!exposureUrl.isEmpty()) {
         doShowExposureFiles(exposureUrl);

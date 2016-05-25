@@ -11,10 +11,12 @@ ADD_PLUGIN(PMRSupport
         src/pmrexposure.cpp
         src/pmrrepository.cpp
         src/pmrsupportplugin.cpp
+        src/pmrworkspace.cpp
     HEADERS_MOC
         src/pmrauthentication.h
         src/pmrrepository.h
         src/pmrsupportplugin.h
+        src/pmrworkspace.h
     INCLUDE_DIRS
         src
     PLUGINS
