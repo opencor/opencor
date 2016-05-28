@@ -231,6 +231,15 @@ MACRO(INITIALISE_PROJECT)
         # Make sure that debugging is on in Qt
 
         ADD_DEFINITIONS(-DQT_DEBUG)
+
+        # Make sure that LLVM works fine when in debug mode
+        # Note: it needs to be done here since, by default, _DEBUG_POINTER_IMPL
+        #       is not defined and will therefore be as soon as we include
+        #       xutility, which will also give it the value _Debug_pointer while
+        #       we want it to be defined but without any value (so that pointer
+        #       testing is disabled)...
+
+        ADD_DEFINITIONS(-D_DEBUG_POINTER_IMPL=)
     ENDIF()
 
     # Disable a warning that occurs on (the 64-bit version of) Windows
