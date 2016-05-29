@@ -4,6 +4,7 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/List_of_Ubuntu_releases#Ubuntu_16.04_LTS_.28Xenial_Xerus.29\">Ubuntu 16.04 LTS (Xenial Xerus)</a>." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Added", "description": "Detection of changes to one or several file dependencies." },
