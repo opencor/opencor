@@ -478,8 +478,15 @@ IF(APPLE)
     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Deploy our Qt libraries
+    # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
+    #       results in some of our tests generating messages about two
+    #       frameworks being available and that one of them will be used, but
+    #       that we don't know which one. So, to avoid those messages, we simply
+    #       don't deploy the Qt frameworks...
 
-    OS_X_DEPLOY_QT_LIBRARIES(${OS_X_QT_LIBRARIES})
+    IF(NOT ENABLE_TRAVIS_CI)
+        OS_X_DEPLOY_QT_LIBRARIES(${OS_X_QT_LIBRARIES})
+    ENDIF()
 
     # Deploy some plugins
 
