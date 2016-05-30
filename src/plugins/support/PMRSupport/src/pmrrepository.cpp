@@ -32,6 +32,7 @@ limitations under the License.
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMutex>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -90,6 +91,24 @@ PmrRepository::PmrRepository() :
 
 PmrRepository::~PmrRepository()
 {
+}
+
+//==============================================================================
+
+QMutex repositoryLock;
+
+PmrRepository *PmrRepository::newPmrRepository()
+{
+    PmrRepository *repository;
+    repositoryLock.lock();
+    QVariant singleton = qApp->property("PmrRepository");
+    if (singleton.isValid()) repository = singleton.value<PmrRepository *>();
+    else {
+        repository = new PmrRepository();
+        qApp->setProperty("PmrRepository", qVariantFromValue(repository));
+    }
+    repositoryLock.unlock();
+    return repository;
 }
 
 //==============================================================================

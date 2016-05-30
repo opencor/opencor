@@ -57,7 +57,7 @@ class PMRSUPPORT_EXPORT PmrRepository : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrRepository();
+    static PmrRepository *newPmrRepository();
     ~PmrRepository();
 
     QString url(void) const;
@@ -67,6 +67,8 @@ public:
     void requestExposureFiles(const QString &pUrl);
 
 private:
+    explicit PmrRepository();
+
     enum PmrRequest {
         ExposuresList,
         ExposureInformation,

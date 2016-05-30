@@ -23,6 +23,7 @@ limitations under the License.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "pmrrepository.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
 
@@ -87,7 +88,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create and add the PMR repository
 
-    mPmrRepository = new PMRSupport::PmrRepository();
+    mPmrRepository = PMRSupport::PmrRepository::newPmrRepository();
 
     // Some connections to process responses from the PMR repository
 

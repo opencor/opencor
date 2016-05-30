@@ -54,7 +54,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Create an instance of the Physiome Model Repository that we are viewing
 
-    mPmrRepository = new PMRSupport::PmrRepository();
+    mPmrRepository = PMRSupport::PmrRepository::newPmrRepository();
 
     // Create a tool bar widget with different buttons
 
@@ -75,7 +75,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Create and add the workspaces widget
 
-    mWorkspacesWidget = new PmrWorkspacesWidget(this);
+    mWorkspacesWidget = new PmrWorkspacesWidget(mPmrRepository, this);
 
     mWorkspacesWidget->setObjectName("PmrWorkspacesWidget");
 
