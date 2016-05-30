@@ -26,7 +26,6 @@ limitations under the License.
 
 #include "organisationwidget.h"
 #include "pmrexposure.h"
-#include "pmrrepository.h"
 #include "pmrwindowwidget.h"
 
 //==============================================================================
@@ -51,7 +50,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace PMRSupport {
-    class PmrWebService;
+    class PmrRepository;
 }   // namespace PMRSupport
 
 //==============================================================================
