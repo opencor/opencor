@@ -613,7 +613,7 @@ IF(WIN32)
     # Qt libraries required by OpenCOR
 
     IF(ENABLE_TESTS)
-        SET(TEST Qt5Test)
+        SET(TEST Test)
     ELSE()
         SET(TEST)
     ENDIF()
