@@ -913,6 +913,20 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                 DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
+
+    # On OS X, and in case we are on Travis CI, make sure that the plugin binary
+    # refers to the system version of the Qt libraries since we don't embed the
+    # Qt libraries in that case (see the main CMakeLists.txt file)
+
+    IF(APPLE AND ENABLE_TRAVIS_CI)
+        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
+            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+
+            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${QT_LIBRARY_FILENAME}
+                                                              ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+                                                              ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+        ENDFOREACH()
+    ENDIF()
 ENDMACRO()
 
 #===============================================================================
