@@ -1692,6 +1692,8 @@ void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 	}
 
 	NotifyPainted();
+/*---OPENCOR---
+*/
 }
 
 // This is mostly copied from the Paint method but with some things omitted
