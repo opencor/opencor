@@ -88,7 +88,6 @@ private Q_SLOTS:
     void updateAuthenticationStatus(const bool &pAuthenticated);
 
     void showCustomContextMenu() const;
-    void itemDoubleClicked(const QModelIndex &pItemIndex);
 };
 
 //==============================================================================

@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "pmrrepository.h"
+#include "pmrworkspace.h"
 #include "pmrworkspaceswidget.h"
 
 //==============================================================================
@@ -27,10 +29,13 @@ specific language governing permissions and limitations under the License.
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QHeaderView>
 #include <QHelpEvent>
 #include <QMimeData>
 #include <QModelIndex>
+#include <QPainter>
 #include <QSettings>
+#include <QTextDocument>
 #include <QUrl>
 
 //==============================================================================
@@ -40,8 +45,63 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-PmrWorkspacesWidget::PmrWorkspacesWidget(QWidget *pParent) :
-    TreeViewWidget(pParent)
+static QString TypeWorkspace = "Workspace";
+
+static const auto ItemTypeRole = Qt::UserRole + 1;
+static const auto WorkspaceUrlRole = Qt::UserRole + 2;
+
+//==============================================================================
+
+PmrWorkspacesItemDelegate::PmrWorkspacesItemDelegate(PmrWorkspacesWidget *pWidget, QObject *parent) :
+   QStyledItemDelegate(parent), mWidget(pWidget)
+{
+}
+
+//==============================================================================
+
+// Following is based on http://stackoverflow.com/questions/4371829/qt-qtreeview-wordwrap-not-working
+
+void PmrWorkspacesItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (index.data(ItemTypeRole).value<QString>() != TypeWorkspace) {
+        QStyledItemDelegate::paint(painter, option, index);
+    }
+    else {
+        QString text = index.data(Qt::DisplayRole).value<QString>();
+        QTextDocument *document = new QTextDocument();
+        document->setHtml("<br>" + text + "</br>");
+        document->setTextWidth(option.rect.width());
+qDebug() << "Paint option rect: " << option.rect;
+        painter->save();
+        painter->translate(option.rect.x(), option.rect.y());
+        document->drawContents(painter);
+        painter->restore();
+    }
+}
+
+//==============================================================================
+
+QSize PmrWorkspacesItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (index.data(ItemTypeRole).value<QString>() != TypeWorkspace) {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
+    else {  // Size depends on the number of wrapped lines
+        QString text = index.data(Qt::DisplayRole).value<QString>();
+        QTextDocument *document = new QTextDocument();
+        document->setHtml("<br>" + text + "</br>");
+        document->setTextWidth(mWidget->header()->sectionSize(index.column()));
+qDebug() << "Option rect: " << option.rect << "  Text size: " << QSize(document->idealWidth() + 10,  document->size().height());        
+        return QSize(document->idealWidth() + 10,  document->size().height());       
+    }
+}
+
+//==============================================================================
+//==============================================================================
+
+PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent) :
+    TreeViewWidget(pParent),
+    mPmrRepository(pPmrRepository)
 {
     // Create an instance of the data model that we want to view
 
@@ -66,7 +126,99 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(QWidget *pParent) :
     setHeaderHidden(true);
     setModel(mModel);
 
-//    // Some connections
+    setItemDelegate(new PmrWorkspacesItemDelegate(this));
+//    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    // Some connections
+
+    connect(this, SIGNAL(clicked(const QModelIndex &)),
+            this, SLOT(on_clicked(const QModelIndex &)));
+
+// STYLESHEETS ***************************
+
+//setStyleSheet(QString("QTreeView { alternate-background-color: blue; background: yellow; }"
+/*
+QTreeView {
+    show-decoration-selected: 1;
+}
+
+QTreeView::item {
+     border: 1px solid #d9d9d9;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+}
+
+QTreeView::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);
+    border: 1px solid #bfcde4;
+}
+
+QTreeView::item:selected {
+    border: 1px solid #567dbc;
+}
+
+QTreeView::item:selected:active{
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
+}
+
+QTreeView::item:selected:!active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
+}
+
+
+"QTreeView::branch { background: palette(base);}"
+
+"QTreeView::branch:has-siblings:!adjoins-item { background: cyan;}"
+
+"QTreeView::branch:has-siblings:adjoins-item { background: red;}"
+
+"QTreeView::branch:!has-children:!has-siblings:adjoins-item {background: blue;}"
+
+
+"QTreeView::branch:closed:has-children:has-siblings { background: pink;}"
+*/
+
+//"QTreeView::branch:has-children:!has-siblings:closed,"
+//"QTreeView::branch:closed:has-children:has-siblings {"
+/*"        border-image: none;"*/
+//"        image: url(:oxygen/places/folder.png);"
+/*"        image: url(:branch-closed.png);"*/
+//"}"
+//"QTreeView::branch:closed { image: url(:oxygen/places/workspace-closed.png); }"
+//"QTreeView::branch:open { image: url(:oxygen/places/workspace-closed.png); }"
+
+/*
+"QTreeView::branch:has-children:!has-siblings:closed { background: gray;}"
+
+"QTreeView::branch:open:has-children:has-siblings { background: magenta;}"
+
+"QTreeView::branch:open:has-children:!has-siblings { background: green;}"
+
+
+
+QTreeView::branch:has-siblings:!adjoins-item {
+    border-image: url(vline.png) 0;
+}
+
+QTreeView::branch:has-siblings:adjoins-item {
+    border-image: url(branch-more.png) 0;
+}
+
+QTreeView::branch:!has-children:!has-siblings:adjoins-item {
+    border-image: url(branch-end.png) 0;
+}
+
+
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings  {
+        border-image: none;
+        image: url(branch-open.png);
+}
+*/
+
+//));
+
+
 //
 //    connect(this, SIGNAL(expanded(const QModelIndex &)),
 //            this, SLOT(expandedFolder(const QModelIndex &)));
@@ -94,6 +246,17 @@ PmrWorkspacesWidget::~PmrWorkspacesWidget()
 
 //    delete mFileManager;
 }
+
+
+//==============================================================================
+/*
+Qt::ItemFlags PmrWorkspacesWidget::flags(const QModelIndex &index) const
+{
+    Q_UNUSED(&index);
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+}
+*/
 
 /**
 //==============================================================================
@@ -312,9 +475,154 @@ void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?currentIndex():QModelIndex()));
 }
+*/
 
 //==============================================================================
 
+void PmrWorkspacesWidget::clearWorkspaces(void)
+{
+    mModel->clear();
+//    mUrlIndexMap = QMap<QString, QPersistentModelIndex>();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::displayWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces)
+{
+    clearWorkspaces();
+
+    QStandardItem *rootItem = mModel->invisibleRootItem();
+
+    for (int i = 0, iMax = pWorkspaces.count(); i < iMax; ++i) {
+        auto row = QList<QStandardItem *>() << new QStandardItem("<b>" + pWorkspaces[i]->name() + "</b>");
+        rootItem->appendRow(row);
+//        row[0]->setEditable(false);
+        row[0]->setFlags(Qt::ItemIsEnabled);
+//        row[1]->setEditable(false);
+        mModel->setData(row[0]->index(), pWorkspaces[i]->url(), WorkspaceUrlRole);
+        mModel->setData(row[0]->index(), TypeWorkspace, ItemTypeRole);
+//        mUrlIndexMap.insert(pWorkspaces[i]->url(), QPersistentModelIndex(row[0]->index()));
+
+        // ****
+        auto srow = QList<QStandardItem *>() << new QStandardItem(QString("Child of %1").arg(i));
+        row[0]->appendRow(srow);
+        if (i > 0) {
+            auto ssrow = QList<QStandardItem *>() << new QStandardItem(QString("Child of child of %1").arg(i));
+            srow[0]->appendRow(ssrow);
+        }
+
+    }
+//    setColumnWidth(0, 400);
+//    qDebug() << "Col 0 width: " << columnWidth(0);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::refreshWorkspaces(void)
+{
+    mPmrRepository->requestWorkspacesList();
+}
+// when resize() ??
+//resizeRowsToContents()
+
+//==============================================================================
+
+void PmrWorkspacesWidget::drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const
+{
+    static const QPixmap WorkspaceClosedPixmap = QPixmap(":oxygen/places/workspace-closed.png");
+    static const QPixmap WorkspaceOpenPixmap = QPixmap(":oxygen/places/workspace-open.png");
+    if (index.data(ItemTypeRole).value<QString>() == TypeWorkspace) {
+qDebug() << "Branch at " << rect;        
+        painter->drawPixmap(rect, isExpanded(index) ? WorkspaceOpenPixmap : WorkspaceClosedPixmap);
+    }
+    else
+        TreeViewWidget::drawBranches(painter, rect, index);
+}
+
+void PmrWorkspacesWidget::resizeEvent(QResizeEvent *event)
+{
+    updateGeometry(); // resizeColumnToContents(0); //resizeRowsToContents();
+    Core::TreeViewWidget::resizeEvent(event);
+}
+//==============================================================================
+
+void PmrWorkspacesWidget::on_clicked(const QModelIndex &pItemIndex)
+{
+    if (pItemIndex.isValid()) {
+        QModelIndex index = (pItemIndex.column() == 0) ? pItemIndex
+                                                       : mModel->index(pItemIndex.row(), 0, pItemIndex.parent());
+        QString url = index.data(WorkspaceUrlRole).value<QString>();
+        qDebug() << "Clicked URL: " << url;
+        if (url != "") mPmrRepository->requestWorkspaceDetails(url);
+    }
+}
+
+
+/***************
+
+Add workspace:
+
+Post to https://models.physiomeproject.org/workspace/+/addWorkspace
+Fields: form-widgets-title, form-widgets-description, form-widgets-storage (= git)
+
+JSON:  "{
+    "collection": {
+        "href": "https://models.physiomeproject.org/workspace/addWorkspace",
+        "template": {
+            "data": [
+                {
+                    "description": "",
+                    "name": "form.widgets.title",
+                    "options": null,
+                    "prompt": "Title",
+                    "required": false,
+                    "type": "TextLine",
+                    "value": ""
+                },
+                {
+                    "description": "",
+                    "name": "form.widgets.description",
+                    "options": null,
+                    "prompt": "Description",
+                    "required": false,
+                    "type": "Text",
+                    "value": ""
+                },
+                {
+                    "description": "The type of storage backend used for this workspace.",
+                    "name": "form.widgets.storage",
+                    "options": [
+                        {
+                            "text": "Git",
+                            "value": "git"
+                        }
+                    ],
+                    "prompt": "Storage Method",
+                    "required": true,
+                    "type": "Choice",
+                    "value": [
+                    ]
+                },
+                {
+                    "description": null,
+                    "name": "form.buttons.add",
+                    "prompt": "Add",
+                    "required": false,
+                    "type": "Button",
+                    "value": null
+                }
+            ]
+        },
+        "version": "1.0"
+    }
+}
+"
+
+*************/
+
+//==============================================================================
+
+/*
 void PmrWorkspacesWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping

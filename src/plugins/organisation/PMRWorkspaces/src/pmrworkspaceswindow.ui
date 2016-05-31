@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>PMR Workspaces</string>
+   <string>My PMR Workspaces</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="layout">
@@ -65,7 +65,7 @@
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
-    <string>New</string>
+    <string>New workspace</string>
    </property>
    <property name="statusTip">
     <string>Create a new workspace</string>

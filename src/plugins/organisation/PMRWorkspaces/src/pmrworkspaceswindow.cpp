@@ -98,14 +98,16 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     connect(mWorkspacesWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
-    connect(mWorkspacesWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
 
-    // Some connections to update the enabled state of our various actions
-
-    connect(this, SIGNAL(refreshWorkspaces(void)), mPmrRepository, SLOT(getAuthenticationStatus()));
+    // Some connections to process responses from the PMR repository
 
     connect(mPmrRepository, SIGNAL(authenticated(const bool &)), this, SLOT(updateAuthenticationStatus(const bool &)));
+    connect(mPmrRepository, SIGNAL(workspacesList(const PMRSupport::PmrWorkspaces &)),
+            mWorkspacesWidget, SLOT(displayWorkspaces(const PMRSupport::PmrWorkspaces &)));
+
+    // Some connections to update our state
+
+    connect(this, SIGNAL(refreshWorkspaces(void)), mPmrRepository, SLOT(getAuthenticationStatus()));
 
     emit refreshWorkspaces();
 }
@@ -164,11 +166,13 @@ void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
         mGui->actionAuthenticate->setVisible(false);
         mGui->actionNew->setEnabled(true);
         mGui->actionUnauthenticate->setVisible(true);
+        mWorkspacesWidget->refreshWorkspaces();
     }
     else {
         mGui->actionAuthenticate->setVisible(true);
         mGui->actionNew->setEnabled(false);
         mGui->actionUnauthenticate->setVisible(false);
+        mWorkspacesWidget->clearWorkspaces();
     }
 }
 
@@ -193,6 +197,7 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
 void PmrWorkspacesWindow::on_actionInfo_triggered()
 {
     // Show information about the selected object
+    mPmrRepository->requestWorkspacesList();  // ***** TEMP
 }
 
 //==============================================================================
@@ -211,15 +216,6 @@ void PmrWorkspacesWindow::showCustomContextMenu() const
     // widget
 
     mContextMenu->exec(QCursor::pos());
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindow::itemDoubleClicked(const QModelIndex &pItemIndex)
-{
-    // Check what kind of item has been double clicked
-
-    Q_UNUSED(pItemIndex)
 }
 
 //==============================================================================

@@ -40,6 +40,7 @@ limitations under the License.
 //==============================================================================
 
 #include "git2.h"
+#include "o1requestor.h"
 #include "zlib.h"
 
 //==============================================================================
@@ -171,6 +172,7 @@ void PmrRepository::sendPmrRequest(const PmrRequest &pPmrRequest,
 
     if (Core::internetConnectionAvailable()) {
         QNetworkRequest networkRequest;
+        bool useSecure = false;
 
         networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
         networkRequest.setRawHeader("Accept-Encoding", "gzip");
@@ -180,15 +182,33 @@ void PmrRepository::sendPmrRequest(const PmrRequest &pPmrRequest,
             networkRequest.setUrl(QUrl(QString("%1/exposure").arg(url())));
 
             break;
+        case WorkspacesList:
+            useSecure = mPmrOAuthClient->linked();
+            networkRequest.setUrl(QUrl(QString("%1/my-workspaces").arg(url())));
+
+            break;
+        case ExposureFileInformation:
         case ExposureInformation:
         case WorkspaceInformation:
-        case ExposureFileInformation:
+            networkRequest.setUrl(QUrl(pUrl));
+
+            break;
+        case WorkspaceDetails:
+            useSecure = mPmrOAuthClient->linked();
             networkRequest.setUrl(QUrl(pUrl));
 
             break;
         }
 
-        QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
+        // Use the authenticated link if it's available
+
+        QNetworkReply *networkReply;
+        if (useSecure) {
+            O1Requestor *requestor = new O1Requestor(mNetworkAccessManager, mPmrOAuthClient, this);
+            networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
+        } else {
+            networkReply = mNetworkAccessManager->get(networkRequest);
+        }
 
         // Keep track of the type of our PMR request and of the action to carry
         // out (once we have retrieved everything we need from PMR)
@@ -249,9 +269,10 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
     QString workspaceUrl = QString();
     QStringList exposureFileUrls = QStringList();
     QString exposureUrl = QString();
+    PmrWorkspaces workspaces = PmrWorkspaces();
 
     if (pNetworkReply) {
-        if (pNetworkReply->error() == QNetworkReply::NoError) {
+//        if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Retrieve and uncompress our JSON data
 
             QByteArray compressedData = pNetworkReply->readAll();
@@ -283,11 +304,14 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
                 inflateEnd(&stream);
             }
 
+        if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Parse our uncompressed JSON data
 
             QJsonParseError jsonParseError;
             QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
             QString url = pNetworkReply->url().toString();
+            
+if (pmrRequest != ExposuresList) qDebug() << "JSON: " << jsonDocument.toJson(QJsonDocument::Indented);
 
             if (jsonParseError.error == QJsonParseError::NoError) {
                 // Check our PMR request to determine what we should do with the
@@ -471,6 +495,32 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
 
                     break;
                 }
+                case WorkspacesList: {
+                    // Retrieve the list of workspaces
+
+                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
+                        QVariantMap linksMap = linksVariant.toMap();
+
+                        if (!linksMap["rel"].toString().compare("bookmark")) {
+                            QString workspaceUrl = linksMap["href"].toString().trimmed();
+                            QString workspaceName = linksMap["prompt"].toString().simplified();
+
+                            if (   !workspaceUrl.isEmpty()
+                                && !workspaceName.isEmpty()) {
+
+                                workspaces.add(workspaceUrl, workspaceName, this);
+                            }
+                        }
+                    }
+
+                    std::sort(workspaces.begin(), workspaces.end(),
+                              PmrWorkspace::compare);
+
+                    break;
+                }
+                default:
+break;
+
                 }
 
                 // Check whether something wrong happened during the processing
@@ -485,6 +535,8 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
             }
         } else {
             errorMessage = pNetworkReply->errorString();
+qDebug() << "Error " << pNetworkReply->error() << ": " << errorMessage;
+qDebug() << uncompressedData;           
         }
     } else {
         internetConnectionAvailable = false;
@@ -520,6 +572,14 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
             doShowExposureFiles(exposureUrl);
         }
 
+        break;
+    case WorkspacesList:
+        // Respond with a list of workspaces
+
+        emit workspacesList(workspaces);
+
+        break;
+    case WorkspaceDetails:
         break;
     }
 
@@ -603,6 +663,36 @@ void PmrRepository::requestExposureFiles(const QString &pUrl)
 
         sendPmrRequest(ExposureInformation, pUrl, ShowExposureFiles);
     }
+}
+
+//==============================================================================
+
+void PmrRepository::requestWorkspacesList(void)
+{
+    // Get the list of the user's workspaces from the PMR
+    // after making sure that our
+    // internal data has been reset
+
+    //mWorkspaces.clear();
+
+//    if (!mPmrOAuthClient->linked()) {
+//        emit information( tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
+//                         +"<br/><br/>"+informationNoteMessage());
+//        emit << "Application is not linked to PMR!";
+//        emit gotWorkspaces();
+//        return;
+//    }
+    sendPmrRequest(WorkspacesList);
+
+}
+
+//==============================================================================
+
+void PmrRepository::requestWorkspaceDetails(const QString &pUrl)
+{
+
+    sendPmrRequest(WorkspaceDetails, pUrl);
+
 }
 
 //==============================================================================

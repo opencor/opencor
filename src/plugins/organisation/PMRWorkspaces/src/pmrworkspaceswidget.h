@@ -25,12 +25,47 @@ specific language governing permissions and limitations under the License.
 
 #include "filemanager.h"
 #include "pmrworkspacesmodel.h"
+#include "pmrworkspace.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
 
+#include <QMap>
+#include <QModelIndex>
+//#include <QPersistentModelIndex>
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace PMRSupport {
+    class PmrRepository;
+}   // namespace PMRSupport
+
+//==============================================================================
+
 namespace PMRWorkspaces {
+
+class PmrWorkspacesWidget;
+
+//==============================================================================
+
+class PmrWorkspacesItemDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    PmrWorkspacesItemDelegate(PmrWorkspacesWidget *pWidget, QObject *parent = 0);
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+private:
+    PmrWorkspacesWidget *mWidget;
+};
 
 //==============================================================================
 
@@ -39,8 +74,10 @@ class PmrWorkspacesWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWidget(QWidget *pParent);
+    explicit PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent);
     ~PmrWorkspacesWidget();
+
+//    Qt::ItemFlags flags(const QModelIndex &index) const;
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -52,9 +89,16 @@ public:
 
 protected:
 //    virtual void keyPressEvent(QKeyEvent *pEvent);
-
+    virtual void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const;
+    void resizeEvent(QResizeEvent *event);
+    
 private:
     PmrWorkspacesModel *mModel;
+
+    PMRSupport::PmrRepository *mPmrRepository;
+
+//    QMap<QString, QPersistentModelIndex> mUrlIndexMap;
+
 //    Core::FileManager *mFileManager;
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
@@ -82,7 +126,7 @@ private:
 //    void moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
 //                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
-    void resizeToContents();
+    //void resizeToContents();
 
 //    QStringList selectedFiles() const;
 
@@ -107,7 +151,13 @@ Q_SIGNALS:
 //    void newFolderEnabled(const bool &pEnabled);
 //    void deleteItemsEnabled(const bool &pEnabled);
 
+public Q_SLOTS:
+    void clearWorkspaces(void);
+    void displayWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
+    void refreshWorkspaces(void);
+
 private Q_SLOTS:
+    void on_clicked(const QModelIndex &pItemIndex);
 //    void expandedFolder(const QModelIndex &pFolderIndex);
 //    void collapsedFolder(const QModelIndex &pFolderIndex);
 

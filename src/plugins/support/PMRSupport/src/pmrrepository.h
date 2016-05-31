@@ -65,6 +65,8 @@ public:
     void cloneWorkspace(const QString &pUrl, const QString &pDirName);
     void requestExposuresList(void);
     void requestExposureFiles(const QString &pUrl);
+    void requestWorkspacesList(void);
+    void requestWorkspaceDetails(const QString &pUrl);
 
 private:
     explicit PmrRepository();
@@ -73,7 +75,9 @@ private:
         ExposuresList,
         ExposureInformation,
         WorkspaceInformation,
-        ExposureFileInformation
+        ExposureFileInformation,
+        WorkspacesList,
+        WorkspaceDetails
     };
 
     enum Action {
@@ -104,6 +108,8 @@ private:
 
 Q_SIGNALS:
     void authenticated(const bool &pAuthenticated);
+    //void authenticationChanged(const bool &pAuthenticated);
+
     void busy(const bool &pBusy);
 
     void warning(const QString &pMessage);
@@ -116,6 +122,8 @@ Q_SIGNALS:
     void addExposureFiles(const QString &pUrl,
                           const QStringList &pExposureFiles);
     void showExposureFiles(const QString &pUrl);
+
+    void workspacesList(const PMRSupport::PmrWorkspaces &pWorkspaces);
 
 public Q_SLOTS:
     void authenticate(const bool &pLink = true);
