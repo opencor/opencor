@@ -484,6 +484,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
 
     mDirectPainter = new QwtPlotDirectPainter(this);
 
+    mDirectPainter->setAttribute(QwtPlotDirectPainter::CopyBackingStore, true);
+
     // Speedup painting on X11 systems
     // Note: this can only be done on X11 systems...
 

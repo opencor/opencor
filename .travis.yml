@@ -18,9 +18,9 @@ branches:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         sudo apt-add-repository -y ppa:beineri/opt-qt542-trusty
+         sudo apt-add-repository -y ppa:beineri/opt-qt551-trusty
       && sudo apt-get -qq update
-      && sudo apt-get -qq install qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webchannel qt54webkit
+      && sudo apt-get -qq install qt55location qt55multimedia qt55sensors qt55svg qt55tools qt55webchannel qt55webkit
       ;
     else
          brew update
@@ -33,7 +33,7 @@ install:
 script:
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt55/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt55/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..

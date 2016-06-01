@@ -160,30 +160,7 @@ QStringList runCli(const QStringList pArguments)
     QDir::setCurrent(origPath);
 #endif
 
-#if defined(Q_OS_WIN)
-//---ISSUE908--- THIS SHOULD BE REMOVED ONCE ISSUE #908 HAS BEEN IMPLEMENTED...
-// The below is only so that we can run our tests using Qt 5.4.2 on Windows 10
-    QStringList res = output.remove("\r").split("\n");
-
-    if (!res.first().compare("Qt: Untested Windows version 10.0 detected!"))
-        res.removeFirst();
-
-    return res;
-#elif defined(Q_OS_LINUX)
     return output.remove("\r").split("\n");
-#elif defined(Q_OS_MAC)
-//---ISSUE908--- THIS SHOULD BE REMOVED ONCE ISSUE #908 HAS BEEN IMPLEMENTED...
-// The below is only so that we can run our tests using Qt 5.5.1 on OS X on
-// Travis CI
-    QStringList res = output.remove("\r").split("\n");
-
-    while (res.first().contains("/usr/local/Cellar/"))
-        res.removeFirst();
-
-    return res;
-#else
-    #error Unsupported platform
-#endif
 }
 
 //==============================================================================
