@@ -253,13 +253,9 @@ void QwtPlotDirectPainter::drawSeries(
         if ( d_data->hasClipping )
             clipRegion &= d_data->clipRegion;
 
-/*---OPENCOR---
         canvas->installEventFilter( this );
-*/
         canvas->repaint(clipRegion);
-/*---OPENCOR---
         canvas->removeEventFilter( this );
-*/
 
         d_data->seriesItem = NULL;
     }
