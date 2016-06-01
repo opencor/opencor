@@ -31,7 +31,6 @@ limitations under the License.
 //==============================================================================
 
 class QSplitter;
-class QWebView;
 
 //==============================================================================
 
@@ -42,6 +41,12 @@ namespace OpenCOR {
 namespace Core {
     class BorderedWidget;
     class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
+namespace WebViewer {
+    class WebViewerWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -91,11 +96,11 @@ private:
 
     Core::BorderedWidget *mBorderedMetadataEditDetails;
     Core::BorderedWidget *mBorderedMetadataViewDetails;
-    Core::BorderedWidget *mBorderedWebView;
+    Core::BorderedWidget *mBorderedWebViewer;
 
     CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
-    QWebView *mWebView;
+    WebViewer::WebViewerWidget *mWebViewer;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -107,11 +112,12 @@ Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
 
-    void qualifierDetailsRequested(QWebView *pWebView,
+    void qualifierDetailsRequested(WebViewer::WebViewerWidget *pWebViewer,
                                    const QString &pQualifier);
-    void resourceDetailsRequested(QWebView *pWebView, const QString &pResource);
-    void idDetailsRequested(QWebView *pWebView, const QString &pResource,
-                            const QString &pId);
+    void resourceDetailsRequested(WebViewer::WebViewerWidget *pWebViewer,
+                                  const QString &pResource);
+    void idDetailsRequested(WebViewer::WebViewerWidget *pWebViewer,
+                            const QString &pResource, const QString &pId);
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement);

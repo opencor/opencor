@@ -27,7 +27,7 @@ limitations under the License.
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "pmrexposure.h"
-#include "webviewwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -46,7 +46,8 @@ namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowWidget : public Core::WebViewWidget, public Core::CommonWidget
+class PmrWindowWidget : public WebViewer::WebViewerWidget,
+                        public Core::CommonWidget
 {
     Q_OBJECT
 

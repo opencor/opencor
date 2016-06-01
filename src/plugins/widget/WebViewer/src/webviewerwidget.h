@@ -17,14 +17,14 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web view widget
+// Web viewer widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "coreglobal.h"
+#include "webviewerglobal.h"
 
 //==============================================================================
 
@@ -34,16 +34,16 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace WebViewer {
 
 //==============================================================================
 
-class CORE_EXPORT WebViewWidget : public QWebView
+class WEBVIEWER_EXPORT WebViewerWidget : public QWebView
 {
     Q_OBJECT
 
 public:
-    explicit WebViewWidget(QWidget *pParent);
+    explicit WebViewerWidget(QWidget *pParent);
 
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
@@ -60,7 +60,7 @@ private:
 
 //==============================================================================
 
-}   // namespace Core
+}   // namespace WebViewer
 }   // namespace OpenCOR
 
 //==============================================================================

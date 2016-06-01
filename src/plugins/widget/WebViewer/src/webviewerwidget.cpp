@@ -17,10 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web view widget
+// Web viewer widget
 //==============================================================================
 
-#include "webviewwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -34,11 +34,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace WebViewer {
 
 //==============================================================================
 
-WebViewWidget::WebViewWidget(QWidget *pParent) :
+WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWebView(pParent),
     mResettingCursor(false),
     mLinkToolTip(QString())
@@ -52,7 +52,7 @@ WebViewWidget::WebViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void WebViewWidget::setLinkToolTip(const QString &pLinkToolTip)
+void WebViewerWidget::setLinkToolTip(const QString &pLinkToolTip)
 {
     // Set our link tool tip
 
@@ -61,7 +61,7 @@ void WebViewWidget::setLinkToolTip(const QString &pLinkToolTip)
 
 //==============================================================================
 
-bool WebViewWidget::event(QEvent *pEvent)
+bool WebViewerWidget::event(QEvent *pEvent)
 {
     // Override the change of the cursor and tool tip when hovering a link
 
@@ -96,8 +96,8 @@ bool WebViewWidget::event(QEvent *pEvent)
 
 //==============================================================================
 
-QWebElement WebViewWidget::retrieveLinkInformation(QString &pLink,
-                                                   QString &pTextContent)
+QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
+                                                     QString &pTextContent)
 {
     // Retrieve the link and text content values for the link, if any, below our
     // mouse pointer
@@ -128,7 +128,7 @@ QWebElement WebViewWidget::retrieveLinkInformation(QString &pLink,
 
 //==============================================================================
 
-}   // namespace Core
+}   // namespace WebViewer
 }   // namespace OpenCOR
 
 //==============================================================================

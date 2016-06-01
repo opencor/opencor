@@ -45,7 +45,7 @@ namespace PMRWindow {
 //==============================================================================
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
-    Core::WebViewWidget(pParent),
+    WebViewer::WebViewerWidget(pParent),
     Core::CommonWidget(),
     mGui(new Ui::PmrWindowWidget),
     mExposureNames(QStringList()),

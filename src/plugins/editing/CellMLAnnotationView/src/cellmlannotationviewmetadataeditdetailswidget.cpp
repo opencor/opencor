@@ -33,7 +33,7 @@ limitations under the License.
 #include "filemanager.h"
 #include "treeviewwidget.h"
 #include "usermessagewidget.h"
-#include "webviewwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -348,7 +348,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputOntologicalTermsTemplate = fileContents;
 
-    mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
+    mOutputOntologicalTerms = new WebViewer::WebViewerWidget(mOutput);
 
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
