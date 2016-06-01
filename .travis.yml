@@ -15,6 +15,7 @@ branches:
   only:
     - master
     - /^\d+\.\d+(\.\d+)?$/
+    - qt5.6
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
