@@ -25,11 +25,11 @@ limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
 #include <QNetworkReply>
-#include <QWebView>
 
 //==============================================================================
 
@@ -39,10 +39,6 @@ class QHelpEngine;
 
 namespace OpenCOR {
 namespace HelpWindow {
-
-//==============================================================================
-
-class HelpWindowWidget;
 
 //==============================================================================
 
@@ -61,7 +57,6 @@ protected:
 
 private:
     QByteArray mData;
-    qint64 mOrigLen;
 };
 
 //==============================================================================
@@ -103,7 +98,8 @@ private:
 
 //==============================================================================
 
-class HelpWindowWidget : public QWebView, public Core::CommonWidget
+class HelpWindowWidget : public WebViewer::WebViewerWidget,
+                         public Core::CommonWidget
 {
     Q_OBJECT
 

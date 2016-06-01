@@ -38,7 +38,6 @@ ADD_PLUGIN(Core
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
         src/viewwidget.cpp
-        src/webviewwidget.cpp
         src/widget.cpp
         src/windowwidget.cpp
         src/xsltransformer.cpp
@@ -62,7 +61,6 @@ ADD_PLUGIN(Core
         src/treeviewwidget.h
         src/usermessagewidget.h
         src/viewwidget.h
-        src/webviewwidget.h
         src/widget.h
         src/windowwidget.h
         src/xsltransformer.h
@@ -70,7 +68,6 @@ ADD_PLUGIN(Core
         src
     QT_MODULES
         Network
-        WebKitWidgets
         Widgets
         Xml
         XmlPatterns

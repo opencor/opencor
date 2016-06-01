@@ -48,8 +48,7 @@ namespace HelpWindow {
 HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
                                                const QByteArray &pData,
                                                const QString &pMimeType) :
-    mData(pData),
-    mOrigLen(pData.length())
+    mData(pData)
 {
     // Set a few things for the network reply
 
@@ -57,7 +56,7 @@ HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
     setOpenMode(QIODevice::ReadOnly);
     setHeader(QNetworkRequest::ContentTypeHeader, pMimeType);
     setHeader(QNetworkRequest::ContentLengthHeader,
-              QByteArray::number(mOrigLen));
+              QByteArray::number(pData.length()));
 
     // Let ourselves know immediately that data is available for reading
 
@@ -190,7 +189,7 @@ enum {
 
 HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                                    const QUrl &pHomePage, QWidget *pParent) :
-    QWebView(pParent),
+    WebViewer::WebViewerWidget(pParent),
     Core::CommonWidget(),
     mHelpEngine(pHelpEngine),
     mHomePage(pHomePage),
