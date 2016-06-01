@@ -295,7 +295,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDeta
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &pQualifier)
 {
-    // Let people know that we want our web viewer to be updated with the some
+    // Let people know that we want our web viewer to be updated with some
     // details about the given qualifier
 
     emit qualifierDetailsRequested(mWebViewer, pQualifier);
@@ -305,7 +305,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &p
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pResource)
 {
-    // Let people know that we want our web viewer to be updated with the some
+    // Let people know that we want our web viewer to be updated with some
     // details about the given resource
 
     emit resourceDetailsRequested(mWebViewer, pResource);
@@ -316,7 +316,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pR
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResource,
                                                          const QString &pId)
 {
-    // Let people know that we want our web viewer to be updated with the some
+    // Let people know that we want our web viewer to be updated with some
     // details about the given id
 
     emit idDetailsRequested(mWebViewer, pResource, pId);
