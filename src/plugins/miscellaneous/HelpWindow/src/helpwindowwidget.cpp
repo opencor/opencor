@@ -202,16 +202,6 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
 
     page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
 
-    // Prevent objects from being dropped on us
-    // Note: by default, QWebView allows for objects to be dropped on itself,
-    //       while we don't want that...
-
-    setAcceptDrops(false);
-
-    // Prevent the widget from taking over the scrolling of other widgets
-
-    setFocusPolicy(Qt::NoFocus);
-
     // Set our initial zoom level to the default value
     // Note: to set mZoomLevel directly is not good enough since one of the
     //       things setZoomLevel does is to set our zoom factor...
@@ -388,7 +378,7 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     } else {
         // Something else, so use the default handling of the event
 
-        QWebView::mouseReleaseEvent(pEvent);
+        WebViewer::WebViewerWidget::mouseReleaseEvent(pEvent);
     }
 }
 
@@ -412,7 +402,7 @@ void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
         // Not the modifier we were expecting, so call the default handling of
         // the event
 
-        QWebView::wheelEvent(pEvent);
+        WebViewer::WebViewerWidget::wheelEvent(pEvent);
     }
 }
 
