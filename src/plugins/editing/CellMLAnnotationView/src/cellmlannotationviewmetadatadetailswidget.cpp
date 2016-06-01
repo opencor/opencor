@@ -91,7 +91,6 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
     mWebViewer           = new WebViewer::WebViewerWidget(this);
 
-    mWebViewer->setAcceptDrops(false);
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
 
     mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
