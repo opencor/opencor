@@ -87,11 +87,11 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     connect(page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
             this, SLOT(linkHovered()));
 
-    // Retrieve the output template
+    // Retrieve the HTML template
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/output.html", fileContents);
+    Core::readFileContentsFromFile(":/pmrwindowwidget.html", fileContents);
 
     mTemplate = QString(fileContents).arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
