@@ -1404,20 +1404,19 @@ void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanRepl
 
     for (int i = 0; i < 2; ++i) {
         // Note: we do the below twice because there are cases where it won't
-        //       work properly otherwise. Indeed, say that you have two graph
-        //       panels. By default, their Y axis will range from 0 to 1,000.
-        //       Now, say that you zoom out the first graph panel and end up
-        //       with somewhat wide labels for the Y axis, e.g. from
-        //       -1,000,000 to 1,000. While doing this, the second graph panel
-        //       will have kept aligning itself with the first graph panel, as
-        //       expected. Now, say that you reset the zoom of the first graph
-        //       panel. At this point, you would expect the Y axis to range from
-        //       0 to 1,000 and it is the case, but we can see loads of empty
-        //       space to the left of the Y axis and this on both graph panels.
-        //       However, that empty space disappears if we do the below twice.
-        //       It clearly has something to do with the internals of QwtPlot,
-        //       yet it's not clear how to get it 'right' without doing the
-        //       below twice, so...
+        //       work properly. Indeed, say that you have two graph panels. By
+        //       default, their Y axis will range from 0 to 1,000. Now, say that
+        //       you zoom out the first graph panel and end up with somewhat
+        //       wide labels for the Y axis, e.g. from -1,000,000 to 1,000.
+        //       While doing this, the second graph panel will have kept
+        //       aligning itself with the first graph panel, as expected. Now,
+        //       say that you reset the zoom of the first graph panel. At this
+        //       point, you would expect the Y axis to range from 0 to 1,000 and
+        //       it is the case, but we can see loads of empty space to the left
+        //       of the Y axis and this on both graph panels. However, that
+        //       empty space disappears if we do the below twice. It clearly has
+        //       something to do with the internals of QwtPlot, yet it's not
+        //       clear how to get it 'right' without doing the below twice...
 
         SingleCellViewGraphPanelPlotWidgets selfPlusNeighbors = SingleCellViewGraphPanelPlotWidgets() << this << mNeighbors;
         double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
