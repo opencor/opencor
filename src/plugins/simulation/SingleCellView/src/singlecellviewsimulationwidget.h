@@ -205,8 +205,8 @@ private:
 
     ErrorType mErrorType;
 
-    QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     SingleCellViewGraphPanelPlotWidgets mPlots;
+    QMap<SingleCellViewGraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
@@ -325,6 +325,8 @@ private Q_SLOTS:
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void openCellmlFile();
+
+    void plotAxesChanged();
 };
 
 //==============================================================================

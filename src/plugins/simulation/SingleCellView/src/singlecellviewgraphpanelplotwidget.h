@@ -289,6 +289,10 @@ private:
     QPointF canvasPoint(const QPoint &pPoint,
                         const bool pNeedOffset = true) const;
 
+Q_SIGNALS:
+    void axesChanged(const double &pMinX, const double &pMaxX,
+                     const double &pMinY, const double &pMaxY);
+
 private Q_SLOTS:
     void on_actionCopyToClipboard_triggered();
 

@@ -945,6 +945,8 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
         alignWithNeighbors(pCanReplot);
 
+        emit axesChanged(pMinX, pMaxX, pMinY, pMaxY);
+
         return pCanReplot;
     } else {
         return false;
