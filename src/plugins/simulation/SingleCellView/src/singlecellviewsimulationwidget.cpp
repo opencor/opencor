@@ -3028,7 +3028,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                             maxY = qMax(maxY, valY);
                         }
 
-                        // Update pour plot, if our graph segment cannot fit
+                        // Update our plot, if our graph segment cannot fit
                         // within our plot's current viewport
 
                         needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
