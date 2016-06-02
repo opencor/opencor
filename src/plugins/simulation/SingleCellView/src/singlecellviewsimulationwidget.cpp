@@ -2980,7 +2980,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                                  || (oldDataSize != realOldDataSize);
 
                 // Draw the graph's new segment, but only if we and our graph
-                // are visible,and that there is no need to update the plot and
+                // are visible, and that there is no need to update the plot and
                 // that there is some data to plot
 
                 if (    visible && graph->isVisible()
