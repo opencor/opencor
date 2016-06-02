@@ -100,8 +100,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
-    mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(SingleCellViewGraphPanelPlotWidgets()),
+    mUpdatablePlotViewports(QMap<SingleCellViewGraphPanelPlotWidget *, bool>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
@@ -2593,20 +2593,34 @@ void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWid
 {
     Q_UNUSED(pActive);
 
-    // Keep track of the graph panel's plot
+    // Keep track of the fact that we want to know if a graph panel's plot's
+    // axes have been changed
+    // Note: we don't need to keep track of the graph panel's plot (in mPlots)
+    //       since we only want to do this if the plot actually has graphs
+    //       associated with it (see graphAdded())...
 
-    mGraphPanelsPlots.insert(pGraphPanel, pGraphPanel->plot());
+    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+
+    mUpdatablePlotViewports.insert(plot, true);
+
+    connect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
+            this, SLOT(plotAxesChanged()));
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationWidget::graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    // A graph panel has been removed, so stop tracking its plot
+    // A graph panel has been removed, so stop tracking its plot and the fact
+    // that we wanted to know if its axes had been changed
 
-    mPlots.removeOne(mGraphPanelsPlots.value(pGraphPanel));
+    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    mGraphPanelsPlots.remove(pGraphPanel);
+    disconnect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
+               this, SLOT(plotAxesChanged()));
+
+    mPlots.removeOne(plot);
+    mUpdatablePlotViewports.remove(plot);
 }
 
 //==============================================================================
@@ -2942,6 +2956,16 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
     bool visible = isVisible();
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
+        // If our graphs are to be cleared (i.e. our plot's viewport are going
+        // to be reset), then we want to be able to update our plot's viewport
+        // if needed (i.e. a graph segment doesn't fit within our plot's current
+        // viewport anymore)
+
+        if (pClearGraphs)
+            mUpdatablePlotViewports.insert(plot, true);
+
+        // Now we are ready to actually update all the graphs of all our plots
+
         bool needUpdatePlot = false;
 
         double plotMinX = plot->minX();
@@ -2983,29 +3007,33 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 if (    visible && graph->isVisible()
                     && !needUpdatePlot && pSimulationResultsSize) {
                     // Check that our graph segment can fit within our plot's
-                    // current viewport
+                    // current viewport, but only if the user hasn't changed the
+                    // plot's viewport since we last came here (e.g. by panning
+                    // the plot's contents)
 
-                    double minX = plotMinX;
-                    double maxX = plotMaxX;
-                    double minY = plotMinY;
-                    double maxY = plotMaxY;
+                    if (mUpdatablePlotViewports.value(plot)) {
+                        double minX = plotMinX;
+                        double maxX = plotMaxX;
+                        double minY = plotMinY;
+                        double maxY = plotMaxY;
 
-                    for (qulonglong i = oldDataSize?oldDataSize-1:0;
-                         i < pSimulationResultsSize; ++i) {
-                        double valX = graph->data()->sample(i).x();
-                        double valY = graph->data()->sample(i).y();
+                        for (qulonglong i = oldDataSize?oldDataSize-1:0;
+                             i < pSimulationResultsSize; ++i) {
+                            double valX = graph->data()->sample(i).x();
+                            double valY = graph->data()->sample(i).y();
 
-                        minX = qMin(minX, valX);
-                        maxX = qMax(maxX, valX);
-                        minY = qMin(minY, valY);
-                        maxY = qMax(maxY, valY);
+                            minX = qMin(minX, valX);
+                            maxX = qMax(maxX, valX);
+                            minY = qMin(minY, valY);
+                            maxY = qMax(maxY, valY);
+                        }
+
+                        // Update our plot, if our graph segment cannot fit
+                        // within our plot's current viewport
+
+                        needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                         || (minY < plotMinY) || (maxY > plotMaxY);
                     }
-
-                    // Update pour plot, if our graph segment cannot fit within
-                    // our plot's current viewport
-
-                    needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                     || (minY < plotMinY) || (maxY > plotMaxY);
 
                     if (!needUpdatePlot)
                         plot->drawGraphFrom(graph, realOldDataSize-1);
@@ -3122,6 +3150,18 @@ void SingleCellViewSimulationWidget::openCellmlFile()
     // Ask OpenCOR to switch to the requested CellML editing view
 
     QDesktopServices::openUrl("opencor://Core.selectView/"+mCellmlEditingViewPlugins.value(qobject_cast<QAction *>(sender()))->name());
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::plotAxesChanged()
+{
+    // A plot has had its axes changed (e.g. its contents was panned), which
+    // means that we don't want to allow its viewport to be updated anymore
+
+    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(sender());
+
+    mUpdatablePlotViewports.insert(plot, false);
 }
 
 //==============================================================================

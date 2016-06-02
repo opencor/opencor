@@ -468,6 +468,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
+    mCanDirectPaint(true),
     mCanZoomInX(true),
     mCanZoomOutX(true),
     mCanZoomInY(true),
@@ -938,9 +939,13 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
     // allowed), in case the axes' values have changed
 
     if (axesValuesChanged) {
+        mCanDirectPaint = false;
+
         updateActions();
 
         alignWithNeighbors(pCanReplot);
+
+        emit axesChanged(pMinX, pMaxX, pMinY, pMaxY);
 
         return pCanReplot;
     } else {
@@ -1362,9 +1367,16 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
 void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
                                                        const qulonglong &pFrom)
 {
-    // Draw our graph from the given point
+    // Direct paint our graph from the given point unless we can't direct paint
+    // (due to the axes having been changed), in which case we replot ourselves
 
-    mDirectPainter->drawSeries(pGraph, pFrom, -1);
+    if (mCanDirectPaint) {
+        mDirectPainter->drawSeries(pGraph, pFrom, -1);
+    } else {
+        replotNow();
+
+        mCanDirectPaint = true;
+    }
 }
 
 //==============================================================================
