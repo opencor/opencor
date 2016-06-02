@@ -556,7 +556,7 @@ qulonglong SingleCellViewWidget::simulationResultsSize(const QString &pFileName)
 //==============================================================================
 
 void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
-                                                  const bool &pForceUpdateSimulationResults)
+                                                  const bool &pClearGraphs)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -574,12 +574,12 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
     SingleCellViewSimulation *simulation = simulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
 
-    if (   pForceUpdateSimulationResults
+    if (   pClearGraphs
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
         foreach (SingleCellViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pForceUpdateSimulationResults);
+            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs);
     }
 
     // Ask to recheck our simulation widget's results, but only if its

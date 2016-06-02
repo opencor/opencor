@@ -2921,7 +2921,7 @@ void SingleCellViewSimulationWidget::updateGui()
 
 void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
                                                              const qulonglong &pSimulationResultsSize,
-                                                             const bool &pForceUpdateSimulationResults)
+                                                             const bool &pClearGraphs)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
@@ -2949,12 +2949,12 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
 
-        if (pForceUpdateSimulationResults)
+        if (pClearGraphs)
             plot->resetAxesChanged();
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
-                if (pForceUpdateSimulationResults)
+                if (pClearGraphs)
                     mOldDataSizes.remove(graph);
 
                 // Update our graph's data and keep track of our new old data
@@ -3053,7 +3053,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
     if (simulation == mSimulation) {
         double simulationProgress = mPlugin->viewWidget()->simulationResultsSize(mFileName)/simulation->size();
 
-        if (pForceUpdateSimulationResults || visible) {
+        if (pClearGraphs || visible) {
             mProgressBarWidget->setValue(simulationProgress);
         } else {
             // We are not visible, so create an icon that shows our simulation's

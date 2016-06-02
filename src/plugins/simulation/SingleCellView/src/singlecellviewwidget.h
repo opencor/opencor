@@ -94,7 +94,7 @@ public:
     qulonglong simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                const bool &pForceUpdateSimulationResults = false);
+                                const bool &pClearGraphs = false);
 
     void retrieveFileDetails(const QString &pFileName,
                              OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
