@@ -241,7 +241,7 @@ private:
 
     SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
 
-    bool mAxesValuesChanged;
+    bool mCanDirectPaint;
 
     bool mCanZoomInX;
     bool mCanZoomOutX;
