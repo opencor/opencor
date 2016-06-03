@@ -150,8 +150,8 @@
   </action>
   <action name="actionSedmlExport">
    <property name="icon">
-    <iconset resource="../../../support/SEDMLSupport/res/SEDMLSupport_ui.qrc">
-     <normaloff>:/sedmlLogo.png</normaloff>:/sedmlLogo.png</iconset>
+    <iconset>
+     <normaloff>:/SEDMLSupport/logo.png</normaloff>:/SEDMLSupport/logo.png</iconset>
    </property>
    <property name="text">
     <string>SED-ML Export</string>
@@ -185,7 +185,7 @@
   <action name="actionCellmlOpen">
    <property name="icon">
     <iconset resource="../../../support/CellMLSupport/res/CellMLSupport_ui.qrc">
-     <normaloff>:/cellmlLogo.png</normaloff>:/cellmlLogo.png</iconset>
+     <normaloff>:/CellMLSupport/logo.png</normaloff>:/CellMLSupport/logo.png</iconset>
    </property>
    <property name="text">
     <string>CellML Open</string>
@@ -201,7 +201,6 @@
  <resources>
   <include location="../../../../../res/ui.qrc"/>
   <include location="../../../support/CellMLSupport/res/CellMLSupport_ui.qrc"/>
-  <include location="../../../support/SEDMLSupport/res/SEDMLSupport_ui.qrc"/>
  </resources>
  <connections/>
 </ui>

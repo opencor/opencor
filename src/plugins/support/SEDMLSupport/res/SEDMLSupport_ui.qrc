@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-        <file>sedmlLogo.png</file>
+    <qresource prefix="/SEDMLSupport">
+        <file>logo.png</file>
     </qresource>
 </RCC>

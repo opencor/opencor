@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/CellMLAnnotationView">
         <file>ontologicalTerms.html</file>
         <file>qualifierInformation.html</file>
         <file>modelQualifier.svg</file>

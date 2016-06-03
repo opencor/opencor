@@ -91,7 +91,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/pmrwindowwidget.html", fileContents);
+    Core::readFileContentsFromFile(":/PMRWindow/output.html", fileContents);
 
     mTemplate = QString(fileContents).arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),

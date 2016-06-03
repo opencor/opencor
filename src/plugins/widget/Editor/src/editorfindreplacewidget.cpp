@@ -96,8 +96,8 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     // Create and handle our clear find and replace text actions
 
-    mClearFindTextAction = Core::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
-    mClearReplaceTextAction = Core::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
+    mClearFindTextAction = Core::newAction(QIcon(":/Editor/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
+    mClearReplaceTextAction = Core::newAction(QIcon(":/Editor/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
 
     connect(mClearFindTextAction, SIGNAL(triggered(bool)),
             mGui->findEdit, SLOT(clear()));
@@ -490,10 +490,10 @@ void EditorFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget
 
-    static const QIcon DefaultIcon           = QIcon(":/qtCreator/src/plugins/coreplugin/images/magnifier.png");
-    static const QIcon CaseSensitiveIcon     = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
-    static const QIcon WholeWordsOnlyIcon    = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
-    static const QIcon RegularExpressionIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
+    static const QIcon DefaultIcon           = QIcon(":/Editor/qtCreator/src/plugins/coreplugin/images/magnifier.png");
+    static const QIcon CaseSensitiveIcon     = QIcon(":/Editor/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
+    static const QIcon WholeWordsOnlyIcon    = QIcon(":/Editor/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
+    static const QIcon RegularExpressionIcon = QIcon(":/Editor/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
 
     int nbOfOptions =  mCaseSensitiveAction->isChecked()
                       +mWholeWordsOnlyAction->isChecked()

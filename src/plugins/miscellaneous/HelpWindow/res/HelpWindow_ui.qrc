@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-        <file>helpWindowWidgetError.html</file>
+    <qresource prefix="/HelpWindow">
+        <file>error.html</file>
     </qresource>
 </RCC>

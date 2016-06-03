@@ -228,17 +228,17 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 {
     // Determine the icon to be used for the item
 
-    static const QIcon ErrorIcon        = QIcon(":oxygen/emblems/emblem-important.png");
-    static const QIcon WarningIcon      = QIcon(":oxygen/status/task-attention.png");
-    static const QIcon ModelIcon        = QIcon(":CellMLSupport_modelNode");
-    static const QIcon ImportIcon       = QIcon(":CellMLSupport_importNode");
-    static const QIcon UnitIcon         = QIcon(":CellMLSupport_unitNode");
-    static const QIcon UnitElementIcon  = QIcon(":CellMLSupport_unitElementNode");
-    static const QIcon ComponentIcon    = QIcon(":CellMLSupport_componentNode");
-    static const QIcon VariableIcon     = QIcon(":CellMLSupport_variableNode");
-    static const QIcon GroupIcon        = QIcon(":CellMLSupport_groupNode");
-    static const QIcon RelationshipIcon = QIcon(":CellMLSupport_relationshipNode");
-    static const QIcon ConnectionIcon   = QIcon(":CellMLSupport_connectionNode");
+    static const QIcon ErrorIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
+    static const QIcon WarningIcon      = QIcon(":/oxygen/status/task-attention.png");
+    static const QIcon ModelIcon        = QIcon(":/CellMLSupport/modelNode.png");
+    static const QIcon ImportIcon       = QIcon(":/CellMLSupport/importNode.png");
+    static const QIcon UnitIcon         = QIcon(":/CellMLSupport/unitNode.png");
+    static const QIcon UnitElementIcon  = QIcon(":/CellMLSupport/unitElementNode.png");
+    static const QIcon ComponentIcon    = QIcon(":/CellMLSupport/componentNode.png");
+    static const QIcon VariableIcon     = QIcon(":/CellMLSupport/variableNode.png");
+    static const QIcon GroupIcon        = QIcon(":/CellMLSupport/groupNode.png");
+    static const QIcon RelationshipIcon = QIcon(":/CellMLSupport/relationshipNode.png");
+    static const QIcon ConnectionIcon   = QIcon(":/CellMLSupport/connectionNode.png");
 
     switch (pType) {
     case Error:

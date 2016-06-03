@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/SingleCellView">
         <file>algebraic.png</file>
         <file>blank.png</file>
         <file>computedConstant.png</file>
