@@ -228,8 +228,8 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 {
     // Determine the icon to be used for the item
 
-    static const QIcon ErrorIcon        = QIcon(":CellMLSupport_errorNode");
-    static const QIcon WarningIcon      = QIcon(":CellMLSupport_warningNode");
+    static const QIcon ErrorIcon        = QIcon(":oxygen/emblems/emblem-important.png");
+    static const QIcon WarningIcon      = QIcon(":oxygen/status/task-attention.png");
     static const QIcon ModelIcon        = QIcon(":CellMLSupport_modelNode");
     static const QIcon ImportIcon       = QIcon(":CellMLSupport_importNode");
     static const QIcon UnitIcon         = QIcon(":CellMLSupport_unitNode");
