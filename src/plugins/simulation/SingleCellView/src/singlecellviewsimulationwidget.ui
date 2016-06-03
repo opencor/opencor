@@ -151,7 +151,7 @@
   <action name="actionSedmlExport">
    <property name="icon">
     <iconset>
-     <normaloff>:/sedmlLogo.png</normaloff>:/sedmlLogo.png</iconset>
+     <normaloff>:/SEDMLSupport/logo.png</normaloff>:/SEDMLSupport/logo.png</iconset>
    </property>
    <property name="text">
     <string>SED-ML Export</string>
