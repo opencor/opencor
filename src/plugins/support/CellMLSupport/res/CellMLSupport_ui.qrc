@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="CellMLSupport_errorNode">oxygen/emblems/emblem-important.png</file>
-        <file alias="CellMLSupport_warningNode">oxygen/status/task-attention.png</file>
         <file alias="CellMLSupport_modelNode">modelNode.png</file>
         <file alias="CellMLSupport_importNode">importNode.png</file>
         <file alias="CellMLSupport_unitNode">unitNode.png</file>

@@ -39,7 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> we now build OpenCOR against <a href=\"https://www.qt.io/\">Qt</a> 5.5.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/971\">#971</a>), which means that OpenCOR is now officially supported on Windows 10 (when it comes to Qt itself). Renamed the WebViewWidget to WebViewerWidget and moved it to its own plugin (WebViewer from the Core plugin; see issue <a href=\"https://github.com/opencor/opencor/issues/976\">#976</a>)." },
+                       { "change": "<strong>General:</strong> we now build OpenCOR against <a href=\"https://www.qt.io/\">Qt</a> 5.5.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/971\">#971</a>), which means that OpenCOR is now officially supported on Windows 10 (when it comes to Qt itself). Renamed the WebViewWidget to WebViewerWidget and moved it to its own plugin (WebViewer from the Core plugin; see issue <a href=\"https://github.com/opencor/opencor/issues/976\">#976</a>). Centralised the Oxygen library images (see issue <a href=\"https://github.com/opencor/opencor/issues/982\">#982</a>)." },
                        { "change": "<strong>Single Cell view:</strong> improved the plotting of (running) simulation data when showing/hiding a graph, panning, scaling and zooming in/out (see issue <a href=\"https://github.com/opencor/opencor/issues/980\">#980</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 2.2.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/970\">#970</a>)." }
                      ]

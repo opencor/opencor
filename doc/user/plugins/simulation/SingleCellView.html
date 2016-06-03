@@ -121,7 +121,7 @@
         </p>
 
         <p>
-            You can start the simulation by pressing <code>F9</code> or by clicking on the <img src="../res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 align=absmiddle> button. Then, or before, you can add a graph. All the model parameters are listed to the bottom-left of the view, grouped by components in which they were originally defined. To add a graph, right click on a model parameter and select against which other model parameter you want it to be plotted. For example, to create a graph for <code>V</code> (from the <code>membrane</code> component) against the variable of integration (i.e. time since the simulation properties are expressed in milliseconds):
+            You can start the simulation by pressing <code>F9</code> or by clicking on the <img src="../../../res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 align=absmiddle> button. Then, or before, you can add a graph. All the model parameters are listed to the bottom-left of the view, grouped by components in which they were originally defined. To add a graph, right click on a model parameter and select against which other model parameter you want it to be plotted. For example, to create a graph for <code>V</code> (from the <code>membrane</code> component) against the variable of integration (i.e. time since the simulation properties are expressed in milliseconds):
         </p>
 
         <p class="center">
@@ -137,11 +137,11 @@
         </p>
 
         <p>
-            The <code>Model</code> property is used to associate the graph with a particular CellML file. By default, it has a value of <code>Current</code>, which means that if you select another CellML file, then OpenCOR will try to associate the graph with it (the <img src="../res/pics/oxygen/status/task-attention.png" width=24 height=24 align=absmiddle> icon will be shown next to the check box, if it cannot, as well as next to the <code>X</code> and/or <code>Y</code> properties to highlight which model parameter(s) could not be found in the other CellML file). The <img src="../res/pics/oxygen/status/object-unlocked.png" width=24 height=24 align=absmiddle> icon indicates that the graph is not locked, i.e. its <code>Model</code> property has a value of <code>Current</code>, while the <img src="../res/pics/oxygen/status/object-locked.png" width=24 height=24 align=absmiddle> icon is used when a graph is specifically associated with a CellML file (resulting in a red trace rather than a blue one). The <code>X</code> and <code>Y</code> properties can be modified either by editing their value or by right clicking on them and selecting another model parameter from the context menu, which can also be used to add or remove a graph.
+            The <code>Model</code> property is used to associate the graph with a particular CellML file. By default, it has a value of <code>Current</code>, which means that if you select another CellML file, then OpenCOR will try to associate the graph with it (the <img src="../../../res/pics/oxygen/status/task-attention.png" width=24 height=24 align=absmiddle> icon will be shown next to the check box, if it cannot, as well as next to the <code>X</code> and/or <code>Y</code> properties to highlight which model parameter(s) could not be found in the other CellML file). The <img src="../../../res/pics/oxygen/status/object-unlocked.png" width=24 height=24 align=absmiddle> icon indicates that the graph is not locked, i.e. its <code>Model</code> property has a value of <code>Current</code>, while the <img src="../../../res/pics/oxygen/status/object-locked.png" width=24 height=24 align=absmiddle> icon is used when a graph is specifically associated with a CellML file (resulting in a red trace rather than a blue one). The <code>X</code> and <code>Y</code> properties can be modified either by editing their value or by right clicking on them and selecting another model parameter from the context menu, which can also be used to add or remove a graph.
         </p>
 
         <p>
-            Back to the simulation, you can see that it failed with several model parameters having a value of <code>nan</code> (i.e. <a href="https://en.wikipedia.org/wiki/NaN">not a number</a>). This is because the solver was not properly set up: its <code>Step</code> property is too big. If you set it to <code>0.01 millisecond</code>s, reset all the model parameters (by clicking on the <img src="../res/pics/oxygen/actions/view-refresh.png" width=24 height=24 align=absmiddle> button) and clear the simulation data (by clicking on the <img src="../res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> button), and restart the simulation, then you get the following trace:
+            Back to the simulation, you can see that it failed with several model parameters having a value of <code>nan</code> (i.e. <a href="https://en.wikipedia.org/wiki/NaN">not a number</a>). This is because the solver was not properly set up: its <code>Step</code> property is too big. If you set it to <code>0.01 millisecond</code>s, reset all the model parameters (by clicking on the <img src="../../../res/pics/oxygen/actions/view-refresh.png" width=24 height=24 align=absmiddle> button) and clear the simulation data (by clicking on the <img src="../../../res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> button), and restart the simulation, then you get the following trace:
         </p>
 
         <p class="center">
@@ -157,7 +157,7 @@
         </p>
 
         <p>
-            However, the simulation is so quick to run that you will not have time to see its progress. Between the <img src="../res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> and <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> buttons, there is a wheel that you can use to add a short delay between two data points. Thus, by using a value of <code>100,000</code> (or a bigger/smaller value, depending on the speed of your computer), you can run the simulation and pause it at a point of interest:
+            However, the simulation is so quick to run that you will not have time to see its progress. Between the <img src="../../../res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> and <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> buttons, there is a wheel that you can use to add a short delay between two data points. Thus, by using a value of <code>100,000</code> (or a bigger/smaller value, depending on the speed of your computer), you can run the simulation and pause it at a point of interest:
         </p>
 
         <p class="center">
@@ -173,7 +173,7 @@
         </p>
 
         <p>
-            If you want, you can export <em>all</em> the simulation data to a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values</a> (CSV) file. To do so, you need to click on the <img src="../res/pics/oxygen/actions/document-export.png" width=24 height=24 align=absmiddle> button. Alternatively, if you want to create other graphs, but do not want them on the same graph panel as the existing one, you can click on the <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button to create a new graph panel:
+            If you want, you can export <em>all</em> the simulation data to a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values</a> (CSV) file. To do so, you need to click on the <img src="../../../res/pics/oxygen/actions/document-export.png" width=24 height=24 align=absmiddle> button. Alternatively, if you want to create other graphs, but do not want them on the same graph panel as the existing one, you can click on the <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button to create a new graph panel:
         </p>
 
         <p class="center">
@@ -189,7 +189,7 @@
         </p>
 
         <p>
-            You can create as many graph panels (and graphs) as you want. The current graph panel or all the graph panels (but the top one) can be removed by clicking on the <img src="../res/pics/oxygen/actions/list-remove.png" width=24 height=24 align=absmiddle> button.
+            You can create as many graph panels (and graphs) as you want. The current graph panel or all the graph panels (but the top one) can be removed by clicking on the <img src="../../../res/pics/oxygen/actions/list-remove.png" width=24 height=24 align=absmiddle> button.
         </p>
 
         <div class="section">
@@ -286,7 +286,7 @@
             <tbody>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/media-playback-start.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/media-playback-start.png" width=24 height=24>
                     </th>
                     <td>
                         Run the simulation
@@ -294,7 +294,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/media-playback-pause.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/media-playback-pause.png" width=24 height=24>
                     </th>
                     <td>
                         Pause the simulation
@@ -302,7 +302,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/media-playback-stop.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/media-playback-stop.png" width=24 height=24>
                     </th>
                     <td>
                         Stop the simulation
@@ -310,7 +310,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/view-refresh.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/view-refresh.png" width=24 height=24>
                     </th>
                     <td>
                         Reset all the model parameters
@@ -318,7 +318,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/trash-empty.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/trash-empty.png" width=24 height=24>
                     </th>
                     <td>
                         Clear the simulation data
@@ -326,7 +326,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24>
                     </th>
                     <td>
                         Add a graph panel
@@ -334,7 +334,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/list-remove.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/list-remove.png" width=24 height=24>
                     </th>
                     <td>
                         Remove the current graph panel or all the graph panels
@@ -342,7 +342,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <img src="../res/pics/oxygen/actions/document-export.png" width=24 height=24>
+                        <img src="../../../res/pics/oxygen/actions/document-export.png" width=24 height=24>
                     </th>
                     <td>
                         Export the simulation data

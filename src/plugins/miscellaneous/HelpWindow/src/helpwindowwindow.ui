@@ -15,17 +15,26 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="layout">
-    <property name="margin">
+    <property name="spacing">
      <number>0</number>
     </property>
-    <property name="spacing">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
    </layout>
   </widget>
   <action name="actionHome">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
@@ -37,7 +46,7 @@
   </action>
   <action name="actionBack">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
    </property>
    <property name="text">
@@ -49,7 +58,7 @@
   </action>
   <action name="actionForward">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
    </property>
    <property name="text">
@@ -61,7 +70,7 @@
   </action>
   <action name="actionZoomIn">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/zoom-in.png</normaloff>:/oxygen/actions/zoom-in.png</iconset>
    </property>
    <property name="text">
@@ -73,7 +82,7 @@
   </action>
   <action name="actionZoomOut">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/zoom-out.png</normaloff>:/oxygen/actions/zoom-out.png</iconset>
    </property>
    <property name="text">
@@ -85,7 +94,7 @@
   </action>
   <action name="actionNormalSize">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/zoom-original.png</normaloff>:/oxygen/actions/zoom-original.png</iconset>
    </property>
    <property name="text">
@@ -97,7 +106,7 @@
   </action>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
@@ -109,7 +118,7 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="../res/HelpWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
    </property>
    <property name="text">
@@ -121,7 +130,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/HelpWindow_ui.qrc"/>
+  <include location="../../../../../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

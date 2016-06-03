@@ -14,7 +14,16 @@
    <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="layout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <property name="spacing">
@@ -111,7 +120,7 @@
         <string>Find Previous</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/Editor_ui.qrc">
+        <iconset resource="../../../../../res/ui.qrc">
          <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
        </property>
       </widget>
@@ -122,7 +131,7 @@
         <string>Find Next</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/Editor_ui.qrc">
+        <iconset resource="../../../../../res/ui.qrc">
          <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
        </property>
       </widget>
@@ -131,6 +140,12 @@
       <spacer name="findSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
        </property>
       </spacer>
      </item>
@@ -148,7 +163,7 @@
   <tabstop>replaceAllButton</tabstop>
  </tabstops>
  <resources>
-  <include location="../res/Editor_ui.qrc"/>
+  <include location="../../../../../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

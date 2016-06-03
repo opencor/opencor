@@ -15,17 +15,26 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="layout">
-    <property name="margin">
+    <property name="spacing">
      <number>0</number>
     </property>
-    <property name="spacing">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
    </layout>
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../res/FileOrganiserWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/folder-new.png</normaloff>:/oxygen/actions/folder-new.png</iconset>
    </property>
    <property name="text">
@@ -37,7 +46,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="../res/FileOrganiserWindow_ui.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
@@ -49,7 +58,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/FileOrganiserWindow_ui.qrc"/>
+  <include location="../../../../../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>
