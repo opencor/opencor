@@ -344,7 +344,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/ontologicalTerms.html", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/ontologicalTerms.html", fileContents);
 
     mOutputOntologicalTermsTemplate = fileContents;
 

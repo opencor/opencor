@@ -58,17 +58,17 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/modelQualifier.svg", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/modelQualifier.svg", fileContents);
 
     mModelQualifierSvg = fileContents;
 
-    Core::readFileContentsFromFile(":/biologyQualifier.svg", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/biologyQualifier.svg", fileContents);
 
     mBiologyQualifierSvg = fileContents;
 
     // Retrieve our output template
 
-    Core::readFileContentsFromFile(":/qualifierInformation.html", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/qualifierInformation.html", fileContents);
 
     mQualifierInformationTemplate = fileContents;
 
