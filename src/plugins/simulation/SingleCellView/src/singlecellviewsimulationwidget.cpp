@@ -3112,7 +3112,7 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
     static const QIcon RateIcon             = QIcon(":/rate.png");
     static const QIcon StateIcon            = QIcon(":/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/algebraic.png");
-    static const QIcon ErrorNodeIcon        = QIcon(":CellMLSupport_errorNode");
+    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
 
     switch (pParameterType) {
     case CellMLSupport::CellmlFileRuntimeParameter::Voi:

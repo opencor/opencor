@@ -279,8 +279,8 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
         // Create the pixmap that will be associated with the dragging action
 
         QPixmap pixmap((selectedDraggableIndexes.count() == 1)?
-                           ":oxygen/mimetypes/application-x-zerosize.png":
-                           ":oxygen/places/document-multiple.png");
+                           ":/oxygen/mimetypes/application-x-zerosize.png":
+                           ":/oxygen/places/document-multiple.png");
 
         // Create the drag object
 
