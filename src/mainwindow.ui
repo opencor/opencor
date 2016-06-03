@@ -105,7 +105,7 @@
    </property>
    <property name="icon">
     <iconset resource="../res/ui.qrc">
-     <normaloff>:/flags/en.png</normaloff>:/flags/en.png</iconset>
+     <normaloff>:/flags/gb.png</normaloff>:/flags/gb.png</iconset>
    </property>
    <property name="text">
     <string>&amp;English</string>
