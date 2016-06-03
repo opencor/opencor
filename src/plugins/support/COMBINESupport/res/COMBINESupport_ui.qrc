@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-        <file alias="omex.xsd">omex.xsd</file>
+    <qresource prefix="/COMBINESupport">
+        <file>omex.xsd</file>
     </qresource>
 </RCC>

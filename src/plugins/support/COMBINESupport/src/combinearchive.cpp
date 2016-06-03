@@ -332,7 +332,7 @@ bool CombineArchive::isValid()
     QByteArray schemaContents;
 
     Core::readFileContentsFromFile(manifestFileName, manifestContents);
-    Core::readFileContentsFromFile(":omex.xsd", schemaContents);
+    Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
