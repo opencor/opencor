@@ -117,7 +117,7 @@ HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHel
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/helpWindowWidgetError.html", fileContents);
+    Core::readFileContentsFromFile(":/HelpWindow/error.html", fileContents);
 
     mErrorMessageTemplate = fileContents;
 }
