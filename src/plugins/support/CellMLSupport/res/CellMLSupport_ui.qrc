@@ -1,17 +1,17 @@
 <RCC>
-    <qresource prefix="/">
-        <file alias="CellMLSupport_modelNode">modelNode.png</file>
-        <file alias="CellMLSupport_importNode">importNode.png</file>
-        <file alias="CellMLSupport_unitNode">unitNode.png</file>
-        <file alias="CellMLSupport_unitElementNode">unitElementNode.png</file>
-        <file alias="CellMLSupport_componentNode">componentNode.png</file>
-        <file alias="CellMLSupport_variableNode">variableNode.png</file>
-        <file alias="CellMLSupport_modifiableVariableNode">modifiableVariableNode.png</file>
-        <file alias="CellMLSupport_mathmlElementNode">mathmlElementNode.png</file>
-        <file alias="CellMLSupport_groupNode">groupNode.png</file>
-        <file alias="CellMLSupport_relationshipNode">relationshipNode.png</file>
-        <file alias="CellMLSupport_connectionNode">connectionNode.png</file>
-        <file alias="CellMLSupport_metadataNode">metadataNode.png</file>
-        <file>cellmlLogo.png</file>
+    <qresource prefix="/CellMLSupport">
+        <file>modelNode.png</file>
+        <file>importNode.png</file>
+        <file>unitNode.png</file>
+        <file>unitElementNode.png</file>
+        <file>componentNode.png</file>
+        <file>variableNode.png</file>
+        <file>modifiableVariableNode.png</file>
+        <file>mathmlElementNode.png</file>
+        <file>groupNode.png</file>
+        <file>relationshipNode.png</file>
+        <file>connectionNode.png</file>
+        <file>metadataNode.png</file>
+        <file>logo.png</file>
     </qresource>
 </RCC>
