@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-        <file>pmrwindowwidget.html</file>
+    <qresource prefix="/PMRWindow">
+        <file>output.html</file>
     </qresource>
 </RCC>
