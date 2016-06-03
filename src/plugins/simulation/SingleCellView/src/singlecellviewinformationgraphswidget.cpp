@@ -681,7 +681,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
     // Update our parameter property based on whether it corresponds to an
     // existing parameter in our runtime
 
-    static const QIcon BlankIcon   = QIcon(":/blank.png");
+    static const QIcon BlankIcon   = QIcon(":/SingleCellView/blank.png");
     static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
 
     pParameterProperty->setIcon(res?BlankIcon:WarningIcon);
@@ -766,7 +766,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     // Update the status (i.e. icon) of our (section) property
 
-    static const QIcon BlankIcon   = QIcon(":/blank.png");
+    static const QIcon BlankIcon   = QIcon(":/SingleCellView/blank.png");
     static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
 
     pProperty->setIcon(graphOk?BlankIcon:WarningIcon);
