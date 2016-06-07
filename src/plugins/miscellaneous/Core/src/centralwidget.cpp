@@ -193,7 +193,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mLogoView->setStyleSheet("QWidget {"
                              "    background-color: white;"
-                             "    background-image: url(:/logo.png);"
+                             "    background-image: url(:/Core/logo.png);"
                              "    background-position: center;"
                              "    background-repeat: no-repeat;"
                              "}");
