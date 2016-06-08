@@ -507,7 +507,7 @@ void cleanContentMathml(QDomElement pDomElement)
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
         QDomNode attribute = attributes.item(i);
 
-        if (attribute.namespaceURI().compare(MathmlNamespace))
+        if (attribute.localName().compare(attribute.nodeName()))
             nonMathmlAttributes << attribute;
     }
 

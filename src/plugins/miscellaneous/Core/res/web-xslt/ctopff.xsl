@@ -120,11 +120,18 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 </x:template>
 
 <x:template match="m:cn[@type='e-notation']">
-  <mn>
-    <x:apply-templates select="m:sep/preceding-sibling::node()"/>
-    <x:text>E</x:text>
-    <x:apply-templates select="m:sep/following-sibling::node()"/>
-  </mn>
+  <mrow>
+    <mn>
+      <x:apply-templates select="m:sep/preceding-sibling::node()"/>
+    </mn>
+    <mo>&#183;<!-- middle dot --></mo>
+    <msup>
+      <mn>10</mn>
+      <mn>
+        <x:apply-templates select="m:sep/following-sibling::node()"/>
+      </mn>
+    </msup>
+  </mrow>
 </x:template>
 
 <x:template match="m:cn[@type='hexdouble']">
