@@ -413,7 +413,7 @@ QDomElement CellmlTextViewParser::newDerivativeElement(const QString &pF,
 QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
                                                    const QString &pUnit)
 {
-    // Create and return a new identifier element with the given value
+    // Create and return a new number element with the given value
 
     QDomElement numberElement = mDomDocument.createElement("cn");
 
