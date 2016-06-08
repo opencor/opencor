@@ -60,7 +60,8 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "cmeta:id's support by allowing hyphens and periods." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
-                               { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
+                               { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." },
+                               { "type": "Fixed", "description": "Not all the metadata being serialised back." }
                              ]
                            },
                            { "type": "Added", "description": "<a href=\"plugins/editing/RawSEDMLView.html\">Raw SED-ML view</a>." }
