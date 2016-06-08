@@ -510,7 +510,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
     // Note: we are not all initialised yet, so we don't want setAxes() to
     //       replot ourselves...
 
-    setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false);
+    setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false, false);
 
     // Attach a grid to ourselves
 
@@ -957,33 +957,18 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::setAxes(const QRectF &pAxesRect,
-                                                 const bool &pCanReplot,
-                                                 const bool &pEmitSignal)
-{
-    // Set our axes' values
-
-    return setAxes(pAxesRect.left(), pAxesRect.left()+pAxesRect.width(),
-                   pAxesRect.top(), pAxesRect.top()+pAxesRect.height(),
-                   pCanReplot, pEmitSignal);
-}
-
-//==============================================================================
-
 bool SingleCellViewGraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
     // that allow to see all the graphs
 
-    QRectF dRect = dataRect();
+    QRectF axesRect = dataRect().isNull()?
+                          QRectF(DefMinAxis, DefMinAxis,
+                                 DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis):
+                          optimisedRect(dataRect());
 
-    if (dRect == QRectF()) {
-        return setAxes(QRectF(DefMinAxis, DefMinAxis,
-                              DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis),
-                       true, true);
-    } else {
-        return setAxes(optimisedRect(dRect), true, true);
-    }
+    return setAxes(axesRect.left(), axesRect.left()+axesRect.width(),
+                   axesRect.top(), axesRect.top()+axesRect.height());
 }
 
 //==============================================================================
@@ -1041,7 +1026,7 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
     //       of the if() statement below...
 
     if (scaledAxisX || scaledAxisY)
-        setAxes(newMinX, newMaxX, newMinY, newMaxY, true, true);
+        setAxes(newMinX, newMaxX, newMinY, newMaxY);
 }
 
 //==============================================================================
@@ -1097,8 +1082,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         // Set our axes' new values
 
-        setAxes(minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY,
-                true, true);
+        setAxes(minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY);
 
         break;
     }
@@ -1248,8 +1232,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         if (zoomRegion.width() && zoomRegion.height()) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
-                    zoomRegion.top()+zoomRegion.height(), zoomRegion.top(),
-                    true, true);
+                    zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
         }
 
         break;

@@ -2849,7 +2849,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     // Set our axes' values and replot our plot, if needed
 
-    if (pPlot->setAxes(minX, maxX, minY, maxY)) {
+    if (pPlot->setAxes(minX, maxX, minY, maxY, true, false)) {
         return true;
     } else if (pForceReplot) {
         pPlot->replotNow();
