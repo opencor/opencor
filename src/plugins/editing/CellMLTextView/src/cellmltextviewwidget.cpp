@@ -515,8 +515,12 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // Add the metadata to our DOM document
 
             QDomDocument domDocument = mParser.domDocument();
+            QDomElement domElement = domDocument.documentElement();
 
-            domDocument.firstChildElement().appendChild(data->rdfNodes().firstChildElement().cloneNode());
+            for (QDomElement childElement = data->rdfNodes().firstChildElement();
+                 !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+                domElement.appendChild(childElement.cloneNode());
+            }
 
             // Serialise our DOM document
 
