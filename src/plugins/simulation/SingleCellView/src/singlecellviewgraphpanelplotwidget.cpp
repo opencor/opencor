@@ -904,8 +904,9 @@ void SingleCellViewGraphPanelPlotWidget::setAxis(const int &pAxis,
 //==============================================================================
 
 bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
-                                                 double pMinY,double pMaxY,
-                                                 const bool &pCanReplot)
+                                                 double pMinY, double pMaxY,
+                                                 const bool &pCanReplot,
+                                                 const bool &pEmitSignal)
 {
     // Keep track of our axes' old values
 
@@ -945,7 +946,8 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
         alignWithNeighbors(pCanReplot);
 
-        emit axesChanged(pMinX, pMaxX, pMinY, pMaxY);
+        if (pEmitSignal)
+            emit axesChanged(pMinX, pMaxX, pMinY, pMaxY);
 
         return pCanReplot;
     } else {
@@ -956,13 +958,14 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 //==============================================================================
 
 bool SingleCellViewGraphPanelPlotWidget::setAxes(const QRectF &pAxesRect,
-                                                 const bool &pCanReplot)
+                                                 const bool &pCanReplot,
+                                                 const bool &pEmitSignal)
 {
     // Set our axes' values
 
     return setAxes(pAxesRect.left(), pAxesRect.left()+pAxesRect.width(),
                    pAxesRect.top(), pAxesRect.top()+pAxesRect.height(),
-                   pCanReplot);
+                   pCanReplot, pEmitSignal);
 }
 
 //==============================================================================
@@ -976,9 +979,10 @@ bool SingleCellViewGraphPanelPlotWidget::resetAxes()
 
     if (dRect == QRectF()) {
         return setAxes(QRectF(DefMinAxis, DefMinAxis,
-                              DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis));
+                              DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis),
+                       true, true);
     } else {
-        return setAxes(optimisedRect(dRect));
+        return setAxes(optimisedRect(dRect), true, true);
     }
 }
 
@@ -1037,7 +1041,7 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
     //       of the if() statement below...
 
     if (scaledAxisX || scaledAxisY)
-        setAxes(newMinX, newMaxX, newMinY, newMaxY);
+        setAxes(newMinX, newMaxX, newMinY, newMaxY, true, true);
 }
 
 //==============================================================================
@@ -1093,7 +1097,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         // Set our axes' new values
 
-        setAxes(minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY);
+        setAxes(minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY,
+                true, true);
 
         break;
     }
@@ -1243,7 +1248,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         if (zoomRegion.width() && zoomRegion.height()) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
-                    zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
+                    zoomRegion.top()+zoomRegion.height(), zoomRegion.top(),
+                    true, true);
         }
 
         break;

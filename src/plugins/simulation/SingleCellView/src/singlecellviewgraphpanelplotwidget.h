@@ -192,8 +192,10 @@ public:
     double maxY() const;
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 const bool &pCanReplot = true);
-    bool setAxes(const QRectF &pAxesRect, const bool &pCanReplot = true);
+                 const bool &pCanReplot = true,
+                 const bool &pEmitSignal = false);
+    bool setAxes(const QRectF &pAxesRect, const bool &pCanReplot = true,
+                 const bool &pEmitSignal = false);
 
     void drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
                        const qulonglong &pFrom);
