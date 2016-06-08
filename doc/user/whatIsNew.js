@@ -61,6 +61,7 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "cmeta:id's support by allowing hyphens and periods." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." },
+                               { "type": "Fixed", "description": "Serialisation of numbers that have an exponent." },
                                { "type": "Fixed", "description": "Not all the metadata being serialised back." }
                              ]
                            },

@@ -416,8 +416,18 @@ QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
     // Create and return a new number element with the given value
 
     QDomElement numberElement = mDomDocument.createElement("cn");
+    int ePos = pNumber.toUpper().indexOf("E");
 
-    numberElement.appendChild(mDomDocument.createTextNode(pNumber));
+    if (ePos != -1) {
+        numberElement.setAttribute("type", "e-notation");
+
+        numberElement.appendChild(mDomDocument.createTextNode(pNumber.left(ePos)));
+        numberElement.appendChild(mDomDocument.createElement("sep"));
+        numberElement.appendChild(mDomDocument.createTextNode(pNumber.right(pNumber.length()-ePos-1)));
+    } else {
+        numberElement.appendChild(mDomDocument.createTextNode(pNumber));
+    }
+
     numberElement.setAttribute("cellml:units", pUnit);
 
     return numberElement;
