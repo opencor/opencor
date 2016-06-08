@@ -504,15 +504,15 @@ bool CellmlFile::save(const QString &pFileName)
 
     domDocument.setContent(QString::fromStdWString(mModel->serialisedText()));
 
-    QDomElement documentElement = domDocument.documentElement();
+    QDomElement domElement = domDocument.documentElement();
 
-    documentElement.attributes().removeNamedItem("xml:base");
+    domElement.attributes().removeNamedItem("xml:base");
 
-    for (QDomElement childElement = documentElement.firstChildElement();
+    for (QDomElement childElement = domElement.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         if (!childElement.nodeName().compare("rdf:RDF")) {
             if (!childElement.childNodes().count())
-                documentElement.removeChild(childElement);
+                domElement.removeChild(childElement);
 
             break;
         }
@@ -525,7 +525,7 @@ bool CellmlFile::save(const QString &pFileName)
 
     usedCmetaIds.removeDuplicates();
 
-    clearCmetaIdsFromCellmlElement(documentElement, usedCmetaIds);
+    clearCmetaIdsFromCellmlElement(domElement, usedCmetaIds);
 
     // Determine the file name to use for the CellML file
 
