@@ -259,7 +259,7 @@ private:
     SingleCellViewSimulationData *mData;
     SingleCellViewSimulationResults *mResults;
 
-    bool simulationSettingsOk(const bool &pEmitError = true);
+    bool simulationSettingsOk(const bool &pEmitSignal = true);
 
 Q_SIGNALS:
     void running(const bool &pIsResuming);
