@@ -967,7 +967,7 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const QRectF &pAxesRect,
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::resetAxes(const bool &pCanReplot)
+bool SingleCellViewGraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
     // that allow to see all the graphs
@@ -976,10 +976,9 @@ bool SingleCellViewGraphPanelPlotWidget::resetAxes(const bool &pCanReplot)
 
     if (dRect == QRectF()) {
         return setAxes(QRectF(DefMinAxis, DefMinAxis,
-                              DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis),
-                       pCanReplot);
+                              DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis));
     } else {
-        return setAxes(optimisedRect(dRect), pCanReplot);
+        return setAxes(optimisedRect(dRect));
     }
 }
 
