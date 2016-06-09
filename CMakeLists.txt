@@ -374,6 +374,14 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
 )
+SET(PLUGINS
+    thirdParty/libgit2
+    thirdParty/LLVM
+    thirdParty/QScintilla
+    thirdParty/Qwt
+    thirdParty/SUNDIALS
+    thirdParty/zlib
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
