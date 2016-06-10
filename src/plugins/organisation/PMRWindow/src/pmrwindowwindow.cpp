@@ -212,7 +212,7 @@ void PmrWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures,
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposureList &pExposures,
                                        const QString &pErrorMessage,
                                        const bool &pInternetConnectionAvailable)
 {
