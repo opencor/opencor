@@ -59,13 +59,20 @@ QString CellmlFileExporter::errorMessage() const
 bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
                                    const QString &pFileName)
 {
-    // Save the given model, after having reformatted it
+    // Save the given model or ouput it to the console, if no file name has been
+    // provided, and this after having reformatted the given model
 
     QDomDocument domDocument;
 
     domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
 
-    return Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
+    if (pFileName.isEmpty()) {
+        std::wcout << QString(Core::serialiseDomDocument(domDocument)).toStdWString() << std::endl;
+
+        return true;
+    } else {
+        return Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
+    }
 }
 
 //==============================================================================

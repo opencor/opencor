@@ -1,4 +1,3 @@
-
 function [VOI, STATES, ALGEBRAIC, CONSTANTS] = mainFunction()
     % This is the "main function".  In Matlab, things work best if you rename this function to match the filename.
    [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel();
@@ -196,4 +195,3 @@ function strout = strpad(strin)
         strout = [strin, blanks(req_length - insize)];
     end
 end
-

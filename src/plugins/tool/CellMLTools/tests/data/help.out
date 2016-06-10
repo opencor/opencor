@@ -1,7 +1,7 @@
 Commands supported by CellMLTools:
  * Display the commands supported by CellMLTools:
       help
- * Export <in_file> to <out_file> using <predefined_format> as the destination format or <user_defined_format_file> as the file describing the destination format:
-      export <in_file> <out_file> [<predefined_format>|<user_defined_format_file>]
+ * Export <file> to a <predefined_format> or a <user_defined_format_file>:
+      export <file> <predefined_format>|<user_defined_format_file>
    <predefined_format> can take one of the following values:
       cellml_1_0: to export a CellML 1.1 file to CellML 1.0

@@ -33,24 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-void Tests::initTestCase()
-{
-    // Get a temporary file name for our exported file
-
-    mFileName = OpenCOR::Core::temporaryFileName();
-}
-
-//==============================================================================
-
-void Tests::cleanupTestCase()
-{
-    // Delete our exported file
-
-    QFile::remove(mFileName);
-}
-
-//==============================================================================
-
 void Tests::cliHelpTests()
 {
     // Ask for the plugin's help
@@ -72,29 +54,27 @@ void Tests::cliCellmlExportTests()
 {
     // Try to export a CellML 1.0 file to CellML 1.0
 
-    QString inFileName = OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/noble_model_1962.cellml");
+    QString fileName = OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/noble_model_1962.cellml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << mFileName << "cellml_1_0"),
-             QStringList() << "The input file is already a CellML 1.0 file." << QString());
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
+             QStringList() << "The file is already a CellML 1.0 file." << QString());
 
     // Export a CellML 1.1 file to CellML 1.0
 
-    inFileName = OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/experiments/periodic-stimulus.xml");
+    fileName = OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/experiments/periodic-stimulus.xml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << mFileName << "cellml_1_0"),
-             QStringList() << QString());
-    QCOMPARE(OpenCOR::fileContents(mFileName),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/cellml_1_0_export.out")));
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
 
     // Try to export a non-existing CellML file to CellML 1.0
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_input_file" << mFileName << "cellml_1_0"),
-             QStringList() << "The input file could not be found." << QString());
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << "cellml_1_0"),
+             QStringList() << "The file could not be found." << QString());
 
     // Try to export to a user-defined format, which file description doesn't
     // exist
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << mFileName << "non_existing_user_defined_format_file"),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "non_existing_user_defined_format_file"),
              QStringList() << "The user-defined format file could not be found." << QString());
 
     // Try to export a local file to a user-defined format, which file
@@ -102,13 +82,10 @@ void Tests::cliCellmlExportTests()
 
     QString userDefinedFormatFileName = OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/user_defined_format.xml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << mFileName << userDefinedFormatFileName),
-             QStringList() << QString());
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << userDefinedFormatFileName),
 #ifdef Q_OS_WIN
-    QCOMPARE(OpenCOR::fileContents(mFileName),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/user_defined_format_export_on_windows.out")));
 #else
-    QCOMPARE(OpenCOR::fileContents(mFileName),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/user_defined_format_export_on_non_windows.out")));
 #endif
 }
