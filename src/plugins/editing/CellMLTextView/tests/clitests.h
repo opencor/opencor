@@ -34,8 +34,8 @@ class CliTests : public QObject
 
 private Q_SLOTS:
     void helpTests();
-    void exportTests();
     void importTests();
+    void exportTests();
 };
 
 //==============================================================================

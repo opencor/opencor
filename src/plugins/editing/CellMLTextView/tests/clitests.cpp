@@ -50,18 +50,46 @@ void CliTests::helpTests()
 
 //==============================================================================
 
-void CliTests::exportTests()
+void CliTests::importTests()
 {
-    // Export the Noble 1962 model to the CellML Text format
+    // Try to import a non-existing file
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("models/noble_model_1962.cellml")),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << "non_existing_file"),
+             QStringList() << "The file could not be found." << QString());
+
+    // Try to import a non CellML file
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")),
+             QStringList() << "The file could not be imported:" << " [1:1] Error occurred while parsing element." << QString());
+
+    // Import the Noble 1962 model to the CellML Text format
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("models/noble_model_1962.cellml")),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")));
 }
 
 //==============================================================================
 
-void CliTests::importTests()
+void CliTests::exportTests()
 {
+    // Try to export a non-existing file
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << "non_existing_file"),
+             QStringList() << "The file could not be found." << QString());
+
+    // Try to export a non CellML Text file
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("models/noble_model_1962.cellml")),
+             QStringList() << "The file could not be exported:" << " [1:1] 'def' is expected, but '<' was found instead." << QString());
+
+    // Export the CellML Text version of the Noble 1962 model to CellML
+
+    QString expectedOutput = OpenCOR::fileContents(OpenCOR::fileName("models/noble_model_1962.cellml")).join("\n");
+
+    expectedOutput.replace("cellml/1.0#", "cellml/1.1#");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")),
+             expectedOutput.split("\n"));
 }
 
 //==============================================================================

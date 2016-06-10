@@ -394,25 +394,9 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 // Plugin specific
 //==============================================================================
 
-void CellMLTextViewPlugin::runHelpCommand()
+int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
+                                       const bool &pImport)
 {
-    // Output the commands we support
-
-    std::cout << "Commands supported by CellMLTextView:" << std::endl;
-    std::cout << " * Display the commands supported by CellMLTextView:" << std::endl;
-    std::cout << "      help" << std::endl;
-    std::cout << " * Export the CellML <file> to the CellML Text format:" << std::endl;
-    std::cout << "      export <file>" << std::endl;
-    std::cout << " * Import the CellML Text <file> to CellML:" << std::endl;
-    std::cout << "      import <file>" << std::endl;
-}
-
-//==============================================================================
-
-int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
-{
-    // Export an existing file to the console using the CellML Text format
-
     // Make sure that we have the correct number of arguments
 
     if (pArguments.count() != 1) {
@@ -436,21 +420,41 @@ int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
         if (!QFile::exists(fileNameOrUrl))
             errorMessage = "The file could not be found.";
         else if (!Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-            errorMessage = QString("The file could not be opened.");
+            errorMessage = "The file could not be opened.";
     } else {
         if (!Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage))
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
     }
 
-    // At this stage, we should have the contents of the file, so we can export
-    // it to the CellML Text format
+    // At this stage, we have the contents of the file, so we can do the
+    // import/export
 
     if (errorMessage.isEmpty()) {
-        OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
+        if (pImport) {
+            OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
-        converter.execute(fileContents);
+            if (!converter.execute(fileContents))
+                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
+                                                                                       .arg(converter.errorColumn())
+                                                                                       .arg(Core::formatMessage(converter.errorMessage(), false));
+            else
+                std::cout << converter.output().toUtf8().constData();
+        } else {
+            OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
-        std::cout << converter.output().toUtf8().constData();
+            if (!parser.execute(fileContents, OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1)) {
+                errorMessage = "The file could not be exported:";
+
+                foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
+                    if (message.type() == CellmlTextViewParserMessage::Error)
+                        errorMessage += QString("\n [%1:%2] %3").arg(message.line())
+                                                                .arg(message.column())
+                                                                .arg(message.message());
+                }
+            } else {
+                std::cout << QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
+            }
+        }
     }
 
     // Let the user know if something went wrong at some point and then leave
@@ -466,10 +470,35 @@ int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
 
 //==============================================================================
 
+void CellMLTextViewPlugin::runHelpCommand()
+{
+    // Output the commands we support
+
+    std::cout << "Commands supported by CellMLTextView:" << std::endl;
+    std::cout << " * Display the commands supported by CellMLTextView:" << std::endl;
+    std::cout << "      help" << std::endl;
+    std::cout << " * Export the CellML Text <file> to CellML:" << std::endl;
+    std::cout << "      export <file>" << std::endl;
+    std::cout << " * Import the CellML <file> to the CellML Text format:" << std::endl;
+    std::cout << "      import <file>" << std::endl;
+}
+
+//==============================================================================
+
 int CellMLTextViewPlugin::runImportCommand(const QStringList &pArguments)
 {
-Q_UNUSED(pArguments);
-    return 0;
+    // Export an existing CellML Text file to CellML on the console
+
+    return importExport(pArguments, true);
+}
+
+//==============================================================================
+
+int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
+{
+    // Export an existing CellML file to CellML Text format on the console
+
+    return importExport(pArguments, false);
 }
 
 //==============================================================================
