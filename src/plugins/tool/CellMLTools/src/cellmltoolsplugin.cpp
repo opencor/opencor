@@ -329,11 +329,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
     QString fileName = fileNameOrUrl;
 
-    if (isLocalFile) {
-        // We are dealing with a local file, so just update inFileName
-
-        fileName = fileNameOrUrl;
-    } else {
+    if (!isLocalFile) {
         // We are dealing with a remote file, so try to get a local copy of it
 
         QByteArray fileContents;
