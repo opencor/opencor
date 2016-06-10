@@ -33,8 +33,8 @@ class Tests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void cliHelpTests();
-    void cliCellmlExportTests();
+    void helpTests();
+    void exportTests();
 };
 
 //==============================================================================

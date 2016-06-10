@@ -33,7 +33,7 @@ limitations under the License.
 
 //==============================================================================
 
-void Tests::cliHelpTests()
+void Tests::helpTests()
 {
     // Ask for the plugin's help
 
@@ -50,7 +50,7 @@ void Tests::cliHelpTests()
 
 //==============================================================================
 
-void Tests::cliCellmlExportTests()
+void Tests::exportTests()
 {
     // Try to export a CellML 1.0 file to CellML 1.0
 
