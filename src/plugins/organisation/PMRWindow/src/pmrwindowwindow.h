@@ -91,7 +91,7 @@ private Q_SLOTS:
 
     void retrieveExposuresList(const bool &pVisible);
 
-    void initializeWidget(const PMRSupport::PmrExposures &pExposures,
+    void initializeWidget(const PMRSupport::PmrExposureList &pExposureList,
                           const QString &pErrorMessage,
                           const bool &pInternetConnectionAvailable);
 

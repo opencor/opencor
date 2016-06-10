@@ -265,7 +265,7 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
     bool internetConnectionAvailable = true;
     QString errorMessage = QString();
     QString informationMessage = QString();
-    PmrExposures exposures = PmrExposures();
+    PmrExposureList exposureList = PmrExposureList();
     QString workspaceUrl = QString();
     QStringList exposureFileUrls = QStringList();
     QString exposureUrl = QString();
@@ -334,12 +334,12 @@ if (pmrRequest != ExposuresList) qDebug() << "JSON: " << jsonDocument.toJson(QJs
                                 && !exposureName.isEmpty()) {
                                 mExposureNames.insert(exposureUrl, exposureName);
 
-                                exposures.add(exposureUrl, exposureName);
+                                exposureList.add(exposureUrl, exposureName, this);
                             }
                         }
                     }
 
-                    std::sort(exposures.begin(), exposures.end(),
+                    std::sort(exposureList.begin(), exposureList.end(),
                               PmrExposure::compare);
 
                     break;
@@ -548,7 +548,7 @@ qDebug() << uncompressedData;
     case ExposuresList:
         // Respond with a list of exposures
 
-        emit exposuresList(exposures, errorMessage, internetConnectionAvailable);
+        emit exposuresList(exposureList, errorMessage, internetConnectionAvailable);
 
         break;
     case ExposureInformation:

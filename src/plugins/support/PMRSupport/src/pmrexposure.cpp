@@ -29,7 +29,15 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrExposure::PmrExposure(const QString &pUrl, const QString &pName) :
+PmrExposure::PmrExposure(QObject *parent) :
+    QObject(parent)
+{
+}
+
+//==============================================================================
+
+PmrExposure::PmrExposure(const QString &pUrl, const QString &pName, QObject *parent) :
+    QObject(parent),
     mUrl(pUrl),
     mName(pName)
 {
@@ -65,14 +73,14 @@ QString PmrExposure::name() const
 
 //==============================================================================
 
-PmrExposures::PmrExposures() :
+PmrExposureList::PmrExposureList() :
     QList<PmrExposure *>()
 {
 }
 
 //==============================================================================
 
-PmrExposures::~PmrExposures()
+PmrExposureList::~PmrExposureList()
 {
     // Delete the list of exposures
 
@@ -82,11 +90,11 @@ PmrExposures::~PmrExposures()
 
 //==============================================================================
 
-void PmrExposures::add(const QString &pUrl, const QString &pName)
+void PmrExposureList::add(const QString &pUrl, const QString &pName, QObject *parent)
 {
     // Add a new exposure to the list
 
-    QList::append(new PmrExposure(pUrl, pName));
+    QList::append(new PmrExposure(pUrl, pName, parent));
 }
 
 //==============================================================================

@@ -115,7 +115,7 @@ Q_SIGNALS:
     void warning(const QString &pMessage);
     void information(const QString &pMessage);
 
-    void exposuresList(const PMRSupport::PmrExposures &pExposures,
+    void exposuresList(const PMRSupport::PmrExposureList &pExposureList,
                        const QString &pErrorMessage,
                        const bool &pInternetConnectionAvailable);
 

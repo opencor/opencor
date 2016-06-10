@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
 #include <QList>
 #include <QString>
 
@@ -38,10 +39,13 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposure
+class PMRSUPPORT_EXPORT PmrExposure : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit PmrExposure(const QString &pUrl, const QString &pName);
+    explicit PmrExposure(QObject *parent=0);
+    PmrExposure(const QString &pUrl, const QString &pName, QObject *parent);
 
     static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
 
@@ -55,13 +59,13 @@ private:
 
 //==============================================================================
 
-class PmrExposures : public QList<PmrExposure *>
+class PmrExposureList : public QList<PmrExposure *>
 {
 public:
-    PmrExposures();
-    virtual ~PmrExposures();
+    PmrExposureList();
+    virtual ~PmrExposureList();
 
-    void add(const QString &pUrl, const QString &pName);
+    void add(const QString &pUrl, const QString &pName, QObject *parent);
 };
 
 //==============================================================================

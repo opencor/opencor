@@ -157,7 +157,7 @@ QString PmrWindowWidget::message() const
 
 //==============================================================================
 
-void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
+void PmrWindowWidget::initialize(const PMRSupport::PmrExposureList &pExposureList,
                                  const QString &pErrorMessage,
                                  const QString &pFilter,
                                  const bool &pInternetConnectionAvailable)
@@ -179,9 +179,9 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
     mNumberOfFilteredExposures = 0;
 
-    for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
-        QString exposureUrl = pExposures[i]->url();
-        QString exposureName = pExposures[i]->name();
+    for (int i = 0, iMax = pExposureList.count(); i < iMax; ++i) {
+        QString exposureUrl = pExposureList[i]->url();
+        QString exposureName = pExposureList[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
 
         exposures += "<tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"

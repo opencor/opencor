@@ -56,7 +56,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PMRSupport::PmrExposures &pExposures,
+    void initialize(const PMRSupport::PmrExposureList &pExposureList,
                     const QString &pErrorMessage, const QString &pFilter,
                     const bool &pInternetConnectionAvailable);
 

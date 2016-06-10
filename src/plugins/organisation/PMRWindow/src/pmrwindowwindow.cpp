@@ -100,8 +100,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposures &, const QString &, const bool &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &, const QString &, const bool &)));
+    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &, const QString &, const bool &)),
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposureList &, const QString &, const bool &)));
 
     connect(mPmrRepository, SIGNAL(addExposureFiles(const QString &, const QStringList &)),
             mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
