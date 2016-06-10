@@ -57,7 +57,7 @@ class PMRSUPPORT_EXPORT PmrRepository : public QObject
     Q_OBJECT
 
 public:
-    static PmrRepository *newPmrRepository();
+    static PmrRepository *instance();
     ~PmrRepository();
 
     QString url(void) const;

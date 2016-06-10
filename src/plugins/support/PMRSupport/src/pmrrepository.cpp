@@ -96,20 +96,14 @@ PmrRepository::~PmrRepository()
 
 //==============================================================================
 
-QMutex repositoryLock;
-
-PmrRepository *PmrRepository::newPmrRepository()
+PmrRepository *PmrRepository::instance()
 {
-    PmrRepository *repository;
-    repositoryLock.lock();
-    QVariant singleton = qApp->property("PmrRepository");
-    if (singleton.isValid()) repository = singleton.value<PmrRepository *>();
-    else {
-        repository = new PmrRepository();
-        qApp->setProperty("PmrRepository", qVariantFromValue(repository));
-    }
-    repositoryLock.unlock();
-    return repository;
+    // Return the 'global' instance of our PMR repository class
+
+    static PmrRepository instance;
+
+    return static_cast<PmrRepository *>(Core::globalInstance("OpenCOR::PMRSupport::PmrRepository::instance()",
+                                                       &instance));
 }
 
 //==============================================================================

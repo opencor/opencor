@@ -86,9 +86,9 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveExposuresList(const bool &)));
 
-    // Create and add the PMR repository
+    // Get the global PMR repository
 
-    mPmrRepository = PMRSupport::PmrRepository::newPmrRepository();
+    mPmrRepository = PMRSupport::PmrRepository::instance();
 
     // Some connections to process responses from the PMR repository
 
@@ -128,10 +128,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 PmrWindowWindow::~PmrWindowWindow()
 {
-    // Delete our PMR repository
-
-    delete mPmrRepository;
-
     // Delete the GUI
 
     delete mGui;
