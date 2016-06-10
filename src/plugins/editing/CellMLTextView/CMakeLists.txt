@@ -40,6 +40,7 @@ ADD_PLUGIN(CellMLTextView
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
+        clitests
         conversiontests
         parsingtests
         scanningtests

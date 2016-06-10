@@ -47,7 +47,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
 
-    return new PluginInfo("Editing", true, false,
+    return new PluginInfo("Editing", true, true,
                           QStringList() << "CoreCellMLEditing",
                           descriptions);
 }
@@ -75,6 +75,38 @@ bool CellMLTextViewPlugin::validCellml(const QString &pFileName,
     pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
 
     return mViewWidget->validate(pFileName);
+}
+
+//==============================================================================
+// CLI interface
+//==============================================================================
+
+int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
+                                         const QStringList &pArguments)
+{
+    // Run the given CLI command
+
+    if (!pCommand.compare("help")) {
+        // Display the commands that we support
+
+        runHelpCommand();
+
+        return 0;
+    } else if (!pCommand.compare("export")) {
+        // Export a CellML file to our CellML Text view format
+
+        return runExportCommand(pArguments);
+    } else if (!pCommand.compare("import")) {
+        // Import a CellML Text view file to CellML
+
+        return runImportCommand(pArguments);
+    } else {
+        // Not a CLI command that we support
+
+        runHelpCommand();
+
+        return -1;
+    }
 }
 
 //==============================================================================
@@ -356,6 +388,39 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
     static const QIcon NoIcon = QIcon();
 
     return NoIcon;
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void CellMLTextViewPlugin::runHelpCommand()
+{
+    // Output the commands we support
+
+    std::cout << "Commands supported by CellMLTextView:" << std::endl;
+    std::cout << " * Display the commands supported by CellMLTextView:" << std::endl;
+    std::cout << "      help" << std::endl;
+    std::cout << " * Export the CellML <file> to the CellML Text format:" << std::endl;
+    std::cout << "      export <file>" << std::endl;
+    std::cout << " * Import the CellML Text <file> to CellML:" << std::endl;
+    std::cout << "      import <file>" << std::endl;
+}
+
+//==============================================================================
+
+int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
+{
+Q_UNUSED(pArguments);
+    return 0;
+}
+
+//==============================================================================
+
+int CellMLTextViewPlugin::runImportCommand(const QStringList &pArguments)
+{
+Q_UNUSED(pArguments);
+    return 0;
 }
 
 //==============================================================================
