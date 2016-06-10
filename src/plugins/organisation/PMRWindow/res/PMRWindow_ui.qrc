@@ -4,6 +4,6 @@
         <file>oxygen/actions/edit-copy.png</file>
         <file>oxygen/actions/view-refresh.png</file>
         <file>oxygen/places/folder-downloads.png</file>
-        <file>output.html</file>
+        <file>pmrwindowwidget.html</file>
     </qresource>
 </RCC>
