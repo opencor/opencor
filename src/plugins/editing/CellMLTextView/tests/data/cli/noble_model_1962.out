@@ -1,0 +1,200 @@
+def model noble_model_1962 as
+    def unit millisecond as
+        unit second {pref: milli};
+    enddef;
+
+    def unit per_millisecond as
+        unit millisecond {expo: -1};
+    enddef;
+
+    def unit millivolt as
+        unit volt {pref: milli};
+    enddef;
+
+    def unit per_millivolt as
+        unit volt {pref: milli, expo: -1};
+    enddef;
+
+    def unit per_millivolt_millisecond as
+        unit millivolt {expo: -1};
+        unit millisecond {expo: -1};
+    enddef;
+
+    def unit milliS_per_cm2 as
+        unit siemens {pref: milli};
+        unit metre {pref: centi, expo: -2};
+    enddef;
+
+    def unit microF_per_cm2 as
+        unit farad {pref: micro};
+        unit metre {pref: centi, expo: -2};
+    enddef;
+
+    def unit microA_per_cm2 as
+        unit ampere {pref: micro};
+        unit metre {pref: centi, expo: -2};
+    enddef;
+
+    def comp environment as
+        var time: millisecond {pub: out};
+    enddef;
+
+    def comp membrane as
+        var V: millivolt {init: -87, pub: out};
+        var Cm: microF_per_cm2 {init: 12};
+        var time: millisecond {pub: in};
+        var i_Na: microA_per_cm2 {pub: in};
+        var i_K: microA_per_cm2 {pub: in};
+        var i_Leak: microA_per_cm2 {pub: in};
+
+        ode(V, time) = -(i_Na+i_K+i_Leak)/Cm;
+    enddef;
+
+    def comp sodium_channel as
+        var i_Na: microA_per_cm2 {pub: out};
+        var g_Na_max: milliS_per_cm2 {init: 400};
+        var g_Na: milliS_per_cm2;
+        var E_Na: millivolt {init: 40};
+        var time: millisecond {pub: in, priv: out};
+        var V: millivolt {pub: in, priv: out};
+        var m: dimensionless {priv: in};
+        var h: dimensionless {priv: in};
+
+        g_Na = pow(m, 3{dimensionless})*h*g_Na_max;
+        i_Na = (g_Na+0.14{milliS_per_cm2})*(V-E_Na);
+    enddef;
+
+    def comp sodium_channel_m_gate as
+        var m: dimensionless {init: 0.01, pub: out};
+        var alpha_m: per_millisecond;
+        var beta_m: per_millisecond;
+        var V: millivolt {pub: in};
+        var time: millisecond {pub: in};
+
+        alpha_m = 0.1{per_millivolt_millisecond}*(-V-48{millivolt})/(exp((-V-48{millivolt})/15{millivolt})-1{dimensionless});
+        beta_m = 0.12{per_millivolt_millisecond}*(V+8{millivolt})/(exp((V+8{millivolt})/5{millivolt})-1{dimensionless});
+        ode(m, time) = alpha_m*(1{dimensionless}-m)-beta_m*m;
+    enddef;
+
+    def comp sodium_channel_h_gate as
+        var h: dimensionless {init: 0.8, pub: out};
+        var alpha_h: per_millisecond;
+        var beta_h: per_millisecond;
+        var V: millivolt {pub: in};
+        var time: millisecond {pub: in};
+
+        alpha_h = 0.17{per_millisecond}*exp((-V-90{millivolt})/20{millivolt});
+        beta_h = 1{per_millisecond}/(1{dimensionless}+exp((-V-42{millivolt})/10{millivolt}));
+        ode(h, time) = alpha_h*(1{dimensionless}-h)-beta_h*h;
+    enddef;
+
+    def comp potassium_channel as
+        var i_K: microA_per_cm2 {pub: out};
+        var g_K1: milliS_per_cm2;
+        var g_K2: milliS_per_cm2;
+        var time: millisecond {pub: in, priv: out};
+        var V: millivolt {pub: in, priv: out};
+        var n: dimensionless {priv: in};
+
+        i_K = (g_K1+g_K2)*(V+100{millivolt});
+        g_K1 = 1.2{milliS_per_cm2}*exp((-V-90{millivolt})/50{millivolt})+0.015{milliS_per_cm2}*exp((V+90{millivolt})/60{millivolt});
+        g_K2 = 1.2{milliS_per_cm2}*pow(n, 4{dimensionless});
+    enddef;
+
+    def comp potassium_channel_n_gate as
+        var n: dimensionless {init: 0.01, pub: out};
+        var alpha_n: per_millisecond;
+        var beta_n: per_millisecond;
+        var V: millivolt {pub: in};
+        var time: millisecond {pub: in};
+
+        alpha_n = 0.0001{per_millivolt_millisecond}*(-V-50{millivolt})/(exp((-V-50{millivolt})/10{millivolt})-1{dimensionless});
+        beta_n = 0.002{per_millisecond}*exp((-V-90{millivolt})/80{millivolt});
+        ode(n, time) = alpha_n*(1{dimensionless}-n)-beta_n*n;
+    enddef;
+
+    def comp leakage_current as
+        var i_Leak: microA_per_cm2 {pub: out};
+        var g_L: milliS_per_cm2 {init: 0.075};
+        var E_L: millivolt {init: -60};
+        var time: millisecond {pub: in};
+        var V: millivolt {pub: in};
+
+        i_Leak = g_L*(V-E_L);
+    enddef;
+
+    def group as containment for
+        comp membrane incl
+            comp sodium_channel incl
+                comp sodium_channel_m_gate;
+                comp sodium_channel_h_gate;
+            endcomp;
+
+            comp potassium_channel incl
+                comp potassium_channel_n_gate;
+            endcomp;
+
+            comp leakage_current;
+        endcomp;
+    enddef;
+
+    def group as encapsulation for
+        comp sodium_channel incl
+            comp sodium_channel_m_gate;
+            comp sodium_channel_h_gate;
+        endcomp;
+
+        comp potassium_channel incl
+            comp potassium_channel_n_gate;
+        endcomp;
+    enddef;
+
+    def map between membrane and environment for
+        vars time and time;
+    enddef;
+
+    def map between sodium_channel and environment for
+        vars time and time;
+    enddef;
+
+    def map between potassium_channel and environment for
+        vars time and time;
+    enddef;
+
+    def map between leakage_current and environment for
+        vars time and time;
+    enddef;
+
+    def map between membrane and sodium_channel for
+        vars V and V;
+        vars i_Na and i_Na;
+    enddef;
+
+    def map between membrane and potassium_channel for
+        vars V and V;
+        vars i_K and i_K;
+    enddef;
+
+    def map between membrane and leakage_current for
+        vars V and V;
+        vars i_Leak and i_Leak;
+    enddef;
+
+    def map between sodium_channel and sodium_channel_m_gate for
+        vars m and m;
+        vars time and time;
+        vars V and V;
+    enddef;
+
+    def map between sodium_channel and sodium_channel_h_gate for
+        vars h and h;
+        vars time and time;
+        vars V and V;
+    enddef;
+
+    def map between potassium_channel and potassium_channel_n_gate for
+        vars n and n;
+        vars time and time;
+        vars V and V;
+    enddef;
+enddef;

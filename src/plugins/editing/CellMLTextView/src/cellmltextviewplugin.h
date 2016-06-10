@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "cellmleditinginterface.h"
+#include "cliinterface.h"
 #include "editinginterface.h"
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
@@ -48,7 +49,7 @@ class CellmlTextViewWidget;
 //==============================================================================
 
 class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
-                             public EditingInterface,
+                             public CliInterface, public EditingInterface,
                              public FileHandlingInterface,
                              public I18nInterface, public PluginInterface,
                              public ViewInterface
@@ -58,6 +59,7 @@ class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLTextViewPlugin" FILE "cellmltextviewplugin.json")
 
     Q_INTERFACES(OpenCOR::CellmlEditingInterface)
+    Q_INTERFACES(OpenCOR::CliInterface)
     Q_INTERFACES(OpenCOR::EditingInterface)
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
@@ -66,6 +68,7 @@ class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
 
 public:
 #include "cellmleditinginterface.inl"
+#include "cliinterface.inl"
 #include "editinginterface.inl"
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
@@ -74,6 +77,12 @@ public:
 
 private:
     CellmlTextViewWidget *mViewWidget;
+
+    int importExport(const QStringList &pArguments, const bool &pImport);
+
+    void runHelpCommand();
+    int runImportCommand(const QStringList &pArguments);
+    int runExportCommand(const QStringList &pArguments);
 };
 
 //==============================================================================
