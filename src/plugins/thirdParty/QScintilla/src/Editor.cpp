@@ -1677,9 +1677,7 @@ void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 				NeedWrapping(cs.DocFromDisplay(topLine));
 			}
 		}
-/*---OPENCOR---
 		return;
-*/
 	}
 
 	view.PaintText(surfaceWindow, *this, rcArea, rcClient, vs);
