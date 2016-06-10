@@ -63,7 +63,6 @@ class PmrExposureList : public QList<PmrExposure *>
 {
 public:
     PmrExposureList();
-    virtual ~PmrExposureList();
 
     void add(const QString &pUrl, const QString &pName, QObject *parent);
 };

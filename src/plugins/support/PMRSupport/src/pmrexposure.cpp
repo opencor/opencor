@@ -80,16 +80,6 @@ PmrExposureList::PmrExposureList() :
 
 //==============================================================================
 
-PmrExposureList::~PmrExposureList()
-{
-    // Delete the list of exposures
-
-    while (!isEmpty())
-        delete takeFirst();
-}
-
-//==============================================================================
-
 void PmrExposureList::add(const QString &pUrl, const QString &pName, QObject *parent)
 {
     // Add a new exposure to the list

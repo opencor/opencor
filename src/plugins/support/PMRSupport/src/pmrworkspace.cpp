@@ -136,16 +136,6 @@ PmrWorkspaceList::PmrWorkspaceList() :
 
 //==============================================================================
 
-PmrWorkspaceList::~PmrWorkspaceList()
-{
-    // Delete the list of workspaces
-
-    while (!isEmpty())
-        delete takeFirst();
-}
-
-//==============================================================================
-
 void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, QObject *parent)
 {
     // Add a new workspace to the list

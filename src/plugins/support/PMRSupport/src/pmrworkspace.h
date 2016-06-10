@@ -80,7 +80,6 @@ class PmrWorkspaceList : public QList<PmrWorkspace *>
 {
 public:
     PmrWorkspaceList();
-    virtual ~PmrWorkspaceList();
 
     void add(const QString &pUrl, const QString &pName, QObject *parent);
 };
