@@ -82,10 +82,11 @@ void Tests::exportTests()
 
     QString userDefinedFormatFileName = OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/user_defined_format.xml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << userDefinedFormatFileName),
 #ifdef Q_OS_WIN
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << userDefinedFormatFileName),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/user_defined_format_export_on_windows.out")));
 #else
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << userDefinedFormatFileName),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tool/CellMLTools/tests/data/user_defined_format_export_on_non_windows.out")));
 #endif
 }
