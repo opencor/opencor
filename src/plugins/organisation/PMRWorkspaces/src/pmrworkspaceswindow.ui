@@ -62,7 +62,7 @@
   <action name="actionNew">
    <property name="icon">
     <iconset resource="../res/PmrWorkspaces_ui.qrc">
-     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+     <normaloff>:/oxygen/actions/list-add1.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
     <string>New workspace</string>

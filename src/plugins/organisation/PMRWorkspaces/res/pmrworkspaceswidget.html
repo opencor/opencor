@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+        <style type="text/css">
+            body {
+                -webkit-user-select: none;
+                font-family: arial, sans-serif;
+                font-size: 10pt;
+                cursor: default;
+            }
+
+            a {
+                outline: 0px;
+                color: rgb(54, 96, 146);
+                text-decoration: none;
+            }
+
+            a:visited {
+                color: rgb(54, 96, 146);
+            }
+
+            a:hover {
+                margin: -1px;
+                border: 1px solid rgba(54, 96, 146, 0.13);
+                background-color: rgba(54, 96, 146, 0.05);
+                color: rgb(54, 96, 146);
+            }
+
+            a.noHover:hover {
+                margin: 0px;
+                border: 0px;
+                background: rgba(255, 255, 255, 0);
+            }
+
+/* NEW */
+            td.action img,
+            td.icon img,
+            td.status img {
+                margin-bottom: -4px;
+                margin-right: 6px;
+            }
+
+              td.action {
+                width: 30px;
+              }
+              td.icon {
+                width: 20px;
+              }
+              td.status {
+                width: 50px;
+              }
+
+
+              table {
+                border-spacing: 0px;
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+              }
+
+              table,
+              td,
+              tr {
+                margin: 0;
+                padding: 0;
+              }
+
+              td {
+                vertical-align: top;
+                padding-bottom: 6px;
+              }
+
+              td:last-child,
+              tr.folder td,
+              tr.packer td,
+              tr.workspace td,
+                padding-bottom: 0;
+              }
+
+              td.action,
+              td.icon,
+              td.status {
+                padding-left: 5px;
+                width: 30px;
+              }
+
+              td.name {
+                width: 100%;
+              }
+
+              tr.packer {
+                font-size: 1px;
+                line-height: 0;
+              }
+
+              tr.workspace {
+                background-color: #DDD;
+                border-bottom: 4px solid white;
+              }
+/* END NEW */
+
+            img.button {
+                position: relative;
+                top: 1px;
+                margin-left: 4px;
+                border: 1px solid rgb(213, 213, 213);
+                border-radius: 5px;
+                padding: 2px;
+                background: linear-gradient(rgb(252, 252, 252), rgb(238, 238, 238));
+                cursor: default;
+            }
+
+            img.button:hover {
+                border: 1px solid rgb(221, 221, 221);
+                background: linear-gradient(rgb(238, 238, 238), rgb(221, 221, 221));
+            }
+
+            img.button:active {
+                border: 1px solid rgb(181, 181, 181);
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+            }
+
+            img.downButton {
+                position: relative;
+                top: 1px;
+                margin-left: 4px;
+                border: 1px solid rgb(181, 181, 181);
+                border-radius: 5px;
+                padding: 2px;
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+                cursor: default;
+            }
+
+            img.about {
+                content: url("%1");
+            }
+
+            img.clone {
+                content: url("%2");
+            }
+
+            img.close {
+                content: url("%3");
+            }
+            img.open {
+                content: url("%4");
+            }
+        </style>
+    </head>
+    <body ondragstart="return false;" ondrop="return false;">
+        <table class="fullWidth">
+            <tbody id="workspaces">
+                <tr class="packer">
+                  <td class="icon"><img /></td>
+                  <td class="name"></td>
+                  <td class="status"><img /></td>
+                  <td class="action"><img /></td>
+                </tr>
+                %5
+            </tbody>
+        </table>
+    </body>
+</html>

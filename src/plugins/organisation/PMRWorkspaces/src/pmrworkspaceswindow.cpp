@@ -54,7 +54,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Create an instance of the Physiome Model Repository that we are viewing
 
-    mPmrRepository = PMRSupport::PmrRepository::newPmrRepository();
+    mPmrRepository = PMRSupport::PmrRepository::instance();
 
     // Create a tool bar widget with different buttons
 
@@ -102,8 +102,8 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     // Some connections to process responses from the PMR repository
 
     connect(mPmrRepository, SIGNAL(authenticated(const bool &)), this, SLOT(updateAuthenticationStatus(const bool &)));
-    connect(mPmrRepository, SIGNAL(workspacesList(const PMRSupport::PmrWorkspaces &)),
-            mWorkspacesWidget, SLOT(displayWorkspaces(const PMRSupport::PmrWorkspaces &)));
+    connect(mPmrRepository, SIGNAL(workspacesList(const PMRSupport::PmrWorkspaceList &)),
+            mWorkspacesWidget, SLOT(initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &)));
 
     // Some connections to update our state
 
@@ -160,7 +160,7 @@ void PmrWorkspacesWindow::saveSettings(QSettings *pSettings) const
 
 void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
 {
-  Q_UNUSED(pAuthenticated)
+    // Show authentication state and allow workspace creation if authenticated
 
     if (pAuthenticated) {
         mGui->actionAuthenticate->setVisible(false);

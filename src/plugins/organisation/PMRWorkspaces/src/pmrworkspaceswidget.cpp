@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // PMR Workspaces widget
 //==============================================================================
 
-#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "pmrrepository.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswidget.h"
@@ -31,12 +31,13 @@ specific language governing permissions and limitations under the License.
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QHelpEvent>
-#include <QMimeData>
-#include <QModelIndex>
-#include <QPainter>
 #include <QSettings>
-#include <QTextDocument>
+#include <QStandardPaths>
 #include <QUrl>
+
+//==============================================================================
+
+#include "git2.h"
 
 //==============================================================================
 
@@ -45,476 +46,384 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-static QString TypeWorkspace = "Workspace";
-
-static const auto ItemTypeRole = Qt::UserRole + 1;
-static const auto WorkspaceUrlRole = Qt::UserRole + 2;
-
-//==============================================================================
-
-PmrWorkspacesItemDelegate::PmrWorkspacesItemDelegate(PmrWorkspacesWidget *pWidget, QObject *parent) :
-   QStyledItemDelegate(parent), mWidget(pWidget)
-{
-}
-
-//==============================================================================
-
-// Following is based on http://stackoverflow.com/questions/4371829/qt-qtreeview-wordwrap-not-working
-
-void PmrWorkspacesItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    if (index.data(ItemTypeRole).value<QString>() != TypeWorkspace) {
-        QStyledItemDelegate::paint(painter, option, index);
-    }
-    else {
-        QString text = index.data(Qt::DisplayRole).value<QString>();
-        QTextDocument *document = new QTextDocument();
-        document->setHtml("<br>" + text + "</br>");
-        document->setTextWidth(option.rect.width());
-qDebug() << "Paint option rect: " << option.rect;
-        painter->save();
-        painter->translate(option.rect.x(), option.rect.y());
-        document->drawContents(painter);
-        painter->restore();
-    }
-}
-
-//==============================================================================
-
-QSize PmrWorkspacesItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    if (index.data(ItemTypeRole).value<QString>() != TypeWorkspace) {
-        return QStyledItemDelegate::sizeHint(option, index);
-    }
-    else {  // Size depends on the number of wrapped lines
-        QString text = index.data(Qt::DisplayRole).value<QString>();
-        QTextDocument *document = new QTextDocument();
-        document->setHtml("<br>" + text + "</br>");
-        document->setTextWidth(mWidget->header()->sectionSize(index.column()));
-qDebug() << "Option rect: " << option.rect << "  Text size: " << QSize(document->idealWidth() + 10,  document->size().height());        
-        return QSize(document->idealWidth() + 10,  document->size().height());       
-    }
-}
-
-//==============================================================================
-//==============================================================================
-
 PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent) :
-    TreeViewWidget(pParent),
-    mPmrRepository(pPmrRepository)
+    Core::WebViewWidget(pParent),
+    Core::CommonWidget(),
+    mPmrRepository(pPmrRepository),
+    mExpandedItems(QMap<QString, bool>()),
+    mSelectedItem("")
 {
-    // Create an instance of the data model that we want to view
+    // Prevent objects from being dropped on us
 
-    mModel = new PmrWorkspacesModel(this);
+    setAcceptDrops(false);
 
-//    // Create our 'local' file manager (as opposed to the 'global' file manager
-//    // that comes with the FileManager class)
-//
-//    mFileManager = new Core::FileManager();
-//
-//    // Set some properties
-//
-//    setDragDropMode(QAbstractItemView::DragDrop);
-//    setEditTriggers(QAbstractItemView::EditKeyPressed);
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    setFrameShape(QFrame::StyledPanel);
-#elif defined(Q_OS_MAC)
-    setFrameShape(QFrame::Panel);
-#else
-    #error Unsupported platform
-#endif
-    setHeaderHidden(true);
-    setModel(mModel);
+    // Some connections to handle the clicking and hovering of a link
 
-    setItemDelegate(new PmrWorkspacesItemDelegate(this));
-//    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    // Some connections
+    connect(page(), SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(linkClicked()));
+    connect(page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+            this, SLOT(linkHovered()));
 
-    connect(this, SIGNAL(clicked(const QModelIndex &)),
-            this, SLOT(on_clicked(const QModelIndex &)));
+    // Retrieve the output template
 
-// STYLESHEETS ***************************
+    QByteArray fileContents;
 
-//setStyleSheet(QString("QTreeView { alternate-background-color: blue; background: yellow; }"
-/*
-QTreeView {
-    show-decoration-selected: 1;
-}
+    Core::readFileContentsFromFile(":/pmrworkspaceswidget.html", fileContents);
 
-QTreeView::item {
-     border: 1px solid #d9d9d9;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-}
-
-QTreeView::item:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);
-    border: 1px solid #bfcde4;
-}
-
-QTreeView::item:selected {
-    border: 1px solid #567dbc;
-}
-
-QTreeView::item:selected:active{
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
-}
-
-QTreeView::item:selected:!active {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
-}
-
-
-"QTreeView::branch { background: palette(base);}"
-
-"QTreeView::branch:has-siblings:!adjoins-item { background: cyan;}"
-
-"QTreeView::branch:has-siblings:adjoins-item { background: red;}"
-
-"QTreeView::branch:!has-children:!has-siblings:adjoins-item {background: blue;}"
-
-
-"QTreeView::branch:closed:has-children:has-siblings { background: pink;}"
-*/
-
-//"QTreeView::branch:has-children:!has-siblings:closed,"
-//"QTreeView::branch:closed:has-children:has-siblings {"
-/*"        border-image: none;"*/
-//"        image: url(:oxygen/places/folder.png);"
-/*"        image: url(:branch-closed.png);"*/
-//"}"
-//"QTreeView::branch:closed { image: url(:oxygen/places/workspace-closed.png); }"
-//"QTreeView::branch:open { image: url(:oxygen/places/workspace-closed.png); }"
-
-/*
-"QTreeView::branch:has-children:!has-siblings:closed { background: gray;}"
-
-"QTreeView::branch:open:has-children:has-siblings { background: magenta;}"
-
-"QTreeView::branch:open:has-children:!has-siblings { background: green;}"
-
-
-
-QTreeView::branch:has-siblings:!adjoins-item {
-    border-image: url(vline.png) 0;
-}
-
-QTreeView::branch:has-siblings:adjoins-item {
-    border-image: url(branch-more.png) 0;
-}
-
-QTreeView::branch:!has-children:!has-siblings:adjoins-item {
-    border-image: url(branch-end.png) 0;
-}
-
-
-QTreeView::branch:open:has-children:!has-siblings,
-QTreeView::branch:open:has-children:has-siblings  {
-        border-image: none;
-        image: url(branch-open.png);
-}
-*/
-
-//));
-
-
-//
-//    connect(this, SIGNAL(expanded(const QModelIndex &)),
-//            this, SLOT(expandedFolder(const QModelIndex &)));
-//    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-//            this, SLOT(collapsedFolder(const QModelIndex &)));
-
-//    // A connection to handle the change of selection
-//
-//    connect(selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-//            this, SLOT(emitItemsRelatedSignals()));
-
-//    // Some connections to handle our file manager
-//
-//    connect(mFileManager, SIGNAL(fileChanged(const QString &)),
-//            this, SLOT(fileChanged(const QString &)));
-//    connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
-//            this, SLOT(fileDeleted(const QString &)));
+    mTemplate = QString(fileContents).arg( // about, clone, close, open
+                                          Core::iconDataUri(":/oxygen/actions/help-about.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/places/workspace-open.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/places/workspace-closed.png", 16, 16),
+                                          "%1");
 }
 
 //==============================================================================
 
 PmrWorkspacesWidget::~PmrWorkspacesWidget()
 {
-    // Delete some internal objects
-
-//    delete mFileManager;
 }
 
-
 //==============================================================================
-/*
-Qt::ItemFlags PmrWorkspacesWidget::flags(const QModelIndex &index) const
+
+QSize PmrWorkspacesWidget::sizeHint() const
 {
-    Q_UNUSED(&index);
+    // Suggest a default size for our PMR workspaces widget
+    // Note: this is critical if we want a docked widget, with a PMR workspaces
+    //        widget on it, to have a decent size when docked to the main window.
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-}
-*/
-
-/**
-//==============================================================================
-
-static const auto SettingsModel        = QStringLiteral("Model");
-static const auto SettingsSelectedItem = QStringLiteral("SelectedItem");
-
-//==============================================================================
-
-void PmrWorkspacesWidget::loadItemSettings(QSettings *pSettings,
-                                           QStandardItem *pParentItem)
-{
-    // Recursively retrieve the item settings
-
-    static int crtItemIndex = -1;
-    QStringList itemInfo;
-
-    itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
-
-    if (!itemInfo.isEmpty()) {
-        QString textOrPath  = itemInfo[0];
-        int parentItemIndex = itemInfo[1].toInt();
-        int childItemsCount = itemInfo[2].toInt();
-        bool expanded       = itemInfo[3].toInt();
-
-        // Create the item, in case we are not dealing with the root folder item
-
-        QStandardItem *childParentItem;
-
-        if (parentItemIndex == -1) {
-            // We are dealing with the root folder item, so don't do anything
-            // except for keeping track of it for when retrieving its child
-            // items, if any
-
-            childParentItem = mModel->invisibleRootItem();
-        } else {
-            // This is not the root folder item, so we can create the item which
-            // is either a folder or a file, depending on its number of child
-            // items
-
-            if (childItemsCount >= 0) {
-                // We are dealing with a folder item
-
-                static const QIcon CollapsedFolderIcon = QIcon(":oxygen/places/folder.png");
-
-                QStandardItem *folderItem = new QStandardItem(CollapsedFolderIcon,
-                                                              textOrPath);
-
-                folderItem->setData(true, Item::Folder);
-
-                if (pParentItem)
-                    pParentItem->appendRow(folderItem);
-
-                // Expand the folder item, if necessary
-
-                if (expanded)
-                    setExpanded(folderItem->index(), true);
-
-                // The folder item is to be the parent of any of its child item
-
-                childParentItem = folderItem;
-            } else {
-                // We are dealing with a file item
-
-                static const QIcon FileIcon        = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
-                static const QIcon DeletedFileIcon = QIcon(":oxygen/status/image-missing.png");
-
-                QFileInfo fileInfo = textOrPath;
-
-                QStandardItem *fileItem = new QStandardItem(fileInfo.exists()?FileIcon:DeletedFileIcon,
-                                                            fileInfo.fileName());
-
-                fileItem->setData(textOrPath, Item::Path);
-
-                if (pParentItem)
-                    pParentItem->appendRow(fileItem);
-
-                // Add the file to our file manager
-                // Note: it doesn't matter whether or not the file is already
-                //       being monitored, since if that's the case then the
-                //       current instance will be ignored
-
-                mFileManager->manage(textOrPath);
-
-                // A file cannot have child items
-
-                childParentItem = 0;
-            }
-        }
-
-        // Retrieve any child item
-        // Note: the test on childParentItem is not necessary (since
-        //       childItemsCount will be equal to -1 in the case of a file
-        //       item), but it doesn't harm having it...
-
-        if (childParentItem) {
-            for (int i = 0; i < childItemsCount; ++i)
-                loadItemSettings(pSettings, childParentItem);
-        }
-    }
+    return defaultSize(0.15);
 }
 
 //==============================================================================
 
-**/
+static const auto SettingsWorkspaces    = QStringLiteral("Workspaces");
+static const auto SettingsExpandedItems = QStringLiteral("ExpandedItems");
+static const auto SettingsSelectedItem  = QStringLiteral("SelectedItem");
+
+//==============================================================================
 
 void PmrWorkspacesWidget::loadSettings(QSettings *pSettings)
 {
+    // Retrieve the names of expanded workspaces and folders
 
-  Q_UNUSED(pSettings)
-}
-/*
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    emitItemsRelatedSignals();
-
-    // Retrieve the data model
-
-    pSettings->beginGroup(SettingsModel);
-        loadItemSettings(pSettings, 0);
+    mExpandedItems.clear();
+    pSettings->beginGroup(SettingsWorkspaces);
+        QStringList expanded = pSettings->value(SettingsExpandedItems).toStringList();
+        QString item;
+        foreach (item, expanded) mExpandedItems.insert(item, true);
     pSettings->endGroup();
 
     // Retrieve the currently selected item, if any
-
-    QByteArray hierarchyData = pSettings->value(SettingsSelectedItem).toByteArray();
-
-    setCurrentIndex(mModel->decodeHierarchyData(hierarchyData));
-
-    // Resize the widget, just to be on the safe side
-
-    resizeToContents();
+mExpandedItems.insert("https://models.physiomeproject.org/w/dbrooks/butterworth3", true);
+mExpandedItems.insert("/Users/dave/Documents/OpenCOR/Workspaces/3rd Order Butterworth Filter/subdir", true);
+mExpandedItems.insert("https://models.physiomeproject.org/workspace/251", true);
+    mSelectedItem = pSettings->value(SettingsSelectedItem).toString();
 }
 
 //==============================================================================
-
-void PmrWorkspacesWidget::saveItemSettings(QSettings *pSettings,
-                                                 QStandardItem *pItem,
-                                                 const int &pParentItemIndex) const
-{
-    // Recursively keep track of the item settings
-
-    static int crtItemIndex = -1;
-    QStringList itemInfo;
-
-    // The item information consists of:
-    //  - The name of the folder item or the path of the file item
-    //  - The index of its parent
-    //  - The number of child items the (folder) item has, if any
-    //  - Whether the (folder) items is expanded
-
-    if (   (pItem == mModel->invisibleRootItem())
-        || pItem->data(Item::Folder).toBool()) {
-        // We are dealing with a folder item (be it the root folder item or not)
-
-        itemInfo << pItem->text() << QString::number(pParentItemIndex)
-                 << QString::number(pItem->rowCount())
-                 << QString(isExpanded(pItem->index())?"1":"0");
-    } else {
-        // We are dealing with a file item
-
-        QString fileName = pItem->data(Item::Path).toString();
-
-        itemInfo << fileName
-                 << QString::number(pParentItemIndex) << "-1" << "0";
-
-        // Remove the file from our file manager
-        // Note: it doesn't matter whether or not the file has already been
-        //       removed, since if that's the case then nothing will be done
-
-        mFileManager->unmanage(fileName);
-    }
-
-    pSettings->setValue(QString::number(++crtItemIndex), itemInfo);
-
-    // Keep track of any child item
-
-    int childParentItemIndex = crtItemIndex;
-
-    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
-        saveItemSettings(pSettings, pItem->child(i), childParentItemIndex);
-}
-
-//==============================================================================
-
-**/
 
 void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
 {
-  Q_UNUSED(pSettings)
-}
-/*
-    // Keep track of the data model
+    // Keep track of the names of expanded workspaces and folders
 
-    pSettings->remove(SettingsModel);
-    pSettings->beginGroup(SettingsModel);
-        saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
+    pSettings->remove(SettingsWorkspaces);
+    pSettings->beginGroup(SettingsWorkspaces);
+        pSettings->setValue(SettingsExpandedItems, mExpandedItems.key(true));
     pSettings->endGroup();
 
-    // Keep track of the currently selected item, but only if it is visible
+    // Keep track of the currently selected item
 
-    bool crtItemVisible = true;
-    QModelIndex crtIndexParent = currentIndex().parent();
+    pSettings->setValue(SettingsSelectedItem, mSelectedItem);
+}
 
-    while (crtIndexParent.isValid()) {
-        if (isExpanded(crtIndexParent)) {
-            // The current parent is expanded, so check to its parent
+//==============================================================================
+//==============================================================================
 
-            crtIndexParent = crtIndexParent.parent();
-        } else {
-            crtItemVisible = false;
+// This needs to go into pmrworkspaces.cpp ...
 
-            break;
+QString PmrWorkspacesWidget::workspacePath(const QString &pUrl, const QString &pPath)
+{
+    Q_UNUSED(pUrl);
+
+    QString workspacePath = QStandardPaths::locate(QStandardPaths::DocumentsLocation,
+                                                   "OpenCOR/Workspaces/" + pPath,
+                                                   QStandardPaths::LocateDirectory);
+qDebug() << "Checking: " << pUrl << "  Local: " << workspacePath;
+    QDir workspaceDirectory = QDir(workspacePath);
+    if (!workspacePath.isEmpty() && workspaceDirectory.exists()) {
+        return workspaceDirectory.absolutePath();
+ /***
+        git_libgit2_init();
+
+        git_repository *gitRepository = 0;
+
+        QByteArray urlByteArray = pUrl.toUtf8();
+        QByteArray pathByteArray = pPath.toUtf8();
+
+        int res = git_repository_open(&gitRepository, pPathByteArray.constData());
+
+        int git_remote_list(git_strarray *out, git_repository *repo);
+
+        const char * git_remote_url(const git_remote *remote);
+
+        if (res) {
+            const git_error *gitError = giterr_last();
+
+            emit warning(gitError?
+                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                Core::formatMessage(gitError->message)):
+                        tr("An error occurred while trying to clone the workspace."));
+        } else if (gitRepository) {
+            git_repository_free(gitRepository);
+        }
+
+        git_libgit2_shutdown();
+***/
+    }
+    return "";
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWidget::actionHtml(const QStringList &pActions)
+{
+    QString action;
+    QStringList actions;
+    foreach (action, pActions)
+        actions << QString("<img class=\"%1\" />").arg(action);
+
+    return actions.join("");
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString &pIcon,
+                                           const QString &pId, const QString &pName,
+                                           const QString &pStatus, const QStringList &pActions)
+{
+    static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
+                                "  <td class=\"icon\"><img class=\"%3\" /></td>\n" /* tr.CLASS td.icon img.clone/open/close { } */
+                                "  <td class=\"name\">%4</td>\n"
+                                "  <td class=\"status\">%5</td>\n"
+                                "  <td class=\"action\">%6</td>\n"
+                                "</tr>\n";
+qDebug() << pClass << "container for " << pName << " is " << pIcon;
+    return html.arg(pClass, pId, pIcon, pName, pStatus, actionHtml(pActions));
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWidget::fileHtml(const QString &pName, const QString &pStatus, const QStringList &pActions)
+{
+    static const QString html = "<tr>\n"
+                                "  <td colspan=\"2\">%1</td>\n"
+                                "  <td class=\"status\">%2</td>\n"
+                                "  <td class=\"action\">%3</td>\n"
+                                "</tr>\n";
+qDebug() << "File " << pName;
+static bool nomod = false;
+nomod = !nomod;
+    return html.arg(pName, nomod ? pStatus : "M", actionHtml(pActions));
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWidget::emptyContentsHtml(void)
+{
+    static const QString html = "<tr></tr>\n";
+
+    return html;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWidget::contentsHtml(const QString &pPath) const
+{
+    static const QString html = "<tr>\n"
+                                "  <td></td>\n"
+                                "  <td colspan=\"3\">\n"
+                                "    <table>\n"
+                                "      <tr class=\"packer\">\n"
+                                "        <td class=\"icon\"><img /></td>\n"
+                                "        <td class=\"name\"></td>\n"
+                                "        <td class=\"status\"><img /></td>\n"
+                                "        <td class=\"action\"><img /></td>\n"
+                                "      </tr>\n"
+                                "      %1\n"
+                                "    </table>\n"
+                                "  </td>\n"
+                                "</tr>\n";
+
+    QStringList itemHtml;
+
+    QDir directory = QDir(pPath);
+    if (directory.exists()) {
+        QFileInfo info;
+        foreach(info, directory.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+            if (info.isDir()) itemHtml << folderHtml(info.absoluteFilePath());
+            else              itemHtml << fileHtml(info.fileName(), "", QStringList()); // status, actions
         }
     }
 
-    pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?currentIndex():QModelIndex()));
+    return html.arg(itemHtml.join("\n"));
 }
-*/
+
+//==============================================================================
+
+
+QStringList PmrWorkspacesWidget::workspaceHtml(const QString &pUrl, const QString &pName, const QString &pPath) const
+{
+    QString icon = pPath.isEmpty()               ? "clone"
+                 : mExpandedItems.contains(pUrl) ? "close"
+                 :                                 "open";
+
+    QStringList html = QStringList(containerHtml("workspace", icon, pUrl, pName, "", QStringList() << "about"));
+
+    if (!pPath.isEmpty() /*&& mExpandedItems.contains(pUrl)*/) html << contentsHtml(pPath);
+    else                                                   html << emptyContentsHtml();
+
+    return html;
+}
+
+//==============================================================================
+
+QStringList PmrWorkspacesWidget::folderHtml(const QString &pPath) const
+{
+    QFileInfo info = QFileInfo(pPath);
+    QString fullname = info.absoluteFilePath();
+
+    QString icon = mExpandedItems.contains(fullname) ? "close"
+                 :                                     "open";
+
+    QStringList html = QStringList(containerHtml("folder", icon, fullname, info.fileName(), "", QStringList())); // status, actions
+
+    if (true /* mExpandedItems.contains(fullname) */) html << contentsHtml(pPath);
+    else                                   html << emptyContentsHtml();
+qDebug() << "Folder " << pPath << "  Name: " << fullname;
+    return html;
+}
 
 //==============================================================================
 
 void PmrWorkspacesWidget::clearWorkspaces(void)
 {
-    mModel->clear();
-//    mUrlIndexMap = QMap<QString, QPersistentModelIndex>();
+//    mWorkspaceNames = QStringList();
+//    mWorkspaceUrlId = QMap<QString, int>();
+
+    setHtml(mTemplate.arg(QString()));
 }
 
 //==============================================================================
 
-void PmrWorkspacesWidget::displayWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaceList)
 {
-    clearWorkspaces();
+/*
 
-    QStandardItem *rootItem = mModel->invisibleRootItem();
+    A workspace view is either closed or open (= contents visible).
+    Contents are an alphabetical list of non-hidden files and folders.
+    A folder may be closed or open. If open then show its contents.
 
-    for (int i = 0, iMax = pWorkspaces.count(); i < iMax; ++i) {
-        auto row = QList<QStandardItem *>() << new QStandardItem("<b>" + pWorkspaces[i]->name() + "</b>");
-        rootItem->appendRow(row);
-//        row[0]->setEditable(false);
-        row[0]->setFlags(Qt::ItemIsEnabled);
-//        row[1]->setEditable(false);
-        mModel->setData(row[0]->index(), pWorkspaces[i]->url(), WorkspaceUrlRole);
-        mModel->setData(row[0]->index(), TypeWorkspace, ItemTypeRole);
-//        mUrlIndexMap.insert(pWorkspaces[i]->url(), QPersistentModelIndex(row[0]->index()));
+        * workspace identified by its URL
+        * file/folder (within a workspace) identified by its full path
 
-        // ****
-        auto srow = QList<QStandardItem *>() << new QStandardItem(QString("Child of %1").arg(i));
-        row[0]->appendRow(srow);
-        if (i > 0) {
-            auto ssrow = QList<QStandardItem *>() << new QStandardItem(QString("Child of child of %1").arg(i));
-            srow[0]->appendRow(ssrow);
+    Operations:
+
+        1. Load settings (open/closed/selection)
+        2. When list of workspaces received (from PMR), update settings as details are displayed.
+            a. If workspace is known then get its state, otherwise add workspace with state closed.
+            b. If open then get (top-level) files/folders from file system.
+                i. For each folder check if known and get its state or add folder with state closed.
+                ii. If folder open then recurse.
+            c. Highlight selected item if it exists.
+            d. Remove all workspaces/folders that no longer exist.
+        3. Save settings.
+
+    Need list of expanded items. Is there a need to prune this list and remove unknown items? Maybe only
+    when saving?? In which case we need QMap<QString, bool>.
+
+    Save just the identifiers; there's no need to group them -- it's just a list of expanded items.
+
+*/
+//    mWorkspaceNames = QStringList();
+//    mWorkspaceUrlId = QMap<QString, int>();
+
+    QStringList html;
+
+    foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaceList) {
+        QString url = workspace->url();
+        QString name = workspace->name();
+
+        // Want to have a LocalWorkspace...
+        QString path = workspacePath(url, name);
+
+        html.append(workspaceHtml(url, name, path));
         }
-
-    }
-//    setColumnWidth(0, 400);
-//    qDebug() << "Col 0 width: " << columnWidth(0);
+//qDebug() << mTemplate.arg(html.join("\n"));
+    setHtml(mTemplate.arg(html.join("\n")));
 }
+
+//==============================================================================
+
+/***
+initially:
+  <tr>
+    folder/workspace
+  </tr>
+  <tr></tr>
+
+OR:
+
+  <tr>
+    folder/workspace
+  </tr>
+  <tr>
+    CONTENTS
+  </tr>
+
+tr[#ID].nextSibling
+
+
+
+Close will simply set display none in DOM tree. Open needs to remove any existing
+non-displayed TR and add a new one.
+
+Is it then best to always have a <TABLE> element that gets rebuilt in the DOM??
+
+            <tr>
+              <td colspan="2">first file</td>
+              <td class="status">?</td>
+              <td class="action">?</td>
+            </tr>
+
+
+            <tr class="folder">
+              <td class="icon"><a href="folderClicked|ID"><img class="icon" src="folder-open.png"/></a></td>
+              <td class="name">Animals</td>
+              <td class="status">x</td>
+              <td></td>
+            </tr>  <!-- Click closed --> set display none; click open --> refresh from disk -->
+            <tr style="display: none;" id="display_ID">
+              <td></td>
+              <td colspan="2">
+                <table>
+                  <tr class="packer">
+                    <td class="icon"><img src="space30.png" /></td>  <!-- <img class="spacer30"/> -->
+                    <td class="name"></td>
+                    <td class="status"><img src="space30.png" /></td>
+                    <td class="action"><img src="space30.png" /></td>
+                  </tr>
+
+                  CONTENTS
+
+                </table>
+              </td>
+            </tr>
+
+
+***/
 
 //==============================================================================
 
@@ -522,41 +431,21 @@ void PmrWorkspacesWidget::refreshWorkspaces(void)
 {
     mPmrRepository->requestWorkspacesList();
 }
-// when resize() ??
-//resizeRowsToContents()
 
 //==============================================================================
 
-void PmrWorkspacesWidget::drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const
+
+void PmrWorkspacesWidget::linkClicked()
 {
-    static const QPixmap WorkspaceClosedPixmap = QPixmap(":oxygen/places/workspace-closed.png");
-    static const QPixmap WorkspaceOpenPixmap = QPixmap(":oxygen/places/workspace-open.png");
-    if (index.data(ItemTypeRole).value<QString>() == TypeWorkspace) {
-qDebug() << "Branch at " << rect;        
-        painter->drawPixmap(rect, isExpanded(index) ? WorkspaceOpenPixmap : WorkspaceClosedPixmap);
-    }
-    else
-        TreeViewWidget::drawBranches(painter, rect, index);
 }
 
-void PmrWorkspacesWidget::resizeEvent(QResizeEvent *event)
-{
-    updateGeometry(); // resizeColumnToContents(0); //resizeRowsToContents();
-    Core::TreeViewWidget::resizeEvent(event);
-}
 //==============================================================================
 
-void PmrWorkspacesWidget::on_clicked(const QModelIndex &pItemIndex)
+void PmrWorkspacesWidget::linkHovered()
 {
-    if (pItemIndex.isValid()) {
-        QModelIndex index = (pItemIndex.column() == 0) ? pItemIndex
-                                                       : mModel->index(pItemIndex.row(), 0, pItemIndex.parent());
-        QString url = index.data(WorkspaceUrlRole).value<QString>();
-        qDebug() << "Clicked URL: " << url;
-        if (url != "") mPmrRepository->requestWorkspaceDetails(url);
-    }
 }
 
+//==============================================================================
 
 /***************
 
@@ -840,175 +729,6 @@ bool PmrWorkspacesWidget::viewportEvent(QEvent *pEvent)
 
 //==============================================================================
 
-bool PmrWorkspacesWidget::parentIndexExists(const QModelIndex &pIndex,
-                                                  const QModelIndexList &pIndexes) const
-{
-    // Recursively determine whether one of the parents of the given index is in
-    // the provided list
-
-    QModelIndex parentIndex = pIndex.parent();
-
-    if (parentIndex.isValid()) {
-        // The current index has a valid parent, so check whether the parent is
-        // in the list
-
-        if (pIndexes.indexOf(parentIndex) != -1) {
-            return true;
-        } else {
-            // The parent index couldn't be found, but what about the parent
-            // index's parent?
-
-            return parentIndexExists(parentIndex, pIndexes);
-        }
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-QModelIndexList PmrWorkspacesWidget::cleanIndexList(const QModelIndexList &pIndexes) const
-{
-    // A list of indexes may contain indexes that are not relevant or
-    // effectively the duplicate of another existing index
-
-    QModelIndexList res;
-
-    // If both the index of a folder and some (if not all) of its (in)direct
-    // contents is in the original list, then we only keep track of the index of
-    // the folder
-
-    for (int i = 0, iMax = pIndexes.count(); i < iMax; ++i) {
-        // Check whether one of the current index's parents is already in the
-        // list. If so, then skip the current index
-
-        QModelIndex crtIndex = pIndexes[i];
-
-        if (!parentIndexExists(crtIndex, pIndexes)) {
-            // None of the index's parents is in the list, so we can safely add
-            // the index to the list
-
-            res << crtIndex;
-
-            // If the index refers to a folder, then we must double check that
-            // the list of cleaned indexes doesn't contain any of the index's
-            // children. If it does, then we must remove all of them
-
-            QStandardItem *crtItem = mModel->itemFromIndex(crtIndex);
-
-            if (crtItem && crtItem->data(Item::Folder).toBool()) {
-                for (int j = res.count()-1; j >= 0; --j) {
-                    if (parentIndexExists(res[j], res))
-                        res.removeAt(j);
-                }
-            }
-        }
-    }
-
-    // At this stage, we have indexes for folders that are unique, but we may
-    // still have indexes for files that are effectively the duplicate of
-    // another file, so these are to be removed from the cleaned list and from
-    // the model
-
-    for (int i = res.count()-1; i >= 0; --i) {
-        QStandardItem *crtItem = mModel->itemFromIndex(res[i]);
-
-        if (crtItem && !crtItem->data(Item::Folder).toBool()) {
-            // The index corresponds to a valid file item, so check whether in
-            // the cleaned list there is another file item referencing the same
-            // physical file and, if so, remove it from the cleaned list and the
-            // model
-
-            for (int j = 0; j < i; ++j) {
-                QStandardItem *testItem = mModel->itemFromIndex(res[j]);
-
-                if (   testItem
-                    && !testItem->data(Item::Folder).toBool()
-                    && !crtItem->data(Item::Path).toString().compare(testItem->data(Item::Path).toString())) {
-                    // The test item is a valid file item and references the
-                    // same physical file as our current item, so remove the
-                    // current item from the cleaned list
-
-                    res.removeAt(i);
-
-                    // Also remove the current item from the model
-
-                    crtItem->parent()->removeRow(crtItem->row());
-
-                    // Go to our next current item
-
-                    break;
-                }
-            }
-        }
-    }
-
-    return res;
-}
-
-//==============================================================================
-
-bool PmrWorkspacesWidget::itemIsOrIsChildOf(QStandardItem *pItem,
-                                                  QStandardItem *pOtherItem) const
-{
-    // Check whether the given items are the same or whether one of them is the
-    // (in)direct child of the other
-
-    if (pItem == pOtherItem) {
-        return true;
-    } else if (pOtherItem->rowCount()) {
-        // pOtherItem has children, so check against them
-
-        for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i) {
-            if (itemIsOrIsChildOf(pItem, pOtherItem->child(i)))
-                return true;
-        }
-
-        return false;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWidget::backupExpandedInformation(QStandardItem *pItem) const
-{
-    // Recursively backup the expanded state of the item, should it be a folder,
-    // and of any of its children, should it have some
-
-    if (pItem->data(Item::Folder).toBool()) {
-        // Keep track of the expanded state of pItem
-
-        pItem->setData(isExpanded(mModel->indexFromItem(pItem)),
-                       Item::Expanded);
-
-        // Do the same with all of pItem's children, if any
-
-        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
-            backupExpandedInformation(pItem->child(i));
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWidget::restoreExpandedInformation(QStandardItem *pItem)
-{
-    // Recursively restore the expanded state of the item, should it be a
-    // folder, and of any of its children, should it have some
-
-    if (pItem->data(Item::Folder).toBool()) {
-        // Retrieve the expanded state of pItem
-
-        setExpanded(mModel->indexFromItem(pItem),
-                    pItem->data(Item::Expanded).toBool());
-
-        // Do the same with all of pItem's children, if any
-
-        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
-            restoreExpandedInformation(pItem->child(i));
-    }
-}
 
 //==============================================================================
 

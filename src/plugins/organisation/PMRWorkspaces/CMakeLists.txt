@@ -7,12 +7,10 @@ ADD_PLUGIN(PMRWorkspaces
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/pmrworkspacesmodel.cpp
         src/pmrworkspacesplugin.cpp
         src/pmrworkspaceswidget.cpp
         src/pmrworkspaceswindow.cpp
     HEADERS_MOC
-        src/pmrworkspacesmodel.h
         src/pmrworkspacesplugin.h
         src/pmrworkspaceswidget.h
         src/pmrworkspaceswindow.h

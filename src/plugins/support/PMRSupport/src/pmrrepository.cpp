@@ -269,7 +269,7 @@ void PmrRepository::finished(QNetworkReply *pNetworkReply)
     QString workspaceUrl = QString();
     QStringList exposureFileUrls = QStringList();
     QString exposureUrl = QString();
-    PmrWorkspaces workspaces = PmrWorkspaces();
+    PmrWorkspaceList workspaceList = PmrWorkspaceList();
 
     if (pNetworkReply) {
 //        if (pNetworkReply->error() == QNetworkReply::NoError) {
@@ -508,12 +508,12 @@ if (pmrRequest != ExposuresList) qDebug() << "JSON: " << jsonDocument.toJson(QJs
                             if (   !workspaceUrl.isEmpty()
                                 && !workspaceName.isEmpty()) {
 
-                                workspaces.add(workspaceUrl, workspaceName, this);
+                                workspaceList.add(workspaceUrl, workspaceName, this);
                             }
                         }
                     }
 
-                    std::sort(workspaces.begin(), workspaces.end(),
+                    std::sort(workspaceList.begin(), workspaceList.end(),
                               PmrWorkspace::compare);
 
                     break;
@@ -576,7 +576,7 @@ qDebug() << uncompressedData;
     case WorkspacesList:
         // Respond with a list of workspaces
 
-        emit workspacesList(workspaces);
+        emit workspacesList(workspaceList);
 
         break;
     case WorkspaceDetails:

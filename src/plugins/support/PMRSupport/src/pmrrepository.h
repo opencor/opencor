@@ -123,7 +123,7 @@ Q_SIGNALS:
                           const QStringList &pExposureFiles);
     void showExposureFiles(const QString &pUrl);
 
-    void workspacesList(const PMRSupport::PmrWorkspaces &pWorkspaces);
+    void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
 
 public Q_SLOTS:
     void authenticate(const bool &pLink = true);
