@@ -52,6 +52,10 @@ void CliTests::helpTests()
 
 void CliTests::exportTests()
 {
+    // Export the Noble 1962 model to the CellML Text format
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("models/noble_model_1962.cellml")),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")));
 }
 
 //==============================================================================

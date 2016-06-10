@@ -24,12 +24,12 @@ limitations under the License.
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewplugin.h"
 #include "cellmltextviewwidget.h"
+#include "corecliutils.h"
 #include "coreguiutils.h"
-#include "filemanager.h"
 
 //==============================================================================
 
-#include <QApplication>
+#include <QFile>
 #include <QMainWindow>
 #include <QSettings>
 
@@ -411,8 +411,57 @@ void CellMLTextViewPlugin::runHelpCommand()
 
 int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
 {
-Q_UNUSED(pArguments);
-    return 0;
+    // Export an existing file to the console using the CellML Text format
+
+    // Make sure that we have the correct number of arguments
+
+    if (pArguments.count() != 1) {
+        runHelpCommand();
+
+        return -1;
+    }
+
+    // Check whether we are dealing with a local or a remote file, and retrieve
+    // its contents
+
+    QString errorMessage = QString();
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
+
+    QByteArray fileContents;
+
+    if (isLocalFile) {
+        if (!QFile::exists(fileNameOrUrl))
+            errorMessage = "The file could not be found.";
+        else if (!Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
+            errorMessage = QString("The file could not be opened.");
+    } else {
+        if (!Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage))
+            errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
+    }
+
+    // At this stage, we should have the contents of the file, so we can export
+    // it to the CellML Text format
+
+    if (errorMessage.isEmpty()) {
+        OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
+
+        converter.execute(fileContents);
+
+        std::cout << converter.output().toUtf8().constData();
+    }
+
+    // Let the user know if something went wrong at some point and then leave
+
+    if (errorMessage.isEmpty()) {
+        return 0;
+    } else {
+        std::cout << errorMessage.toStdString() << std::endl;
+
+        return -1;
+    }
 }
 
 //==============================================================================
