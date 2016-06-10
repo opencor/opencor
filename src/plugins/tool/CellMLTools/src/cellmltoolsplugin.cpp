@@ -327,12 +327,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
     Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
 
-    QString inFileName = fileNameOrUrl;
+    QString fileName = fileNameOrUrl;
 
     if (isLocalFile) {
         // We are dealing with a local file, so just update inFileName
 
-        inFileName = fileNameOrUrl;
+        fileName = fileNameOrUrl;
     } else {
         // We are dealing with a remote file, so try to get a local copy of it
 
@@ -342,9 +342,9 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
-            inFileName = Core::temporaryFileName();
+            fileName = Core::temporaryFileName();
 
-            if (!Core::writeFileContentsToFile(inFileName, fileContents))
+            if (!Core::writeFileContentsToFile(fileName, fileContents))
                 errorMessage = "The file could not be saved locally.";
         } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
@@ -359,21 +359,23 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         // exists, that it is a valid CellML file, that it can be managed and
         // that it can be loaded
 
-        if (!QFile::exists(inFileName)) {
+        if (!QFile::exists(fileName)) {
             errorMessage = "The file could not be found.";
-        } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(inFileName)) {
+        } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
             errorMessage = "The file is not a CellML file.";
         } else {
-            if (Core::FileManager::instance()->manage(inFileName,
-                                                      isLocalFile?
-                                                          Core::File::Local:
-                                                          Core::File::Remote,
-                                                      isLocalFile?
-                                                          QString():
-                                                          fileNameOrUrl) != Core::FileManager::Added) {
+            Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+            if (fileManagerInstance->manage(fileName,
+                                            isLocalFile?
+                                                Core::File::Local:
+                                                Core::File::Remote,
+                                            isLocalFile?
+                                                QString():
+                                                fileNameOrUrl) != Core::FileManager::Added) {
                 errorMessage = "The file could not be managed.";
             } else {
-                CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(inFileName);
+                CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(fileName);
 
                 if (!cellmlFile->load()) {
                     errorMessage = "A problem occurred while loading the file.";
@@ -420,7 +422,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
                 delete cellmlFile;
 
-                Core::FileManager::instance()->unmanage(inFileName);
+                fileManagerInstance->unmanage(fileName);
             }
         }
     }
@@ -428,8 +430,8 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Delete the temporary file, if any, i.e. we are dealing with a remote file
     // and it has a temporay file associated with it
 
-    if (!isLocalFile && QFile::exists(inFileName))
-        QFile::remove(inFileName);
+    if (!isLocalFile && QFile::exists(fileName))
+        QFile::remove(fileName);
 
     // Let the user know if something went wrong at some point and then leave
 
