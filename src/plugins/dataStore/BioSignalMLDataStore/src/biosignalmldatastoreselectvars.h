@@ -62,7 +62,6 @@ private slots:
 
 private:
     Ui::BioSignalMLSelectVariables *mGui;
-
 };
 
 //==============================================================================

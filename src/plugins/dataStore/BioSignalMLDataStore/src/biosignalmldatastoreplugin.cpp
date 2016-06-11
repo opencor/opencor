@@ -119,8 +119,6 @@ void BioSignalMLDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugin
 
 //==============================================================================
 
-//==============================================================================
-
 void BioSignalMLDataStorePlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
