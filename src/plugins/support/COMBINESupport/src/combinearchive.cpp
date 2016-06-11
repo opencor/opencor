@@ -20,7 +20,6 @@ limitations under the License.
 // COMBINE archive class
 //==============================================================================
 
-#include "cellmlfile.h"
 #include "combinearchive.h"
 #include "corecliutils.h"
 

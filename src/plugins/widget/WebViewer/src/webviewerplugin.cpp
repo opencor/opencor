@@ -37,7 +37,7 @@ PLUGININFO_FUNC WebViewerPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
 
     return new PluginInfo("Widget", false, false,
-                          QStringList() << "Core",
+                          QStringList(),
                           descriptions);
 }
 

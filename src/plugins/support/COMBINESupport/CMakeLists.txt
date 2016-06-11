@@ -19,18 +19,12 @@ ADD_PLUGIN(COMBINESupport
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
-        CellMLSupport
         Core
-        ${LLVM_PLUGIN}
         StandardSupport
         ZIPSupport
         ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
         ${ZLIB_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
         tests
 )
