@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>CellML Text view:</strong> allow the import / export of the CellML Text format from / to CellML from the command line (see issue <a href=\"https://github.com/opencor/opencor/issues/992\">#992</a>)." }
+                       { "change": "<strong>CellML Text view:</strong> allow the import / export of the CellML Text format from / to CellML from the command line (see issue <a href=\"https://github.com/opencor/opencor/issues/992\">#992</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> applied an official patch to <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> 2.9.2 following a (Mac) OS X issue (see issue <a href=\"https://github.com/opencor/opencor/issues/994\">#994</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
