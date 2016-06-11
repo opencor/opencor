@@ -72,7 +72,6 @@ void BioSignalMLSaveDialog::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
-
 }
 
 //==============================================================================

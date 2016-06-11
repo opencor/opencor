@@ -147,7 +147,6 @@ void BioSignalMLExporter::execute(const QString &pFileName,
         }
 
     }
-
 }
 
 //==============================================================================
