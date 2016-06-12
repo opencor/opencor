@@ -811,12 +811,19 @@ void CellmlFileRuntime::update()
 
         ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
         iface::cellml_api::CellMLVariable *mainVariable = variable;
+        iface::cellml_api::CellMLVariable *realVariable = variable;
 
-        if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
             mainVariable = mainVariables.value(variable);
 
-        if (!mainVariable)
+            if (mainVariable)
+                realVariable = mainVariable;
+        }
+
+        if (   !mainVariable
+            &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
             continue;
+        }
 
         // Determine the type of the parameter
 
@@ -887,17 +894,18 @@ void CellmlFileRuntime::update()
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(mainVariable->name()),
+            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
                                                                                    computationTarget->degree(),
-                                                                                   QString::fromStdWString(mainVariable->unitsName()),
-                                                                                   componentHierarchy(mainVariable),
+                                                                                   QString::fromStdWString(realVariable->unitsName()),
+                                                                                   componentHierarchy(realVariable),
                                                                                    parameterType,
                                                                                    computationTarget->assignedIndex());
 
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            mParameters << parameter;
+            if (mainVariable == variable)
+                mParameters << parameter;
         }
     }
 
