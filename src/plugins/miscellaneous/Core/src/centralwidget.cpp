@@ -1929,8 +1929,9 @@ void CentralWidget::fileChanged(const QString &pFileName,
                     //       updated outside of OpenCOR and gets recognised as
                     //       being a CellML file...
 
-                    if (   (mFileTabs->currentIndex() == i)
-                        && (viewInterface->viewWidget(pFileName) != oldView)) {
+                    if (   (   (mFileTabs->currentIndex() == i)
+                            && (viewInterface->viewWidget(pFileName) != oldView))
+                        || (mFileTabs->currentIndex() != i)) {
                         updateGui();
                     }
 
