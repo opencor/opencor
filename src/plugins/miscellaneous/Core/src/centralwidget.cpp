@@ -1598,9 +1598,10 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 {
     // Return the view plugin associated with the file, which file name is given
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!pFileName.compare(mFileNames[i]))
             return viewPlugin(i);
+    }
 
     return 0;
 }
@@ -1711,7 +1712,7 @@ void CentralWidget::updateGui()
     mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));
     mModes.value(ViewInterface::AnalysisMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode));
 
-    // Ask the GUI interface for the widget to use for the current file (should
+    // Ask the GUI interface for the widget to use the current file (should
     // there be one)
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
@@ -1928,8 +1929,9 @@ void CentralWidget::fileChanged(const QString &pFileName,
                     //       updated outside of OpenCOR and gets recognised as
                     //       being a CellML file...
 
-                    if (   (mFileTabs->currentIndex() == i)
-                        && (viewInterface->viewWidget(pFileName) != oldView)) {
+                    if (   (   (mFileTabs->currentIndex() == i)
+                            && (viewInterface->viewWidget(pFileName) != oldView))
+                        || (mFileTabs->currentIndex() != i)) {
                         updateGui();
                     }
 
