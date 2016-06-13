@@ -433,9 +433,10 @@ void CoreEditingPlugin::updateGui(const QString &pFileName)
 
         // Make our editor read-only or writable
 
-        if (mEditor)
+        if (mEditor) {
             mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
                                  || !mEditingInterface->isEditorUseable(pFileName));
+        }
     }
 }
 
@@ -489,10 +490,11 @@ void CoreEditingPlugin::clipboardDataChanged()
 {
     // Enable our paste action if the clipboard contains some text
 
-    if (mEditingInterface)
+    if (mEditingInterface) {
         mEditPasteAction->setEnabled(   mEditor
                                      && Core::FileManager::instance()->isReadableAndWritable(mFileName)
                                      && QApplication::clipboard()->text().size());
+    }
 }
 
 //==============================================================================
