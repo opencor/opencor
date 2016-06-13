@@ -67,7 +67,7 @@ DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::newDataStoreExporterI
 {
     Q_UNUSED(pId);
 
-    return mExporter;
+    return mBiosignalmlDataStoreExporter;
 }
 
 //==============================================================================
@@ -96,7 +96,7 @@ void BioSignalMLDataStorePlugin::initializePlugin()
 {
     // Create our BioSignalML data store exporter
 
-    mExporter = new BioSignalMLExporter();
+    mBiosignalmlDataStoreExporter = new BiosignalmlDataStoreExporter();
 }
 
 //==============================================================================
@@ -105,7 +105,7 @@ void BioSignalMLDataStorePlugin::finalizePlugin()
 {
     // Delete our BioSignalML data store exporter
 
-    delete mExporter;
+    delete mBiosignalmlDataStoreExporter;
 }
 
 //==============================================================================

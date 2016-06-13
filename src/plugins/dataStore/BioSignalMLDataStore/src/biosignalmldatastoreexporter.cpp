@@ -43,7 +43,7 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BioSignalMLExporter::BioSignalMLExporter(const QString &pId) :
+BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(const QString &pId) :
     DataStore::DataStoreExporter(pId),
     mSaveDialog(new BioSignalMLSaveDialog())
 {
@@ -51,8 +51,8 @@ BioSignalMLExporter::BioSignalMLExporter(const QString &pId) :
 
 //==============================================================================
 
-void BioSignalMLExporter::execute(const QString &pFileName,
-                                  DataStore::DataStore *pDataStore) const
+void BiosignalmlDataStoreExporter::execute(const QString &pFileName,
+                                           DataStore::DataStore *pDataStore) const
 {
     // Export the given data store to a BioSignalML file
 
@@ -126,9 +126,9 @@ void BioSignalMLExporter::execute(const QString &pFileName,
 
                 qApp->processEvents();
 //---GRY--- THE CALL TO qApp->processEvents() SHOULD BE REMOVED AND THE EXPORTER
-//              BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G. WHEN EXPORTING
-//              LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING THE EXPORTER
-//              WORK IN ITS OWN THREAD?...
+//          BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G. WHEN EXPORTING
+//          LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING THE EXPORTER
+//          WORK IN ITS OWN THREAD?...
             }
 
             sigs->extend(data, rowcount*nvars);

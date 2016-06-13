@@ -40,10 +40,11 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLDATASTORE_EXPORT BioSignalMLExporter : public DataStore::DataStoreExporter
+class BioSignalMLDATASTORE_EXPORT BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
 {
 public:
-    BioSignalMLExporter(const QString &pId = QString());
+    BiosignalmlDataStoreExporter(const QString &pId = QString());
+
     virtual void execute(const QString &pFileName,
                          DataStore::DataStore *pDataStore) const;
 

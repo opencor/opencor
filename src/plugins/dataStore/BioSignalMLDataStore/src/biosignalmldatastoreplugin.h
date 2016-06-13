@@ -63,7 +63,7 @@ public:
 #include "datastoreinterface.inl"
 
 private:
-    BioSignalMLExporter *mExporter;
+    BiosignalmlDataStoreExporter *mBiosignalmlDataStoreExporter;
 };
 
 //==============================================================================
