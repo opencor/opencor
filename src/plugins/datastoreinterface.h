@@ -112,19 +112,30 @@ private:
 
 //==============================================================================
 
-class DataStoreExporter
+class DataStoreExporter : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit DataStoreExporter(const QString &pId = QString());
-    virtual ~DataStoreExporter();
+    explicit DataStoreExporter(const QString &pFileName,
+                               DataStore *pDataStore);
 
-    virtual void execute(const QString &pFileName,
-                         DataStore *pDataStore) const = 0;
+    void start();
 
-    QString id() const;
+    virtual void execute() const = 0;
 
 private:
-    QString mId;
+    QThread *mThread;
+
+protected:
+    QString mFileName;
+    DataStore *mDataStore;
+
+Q_SIGNALS:
+    void done();
+
+private Q_SLOTS:
+    void started();
 };
 
 //==============================================================================

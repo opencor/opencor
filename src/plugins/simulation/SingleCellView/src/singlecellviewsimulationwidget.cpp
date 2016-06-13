@@ -2363,13 +2363,12 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     mPlugin->viewWidget()->showGlobalBusyWidget(this);
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
+    DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, mSimulation->results()->dataStore());
 
-    dataStoreExporter->execute(mFileName, mSimulation->results()->dataStore());
+    connect(dataStoreExporter, SIGNAL(done()),
+            this, SLOT(dataStoreExportDone()));
 
-    dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
-
-    mPlugin->viewWidget()->hideBusyWidget();
+    dataStoreExporter->start();
 }
 
 //==============================================================================
@@ -3162,6 +3161,15 @@ void SingleCellViewSimulationWidget::plotAxesChanged()
     SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(sender());
 
     mUpdatablePlotViewports.insert(plot, false);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::dataStoreExportDone()
+{
+    // We are done with the export, so hide our busy widget
+
+    mPlugin->viewWidget()->hideBusyWidget();
 }
 
 //==============================================================================

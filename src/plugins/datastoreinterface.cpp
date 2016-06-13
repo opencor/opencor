@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QThread>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace DataStore {
 
@@ -316,24 +320,50 @@ void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter(const QString &pId) :
-    mId(pId)
+DataStoreExporter::DataStoreExporter(const QString &pFileName,
+                                     DataStore *pDataStore) :
+    mFileName(pFileName),
+    mDataStore(pDataStore)
 {
+    // Create our thread
+
+    mThread = new QThread();
+
+    // Move ourselves to our thread
+
+    moveToThread(mThread);
+
+    // Create a few connections
+
+    connect(mThread, SIGNAL(started()),
+            this, SLOT(started()));
+
+    connect(mThread, SIGNAL(finished()),
+            mThread, SLOT(deleteLater()));
+    connect(mThread, SIGNAL(finished()),
+            this, SLOT(deleteLater()));
 }
 
 //==============================================================================
 
-DataStoreExporter::~DataStoreExporter()
+void DataStoreExporter::start()
 {
+    // Start the export
+
+    mThread->start();
 }
 
 //==============================================================================
 
-QString DataStoreExporter::id() const
+void DataStoreExporter::started()
 {
-    // Return our id
+    // Do the export itself
 
-    return mId;
+    execute();
+
+    // Let people know that we are done with the export
+
+    emit done();
 }
 
 //==============================================================================

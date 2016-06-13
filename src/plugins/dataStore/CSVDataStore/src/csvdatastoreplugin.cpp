@@ -58,22 +58,12 @@ void CSVDataStorePlugin::retranslateUi()
 // Data store interface
 //==============================================================================
 
-DataStore::DataStoreExporter * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
+DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(const QString &pFileName,
+                                                                             DataStore::DataStore *pDataStore) const
 {
-    Q_UNUSED(pId);
+    // Return an instance of our CSV data store exporter
 
-    // Return the instance of our CSV data store exporter
-
-    return mCsvDataStoreExporter;
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance)
-{
-    Q_UNUSED(pDataStoreExporterInstance);
-
-    // We don't handle this interface...
+    return new CsvDataStoreExporter(pFileName, pDataStore);
 }
 
 //==============================================================================
@@ -83,62 +73,6 @@ QString CSVDataStorePlugin::dataStoreName() const
     // Return the name of the data store
 
     return "CSV";
-}
-
-//==============================================================================
-// Plugin interface
-//==============================================================================
-
-void CSVDataStorePlugin::initializePlugin()
-{
-    // Create our CSV data store explorer instance
-
-    mCsvDataStoreExporter = new CsvDataStoreExporter();
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::finalizePlugin()
-{
-    // Create our CSV data store explorer instance
-
-    delete mCsvDataStoreExporter;
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::handleUrl(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
 }
 
 //==============================================================================

@@ -28,6 +28,7 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewsimulationwidget.cpp
         src/singlecellviewwidget.cpp
     HEADERS_MOC
+        ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
         ../../solverinterface.h

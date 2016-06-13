@@ -35,14 +35,21 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-void CsvDataStoreExporter::execute(const QString &pFileName,
-                                   DataStore::DataStore *pDataStore) const
+CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
+                                           DataStore::DataStore *pDataStore) :
+    DataStore::DataStoreExporter(pFileName, pDataStore)
+{
+}
+
+//==============================================================================
+
+void CsvDataStoreExporter::execute() const
 {
     // Export the given data store to a CSV file
 
     QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
     QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
-                                             Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
+                                             Core::newFileName(mFileName, QObject::tr("Data"), false, "csv"),
                                              QStringList() << csvFilter,
                                              &csvFilter);
 
@@ -51,8 +58,8 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
 
         static const QString Header = "%1 (%2)";
 
-        DataStore::DataStoreVariable *voi = pDataStore->voi();
-        DataStore::DataStoreVariables variables = pDataStore->variables();
+        DataStore::DataStoreVariable *voi = mDataStore->voi();
+        DataStore::DataStoreVariables variables = mDataStore->variables();
 
         QByteArray data = QByteArray();
 
@@ -73,7 +80,7 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
 
         // Data itself
 
-        for (qulonglong i = 0; i < pDataStore->size(); ++i) {
+        for (qulonglong i = 0; i < mDataStore->size(); ++i) {
             data += QString::number(voi->value(i));
 
             for (auto variable = variableBegin; variable != variableEnd; ++variable) {
@@ -82,12 +89,6 @@ void CsvDataStoreExporter::execute(const QString &pFileName,
             }
 
             data += "\n";
-
-            QCoreApplication::processEvents();
-//---GRY--- THE CALL TO QCoreApplication::processEvents() SHOULD BE REMOVED AND
-//          THE EXPORTER BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G.
-//          WHEN EXPORTING LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING
-//          THE EXPORTER WORK IN ITS OWN THREAD?... SEE ISSUE #849...
         }
 
         // The data is ready, so write it to the file

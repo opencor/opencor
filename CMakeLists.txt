@@ -107,6 +107,8 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+
+    src/plugins/datastoreinterface.h
 )
 
 SET(UIS
@@ -337,7 +339,7 @@ SET(PLUGINS
 
     # Selectable plugins
 
-    dataStore/BioSignalMLDataStore
+#    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
