@@ -1598,9 +1598,10 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 {
     // Return the view plugin associated with the file, which file name is given
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!pFileName.compare(mFileNames[i]))
             return viewPlugin(i);
+    }
 
     return 0;
 }
