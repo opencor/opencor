@@ -403,7 +403,7 @@ static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
 
 //==============================================================================
 
-QString CORE_EXPORT activeDirectory()
+QString activeDirectory()
 {
     // Retrieve and return the active directory
 
@@ -412,7 +412,7 @@ QString CORE_EXPORT activeDirectory()
 
 //==============================================================================
 
-void CORE_EXPORT setActiveDirectory(const QString &pDirName)
+void setActiveDirectory(const QString &pDirName)
 {
     // Keep track of the active directory
 

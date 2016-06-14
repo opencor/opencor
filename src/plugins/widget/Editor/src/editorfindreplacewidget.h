@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "editorglobal.h"
 #include "widget.h"
 
 //==============================================================================
@@ -50,7 +49,7 @@ namespace Editor {
 
 //==============================================================================
 
-class EDITOR_EXPORT EditorFindReplaceWidget : public Core::Widget
+class EditorFindReplaceWidget : public Core::Widget
 {
     Q_OBJECT
 

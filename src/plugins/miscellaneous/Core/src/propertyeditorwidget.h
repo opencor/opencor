@@ -149,7 +149,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-class CORE_EXPORT PropertyItem : public QStandardItem
+class PropertyItem : public QStandardItem
 {
 public:
     explicit PropertyItem(Property *pOwner);

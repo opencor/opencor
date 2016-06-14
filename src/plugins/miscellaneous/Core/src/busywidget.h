@@ -24,10 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "coreglobal.h"
-
-//==============================================================================
-
 #include <QColor>
 #include <QWidget>
 
@@ -42,7 +38,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT BusyWidget : public QWidget
+class BusyWidget : public QWidget
 {
     Q_OBJECT
 
