@@ -40,6 +40,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>CellML support:</strong> can now detect a variable of integration no matter where it is defined in a model (see issue <a href=\"https://github.com/opencor/opencor/issues/995\">#995</a>)." },
+                       { "change": "<strong>Data stores:</strong> data export is now done in its own thread (ee issue <a href=\"https://github.com/opencor/opencor/issues/849\">#849</a>)." },
                        { "change": "<strong>Text-based editing views:</strong> fixed a small problem with losing the focus and not being able to track changes to a file after having reloaded another file that depends on it (see issue <a href=\"https://github.com/opencor/opencor/issues/996\">#996</a>)." },
                        { "change": "<strong>CellML Text view:</strong> allow the import / export of the CellML Text format from / to CellML from the command line (see issue <a href=\"https://github.com/opencor/opencor/issues/992\">#992</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> applied an official patch to <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> 2.9.2 following a (Mac) OS X issue (see issue <a href=\"https://github.com/opencor/opencor/issues/994\">#994</a>)." }
