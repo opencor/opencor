@@ -17,26 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Save as BioSignalML widget
+// BioSignalML data store data class
 //==============================================================================
 
-#ifndef BioSignalMLDATASTORESAVEDIALOG_H
-#define BioSignalMLDATASTORESAVEDIALOG_H
-
-//==============================================================================
-
-#include "datastoreinterface.h"
-
-//==============================================================================
-
-#include <QDialog>
-#include <QVector>
-
-//==============================================================================
-
-namespace Ui {
-    class BioSignalMLSaveDialog;
-}
+#include "biosignalmldatastoredata.h"
 
 //==============================================================================
 
@@ -45,53 +29,70 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLSaveDialog : public QDialog
+BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
+                                                   const QString &pShortName,
+                                                   const QString &pAuthor,
+                                                   const QString &pDescription,
+                                                   const QVector<bool> &pSelectedVariables,
+                                                   const QString &pComment) :
+    DataStore::DataStoreData(pFileName),
+    mShortName(pShortName),
+    mAuthor(pAuthor),
+    mDescription(pDescription),
+    mSelectedVariables(pSelectedVariables),
+    mComment(pComment)
 {
-    Q_OBJECT
+}
 
-public:
-    explicit BioSignalMLSaveDialog(QWidget * pParent = nullptr);
-    ~BioSignalMLSaveDialog();
+//==============================================================================
 
-    virtual void retranslateUi();
+QString BiosignalmlDataStoreData::shortName() const
+{
+    // Return our short name
 
-    bool run(void);
+    return mShortName;
+}
 
-    void setDefaultFileName(const QString &pFileName);
-    QString fileName(void) const;
-    QString shortName(void) const;
-    QString description(void) const;
-    QString author(void) const;
-    void setComment(const QString & pComment);
-    void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
-    QVector<bool> selectedVariables() const;
-    bool selectedVariable(const size_t pIndex) const;
+//==============================================================================
 
-private slots:
-    void accepted(void);
-    void setFileName(bool checked = false);
-    void selectVariables(bool checked = false);
+QString BiosignalmlDataStoreData::author() const
+{
+    // Return our author
 
-private:
-    void setButtonStates(void) const;
+    return mAuthor;
+}
 
-    Ui::BioSignalMLSaveDialog *mGui;
+//==============================================================================
 
-    QString mDefaultFileName;
-    QVector<QString> mVariableLabels;
-    QVector<bool> mSelectedVariables;
-    bool mGotSignals;
-    bool mAccepted;
-};
+QString BiosignalmlDataStoreData::description() const
+{
+    // Return our description
+
+    return mDescription;
+}
+
+//==============================================================================
+
+QVector<bool> BiosignalmlDataStoreData::selectedVariables() const
+{
+    // Return our selected variables
+
+    return mSelectedVariables;
+}
+
+//==============================================================================
+
+QString BiosignalmlDataStoreData::comment() const
+{
+    // Return our comment
+
+    return mComment;
+}
 
 //==============================================================================
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

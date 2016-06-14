@@ -2358,18 +2358,27 @@ void SingleCellViewSimulationWidget::emitSplitterMoved()
 
 void SingleCellViewSimulationWidget::simulationDataExport()
 {
-    // Export our simulation data results
-
-    mPlugin->viewWidget()->showGlobalBusyWidget(this);
+    // Retrieve some data so that we can effectively export our simulation data
+    // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->newDataStoreExporterInstance();
+    DataStore::DataStore *dataStore = mSimulation->results()->dataStore();
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mFileName, dataStore);
 
-    dataStoreExporter->execute(mFileName, mSimulation->results()->dataStore());
+    if (dataStoreData) {
+        // We have got the data we need, so do the actual export
 
-    dataStoreInterface->deleteDataStoreExporterInstance(dataStoreExporter);
+        mPlugin->viewWidget()->showGlobalProgressBusyWidget(this);
 
-    mPlugin->viewWidget()->hideBusyWidget();
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
+
+        connect(dataStoreExporter, SIGNAL(done()),
+                this, SLOT(dataStoreExportDone()));
+        connect(dataStoreExporter, SIGNAL(progress(const double &)),
+                this, SLOT(dataStoreExportProgress(const double &)));
+
+        dataStoreExporter->start();
+    }
 }
 
 //==============================================================================
@@ -3162,6 +3171,24 @@ void SingleCellViewSimulationWidget::plotAxesChanged()
     SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(sender());
 
     mUpdatablePlotViewports.insert(plot, false);
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::dataStoreExportDone()
+{
+    // We are done with the export, so hide our busy widget
+
+    mPlugin->viewWidget()->hideBusyWidget();
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProgress)
+{
+    // There has been some progress with our export, so update our busy widget
+
+    mPlugin->viewWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

@@ -21,7 +21,6 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 
 //==============================================================================
@@ -35,65 +34,59 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-void CsvDataStoreExporter::execute(const QString &pFileName,
-                                   DataStore::DataStore *pDataStore) const
+CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
+                                           DataStore::DataStore *pDataStore,
+                                           DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporter(pFileName, pDataStore, pDataStoreData)
 {
-    // Export the given data store to a CSV file
+}
 
-    QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
-    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
-                                             Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
-                                             QStringList() << csvFilter,
-                                             &csvFilter);
+//==============================================================================
 
-    if (!fileName.isEmpty()) {
-        // Header
+void CsvDataStoreExporter::execute() const
+{
+    // Header
 
-        static const QString Header = "%1 (%2)";
+    static const QString Header = "%1 (%2)";
 
-        DataStore::DataStoreVariable *voi = pDataStore->voi();
-        DataStore::DataStoreVariables variables = pDataStore->variables();
+    DataStore::DataStoreVariable *voi = mDataStore->voi();
+    DataStore::DataStoreVariables variables = mDataStore->variables();
 
-        QByteArray data = QByteArray();
+    QByteArray data = QByteArray();
 
-        data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
-                           voi->unit());
+    data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+                       voi->unit());
 
-        auto variableBegin = variables.constBegin();
-        auto variableEnd = variables.constEnd();
+    auto variableBegin = variables.constBegin();
+    auto variableEnd = variables.constEnd();
+
+    for (auto variable = variableBegin; variable != variableEnd; ++variable) {
+        if ((*variable)->isValid()) {
+            data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
+                                   (*variable)->unit());
+        }
+    }
+
+    data += "\n";
+
+    // Data itself
+
+    for (qulonglong i = 0; i < mDataStore->size(); ++i) {
+        data += QString::number(voi->value(i));
 
         for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if ((*variable)->isValid()) {
-                data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
-                                       (*variable)->unit());
-            }
+            if ((*variable)->isValid())
+                data += ","+QString::number((*variable)->value(i));
         }
 
         data += "\n";
 
-        // Data itself
-
-        for (qulonglong i = 0; i < pDataStore->size(); ++i) {
-            data += QString::number(voi->value(i));
-
-            for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-                if ((*variable)->isValid())
-                    data += ","+QString::number((*variable)->value(i));
-            }
-
-            data += "\n";
-
-            QCoreApplication::processEvents();
-//---GRY--- THE CALL TO QCoreApplication::processEvents() SHOULD BE REMOVED AND
-//          THE EXPORTER BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G.
-//          WHEN EXPORTING LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING
-//          THE EXPORTER WORK IN ITS OWN THREAD?... SEE ISSUE #849...
-        }
-
-        // The data is ready, so write it to the file
-
-        Core::writeFileContentsToFile(fileName, data);
+        emit progress(double(i)/(mDataStore->size()-1));
     }
+
+    // The data is ready, so write it to the file
+
+    Core::writeFileContentsToFile(mDataStoreData->fileName(), data);
 }
 
 //==============================================================================

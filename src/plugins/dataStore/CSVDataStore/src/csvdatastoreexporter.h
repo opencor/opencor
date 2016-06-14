@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "csvdatastoreglobal.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -34,11 +33,14 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-class CSVDATASTORE_EXPORT CsvDataStoreExporter : public DataStore::DataStoreExporter
+class CsvDataStoreExporter : public DataStore::DataStoreExporter
 {
 public:
-    virtual void execute(const QString &pFileName,
-                         DataStore::DataStore *pDataStore) const;
+    explicit CsvDataStoreExporter(const QString &pFileName,
+                                  DataStore::DataStore *pDataStore,
+                                  DataStore::DataStoreData *pDataStoreData);
+
+    virtual void execute() const;
 };
 
 //==============================================================================

@@ -20,6 +20,8 @@ limitations under the License.
 // CSVDataStore plugin
 //==============================================================================
 
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 #include "csvdatastoreplugin.h"
 
@@ -58,26 +60,6 @@ void CSVDataStorePlugin::retranslateUi()
 // Data store interface
 //==============================================================================
 
-DataStore::DataStoreExporter * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
-{
-    Q_UNUSED(pId);
-
-    // Return the instance of our CSV data store exporter
-
-    return mCsvDataStoreExporter;
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::deleteDataStoreExporterInstance(DataStore::DataStoreExporter *pDataStoreExporterInstance)
-{
-    Q_UNUSED(pDataStoreExporterInstance);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 QString CSVDataStorePlugin::dataStoreName() const
 {
     // Return the name of the data store
@@ -86,59 +68,35 @@ QString CSVDataStorePlugin::dataStoreName() const
 }
 
 //==============================================================================
-// Plugin interface
-//==============================================================================
 
-void CSVDataStorePlugin::initializePlugin()
+DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
+                                                       DataStore::DataStore *pDataStore) const
 {
-    // Create our CSV data store explorer instance
+    Q_UNUSED(pDataStore);
 
-    mCsvDataStoreExporter = new CsvDataStoreExporter();
+    // Retrieve the name of the CSV file where our data is to be exported
+
+    QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
+    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
+                                             Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
+                                             QStringList() << csvFilter,
+                                             &csvFilter);
+
+    if (fileName.isEmpty())
+        return 0;
+    else
+        return new DataStore::DataStoreData(fileName);
 }
 
 //==============================================================================
 
-void CSVDataStorePlugin::finalizePlugin()
+DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(const QString &pFileName,
+                                                                             DataStore::DataStore *pDataStore,
+                                                                             DataStore::DataStoreData *pDataStoreData) const
 {
-    // Create our CSV data store explorer instance
+    // Return an instance of our CSV data store exporter
 
-    delete mCsvDataStoreExporter;
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CSVDataStorePlugin::handleUrl(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
+    return new CsvDataStoreExporter(pFileName, pDataStore, pDataStoreData);
 }
 
 //==============================================================================

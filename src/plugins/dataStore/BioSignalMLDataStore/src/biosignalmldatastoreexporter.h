@@ -25,8 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "biosignalmldatastoreglobal.h"
-#include "biosignalmldatastoresavedialog.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -36,20 +34,18 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
 namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLDATASTORE_EXPORT BioSignalMLExporter : public DataStore::DataStoreExporter
+class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
 {
 public:
-    BioSignalMLExporter(const QString &pId = QString());
-    virtual void execute(const QString &pFileName,
-                         DataStore::DataStore *pDataStore) const;
+    explicit BiosignalmlDataStoreExporter(const QString &pFileName,
+                                          DataStore::DataStore *pDataStore,
+                                          DataStore::DataStoreData *pDataStoreData);
 
-private:
-    BioSignalMLSaveDialog *mSaveDialog;
+    virtual void execute() const;
 };
 
 //==============================================================================

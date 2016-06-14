@@ -327,6 +327,9 @@ private Q_SLOTS:
     void openCellmlFile();
 
     void plotAxesChanged();
+
+    void dataStoreExportDone();
+    void dataStoreExportProgress(const double &pProgress);
 };
 
 //==============================================================================

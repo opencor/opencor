@@ -32,7 +32,6 @@ limitations under the License.
 #include "datastoreinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
-#include "plugininterface.h"
 
 //==============================================================================
 
@@ -46,7 +45,6 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo();
 //==============================================================================
 
 class BioSignalMLDataStorePlugin : public QObject, public I18nInterface,
-                                   public PluginInterface,
                                    public DataStoreInterface
 {
     Q_OBJECT
@@ -54,16 +52,11 @@ class BioSignalMLDataStorePlugin : public QObject, public I18nInterface,
     Q_PLUGIN_METADATA(IID "OpenCOR.BioSignalMLDataStorePlugin" FILE "biosignalmldatastoreplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
 
 public:
 #include "i18ninterface.inl"
-#include "plugininterface.inl"
 #include "datastoreinterface.inl"
-
-private:
-    BioSignalMLExporter *mExporter;
 };
 
 //==============================================================================

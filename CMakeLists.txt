@@ -107,6 +107,8 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+
+    src/plugins/datastoreinterface.h
 )
 
 SET(UIS

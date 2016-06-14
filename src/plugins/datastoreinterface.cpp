@@ -24,8 +24,28 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QThread>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace DataStore {
+
+//==============================================================================
+
+DataStoreData::DataStoreData(const QString &pFileName) :
+    mFileName(pFileName)
+{
+}
+
+//==============================================================================
+
+QString DataStoreData::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
 
 //==============================================================================
 
@@ -172,9 +192,8 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-DataStore::DataStore(const QString &pId, const QString &pUri,
+DataStore::DataStore(const QString &pUri,
                      const qulonglong &pSize) :
-    mId(pId),
     mlUri(pUri),
     mSize(pSize),
     mVoi(0),
@@ -194,15 +213,6 @@ DataStore::~DataStore()
          variable != variableEnd; ++variable) {
         delete *variable;
     }
-}
-
-//==============================================================================
-
-QString DataStore::id() const
-{
-    // Return our id
-
-    return mId;
 }
 
 //==============================================================================
@@ -316,24 +326,63 @@ void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter(const QString &pId) :
-    mId(pId)
+DataStoreExporter::DataStoreExporter(const QString &pFileName,
+                                     DataStore *pDataStore,
+                                     DataStoreData *pDataStoreData) :
+    mFileName(pFileName),
+    mDataStore(pDataStore),
+    mDataStoreData(pDataStoreData)
 {
+    // Create our thread
+
+    mThread = new QThread();
+
+    // Move ourselves to our thread
+
+    moveToThread(mThread);
+
+    // Create a few connections
+
+    connect(mThread, SIGNAL(started()),
+            this, SLOT(started()));
+
+    connect(mThread, SIGNAL(finished()),
+            mThread, SLOT(deleteLater()));
+    connect(mThread, SIGNAL(finished()),
+            this, SLOT(deleteLater()));
 }
 
 //==============================================================================
 
 DataStoreExporter::~DataStoreExporter()
 {
+    // Delete some internal objects
+    // Note: no need to delete mDataStore since it will be automatically
+    //       deleted through our threaded mechanism...
+
+    delete mDataStoreData;
 }
 
 //==============================================================================
 
-QString DataStoreExporter::id() const
+void DataStoreExporter::start()
 {
-    // Return our id
+    // Start the export
 
-    return mId;
+    mThread->start();
+}
+
+//==============================================================================
+
+void DataStoreExporter::started()
+{
+    // Do the export itself
+
+    execute();
+
+    // Let people know that we are done with the export
+
+    emit done();
 }
 
 //==============================================================================

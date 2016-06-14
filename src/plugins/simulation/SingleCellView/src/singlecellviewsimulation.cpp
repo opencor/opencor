@@ -680,8 +680,7 @@ bool SingleCellViewSimulationResults::createDataStore()
     // well as with constant, rate, state and algebraic variables
 
     try {
-        mDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->cmetaId(),
-                                              mRuntime->cellmlFile()->xmlBase(),
+        mDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase(),
                                               simulationSize);
 
         mPoints = mDataStore->addVoi();
