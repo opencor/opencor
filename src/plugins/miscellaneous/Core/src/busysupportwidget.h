@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "coreglobal.h"
 
 //==============================================================================
 
@@ -41,7 +42,7 @@ class BusyWidget;
 
 //==============================================================================
 
-class BusySupportWidget
+class CORE_EXPORT BusySupportWidget
 {
 public:
     explicit BusySupportWidget();
