@@ -327,10 +327,10 @@ void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
 //==============================================================================
 
 DataStoreExporter::DataStoreExporter(const QString &pFileName,
-                                     DataStore *pDatapStore,
+                                     DataStore *pDataStore,
                                      DataStoreData *pDataStoreData) :
     mFileName(pFileName),
-    mDataStore(pDatapStore),
+    mDataStore(pDataStore),
     mDataStoreData(pDataStoreData)
 {
     // Create our thread

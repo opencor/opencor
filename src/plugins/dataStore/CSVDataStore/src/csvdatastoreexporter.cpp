@@ -35,9 +35,9 @@ namespace CSVDataStore {
 //==============================================================================
 
 CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
-                                           DataStore::DataStore *pDatapStore,
+                                           DataStore::DataStore *pDataStore,
                                            DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pFileName, pDatapStore, pDataStoreData)
+    DataStore::DataStoreExporter(pFileName, pDataStore, pDataStoreData)
 {
 }
 

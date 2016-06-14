@@ -127,8 +127,7 @@ class DataStoreExporter : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreExporter(const QString &pFileName,
-                               DataStore *pDatapStore,
+    explicit DataStoreExporter(const QString &pFileName, DataStore *pDataStore,
                                DataStoreData *pDataStoreData);
     ~DataStoreExporter();
 

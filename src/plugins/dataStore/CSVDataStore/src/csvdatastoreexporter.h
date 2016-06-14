@@ -38,7 +38,7 @@ class CSVDATASTORE_EXPORT CsvDataStoreExporter : public DataStore::DataStoreExpo
 {
 public:
     explicit CsvDataStoreExporter(const QString &pFileName,
-                                  DataStore::DataStore *pDatapStore,
+                                  DataStore::DataStore *pDataStore,
                                   DataStore::DataStoreData *pDataStoreData);
 
     virtual void execute() const;
