@@ -2358,17 +2358,24 @@ void SingleCellViewSimulationWidget::emitSplitterMoved()
 
 void SingleCellViewSimulationWidget::simulationDataExport()
 {
-    // Export our simulation data results
-
-    mPlugin->viewWidget()->showGlobalBusyWidget(this);
+    // Retrieve some data so that we can effectively export our simulation data
+    // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, mSimulation->results()->dataStore());
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mFileName);
 
-    connect(dataStoreExporter, SIGNAL(done()),
-            this, SLOT(dataStoreExportDone()));
+    if (dataStoreData) {
+        // We have got the data we need, so do the actual export
 
-    dataStoreExporter->start();
+        mPlugin->viewWidget()->showGlobalBusyWidget(this);
+
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, mSimulation->results()->dataStore(), dataStoreData);
+
+        connect(dataStoreExporter, SIGNAL(done()),
+                this, SLOT(dataStoreExportDone()));
+
+        dataStoreExporter->start();
+    }
 }
 
 //==============================================================================

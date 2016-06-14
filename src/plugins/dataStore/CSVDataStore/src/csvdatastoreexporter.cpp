@@ -21,7 +21,6 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 
 //==============================================================================
@@ -36,8 +35,9 @@ namespace CSVDataStore {
 //==============================================================================
 
 CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
-                                           DataStore::DataStore *pDataStore) :
-    DataStore::DataStoreExporter(pFileName, pDataStore)
+                                           DataStore::DataStore *pDatapStore,
+                                           DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporter(pFileName, pDatapStore, pDataStoreData)
 {
 }
 
@@ -45,56 +45,46 @@ CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
 
 void CsvDataStoreExporter::execute() const
 {
-    // Export the given data store to a CSV file
+    // Header
 
-    QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
-    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
-                                             Core::newFileName(mFileName, QObject::tr("Data"), false, "csv"),
-                                             QStringList() << csvFilter,
-                                             &csvFilter);
+    static const QString Header = "%1 (%2)";
 
-    if (!fileName.isEmpty()) {
-        // Header
+    DataStore::DataStoreVariable *voi = mDataStore->voi();
+    DataStore::DataStoreVariables variables = mDataStore->variables();
 
-        static const QString Header = "%1 (%2)";
+    QByteArray data = QByteArray();
 
-        DataStore::DataStoreVariable *voi = mDataStore->voi();
-        DataStore::DataStoreVariables variables = mDataStore->variables();
+    data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+                       voi->unit());
 
-        QByteArray data = QByteArray();
+    auto variableBegin = variables.constBegin();
+    auto variableEnd = variables.constEnd();
 
-        data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
-                           voi->unit());
+    for (auto variable = variableBegin; variable != variableEnd; ++variable) {
+        if ((*variable)->isValid()) {
+            data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
+                                   (*variable)->unit());
+        }
+    }
 
-        auto variableBegin = variables.constBegin();
-        auto variableEnd = variables.constEnd();
+    data += "\n";
+
+    // Data itself
+
+    for (qulonglong i = 0; i < mDataStore->size(); ++i) {
+        data += QString::number(voi->value(i));
 
         for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if ((*variable)->isValid()) {
-                data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
-                                       (*variable)->unit());
-            }
+            if ((*variable)->isValid())
+                data += ","+QString::number((*variable)->value(i));
         }
 
         data += "\n";
-
-        // Data itself
-
-        for (qulonglong i = 0; i < mDataStore->size(); ++i) {
-            data += QString::number(voi->value(i));
-
-            for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-                if ((*variable)->isValid())
-                    data += ","+QString::number((*variable)->value(i));
-            }
-
-            data += "\n";
-        }
-
-        // The data is ready, so write it to the file
-
-        Core::writeFileContentsToFile(fileName, data);
     }
+
+    // The data is ready, so write it to the file
+
+    Core::writeFileContentsToFile(mDataStoreData->fileName(), data);
 }
 
 //==============================================================================

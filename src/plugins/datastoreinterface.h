@@ -37,6 +37,19 @@ namespace DataStore {
 
 //==============================================================================
 
+class DataStoreData
+{
+public:
+    explicit DataStoreData(const QString &pFileName);
+
+    QString fileName() const;
+
+private:
+    QString mFileName;
+};
+
+//==============================================================================
+
 class DataStoreVariable
 {
 public:
@@ -115,7 +128,9 @@ class DataStoreExporter : public QObject
 
 public:
     explicit DataStoreExporter(const QString &pFileName,
-                               DataStore *pDataStore);
+                               DataStore *pDatapStore,
+                               DataStoreData *pDataStoreData);
+    ~DataStoreExporter();
 
     void start();
 
@@ -127,6 +142,7 @@ private:
 protected:
     QString mFileName;
     DataStore *mDataStore;
+    DataStoreData *mDataStoreData;
 
 Q_SIGNALS:
     void done();

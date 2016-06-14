@@ -33,6 +33,22 @@ namespace DataStore {
 
 //==============================================================================
 
+DataStoreData::DataStoreData(const QString &pFileName) :
+    mFileName(pFileName)
+{
+}
+
+//==============================================================================
+
+QString DataStoreData::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
 DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
     mUri(QString()),
     mName(QString()),
@@ -311,9 +327,11 @@ void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
 //==============================================================================
 
 DataStoreExporter::DataStoreExporter(const QString &pFileName,
-                                     DataStore *pDataStore) :
+                                     DataStore *pDatapStore,
+                                     DataStoreData *pDataStoreData) :
     mFileName(pFileName),
-    mDataStore(pDataStore)
+    mDataStore(pDatapStore),
+    mDataStoreData(pDataStoreData)
 {
     // Create our thread
 
@@ -332,6 +350,17 @@ DataStoreExporter::DataStoreExporter(const QString &pFileName,
             mThread, SLOT(deleteLater()));
     connect(mThread, SIGNAL(finished()),
             this, SLOT(deleteLater()));
+}
+
+//==============================================================================
+
+DataStoreExporter::~DataStoreExporter()
+{
+    // Delete some internal objects
+    // Note: no need to delete mDataStore since it will be automatically
+    //       deleted through our threaded mechanism...
+
+    delete mDataStoreData;
 }
 
 //==============================================================================

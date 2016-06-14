@@ -20,6 +20,8 @@ limitations under the License.
 // CSVDataStore plugin
 //==============================================================================
 
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 #include "csvdatastoreplugin.h"
 
@@ -67,12 +69,31 @@ QString CSVDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
+DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName) const
+{
+    // Retrieve the name of the CSV file where our data is to be exported
+
+    QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
+    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
+                                             Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
+                                             QStringList() << csvFilter,
+                                             &csvFilter);
+
+    if (fileName.isEmpty())
+        return 0;
+    else
+        return new DataStore::DataStoreData(fileName);
+}
+
+//==============================================================================
+
 DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(const QString &pFileName,
-                                                                             DataStore::DataStore *pDataStore) const
+                                                                             DataStore::DataStore *pDataStore,
+                                                                             DataStore::DataStoreData *pDataStoreData) const
 {
     // Return an instance of our CSV data store exporter
 
-    return new CsvDataStoreExporter(pFileName, pDataStore);
+    return new CsvDataStoreExporter(pFileName, pDataStore, pDataStoreData);
 }
 
 //==============================================================================
