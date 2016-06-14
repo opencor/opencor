@@ -6,7 +6,8 @@
 
     virtual QString dataStoreName() const PURE;
 
-    virtual DataStore::DataStoreData * getData(const QString &pFileName) const PURE;
+    virtual DataStore::DataStoreData * getData(const QString &pFileName,
+                                               DataStore::DataStore *pDataStore) const PURE;
 
     virtual DataStore::DataStoreExporter * dataStoreExporterInstance(const QString &pFileName,
                                                                      DataStore::DataStore *pDataStore,

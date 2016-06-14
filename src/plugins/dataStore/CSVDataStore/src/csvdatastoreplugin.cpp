@@ -69,8 +69,11 @@ QString CSVDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
-DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName) const
+DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
+                                                       DataStore::DataStore *pDataStore) const
 {
+    Q_UNUSED(pDataStore);
+
     // Retrieve the name of the CSV file where our data is to be exported
 
     QString csvFilter = QObject::tr("CSV File")+" (*.csv)";

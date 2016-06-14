@@ -339,7 +339,7 @@ SET(PLUGINS
 
     # Selectable plugins
 
-#    dataStore/BioSignalMLDataStore
+    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView

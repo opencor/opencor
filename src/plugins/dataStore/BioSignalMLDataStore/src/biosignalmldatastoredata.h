@@ -17,26 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Save as BioSignalML widget
+// BioSignalML data store data class
 //==============================================================================
 
-#ifndef BioSignalMLDATASTORESAVEDIALOG_H
-#define BioSignalMLDATASTORESAVEDIALOG_H
+#ifndef BIOSIGNALMLDATASTOREDATA_H
+#define BIOSIGNALMLDATASTOREDATA_H
 
 //==============================================================================
 
 #include "datastoreinterface.h"
-
-//==============================================================================
-
-#include <QDialog>
-#include <QVector>
-
-//==============================================================================
-
-namespace Ui {
-    class BioSignalMLSaveDialog;
-}
 
 //==============================================================================
 
@@ -45,43 +34,28 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLSaveDialog : public QDialog
+class BiosignalmlDataStoreData : public DataStore::DataStoreData
 {
-    Q_OBJECT
-
 public:
-    explicit BioSignalMLSaveDialog(QWidget * pParent = nullptr);
-    ~BioSignalMLSaveDialog();
+    explicit BiosignalmlDataStoreData(const QString &pFileName,
+                                      const QString &pShortName,
+                                      const QString &pAuthor,
+                                      const QString &pDescription,
+                                      const QVector<bool> &pSelectedVariables,
+                                      const QString &pComment);
 
-    virtual void retranslateUi();
-
-    bool run(void);
-
-    void setDefaultFileName(const QString &pFileName);
-    QString fileName(void) const;
-    QString shortName(void) const;
-    QString description(void) const;
-    QString author(void) const;
-    void setComment(const QString & pComment);
-    void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
+    QString shortName() const;
+    QString author() const;
+    QString description() const;
     QVector<bool> selectedVariables() const;
-    bool selectedVariable(const size_t pIndex) const;
-
-private slots:
-    void accepted(void);
-    void setFileName(bool checked = false);
-    void selectVariables(bool checked = false);
+    QString comment() const;
 
 private:
-    void setButtonStates(void) const;
-
-    Ui::BioSignalMLSaveDialog *mGui;
-
-    QString mDefaultFileName;
-    QVector<QString> mVariableLabels;
+    QString mShortName;
+    QString mAuthor;
+    QString mDescription;
     QVector<bool> mSelectedVariables;
-    bool mGotSignals;
-    bool mAccepted;
+    QString mComment;
 };
 
 //==============================================================================

@@ -2362,14 +2362,15 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mFileName);
+    DataStore::DataStore *dataStore = mSimulation->results()->dataStore();
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mFileName, dataStore);
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
         mPlugin->viewWidget()->showGlobalProgressBusyWidget(this);
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, mSimulation->results()->dataStore(), dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
 
         connect(dataStoreExporter, SIGNAL(done()),
                 this, SLOT(dataStoreExportDone()));

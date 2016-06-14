@@ -196,6 +196,13 @@ void BioSignalMLSaveDialog::selectVariables(bool checked)
 
 //==============================================================================
 
+QVector<bool> BioSignalMLSaveDialog::selectedVariables() const
+{
+    return mSelectedVariables;
+}
+
+//==============================================================================
+
 bool BioSignalMLSaveDialog::selectedVariable(const size_t pIndex) const
 {
     return mSelectedVariables[pIndex];
