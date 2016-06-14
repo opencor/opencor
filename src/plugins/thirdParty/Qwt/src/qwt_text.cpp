@@ -518,18 +518,10 @@ double QwtText::heightForWidth( double width, const QFont &defaultFont ) const
 }
 
 /*!
-   Find the height for a given width
-
-   \param defaultFont Font, used for the calculation if the text has no font
-
-   \return Calculated height
-*/
-
-/*!
    Returns the size, that is needed to render text
 
    \param defaultFont Font of the text
-   \return Caluclated size
+   \return Calculated size
 */
 QSizeF QwtText::textSize( const QFont &defaultFont ) const
 {

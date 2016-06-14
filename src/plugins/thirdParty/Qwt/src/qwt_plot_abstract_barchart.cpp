@@ -347,7 +347,7 @@ void QwtPlotAbstractBarChart::getCanvasMarginHint( const QwtScaleMap &xMap,
                 w = canvasRect.height();
             }
 
-            const double sampleWidthP = ( w - spacing * ds )
+            const double sampleWidthP = ( w - spacing * ( numSamples - 1 ) )
                 * sampleWidthS / ( ds + sampleWidthS );
 
             hint = 0.5 * sampleWidthP;

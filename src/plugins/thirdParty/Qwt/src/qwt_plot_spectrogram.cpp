@@ -423,8 +423,8 @@ QImage QwtPlotSpectrogram::renderImage(
     d_data->data->initRaster( area, image.size() );
 
 #if DEBUG_RENDER
-	QElapsedTimer time;
-	time.start();
+    QElapsedTimer time;
+    time.start();
 #endif
 
 #if QT_VERSION >= 0x040400 && !defined(QT_NO_QFUTURE)
