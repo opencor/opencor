@@ -4,9 +4,9 @@
     #define PURE
 #endif
 
+    virtual QString dataStoreName() const PURE;
+
     virtual DataStore::DataStoreExporter * dataStoreExporterInstance(const QString &pFileName,
                                                                      DataStore::DataStore *pDataStore) const PURE;
-
-    virtual QString dataStoreName() const PURE;
 
 #undef PURE

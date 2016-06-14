@@ -176,9 +176,8 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-DataStore::DataStore(const QString &pId, const QString &pUri,
+DataStore::DataStore(const QString &pUri,
                      const qulonglong &pSize) :
-    mId(pId),
     mlUri(pUri),
     mSize(pSize),
     mVoi(0),
@@ -198,15 +197,6 @@ DataStore::~DataStore()
          variable != variableEnd; ++variable) {
         delete *variable;
     }
-}
-
-//==============================================================================
-
-QString DataStore::id() const
-{
-    // Return our id
-
-    return mId;
 }
 
 //==============================================================================

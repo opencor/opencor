@@ -58,21 +58,21 @@ void CSVDataStorePlugin::retranslateUi()
 // Data store interface
 //==============================================================================
 
+QString CSVDataStorePlugin::dataStoreName() const
+{
+    // Return the name of the data store
+
+    return "CSV";
+}
+
+//==============================================================================
+
 DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(const QString &pFileName,
                                                                              DataStore::DataStore *pDataStore) const
 {
     // Return an instance of our CSV data store exporter
 
     return new CsvDataStoreExporter(pFileName, pDataStore);
-}
-
-//==============================================================================
-
-QString CSVDataStorePlugin::dataStoreName() const
-{
-    // Return the name of the data store
-
-    return "CSV";
 }
 
 //==============================================================================

@@ -82,11 +82,9 @@ typedef QVector<DataStoreVariable *> DataStoreVariables;
 class DataStore
 {
 public:
-    explicit DataStore(const QString &pId, const QString &pUri,
-                       const qulonglong &pSize);
+    explicit DataStore(const QString &pUri, const qulonglong &pSize);
     virtual ~DataStore();
 
-    QString id() const;
     QString uri() const;
 
     qulonglong size() const;
@@ -101,7 +99,6 @@ public:
     void setValues(const qulonglong &pPosition, const double &pValue);
 
 private:
-    QString mId;
     QString mlUri;
 
     const qulonglong mSize;
