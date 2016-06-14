@@ -478,8 +478,12 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setBrush(mForegroundColor);
 
-        painter.drawPie(QRectF(-0.5*size, -0.5*size, size, size),
-                        90*16, -mProgress*360*16);
+        if (mProgress == 1.0) {
+            painter.drawEllipse(QPointF(0.0, 0.0), 0.5*size, 0.5*size);
+        } else {
+            painter.drawPie(QRectF(-0.5*size, -0.5*size, size, size),
+                            90*16, -mProgress*360*16);
+        }
     }
 
     // Accept the event

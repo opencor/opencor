@@ -2367,12 +2367,14 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
-        mPlugin->viewWidget()->showGlobalBusyWidget(this);
+        mPlugin->viewWidget()->showGlobalProgressBusyWidget(this);
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, mSimulation->results()->dataStore(), dataStoreData);
 
         connect(dataStoreExporter, SIGNAL(done()),
                 this, SLOT(dataStoreExportDone()));
+        connect(dataStoreExporter, SIGNAL(progress(const double &)),
+                this, SLOT(dataStoreExportProgress(const double &)));
 
         dataStoreExporter->start();
     }
@@ -3177,6 +3179,15 @@ void SingleCellViewSimulationWidget::dataStoreExportDone()
     // We are done with the export, so hide our busy widget
 
     mPlugin->viewWidget()->hideBusyWidget();
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProgress)
+{
+    // There has been some progress with our export, so update our busy widget
+
+    mPlugin->viewWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

@@ -80,6 +80,8 @@ void CsvDataStoreExporter::execute() const
         }
 
         data += "\n";
+
+        emit progress(double(i)/(mDataStore->size()-1));
     }
 
     // The data is ready, so write it to the file

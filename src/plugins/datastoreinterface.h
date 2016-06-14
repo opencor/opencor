@@ -146,6 +146,7 @@ protected:
 
 Q_SIGNALS:
     void done();
+    void progress(const double &pProgress) const;
 
 private Q_SLOTS:
     void started();
