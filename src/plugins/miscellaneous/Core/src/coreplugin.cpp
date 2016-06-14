@@ -357,7 +357,7 @@ void CorePlugin::initializePlugin()
                                       QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O),
                                       Core::mainWindow());
 
-    mFileReloadAction = new QAction(Core::mainWindow());
+    mFileReloadAction = Core::newAction(Core::mainWindow());
 
     mFileDuplicateAction = newAction(QKeySequence(Qt::CTRL|Qt::Key_D),
                                      Core::mainWindow());
@@ -414,11 +414,11 @@ void CorePlugin::initializePlugin()
     #error Unsupported platform
 #endif
                                     Core::mainWindow());
-    mFileCloseAllAction = new QAction(Core::mainWindow());
+    mFileCloseAllAction = Core::newAction(Core::mainWindow());
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    mOpenReloadSeparator = new QAction(Core::mainWindow());
+    mOpenReloadSeparator = Core::newAction(Core::mainWindow());
 
     mOpenReloadSeparator->setSeparator(true);
 
@@ -429,9 +429,9 @@ void CorePlugin::initializePlugin()
 
     mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
                                                 Core::mainWindow());
-    mFileReopenSubMenuSeparator1 = new QAction(Core::mainWindow());
-    mFileReopenSubMenuSeparator2 = new QAction(Core::mainWindow());
-    mFileClearReopenSubMenuAction = new QAction(Core::mainWindow());
+    mFileReopenSubMenuSeparator1 = Core::newAction(Core::mainWindow());
+    mFileReopenSubMenuSeparator2 = Core::newAction(Core::mainWindow());
+    mFileClearReopenSubMenuAction = Core::newAction(Core::mainWindow());
 
     mFileReopenSubMenuSeparator1->setSeparator(true);
     mFileReopenSubMenuSeparator2->setSeparator(true);
@@ -665,7 +665,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Add the recent files to our Reopen sub-menu
 
     foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
-        QAction *action = new QAction(Core::mainWindow());
+        QAction *action = Core::newAction(Core::mainWindow());
 
         action->setEnabled(pEnabled);
         action->setText(recentFile);

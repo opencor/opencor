@@ -57,8 +57,8 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mClearAction = new QAction(this);
-    mCopyToClipboardAction = new QAction(this);
+    mClearAction = Core::newAction(this);
+    mCopyToClipboardAction = Core::newAction(this);
 
     connect(mClearAction, SIGNAL(triggered(bool)),
             this, SLOT(clear()));

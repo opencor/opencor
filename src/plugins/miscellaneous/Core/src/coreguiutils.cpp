@@ -464,6 +464,15 @@ QAction * newAction(const QKeySequence::StandardKey &pStandardKey,
 
 //==============================================================================
 
+QAction * newAction(QWidget *pParent)
+{
+    // Create and return an action
+
+    return new QAction(pParent);
+}
+
+//==============================================================================
+
 QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
                        QWidget *pParent)
 {

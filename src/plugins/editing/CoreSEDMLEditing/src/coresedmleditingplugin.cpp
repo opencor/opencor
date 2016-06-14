@@ -179,14 +179,14 @@ void CoreSEDMLEditingPlugin::updateGui(Plugin *pViewPlugin,
         if (editor) {
             QList<QAction *> contextMenuActions = editor->contextMenu()->actions();
 
-            QAction *separatorAction = new QAction(Core::mainWindow());
+            QAction *separatorAction = Core::newAction(Core::mainWindow());
 
             separatorAction->setSeparator(true);
 
             contextMenuActions << separatorAction;
             contextMenuActions << mEditReformatAction;
 
-            separatorAction = new QAction(Core::mainWindow());
+            separatorAction = Core::newAction(Core::mainWindow());
 
             separatorAction->setSeparator(true);
 
@@ -246,11 +246,11 @@ void CoreSEDMLEditingPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mEditReformatAction = new QAction(Core::mainWindow());
+    mEditReformatAction = Core::newAction(Core::mainWindow());
 
     mEditReformatAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_R));
 
-    mToolsSedmlValidationAction = new QAction(Core::mainWindow());
+    mToolsSedmlValidationAction = Core::newAction(Core::mainWindow());
 
     mToolsSedmlValidationAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_T));
 

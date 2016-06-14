@@ -140,7 +140,7 @@ void CellMLSupportPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mFileNewCellmlFileAction = new QAction(Core::mainWindow());
+    mFileNewCellmlFileAction = Core::newAction(Core::mainWindow());
 
     // Some connections to handle our different actions
 

@@ -140,7 +140,7 @@ void SEDMLSupportPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mFileNewSedmlFileAction = new QAction(Core::mainWindow());
+    mFileNewSedmlFileAction = Core::newAction(Core::mainWindow());
 
     // Some connections to handle our different actions
 

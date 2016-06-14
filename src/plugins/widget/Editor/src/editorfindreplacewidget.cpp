@@ -71,7 +71,7 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     // Create and handle our drop-down menu action
 
-    mDropDownAction = new QAction(this);
+    mDropDownAction = Core::newAction(this);
 
     mCaseSensitiveAction = Core::newAction(true, this);
     mWholeWordsOnlyAction = Core::newAction(true, this);

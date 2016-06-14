@@ -133,7 +133,7 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     mSubscriptsAction = newAction();
     mGreekSymbolsAction = newAction();
     mDigitGroupingAction = newAction();
-    mCopyToClipboardAction = new QAction(this);
+    mCopyToClipboardAction = Core::newAction(this);
 
     connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
             this, SLOT(update()));

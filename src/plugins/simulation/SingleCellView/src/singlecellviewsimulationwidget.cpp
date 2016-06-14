@@ -164,7 +164,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
 
     foreach (Plugin *cellmlEditingViewPlugin, pPlugin->cellmlEditingViewPlugins()) {
-        QAction *action = new QAction(Core::mainWindow());
+        QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
 
