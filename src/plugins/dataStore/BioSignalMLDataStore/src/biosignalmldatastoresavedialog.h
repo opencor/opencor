@@ -25,7 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "biosignalmldatastoreglobal.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -46,7 +45,7 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLDATASTORE_EXPORT BioSignalMLSaveDialog : public QDialog
+class BioSignalMLSaveDialog : public QDialog
 {
     Q_OBJECT
 

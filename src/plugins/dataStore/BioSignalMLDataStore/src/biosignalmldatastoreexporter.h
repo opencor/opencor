@@ -25,8 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "biosignalmldatastoreglobal.h"
-#include "biosignalmldatastoresavedialog.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -40,7 +38,7 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLDATASTORE_EXPORT BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
+class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
 {
 public:
     BiosignalmlDataStoreExporter(const QString &pId = QString());
