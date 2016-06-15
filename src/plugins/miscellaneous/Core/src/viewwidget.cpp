@@ -24,29 +24,18 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QVBoxLayout>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Core {
 
 //==============================================================================
 
-ViewWidget::ViewWidget(QWidget *pParent, const bool &pNeedLayout) :
+ViewWidget::ViewWidget(QWidget *pParent) :
     Widget(pParent),
     BusySupportWidget()
 {
-    // Create and set our vertical layout, if needed
+    // Create a layout for ourselves
 
-    if (pNeedLayout) {
-        QVBoxLayout *layout = new QVBoxLayout(this);
-
-        layout->setMargin(0);
-        layout->setSpacing(0);
-
-        setLayout(layout);
-    }
+    createLayout();
 }
 
 //==============================================================================

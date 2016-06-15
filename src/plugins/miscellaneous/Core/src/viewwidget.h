@@ -40,7 +40,7 @@ class CORE_EXPORT ViewWidget : public Widget, public BusySupportWidget
     Q_OBJECT
 
 public:
-    explicit ViewWidget(QWidget *pParent, const bool &pNeedLayout = true);
+    explicit ViewWidget(QWidget *pParent);
 
     virtual QList<QWidget *> statusBarWidgets() const;
 

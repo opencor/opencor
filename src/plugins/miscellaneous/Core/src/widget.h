@@ -46,6 +46,8 @@ public:
     explicit Widget(QWidget *pParent);
     explicit Widget(const QSize &pSizeHint, QWidget *pParent);
 
+    void createLayout();
+
 protected:
     virtual QSize sizeHint() const;
 

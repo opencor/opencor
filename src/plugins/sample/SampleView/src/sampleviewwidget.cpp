@@ -40,10 +40,14 @@ namespace SampleView {
 //==============================================================================
 
 SampleViewWidget::SampleViewWidget(QWidget *pParent) :
-    ViewWidget(pParent, false),
+    ViewWidget(pParent),
     mGui(new Ui::SampleViewWidget),
     mFileName(QString())
 {
+    // Delete the layout that comes with ViewWidget
+
+    delete layout();
+
     // Set up the GUI
 
     mGui->setupUi(this);
