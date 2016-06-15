@@ -15,7 +15,6 @@ ADD_PLUGIN(PMRWindow
         src/pmrwindowwidget.h
         src/pmrwindowwindow.h
     UIS
-        src/pmrwindowwidget.ui
         src/pmrwindowwindow.ui
     INCLUDE_DIRS
         src
