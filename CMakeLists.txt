@@ -364,7 +364,7 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
-    tool/CellMLTools
+    tools/CellMLTools
 
     # Sample plugins
 
