@@ -43,12 +43,6 @@ class QwtPlotDirectPainter;
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellViewGraphPanelPlotWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -225,8 +219,6 @@ private:
         ZoomRegion
     };
 
-    Ui::SingleCellViewGraphPanelPlotWidget *mGui;
-
     QwtPlotDirectPainter *mDirectPainter;
 
     SingleCellViewGraphPanelPlotGraphs mGraphs;
@@ -247,6 +239,11 @@ private:
 
     bool mNeedContextMenu;
     QMenu *mContextMenu;
+
+    QAction *mCopyToClipboardAction;
+    QAction *mZoomInAction;
+    QAction *mZoomOutAction;
+    QAction *mResetZoomAction;
 
     SingleCellViewGraphPanelPlotScaleDraw *mAxisX;
     SingleCellViewGraphPanelPlotScaleDraw *mAxisY;
@@ -293,12 +290,10 @@ Q_SIGNALS:
                      const double &pMinY, const double &pMaxY);
 
 private Q_SLOTS:
-    void on_actionCopyToClipboard_triggered();
-
-    void on_actionZoomIn_triggered();
-    void on_actionZoomOut_triggered();
-
-    void on_actionResetZoom_triggered();
+    void copyToClipboard();
+    void zoomIn();
+    void zoomOut();
+    void resetZoom();
 };
 
 //==============================================================================
