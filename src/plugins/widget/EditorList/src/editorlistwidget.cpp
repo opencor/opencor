@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "editorlistwidget.h"
 #include "i18ninterface.h"
 
