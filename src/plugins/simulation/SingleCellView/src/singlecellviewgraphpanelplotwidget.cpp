@@ -26,6 +26,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QMenu>

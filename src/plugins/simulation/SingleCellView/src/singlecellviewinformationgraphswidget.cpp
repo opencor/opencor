@@ -33,6 +33,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QFileInfo>
+#include <QHeaderView>
 #include <QMenu>
 #include <QScrollBar>
 #include <QSettings>

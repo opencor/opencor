@@ -45,12 +45,6 @@ class QwtWheel;
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellViewSimulationWidget;
-}
-
-//==============================================================================
-
 namespace libsedml {
     class SedDocument;
     class SedModel;
@@ -157,8 +151,6 @@ private:
         InvalidSimulationEnvironment
     };
 
-    Ui::SingleCellViewSimulationWidget *mGui;
-
     SingleCellViewPlugin *mPlugin;
 
     QString mFileName;
@@ -180,6 +172,21 @@ private:
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
+
+    QAction *mRunPauseResumeSimulationAction;
+    QAction *mStopSimulationAction;
+    QAction *mDevelopmentModeAction;
+    QAction *mAddGraphPanelAction;
+    QAction *mRemoveGraphPanelAction;
+    QAction *mRemoveCurrentGraphPanelAction;
+    QAction *mRemoveAllGraphPanelsAction;
+    QAction *mResetModelParametersAction;
+    QAction *mClearSimulationDataAction;
+    QAction *mSimulationDataExportAction;
+    QAction *mSedmlExportAction;
+    QAction *mSedmlExportSedmlFileAction;
+    QAction *mSedmlExportCombineArchiveAction;
+    QAction *mCellmlOpenAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -269,22 +276,17 @@ Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
 private Q_SLOTS:
-    void on_actionRunPauseResumeSimulation_triggered();
-    void on_actionStopSimulation_triggered();
-
-    void on_actionResetModelParameters_triggered();
-    void on_actionClearSimulationData_triggered();
-
-    void on_actionDevelopmentMode_triggered();
-
-    void on_actionAddGraphPanel_triggered();
-
-    void on_actionRemoveGraphPanel_triggered();
-    void on_actionRemoveCurrentGraphPanel_triggered();
-    void on_actionRemoveAllGraphPanels_triggered();
-
-    void on_actionSedmlExportSedmlFile_triggered();
-    void on_actionSedmlExportCombineArchive_triggered();
+    void runPauseResumeSimulation();
+    void stopSimulation();
+    void developmentMode();
+    void addGraphPanel();
+    void removeGraphPanel();
+    void removeCurrentGraphPanel();
+    void removeAllGraphPanels();
+    void resetModelParameters();
+    void clearSimulationData();
+    void sedmlExportSedmlFile();
+    void sedmlExportCombineArchive();
 
     void furtherInitialize();
 
