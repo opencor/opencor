@@ -83,6 +83,8 @@ QMenu CORE_EXPORT * newMenu(const QIcon &pIcon, QWidget *pParent);
 QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);
+QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
+                                QWidget *pParent);
 QAction CORE_EXPORT * newAction(const bool &pCheckable,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);

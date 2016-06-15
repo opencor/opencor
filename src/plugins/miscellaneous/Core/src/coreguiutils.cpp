@@ -366,6 +366,21 @@ QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
 
 //==============================================================================
 
+QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
+                    QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(pCheckable);
+    res->setIcon(pIcon);
+
+    return res;
+}
+
+//==============================================================================
+
 QAction * newAction(const bool &pCheckable, const QKeySequence &pKeySequence,
                     QWidget *pParent)
 {

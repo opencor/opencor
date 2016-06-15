@@ -49,7 +49,8 @@ public:
 #undef INTERFACE_DEFINITION
 
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
-    static void retranslateAction(QAction *pAction, const QString &pText,
+    static void retranslateAction(QAction *pAction,
+                                  const QString &pTextAndToolTip,
                                   const QString &pStatusTip);
 
 private:
