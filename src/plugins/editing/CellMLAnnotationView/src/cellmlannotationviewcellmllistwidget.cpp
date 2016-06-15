@@ -23,12 +23,10 @@ limitations under the License.
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
+#include "i18ninterface.h"
 #include "treeviewwidget.h"
-
-//==============================================================================
-
-#include "ui_cellmlannotationviewcellmllistwidget.h"
 
 //==============================================================================
 
@@ -37,8 +35,10 @@ limitations under the License.
 //==============================================================================
 
 #include <QAbstractItemView>
+#include <QApplication>
 #include <QDesktopServices>
 #include <QFont>
+#include <QLayout>
 #include <QMenu>
 #include <QPoint>
 #include <QStandardItemModel>
@@ -340,13 +340,8 @@ iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::elemen
 
 CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewEditingWidget *pParent) :
     Widget(pParent),
-    mCellmlFile(pParent->cellmlFile()),
-    mGui(new Ui::CellmlAnnotationViewCellmlListWidget)
+    mCellmlFile(pParent->cellmlFile())
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Create and customise our tree view widget which will contain all of the
     // imports, units, components, groups and connections from a CellML file
 
@@ -367,7 +362,9 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     // Populate ourselves
 
-    mGui->layout->addWidget(mTreeViewWidget);
+    createLayout();
+
+    layout()->addWidget(mTreeViewWidget);
 
     // We want a context menu for our tree view widget
 
@@ -375,6 +372,27 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    // Create our actions
+
+    mExpandAllAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
+                                       this);
+    mCollapseAllAction = Core::newAction(QIcon(":/oxygen/actions/list-remove.png"),
+                                         this);
+    mRemoveCurrentMetadataAction = Core::newAction(this);
+    mRemoveAllMetadataAction = Core::newAction(this);
+    mOpenImportAction = Core::newAction(this);
+
+    connect(mExpandAllAction, SIGNAL(triggered(bool)),
+            this, SLOT(expandAll()));
+    connect(mCollapseAllAction, SIGNAL(triggered(bool)),
+            this, SLOT(collapseAll()));
+    connect(mRemoveCurrentMetadataAction, SIGNAL(triggered(bool)),
+            this, SLOT(removeCurrentMetadata()));
+    connect(mRemoveAllMetadataAction, SIGNAL(triggered(bool)),
+            this, SLOT(removeAllMetadata()));
+    connect(mOpenImportAction, SIGNAL(triggered(bool)),
+            this, SLOT(openImport()));
 
     // Some connections to handle the expansion/collapse of a CellML element
 
@@ -403,20 +421,20 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlListWidget::~CellmlAnnotationViewCellmlListWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 {
-    // Retranslate our GUI
+    // Retranslate our actions
 
-    mGui->retranslateUi(this);
+    I18nInterface::retranslateAction(mExpandAllAction, tr("Expand All"),
+                                     tr("Expand all the children nodes"));
+    I18nInterface::retranslateAction(mCollapseAllAction, tr("Collapse All"),
+                                     tr("Collapse all the children nodes"));
+    I18nInterface::retranslateAction(mRemoveCurrentMetadataAction, tr("Remove Current Metadata"),
+                                     tr("Remove the metadata associated with the current node"));
+    I18nInterface::retranslateAction(mRemoveAllMetadataAction, tr("Remove All Metadata"),
+                                     tr("Remove all the metadata associated with the different nodes"));
+    I18nInterface::retranslateAction(mOpenImportAction, tr("Open Import"),
+                                     tr("Open the imported file"));
 
     // Retranslate some of the CellML elements in our tree view widget
 
@@ -913,32 +931,32 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 
         bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
 
-        mGui->actionExpandAll->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
-        mGui->actionCollapseAll->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
+        mExpandAllAction->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
+        mCollapseAllAction->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
 
-        mGui->actionRemoveCurrentMetadata->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
-        mGui->actionRemoveAllMetadata->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples().count());
+        mRemoveCurrentMetadataAction->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
+        mRemoveAllMetadataAction->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples().count());
 
-        mGui->actionOpenImport->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
+        mOpenImportAction->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
 
         // Create and show the context menu, if it isn't empty
 
         QMenu menu;
 
         if (posItem->hasChildren()) {
-            menu.addAction(mGui->actionExpandAll);
-            menu.addAction(mGui->actionCollapseAll);
+            menu.addAction(mExpandAllAction);
+            menu.addAction(mCollapseAllAction);
             menu.addSeparator();
         }
 
         if (!posItem->isCategory()) {
-            menu.addAction(mGui->actionRemoveCurrentMetadata);
-            menu.addAction(mGui->actionRemoveAllMetadata);
+            menu.addAction(mRemoveCurrentMetadataAction);
+            menu.addAction(mRemoveAllMetadataAction);
         }
 
         if (posItem->type() == CellmlAnnotationViewCellmlElementItem::Import) {
             menu.addSeparator();
-            menu.addAction(mGui->actionOpenImport);
+            menu.addAction(mOpenImportAction);
         }
 
         if (!menu.isEmpty())
@@ -948,7 +966,7 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
+void CellmlAnnotationViewCellmlListWidget::expandAll()
 {
     // Expand all the CellML elements below the current one
     // Note: we disable and then re-enable updates before expanding all the
@@ -965,7 +983,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
+void CellmlAnnotationViewCellmlListWidget::collapseAll()
 {
     // Collapse all the CellML elements below the current one
     // Note: see the note in on_actionExpandAll_triggered() above...
@@ -981,7 +999,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_triggered()
+void CellmlAnnotationViewCellmlListWidget::removeCurrentMetadata()
 {
     // Remove all the metadata associated with the current node
 
@@ -995,7 +1013,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_trigge
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionRemoveAllMetadata_triggered()
+void CellmlAnnotationViewCellmlListWidget::removeAllMetadata()
 {
     // Remove all the metadata associated with the CellML file
 
@@ -1085,7 +1103,7 @@ CellmlAnnotationViewCellmlElementItem * CellmlAnnotationViewCellmlListWidget::cu
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
+void CellmlAnnotationViewCellmlListWidget::openImport()
 {
     // Ask OpenCOR to open the imported file
 

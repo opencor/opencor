@@ -36,12 +36,6 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewCellmlListWidget;
-}
-
-//==============================================================================
-
 class QPainter;
 
 //==============================================================================
@@ -130,7 +124,6 @@ class CellmlAnnotationViewCellmlListWidget : public Core::Widget
 
 public:
     explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewEditingWidget *pParent);
-    ~CellmlAnnotationViewCellmlListWidget();
 
     virtual void retranslateUi();
 
@@ -141,13 +134,15 @@ public:
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    Ui::CellmlAnnotationViewCellmlListWidget *mGui;
-
     Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mTreeViewModel;
     CellmlAnnotationViewCellmlElementItemDelegate *mTreeViewItemDelegate;
 
-    QList<QModelIndex> mIndexes;
+    QAction *mExpandAllAction;
+    QAction *mCollapseAllAction;
+    QAction *mRemoveCurrentMetadataAction;
+    QAction *mRemoveAllMetadataAction;
+    QAction *mOpenImportAction;
 
     void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
 
@@ -168,20 +163,18 @@ Q_SIGNALS:
     void metadataDetailsRequested(iface::cellml_api::CellMLElement *pCellElement);
 
 private Q_SLOTS:
+    void expandAll();
+    void collapseAll();
+    void removeCurrentMetadata();
+    void removeAllMetadata();
+    void openImport();
+
     void resizeTreeViewToContents();
 
     void updateMetadataDetails(const QModelIndex &pNewIndex,
                                const QModelIndex &pOldIndex);
 
     void showCustomContextMenu(const QPoint &pPosition) const;
-
-    void on_actionExpandAll_triggered();
-    void on_actionCollapseAll_triggered();
-
-    void on_actionRemoveCurrentMetadata_triggered();
-    void on_actionRemoveAllMetadata_triggered();
-
-    void on_actionOpenImport_triggered();
 };
 
 //==============================================================================
