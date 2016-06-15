@@ -51,8 +51,8 @@
         <translation>Naviguer Exposition</translation>
     </message>
     <message>
-        <source>Copy URL</source>
-        <translation>Copier URL</translation>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Copy the URL to the clipboard</source>

@@ -58,13 +58,13 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+    mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                   this);
 
-    connect(mCopyUrlAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyUrl()));
+    connect(mCopyAction, SIGNAL(triggered(bool)),
+            this, SLOT(copy()));
 
-    mContextMenu->addAction(mCopyUrlAction);
+    mContextMenu->addAction(mCopyAction);
 
     // We want our own context menu
 
@@ -103,7 +103,7 @@ void PmrWindowWidget::retranslateUi()
 {
     // Retranslate our action
 
-    I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
+    I18nInterface::retranslateAction(mCopyAction, tr("Copy"),
                                      tr("Copy the URL to the clipboard"));
 
     // Retranslate our message, if we have been initialised
@@ -301,7 +301,7 @@ void PmrWindowWidget::showExposureFiles(const QString &pUrl, const bool &pShow)
 
 //==============================================================================
 
-void PmrWindowWidget::copyUrl()
+void PmrWindowWidget::copy()
 {
     // Copy the URL of the exposure to the clipboard
 

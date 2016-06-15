@@ -4,8 +4,8 @@
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewGraphPanelPlotWidget</name>
     <message>
-        <source>Copy To Clipboard</source>
-        <translation>Copier Dans Presse-Papier</translation>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Copy the contents of the graph panel to the clipboard</source>

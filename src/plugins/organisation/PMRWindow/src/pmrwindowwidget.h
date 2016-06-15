@@ -62,7 +62,7 @@ protected:
 private:
     QMenu *mContextMenu;
 
-    QAction *mCopyUrlAction;
+    QAction *mCopyAction;
 
     QStringList mExposureNames;
     QBoolList mExposureDisplayed;
@@ -92,7 +92,7 @@ public Q_SLOTS:
     void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 private Q_SLOTS:
-    void copyUrl();
+    void copy();
 
     void linkClicked();
     void linkHovered();
