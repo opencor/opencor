@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 #include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
@@ -52,7 +53,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(),
-    mGui(new Ui::SingleCellViewInformationGraphsWidget),
     mPlugin(pPlugin),
     mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
@@ -63,40 +63,58 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mHorizontalScrollBarValue(0)
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Create our context menus and populate our main context menu
 
     mContextMenu = new QMenu(this);
     mParametersContextMenu = new QMenu(this);
 
-    mContextMenu->addAction(mGui->actionAddGraph);
+    mAddGraphAction = Core::newAction(this);
+    mRemoveCurrentGraphAction = Core::newAction(this);
+    mRemoveAllGraphsAction = Core::newAction(this);
+    mSelectAllGraphsAction = Core::newAction(this);
+    mUnselectAllGraphsAction = Core::newAction(this);
+
+    connect(mAddGraphAction, SIGNAL(triggered(bool)),
+            this, SLOT(addGraph()));
+    connect(mRemoveCurrentGraphAction, SIGNAL(triggered(bool)),
+            this, SLOT(removeCurrentGraph()));
+    connect(mRemoveAllGraphsAction, SIGNAL(triggered(bool)),
+            this, SLOT(removeAllGraphs()));
+    connect(mSelectAllGraphsAction, SIGNAL(triggered(bool)),
+            this, SLOT(selectAllGraphs()));
+    connect(mUnselectAllGraphsAction, SIGNAL(triggered(bool)),
+            this, SLOT(unselectAllGraphs()));
+
+    mContextMenu->addAction(mAddGraphAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mGui->actionRemoveCurrentGraph);
-    mContextMenu->addAction(mGui->actionRemoveAllGraphs);
+    mContextMenu->addAction(mRemoveCurrentGraphAction);
+    mContextMenu->addAction(mRemoveAllGraphsAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mGui->actionSelectAllGraphs);
-    mContextMenu->addAction(mGui->actionUnselectAllGraphs);
-}
+    mContextMenu->addAction(mSelectAllGraphsAction);
+    mContextMenu->addAction(mUnselectAllGraphsAction);
 
-//==============================================================================
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
 
-SingleCellViewInformationGraphsWidget::~SingleCellViewInformationGraphsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
+    retranslateUi();
 }
 
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::retranslateUi()
 {
-    // Retranslate our GUI
+    // Retranslate our actions
 
-    mGui->retranslateUi(this);
+    I18nInterface::retranslateAction(mAddGraphAction, tr("Add Graph"),
+                                     tr("Add a graph"));
+    I18nInterface::retranslateAction(mRemoveCurrentGraphAction, tr("Remove Current Graph"),
+                                     tr("Remove the current graph"));
+    I18nInterface::retranslateAction(mRemoveAllGraphsAction, tr("Remove All Graphs"),
+                                     tr("Remove all the graphs"));
+    I18nInterface::retranslateAction(mSelectAllGraphsAction, tr("Select All Graphs"),
+                                     tr("Select all the graphs"));
+    I18nInterface::retranslateAction(mUnselectAllGraphsAction, tr("Unselect All Graphs"),
+                                     tr("Unselect all the graphs"));
 
     // Retranslate all our property editors
 
@@ -313,7 +331,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPane
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
+void SingleCellViewInformationGraphsWidget::addGraph()
 {
     // Ask the graph panel associated with our current property editor to add an
     // 'empty' graph
@@ -323,7 +341,7 @@ void SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggered()
+void SingleCellViewInformationGraphsWidget::removeCurrentGraph()
 {
     // Ask the graph panel associated with our current property editor to remove
     // the current graph
@@ -333,7 +351,7 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggere
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
+void SingleCellViewInformationGraphsWidget::removeAllGraphs()
 {
     // Ask the graph panel associated with our current property editor to remove
     // all the graphs
@@ -376,7 +394,7 @@ void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::on_actionSelectAllGraphs_triggered()
+void SingleCellViewInformationGraphsWidget::selectAllGraphs()
 {
     // Select all the graphs
 
@@ -385,7 +403,7 @@ void SingleCellViewInformationGraphsWidget::on_actionSelectAllGraphs_triggered()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::on_actionUnselectAllGraphs_triggered()
+void SingleCellViewInformationGraphsWidget::unselectAllGraphs()
 {
     // Unselect all the graphs
 
@@ -501,8 +519,8 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
     // Update the enabled state of some of our actions
 
-    mGui->actionRemoveCurrentGraph->setEnabled(crtProperty);
-    mGui->actionRemoveAllGraphs->setEnabled(!mPropertyEditor->properties().isEmpty());
+    mRemoveCurrentGraphAction->setEnabled(crtProperty);
+    mRemoveAllGraphsAction->setEnabled(!mPropertyEditor->properties().isEmpty());
 
     bool canSelectAllGraphs = false;
     bool canUnselectAllGraphs = false;
@@ -514,8 +532,8 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
         canUnselectAllGraphs = canUnselectAllGraphs ||  graphSelected;
     }
 
-    mGui->actionSelectAllGraphs->setEnabled(canSelectAllGraphs);
-    mGui->actionUnselectAllGraphs->setEnabled(canUnselectAllGraphs);
+    mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);
+    mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);
 
     // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any

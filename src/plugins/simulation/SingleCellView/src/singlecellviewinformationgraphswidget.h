@@ -35,12 +35,6 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellViewInformationGraphsWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -71,7 +65,6 @@ public:
     explicit SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
                                                    SingleCellViewSimulationWidget *pSimulationWidget,
                                                    QWidget *pParent);
-    ~SingleCellViewInformationGraphsWidget();
 
     virtual void retranslateUi();
 
@@ -91,8 +84,6 @@ public:
     void setColumnWidth(const int &pIndex, const int &pColumnWidth);
 
 private:
-    Ui::SingleCellViewInformationGraphsWidget *mGui;
-
     SingleCellViewPlugin *mPlugin;
     SingleCellViewSimulationWidget *mSimulationWidget;
 
@@ -105,6 +96,12 @@ private:
 
     QMenu *mContextMenu;
     QMenu *mParametersContextMenu;
+
+    QAction *mAddGraphAction;
+    QAction *mRemoveCurrentGraphAction;
+    QAction *mRemoveAllGraphsAction;
+    QAction *mSelectAllGraphsAction;
+    QAction *mUnselectAllGraphsAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
@@ -143,13 +140,11 @@ public Q_SLOTS:
                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
-    void on_actionAddGraph_triggered();
-
-    void on_actionRemoveCurrentGraph_triggered();
-    void on_actionRemoveAllGraphs_triggered();
-
-    void on_actionSelectAllGraphs_triggered();
-    void on_actionUnselectAllGraphs_triggered();
+    void addGraph();
+    void removeCurrentGraph();
+    void removeAllGraphs();
+    void selectAllGraphs();
+    void unselectAllGraphs();
 
     void propertyEditorContextMenu(const QPoint &pPosition) const;
 

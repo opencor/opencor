@@ -62,6 +62,46 @@
         <source>no runtime</source>
         <translation>pas de modèle d&apos;exécution</translation>
     </message>
+    <message>
+        <source>Add Graph</source>
+        <translation>Ajouter Courbe</translation>
+    </message>
+    <message>
+        <source>Add a graph</source>
+        <translation>Ajouter une courbe</translation>
+    </message>
+    <message>
+        <source>Remove Current Graph</source>
+        <translation>Supprimer Courbe Actuelle</translation>
+    </message>
+    <message>
+        <source>Remove the current graph</source>
+        <translation>Supprimer la courbe actuelle</translation>
+    </message>
+    <message>
+        <source>Remove All Graphs</source>
+        <translation>Supprimer Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Remove all the graphs</source>
+        <translation>Supprimer toutes les courbes</translation>
+    </message>
+    <message>
+        <source>Select All Graphs</source>
+        <translation>Sélectionner Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Select all the graphs</source>
+        <translation>Sélectionner toutes les courbes</translation>
+    </message>
+    <message>
+        <source>Unselect All Graphs</source>
+        <translation>Déselectionner Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Unselect all the graphs</source>
+        <translation>Déselectionner toutes les courbes</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
@@ -528,49 +568,6 @@
     <message>
         <source>Export To COMBINE Archive</source>
         <translation>Exporter Vers Archive COMBINE</translation>
-    </message>
-</context>
-<context>
-    <name>SingleCellViewInformationGraphsWidget</name>
-    <message>
-        <source>Add a graph</source>
-        <translation>Ajouter une courbe</translation>
-    </message>
-    <message>
-        <source>Remove the current graph</source>
-        <translation>Supprimer la courbe actuelle</translation>
-    </message>
-    <message>
-        <source>Remove all the graphs</source>
-        <translation>Supprimer toutes les courbes</translation>
-    </message>
-    <message>
-        <source>Add Graph</source>
-        <translation>Ajouter Courbe</translation>
-    </message>
-    <message>
-        <source>Remove Current Graph</source>
-        <translation>Supprimer Courbe Actuelle</translation>
-    </message>
-    <message>
-        <source>Remove All Graphs</source>
-        <translation>Supprimer Toutes Courbes</translation>
-    </message>
-    <message>
-        <source>Select All Graphs</source>
-        <translation>Sélectionner Toutes Courbes</translation>
-    </message>
-    <message>
-        <source>Unselect All Graphs</source>
-        <translation>Déselectionner Toutes Courbes</translation>
-    </message>
-    <message>
-        <source>Select all the graphs</source>
-        <translation>Sélectionner toutes les courbes</translation>
-    </message>
-    <message>
-        <source>Unselect all the graphs</source>
-        <translation>Déselectionner toutes les courbes</translation>
     </message>
 </context>
 <context>
