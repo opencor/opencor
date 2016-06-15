@@ -246,13 +246,10 @@ void CoreSEDMLEditingPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mEditReformatAction = Core::newAction(Core::mainWindow());
-
-    mEditReformatAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_R));
-
-    mToolsSedmlValidationAction = Core::newAction(Core::mainWindow());
-
-    mToolsSedmlValidationAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_T));
+    mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
+                                          Core::mainWindow());
+    mToolsSedmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
+                                                  Core::mainWindow());
 
     // Some connections to handle our different actions
 

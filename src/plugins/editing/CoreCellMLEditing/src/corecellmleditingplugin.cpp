@@ -246,13 +246,10 @@ void CoreCellMLEditingPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mEditReformatAction = Core::newAction(Core::mainWindow());
-
-    mEditReformatAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_R));
-
-    mToolsCellmlValidationAction = Core::newAction(Core::mainWindow());
-
-    mToolsCellmlValidationAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_T));
+    mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
+                                          Core::mainWindow());
+    mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
+                                                   Core::mainWindow());
 
     // Some connections to handle our different actions
 
