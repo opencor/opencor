@@ -38,12 +38,6 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewMetadataEditDetailsWidget;
-}
-
-//==============================================================================
-
 class QComboBox;
 class QLabel;
 class QLineEdit;
@@ -114,7 +108,6 @@ public:
                                                            CellmlAnnotationViewEditingWidget *pViewEditingWidget,
                                                            CellMLSupport::CellmlFile *pCellmlFile,
                                                            QWidget *pParent);
-    ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -130,8 +123,6 @@ private:
 
     CellmlAnnotationViewWidget *mViewWidget;
     CellmlAnnotationViewEditingWidget *mViewEditingWidget;
-
-    Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
@@ -180,6 +171,8 @@ private:
 
     QMenu *mContextMenu;
 
+    QAction *mCopyAction;
+
     QNetworkReply *mNetworkReply;
 
     void upudateOutputMessage(const bool &pLookUpTerm,
@@ -210,7 +203,7 @@ public Q_SLOTS:
                    const bool &pFilePermissionsChanged = false);
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void copy();
 
     void disableLookUpInformation();
 

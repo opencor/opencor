@@ -31,13 +31,10 @@ limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
+#include "i18ninterface.h"
 #include "treeviewwidget.h"
 #include "usermessagewidget.h"
 #include "webviewerwidget.h"
-
-//==============================================================================
-
-#include "ui_cellmlannotationviewmetadataeditdetailswidget.h"
 
 //==============================================================================
 
@@ -55,6 +52,7 @@ limitations under the License.
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
+#include <QLayout>
 #include <QLineEdit>
 #include <QLocale>
 #include <QMenu>
@@ -66,7 +64,6 @@ limitations under the License.
 #include <QScrollArea>
 #include <QTimer>
 #include <QVariant>
-#include <QVBoxLayout>
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebPage>
@@ -157,7 +154,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     Core::Widget(pParent),
     mViewWidget(pViewWidget),
     mViewEditingWidget(pViewEditingWidget),
-    mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
     mTermValue(0),
     mAddTermButton(0),
     mTerm(QString()),
@@ -179,10 +175,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTextContent(QString()),
     mNetworkReply(0)
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Create a network access manager so that we can then retrieve a list of
     // ontological terms models from the PMR
 
@@ -200,7 +192,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mContextMenu = new QMenu(this);
 
-    mContextMenu->addAction(mGui->actionCopy);
+    mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                  this);
+
+    connect(mCopyAction, SIGNAL(triggered(bool)),
+            this, SLOT(copy()));
+
+    mContextMenu->addAction(mCopyAction);
 
     // Create a form widget that will contain our qualifier and term fields
 
@@ -321,9 +319,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutput = new Core::Widget(this);
 
-    mOutput->setLayout(new QVBoxLayout(mOutput));
-
-    mOutput->layout()->setMargin(0);
+    mOutput->createLayout();
 
     connect(mOutput, SIGNAL(resized(const QSize &, const QSize &)),
             this, SLOT(recenterBusyWidget()));
@@ -370,9 +366,11 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Add our 'internal' widgets to our main layout
 
-    mGui->layout->addWidget(formWidget);
-    mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addWidget(mOutput);
+    createLayout();
+
+    layout()->addWidget(formWidget);
+    layout()->addWidget(Core::newLineWidget(this));
+    layout()->addWidget(mOutput);
 
     // Update our GUI (incl. its enabled state)
 
@@ -381,20 +379,12 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::~CellmlAnnotationViewMetadataEditDetailsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 {
-    // Retranslate our GUI
+    // Retranslate our action
 
-    mGui->retranslateUi(this);
+    I18nInterface::retranslateAction(mCopyAction, tr("Copy"),
+                                     tr("Copy the URL to the clipboard"));
 
     // Retranslate various aspects of our form widget
 
@@ -1136,7 +1126,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
+void CellmlAnnotationViewMetadataEditDetailsWidget::copy()
 {
     // Copy the URL of the resource or id to the clipboard
 

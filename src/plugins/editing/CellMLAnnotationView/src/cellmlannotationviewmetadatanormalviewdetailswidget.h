@@ -33,12 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
-}
-
-//==============================================================================
-
 class QLabel;
 class QMenu;
 class QScrollArea;
@@ -87,7 +81,6 @@ private:
 public:
     explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                  QWidget *pParent);
-    ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -103,8 +96,6 @@ public:
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
-
-    Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
 
     int mItemsCount;
 
@@ -137,6 +128,8 @@ private:
 
     QMenu *mContextMenu;
 
+    QAction *mCopyAction;
+
     void additionalGuiUpdates(const QString &pRdfTripleInformation,
                               const InformationType &pInformationType,
                               const Information &pLookUpRdfTripleInformation);
@@ -155,7 +148,7 @@ Q_SIGNALS:
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void copy();
 
     void disableLookUpInformation();
 

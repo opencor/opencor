@@ -26,12 +26,9 @@ limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
+#include "i18ninterface.h"
 #include "usermessagewidget.h"
 #include "webviewerwidget.h"
-
-//==============================================================================
-
-#include "ui_cellmlannotationviewmetadatanormalviewdetailswidget.h"
 
 //==============================================================================
 
@@ -42,6 +39,7 @@ limitations under the License.
 #include <QApplication>
 #include <QClipboard>
 #include <QCursor>
+#include <QLayout>
 #include <QMenu>
 #include <QRegularExpression>
 #include <QScrollArea>
@@ -62,7 +60,6 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
                                                                                                          QWidget *pParent) :
     Core::Widget(pParent),
     mCellmlFile(pCellmlFile),
-    mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
     mItemsCount(0),
     mElement(0),
     mRdfTripleInformation(QString()),
@@ -77,26 +74,24 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mLink(QString()),
     mTextContent(QString())
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
 
-    mContextMenu->addAction(mGui->actionCopy);
+    mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                  this);
+
+    connect(mCopyAction, SIGNAL(triggered(bool)),
+            this, SLOT(copy()));
+
+    mContextMenu->addAction(mCopyAction);
 
     // Create an output widget that will contain our output message and output
     // for ontological terms
 
     mOutput = new Core::Widget(this);
 
-    QVBoxLayout *outputLayout = new QVBoxLayout(mOutput);
-
-    outputLayout->setMargin(0);
-
-    mOutput->setLayout(outputLayout);
+    mOutput->createLayout();
 
     // Create our output message (within a scroll area, in case the label is too
     // wide)
@@ -136,30 +131,24 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     // Add our output message and output for ontological terms to our output
     // widget
 
-    outputLayout->addWidget(mOutputMessageScrollArea);
-    outputLayout->addWidget(mOutputOntologicalTerms);
+    mOutput->layout()->addWidget(mOutputMessageScrollArea);
+    mOutput->layout()->addWidget(mOutputOntologicalTerms);
 
     // Add our output widget to our main layout
 
-    mGui->layout->addWidget(mOutput);
-}
+    createLayout();
 
-//==============================================================================
-
-CellmlAnnotationViewMetadataNormalViewDetailsWidget::~CellmlAnnotationViewMetadataNormalViewDetailsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
+    layout()->addWidget(mOutput);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 {
-    // Retranslate our GUI
+    // Retranslate our action
 
-    mGui->retranslateUi(this);
+    I18nInterface::retranslateAction(mCopyAction, tr("Copy"),
+                                     tr("Copy the URL to the clipboard"));
 
     // Retranslate our output message
 
@@ -649,7 +638,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggered()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::copy()
 {
     // Copy the qualifier or the URL of the resource or id to the clipboard
 
