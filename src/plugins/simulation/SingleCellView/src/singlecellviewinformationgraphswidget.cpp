@@ -39,10 +39,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_singlecellviewinformationgraphswidget.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
