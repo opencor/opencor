@@ -545,6 +545,11 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
     //       replot ourselves...
 
     setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false, false);
+
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -563,7 +568,7 @@ SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
 
 void SingleCellViewGraphPanelPlotWidget::retranslateUi()
 {
-    // Retranslate our GUI
+    // Retranslate our actions
 
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
