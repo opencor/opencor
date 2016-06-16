@@ -385,12 +385,12 @@
         <translation>extensions pour stocker et manipuler des données.</translation>
     </message>
     <message>
-        <source>Tool</source>
-        <translation>Outil</translation>
-    </message>
-    <message>
         <source>plugins to access various tools.</source>
         <translation>extensions pour accéder différents outils.</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Outils</translation>
     </message>
 </context>
 <context>
