@@ -17,12 +17,12 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreEditingView plugin
+// Editing view plugin
 //==============================================================================
 
-#include "coreeditingviewplugin.h"
 #include "coreguiutils.h"
 #include "editingviewinterface.h"
+#include "editingviewplugin.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 
@@ -36,16 +36,16 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreEditingView {
+namespace EditingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreEditingViewPluginInfo()
+PLUGININFO_FUNC EditingViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the core editing view plugin."));
-    descriptions.insert("fr", QString::fromUtf8("l'extension de vue d'édition de base."));
+    descriptions.insert("en", QString::fromUtf8("a plugin that provides core editing view facilities."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition."));
 
     return new PluginInfo("Editing", false, false,
                           QStringList() << "EditorWidget",
@@ -54,7 +54,7 @@ PLUGININFO_FUNC CoreEditingViewPluginInfo()
 
 //==============================================================================
 
-CoreEditingViewPlugin::CoreEditingViewPlugin() :
+EditingViewPlugin::EditingViewPlugin() :
     mEditingViewInterface(0),
     mEditor(0),
     mFileName(QString())
@@ -65,7 +65,7 @@ CoreEditingViewPlugin::CoreEditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
-bool CoreEditingViewPlugin::isIndirectRemoteFile(const QString &pFileName)
+bool EditingViewPlugin::isIndirectRemoteFile(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -76,9 +76,9 @@ bool CoreEditingViewPlugin::isIndirectRemoteFile(const QString &pFileName)
 
 //==============================================================================
 
-bool CoreEditingViewPlugin::saveFile(const QString &pOldFileName,
-                                     const QString &pNewFileName,
-                                     bool &pNeedFeedback)
+bool EditingViewPlugin::saveFile(const QString &pOldFileName,
+                                 const QString &pNewFileName,
+                                 bool &pNeedFeedback)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -91,7 +91,7 @@ bool CoreEditingViewPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void CoreEditingViewPlugin::fileOpened(const QString &pFileName)
+void EditingViewPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -100,7 +100,7 @@ void CoreEditingViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
+void EditingViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     // The given file has been un/locked, so update our GUI accordingly
 
@@ -109,7 +109,7 @@ void CoreEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::fileModified(const QString &pFileName)
+void EditingViewPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -118,8 +118,8 @@ void CoreEditingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::fileReloaded(const QString &pFileName,
-                                         const bool &pFileChanged)
+void EditingViewPlugin::fileReloaded(const QString &pFileName,
+                                     const bool &pFileChanged)
 {
     // A file has been reloaded, so update our internals, if needed
     // Note: we clearly still have an editor for the given file, but when
@@ -139,8 +139,8 @@ void CoreEditingViewPlugin::fileReloaded(const QString &pFileName,
 
 //==============================================================================
 
-void CoreEditingViewPlugin::fileRenamed(const QString &pOldFileName,
-                                        const QString &pNewFileName)
+void EditingViewPlugin::fileRenamed(const QString &pOldFileName,
+                                    const QString &pNewFileName)
 {
     // A file has been renamed, so update our internals, if needed
 
@@ -150,7 +150,7 @@ void CoreEditingViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void CoreEditingViewPlugin::fileClosed(const QString &pFileName)
+void EditingViewPlugin::fileClosed(const QString &pFileName)
 {
     // A file has been closed, so update our internals, if needed
 
@@ -164,11 +164,10 @@ void CoreEditingViewPlugin::fileClosed(const QString &pFileName)
 // GUI interface
 //==============================================================================
 
-void CoreEditingViewPlugin::updateGui(Plugin *pViewPlugin,
-                                      const QString &pFileName)
+void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     // Reset our previous editor and set up our new one, should the current
-    // plugin handle the editing interface
+    // plugin handle the editing view interface
 
     mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
@@ -208,7 +207,7 @@ void CoreEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     }
 
     // Show/enable or hide/disable various actions, depending on whether the
-    // view plugin handles the editing interface
+    // view plugin handles the editing view interface
 
     Core::showEnableAction(mEditUndoAction, mEditingViewInterface, mEditor);
     Core::showEnableAction(mEditRedoAction, mEditingViewInterface, mEditor);
@@ -231,7 +230,7 @@ void CoreEditingViewPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
-Gui::Menus CoreEditingViewPlugin::guiMenus() const
+Gui::Menus EditingViewPlugin::guiMenus() const
 {
     // Return our menus
 
@@ -240,7 +239,7 @@ Gui::Menus CoreEditingViewPlugin::guiMenus() const
 
 //==============================================================================
 
-Gui::MenuActions CoreEditingViewPlugin::guiMenuActions() const
+Gui::MenuActions EditingViewPlugin::guiMenuActions() const
 {
     // We don't handle this interface...
 
@@ -251,7 +250,7 @@ Gui::MenuActions CoreEditingViewPlugin::guiMenuActions() const
 // I18n interface
 //==============================================================================
 
-void CoreEditingViewPlugin::retranslateUi()
+void EditingViewPlugin::retranslateUi()
 {
     // Retranslate our Edit menu
 
@@ -310,7 +309,7 @@ void CoreEditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CoreEditingViewPlugin::initializePlugin()
+void EditingViewPlugin::initializePlugin()
 {
     // Create our Edit menu
 
@@ -375,14 +374,14 @@ void CoreEditingViewPlugin::initializePlugin()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::finalizePlugin()
+void EditingViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CoreEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void EditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -391,7 +390,7 @@ void CoreEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::loadSettings(QSettings *pSettings)
+void EditingViewPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -400,7 +399,7 @@ void CoreEditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::saveSettings(QSettings *pSettings) const
+void EditingViewPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -409,7 +408,7 @@ void CoreEditingViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreEditingViewPlugin::handleUrl(const QUrl &pUrl)
+void EditingViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -420,7 +419,7 @@ void CoreEditingViewPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void CoreEditingViewPlugin::updateGui(const QString &pFileName)
+void EditingViewPlugin::updateGui(const QString &pFileName)
 {
     // Update some actions and make our editor read-only or writable, if needed
 
@@ -443,7 +442,7 @@ void CoreEditingViewPlugin::updateGui(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::unpopulateEditMenu()
+void EditingViewPlugin::unpopulateEditMenu()
 {
     // Unpopulate our Edit menu
     // Note: we do not want to use mEditMenu->clear() since we want to keep our
@@ -466,7 +465,7 @@ void CoreEditingViewPlugin::unpopulateEditMenu()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::populateEditMenu(QAction *pBeforeAction)
+void EditingViewPlugin::populateEditMenu(QAction *pBeforeAction)
 {
     // Populate our Edit menu
 
@@ -487,7 +486,7 @@ void CoreEditingViewPlugin::populateEditMenu(QAction *pBeforeAction)
 
 //==============================================================================
 
-void CoreEditingViewPlugin::clipboardDataChanged()
+void EditingViewPlugin::clipboardDataChanged()
 {
     // Enable our paste action if the clipboard contains some text
 
@@ -500,7 +499,7 @@ void CoreEditingViewPlugin::clipboardDataChanged()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::updateUndoAndRedoActions()
+void EditingViewPlugin::updateUndoAndRedoActions()
 {
     // Update our undo/redo actions, and update the modified state of the
     // current file
@@ -520,7 +519,7 @@ void CoreEditingViewPlugin::updateUndoAndRedoActions()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::updateEditingActions()
+void EditingViewPlugin::updateEditingActions()
 {
     // Update our editing actions
 
@@ -538,7 +537,7 @@ void CoreEditingViewPlugin::updateEditingActions()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::updateFindPreviousNextActions()
+void EditingViewPlugin::updateFindPreviousNextActions()
 {
     // Update our find previous and next actions
 
@@ -553,7 +552,7 @@ void CoreEditingViewPlugin::updateFindPreviousNextActions()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::updateSelectAllAction()
+void EditingViewPlugin::updateSelectAllAction()
 {
     // Update our select all action
 
@@ -565,7 +564,7 @@ void CoreEditingViewPlugin::updateSelectAllAction()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doUndo()
+void EditingViewPlugin::doUndo()
 {
     // Undo the last action and update our undo/redo actions, should there be an
     // editor
@@ -580,7 +579,7 @@ void CoreEditingViewPlugin::doUndo()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doRedo()
+void EditingViewPlugin::doRedo()
 {
     // Redo the last action and update our undo/redo actions, should there be an
     // editor
@@ -595,7 +594,7 @@ void CoreEditingViewPlugin::doRedo()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doCut()
+void EditingViewPlugin::doCut()
 {
     // Cut the text and update our undo/redo actions, should there be an editor
 
@@ -609,7 +608,7 @@ void CoreEditingViewPlugin::doCut()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doCopy()
+void EditingViewPlugin::doCopy()
 {
     // Copy the text and update our undo/redo actions, should there be an editor
 
@@ -621,7 +620,7 @@ void CoreEditingViewPlugin::doCopy()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doPaste()
+void EditingViewPlugin::doPaste()
 {
     // Paste the text and update our undo/redo actions, should there be an
     // editor
@@ -636,7 +635,7 @@ void CoreEditingViewPlugin::doPaste()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doDelete()
+void EditingViewPlugin::doDelete()
 {
     // Delete the text and update our undo/redo actions, should there be an
     // editor
@@ -651,7 +650,7 @@ void CoreEditingViewPlugin::doDelete()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doFindReplace()
+void EditingViewPlugin::doFindReplace()
 {
     // Show/select the find/replace widget in our editor
 
@@ -661,7 +660,7 @@ void CoreEditingViewPlugin::doFindReplace()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doFindNext()
+void EditingViewPlugin::doFindNext()
 {
     // Find the next occurrence of the text in our editor
 
@@ -671,7 +670,7 @@ void CoreEditingViewPlugin::doFindNext()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doFindPrevious()
+void EditingViewPlugin::doFindPrevious()
 {
     // Find the previous occurrence of the text in our editor
 
@@ -681,7 +680,7 @@ void CoreEditingViewPlugin::doFindPrevious()
 
 //==============================================================================
 
-void CoreEditingViewPlugin::doSelectAll()
+void EditingViewPlugin::doSelectAll()
 {
     // Select all the text and update our select all action, should there be an
     // editor
@@ -696,7 +695,7 @@ void CoreEditingViewPlugin::doSelectAll()
 
 //==============================================================================
 
-}   // namespace CoreEditingView
+}   // namespace EditingView
 }   // namespace OpenCOR
 
 //==============================================================================

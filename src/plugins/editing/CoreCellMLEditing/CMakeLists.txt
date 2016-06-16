@@ -25,7 +25,7 @@ ADD_PLUGIN(CoreCellMLEditing
         CellMLSupport
         Compiler
         Core
-        CoreEditingView
+        EditingView
         EditorWidget
         ${LLVM_PLUGIN}
         MathMLViewerWidget

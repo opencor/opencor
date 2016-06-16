@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CoreEditingView::CoreEditingViewPlugin</name>
+    <name>OpenCOR::EditingView::EditingViewPlugin</name>
     <message>
         <source>Undo the last action</source>
         <translation>Défaire la dernière action</translation>

@@ -272,9 +272,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             // of messages to our editor list
 
             editingWidget->editor()->setReadOnly(true);
-            // Note: CoreEditingViewPlugin::filePermissionsChanged() will do the
-            //       same as above, but this will take a wee bit of time
-            //       while we want it done straightaway...
+            // Note: EditingViewPlugin::filePermissionsChanged() will do the
+            //       same as above, but this will take a wee bit of time while
+            //       we want it done straightaway...
 
             editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Error,
                                                     mConverter.errorLine(),

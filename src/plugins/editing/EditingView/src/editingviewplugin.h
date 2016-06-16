@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreEditingView plugin
+// Editing view plugin
 //==============================================================================
 
 #pragma once
@@ -46,21 +46,21 @@ namespace EditorWidget {
 
 //==============================================================================
 
-namespace CoreEditingView {
+namespace EditingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreEditingViewPluginInfo();
+PLUGININFO_FUNC EditingViewPluginInfo();
 
 //==============================================================================
 
-class CoreEditingViewPlugin : public QObject, public FileHandlingInterface,
-                              public GuiInterface, public I18nInterface,
-                              public PluginInterface
+class EditingViewPlugin : public QObject, public FileHandlingInterface,
+                          public GuiInterface, public I18nInterface,
+                          public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreEditingViewPlugin" FILE "coreeditingviewplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.EditingViewPlugin" FILE "editingviewplugin.json")
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
@@ -68,7 +68,7 @@ class CoreEditingViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CoreEditingViewPlugin();
+    explicit EditingViewPlugin();
 
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
@@ -128,7 +128,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CoreEditingView
+}   // namespace EditingView
 }   // namespace OpenCOR
 
 //==============================================================================
