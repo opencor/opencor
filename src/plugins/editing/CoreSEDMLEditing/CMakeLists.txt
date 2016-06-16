@@ -24,7 +24,7 @@ ADD_PLUGIN(CoreSEDMLEditing
         CellMLAPI
         CellMLSupport
         Core
-        CoreEditing
+        CoreEditingView
         Editor
         EditorList
         ${LLVM_PLUGIN}

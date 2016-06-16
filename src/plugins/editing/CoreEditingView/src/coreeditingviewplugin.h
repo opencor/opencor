@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreEditing plugin
+// CoreEditingView plugin
 //==============================================================================
 
 #pragma once
@@ -36,7 +36,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class EditingInterface;
+class EditingViewInterface;
 
 //==============================================================================
 
@@ -46,21 +46,21 @@ namespace Editor {
 
 //==============================================================================
 
-namespace CoreEditing {
+namespace CoreEditingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreEditingPluginInfo();
+PLUGININFO_FUNC CoreEditingViewPluginInfo();
 
 //==============================================================================
 
-class CoreEditingPlugin : public QObject, public FileHandlingInterface,
-                          public GuiInterface, public I18nInterface,
-                          public PluginInterface
+class CoreEditingViewPlugin : public QObject, public FileHandlingInterface,
+                              public GuiInterface, public I18nInterface,
+                              public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreEditingPlugin" FILE "coreeditingplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreEditingViewPlugin" FILE "coreeditingviewplugin.json")
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
@@ -68,7 +68,7 @@ class CoreEditingPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CoreEditingPlugin();
+    explicit CoreEditingViewPlugin();
 
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
@@ -76,7 +76,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    EditingInterface *mEditingInterface;
+    EditingViewInterface *mEditingViewInterface;
 
     QMenu *mEditMenu;
 
@@ -128,7 +128,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CoreEditing
+}   // namespace CoreEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

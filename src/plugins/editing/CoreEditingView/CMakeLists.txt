@@ -1,8 +1,8 @@
-PROJECT(CoreEditingPlugin)
+PROJECT(CoreEditingViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CoreEditing
+ADD_PLUGIN(CoreEditingView
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
@@ -10,12 +10,12 @@ ADD_PLUGIN(CoreEditing
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
-        src/coreeditingplugin.cpp
+        src/coreeditingviewplugin.cpp
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
-        src/coreeditingplugin.h
+        src/coreeditingviewplugin.h
     INCLUDE_DIRS
         src
     PLUGINS

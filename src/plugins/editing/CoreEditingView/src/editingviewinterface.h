@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Editing interface
+// Editing view interface
 //==============================================================================
 
 #pragma once
@@ -32,11 +32,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class EditingInterface
+class EditingViewInterface
 {
 public:
 #define INTERFACE_DEFINITION
-    #include "editinginterface.inl"
+    #include "editingviewinterface.inl"
 #undef INTERFACE_DEFINITION
 };
 
@@ -46,7 +46,7 @@ public:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::EditingInterface, "OpenCOR::EditingInterface")
+Q_DECLARE_INTERFACE(OpenCOR::EditingViewInterface, "OpenCOR::EditingViewInterface")
 
 //==============================================================================
 // End of file

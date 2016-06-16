@@ -19,7 +19,7 @@ ADD_PLUGIN(RawSEDMLView
         CellMLAPI
         CellMLSupport
         Core
-        CoreEditing
+        CoreEditingView
         CoreSEDMLEditing
         Editor
         EditorList

@@ -330,7 +330,7 @@ SET(PLUGINS
 
     # Plugins that provide some generic features
 
-    editing/CoreEditing
+    editing/CoreEditingView
 
     # Plugins that have dependencies on others
 

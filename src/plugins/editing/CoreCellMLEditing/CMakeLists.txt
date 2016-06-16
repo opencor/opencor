@@ -25,7 +25,7 @@ ADD_PLUGIN(CoreCellMLEditing
         CellMLSupport
         Compiler
         Core
-        CoreEditing
+        CoreEditingView
         Editor
         EditorList
         ${LLVM_PLUGIN}

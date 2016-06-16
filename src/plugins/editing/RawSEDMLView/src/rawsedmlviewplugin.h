@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "editinginterface.h"
+#include "editingviewinterface.h"
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -47,24 +47,24 @@ class RawSedmlViewWidget;
 
 //==============================================================================
 
-class RawSEDMLViewPlugin : public QObject, public SedmlEditingInterface,
-                           public EditingInterface,
+class RawSEDMLViewPlugin : public QObject, public EditingViewInterface,
                            public FileHandlingInterface, public I18nInterface,
-                           public PluginInterface, public ViewInterface
+                           public PluginInterface, public SedmlEditingInterface,
+                           public ViewInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.RawSEDMLViewPlugin" FILE "rawsedmlviewplugin.json")
 
-    Q_INTERFACES(OpenCOR::SedmlEditingInterface)
-    Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::EditingViewInterface)
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::SedmlEditingInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-#include "editinginterface.inl"
+#include "editingviewinterface.inl"
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

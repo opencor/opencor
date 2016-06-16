@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "coresedmleditingplugin.h"
-#include "editinginterface.h"
+#include "editingviewinterface.h"
 #include "filemanager.h"
 #include "sedmleditinginterface.h"
 
@@ -48,7 +48,7 @@ PLUGININFO_FUNC CoreSEDMLEditingPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition SED-ML de base."));
 
     return new PluginInfo("Editing", false, false,
-                          QStringList() << "CoreEditing" << "SEDMLSupport" << "EditorList",
+                          QStringList() << "CoreEditingView" << "SEDMLSupport" << "EditorList",
                           descriptions);
 }
 
@@ -169,12 +169,12 @@ void CoreSEDMLEditingPlugin::updateGui(Plugin *pViewPlugin,
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
-    //       CoreEditingPlugin::updateGui()...
+    //       CoreEditingViewPlugin::updateGui()...
 
-    EditingInterface *editingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
+    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
-    if (editingInterface) {
-        Editor::EditorWidget *editor = editingInterface->editor(pFileName);
+    if (editingViewInterface) {
+        Editor::EditorWidget *editor = editingViewInterface->editor(pFileName);
 
         if (editor) {
             QList<QAction *> contextMenuActions = editor->contextMenu()->actions();
