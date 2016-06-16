@@ -51,9 +51,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-namespace WebViewer {
+namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewer
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -105,11 +105,11 @@ Q_SIGNALS:
 private Q_SLOTS:
     void emitSplitterMoved();
 
-    void updateWebViewerWithQualifierDetails(WebViewer::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                              const QString &pQualifier);
-    void updateWebViewerWithResourceDetails(WebViewer::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                             const QString &pResource);
-    void updateWebViewerWithIdDetails(WebViewer::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                       const QString &pResource,
                                       const QString &pId);
 };

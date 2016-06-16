@@ -17,50 +17,33 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web viewer widget
+// Web viewer widget plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "webviewerglobal.h"
-
-//==============================================================================
-
-#include <QString>
-#include <QWebView>
+#include "webviewerwidgetplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace WebViewer {
+namespace WebViewerWidget {
 
 //==============================================================================
 
-class WEBVIEWER_EXPORT WebViewerWidget : public QWebView
+PLUGININFO_FUNC WebViewerWidgetPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    explicit WebViewerWidget(QWidget *pParent);
+    descriptions.insert("en", QString::fromUtf8("a plugin to visualise Web documents."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
 
-    QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
-
-    void setLinkToolTip(const QString &pLinkToolTip);
-
-protected:
-    virtual bool event(QEvent *pEvent);
-
-private:
-    bool mResettingCursor;
-
-    QString mLinkToolTip;
-};
+    return new PluginInfo("Widget", false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace WebViewer
+}   // namespace WebViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -29,24 +29,24 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace WebViewer {
+namespace WebViewerWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC WebViewerPluginInfo();
+PLUGININFO_FUNC WebViewerWidgetPluginInfo();
 
 //==============================================================================
 
-class WebViewerPlugin : public QObject
+class WebViewerWidgetPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.WebViewerPlugin" FILE "webviewerplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.WebViewerWidgetPlugin" FILE "webviewerwidgetplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace WebViewer
+}   // namespace WebViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

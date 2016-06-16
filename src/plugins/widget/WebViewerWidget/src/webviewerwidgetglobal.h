@@ -17,34 +17,22 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web viewer plugin
+// Web viewer global
 //==============================================================================
 
-#include "webviewerplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace WebViewer {
+#pragma once
 
 //==============================================================================
 
-PLUGININFO_FUNC WebViewerPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to visualise Web documents."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
-
-    return new PluginInfo("Widget", false, false,
-                          QStringList(),
-                          descriptions);
-}
-
-//==============================================================================
-
-}   // namespace WebViewer
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef WebViewerWidget_PLUGIN
+        #define WEBVIEWERWIDGET_EXPORT __declspec(dllexport)
+    #else
+        #define WEBVIEWERWIDGET_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define WEBVIEWERWIDGET_EXPORT
+#endif
 
 //==============================================================================
 // End of file

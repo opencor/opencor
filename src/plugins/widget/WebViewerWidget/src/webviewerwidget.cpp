@@ -34,7 +34,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace WebViewer {
+namespace WebViewerWidget {
 
 //==============================================================================
 
@@ -128,7 +128,7 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
 
 //==============================================================================
 
-}   // namespace WebViewer
+}   // namespace WebViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -17,22 +17,51 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web viewer global
+// Web viewer widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef WebViewer_PLUGIN
-        #define WEBVIEWER_EXPORT __declspec(dllexport)
-    #else
-        #define WEBVIEWER_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define WEBVIEWER_EXPORT
-#endif
+#include "webviewerwidgetglobal.h"
+
+//==============================================================================
+
+#include <QString>
+#include <QWebView>
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace WebViewerWidget {
+
+//==============================================================================
+
+class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView
+{
+    Q_OBJECT
+
+public:
+    explicit WebViewerWidget(QWidget *pParent);
+
+    QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
+
+    void setLinkToolTip(const QString &pLinkToolTip);
+
+protected:
+    virtual bool event(QEvent *pEvent);
+
+private:
+    bool mResettingCursor;
+
+    QString mLinkToolTip;
+};
+
+//==============================================================================
+
+}   // namespace WebViewerWidget
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -326,7 +326,7 @@ SET(PLUGINS
     widget/Editor
     widget/EditorList
     widget/MathMLViewer
-    widget/WebViewer
+    widget/WebViewerWidget
 
     # Plugins that provide some generic features
 
