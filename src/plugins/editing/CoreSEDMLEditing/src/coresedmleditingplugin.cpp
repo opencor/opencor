@@ -48,7 +48,7 @@ PLUGININFO_FUNC CoreSEDMLEditingPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition SED-ML de base."));
 
     return new PluginInfo("Editing", false, false,
-                          QStringList() << "CoreEditingView" << "SEDMLSupport" << "EditorList",
+                          QStringList() << "CoreEditingView" << "SEDMLSupport",
                           descriptions);
 }
 
@@ -174,7 +174,7 @@ void CoreSEDMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
     if (editingViewInterface) {
-        Editor::EditorWidget *editor = editingViewInterface->editor(pFileName);
+        EditorWidget::EditorWidget *editor = editingViewInterface->editor(pFileName);
 
         if (editor) {
             QList<QAction *> contextMenuActions = editor->contextMenu()->actions();

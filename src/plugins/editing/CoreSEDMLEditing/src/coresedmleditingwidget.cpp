@@ -59,11 +59,11 @@ CoreSedmlEditingWidget::CoreSedmlEditingWidget(const QString &pContents,
 
     // Create our editor and editor list
 
-    mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
-    mEditorList = new EditorList::EditorListWidget(this);
+    mEditor = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
+    mEditorList = new EditorWidget::EditorListWidget(this);
 
-    connect(mEditorList, SIGNAL(itemRequested(EditorList::EditorListItem *)),
-            this, SLOT(itemRequested(EditorList::EditorListItem *)));
+    connect(mEditorList, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
+            this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
 
     // Add the bordered editor and editor list to ourselves
 
@@ -147,7 +147,7 @@ void CoreSedmlEditingWidget::updateSettings(CoreSedmlEditingWidget *pCoreSedmlEd
 
 //==============================================================================
 
-Editor::EditorWidget * CoreSedmlEditingWidget::editor() const
+EditorWidget::EditorWidget * CoreSedmlEditingWidget::editor() const
 {
     // Return our editor
 
@@ -156,7 +156,7 @@ Editor::EditorWidget * CoreSedmlEditingWidget::editor() const
 
 //==============================================================================
 
-EditorList::EditorListWidget * CoreSedmlEditingWidget::editorList() const
+EditorWidget::EditorListWidget * CoreSedmlEditingWidget::editorList() const
 {
     // Return our editor list
 
@@ -183,7 +183,7 @@ void CoreSedmlEditingWidget::splitterMoved()
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::itemRequested(EditorList::EditorListItem *pItem)
+void CoreSedmlEditingWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
 {
     // Set our editor's cursor position to the line/column of the given item and
     // give our editor the focus so that we can see the exact location of the

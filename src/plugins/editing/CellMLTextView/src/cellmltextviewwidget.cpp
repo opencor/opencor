@@ -161,7 +161,7 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     mData(QMap<QString, CellmlTextViewWidgetData *>()),
     mConverter(CellMLTextViewConverter()),
     mParser(CellmlTextViewParser()),
-    mEditorLists(QList<EditorList::EditorListWidget *>()),
+    mEditorLists(QList<EditorWidget::EditorListWidget *>()),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
@@ -243,7 +243,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             foreach (const CellMLTextViewConverterWarning &warning, mConverter.warnings()) {
-                editingWidget->editorList()->addItem(EditorList::EditorListItem::Warning,
+                editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Warning,
                                                         successfulConversion?-1:warning.line(),
                                                         successfulConversion?
                                                             QString("[%1] ").arg(warning.line())+warning.message().arg(" "+tr("in the original CellML file")):
@@ -276,12 +276,12 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             //       same as above, but this will take a wee bit of time
             //       while we want it done straightaway...
 
-            editingWidget->editorList()->addItem(EditorList::EditorListItem::Error,
+            editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Error,
                                                     mConverter.errorLine(),
                                                     mConverter.errorColumn(),
                                                     Core::formatMessage(mConverter.errorMessage(), false)+".");
 
-            editingWidget->editorList()->addItem(EditorList::EditorListItem::Hint,
+            editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Hint,
                                                     tr("You might want to use the Raw (CellML) view to edit the file."));
 
             // Apply an XML lexer to our editor
@@ -446,7 +446,7 @@ void CellmlTextViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-Editor::EditorWidget * CellmlTextViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellmlTextViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -567,7 +567,7 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
     if (data && parse(pFileName, true)) {
-        Editor::EditorWidget *editor = data->editingWidget()->editor();
+        EditorWidget::EditorWidget *editor = data->editingWidget()->editor();
         int cursorLine;
         int cursorColumn;
 
@@ -668,8 +668,8 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
             if (   !pOnlyErrors
                 || (message.type() == CellmlTextViewParserMessage::Error)) {
                 editingWidget->editorList()->addItem((message.type() == CellmlTextViewParserMessage::Error)?
-                                                         EditorList::EditorListItem::Error:
-                                                         EditorList::EditorListItem::Warning,
+                                                         EditorWidget::EditorListItem::Error:
+                                                         EditorWidget::EditorListItem::Warning,
                                                      message.line(), message.column(),
                                                      message.message());
             }
@@ -844,7 +844,7 @@ QString CellmlTextViewWidget::partialStatement(const int &pPosition,
     static const QString AsTag = "as";
     static const QString SemiColonTag = ";";
 
-    Editor::EditorWidget *editor = mEditingWidget->editor();
+    EditorWidget::EditorWidget *editor = mEditingWidget->editor();
     int editorContentsSize = editor->contentsSize();
 
     // Look for "as" and ";" before the given position
@@ -996,7 +996,7 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
         // Skip spaces and comments to determine the real start of our current
         // statement
 
-        Editor::EditorWidget *editor = mEditingWidget->editor();
+        EditorWidget::EditorWidget *editor = mEditingWidget->editor();
         int shift = 0;
         int style;
 
@@ -1086,7 +1086,7 @@ void CellmlTextViewWidget::updateViewer()
 
 //==============================================================================
 
-void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList)
+void CellmlTextViewWidget::selectFirstItemInEditorList(EditorWidget::EditorListWidget *pEditorList)
 {
     // Select the first item in the given editor list
 
@@ -1098,7 +1098,7 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWid
         // first editor list, assuming it's still current (i.e. it's still
         // referenced in mData)
 
-        EditorList::EditorListWidget *editorList = mEditorLists.first();
+        EditorWidget::EditorListWidget *editorList = mEditorLists.first();
 
         mEditorLists.removeFirst();
 

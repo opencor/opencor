@@ -241,7 +241,7 @@ void RawSedmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-Editor::EditorWidget * RawSedmlViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawSedmlViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -298,7 +298,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
     if (editingWidget) {
         // Clear the list of SED-ML issues
 
-        EditorList::EditorListWidget *editorList = editingWidget->editorList();
+        EditorWidget::EditorListWidget *editorList = editingWidget->editorList();
 
         editorList->clear();
 
@@ -315,23 +315,23 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
         foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
             if (   !pOnlyErrors
                 || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
-                EditorList::EditorListItem::Type issueType;
+                EditorWidget::EditorListItem::Type issueType;
 
                 switch (sedmlFileIssue.type()) {
                 case SEDMLSupport::SedmlFileIssue::Information:
-                    issueType = EditorList::EditorListItem::Information;
+                    issueType = EditorWidget::EditorListItem::Information;
 
                     break;
                     case SEDMLSupport::SedmlFileIssue::Error:
-                    issueType = EditorList::EditorListItem::Error;
+                    issueType = EditorWidget::EditorListItem::Error;
 
                     break;
                     case SEDMLSupport::SedmlFileIssue::Warning:
-                    issueType = EditorList::EditorListItem::Warning;
+                    issueType = EditorWidget::EditorListItem::Warning;
 
                     break;
                     case SEDMLSupport::SedmlFileIssue::Fatal:
-                    issueType = EditorList::EditorListItem::Fatal;
+                    issueType = EditorWidget::EditorListItem::Fatal;
 
                     break;
                 }

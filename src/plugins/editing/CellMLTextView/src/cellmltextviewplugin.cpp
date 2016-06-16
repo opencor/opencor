@@ -113,7 +113,7 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 

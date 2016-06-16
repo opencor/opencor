@@ -35,7 +35,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace EditorList {
+namespace EditorWidget {
 
 //==============================================================================
 
@@ -254,7 +254,7 @@ void EditorListWidget::requestItem(const QModelIndex &pItemIndex)
 
 //==============================================================================
 
-}   // namespace EditorList
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

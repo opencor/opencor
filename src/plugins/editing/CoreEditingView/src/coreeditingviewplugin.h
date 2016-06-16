@@ -40,9 +40,9 @@ class EditingViewInterface;
 
 //==============================================================================
 
-namespace Editor {
+namespace EditorWidget {
     class EditorWidget;
-}   // namespace Editor
+}   // namespace EditorWidget
 
 //==============================================================================
 
@@ -94,7 +94,7 @@ private:
 
     QAction *mEditSelectAllAction;
 
-    Editor::EditorWidget *mEditor;
+    EditorWidget::EditorWidget *mEditor;
 
     QString mFileName;
 

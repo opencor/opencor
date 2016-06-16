@@ -261,7 +261,7 @@ void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-Editor::EditorWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -318,7 +318,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
     if (editingWidget) {
         // Clear the list of CellML issues
 
-        EditorList::EditorListWidget *editorList = editingWidget->editorList();
+        EditorWidget::EditorListWidget *editorList = editingWidget->editorList();
 
         editorList->clear();
 
@@ -342,7 +342,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         if (   (cellmlFile->version() != CellMLSupport::CellmlFile::Cellml_1_0)
             && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
-            editorList->addItem(EditorList::EditorListItem::Information,
+            editorList->addItem(EditorWidget::EditorListItem::Information,
                                 (nbOfReportedIssues == 1)?
                                     tr("The issue reported below may be related to this CellML file or to one of its (in)directly imported CellML files."):
                                     tr("The issues reported below may be related to this CellML file and/or to one or several of its (in)directly imported CellML files."));
@@ -355,8 +355,8 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
             if (   !pOnlyErrors
                 || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
                 editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
-                                        EditorList::EditorListItem::Error:
-                                        EditorList::EditorListItem::Warning,
+                                        EditorWidget::EditorListItem::Error:
+                                        EditorWidget::EditorListItem::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
                                     qPrintable(cellmlFileIssue.formattedMessage()));
@@ -485,7 +485,7 @@ void RawCellmlViewWidget::updateViewer()
     static const QString StartMathTag = "<math ";
     static const QString EndMathTag = "</math>";
 
-    Editor::EditorWidget *editor = mEditingWidget->editor();
+    EditorWidget::EditorWidget *editor = mEditingWidget->editor();
     int crtPosition = editor->currentPosition();
 
     int crtStartMathTagPos = editor->findTextInRange(crtPosition+StartMathTag.length(), 0, StartMathTag, false, true, false);

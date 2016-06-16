@@ -20,7 +20,7 @@ ADD_PLUGIN(CoreEditingView
         src
     PLUGINS
         Core
-        Editor
+        EditorWidget
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
     PLUGIN_BINARIES

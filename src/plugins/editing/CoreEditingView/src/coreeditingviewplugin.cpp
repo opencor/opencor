@@ -48,7 +48,7 @@ PLUGININFO_FUNC CoreEditingViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension de vue d'édition de base."));
 
     return new PluginInfo("Editing", false, false,
-                          QStringList() << "Editor",
+                          QStringList() << "EditorWidget",
                           descriptions);
 }
 

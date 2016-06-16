@@ -17,27 +17,27 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// EditorList plugin
+// Editor widget plugin
 //==============================================================================
 
-#include "editorlistplugin.h"
+#include "editorwidgetplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace EditorList {
+namespace EditorWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC EditorListPluginInfo()
+PLUGININFO_FUNC EditorWidgetPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to handle issues in a text editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour gérer les problèmes dans un éditeur de texte."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to edit and display text."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et afficher du texte."));
 
     return new PluginInfo("Widget", false, false,
-                          QStringList() << "Core",
+                          QStringList() << "QScintillaSupport",
                           descriptions);
 }
 
@@ -45,7 +45,7 @@ PLUGININFO_FUNC EditorListPluginInfo()
 // I18n interface
 //==============================================================================
 
-void EditorListPlugin::retranslateUi()
+void EditorWidgetPlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
@@ -55,7 +55,7 @@ void EditorListPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace EditorList
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

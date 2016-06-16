@@ -1,20 +1,23 @@
-PROJECT(EditorPlugin)
+PROJECT(EditorWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(Editor
+ADD_PLUGIN(EditorWidget
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/editorfindreplacewidget.cpp
-        src/editorplugin.cpp
+        src/editorlistitem.cpp
+        src/editorlistwidget.cpp
         src/editorwidget.cpp
+        src/editorwidgetplugin.cpp
     HEADERS_MOC
+        src/editorlistwidget.h
         src/editorfindreplacewidget.h
-        src/editorplugin.h
         src/editorwidget.h
+        src/editorwidgetplugin.h
     UIS
         src/editorfindreplacewidget.ui
     INCLUDE_DIRS

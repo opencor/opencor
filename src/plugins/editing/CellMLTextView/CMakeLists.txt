@@ -26,8 +26,7 @@ ADD_PLUGIN(CellMLTextView
         Core
         CoreCellMLEditing
         CoreEditingView
-        Editor
-        EditorList
+        EditorWidget
         ${LLVM_PLUGIN}
         MathMLViewerWidget
         ${QSCINTILLA_PLUGIN}

@@ -21,8 +21,7 @@ ADD_PLUGIN(RawSEDMLView
         Core
         CoreEditingView
         CoreSEDMLEditing
-        Editor
-        EditorList
+        EditorWidget
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport

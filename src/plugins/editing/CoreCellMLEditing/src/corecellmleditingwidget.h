@@ -43,16 +43,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Editor {
-    class EditorWidget;
-}   // namespace Editor
-
-//==============================================================================
-
-namespace EditorList {
+namespace EditorWidget {
     class EditorListItem;
     class EditorListWidget;
-}   // namespace EditorList
+    class EditorWidget;
+}   // namespace EditorWidget
 
 //==============================================================================
 
@@ -84,15 +79,15 @@ public:
     void updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
 
     MathMLViewerWidget::MathmlViewerWidget * mathmlViewer() const;
-    Editor::EditorWidget * editor() const;
-    EditorList::EditorListWidget * editorList() const;
+    EditorWidget::EditorWidget * editor() const;
+    EditorWidget::EditorListWidget * editorList() const;
 
     QIntList editingWidgetSizes() const;
 
 private:
     MathMLViewerWidget::MathmlViewerWidget *mMathmlViewer;
-    Editor::EditorWidget *mEditor;
-    EditorList::EditorListWidget *mEditorList;
+    EditorWidget::EditorWidget *mEditor;
+    EditorWidget::EditorListWidget *mEditorList;
 
     QIntList mEditingWidgetSizes;
 

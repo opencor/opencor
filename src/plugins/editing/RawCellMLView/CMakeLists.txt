@@ -22,8 +22,7 @@ ADD_PLUGIN(RawCellMLView
         Core
         CoreCellMLEditing
         CoreEditingView
-        Editor
-        EditorList
+        EditorWidget
         ${LLVM_PLUGIN}
         MathMLViewerWidget
         ${QSCINTILLA_PLUGIN}

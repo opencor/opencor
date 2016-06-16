@@ -25,7 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "editorglobal.h"
+#include "editorwidgetglobal.h"
 #include "widget.h"
 
 //==============================================================================
@@ -56,7 +56,7 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-namespace Editor {
+namespace EditorWidget {
 
 //==============================================================================
 
@@ -64,7 +64,7 @@ class EditorFindReplaceWidget;
 
 //==============================================================================
 
-class EDITOR_EXPORT EditorWidget : public Core::Widget
+class EDITORWIDGET_EXPORT EditorWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -188,7 +188,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace Editor
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -48,7 +48,7 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition CellML de base."));
 
     return new PluginInfo("Editing", false, false,
-                          QStringList() << "CellMLSupport" << "CoreEditingView" << "EditorList" << "MathMLViewerWidget",
+                          QStringList() << "CellMLSupport" << "CoreEditingView" << "MathMLViewerWidget",
                           descriptions);
 }
 
@@ -174,7 +174,7 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
     if (editingViewInterface) {
-        Editor::EditorWidget *editor = editingViewInterface->editor(pFileName);
+        EditorWidget::EditorWidget *editor = editingViewInterface->editor(pFileName);
 
         if (editor) {
             QList<QAction *> contextMenuActions = editor->contextMenu()->actions();

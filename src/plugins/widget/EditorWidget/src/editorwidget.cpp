@@ -41,7 +41,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Editor {
+namespace EditorWidget {
 
 //==============================================================================
 
@@ -156,7 +156,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
 //==============================================================================
 
-static const auto SettingsEditorZoomLevel = QStringLiteral("EditorZoomLevel");
+static const auto SettingsEditorWidgetZoomLevel = QStringLiteral("EditorWidgetZoomLevel");
 
 //==============================================================================
 
@@ -164,7 +164,7 @@ void EditorWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
-    setZoomLevel(pSettings->value(SettingsEditorZoomLevel, 0).toInt());
+    setZoomLevel(pSettings->value(SettingsEditorWidgetZoomLevel, 0).toInt());
 }
 
 //==============================================================================
@@ -173,7 +173,7 @@ void EditorWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->setValue(SettingsEditorZoomLevel, zoomLevel());
+    pSettings->setValue(SettingsEditorWidgetZoomLevel, zoomLevel());
 }
 
 //==============================================================================
@@ -831,16 +831,17 @@ void EditorWidget::findTextChanged(const QString &pText)
     // editor, should there be some text to search otherwise go back to our
     // original position
 
-    if (pText.isEmpty())
+    if (pText.isEmpty()) {
         mEditor->setSelection(mCurrentLine, mCurrentColumn,
                               mCurrentLine, mCurrentColumn);
-    else
+    } else {
         findText(pText, true);
+    }
 }
 
 //==============================================================================
 
-}   // namespace Editor
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

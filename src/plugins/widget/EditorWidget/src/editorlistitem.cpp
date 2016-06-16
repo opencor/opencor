@@ -25,7 +25,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace EditorList {
+namespace EditorWidget {
 
 //==============================================================================
 
@@ -117,7 +117,7 @@ QString EditorListItem::message() const
 
 //==============================================================================
 
-}   // namespace EditorList
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

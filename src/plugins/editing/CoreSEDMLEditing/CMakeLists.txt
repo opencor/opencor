@@ -25,8 +25,7 @@ ADD_PLUGIN(CoreSEDMLEditing
         CellMLSupport
         Core
         CoreEditingView
-        Editor
-        EditorList
+        EditorWidget
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport

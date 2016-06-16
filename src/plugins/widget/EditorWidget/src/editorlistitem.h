@@ -17,81 +17,60 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Editor list widget
+// Editor list item
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "commonwidget.h"
-#include "editorlistglobal.h"
-#include "editorlistitem.h"
+#include "editorwidgetglobal.h"
 
 //==============================================================================
 
-#include <QListView>
-
-//==============================================================================
-
-class QAction;
-class QMenu;
+#include <QStandardItem>
+#include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace EditorList {
+namespace EditorWidget {
 
 //==============================================================================
 
-class EDITORLIST_EXPORT EditorListWidget : public QListView,
-                                           public Core::CommonWidget
+class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
 {
-    Q_OBJECT
-
 public:
-    explicit EditorListWidget(QWidget *pParent);
+    enum Type {
+        Error       = QStandardItem::UserType,
+        Warning     = QStandardItem::UserType+1,
+        Hint        = QStandardItem::UserType+2,
+        Information = QStandardItem::UserType+3,
+        Fatal       = QStandardItem::UserType+4
+    };
 
-    virtual void retranslateUi();
+    explicit EditorListItem(const Type &pType, const int &pLine,
+                            const int &pColumn, const QString &pMessage);
 
-    void addItem(const EditorListItem::Type &pType, const int &pLine,
-                 const int &pColumn, const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, const int &pLine,
-                 const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, const QString &pMessage);
-
-    int count() const;
-
-    void selectFirstItem();
-
-protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual int type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
 
 private:
-    QStandardItemModel *mModel;
-
-    QMenu *mContextMenu;
-
-    QAction *mClearAction;
-    QAction *mCopyToClipboardAction;
-
-Q_SIGNALS:
-    void itemRequested(EditorList::EditorListItem *pItem);
-
-public Q_SLOTS:
-    void clear();
-
-private Q_SLOTS:
-    void showCustomContextMenu() const;
-
-    void copyToClipboard();
-
-    void requestItem(const QModelIndex &pItemIndex);
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
 };
 
 //==============================================================================
 
-}   // namespace EditorList
+typedef QList<EditorListItem> EditorListItems;
+
+//==============================================================================
+
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

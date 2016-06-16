@@ -17,22 +17,43 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// EditorList global
+// Editor widget plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef EditorList_PLUGIN
-        #define EDITORLIST_EXPORT __declspec(dllexport)
-    #else
-        #define EDITORLIST_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define EDITORLIST_EXPORT
-#endif
+#include "i18ninterface.h"
+#include "plugininfo.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace EditorWidget {
+
+//==============================================================================
+
+PLUGININFO_FUNC EditorWidgetPluginInfo();
+
+//==============================================================================
+
+class EditorWidgetPlugin : public QObject, public I18nInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.EditorWidgetPlugin" FILE "editorwidgetplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "i18ninterface.inl"
+};
+
+//==============================================================================
+
+}   // namespace EditorWidget
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

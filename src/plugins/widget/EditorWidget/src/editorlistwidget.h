@@ -17,45 +17,81 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Editor plugin
+// Editor list widget
 //==============================================================================
 
-#include "editorplugin.h"
+#pragma once
+
+//==============================================================================
+
+#include "commonwidget.h"
+#include "editorlistitem.h"
+#include "editorwidgetglobal.h"
+
+//==============================================================================
+
+#include <QListView>
+
+//==============================================================================
+
+class QAction;
+class QMenu;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Editor {
+namespace EditorWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC EditorPluginInfo()
+class EDITORWIDGET_EXPORT EditorListWidget : public QListView,
+                                             public Core::CommonWidget
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit and display text."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et afficher du texte."));
+public:
+    explicit EditorListWidget(QWidget *pParent);
 
-    return new PluginInfo("Widget", false, false,
-                          QStringList() << "QScintillaSupport",
-                          descriptions);
-}
+    virtual void retranslateUi();
+
+    void addItem(const EditorListItem::Type &pType, const int &pLine,
+                 const int &pColumn, const QString &pMessage);
+    void addItem(const EditorListItem::Type &pType, const int &pLine,
+                 const QString &pMessage);
+    void addItem(const EditorListItem::Type &pType, const QString &pMessage);
+
+    int count() const;
+
+    void selectFirstItem();
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
+private:
+    QStandardItemModel *mModel;
+
+    QMenu *mContextMenu;
+
+    QAction *mClearAction;
+    QAction *mCopyToClipboardAction;
+
+Q_SIGNALS:
+    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
+
+public Q_SLOTS:
+    void clear();
+
+private Q_SLOTS:
+    void showCustomContextMenu() const;
+
+    void copyToClipboard();
+
+    void requestItem(const QModelIndex &pItemIndex);
+};
 
 //==============================================================================
-// I18n interface
-//==============================================================================
 
-void EditorPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
-
-//==============================================================================
-
-}   // namespace Editor
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

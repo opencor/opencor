@@ -47,15 +47,10 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-namespace Editor {
-    class EditorWidget;
-}   // namespace Editor
-
-//==============================================================================
-
-namespace EditorList {
+namespace EditorWidget {
     class EditorListWidget;
-}   // namespace EditorList
+    class EditorWidget;
+}   // namespace EditorWidget
 
 //==============================================================================
 
@@ -122,7 +117,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    Editor::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
 
     bool isEditorUseable(const QString &pFileName) const;
     bool isEditorContentsModified(const QString &pFileName) const;
@@ -147,7 +142,7 @@ private:
     CellMLTextViewConverter mConverter;
     CellmlTextViewParser mParser;
 
-    QList<EditorList::EditorListWidget *> mEditorLists;
+    QList<EditorWidget::EditorListWidget *> mEditorLists;
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
@@ -172,7 +167,7 @@ private Q_SLOTS:
 
     void updateViewer();
 
-    void selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList = 0);
+    void selectFirstItemInEditorList(EditorWidget::EditorListWidget *pEditorList = 0);
 
     void mathmlConversionDone(const QString &pContentMathml,
                               const QString &pPresentationMathml);
