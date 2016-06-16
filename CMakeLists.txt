@@ -324,6 +324,7 @@ SET(PLUGINS
     # Plugins that extend some libraries (incl. third-party ones)
 
     widget/EditorWidget
+    widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
 
