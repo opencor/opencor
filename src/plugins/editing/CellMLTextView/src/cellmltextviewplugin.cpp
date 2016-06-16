@@ -452,7 +452,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                                                                 .arg(message.message());
                 }
             } else {
-                std::cout << QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
+                std::cout << QString(Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
             }
         }
     }

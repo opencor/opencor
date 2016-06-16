@@ -251,7 +251,7 @@ private:
 
     QVariant value(Core::Property *pProperty) const;
 
-    void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
+    void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);

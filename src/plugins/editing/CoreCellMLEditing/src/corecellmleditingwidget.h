@@ -98,7 +98,7 @@ private:
 
 private Q_SLOTS:
     void splitterMoved();
-    void itemRequested(EditorList::EditorListItem *pItem);
+    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
 };
 
 //==============================================================================
