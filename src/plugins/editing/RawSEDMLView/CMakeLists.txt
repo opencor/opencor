@@ -20,13 +20,13 @@ ADD_PLUGIN(RawSEDMLView
         CellMLSupport
         Core
         EditingView
-        CoreSEDMLEditing
         EditorWidget
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
         SBMLAPI
         SEDMLAPI
+        SEDMLEditingView
         SEDMLSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}

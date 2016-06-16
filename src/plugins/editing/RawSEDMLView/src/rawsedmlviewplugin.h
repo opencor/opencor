@@ -29,7 +29,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
-#include "sedmleditinginterface.h"
+#include "sedmleditingviewinterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -49,7 +49,8 @@ class RawSedmlViewWidget;
 
 class RawSEDMLViewPlugin : public QObject, public EditingViewInterface,
                            public FileHandlingInterface, public I18nInterface,
-                           public PluginInterface, public SedmlEditingInterface,
+                           public PluginInterface,
+                           public SedmlEditingViewInterface,
                            public ViewInterface
 {
     Q_OBJECT
@@ -60,7 +61,7 @@ class RawSEDMLViewPlugin : public QObject, public EditingViewInterface,
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::SedmlEditingInterface)
+    Q_INTERFACES(OpenCOR::SedmlEditingViewInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
@@ -68,7 +69,7 @@ public:
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
-#include "sedmleditinginterface.inl"
+#include "sedmleditingviewinterface.inl"
 #include "viewinterface.inl"
 
 private:

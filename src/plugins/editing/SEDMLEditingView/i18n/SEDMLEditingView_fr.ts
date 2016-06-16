@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CoreSEDMLEditing::CoreSEDMLEditingPlugin</name>
+    <name>OpenCOR::SEDMLEditingView::SEDMLEditingViewPlugin</name>
     <message>
         <source>SED-ML Validation</source>
         <translation>Validation SED-ML</translation>

@@ -37,9 +37,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreSEDMLEditing {
-    class CoreSedmlEditingWidget;
-}   // namespace CoreSEDMLEditing
+namespace SEDMLEditingView {
+    class SedmlEditingViewWidget;
+}   // namespace SEDMLEditingView
 
 //==============================================================================
 
@@ -86,8 +86,8 @@ private:
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *mEditingWidget;
-    QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *> mEditingWidgets;
+    SEDMLEditingView::SedmlEditingViewWidget *mEditingWidget;
+    QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *> mEditingWidgets;
 };
 
 //==============================================================================

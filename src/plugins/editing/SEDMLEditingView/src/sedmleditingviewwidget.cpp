@@ -17,15 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core SED-ML editing widget
+// SED-ML editing view widget
 //==============================================================================
 
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "coresedmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
+#include "sedmleditingviewwidget.h"
 
 //==============================================================================
 
@@ -36,11 +36,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreSEDMLEditing {
+namespace SEDMLEditingView {
 
 //==============================================================================
 
-CoreSedmlEditingWidget::CoreSedmlEditingWidget(const QString &pContents,
+SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
                                                const bool &pReadOnly,
                                                QsciLexer *pLexer,
                                                QWidget *pParent) :
@@ -77,11 +77,11 @@ CoreSedmlEditingWidget::CoreSedmlEditingWidget(const QString &pContents,
 
 //==============================================================================
 
-static const auto SettingsCoreSedmlEditingWidgetSizes = QStringLiteral("EditingWidgetSizes");
+static const auto SettingsSedmlEditingViewWidgetSizes = QStringLiteral("SedmlEditingViewWidgetSizes");
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::loadSettings(QSettings *pSettings)
+void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set our sizes
     // Note #1: the editor list's default height is 13% of the desktop's height
@@ -92,10 +92,10 @@ void CoreSedmlEditingWidget::loadSettings(QSettings *pSettings)
     //          less than 13% of the desktop's height, but that doesn't matter
     //          at all...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << qApp->desktop()->screenGeometry().height()
-                                                            << 0.13*qApp->desktop()->screenGeometry().height();
+    QVariantList defaultSedmlEditingViewWidgetSizes = QVariantList() << qApp->desktop()->screenGeometry().height()
+                                                                     << 0.13*qApp->desktop()->screenGeometry().height();
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCoreSedmlEditingWidgetSizes, defaultEditingWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSedmlEditingViewWidgetSizes, defaultSedmlEditingViewWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 
@@ -106,11 +106,11 @@ void CoreSedmlEditingWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::saveSettings(QSettings *pSettings) const
+void SedmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsCoreSedmlEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings->setValue(SettingsSedmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
     // Keep track of our editor's settings
 
@@ -119,7 +119,7 @@ void CoreSedmlEditingWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::retranslateUi()
+void SedmlEditingViewWidget::retranslateUi()
 {
     // Retranslate our editor and editor list
 
@@ -129,25 +129,25 @@ void CoreSedmlEditingWidget::retranslateUi()
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::updateSettings(CoreSedmlEditingWidget *pCoreSedmlEditingWidget)
+void SedmlEditingViewWidget::updateSettings(SedmlEditingViewWidget *pSedmlEditingViewWidget)
 {
     // Make sure that we are given another editing widget
 
-    if (!pCoreSedmlEditingWidget || (pCoreSedmlEditingWidget == this))
+    if (!pSedmlEditingViewWidget || (pSedmlEditingViewWidget == this))
         return;
 
     // Update our sizes and editor settings
 
-    mEditingWidgetSizes = pCoreSedmlEditingWidget->editingWidgetSizes();
+    mEditingWidgetSizes = pSedmlEditingViewWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mEditor->updateSettings(pCoreSedmlEditingWidget->editor());
+    mEditor->updateSettings(pSedmlEditingViewWidget->editor());
 }
 
 //==============================================================================
 
-EditorWidget::EditorWidget * CoreSedmlEditingWidget::editor() const
+EditorWidget::EditorWidget * SedmlEditingViewWidget::editor() const
 {
     // Return our editor
 
@@ -156,7 +156,7 @@ EditorWidget::EditorWidget * CoreSedmlEditingWidget::editor() const
 
 //==============================================================================
 
-EditorWidget::EditorListWidget * CoreSedmlEditingWidget::editorList() const
+EditorWidget::EditorListWidget * SedmlEditingViewWidget::editorList() const
 {
     // Return our editor list
 
@@ -165,7 +165,7 @@ EditorWidget::EditorListWidget * CoreSedmlEditingWidget::editorList() const
 
 //==============================================================================
 
-QIntList CoreSedmlEditingWidget::editingWidgetSizes() const
+QIntList SedmlEditingViewWidget::editingWidgetSizes() const
 {
     // Return our editing widget sizes
 
@@ -174,7 +174,7 @@ QIntList CoreSedmlEditingWidget::editingWidgetSizes() const
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::splitterMoved()
+void SedmlEditingViewWidget::splitterMoved()
 {
     // We have moved, so keep track of our new sizes
 
@@ -183,7 +183,7 @@ void CoreSedmlEditingWidget::splitterMoved()
 
 //==============================================================================
 
-void CoreSedmlEditingWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
+void SedmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
 {
     // Set our editor's cursor position to the line/column of the given item and
     // give our editor the focus so that we can see the exact location of the
@@ -196,7 +196,7 @@ void CoreSedmlEditingWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem
 
 //==============================================================================
 
-}   // namespace CoreSEDMLEditing
+}   // namespace SEDMLEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

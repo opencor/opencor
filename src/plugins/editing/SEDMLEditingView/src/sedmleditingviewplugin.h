@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreSEDMLEditing plugin
+// SEDMLEditingView plugin
 //==============================================================================
 
 #pragma once
@@ -36,25 +36,25 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class SedmlEditingInterface;
+class SedmlEditingViewInterface;
 
 //==============================================================================
 
-namespace CoreSEDMLEditing {
+namespace SEDMLEditingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreSEDMLEditingPluginInfo();
+PLUGININFO_FUNC SEDMLEditingViewPluginInfo();
 
 //==============================================================================
 
-class CoreSEDMLEditingPlugin : public QObject, public FileHandlingInterface,
+class SEDMLEditingViewPlugin : public QObject, public FileHandlingInterface,
                                public GuiInterface, public I18nInterface,
                                public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreSEDMLEditingPlugin" FILE "coresedmleditingplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.SEDMLEditingViewPlugin" FILE "sedmleditingviewplugin.json")
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
@@ -62,7 +62,7 @@ class CoreSEDMLEditingPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CoreSEDMLEditingPlugin();
+    explicit SEDMLEditingViewPlugin();
 
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
@@ -75,7 +75,7 @@ private:
     QAction *mToolsSedmlValidationAction;
 
     QString mFileName;
-    SedmlEditingInterface *mSedmlEditingInterface;
+    SedmlEditingViewInterface *mSedmlEditingViewInterface;
 
 private Q_SLOTS:
     void reformat();
@@ -85,7 +85,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CoreSEDMLEditing
+}   // namespace SEDMLEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

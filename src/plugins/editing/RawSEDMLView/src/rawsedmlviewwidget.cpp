@@ -21,11 +21,11 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coresedmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawsedmlviewwidget.h"
+#include "sedmleditingviewwidget.h"
 #include "sedmlfile.h"
 #include "sedmlfilemanager.h"
 #include "sedmlfileissue.h"
@@ -55,7 +55,7 @@ RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
-    mEditingWidgets(QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *>())
+    mEditingWidgets(QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *>())
 {
 }
 
@@ -86,7 +86,7 @@ void RawSedmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    foreach (CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget, mEditingWidgets)
+    foreach (SEDMLEditingView::SedmlEditingViewWidget *editingWidget, mEditingWidgets)
         editingWidget->retranslateUi();
 }
 
@@ -106,7 +106,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *newEditingWidget = mEditingWidgets.value(pFileName);
+    SEDMLEditingView::SedmlEditingViewWidget *newEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
@@ -115,7 +115,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
-        newEditingWidget = new CoreSEDMLEditing::CoreSedmlEditingWidget(fileContents,
+        newEditingWidget = new SEDMLEditingView::SedmlEditingViewWidget(fileContents,
                                                                         !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
@@ -130,7 +130,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
     // Update our editing widget, if required
 
     if (pUpdate) {
-        CoreSEDMLEditing::CoreSedmlEditingWidget *oldEditingWidget = mEditingWidget;
+        SEDMLEditingView::SedmlEditingViewWidget *oldEditingWidget = mEditingWidget;
 
         mEditingWidget = newEditingWidget;
 
@@ -179,7 +179,7 @@ void RawSedmlViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
         // There is an editing widget for the given file name, so save our
@@ -231,7 +231,7 @@ void RawSedmlViewWidget::fileRenamed(const QString &pOldFileName,
 {
     // The given file has been renamed, so update our editing widgets mapping
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+    SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
     if (editingWidget) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
@@ -245,7 +245,7 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editor(const QString &pFileName
 {
     // Return the requested editor
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     return editingWidget?editingWidget->editor():0;
 }
@@ -269,7 +269,7 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
 {
     // Reformat the contents of the given file's editor
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget && validate(pFileName, true)) {
         int cursorLine;
@@ -293,7 +293,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
 {
     // Validate the given file
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
         // Clear the list of SED-ML issues

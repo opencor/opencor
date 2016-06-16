@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core SED-ML editing widget
+// SED-ML editing view widget
 //==============================================================================
 
 #pragma once
@@ -26,7 +26,7 @@ limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
-#include "coresedmleditingglobal.h"
+#include "sedmleditingviewglobal.h"
 
 //==============================================================================
 
@@ -51,17 +51,17 @@ namespace EditorWidget {
 
 //==============================================================================
 
-namespace CoreSEDMLEditing {
+namespace SEDMLEditingView {
 
 //==============================================================================
 
-class CORESEDMLEDITING_EXPORT CoreSedmlEditingWidget : public QSplitter,
+class SEDMLEDITINGVIEW_EXPORT SedmlEditingViewWidget : public QSplitter,
                                                        public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CoreSedmlEditingWidget(const QString &pContents,
+    explicit SedmlEditingViewWidget(const QString &pContents,
                                     const bool &pReadOnly, QsciLexer *pLexer,
                                     QWidget *pParent);
 
@@ -70,7 +70,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateSettings(CoreSedmlEditingWidget *pCoreSedmlEditingWidget);
+    void updateSettings(SedmlEditingViewWidget *pSedmlEditingViewWidget);
 
     EditorWidget::EditorWidget * editor() const;
     EditorWidget::EditorListWidget * editorList() const;
@@ -90,7 +90,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CoreSEDMLEditing
+}   // namespace SEDMLEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

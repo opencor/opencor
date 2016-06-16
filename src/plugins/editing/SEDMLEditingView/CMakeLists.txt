@@ -1,8 +1,8 @@
-PROJECT(CoreSEDMLEditingPlugin)
+PROJECT(SEDMLEditingViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CoreSEDMLEditing
+ADD_PLUGIN(SEDMLEditingView
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
@@ -10,14 +10,14 @@ ADD_PLUGIN(CoreSEDMLEditing
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
-        src/coresedmleditingplugin.cpp
-        src/coresedmleditingwidget.cpp
+        src/sedmleditingviewplugin.cpp
+        src/sedmleditingviewwidget.cpp
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
-        src/coresedmleditingplugin.h
-        src/coresedmleditingwidget.h
+        src/sedmleditingviewplugin.h
+        src/sedmleditingviewwidget.h
     INCLUDE_DIRS
         src
     PLUGINS
