@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view information graphs widget
+// Single Cell view information graphs widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"

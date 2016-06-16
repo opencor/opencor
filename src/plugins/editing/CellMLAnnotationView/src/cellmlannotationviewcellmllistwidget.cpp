@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view CellML list widget
+// CellML Annotation view CellML list widget
 //==============================================================================
 
 #include "cellmlannotationviewcellmllistwidget.h"

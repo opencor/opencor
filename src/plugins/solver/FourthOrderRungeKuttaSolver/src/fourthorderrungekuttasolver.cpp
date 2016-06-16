@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Fourth-order Runge-Kutta solver class
+// Fourth-order Runge-Kutta solver
 //==============================================================================
 
 #include "fourthorderrungekuttasolver.h"

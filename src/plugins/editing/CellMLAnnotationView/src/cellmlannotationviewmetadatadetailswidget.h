@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata details widget
+// CellML Annotation view metadata details widget
 //==============================================================================
 
 #pragma once

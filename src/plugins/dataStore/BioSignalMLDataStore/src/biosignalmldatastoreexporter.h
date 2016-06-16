@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// BioSignalML data store exporter class
+// BioSignalML data store exporter
 //==============================================================================
 
 #ifndef BioSignalMLDATASTOREEXPORTER_H

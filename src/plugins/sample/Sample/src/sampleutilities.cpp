@@ -20,7 +20,7 @@ limitations under the License.
 // Sample utilities
 //==============================================================================
 
-#include "sampleutils.h"
+#include "sampleutilities.h"
 
 //==============================================================================
 

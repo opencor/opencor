@@ -7,7 +7,7 @@ ADD_PLUGIN(Sample
         ../../plugininfo.cpp
 
         src/sampleplugin.cpp
-        src/sampleutils.cpp
+        src/sampleutilities.cpp
     HEADERS_MOC
         src/sampleplugin.h
     INCLUDE_DIRS
