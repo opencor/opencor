@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "mathmlviewerglobal.h"
+#include "mathmlviewerwidgetglobal.h"
 #include "widget.h"
 
 //==============================================================================
@@ -42,11 +42,11 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
-namespace MathMLViewer {
+namespace MathMLViewerWidget {
 
 //==============================================================================
 
-class MATHMLVIEWER_EXPORT MathmlViewerWidget : public Core::Widget
+class MATHMLVIEWERWIDGET_EXPORT MathmlViewerWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -114,14 +114,14 @@ private:
 private Q_SLOTS:
     void showCustomContextMenu() const;
 
-    void updateMathmlViewer();
+    void updateMathmlViewerWidget();
 
     void copyToClipboard();
 };
 
 //==============================================================================
 
-}   // namespace MathMLViewer
+}   // namespace MathMLViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

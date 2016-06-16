@@ -1,4 +1,4 @@
-PROJECT(MathMLViewerPlugin)
+PROJECT(MathMLViewerWidgetPlugin)
 
 # Add the plugin
 
@@ -8,16 +8,16 @@ ELSE()
     SET(XML)
 ENDIF()
 
-ADD_PLUGIN(MathMLViewer
+ADD_PLUGIN(MathMLViewerWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/mathmlviewerplugin.cpp
         src/mathmlviewerwidget.cpp
+        src/mathmlviewerwidgetplugin.cpp
     HEADERS_MOC
-        src/mathmlviewerplugin.h
         src/mathmlviewerwidget.h
+        src/mathmlviewerwidgetplugin.h
     INCLUDE_DIRS
         src
     PLUGINS

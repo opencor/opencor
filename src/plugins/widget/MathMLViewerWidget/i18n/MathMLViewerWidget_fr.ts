@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::MathMLViewer::MathmlViewerWidget</name>
+    <name>OpenCOR::MathMLViewerWidget::MathmlViewerWidget</name>
     <message>
         <source>Optimise Font Size</source>
         <translation>Optimiser Taille Fonte</translation>

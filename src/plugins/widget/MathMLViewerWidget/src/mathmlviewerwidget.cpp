@@ -51,7 +51,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MathMLViewer {
+namespace MathMLViewerWidget {
 
 //==============================================================================
 
@@ -139,11 +139,11 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
             this, SLOT(update()));
 
     connect(mSubscriptsAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateMathmlViewer()));
+            this, SLOT(updateMathmlViewerWidget()));
     connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateMathmlViewer()));
+            this, SLOT(updateMathmlViewerWidget()));
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateMathmlViewer()));
+            this, SLOT(updateMathmlViewerWidget()));
 
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
@@ -170,10 +170,10 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsMathmlViewerOptimiseFontSizeEnabled = QStringLiteral("MathmlViewerOptimiseFontSizeEnabled");
-static const auto SettingsMathmlViewerSubscriptsEnabled       = QStringLiteral("MathmlViewerSubscriptsEnabled");
-static const auto SettingsMathmlViewerGreekSymbolsEnabled     = QStringLiteral("MathmlViewerGreekSymbolsEnabled");
-static const auto SettingsMathmlViewerDigitGroupingEnabled    = QStringLiteral("MathmlViewerDigitGroupingEnabled");
+static const auto SettingsMathmlViewerWidgetOptimiseFontSizeEnabled = QStringLiteral("MathmlViewerWidgetOptimiseFontSizeEnabled");
+static const auto SettingsMathmlViewerWidgetSubscriptsEnabled       = QStringLiteral("MathmlViewerWidgetSubscriptsEnabled");
+static const auto SettingsMathmlViewerWidgetGreekSymbolsEnabled     = QStringLiteral("MathmlViewerWidgetGreekSymbolsEnabled");
+static const auto SettingsMathmlViewerWidgetDigitGroupingEnabled    = QStringLiteral("MathmlViewerWidgetDigitGroupingEnabled");
 
 //==============================================================================
 
@@ -181,10 +181,10 @@ void MathmlViewerWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
-    setOptimiseFontSize(pSettings->value(SettingsMathmlViewerOptimiseFontSizeEnabled, true).toBool());
-    setSubscripts(pSettings->value(SettingsMathmlViewerSubscriptsEnabled, true).toBool());
-    setGreekSymbols(pSettings->value(SettingsMathmlViewerGreekSymbolsEnabled, true).toBool());
-    setDigitGrouping(pSettings->value(SettingsMathmlViewerDigitGroupingEnabled, true).toBool());
+    setOptimiseFontSize(pSettings->value(SettingsMathmlViewerWidgetOptimiseFontSizeEnabled, true).toBool());
+    setSubscripts(pSettings->value(SettingsMathmlViewerWidgetSubscriptsEnabled, true).toBool());
+    setGreekSymbols(pSettings->value(SettingsMathmlViewerWidgetGreekSymbolsEnabled, true).toBool());
+    setDigitGrouping(pSettings->value(SettingsMathmlViewerWidgetDigitGroupingEnabled, true).toBool());
 }
 
 //==============================================================================
@@ -193,10 +193,10 @@ void MathmlViewerWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->setValue(SettingsMathmlViewerOptimiseFontSizeEnabled, optimiseFontSize());
-    pSettings->setValue(SettingsMathmlViewerSubscriptsEnabled, subscripts());
-    pSettings->setValue(SettingsMathmlViewerGreekSymbolsEnabled, greekSymbols());
-    pSettings->setValue(SettingsMathmlViewerDigitGroupingEnabled, digitGrouping());
+    pSettings->setValue(SettingsMathmlViewerWidgetOptimiseFontSizeEnabled, optimiseFontSize());
+    pSettings->setValue(SettingsMathmlViewerWidgetSubscriptsEnabled, subscripts());
+    pSettings->setValue(SettingsMathmlViewerWidgetGreekSymbolsEnabled, greekSymbols());
+    pSettings->setValue(SettingsMathmlViewerWidgetDigitGroupingEnabled, digitGrouping());
 }
 
 //==============================================================================
@@ -736,7 +736,7 @@ void MathmlViewerWidget::showCustomContextMenu() const
 
 //==============================================================================
 
-void MathmlViewerWidget::updateMathmlViewer()
+void MathmlViewerWidget::updateMathmlViewerWidget()
 {
     // Update our MathML viewer by 'updating' our contents
 
@@ -765,7 +765,7 @@ void MathmlViewerWidget::copyToClipboard()
 
 //==============================================================================
 
-}   // namespace MathMLViewer
+}   // namespace MathMLViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -60,7 +60,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     // Create our viewer, editor and editor list
 
-    mMathmlViewer = new MathMLViewer::MathmlViewerWidget(this);
+    mMathmlViewer = new MathMLViewerWidget::MathmlViewerWidget(this);
     mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorList = new EditorList::EditorListWidget(this);
 
@@ -155,7 +155,7 @@ void CoreCellmlEditingWidget::updateSettings(CoreCellmlEditingWidget *pCoreCellm
 
 //==============================================================================
 
-MathMLViewer::MathmlViewerWidget *CoreCellmlEditingWidget::mathmlViewer() const
+MathMLViewerWidget::MathmlViewerWidget *CoreCellmlEditingWidget::mathmlViewer() const
 {
     // Return our MathML viewer
 

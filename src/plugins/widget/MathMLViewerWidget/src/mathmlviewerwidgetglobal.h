@@ -25,13 +25,13 @@ limitations under the License.
 //==============================================================================
 
 #ifdef _WIN32
-    #ifdef MathMLViewer_PLUGIN
-        #define MATHMLVIEWER_EXPORT __declspec(dllexport)
+    #ifdef MathMLViewerWidget_PLUGIN
+        #define MATHMLVIEWERWIDGET_EXPORT __declspec(dllexport)
     #else
-        #define MATHMLVIEWER_EXPORT __declspec(dllimport)
+        #define MATHMLVIEWERWIDGET_EXPORT __declspec(dllimport)
     #endif
 #else
-    #define MATHMLVIEWER_EXPORT
+    #define MATHMLVIEWERWIDGET_EXPORT
 #endif
 
 //==============================================================================

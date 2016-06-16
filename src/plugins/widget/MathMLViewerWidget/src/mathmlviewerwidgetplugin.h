@@ -30,19 +30,19 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MathMLViewer {
+namespace MathMLViewerWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC MathMLViewerPluginInfo();
+PLUGININFO_FUNC MathMLViewerWidgetPluginInfo();
 
 //==============================================================================
 
-class MathMLViewerPlugin : public QObject, public I18nInterface
+class MathMLViewerWidgetPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.MathMLViewerPlugin" FILE "mathmlviewerplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.MathMLViewerWidgetPlugin" FILE "mathmlviewerwidgetplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
 
@@ -52,7 +52,7 @@ public:
 
 //==============================================================================
 
-}   // namespace MathMLViewer
+}   // namespace MathMLViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

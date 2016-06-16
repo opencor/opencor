@@ -29,7 +29,7 @@ ADD_PLUGIN(CoreCellMLEditing
         Editor
         EditorList
         ${LLVM_PLUGIN}
-        MathMLViewer
+        MathMLViewerWidget
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
         ${QWT_PLUGIN}

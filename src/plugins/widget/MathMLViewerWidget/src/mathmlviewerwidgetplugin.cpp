@@ -20,16 +20,16 @@ limitations under the License.
 // MathML viewer plugin
 //==============================================================================
 
-#include "mathmlviewerplugin.h"
+#include "mathmlviewerwidgetplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace MathMLViewer {
+namespace MathMLViewerWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC MathMLViewerPluginInfo()
+PLUGININFO_FUNC MathMLViewerWidgetPluginInfo()
 {
     Descriptions descriptions;
 
@@ -45,7 +45,7 @@ PLUGININFO_FUNC MathMLViewerPluginInfo()
 // I18n interface
 //==============================================================================
 
-void MathMLViewerPlugin::retranslateUi()
+void MathMLViewerWidgetPlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
@@ -55,7 +55,7 @@ void MathMLViewerPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace MathMLViewer
+}   // namespace MathMLViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================
