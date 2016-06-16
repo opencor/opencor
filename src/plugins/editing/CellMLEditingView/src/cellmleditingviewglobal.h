@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreCellMLEditing global
+// CellMLEditingView global
 //==============================================================================
 
 #pragma once
@@ -25,13 +25,13 @@ limitations under the License.
 //==============================================================================
 
 #ifdef _WIN32
-    #ifdef CoreCellMLEditing_PLUGIN
-        #define CORECELLMLEDITING_EXPORT __declspec(dllexport)
+    #ifdef CellMLEditingView_PLUGIN
+        #define CELLMLEDITINGVIEW_EXPORT __declspec(dllexport)
     #else
-        #define CORECELLMLEDITING_EXPORT __declspec(dllimport)
+        #define CELLMLEDITINGVIEW_EXPORT __declspec(dllimport)
     #endif
 #else
-    #define CORECELLMLEDITING_EXPORT
+    #define CELLMLEDITINGVIEW_EXPORT
 #endif
 
 //==============================================================================

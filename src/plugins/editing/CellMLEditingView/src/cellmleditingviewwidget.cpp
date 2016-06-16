@@ -17,11 +17,11 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core CellML editing widget
+// CellML editing view widget
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "corecellmleditingwidget.h"
+#include "cellmleditingviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
@@ -37,11 +37,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreCellMLEditing {
+namespace CellMLEditingView {
 
 //==============================================================================
 
-CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
+CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
                                                  const bool &pReadOnly,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
@@ -80,11 +80,11 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
 //==============================================================================
 
-static const auto SettingsCoreCellmlEditingWidgetSizes = QStringLiteral("EditingWidgetSizes");
+static const auto SettingsCellmlEditingViewWidgetSizes = QStringLiteral("CellmlEditingViewWidgetSizes");
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
+void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set our sizes
     // Note #1: the viewer's and editor list's default height is 19% and 13%,
@@ -95,11 +95,11 @@ void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 19% and 13%, respectively, of the
     //          desktop's height, but that doesn't matter at all...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                            << qApp->desktop()->screenGeometry().height()
-                                                            << 0.13*qApp->desktop()->screenGeometry().height();
+    QVariantList defaultCellmlEditingViewWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
+                                                                      << qApp->desktop()->screenGeometry().height()
+                                                                      << 0.13*qApp->desktop()->screenGeometry().height();
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCoreCellmlEditingWidgetSizes, defaultEditingWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlEditingViewWidgetSizes, defaultCellmlEditingViewWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 
@@ -111,11 +111,11 @@ void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
+void CellmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsCoreCellmlEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings->setValue(SettingsCellmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
     // Keep track of our viewer's and editor's settings
 
@@ -125,7 +125,7 @@ void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::retranslateUi()
+void CellmlEditingViewWidget::retranslateUi()
 {
     // Retranslate our viewer, editor and editor list
 
@@ -136,26 +136,26 @@ void CoreCellmlEditingWidget::retranslateUi()
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget)
+void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pCellmlEditingViewWidget)
 {
     // Make sure that we are given another editing widget
 
-    if (!pCoreCellmlEditingWidget || (pCoreCellmlEditingWidget == this))
+    if (!pCellmlEditingViewWidget || (pCellmlEditingViewWidget == this))
         return;
 
     // Update our sizes, viewer settings and editor settings
 
-    mEditingWidgetSizes = pCoreCellmlEditingWidget->editingWidgetSizes();
+    mEditingWidgetSizes = pCellmlEditingViewWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mMathmlViewer->updateSettings(pCoreCellmlEditingWidget->mathmlViewer());
-    mEditor->updateSettings(pCoreCellmlEditingWidget->editor());
+    mMathmlViewer->updateSettings(pCellmlEditingViewWidget->mathmlViewer());
+    mEditor->updateSettings(pCellmlEditingViewWidget->editor());
 }
 
 //==============================================================================
 
-MathMLViewerWidget::MathmlViewerWidget *CoreCellmlEditingWidget::mathmlViewer() const
+MathMLViewerWidget::MathmlViewerWidget *CellmlEditingViewWidget::mathmlViewer() const
 {
     // Return our MathML viewer
 
@@ -164,7 +164,7 @@ MathMLViewerWidget::MathmlViewerWidget *CoreCellmlEditingWidget::mathmlViewer() 
 
 //==============================================================================
 
-EditorWidget::EditorWidget * CoreCellmlEditingWidget::editor() const
+EditorWidget::EditorWidget * CellmlEditingViewWidget::editor() const
 {
     // Return our editor
 
@@ -173,7 +173,7 @@ EditorWidget::EditorWidget * CoreCellmlEditingWidget::editor() const
 
 //==============================================================================
 
-EditorWidget::EditorListWidget * CoreCellmlEditingWidget::editorList() const
+EditorWidget::EditorListWidget * CellmlEditingViewWidget::editorList() const
 {
     // Return our editor list
 
@@ -182,7 +182,7 @@ EditorWidget::EditorListWidget * CoreCellmlEditingWidget::editorList() const
 
 //==============================================================================
 
-QIntList CoreCellmlEditingWidget::editingWidgetSizes() const
+QIntList CellmlEditingViewWidget::editingWidgetSizes() const
 {
     // Return our editing widget sizes
 
@@ -191,7 +191,7 @@ QIntList CoreCellmlEditingWidget::editingWidgetSizes() const
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::splitterMoved()
+void CellmlEditingViewWidget::splitterMoved()
 {
     // We have moved, so keep track of our new sizes
 
@@ -200,7 +200,7 @@ void CoreCellmlEditingWidget::splitterMoved()
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
+void CellmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
 {
     // Set our editor's cursor position to the line/column of the given item and
     // give our editor the focus so that we can see the exact location of the
@@ -213,7 +213,7 @@ void CoreCellmlEditingWidget::itemRequested(OpenCOR::EditorWidget::EditorListIte
 
 //==============================================================================
 
-}   // namespace CoreCellMLEditing
+}   // namespace CellMLEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

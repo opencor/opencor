@@ -48,7 +48,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide du format CellML Text."));
 
     return new PluginInfo("Editing", true, true,
-                          QStringList() << "CoreCellMLEditing",
+                          QStringList() << "CellMLEditingView",
                           descriptions);
 }
 

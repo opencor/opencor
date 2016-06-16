@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "cellmleditinginterface.h"
+#include "cellmleditingviewinterface.h"
 #include "cliinterface.h"
 #include "editingviewinterface.h"
 #include "filehandlinginterface.h"
@@ -48,7 +48,7 @@ class CellmlTextViewWidget;
 
 //==============================================================================
 
-class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
+class CellMLTextViewPlugin : public QObject, public CellmlEditingViewInterface,
                              public CliInterface, public EditingViewInterface,
                              public FileHandlingInterface,
                              public I18nInterface, public PluginInterface,
@@ -58,7 +58,7 @@ class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLTextViewPlugin" FILE "cellmltextviewplugin.json")
 
-    Q_INTERFACES(OpenCOR::CellmlEditingInterface)
+    Q_INTERFACES(OpenCOR::CellmlEditingViewInterface)
     Q_INTERFACES(OpenCOR::CliInterface)
     Q_INTERFACES(OpenCOR::EditingViewInterface)
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
@@ -67,7 +67,7 @@ class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-#include "cellmleditinginterface.inl"
+#include "cellmleditingviewinterface.inl"
 #include "cliinterface.inl"
 #include "editingviewinterface.inl"
 #include "filehandlinginterface.inl"

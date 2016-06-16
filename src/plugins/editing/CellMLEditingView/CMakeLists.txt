@@ -1,8 +1,8 @@
-PROJECT(CoreCellMLEditingPlugin)
+PROJECT(CellMLEditingViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CoreCellMLEditing
+ADD_PLUGIN(CellMLEditingView
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
@@ -10,14 +10,14 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
-        src/corecellmleditingplugin.cpp
-        src/corecellmleditingwidget.cpp
+        src/cellmleditingviewplugin.cpp
+        src/cellmleditingviewwidget.cpp
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
-        src/corecellmleditingplugin.h
-        src/corecellmleditingwidget.h
+        src/cellmleditingviewplugin.h
+        src/cellmleditingviewwidget.h
     INCLUDE_DIRS
         src
     PLUGINS

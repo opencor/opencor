@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CoreCellMLEditing::CoreCellMLEditingPlugin</name>
+    <name>OpenCOR::CellMLEditingView::CellMLEditingViewPlugin</name>
     <message>
         <source>CellML Validation</source>
         <translation>Validation CellML</translation>

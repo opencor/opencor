@@ -24,7 +24,7 @@ limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "corecellmleditingwidget.h"
+#include "cellmleditingviewwidget.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
@@ -57,7 +57,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
-    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
+    mEditingWidgets(QMap<QString, CellMLEditingView::CellmlEditingViewWidget *>()),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
@@ -95,7 +95,7 @@ void RawCellmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
+    foreach (CellMLEditingView::CellmlEditingViewWidget *editingWidget, mEditingWidgets)
         editingWidget->retranslateUi();
 }
 
@@ -115,7 +115,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = mEditingWidgets.value(pFileName);
+    CellMLEditingView::CellmlEditingViewWidget *newEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
@@ -124,7 +124,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
-        newEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
+        newEditingWidget = new CellMLEditingView::CellmlEditingViewWidget(fileContents,
                                                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                                                           new QsciLexerXML(this),
                                                                           parentWidget());
@@ -146,7 +146,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
     // Update our editing widget, if required
 
     if (pUpdate) {
-        CoreCellMLEditing::CoreCellmlEditingWidget *oldEditingWidget = mEditingWidget;
+        CellMLEditingView::CellmlEditingViewWidget *oldEditingWidget = mEditingWidget;
 
         mEditingWidget = newEditingWidget;
 
@@ -199,7 +199,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
         // There is an editing widget for the given file name, so save our
@@ -251,7 +251,7 @@ void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 {
     // The given file has been renamed, so update our editing widgets mapping
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+    CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
     if (editingWidget) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
@@ -265,7 +265,7 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editor(const QString &pFileNam
 {
     // Return the requested editor
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     return editingWidget?editingWidget->editor():0;
 }
@@ -289,7 +289,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 {
     // Reformat the contents of the given file's editor
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget && validate(pFileName, true)) {
         int cursorLine;
@@ -313,7 +313,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 {
     // Validate the given file
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
         // Clear the list of CellML issues

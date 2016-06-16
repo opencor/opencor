@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreCellMLEditing plugin
+// CellMLEditingView plugin
 //==============================================================================
 
 #pragma once
@@ -36,25 +36,25 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class CellmlEditingInterface;
+class CellmlEditingViewInterface;
 
 //==============================================================================
 
-namespace CoreCellMLEditing {
+namespace CellMLEditingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreCellMLEditingPluginInfo();
+PLUGININFO_FUNC CellMLEditingViewPluginInfo();
 
 //==============================================================================
 
-class CoreCellMLEditingPlugin : public QObject, public FileHandlingInterface,
+class CellMLEditingViewPlugin : public QObject, public FileHandlingInterface,
                                 public GuiInterface, public I18nInterface,
                                 public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreCellMLEditingPlugin" FILE "corecellmleditingplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLEditingViewPlugin" FILE "cellmleditingviewplugin.json")
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
@@ -62,7 +62,7 @@ class CoreCellMLEditingPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CoreCellMLEditingPlugin();
+    explicit CellMLEditingViewPlugin();
 
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
@@ -75,7 +75,7 @@ private:
     QAction *mToolsCellmlValidationAction;
 
     QString mFileName;
-    CellmlEditingInterface *mCellmlEditingInterface;
+    CellmlEditingViewInterface *mCellmlEditingViewInterface;
 
 private Q_SLOTS:
     void reformat();
@@ -85,7 +85,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CoreCellMLEditing
+}   // namespace CellMLEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

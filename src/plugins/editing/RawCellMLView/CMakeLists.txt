@@ -20,7 +20,7 @@ ADD_PLUGIN(RawCellMLView
         CellMLSupport
         Compiler
         Core
-        CoreCellMLEditing
+        CellMLEditingView
         EditingView
         EditorWidget
         ${LLVM_PLUGIN}

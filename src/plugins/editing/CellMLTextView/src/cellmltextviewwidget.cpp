@@ -23,13 +23,13 @@ limitations under the License.
 //       updating the viewer (e.g. see the XSL transformation)...
 //==============================================================================
 
+#include "cellmleditingviewwidget.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewlexer.h"
 #include "cellmltextviewparser.h"
 #include "cellmltextviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
@@ -57,7 +57,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewWidgetData::CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
+CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
                                                    const QString &pSha1,
                                                    const bool &pValid,
                                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion,
@@ -90,7 +90,7 @@ void CellmlTextViewWidgetData::retranslateUi()
 
 //==============================================================================
 
-CoreCellMLEditing::CoreCellmlEditingWidget * CellmlTextViewWidgetData::editingWidget() const
+CellMLEditingView::CellmlEditingViewWidget * CellmlTextViewWidgetData::editingWidget() const
 {
     // Return our editing widget
 
@@ -235,7 +235,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
         // Create an editing widget for the given CellML file
 
-        CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileIsEmpty?QString():mConverter.output(),
+        CellMLEditingView::CellmlEditingViewWidget *editingWidget = new CellMLEditingView::CellmlEditingViewWidget(fileIsEmpty?QString():mConverter.output(),
                                                                                                                    !fileManagerInstance->isReadableAndWritable(pFileName),
                                                                                                                    0, parentWidget());
 
@@ -314,10 +314,10 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
     // Update our editing widget, if required
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = data->editingWidget();
+    CellMLEditingView::CellmlEditingViewWidget *newEditingWidget = data->editingWidget();
 
     if (pUpdate) {
-        CoreCellMLEditing::CoreCellmlEditingWidget *oldEditingWidget = mEditingWidget;
+        CellMLEditingView::CellmlEditingViewWidget *oldEditingWidget = mEditingWidget;
 
         mEditingWidget = newEditingWidget;
 
@@ -387,7 +387,7 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
         // settings and reset our memory of the current editing widget, if
         // needed
 
-        CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = data->editingWidget();
+        CellMLEditingView::CellmlEditingViewWidget *editingWidget = data->editingWidget();
 
         if (mEditingWidget == editingWidget) {
             QSettings settings;
@@ -654,7 +654,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
     if (data) {
-        CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = data->editingWidget();
+        CellMLEditingView::CellmlEditingViewWidget *editingWidget = data->editingWidget();
 
         editingWidget->editorList()->clear();
 

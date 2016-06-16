@@ -333,7 +333,7 @@ SET(PLUGINS
 
     # Plugins that have dependencies on others
 
-    editing/CoreCellMLEditing
+    editing/CellMLEditingView
     editing/CoreSEDMLEditing
 
     # Selectable plugins

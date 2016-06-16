@@ -17,15 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core CellML editing widget
+// CellML editing view widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
+#include "cellmleditingviewglobal.h"
 #include "commonwidget.h"
-#include "corecellmleditingglobal.h"
 #include "corecliutils.h"
 
 //==============================================================================
@@ -57,17 +57,17 @@ namespace MathMLViewerWidget {
 
 //==============================================================================
 
-namespace CoreCellMLEditing {
+namespace CellMLEditingView {
 
 //==============================================================================
 
-class CORECELLMLEDITING_EXPORT CoreCellmlEditingWidget : public QSplitter,
+class CELLMLEDITINGVIEW_EXPORT CellmlEditingViewWidget : public QSplitter,
                                                          public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CoreCellmlEditingWidget(const QString &pContents,
+    explicit CellmlEditingViewWidget(const QString &pContents,
                                      const bool &pReadOnly, QsciLexer *pLexer,
                                      QWidget *pParent);
 
@@ -76,7 +76,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
+    void updateSettings(CellmlEditingViewWidget *pCellmlEditingViewWidget);
 
     MathMLViewerWidget::MathmlViewerWidget * mathmlViewer() const;
     EditorWidget::EditorWidget * editor() const;
@@ -98,7 +98,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CoreCellMLEditing
+}   // namespace CellMLEditingView
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -38,9 +38,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreCellMLEditing {
-    class CoreCellmlEditingWidget;
-}   // namespace CoreCellMLEditing
+namespace CellMLEditingView {
+    class CellmlEditingViewWidget;
+}   // namespace CellMLEditingView
 
 //==============================================================================
 
@@ -87,8 +87,8 @@ private:
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
-    QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
+    CellMLEditingView::CellmlEditingViewWidget *mEditingWidget;
+    QMap<QString, CellMLEditingView::CellmlEditingViewWidget *> mEditingWidgets;
 
     QMap<QString, QString> mPresentationMathmlEquations;
 

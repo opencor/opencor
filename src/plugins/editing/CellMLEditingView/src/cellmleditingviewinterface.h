@@ -32,11 +32,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class CellmlEditingInterface
+class CellmlEditingViewInterface
 {
 public:
 #define INTERFACE_DEFINITION
-    #include "cellmleditinginterface.inl"
+    #include "cellmleditingviewinterface.inl"
 #undef INTERFACE_DEFINITION
 };
 
@@ -46,7 +46,7 @@ public:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::CellmlEditingInterface, "OpenCOR::CellmlEditingInterface")
+Q_DECLARE_INTERFACE(OpenCOR::CellmlEditingViewInterface, "OpenCOR::CellmlEditingViewInterface")
 
 //==============================================================================
 // End of file
