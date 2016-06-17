@@ -4,8 +4,8 @@
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
+        <source>Copy To Clipboard</source>
+        <translation>Copier Dans Presse-Papier</translation>
     </message>
     <message>
         <source>Copy the contents of the graph panel to the clipboard</source>

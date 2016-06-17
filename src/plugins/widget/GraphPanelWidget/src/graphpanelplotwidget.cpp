@@ -567,7 +567,7 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy"),
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                      tr("Zoom in the graph panel"));
