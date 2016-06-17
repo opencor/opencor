@@ -21,7 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "singlecellviewgraphpanelwidget.h"
+#include "graphpanelwidget.h"
 
 //==============================================================================
 

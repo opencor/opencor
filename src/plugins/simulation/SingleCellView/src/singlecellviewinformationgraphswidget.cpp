@@ -23,7 +23,7 @@ limitations under the License.
 #include "cellmlfileruntime.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
-#include "singlecellviewgraphpanelwidget.h"
+#include "graphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewsimulation.h"

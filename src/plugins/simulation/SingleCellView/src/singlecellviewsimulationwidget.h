@@ -26,8 +26,8 @@ limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
+#include "graphpanelplotwidget.h"
 #include "sedmlfileissue.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewwidget.h"
 #include "widget.h"
 

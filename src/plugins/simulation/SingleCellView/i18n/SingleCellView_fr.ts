@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewGraphPanelPlotWidget</name>
+    <name>OpenCOR::SingleCellView::GraphPanelPlotWidget</name>
     <message>
         <source>Copy</source>
         <translation>Copier</translation>

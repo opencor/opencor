@@ -13,10 +13,10 @@ ADD_PLUGIN(SingleCellView
         ../../solverinterface.cpp
         ../../viewinterface.cpp
 
+        src/graphpanelplotwidget.cpp
+        src/graphpanelswidget.cpp
+        src/graphpanelwidget.cpp
         src/singlecellviewcontentswidget.cpp
-        src/singlecellviewgraphpanelplotwidget.cpp
-        src/singlecellviewgraphpanelswidget.cpp
-        src/singlecellviewgraphpanelwidget.cpp
         src/singlecellviewinformationgraphswidget.cpp
         src/singlecellviewinformationparameterswidget.cpp
         src/singlecellviewinformationsimulationwidget.cpp
@@ -33,10 +33,10 @@ ADD_PLUGIN(SingleCellView
         ../../pluginmanager.h
         ../../solverinterface.h
 
+        src/graphpanelplotwidget.h
+        src/graphpanelswidget.h
+        src/graphpanelwidget.h
         src/singlecellviewcontentswidget.h
-        src/singlecellviewgraphpanelplotwidget.h
-        src/singlecellviewgraphpanelswidget.h
-        src/singlecellviewgraphpanelwidget.h
         src/singlecellviewinformationgraphswidget.h
         src/singlecellviewinformationparameterswidget.h
         src/singlecellviewinformationsimulationwidget.h

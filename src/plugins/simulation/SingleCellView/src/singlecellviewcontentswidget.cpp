@@ -21,8 +21,8 @@ limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "graphpanelswidget.h"
 #include "singlecellviewcontentswidget.h"
-#include "singlecellviewgraphpanelswidget.h"
 #include "singlecellviewinformationwidget.h"
 
 //==============================================================================

@@ -26,8 +26,8 @@ limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
+#include "graphpanelplotwidget.h"
 #include "propertyeditorwidget.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 

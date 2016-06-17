@@ -17,19 +17,19 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view graph panels widget
+// Single Cell view graph panel widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "singlecellviewgraphpanelwidget.h"
+#include "graphpanelplotwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
-#include <QSplitter>
+#include <QList>
 
 //==============================================================================
 
@@ -38,65 +38,56 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewSimulationWidget;
+class GraphPanelWidget;
 
 //==============================================================================
 
-class GraphPanelsWidget : public QSplitter,
-                                        public Core::CommonWidget
+typedef QList<GraphPanelWidget *> GraphPanelWidgets;
+
+//==============================================================================
+
+class GraphPanelWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit GraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
-                               QWidget *pParent);
+    explicit GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
+                              QWidget *pParent);
+    ~GraphPanelWidget();
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    bool isActive() const;
+    void setActive(const bool &pActive);
 
-    void initialize();
+    GraphPanelPlotWidget * plot() const;
 
-    GraphPanelWidgets graphPanels() const;
-    GraphPanelWidget * activeGraphPanel() const;
+    SingleCellViewGraphPanelPlotGraphs graphs() const;
 
-    GraphPanelWidget * addGraphPanel(const bool &pActive = true);
+    void addGraph(GraphPanelPlotGraph *pGraph);
+    void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void removeAllGraphs();
 
-    void removeCurrentGraphPanel();
-    void removeAllGraphPanels();
-
-    void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
+protected:
+    virtual void changeEvent(QEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:
-    SingleCellViewSimulationWidget *mSimulationWidget;
+    QFrame *mMarker;
+    GraphPanelPlotWidget *mPlot;
 
-    QIntList mSplitterSizes;
+    bool mActive;
 
-    GraphPanelWidgets mGraphPanels;
-
-    GraphPanelWidget *mActiveGraphPanel;
-
-    void removeGraphPanel(GraphPanelWidget *pGraphPanel);
+    void updateMarkerColor();
 
 Q_SIGNALS:
-    void graphPanelAdded(GraphPanelWidget *pGraphPanel,
-                         const bool &pActive);
-    void graphPanelRemoved(GraphPanelWidget *pGraphPanel);
-
-    void removeGraphPanelsEnabled(const bool &pEnabled);
-
-    void graphPanelActivated(GraphPanelWidget *pGraphPanel);
+    void activated(GraphPanelWidget *pGraphPanel);
+    void inactivated(GraphPanelWidget *pGraphPanel);
 
     void graphAdded(GraphPanelWidget *pGraphPanel,
                     GraphPanelPlotGraph *pGraph);
     void graphsRemoved(GraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
-
-private Q_SLOTS:
-    void splitterMoved();
-
-    void updateGraphPanels(GraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================

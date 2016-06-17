@@ -21,8 +21,8 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "graphpanelplotwidget.h"
 #include "i18ninterface.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 

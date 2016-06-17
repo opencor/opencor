@@ -20,7 +20,7 @@ limitations under the License.
 // Single Cell view graph panels widget
 //==============================================================================
 
-#include "singlecellviewgraphpanelswidget.h"
+#include "graphpanelswidget.h"
 #include "singlecellviewsimulationwidget.h"
 
 //==============================================================================
