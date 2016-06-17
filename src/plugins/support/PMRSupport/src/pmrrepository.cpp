@@ -308,8 +308,8 @@ void PmrRepository::requestCloneWorkspace(PmrWorkspace *pWorkspace, const QStrin
 {
     emit busy(true);
     connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
-    connect(pWorkspace, SIGNAL(workspaceCloned(QString, QString)),
-            this, SLOT(cloneWorkspaceResponse(QString, QString)));
+    connect(pWorkspace, SIGNAL(workspaceCloned(PmrWorkspace *)),
+            this, SLOT(cloneWorkspaceResponse(PmrWorkspace *)));
 
     QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
 }
