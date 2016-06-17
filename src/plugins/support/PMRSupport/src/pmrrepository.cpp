@@ -66,18 +66,6 @@ PmrRepository::PmrRepository(QObject *parent) : QObject(parent),
 
 PmrRepository::~PmrRepository()
 {
-}
-
-//==============================================================================
-
-PmrRepository *PmrRepository::instance()
-{
-    // Return the 'global' instance of our PMR repository class
-
-    static PmrRepository instance;
-
-    return static_cast<PmrRepository *>(Core::globalInstance("OpenCOR::PMRSupport::PmrRepository::instance()",
-                                                       &instance));
     delete mPmrRepositoryManager;
 }
 

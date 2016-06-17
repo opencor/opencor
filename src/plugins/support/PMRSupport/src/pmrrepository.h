@@ -56,7 +56,7 @@ class PMRSUPPORT_EXPORT PmrRepository : public QObject
     Q_OBJECT
 
 public:
-    static PmrRepository *instance();
+    explicit PmrRepository(QObject *parent = 0);
     ~PmrRepository();
 
     QString url(void) const;
@@ -68,7 +68,6 @@ public:
     void requestWorkspaceDetails(const QString &pUrl);
 
 private:
-    explicit PmrRepository();
 
 
     enum Action {

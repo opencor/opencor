@@ -86,9 +86,9 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveExposuresList(const bool &)));
 
-    // Get the global PMR repository
+    // Get a PMR repository
 
-    mPmrRepository = PMRSupport::PmrRepository::instance();
+    mPmrRepository = new PMRSupport::PmrRepository(this);
 
     // Some connections to process responses from the PMR repository
 
