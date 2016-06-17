@@ -38,7 +38,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelsWidget;
+class GraphPanelsWidget;
 class SingleCellViewInformationWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulationWidget;
@@ -60,11 +60,11 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     SingleCellViewInformationWidget * informationWidget() const;
-    SingleCellViewGraphPanelsWidget * graphPanelsWidget() const;
+    GraphPanelsWidget * graphPanelsWidget() const;
 
 private:
     SingleCellViewInformationWidget *mInformationWidget;
-    SingleCellViewGraphPanelsWidget *mGraphPanelsWidget;
+    GraphPanelsWidget *mGraphPanelsWidget;
 
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);

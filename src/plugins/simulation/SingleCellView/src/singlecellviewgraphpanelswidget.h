@@ -42,14 +42,14 @@ class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewGraphPanelsWidget : public QSplitter,
+class GraphPanelsWidget : public QSplitter,
                                         public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
-                                             QWidget *pParent);
+    explicit GraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+                               QWidget *pParent);
 
     virtual void retranslateUi();
 
@@ -58,45 +58,45 @@ public:
 
     void initialize();
 
-    SingleCellViewGraphPanelWidgets graphPanels() const;
-    SingleCellViewGraphPanelWidget * activeGraphPanel() const;
+    GraphPanelWidgets graphPanels() const;
+    GraphPanelWidget * activeGraphPanel() const;
 
-    SingleCellViewGraphPanelWidget * addGraphPanel(const bool &pActive = true);
+    GraphPanelWidget * addGraphPanel(const bool &pActive = true);
 
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
 
-    void setActiveGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
 private:
     SingleCellViewSimulationWidget *mSimulationWidget;
 
     QIntList mSplitterSizes;
 
-    SingleCellViewGraphPanelWidgets mGraphPanels;
+    GraphPanelWidgets mGraphPanels;
 
-    SingleCellViewGraphPanelWidget *mActiveGraphPanel;
+    GraphPanelWidget *mActiveGraphPanel;
 
-    void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void removeGraphPanel(GraphPanelWidget *pGraphPanel);
 
 Q_SIGNALS:
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+    void graphPanelAdded(GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
-    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(GraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
-    void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelActivated(GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
-                    SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
+    void graphAdded(GraphPanelWidget *pGraphPanel,
+                    GraphPanelPlotGraph *pGraph);
+    void graphsRemoved(GraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void splitterMoved();
 
-    void updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void updateGraphPanels(GraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================

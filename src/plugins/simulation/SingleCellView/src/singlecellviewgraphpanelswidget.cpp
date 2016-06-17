@@ -40,13 +40,13 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
-                                                                 QWidget *pParent) :
+GraphPanelsWidget::GraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+                                     QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(),
     mSimulationWidget(pSimulationWidget),
     mSplitterSizes(QIntList()),
-    mGraphPanels(SingleCellViewGraphPanelWidgets()),
+    mGraphPanels(GraphPanelWidgets()),
     mActiveGraphPanel(0)
 {
     // Set our orientation
@@ -64,11 +64,11 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(SingleCellViewS
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::retranslateUi()
+void GraphPanelsWidget::retranslateUi()
 {
     // Retranslate all our graph panels
 
-    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels)
+    foreach (GraphPanelWidget *graphPanel, mGraphPanels)
         graphPanel->retranslateUi();
 }
 
@@ -78,7 +78,7 @@ static const auto SettingsGraphPanelSizes = QStringLiteral("GraphPanelSizes");
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
+void GraphPanelsWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -124,7 +124,7 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
+void GraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the size of each graph panel, but only if we are dealing
     // with a CellML file
@@ -138,16 +138,16 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::initialize()
+void GraphPanelsWidget::initialize()
 {
     // Set the first graph panel
 
-    qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
+    qobject_cast<GraphPanelWidget *>(widget(0))->setActive(true);
 }
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelsWidget::graphPanels() const
+GraphPanelWidgets GraphPanelsWidget::graphPanels() const
 {
     // Return our graph panels
 
@@ -156,7 +156,7 @@ SingleCellViewGraphPanelWidgets SingleCellViewGraphPanelsWidget::graphPanels() c
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPanel() const
+GraphPanelWidget * GraphPanelsWidget::activeGraphPanel() const
 {
     // Return our active graph panel
 
@@ -165,7 +165,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPan
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(const bool &pActive)
+GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 {
     // Keep track of the graph panels' original size
 
@@ -173,7 +173,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Create a new graph panel, add it to ourselves and keep track of it
 
-    SingleCellViewGraphPanelWidget *res = new SingleCellViewGraphPanelWidget(mGraphPanels, this);
+    GraphPanelWidget *res = new GraphPanelWidget(mGraphPanels, this);
 
     mGraphPanels << res;
 
@@ -189,18 +189,18 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Keep track of whenever a graph panel gets activated
 
-    connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
-            this, SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)));
+    connect(res, SIGNAL(activated(GraphPanelWidget *)),
+            this, SIGNAL(graphPanelActivated(GraphPanelWidget *)));
 
-    connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
-            this, SLOT(updateGraphPanels(SingleCellViewGraphPanelWidget *)));
+    connect(res, SIGNAL(activated(GraphPanelWidget *)),
+            this, SLOT(updateGraphPanels(GraphPanelWidget *)));
 
     // Keep track of the addition and removal of a graph
 
-    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            this, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(res, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(res, SIGNAL(graphAdded(GraphPanelWidget *, GraphPanelPlotGraph *)),
+            this, SIGNAL(graphAdded(GraphPanelWidget *, GraphPanelPlotGraph *)));
+    connect(res, SIGNAL(graphsRemoved(GraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
+            this, SIGNAL(graphsRemoved(GraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
 
     // In/activate the graph panel
 
@@ -229,7 +229,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel)
+void GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 {
     if (!pGraphPanel)
         return;
@@ -286,7 +286,7 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::removeCurrentGraphPanel()
+void GraphPanelsWidget::removeCurrentGraphPanel()
 {
     // Make sure that we don't have only one graph panel left
 
@@ -300,7 +300,7 @@ void SingleCellViewGraphPanelsWidget::removeCurrentGraphPanel()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::removeAllGraphPanels()
+void GraphPanelsWidget::removeAllGraphPanels()
 {
     // Make sure that we don't have only one graph panel left
 
@@ -317,7 +317,7 @@ void SingleCellViewGraphPanelsWidget::removeAllGraphPanels()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::setActiveGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel)
+void GraphPanelsWidget::setActiveGraphPanel(GraphPanelWidget *pGraphPanel)
 {
     // Make sure that we own the given graph panel
 
@@ -331,7 +331,7 @@ void SingleCellViewGraphPanelsWidget::setActiveGraphPanel(SingleCellViewGraphPan
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::splitterMoved()
+void GraphPanelsWidget::splitterMoved()
 {
     // Our splitter has been moved, so keep track of its new sizes
 
@@ -341,7 +341,7 @@ void SingleCellViewGraphPanelsWidget::splitterMoved()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel)
+void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
 {
     // Keep track of the newly activated graph panel
 
@@ -349,7 +349,7 @@ void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanel
 
     // Inactivate all the other graph panels
 
-    foreach (SingleCellViewGraphPanelWidget *graphPanel, mGraphPanels) {
+    foreach (GraphPanelWidget *graphPanel, mGraphPanels) {
         if (graphPanel != pGraphPanel) {
             // We are not dealing with the graph panel that just got activated,
             // so inactivate it

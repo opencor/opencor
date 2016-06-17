@@ -38,33 +38,33 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelWidget;
+class GraphPanelWidget;
 
 //==============================================================================
 
-typedef QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelWidgets;
+typedef QList<GraphPanelWidget *> GraphPanelWidgets;
 
 //==============================================================================
 
-class SingleCellViewGraphPanelWidget : public Core::Widget
+class GraphPanelWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelWidget(const SingleCellViewGraphPanelWidgets &pNeighbors,
-                                            QWidget *pParent);
-    ~SingleCellViewGraphPanelWidget();
+    explicit GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
+                              QWidget *pParent);
+    ~GraphPanelWidget();
 
     virtual void retranslateUi();
 
     bool isActive() const;
     void setActive(const bool &pActive);
 
-    SingleCellViewGraphPanelPlotWidget * plot() const;
+    GraphPanelPlotWidget * plot() const;
 
     SingleCellViewGraphPanelPlotGraphs graphs() const;
 
-    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void addGraph(GraphPanelPlotGraph *pGraph);
     void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
     void removeAllGraphs();
 
@@ -74,19 +74,19 @@ protected:
 
 private:
     QFrame *mMarker;
-    SingleCellViewGraphPanelPlotWidget *mPlot;
+    GraphPanelPlotWidget *mPlot;
 
     bool mActive;
 
     void updateMarkerColor();
 
 Q_SIGNALS:
-    void activated(SingleCellViewGraphPanelWidget *pGraphPanel);
-    void inactivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void activated(GraphPanelWidget *pGraphPanel);
+    void inactivated(GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
-                    SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
+    void graphAdded(GraphPanelWidget *pGraphPanel,
+                    GraphPanelPlotGraph *pGraph);
+    void graphsRemoved(GraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 };
 

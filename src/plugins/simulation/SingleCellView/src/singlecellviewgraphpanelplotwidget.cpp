@@ -53,8 +53,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                                                     CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
+GraphPanelPlotGraph::GraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
     QwtPlotCurve(),
     mSelected(true),
     mFileName(QString()),
@@ -69,7 +69,7 @@ SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSuppo
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotGraph::isValid() const
+bool GraphPanelPlotGraph::isValid() const
 {
     // Return whether we are valid
 
@@ -79,7 +79,7 @@ bool SingleCellViewGraphPanelPlotGraph::isValid() const
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotGraph::isSelected() const
+bool GraphPanelPlotGraph::isSelected() const
 {
     // Return whether we are selected
 
@@ -88,7 +88,7 @@ bool SingleCellViewGraphPanelPlotGraph::isSelected() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotGraph::setSelected(const bool &pSelected)
+void GraphPanelPlotGraph::setSelected(const bool &pSelected)
 {
     // Set our selected state
 
@@ -97,7 +97,7 @@ void SingleCellViewGraphPanelPlotGraph::setSelected(const bool &pSelected)
 
 //==============================================================================
 
-QString SingleCellViewGraphPanelPlotGraph::fileName() const
+QString GraphPanelPlotGraph::fileName() const
 {
     // Return our file name
 
@@ -106,7 +106,7 @@ QString SingleCellViewGraphPanelPlotGraph::fileName() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotGraph::setFileName(const QString &pFileName)
+void GraphPanelPlotGraph::setFileName(const QString &pFileName)
 {
     // Set our file name
 
@@ -115,7 +115,7 @@ void SingleCellViewGraphPanelPlotGraph::setFileName(const QString &pFileName)
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterX() const
+CellMLSupport::CellmlFileRuntimeParameter * GraphPanelPlotGraph::parameterX() const
 {
     // Return our parameter X
 
@@ -124,7 +124,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::p
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotGraph::setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX)
+void GraphPanelPlotGraph::setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX)
 {
     // Set our parameter X
 
@@ -133,7 +133,7 @@ void SingleCellViewGraphPanelPlotGraph::setParameterX(CellMLSupport::CellmlFileR
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterY() const
+CellMLSupport::CellmlFileRuntimeParameter * GraphPanelPlotGraph::parameterY() const
 {
     // Return our parameter Y
 
@@ -142,7 +142,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::p
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void GraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Set our parameter Y
 
@@ -151,7 +151,7 @@ void SingleCellViewGraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileR
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotOverlayWidget::SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent) :
+GraphPanelPlotOverlayWidget::GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *pParent) :
     QWidget(pParent),
     mOwner(pParent),
     mOriginPoint(QPoint()),
@@ -165,7 +165,7 @@ SingleCellViewGraphPanelPlotOverlayWidget::SingleCellViewGraphPanelPlotOverlayWi
 
 //==============================================================================
 
-QPoint SingleCellViewGraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &pPoint) const
+QPoint GraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &pPoint) const
 {
     // Optimise the given point so that it fits within our owner's ranges
 
@@ -184,7 +184,7 @@ QPoint SingleCellViewGraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &p
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
+void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Accept the event
 
@@ -192,7 +192,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     // Check whether an action is to be carried out
 
-    if (mOwner->action() == SingleCellViewGraphPanelPlotWidget::None)
+    if (mOwner->action() == GraphPanelPlotWidget::None)
         return;
 
     // Paint the overlay, if any is needed
@@ -204,7 +204,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
     painter.translate(canvasRect.x(), canvasRect.y());
 
     switch (mOwner->action()) {
-    case SingleCellViewGraphPanelPlotWidget::ShowCoordinates: {
+    case GraphPanelPlotWidget::ShowCoordinates: {
         // Draw the two dashed lines that show the coordinates, using a dark
         // cyan pen
 
@@ -231,7 +231,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         break;
     }
-    case SingleCellViewGraphPanelPlotWidget::ZoomRegion: {
+    case GraphPanelPlotWidget::ZoomRegion: {
         // Draw the region to be zoomed
 
         QColor penColor = Qt::darkRed;
@@ -266,7 +266,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotOverlayWidget::setOriginPoint(const QPoint &pOriginPoint)
+void GraphPanelPlotOverlayWidget::setOriginPoint(const QPoint &pOriginPoint)
 {
     // Set our point of origin
 
@@ -279,7 +279,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::setOriginPoint(const QPoint &pOr
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotOverlayWidget::setPoint(const QPoint &pPoint)
+void GraphPanelPlotOverlayWidget::setPoint(const QPoint &pPoint)
 {
     // Set our point
 
@@ -290,7 +290,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::setPoint(const QPoint &pPoint)
 
 //==============================================================================
 
-QRect SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
+QRect GraphPanelPlotOverlayWidget::zoomRegion() const
 {
     // Return the region to be zoomed based on mOriginPoint and mPoint
     // Note: by default, we assume that we are already fully zoomed in in both
@@ -324,12 +324,12 @@ QRect SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
-                                                                const QPoint &pPoint,
-                                                                const QColor &pBackgroundColor,
-                                                                const QColor &pForegroundColor,
-                                                                const Location &pLocation,
-                                                                const bool &pCanMoveLocation)
+void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
+                                                  const QPoint &pPoint,
+                                                  const QColor &pBackgroundColor,
+                                                  const QColor &pForegroundColor,
+                                                  const Location &pLocation,
+                                                  const bool &pCanMoveLocation)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
@@ -416,7 +416,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotScaleDraw::retranslateUi()
+void GraphPanelPlotScaleDraw::retranslateUi()
 {
     // Retranslate ourselves by invalidating our cache
 
@@ -425,7 +425,7 @@ void SingleCellViewGraphPanelPlotScaleDraw::retranslateUi()
 
 //==============================================================================
 
-QwtText SingleCellViewGraphPanelPlotScaleDraw::label(double pValue) const
+QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
     if (qFuzzyCompare(pValue, 0.0))
         // Due to the limited precision of floating point numbers, pValue isn't
@@ -459,7 +459,8 @@ static const double MinAxisRange = 1.0e-5;
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors, QWidget *pParent) :
+GraphPanelPlotWidget::GraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors,
+                                           QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(),
     mGraphs(SingleCellViewGraphPanelPlotGraphs()),
@@ -490,8 +491,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
 
     setCanvasBackground(Qt::white);
 
-    mAxisX = new SingleCellViewGraphPanelPlotScaleDraw();
-    mAxisY = new SingleCellViewGraphPanelPlotScaleDraw();
+    mAxisX = new GraphPanelPlotScaleDraw();
+    mAxisY = new GraphPanelPlotScaleDraw();
 
     setAxisScaleDraw(QwtPlot::xBottom, mAxisX);
     setAxisScaleDraw(QwtPlot::yLeft, mAxisY);
@@ -510,7 +511,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
 
     // Create our overlay widget
 
-    mOverlayWidget = new SingleCellViewGraphPanelPlotOverlayWidget(this);
+    mOverlayWidget = new GraphPanelPlotOverlayWidget(this);
 
     // Create our context menu
 
@@ -551,19 +552,19 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(const Sin
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
+GraphPanelPlotWidget::~GraphPanelPlotWidget()
 {
     // Delete some internal objects
 
     delete mDirectPainter;
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+    foreach (GraphPanelPlotGraph *graph, mGraphs)
         delete graph;
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::retranslateUi()
+void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
@@ -586,8 +587,7 @@ void SingleCellViewGraphPanelPlotWidget::retranslateUi()
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
-                                                     QEvent *pEvent)
+bool GraphPanelPlotWidget::eventFilter(QObject *pObject, QEvent *pEvent)
 {
     // Default handling of the event
 
@@ -604,7 +604,7 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
+void GraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Reset the zoom level (i.e. our axes), in case we double-clicked using the
     // left mouse button with no modifiers
@@ -617,7 +617,7 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::updateActions()
+void GraphPanelPlotWidget::updateActions()
 {
     // Update our actions
 
@@ -657,8 +657,7 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
-                                                         double &pMax)
+void GraphPanelPlotWidget::checkAxisValues(double &pMin, double &pMax)
 {
     // Make sure that our axis' values have finite values
 
@@ -700,10 +699,8 @@ void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
-                                                         double &pMaxX,
-                                                         double &pMinY,
-                                                         double &pMaxY)
+void GraphPanelPlotWidget::checkAxesValues(double &pMinX, double &pMaxX,
+                                           double &pMinY, double &pMaxY)
 {
     // Make sure that our axes' values are fine
 
@@ -713,7 +710,7 @@ void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget::Action SingleCellViewGraphPanelPlotWidget::action() const
+GraphPanelPlotWidget::Action GraphPanelPlotWidget::action() const
 {
     // Return our action
 
@@ -722,7 +719,7 @@ SingleCellViewGraphPanelPlotWidget::Action SingleCellViewGraphPanelPlotWidget::a
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::resetAction()
+void GraphPanelPlotWidget::resetAction()
 {
     // Reset our action and our overlay widget, by updating it
 
@@ -733,7 +730,7 @@ void SingleCellViewGraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::minX() const
+double GraphPanelPlotWidget::minX() const
 {
     // Return our minimum X value
 
@@ -742,7 +739,7 @@ double SingleCellViewGraphPanelPlotWidget::minX() const
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::maxX() const
+double GraphPanelPlotWidget::maxX() const
 {
     // Return our maximum X value
 
@@ -751,7 +748,7 @@ double SingleCellViewGraphPanelPlotWidget::maxX() const
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::minY() const
+double GraphPanelPlotWidget::minY() const
 {
     // Return our minimum Y value
 
@@ -760,7 +757,7 @@ double SingleCellViewGraphPanelPlotWidget::minY() const
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::maxY() const
+double GraphPanelPlotWidget::maxY() const
 {
     // Return our maximum Y value
 
@@ -770,7 +767,7 @@ double SingleCellViewGraphPanelPlotWidget::maxY() const
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::canZoomInX() const
+bool GraphPanelPlotWidget::canZoomInX() const
 {
     // Return whether we can zoom in on the X axis
 
@@ -779,7 +776,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomInX() const
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::canZoomOutX() const
+bool GraphPanelPlotWidget::canZoomOutX() const
 {
     // Return whether we can zoom out on the X axis
 
@@ -788,7 +785,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomOutX() const
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::canZoomInY() const
+bool GraphPanelPlotWidget::canZoomInY() const
 {
     // Return whether we can zoom in on the Y axis
 
@@ -797,7 +794,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomInY() const
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
+bool GraphPanelPlotWidget::canZoomOutY() const
 {
     // Return whether we can zoom out on the Y axis
 
@@ -806,7 +803,7 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelPlotWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
 
@@ -815,9 +812,8 @@ SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelPlotWidget::graphs() 
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::optimiseAxis(const int &pAxisId,
-                                                      double &pMin,
-                                                      double &pMax) const
+void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
+                                        double &pMax) const
 {
     // Make sure that the given values are different
 
@@ -848,7 +844,7 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxis(const int &pAxisId,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
 {
     // Optimise our X axis' values
 
@@ -857,7 +853,7 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMa
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
 {
     // Optimise our Y axis' values
 
@@ -866,7 +862,7 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMa
 
 //==============================================================================
 
-QRectF SingleCellViewGraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
+QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
 {
     // Optimise our axes' values
 
@@ -883,14 +879,14 @@ QRectF SingleCellViewGraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) co
 
 //==============================================================================
 
-QRectF SingleCellViewGraphPanelPlotWidget::dataRect() const
+QRectF GraphPanelPlotWidget::dataRect() const
 {
     // Determine and return the rectangle within which all the graphs, which are
     // valid, selected and have some data, can fit
 
     QRectF res = QRect();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs) {
+    foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
             res |= graph->boundingRect();
     }
@@ -900,8 +896,7 @@ QRectF SingleCellViewGraphPanelPlotWidget::dataRect() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setAxis(const int &pAxis,
-                                                 double pMin, double pMax)
+void GraphPanelPlotWidget::setAxis(const int &pAxis, double pMin, double pMax)
 {
     // Set our axis
     // Note: to use setAxisScale() on its own is not sufficient unless we were
@@ -919,10 +914,9 @@ void SingleCellViewGraphPanelPlotWidget::setAxis(const int &pAxis,
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
-                                                 double pMinY, double pMaxY,
-                                                 const bool &pCanReplot,
-                                                 const bool &pEmitSignal)
+bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
+                                   double pMaxY, const bool &pCanReplot,
+                                   const bool &pEmitSignal)
 {
     // Keep track of our axes' old values
 
@@ -973,7 +967,7 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::resetAxes()
+bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
     // that allow to see all the graphs
@@ -989,11 +983,11 @@ bool SingleCellViewGraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
-                                                   const bool &pCanZoomIn,
-                                                   const bool &pCanZoomOut,
-                                                   const double pOriginPoint,
-                                                   double &pMin, double &pMax)
+bool GraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
+                                     const bool &pCanZoomIn,
+                                     const bool &pCanZoomOut,
+                                     const double pOriginPoint, double &pMin,
+                                     double &pMax)
 {
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
@@ -1022,9 +1016,9 @@ bool SingleCellViewGraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
-                                                   const double &pScalingFactorX,
-                                                   const double &pScalingFactorY)
+void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
+                                     const double &pScalingFactorX,
+                                     const double &pScalingFactorY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -1047,8 +1041,8 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
 //==============================================================================
 
-QPointF SingleCellViewGraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
-                                                        const bool pNeedOffset) const
+QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
+                                          const bool pNeedOffset) const
 {
     // Return the mouse position using canvas coordinates, making sure that they
     // are within our ranges
@@ -1072,7 +1066,7 @@ static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
+void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -1151,7 +1145,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
+void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -1218,7 +1212,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -1271,7 +1265,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
+void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
 
@@ -1284,7 +1278,7 @@ void SingleCellViewGraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
+void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 {
     // Handle the wheel mouse button for zooming in/out
 
@@ -1315,7 +1309,7 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::replotNow()
+void GraphPanelPlotWidget::replotNow()
 {
     // Replot ourselves
 
@@ -1330,7 +1324,7 @@ void SingleCellViewGraphPanelPlotWidget::replotNow()
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 {
     // Make sure that the given graph is not already attached to us
 
@@ -1348,7 +1342,7 @@ bool SingleCellViewGraphPanelPlotWidget::addGraph(SingleCellViewGraphPanelPlotGr
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 {
     // Check that the given graph is attached to us
 
@@ -1368,8 +1362,8 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
-                                                       const qulonglong &pFrom)
+void GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
+                                         const qulonglong &pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
     // (due to the axes having been changed), in which case we replot ourselves
@@ -1385,7 +1379,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelP
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidgets SingleCellViewGraphPanelPlotWidget::neighbors() const
+SingleCellViewGraphPanelPlotWidgets GraphPanelPlotWidget::neighbors() const
 {
     // Return our neighbours
 
@@ -1394,7 +1388,7 @@ SingleCellViewGraphPanelPlotWidgets SingleCellViewGraphPanelPlotWidget::neighbor
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot)
+void GraphPanelPlotWidget::addNeighbor(GraphPanelPlotWidget *pPlot)
 {
     // Add the plot as a neighbour
 
@@ -1404,7 +1398,7 @@ void SingleCellViewGraphPanelPlotWidget::addNeighbor(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot)
+void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 {
     // Remove the plot from our neighbours
 
@@ -1413,8 +1407,8 @@ void SingleCellViewGraphPanelPlotWidget::removeNeighbor(SingleCellViewGraphPanel
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
-                                                            const bool &pForceAlignment)
+void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
+                                              const bool &pForceAlignment)
 {
     // Align ourselves with our neighbours unless we don't have any in which
     // case we just replot ourselves, if allowed
@@ -1442,7 +1436,7 @@ void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanRepl
             double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
             double newMaxExtent = 0;
 
-            foreach (SingleCellViewGraphPanelPlotWidget *plot, selfPlusNeighbors) {
+            foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
                 QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
                 QwtScaleDraw *scaleDraw = scaleWidget->scaleDraw();
 
@@ -1454,7 +1448,7 @@ void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanRepl
                     newMaxExtent = extent;
             }
 
-            foreach (SingleCellViewGraphPanelPlotWidget *plot, selfPlusNeighbors) {
+            foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
                 plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
 
                 if (pCanReplot) {
@@ -1472,7 +1466,7 @@ void SingleCellViewGraphPanelPlotWidget::alignWithNeighbors(const bool &pCanRepl
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::forceAlignWithNeighbors()
+void GraphPanelPlotWidget::forceAlignWithNeighbors()
 {
     // Force the re-alignment with our neighbours
 
@@ -1481,7 +1475,7 @@ void SingleCellViewGraphPanelPlotWidget::forceAlignWithNeighbors()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::copyToClipboard()
+void GraphPanelPlotWidget::copyToClipboard()
 {
     // Copy our contents to the clipboard
 
@@ -1490,7 +1484,7 @@ void SingleCellViewGraphPanelPlotWidget::copyToClipboard()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::zoomIn()
+void GraphPanelPlotWidget::zoomIn()
 {
     // Zoom in by scaling our two axes around the point where the context menu
     // was shown
@@ -1500,7 +1494,7 @@ void SingleCellViewGraphPanelPlotWidget::zoomIn()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::zoomOut()
+void GraphPanelPlotWidget::zoomOut()
 {
     // Zoom out by scaling our two axes around the point where the context menu
     // was shown
@@ -1510,7 +1504,7 @@ void SingleCellViewGraphPanelPlotWidget::zoomOut()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::resetZoom()
+void GraphPanelPlotWidget::resetZoom()
 {
     // Reset the zoom level by resetting our axes
 

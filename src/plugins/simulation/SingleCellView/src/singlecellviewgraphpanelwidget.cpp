@@ -35,8 +35,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(const SingleCellViewGraphPanelWidgets &pNeighbors,
-                                                               QWidget *pParent) :
+GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
+                                   QWidget *pParent) :
     Widget(pParent),
     mActive(false)
 {
@@ -69,10 +69,10 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(const SingleCellV
 
     SingleCellViewGraphPanelPlotWidgets neighbors = SingleCellViewGraphPanelPlotWidgets();
 
-    foreach (SingleCellViewGraphPanelWidget *neighbor, pNeighbors)
+    foreach (GraphPanelWidget *neighbor, pNeighbors)
         neighbors << neighbor->plot();
 
-    mPlot = new SingleCellViewGraphPanelPlotWidget(neighbors, this);
+    mPlot = new GraphPanelPlotWidget(neighbors, this);
 
     layout->addWidget(mPlot);
 
@@ -86,18 +86,18 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(const SingleCellV
 
     // Let our plot's neighbours know about our plot
 
-    foreach (SingleCellViewGraphPanelPlotWidget *neighbor, neighbors)
+    foreach (GraphPanelPlotWidget *neighbor, neighbors)
         neighbor->addNeighbor(mPlot);
 }
 
 //==============================================================================
 
-SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
+GraphPanelWidget::~GraphPanelWidget()
 {
     // Let our plot's neighbours that our plot is not going to be their
     // neighbour anymore
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlot->neighbors()) {
+    foreach (GraphPanelPlotWidget *plot, mPlot->neighbors()) {
         if (plot != mPlot)
             plot->removeNeighbor(mPlot);
     }
@@ -105,7 +105,7 @@ SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::retranslateUi()
+void GraphPanelWidget::retranslateUi()
 {
     // Retranslate our plot
 
@@ -114,7 +114,7 @@ void SingleCellViewGraphPanelWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::changeEvent(QEvent *pEvent)
+void GraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
@@ -129,7 +129,7 @@ void SingleCellViewGraphPanelWidget::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
+void GraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -144,7 +144,7 @@ void SingleCellViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot() const
+GraphPanelPlotWidget * GraphPanelWidget::plot() const
 {
     // Return our plot
 
@@ -153,7 +153,7 @@ SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot() cons
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelWidget::graphs() const
+SingleCellViewGraphPanelPlotGraphs GraphPanelWidget::graphs() const
 {
     // Return all our plot's graphs
 
@@ -162,7 +162,7 @@ SingleCellViewGraphPanelPlotGraphs SingleCellViewGraphPanelWidget::graphs() cons
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph)
 {
     // Add the graph to our plot
 
@@ -172,13 +172,13 @@ void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph 
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs)
+void GraphPanelWidget::removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs)
 {
     // Remove the graphs from our plot
 
     SingleCellViewGraphPanelPlotGraphs graphs = SingleCellViewGraphPanelPlotGraphs();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs)
+    foreach (GraphPanelPlotGraph *graph, pGraphs)
         if (mPlot->removeGraph(graph))
             graphs << graph;
 
@@ -187,7 +187,7 @@ void SingleCellViewGraphPanelWidget::removeGraphs(const SingleCellViewGraphPanel
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::removeAllGraphs()
+void GraphPanelWidget::removeAllGraphs()
 {
     // Remove all our graphs from our plot
 
@@ -196,7 +196,7 @@ void SingleCellViewGraphPanelWidget::removeAllGraphs()
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelWidget::isActive() const
+bool GraphPanelWidget::isActive() const
 {
     // Return whether the graph panel is active
 
@@ -205,7 +205,7 @@ bool SingleCellViewGraphPanelWidget::isActive() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::updateMarkerColor()
+void GraphPanelWidget::updateMarkerColor()
 {
     // Update the marker's colour based on whether the graph panel is active
 
@@ -216,7 +216,7 @@ void SingleCellViewGraphPanelWidget::updateMarkerColor()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::setActive(const bool &pActive)
+void GraphPanelWidget::setActive(const bool &pActive)
 {
     if (pActive == mActive)
         return;

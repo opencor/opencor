@@ -55,7 +55,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
     // Create our graph panels widget
 
-    mGraphPanelsWidget = new SingleCellViewGraphPanelsWidget(pSimulationWidget, this);
+    mGraphPanelsWidget = new GraphPanelsWidget(pSimulationWidget, this);
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
 
@@ -114,7 +114,7 @@ SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidge
 
 //==============================================================================
 
-SingleCellViewGraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget() const
+GraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget() const
 {
     // Return our graph panels widget
 

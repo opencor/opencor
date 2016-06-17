@@ -89,8 +89,8 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class GraphPanelWidget;
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -213,7 +213,7 @@ private:
     ErrorType mErrorType;
 
     SingleCellViewGraphPanelPlotWidgets mPlots;
-    QMap<SingleCellViewGraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
+    QMap<GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
@@ -221,7 +221,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+    QMap<GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
 
     void reloadView();
 
@@ -240,13 +240,13 @@ private:
     void checkAxisValue(double &pValue, const double &pOrigValue,
                         const QList<double> &pTestValues);
 
-    bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
+    bool updatePlot(GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
     double * dataPoints(SingleCellViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
-    void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
+    void updateGraphData(GraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
 
     QVariant value(Core::Property *pProperty) const;
@@ -311,19 +311,19 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+    void graphPanelAdded(GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
-    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(GraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
-                    SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
+    void graphAdded(GraphPanelWidget *pGraphPanel,
+                    GraphPanelPlotGraph *pGraph);
+    void graphsRemoved(GraphPanelWidget *pGraphPanel,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
-    void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
+    void graphsUpdated(GraphPanelPlotWidget *pPlot,
                        const SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
     void openCellmlFile();

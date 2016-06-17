@@ -65,11 +65,11 @@ static const QRectF DefPlotRect = QRectF(DefMinAxis, DefMinAxis,
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
+class GraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
-    explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX = 0,
-                                               CellMLSupport::CellmlFileRuntimeParameter *pParameterY = 0);
+    explicit GraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX = 0,
+                                 CellMLSupport::CellmlFileRuntimeParameter *pParameterY = 0);
 
     bool isValid() const;
 
@@ -96,18 +96,18 @@ private:
 
 //==============================================================================
 
-typedef QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotGraphs;
+typedef QList<GraphPanelPlotGraph *> SingleCellViewGraphPanelPlotGraphs;
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotWidget;
+class GraphPanelPlotWidget;
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotOverlayWidget : public QWidget
+class GraphPanelPlotOverlayWidget : public QWidget
 {
 public:
-    explicit SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent);
+    explicit GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *pParent);
 
     void setOriginPoint(const QPoint &pOriginPoint);
     void setPoint(const QPoint &pPoint);
@@ -125,7 +125,7 @@ private:
         BottomRight
     };
 
-    SingleCellViewGraphPanelPlotWidget *mOwner;
+    GraphPanelPlotWidget *mOwner;
 
     QPoint mOriginPoint;
     QPoint mPoint;
@@ -141,7 +141,7 @@ private:
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotScaleDraw : public QwtScaleDraw
+class GraphPanelPlotScaleDraw : public QwtScaleDraw
 {
 public:
     void retranslateUi();
@@ -152,28 +152,27 @@ protected:
 
 //==============================================================================
 
-typedef QList<SingleCellViewGraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
+typedef QList<GraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
-                                           public Core::CommonWidget
+class GraphPanelPlotWidget : public QwtPlot, public Core::CommonWidget
 {
     Q_OBJECT
 
-    friend class SingleCellViewGraphPanelPlotOverlayWidget;
+    friend class GraphPanelPlotOverlayWidget;
 
 public:
-    explicit SingleCellViewGraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors,
-                                                QWidget *pParent);
-    ~SingleCellViewGraphPanelPlotWidget();
+    explicit GraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors,
+                                  QWidget *pParent);
+    ~GraphPanelPlotWidget();
 
     virtual void retranslateUi();
 
     SingleCellViewGraphPanelPlotGraphs graphs() const;
 
-    bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
-    bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    bool addGraph(GraphPanelPlotGraph *pGraph);
+    bool removeGraph(GraphPanelPlotGraph *pGraph);
 
     QRectF dataRect() const;
 
@@ -188,15 +187,15 @@ public:
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pCanReplot = true, const bool &pEmitSignal = true);
 
-    void drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
+    void drawGraphFrom(GraphPanelPlotGraph *pGraph,
                        const qulonglong &pFrom);
 
     void replotNow();
 
     SingleCellViewGraphPanelPlotWidgets neighbors() const;
 
-    void addNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
-    void removeNeighbor(SingleCellViewGraphPanelPlotWidget *pPlot);
+    void addNeighbor(GraphPanelPlotWidget *pPlot);
+    void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
     void alignWithNeighbors(const bool &pCanReplot,
                             const bool &pForceAlignment = false);
@@ -228,7 +227,7 @@ private:
     QPoint mOriginPoint;
     QPoint mPoint;
 
-    SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
+    GraphPanelPlotOverlayWidget *mOverlayWidget;
 
     bool mCanDirectPaint;
 
@@ -245,8 +244,8 @@ private:
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
 
-    SingleCellViewGraphPanelPlotScaleDraw *mAxisX;
-    SingleCellViewGraphPanelPlotScaleDraw *mAxisY;
+    GraphPanelPlotScaleDraw *mAxisX;
+    GraphPanelPlotScaleDraw *mAxisY;
 
     SingleCellViewGraphPanelPlotWidgets mNeighbors;
 
