@@ -67,7 +67,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     // Create and add a plot widget to our layout
 
-    SingleCellViewGraphPanelPlotWidgets neighbors = SingleCellViewGraphPanelPlotWidgets();
+    GraphPanelPlotWidgets neighbors = GraphPanelPlotWidgets();
 
     foreach (GraphPanelWidget *neighbor, pNeighbors)
         neighbors << neighbor->plot();

@@ -152,7 +152,7 @@ protected:
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotWidget *> SingleCellViewGraphPanelPlotWidgets;
+typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
 
 //==============================================================================
 
@@ -163,7 +163,7 @@ class GraphPanelPlotWidget : public QwtPlot, public Core::CommonWidget
     friend class GraphPanelPlotOverlayWidget;
 
 public:
-    explicit GraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors,
+    explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QWidget *pParent);
     ~GraphPanelPlotWidget();
 
@@ -192,7 +192,7 @@ public:
 
     void replotNow();
 
-    SingleCellViewGraphPanelPlotWidgets neighbors() const;
+    GraphPanelPlotWidgets neighbors() const;
 
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
@@ -247,7 +247,7 @@ private:
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
 
-    SingleCellViewGraphPanelPlotWidgets mNeighbors;
+    GraphPanelPlotWidgets mNeighbors;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 

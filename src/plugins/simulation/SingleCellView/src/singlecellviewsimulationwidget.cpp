@@ -97,7 +97,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
-    mPlots(GraphPanelWidget::SingleCellViewGraphPanelPlotWidgets()),
+    mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
@@ -2765,7 +2765,7 @@ void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::Gr
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
 
-    GraphPanelWidget::SingleCellViewGraphPanelPlotWidgets plots = GraphPanelWidget::SingleCellViewGraphPanelPlotWidgets();
+    GraphPanelWidget::GraphPanelPlotWidgets plots = GraphPanelWidget::GraphPanelPlotWidgets();
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pGraphs) {
         // Show/hide the graph

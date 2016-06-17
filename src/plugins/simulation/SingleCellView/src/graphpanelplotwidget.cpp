@@ -459,7 +459,7 @@ static const double MinAxisRange = 1.0e-5;
 
 //==============================================================================
 
-GraphPanelPlotWidget::GraphPanelPlotWidget(const SingleCellViewGraphPanelPlotWidgets &pNeighbors,
+GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                            QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(),
@@ -1379,7 +1379,7 @@ void GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidgets GraphPanelPlotWidget::neighbors() const
+GraphPanelPlotWidgets GraphPanelPlotWidget::neighbors() const
 {
     // Return our neighbours
 
@@ -1432,7 +1432,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
             //       this on both graph panels. However, that empty space
             //       disappears if we do the below twice...
 
-            SingleCellViewGraphPanelPlotWidgets selfPlusNeighbors = SingleCellViewGraphPanelPlotWidgets() << this << mNeighbors;
+            GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
             double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
             double newMaxExtent = 0;
 

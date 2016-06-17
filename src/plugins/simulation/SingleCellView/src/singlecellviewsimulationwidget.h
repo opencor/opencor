@@ -217,7 +217,7 @@ private:
 
     ErrorType mErrorType;
 
-    GraphPanelWidget::SingleCellViewGraphPanelPlotWidgets mPlots;
+    GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
