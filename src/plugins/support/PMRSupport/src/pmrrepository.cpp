@@ -27,8 +27,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QFuture>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QtConcurrent/QtConcurrent>
 
 //==============================================================================
 
@@ -306,9 +308,16 @@ void PmrRepository::requestCloneWorkspace(PmrWorkspace *pWorkspace, const QStrin
 {
     emit busy(true);
     connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
+    connect(pWorkspace, SIGNAL(workspaceCloned(QString, QString)),
+            this, SLOT(cloneWorkspaceResponse(QString, QString)));
 
-    pWorkspace->clone(pDirName);
+    QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
+}
 
+//==============================================================================
+
+void PmrRepository::cloneWorkspaceResponse(PmrWorkspace *pWorkspace)
+{
     emit busy(false);
     emit workspaceCloned(pWorkspace);
 }
