@@ -12,6 +12,14 @@
         <translation>Copier le contenu du panneau graphique dans le presse-papier</translation>
     </message>
     <message>
+        <source>Custom Axes...</source>
+        <translation>Coordonnées Personnalisées...</translation>
+    </message>
+    <message>
+        <source>Specify custom axes for the graph panel</source>
+        <translation>Spécifier des coordonnées personnalisées pour le panneau graphique</translation>
+    </message>
+    <message>
         <source>Zoom In</source>
         <translation>Aggrandir</translation>
     </message>
