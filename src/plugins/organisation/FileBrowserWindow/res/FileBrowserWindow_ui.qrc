@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>oxygen/actions/go-next.png</file>
-        <file>oxygen/actions/go-previous.png</file>
-        <file>oxygen/actions/go-up.png</file>
-        <file>oxygen/places/user-home.png</file>
-    </qresource>
-</RCC>

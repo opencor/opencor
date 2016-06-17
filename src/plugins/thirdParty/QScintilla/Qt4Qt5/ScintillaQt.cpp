@@ -575,12 +575,7 @@ sptr_t QsciScintillaQt::DirectFunction(QsciScintillaQt *sciThis, unsigned int iM
 // Draw the contents of the widget.
 void QsciScintillaQt::paintEvent(QPaintEvent *e)
 {
-    QSCI_SCI_NAMESPACE(Surface) *sw = QSCI_SCI_NAMESPACE(Surface)::Allocate(SC_TECHNOLOGY_DEFAULT);
-
-    if (!sw)
-        return;
-
-    paintState = painting;
+    QSCI_SCI_NAMESPACE(Surface) *sw;
 
     const QRect &qr = e->rect();
 
@@ -589,11 +584,16 @@ void QsciScintillaQt::paintEvent(QPaintEvent *e)
     rcPaint.right = qr.right() + 1;
     rcPaint.bottom = qr.bottom() + 1;
 
-    QSCI_SCI_NAMESPACE(PRectangle) rcText = GetTextRectangle();
-    paintingAllText = rcPaint.Contains(rcText);
+    QSCI_SCI_NAMESPACE(PRectangle) rcClient = GetClientRectangle();
+    paintingAllText = rcPaint.Contains(rcClient);
+
+    sw = QSCI_SCI_NAMESPACE(Surface)::Allocate(SC_TECHNOLOGY_DEFAULT);
+    if (!sw)
+        return;
 
     QPainter painter(qsb->viewport());
 
+    paintState = painting;
     sw->Init(&painter);
     sw->SetUnicodeMode(CodePage() == SC_CP_UTF8);
     Paint(sw, rcPaint);
@@ -603,7 +603,26 @@ void QsciScintillaQt::paintEvent(QPaintEvent *e)
     // If the painting area was insufficient to cover the new style or brace
     // highlight positions then repaint the whole thing.
     if (paintState == paintAbandoned)
+    {
+        // Do a full re-paint immediately.  This may only be needed on OS X (to
+        // avoid flicker).
+        paintingAllText = true;
+
+        sw = QSCI_SCI_NAMESPACE(Surface)::Allocate(SC_TECHNOLOGY_DEFAULT);
+        if (!sw)
+            return;
+
+        QPainter painter(qsb->viewport());
+
+        paintState = painting;
+        sw->Init(&painter);
+        sw->SetUnicodeMode(CodePage() == SC_CP_UTF8);
+        Paint(sw, rcPaint);
+
+        delete sw;
+
         qsb->viewport()->update();
+    }
 
     paintState = notPainting;
 }

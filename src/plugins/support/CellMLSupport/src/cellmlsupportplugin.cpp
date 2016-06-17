@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLSupport plugin
+// CellML support plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -46,7 +46,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
 
     return new PluginInfo("Support", false, false,
-                          QStringList() << "Core" << "CellMLAPI" << "Compiler" << "StandardSupport",
+                          QStringList() << "CellMLAPI" << "Compiler" << "StandardSupport",
                           descriptions);
 }
 
@@ -140,7 +140,7 @@ void CellMLSupportPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mFileNewCellmlFileAction = new QAction(Core::mainWindow());
+    mFileNewCellmlFileAction = Core::newAction(Core::mainWindow());
 
     // Some connections to handle our different actions
 

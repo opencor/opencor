@@ -1,14 +1,15 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 31, "month": 3, "year": 2016,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 6, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/List_of_Ubuntu_releases#Ubuntu_16.04_LTS_.28Xenial_Xerus.29\">Ubuntu 16.04 LTS</a> (Xenial Xerus)." },
                            { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan)." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Added", "description": "Detection of changes to one or several file dependencies." },
-                           { "type": "Added", "description": "Use of a default to view to open a particular type of file." },
                            { "type": "Added", "description": "Support for an OpenCOR-specific URL scheme." },
+                           { "type": "Added", "description": "Default view to open a particular type of file." },
                            { "type": "Added", "description": "Reference to the <a href=\"http://tutorial-on-cellml-opencor-and-pmr.readthedocs.org/en/latest/index.html\">official OpenCOR tutorial</a>." },
                            { "type": "Added", "description": "Use of a user's proxy settings." },
                            { "type": "Improved", "description": "File handling." },
@@ -31,6 +32,7 @@ var jsonData = { "versions": [
                        { "name": "Data store",
                          "entries": [
                            { "type": "Added", "description": "BioSignalML data store (work in progress)." },
+                           { "type": "Improved", "description": "Data export (now done in its own thread)." },
                            { "type": "Improved", "description": "Interface." }
                          ]
                        },
@@ -59,7 +61,9 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "cmeta:id's support by allowing hyphens and periods." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
-                               { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
+                               { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." },
+                               { "type": "Fixed", "description": "Serialisation of numbers that have an exponent." },
+                               { "type": "Fixed", "description": "Not all the metadata being serialised back." }
                              ]
                            },
                            { "type": "Added", "description": "<a href=\"plugins/editing/RawSEDMLView.html\">Raw SED-ML view</a>." }
@@ -92,12 +96,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">CVODE</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">IDA</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
@@ -115,7 +119,7 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
-                       { "name": "Tool",
+                       { "name": "Tools",
                          "entries": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
@@ -267,7 +271,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "(Un)lock a file." },
                            { "type": "Added", "description": "Close a file by pressing <code>Ctrl+W</code> on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> support on <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a> and <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
-                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with improved <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
+                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with improved <a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> support." },
                            { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Plugins window." },
@@ -351,12 +355,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">CVODE</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">IDA</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
                              ]
@@ -375,7 +379,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Show/hide all the recent/current docked widgets at once." },
                            { "type": "Added", "description": "<a href=\"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the <a href=\"https://www.cellml.org/\">CellML</a> file examples." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
-                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
+                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with <a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "Plugins window." },
                            { "type": "Improved", "description": "File handling." }
                          ]
@@ -391,7 +395,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Miscellaneous",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." }
+                           { "type": "Added", "description": "<a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." }
                          ]
                        },
                        { "name": "Organisation",

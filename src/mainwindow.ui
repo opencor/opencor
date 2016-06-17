@@ -105,7 +105,7 @@
    </property>
    <property name="icon">
     <iconset resource="../res/ui.qrc">
-     <normaloff>:/flags/en.png</normaloff>:/flags/en.png</iconset>
+     <normaloff>:/flags/gb.png</normaloff>:/flags/gb.png</iconset>
    </property>
    <property name="text">
     <string>&amp;English</string>
@@ -263,7 +263,7 @@
   </action>
   <action name="actionCheckForUpdates">
    <property name="icon">
-    <iconset resource="../res/ui.qrc">
+    <iconset>
      <normaloff>:/oxygen/actions/system-software-update.png</normaloff>:/oxygen/actions/system-software-update.png</iconset>
    </property>
    <property name="text">

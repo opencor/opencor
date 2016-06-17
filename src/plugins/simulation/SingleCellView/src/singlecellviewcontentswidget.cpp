@@ -17,12 +17,12 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view contents widget
+// Single Cell view contents widget
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "graphpanelswidget.h"
 #include "singlecellviewcontentswidget.h"
-#include "singlecellviewgraphpanelswidget.h"
 #include "singlecellviewinformationwidget.h"
 
 //==============================================================================
@@ -55,7 +55,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
     // Create our graph panels widget
 
-    mGraphPanelsWidget = new SingleCellViewGraphPanelsWidget(pSimulationWidget, this);
+    mGraphPanelsWidget = new GraphPanelWidget::GraphPanelsWidget(this);
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
 
@@ -83,28 +83,6 @@ void SingleCellViewContentsWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the settings of our graph panels widgets
-
-    pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the settings of our graph panels widgets
-
-    pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
 SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidget() const
 {
     // Return our information widget
@@ -114,7 +92,7 @@ SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidge
 
 //==============================================================================
 
-SingleCellViewGraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget() const
+GraphPanelWidget::GraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget() const
 {
     // Return our graph panels widget
 

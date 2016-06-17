@@ -118,7 +118,7 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <cn cellml:units="dimensionless">12.3e5</cn>
+                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
             </apply>
             <apply>
                 <eq/>

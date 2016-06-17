@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view widget
+// Single Cell view widget
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -255,14 +255,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         layout()->addWidget(mSimulationWidget);
 
-        // Load our simulation widget's settings
-
-        QSettings settings;
-
-        settings.beginGroup(mSettingsGroup);
-            mSimulationWidget->loadSettings(&settings);
-        settings.endGroup();
-
         // Initialise our simulation widget
 
         mSimulationWidget->initialize();
@@ -330,15 +322,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget) {
-        // There is a simulation widget for the given file name, so save its
-        // settings and those of some of its contents' children, if needed
-
-        QSettings settings;
-
-        settings.beginGroup(mSettingsGroup);
-            simulationWidget->saveSettings(&settings);
-        settings.endGroup();
-
         // Finalise our simulation widget
 
         simulationWidget->finalize();
@@ -556,7 +539,7 @@ qulonglong SingleCellViewWidget::simulationResultsSize(const QString &pFileName)
 //==============================================================================
 
 void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
-                                                  const bool &pForceUpdateSimulationResults)
+                                                  const bool &pClearGraphs)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -574,12 +557,12 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
     SingleCellViewSimulation *simulation = simulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
 
-    if (   pForceUpdateSimulationResults
+    if (   pClearGraphs
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
         foreach (SingleCellViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pForceUpdateSimulationResults);
+            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs);
     }
 
     // Ask to recheck our simulation widget's results, but only if its

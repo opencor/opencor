@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view editing widget
+// CellML Annotation view editing widget
 //==============================================================================
 
 #include "borderedwidget.h"
@@ -31,6 +31,7 @@ limitations under the License.
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "treeviewwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -38,7 +39,6 @@ limitations under the License.
 #include <QIODevice>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QWebView>
 
 //==============================================================================
 
@@ -58,17 +58,17 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/modelQualifier.svg", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/modelQualifier.svg", fileContents);
 
     mModelQualifierSvg = fileContents;
 
-    Core::readFileContentsFromFile(":/biologyQualifier.svg", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/biologyQualifier.svg", fileContents);
 
     mBiologyQualifierSvg = fileContents;
 
     // Retrieve our output template
 
-    Core::readFileContentsFromFile(":/qualifierInformation.html", fileContents);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/qualifierInformation.html", fileContents);
 
     mQualifierInformationTemplate = fileContents;
 
@@ -110,12 +110,12 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Some connections to keep track of what our details widget wants
 
-    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(QWebView *, const QString &)),
-            this, SLOT(updateWebViewerWithQualifierDetails(QWebView *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(QWebView *, const QString &)),
-            this, SLOT(updateWebViewerWithResourceDetails(QWebView *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(idDetailsRequested(QWebView *, const QString &, const QString &)),
-            this, SLOT(updateWebViewerWithIdDetails(QWebView *, const QString &, const QString &)));
+    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &)),
+            this, SLOT(updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &)),
+            this, SLOT(updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(idDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &, const QString &)),
+            this, SLOT(updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *, const QString &, const QString &)));
 
     // Make our CellML list widget our focus proxy
 
@@ -177,7 +177,7 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(QWebView *pWebView,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                             const QString &pQualifier)
 {
     // The user requested a qualifier to be looked up, so generate a web page
@@ -296,33 +296,33 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(QWeb
 
     // Show the information
 
-    pWebView->setHtml(mQualifierInformationTemplate.arg(pQualifier,
-                                                        qualifierSvg,
-                                                        shortDescription,
-                                                        longDescription));
+    pWebViewer->setHtml(mQualifierInformationTemplate.arg(pQualifier,
+                                                          qualifierSvg,
+                                                          shortDescription,
+                                                          longDescription));
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(QWebView *pWebView,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                            const QString &pResource)
 {
     // The user requested a resource to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebView->setUrl(CellmlAnnotationViewWidget::resourceUrl(pResource));
+    pWebViewer->setUrl(CellmlAnnotationViewWidget::resourceUrl(pResource));
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(QWebView *pWebView,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                      const QString &pResource,
                                                                      const QString &pId)
 {
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebView->setUrl(CellmlAnnotationViewWidget::idUrl(pResource, pId));
+    pWebViewer->setUrl(CellmlAnnotationViewWidget::idUrl(pResource, pId));
 }
 
 //==============================================================================

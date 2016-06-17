@@ -53,7 +53,6 @@ BioSignalMLSelectVariables::BioSignalMLSelectVariables(QWidget *pParent,
 
     QObject::connect(mGui->allVariables, SIGNAL(clicked(bool)),
                      this, SLOT(selectAllVariables(bool)));
-
 }
 
 //==============================================================================
@@ -72,7 +71,6 @@ void BioSignalMLSelectVariables::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
-
 }
 
 //==============================================================================

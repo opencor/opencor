@@ -72,7 +72,6 @@ void BioSignalMLSaveDialog::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
-
 }
 
 //==============================================================================
@@ -193,6 +192,13 @@ void BioSignalMLSaveDialog::selectVariables(bool checked)
     }
 
     this->activateWindow();
+}
+
+//==============================================================================
+
+QVector<bool> BioSignalMLSaveDialog::selectedVariables() const
+{
+    return mSelectedVariables;
 }
 
 //==============================================================================

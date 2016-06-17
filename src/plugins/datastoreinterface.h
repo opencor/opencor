@@ -37,6 +37,19 @@ namespace DataStore {
 
 //==============================================================================
 
+class DataStoreData
+{
+public:
+    explicit DataStoreData(const QString &pFileName);
+
+    QString fileName() const;
+
+private:
+    QString mFileName;
+};
+
+//==============================================================================
+
 class DataStoreVariable
 {
 public:
@@ -82,11 +95,9 @@ typedef QVector<DataStoreVariable *> DataStoreVariables;
 class DataStore
 {
 public:
-    explicit DataStore(const QString &pId, const QString &pUri,
-                       const qulonglong &pSize);
+    explicit DataStore(const QString &pUri, const qulonglong &pSize);
     virtual ~DataStore();
 
-    QString id() const;
     QString uri() const;
 
     qulonglong size() const;
@@ -101,7 +112,6 @@ public:
     void setValues(const qulonglong &pPosition, const double &pValue);
 
 private:
-    QString mId;
     QString mlUri;
 
     const qulonglong mSize;
@@ -112,19 +122,33 @@ private:
 
 //==============================================================================
 
-class DataStoreExporter
+class DataStoreExporter : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit DataStoreExporter(const QString &pId = QString());
-    virtual ~DataStoreExporter();
+    explicit DataStoreExporter(const QString &pFileName, DataStore *pDataStore,
+                               DataStoreData *pDataStoreData);
+    ~DataStoreExporter();
 
-    virtual void execute(const QString &pFileName,
-                         DataStore *pDataStore) const = 0;
+    void start();
 
-    QString id() const;
+    virtual void execute() const = 0;
 
 private:
-    QString mId;
+    QThread *mThread;
+
+protected:
+    QString mFileName;
+    DataStore *mDataStore;
+    DataStoreData *mDataStoreData;
+
+Q_SIGNALS:
+    void done();
+    void progress(const double &pProgress) const;
+
+private Q_SLOTS:
+    void started();
 };
 
 //==============================================================================

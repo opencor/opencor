@@ -91,7 +91,7 @@ void MathmlTests::tests(const QString &pCategory)
 
     foreach (const QString &fileName, QDir(dirName).entryList(QStringList() << "*.in")) {
         xmlQuery.setFocus(OpenCOR::rawFileContents(dirName+fileName));
-        xmlQuery.setQuery(OpenCOR::rawFileContents(":ctop.xsl"));
+        xmlQuery.setQuery(OpenCOR::rawFileContents(":/Core/web-xslt/ctopff.xsl"));
 
         if (xmlQuery.evaluateTo(&actualOutput)) {
             actualOutput = OpenCOR::Core::formatXml(OpenCOR::Core::cleanPresentationMathml(actualOutput));

@@ -24,12 +24,11 @@ ADD_PLUGIN(CellMLTextView
         CellMLSupport
         Compiler
         Core
-        CoreCellMLEditing
-        CoreEditing
-        Editor
-        EditorList
+        CellMLEditingView
+        EditingView
+        EditorWidget
         ${LLVM_PLUGIN}
-        MathMLViewer
+        MathMLViewerWidget
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
         ${QWT_PLUGIN}
@@ -40,6 +39,7 @@ ADD_PLUGIN(CellMLTextView
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
+        clitests
         conversiontests
         parsingtests
         scanningtests

@@ -405,7 +405,7 @@ QDateTime QwtDate::ceil( const QDateTime &dateTime, IntervalType intervalType )
         {
             qwtFloorTime( QwtDate::Second, dt );
             if ( dt < dateTime )
-                dt.addSecs( 1 );
+                dt = dt.addSecs( 1 );
 
             break;
         }
@@ -413,7 +413,7 @@ QDateTime QwtDate::ceil( const QDateTime &dateTime, IntervalType intervalType )
         {
             qwtFloorTime( QwtDate::Minute, dt );
             if ( dt < dateTime )
-                dt.addSecs( 60 );
+                dt = dt.addSecs( 60 );
 
             break;
         }
@@ -421,7 +421,7 @@ QDateTime QwtDate::ceil( const QDateTime &dateTime, IntervalType intervalType )
         {
             qwtFloorTime( QwtDate::Hour, dt );
             if ( dt < dateTime )
-                dt.addSecs( 3600 );
+                dt = dt.addSecs( 3600 );
 
             break;
         }
@@ -454,7 +454,7 @@ QDateTime QwtDate::ceil( const QDateTime &dateTime, IntervalType intervalType )
                 dateTime.date().month() ) );
 
             if ( dt < dateTime )
-                dt.addMonths( 1 );
+                dt = dt.addMonths( 1 );
 
             break;
         }

@@ -50,23 +50,20 @@
         <source>Browse Exposure</source>
         <translation>Naviguer Exposition</translation>
     </message>
-</context>
-<context>
-    <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
-    <message>
-        <source>Select Empty Directory</source>
-        <translation>Sélectionner Répertoire Vide</translation>
-    </message>
-</context>
-<context>
-    <name>PmrWindowWidget</name>
     <message>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
         <source>Copy the URL to the clipboard</source>
-        <translation>Copier la sélection dans le presse-papier</translation>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
+    <message>
+        <source>Select Empty Directory</source>
+        <translation>Sélectionner Répertoire Vide</translation>
     </message>
 </context>
 <context>

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata edit details widget
+// CellML Annotation view metadata edit details widget
 //==============================================================================
 
 #pragma once
@@ -38,12 +38,6 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewMetadataEditDetailsWidget;
-}
-
-//==============================================================================
-
 class QComboBox;
 class QLabel;
 class QLineEdit;
@@ -61,8 +55,13 @@ namespace OpenCOR {
 
 namespace Core {
     class UserMessageWidget;
-    class WebViewWidget;
 }   // namespace Core
+
+//==============================================================================
+
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -71,7 +70,6 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
-class CellmlAnnotationViewMetadataWebViewWidget;
 class CellmlAnnotationViewWidget;
 
 //==============================================================================
@@ -110,7 +108,6 @@ public:
                                                            CellmlAnnotationViewEditingWidget *pViewEditingWidget,
                                                            CellMLSupport::CellmlFile *pCellmlFile,
                                                            QWidget *pParent);
-    ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -126,8 +123,6 @@ private:
 
     CellmlAnnotationViewWidget *mViewWidget;
     CellmlAnnotationViewEditingWidget *mViewEditingWidget;
-
-    Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
@@ -154,7 +149,7 @@ private:
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputOntologicalTermsTemplate;
-    Core::WebViewWidget *mOutputOntologicalTerms;
+    WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
 
     InformationType mInformationType;
 
@@ -175,6 +170,8 @@ private:
     QString mTextContent;
 
     QMenu *mContextMenu;
+
+    QAction *mCopyAction;
 
     QNetworkReply *mNetworkReply;
 
@@ -206,7 +203,7 @@ public Q_SLOTS:
                    const bool &pFilePermissionsChanged = false);
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void copy();
 
     void disableLookUpInformation();
 

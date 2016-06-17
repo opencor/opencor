@@ -20,7 +20,7 @@ limitations under the License.
 // Sample window
 //==============================================================================
 
-#include "sampleutils.h"
+#include "sampleutilities.h"
 #include "samplewindowwindow.h"
 
 //==============================================================================

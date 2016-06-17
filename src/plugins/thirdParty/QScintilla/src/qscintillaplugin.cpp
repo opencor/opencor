@@ -33,8 +33,8 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a> 2.9.2+."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a> 2.9.2+."));
 
     return new PluginInfo("Third-party", false, false,
                           QStringList(),

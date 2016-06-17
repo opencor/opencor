@@ -1,0 +1,7 @@
+Commands supported by CellMLTextView:
+ * Display the commands supported by CellMLTextView:
+      help
+ * Export the CellML Text <file> to CellML:
+      export <file>
+ * Import the CellML <file> to the CellML Text format:
+      import <file>

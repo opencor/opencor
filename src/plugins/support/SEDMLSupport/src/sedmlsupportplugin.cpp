@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SEDMLSupport plugin
+// SED-ML support plugin
 //==============================================================================
 
 #include "corecliutils.h"
@@ -46,7 +46,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
     return new PluginInfo("Support", false, false,
-                          QStringList() << "Core" << "SEDMLAPI" << "StandardSupport",
+                          QStringList() << "CellMLSupport" << "SEDMLAPI" << "StandardSupport",
                           descriptions);
 }
 
@@ -140,7 +140,7 @@ void SEDMLSupportPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mFileNewSedmlFileAction = new QAction(Core::mainWindow());
+    mFileNewSedmlFileAction = Core::newAction(Core::mainWindow());
 
     // Some connections to handle our different actions
 

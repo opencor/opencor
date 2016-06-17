@@ -62,12 +62,15 @@ void I18nInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
 
 //==============================================================================
 
-void I18nInterface::retranslateAction(QAction *pAction, const QString &pText,
+void I18nInterface::retranslateAction(QAction *pAction,
+                                      const QString &pTextAndToolTip,
                                       const QString &pStatusTip)
 {
-    // Retranslate the action, i.e. retranslate both its text and status tip
+    // Retranslate the action, i.e. retranslate its text, tool tip and status
+    // tip
 
-    pAction->setText(pText);
+    pAction->setText(pTextAndToolTip);
+    pAction->setToolTip(pTextAndToolTip);
     pAction->setStatusTip(pStatusTip);
 }
 

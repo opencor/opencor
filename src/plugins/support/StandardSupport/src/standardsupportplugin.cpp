@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// StandardSupport plugin
+// Standard support plugin
 //==============================================================================
 
 #include "standardsupportplugin.h"
@@ -41,7 +41,7 @@ PLUGININFO_FUNC StandardSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter différentes standards."));
 
     return new PluginInfo("Support", false, false,
-                          QStringList(),
+                          QStringList() << "Core",
                           descriptions);
 }
 

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawTextView plugin
+// Raw Text view plugin
 //==============================================================================
 
 #include "corecliutils.h"
@@ -46,7 +46,7 @@ PLUGININFO_FUNC RawTextViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte."));
 
     return new PluginInfo("Editing", true, false,
-                          QStringList() << "CoreEditing",
+                          QStringList() << "EditingView",
                           descriptions);
 }
 
@@ -54,7 +54,7 @@ PLUGININFO_FUNC RawTextViewPluginInfo()
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * RawTextViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawTextViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -79,7 +79,7 @@ bool RawTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file
 
-    Editor::EditorWidget *crtEditor = editor(pFileName);
+    EditorWidget::EditorWidget *crtEditor = editor(pFileName);
 
     return crtEditor?
                Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
@@ -109,7 +109,7 @@ bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
 
     // Save the given file
 
-    Editor::EditorWidget *crtEditor = editor(pOldFileName);
+    EditorWidget::EditorWidget *crtEditor = editor(pOldFileName);
 
     return crtEditor?
                Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):

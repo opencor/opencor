@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QResizeEvent>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -47,6 +48,20 @@ Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
     CommonWidget(),
     mSizeHint(pSizeHint)
 {
+}
+
+//==============================================================================
+
+void Widget::createLayout()
+{
+    // Create and set a vertical layout
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 }
 
 //==============================================================================

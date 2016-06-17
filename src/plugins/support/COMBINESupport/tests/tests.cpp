@@ -122,7 +122,7 @@ void Tests::basicTests()
     doBasicTests(otherFileName);
 
     // Check that we can load our other COMBINE archive and save it in yet
-    // another file, and make sure that the SHA-1 of the two files is the same
+    // another file
 
     OpenCOR::COMBINESupport::CombineArchive otherCombineArchive(otherFileName);
 
@@ -132,58 +132,37 @@ void Tests::basicTests()
     QVERIFY(otherCombineArchive.isValid());
     QVERIFY(otherCombineArchive.save(yetAnotherFileName));
 
-    QByteArray otherFileContents;
-    QByteArray yetAnotherFileContents;
+    // Unzip our two COMBINE archives and make sure that their contents is the
+    // same
+    // Note: the original plan was to check that the SHA-1 value of the two
+    //       files was the same, but the fact is that the ZIP file format
+    //       contains various date and time information, so the SHA-1 value of
+    //       two files may be different...
 
-    QVERIFY(OpenCOR::Core::readFileContentsFromFile(otherFileName, otherFileContents));
-    QVERIFY(OpenCOR::Core::readFileContentsFromFile(yetAnotherFileName, yetAnotherFileContents));
-//---GRY--- THE BELOW IS TO BE REMOVED ONCE WE HAVE DETERMINED WHY (ON Travis CI
-//          ONLY?) WE SOMETIMES GET A DIFFERENT SHA-1 VALUE...
-if (OpenCOR::Core::sha1(otherFileContents).compare(OpenCOR::Core::sha1(yetAnotherFileContents))) {
-    qDebug("---------");
+    QTemporaryDir temporaryDir;
+    QString otherDir = temporaryDir.path()+"/otherDir";
+    QString yetAnotherDir = temporaryDir.path()+"/yetAnotherDir";
+    OpenCOR::ZIPSupport::QZipReader otherZipReader(otherFileName);
+    OpenCOR::ZIPSupport::QZipReader yetAnotherZipReader(yetAnotherFileName);
 
-    QProcess process;
+    QVERIFY(otherZipReader.extractAll(otherDir));
+    QVERIFY(yetAnotherZipReader.extractAll(yetAnotherDir));
 
-    process.start("ls", QStringList() << "-l" << otherFileName);
-    process.waitForFinished();
+    QDirIterator dirIterator(otherDir, QStringList() << "*",
+                             QDir::Files, QDirIterator::Subdirectories);
 
-    qDebug("%s", qPrintable(process.readAll().trimmed()));
+    while (dirIterator.hasNext()) {
+        QString otherFileName = dirIterator.next();
+        QString yetAnotherFileName = otherFileName.replace(otherDir, yetAnotherDir);
+        QByteArray otherFileContents;
+        QByteArray yetAnotherFileContents;
 
-    process.start("ls", QStringList() << "-l" << yetAnotherFileName);
-    process.waitForFinished();
+        QVERIFY(OpenCOR::Core::readFileContentsFromFile(otherFileName, otherFileContents));
+        QVERIFY(OpenCOR::Core::readFileContentsFromFile(yetAnotherFileName, yetAnotherFileContents));
 
-    qDebug("%s", qPrintable(process.readAll().trimmed()));
-    qDebug("---------");
-
-    QString baseDir = otherCombineArchive.location(otherCombineArchive.masterFiles().first()).remove("/dir01/file01.txt");
-
-    process.start("ls", QStringList() << "-lR" << baseDir);
-    process.waitForFinished();
-
-    qDebug("%s", qPrintable(process.readAll().trimmed()));
-    qDebug("---------");
-
-    process.start("unzip", QStringList() << otherFileName << "-d" << baseDir+"/OLD");
-    process.waitForFinished();
-
-    process.start("unzip", QStringList() << yetAnotherFileName << "-d" << baseDir+"/NEW");
-    process.waitForFinished();
-
-    process.start("ls", QStringList() << "-lR" << baseDir+"/OLD");
-    process.waitForFinished();
-
-    qDebug("%s", qPrintable(process.readAll().trimmed()));
-    qDebug("---------");
-
-    process.start("ls", QStringList() << "-lR" << baseDir+"/NEW");
-    process.waitForFinished();
-
-    qDebug("%s", qPrintable(process.readAll().trimmed()));
-    qDebug("---------");
-}
-
-    QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
-             OpenCOR::Core::sha1(yetAnotherFileContents));
+        QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
+                 OpenCOR::Core::sha1(yetAnotherFileContents));
+    }
 
     // Clean up after ourselves
 

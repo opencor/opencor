@@ -25,7 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "biosignalmldatastoreglobal.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -46,7 +45,7 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLDATASTORE_EXPORT BioSignalMLSaveDialog : public QDialog
+class BioSignalMLSaveDialog : public QDialog
 {
     Q_OBJECT
 
@@ -65,6 +64,7 @@ public:
     QString author(void) const;
     void setComment(const QString & pComment);
     void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
+    QVector<bool> selectedVariables() const;
     bool selectedVariable(const size_t pIndex) const;
 
 private slots:

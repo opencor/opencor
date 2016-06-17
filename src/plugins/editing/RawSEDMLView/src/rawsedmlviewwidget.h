@@ -37,15 +37,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreSEDMLEditing {
-    class CoreSedmlEditingWidget;
-}   // namespace CoreSEDMLEditing
+namespace SEDMLEditingView {
+    class SedmlEditingViewWidget;
+}   // namespace SEDMLEditingView
 
 //==============================================================================
 
-namespace Editor {
+namespace EditorWidget {
     class EditorWidget;
-}   // namespace Editor
+}   // namespace EditorWidget
 
 //==============================================================================
 
@@ -73,7 +73,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    Editor::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -86,8 +86,8 @@ private:
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
-    CoreSEDMLEditing::CoreSedmlEditingWidget *mEditingWidget;
-    QMap<QString, CoreSEDMLEditing::CoreSedmlEditingWidget *> mEditingWidgets;
+    SEDMLEditingView::SedmlEditingViewWidget *mEditingWidget;
+    QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *> mEditingWidgets;
 };
 
 //==============================================================================

@@ -149,7 +149,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mMappedCategories.insert(tr("Solver"), SolverCategory);
     mMappedCategories.insert(tr("Support"), SupportCategory);
     mMappedCategories.insert(tr("Third-party"), ThirdPartyCategory);
-    mMappedCategories.insert(tr("Tool"), ToolCategory);
+    mMappedCategories.insert(tr("Tools"), ToolsCategory);
     mMappedCategories.insert(tr("Widget"), WidgetCategory);
 
     QMap<QString, QString> diacriticCategories = QMap<QString, QString>();
@@ -503,7 +503,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldTwoValue->setText(tr("plugins to support various third-party libraries and APIs."));
         else if (!category.compare(ThirdPartyCategory))
             mGui->fieldTwoValue->setText(tr("plugins to access various third-party libraries."));
-        else if (!category.compare(ToolCategory))
+        else if (!category.compare(ToolsCategory))
             mGui->fieldTwoValue->setText(tr("plugins to access various tools."));
         else if (!category.compare(WidgetCategory))
             mGui->fieldTwoValue->setText(tr("plugins to access various <em>ad hoc</em> widgets."));

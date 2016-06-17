@@ -17,14 +17,14 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawTextView plugin
+// Raw Text view plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "editinginterface.h"
+#include "editingviewinterface.h"
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -46,7 +46,7 @@ class RawTextViewWidget;
 
 //==============================================================================
 
-class RawTextViewPlugin : public QObject, public EditingInterface,
+class RawTextViewPlugin : public QObject, public EditingViewInterface,
                           public FileHandlingInterface, public I18nInterface,
                           public PluginInterface, public ViewInterface
 {
@@ -54,14 +54,14 @@ class RawTextViewPlugin : public QObject, public EditingInterface,
 
     Q_PLUGIN_METADATA(IID "OpenCOR.RawTextViewPlugin" FILE "rawtextviewplugin.json")
 
-    Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::EditingViewInterface)
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-#include "editinginterface.inl"
+#include "editingviewinterface.inl"
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

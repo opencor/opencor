@@ -17,10 +17,9 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// COMBINE archive class
+// COMBINE archive
 //==============================================================================
 
-#include "cellmlfile.h"
 #include "combinearchive.h"
 #include "corecliutils.h"
 
@@ -232,7 +231,7 @@ bool CombineArchive::save(const QString &pFileName)
     if (mLoadingNeeded || !mIssues.isEmpty())
         return false;
 
-    // Generate the contents our manifest
+    // Generate the contents of our manifest
 
     QByteArray fileList = QByteArray();
     QString fileFormat;
@@ -332,7 +331,7 @@ bool CombineArchive::isValid()
     QByteArray schemaContents;
 
     Core::readFileContentsFromFile(manifestFileName, manifestContents);
-    Core::readFileContentsFromFile(":omex.xsd", schemaContents);
+    Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,

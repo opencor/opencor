@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Raw text view widget
+// Raw Text view widget
 //==============================================================================
 
 #pragma once
@@ -36,9 +36,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Editor {
+namespace EditorWidget {
     class EditorWidget;
-}   // namespace Editor
+}   // namespace EditorWidget
 
 //==============================================================================
 
@@ -66,7 +66,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    Editor::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -74,8 +74,8 @@ private:
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
-    Editor::EditorWidget *mEditor;
-    QMap<QString, Editor::EditorWidget *> mEditors;
+    EditorWidget::EditorWidget *mEditor;
+    QMap<QString, EditorWidget::EditorWidget *> mEditors;
 };
 
 //==============================================================================

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata details widget
+// CellML Annotation view metadata details widget
 //==============================================================================
 
 #pragma once
@@ -31,7 +31,6 @@ limitations under the License.
 //==============================================================================
 
 class QSplitter;
-class QWebView;
 
 //==============================================================================
 
@@ -43,6 +42,12 @@ namespace Core {
     class BorderedWidget;
     class UserMessageWidget;
 }   // namespace Core
+
+//==============================================================================
+
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -91,11 +96,11 @@ private:
 
     Core::BorderedWidget *mBorderedMetadataEditDetails;
     Core::BorderedWidget *mBorderedMetadataViewDetails;
-    Core::BorderedWidget *mBorderedWebView;
+    Core::BorderedWidget *mBorderedWebViewer;
 
     CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
-    QWebView *mWebView;
+    WebViewerWidget::WebViewerWidget *mWebViewer;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -107,11 +112,12 @@ Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
 
-    void qualifierDetailsRequested(QWebView *pWebView,
+    void qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                    const QString &pQualifier);
-    void resourceDetailsRequested(QWebView *pWebView, const QString &pResource);
-    void idDetailsRequested(QWebView *pWebView, const QString &pResource,
-                            const QString &pId);
+    void resourceDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
+                                  const QString &pResource);
+    void idDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
+                            const QString &pResource, const QString &pId);
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement);

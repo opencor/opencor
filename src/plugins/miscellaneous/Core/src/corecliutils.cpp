@@ -403,7 +403,7 @@ static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
 
 //==============================================================================
 
-QString CORE_EXPORT activeDirectory()
+QString activeDirectory()
 {
     // Retrieve and return the active directory
 
@@ -412,7 +412,7 @@ QString CORE_EXPORT activeDirectory()
 
 //==============================================================================
 
-void CORE_EXPORT setActiveDirectory(const QString &pDirName)
+void setActiveDirectory(const QString &pDirName)
 {
     // Keep track of the active directory
 
@@ -507,7 +507,7 @@ void cleanContentMathml(QDomElement pDomElement)
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
         QDomNode attribute = attributes.item(i);
 
-        if (attribute.namespaceURI().compare(MathmlNamespace))
+        if (attribute.localName().compare(attribute.nodeName()))
             nonMathmlAttributes << attribute;
     }
 

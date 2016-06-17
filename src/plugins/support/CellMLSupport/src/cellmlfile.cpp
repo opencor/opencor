@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file class
+// CellML file
 //==============================================================================
 
 #include "cellmlfile.h"
@@ -504,15 +504,15 @@ bool CellmlFile::save(const QString &pFileName)
 
     domDocument.setContent(QString::fromStdWString(mModel->serialisedText()));
 
-    QDomElement documentElement = domDocument.documentElement();
+    QDomElement domElement = domDocument.documentElement();
 
-    documentElement.attributes().removeNamedItem("xml:base");
+    domElement.attributes().removeNamedItem("xml:base");
 
-    for (QDomElement childElement = documentElement.firstChildElement();
+    for (QDomElement childElement = domElement.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         if (!childElement.nodeName().compare("rdf:RDF")) {
             if (!childElement.childNodes().count())
-                documentElement.removeChild(childElement);
+                domElement.removeChild(childElement);
 
             break;
         }
@@ -525,7 +525,7 @@ bool CellmlFile::save(const QString &pFileName)
 
     usedCmetaIds.removeDuplicates();
 
-    clearCmetaIdsFromCellmlElement(documentElement, usedCmetaIds);
+    clearCmetaIdsFromCellmlElement(domElement, usedCmetaIds);
 
     // Determine the file name to use for the CellML file
 
@@ -1125,9 +1125,12 @@ bool CellmlFile::exportTo(const QString &pFileName,
             return false;
         }
 
-        // Save the export
+        // Save the export or output it to the console, if no file name has been
+        // provided
 
-        if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)).toUtf8())) {
+        if (pFileName.isEmpty()) {
+            std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
+        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)).toUtf8())) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the output file could not be saved"));
 

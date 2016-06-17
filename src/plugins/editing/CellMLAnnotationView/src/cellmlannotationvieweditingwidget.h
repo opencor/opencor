@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view editing widget
+// CellML Annotation view editing widget
 //==============================================================================
 
 #pragma once
@@ -38,7 +38,6 @@ class QComboBox;
 class QLabel;
 class QLineEdit;
 class QPushButton;
-class QWebView;
 
 //==============================================================================
 
@@ -49,6 +48,12 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
 }   // namespace CellMLSupport
+
+//==============================================================================
+
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -100,11 +105,11 @@ Q_SIGNALS:
 private Q_SLOTS:
     void emitSplitterMoved();
 
-    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
+    void updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                              const QString &pQualifier);
-    void updateWebViewerWithResourceDetails(QWebView *pWebView,
+    void updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                             const QString &pResource);
-    void updateWebViewerWithIdDetails(QWebView *pWebView,
+    void updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                       const QString &pResource,
                                       const QString &pId);
 };

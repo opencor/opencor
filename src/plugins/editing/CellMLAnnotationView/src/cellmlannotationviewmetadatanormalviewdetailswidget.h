@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata normal view details widget
+// CellML Annotation view metadata normal view details widget
 //==============================================================================
 
 #pragma once
@@ -33,12 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
-}
-
-//==============================================================================
-
 class QLabel;
 class QMenu;
 class QScrollArea;
@@ -51,8 +45,13 @@ namespace OpenCOR {
 
 namespace Core {
     class UserMessageWidget;
-    class WebViewWidget;
 }   // namespace Core
+
+//==============================================================================
+
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -82,7 +81,6 @@ private:
 public:
     explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                  QWidget *pParent);
-    ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -99,8 +97,6 @@ public:
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
-
     int mItemsCount;
 
     Core::Widget *mOutput;
@@ -109,7 +105,7 @@ private:
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputOntologicalTermsTemplate;
-    Core::WebViewWidget *mOutputOntologicalTerms;
+    WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
@@ -132,6 +128,8 @@ private:
 
     QMenu *mContextMenu;
 
+    QAction *mCopyAction;
+
     void additionalGuiUpdates(const QString &pRdfTripleInformation,
                               const InformationType &pInformationType,
                               const Information &pLookUpRdfTripleInformation);
@@ -150,7 +148,7 @@ Q_SIGNALS:
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void copy();
 
     void disableLookUpInformation();
 

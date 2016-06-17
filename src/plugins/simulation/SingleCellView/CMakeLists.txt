@@ -14,9 +14,6 @@ ADD_PLUGIN(SingleCellView
         ../../viewinterface.cpp
 
         src/singlecellviewcontentswidget.cpp
-        src/singlecellviewgraphpanelplotwidget.cpp
-        src/singlecellviewgraphpanelswidget.cpp
-        src/singlecellviewgraphpanelwidget.cpp
         src/singlecellviewinformationgraphswidget.cpp
         src/singlecellviewinformationparameterswidget.cpp
         src/singlecellviewinformationsimulationwidget.cpp
@@ -28,14 +25,12 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewsimulationwidget.cpp
         src/singlecellviewwidget.cpp
     HEADERS_MOC
+        ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
         ../../solverinterface.h
 
         src/singlecellviewcontentswidget.h
-        src/singlecellviewgraphpanelplotwidget.h
-        src/singlecellviewgraphpanelswidget.h
-        src/singlecellviewgraphpanelwidget.h
         src/singlecellviewinformationgraphswidget.h
         src/singlecellviewinformationparameterswidget.h
         src/singlecellviewinformationsimulationwidget.h
@@ -46,10 +41,6 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewsimulationworker.h
         src/singlecellviewsimulationwidget.h
         src/singlecellviewwidget.h
-    UIS
-        src/singlecellviewgraphpanelplotwidget.ui
-        src/singlecellviewinformationgraphswidget.ui
-        src/singlecellviewsimulationwidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS
@@ -60,6 +51,7 @@ ADD_PLUGIN(SingleCellView
         COMBINESupport
         Compiler
         Core
+        GraphPanelWidget
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
         SBMLAPI

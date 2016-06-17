@@ -20,7 +20,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 31, "month": 3, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 6, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -39,11 +39,13 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> added support for Ubuntu 16.04 LTS (Xenial Xerus; see issue <a href=\"https://github.com/opencor/opencor/issues/965\">#965</a>) and renamed the Viewer plugin to MathMLViewer (see issue <a href=\"https://github.com/opencor/opencor/issues/940\">#940</a>)." },
-                       { "change": "<strong>Physiome Model Repository window:</strong> properly handle JSON responses from PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/930\">#930</a>). The plugin is now called PMRWindow (see issues <a href=\"https://github.com/opencor/opencor/issues/935\">#935</a> and <a href=\"https://github.com/opencor/opencor/issues/958\">#958</a>)." },
-                       { "change": "<strong>Single Cell view:</strong> fixed a problem with an infinite loop in modification prompting (see issue <a href=\"https://github.com/opencor/opencor/issues/941\">#941</a>). Fixed a problem with opening CellML models from SED-ML documents (see issue <a href=\"https://github.com/opencor/opencor/issues/942\">#942</a>)." },
-                       { "change": "<strong>Support:</strong> added a PMR web service plugin ((see issue <a href=\"https://github.com/opencor/opencor/issues/931\">#931</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 2.2.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/934\">#934</a>), <a href=\"https://khan.github.io/KaTeX/\">KaTeX</a> to version 0.6.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/948\">#948</a>), <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.24.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/936\">#936</a>), <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.13.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/949\">#949</a>), <a href=\"http://www.llvm.org/\">LLVM</a> to version 3.8.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/913\">#913</a>), <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2h (Windows only; see issue <a href=\"https://github.com/opencor/opencor/issues/956\">#956</a>) and <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.9.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/947\">#947</a>)." }
+                       { "change": "<strong>General:</strong> merged and renamed some of our plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1004\">#1004</a>)." },
+                       { "change": "<strong>CellML support:</strong> can now detect a variable of integration no matter where it is defined in a model (see issue <a href=\"https://github.com/opencor/opencor/issues/995\">#995</a>)." },
+                       { "change": "<strong>Data stores:</strong> data export is now done in its own thread (ee issue <a href=\"https://github.com/opencor/opencor/issues/849\">#849</a>)." },
+                       { "change": "<strong>Text-based editing views:</strong> fixed a small problem with losing the focus and not being able to track changes to a file after having reloaded another file that depends on it (see issue <a href=\"https://github.com/opencor/opencor/issues/996\">#996</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> allow the import / export of the CellML Text format from / to CellML from the command line (see issue <a href=\"https://github.com/opencor/opencor/issues/992\">#992</a>)." },
+                       { "change": "<strong>Single Cell view:</strong> now use better colours/symbols in the Parameters window (see issue <a href=\"https://github.com/opencor/opencor/issues/634\">#634</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> applied an official patch to <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> 2.9.2 following a (Mac) OS X issue (see issue <a href=\"https://github.com/opencor/opencor/issues/994\">#994</a>). Upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1001\">#1001</a>) and <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.1.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1002\">#1002</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,

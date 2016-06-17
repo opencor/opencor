@@ -15,6 +15,9 @@
             <file>res/*.*</file>
             <file>res/pics/*.*</file>
             <file>res/pics/oxygen/actions/*.*</file>
+            <file>res/pics/oxygen/categories/*.*</file>
+            <file>res/pics/oxygen/places/*.*</file>
+            <file>res/pics/oxygen/status/*.*</file>
 
             <file>user/*.*</file>
             <file>user/plugins/*.*</file>
@@ -26,10 +29,6 @@
             <file>user/plugins/organisation/*.*</file>
             <file>user/plugins/organisation/res/pics/*.*</file>
             <file>user/plugins/res/pics/*.*</file>
-            <file>user/plugins/res/pics/oxygen/actions/*.*</file>
-            <file>user/plugins/res/pics/oxygen/categories/*.*</file>
-            <file>user/plugins/res/pics/oxygen/places/*.*</file>
-            <file>user/plugins/res/pics/oxygen/status/*.*</file>
             <file>user/plugins/simulation/*.*</file>
             <file>user/plugins/simulation/res/pics/*.*</file>
             <file>user/plugins/solver/*.*</file>

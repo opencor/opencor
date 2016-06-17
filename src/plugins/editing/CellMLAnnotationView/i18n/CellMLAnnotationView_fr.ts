@@ -2,71 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlAnnotationViewCellmlListWidget</name>
-    <message>
-        <source>Expand all the children nodes</source>
-        <translation>Etendre tous les noeuds enfants</translation>
-    </message>
-    <message>
-        <source>Collapse all the children nodes</source>
-        <translation>Réduire tous les noeuds enfants</translation>
-    </message>
-    <message>
-        <source>Remove the metadata associated with the current node</source>
-        <translation>Supprimer les métadonnées associées au noeud actuel</translation>
-    </message>
-    <message>
-        <source>Remove all the metadata associated with the different nodes</source>
-        <translation>Supprimer toutes les métadonnées associées aux différents noeuds</translation>
-    </message>
-    <message>
-        <source>Open Import</source>
-        <translation>Ouvrir Import</translation>
-    </message>
-    <message>
-        <source>Open the imported file</source>
-        <translation>Ouvrir le fichier importé</translation>
-    </message>
-    <message>
-        <source>Expand All</source>
-        <translation>Tout Étendre</translation>
-    </message>
-    <message>
-        <source>Collapse All</source>
-        <translation>Tout Réduire</translation>
-    </message>
-    <message>
-        <source>Remove Current Metadata</source>
-        <translation>Supprimer Métadonnées Courantes</translation>
-    </message>
-    <message>
-        <source>Remove All Metadata</source>
-        <translation>Supprimer Toutes Métadonnées</translation>
-    </message>
-</context>
-<context>
-    <name>CellmlAnnotationViewMetadataEditDetailsWidget</name>
-    <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-</context>
-<context>
-    <name>CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
-    <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>
@@ -114,6 +49,46 @@
     <message>
         <source>Connection #%1</source>
         <translation>Connexion n° %1</translation>
+    </message>
+    <message>
+        <source>Expand All</source>
+        <translation>Tout Étendre</translation>
+    </message>
+    <message>
+        <source>Expand all the children nodes</source>
+        <translation>Etendre tous les noeuds enfants</translation>
+    </message>
+    <message>
+        <source>Collapse All</source>
+        <translation>Tout Réduire</translation>
+    </message>
+    <message>
+        <source>Collapse all the children nodes</source>
+        <translation>Réduire tous les noeuds enfants</translation>
+    </message>
+    <message>
+        <source>Remove Current Metadata</source>
+        <translation>Supprimer Métadonnées Courantes</translation>
+    </message>
+    <message>
+        <source>Remove the metadata associated with the current node</source>
+        <translation>Supprimer les métadonnées associées au noeud actuel</translation>
+    </message>
+    <message>
+        <source>Remove All Metadata</source>
+        <translation>Supprimer Toutes Métadonnées</translation>
+    </message>
+    <message>
+        <source>Remove all the metadata associated with the different nodes</source>
+        <translation>Supprimer toutes les métadonnées associées aux différents noeuds</translation>
+    </message>
+    <message>
+        <source>Open Import</source>
+        <translation>Ouvrir Import</translation>
+    </message>
+    <message>
+        <source>Open the imported file</source>
+        <translation>Ouvrir le fichier importé</translation>
     </message>
 </context>
 <context>
@@ -356,6 +331,14 @@
         <source>The term &lt;strong&gt;%1&lt;/strong&gt; cannot be added using the above qualifier...</source>
         <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; ne peut pas être ajouté avec le qualificatif ci-dessus...</translation>
     </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
@@ -398,6 +381,14 @@
     <message>
         <source>Remove Term</source>
         <translation>Supprimer Terme</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
 </context>
 <context>

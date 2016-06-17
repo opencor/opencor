@@ -73,9 +73,10 @@ void CliApplication::loadPlugins()
 
     // Keep track of our loaded CLI plugins
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         if (qobject_cast<CliInterface *>(plugin->instance()))
             mLoadedCliPlugins << plugin;
+    }
 }
 
 //==============================================================================
@@ -132,13 +133,14 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
             bool pluginFound = false;
             bool pluginHasCliSupport = false;
 
-            foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+            foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
                 if (!commandPlugin.compare(plugin->name())) {
                     pluginFound = true;
                     pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
 
                     break;
                 }
+            }
 
             if (!pluginFound) {
                 std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
@@ -169,6 +171,8 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
     // Send the command to the plugin(s)
 
+    bool firstPlugin = true;
+
     foreach (Plugin *plugin, mLoadedCliPlugins) {
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
@@ -177,6 +181,11 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
             arguments.removeFirst();
             // Note: since the first argument corresponds to the command
             //       itself...
+
+            if (firstPlugin)
+                firstPlugin = false;
+            else
+                std::cout << std::endl;
 
             if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, arguments))
                 *pRes = -1;

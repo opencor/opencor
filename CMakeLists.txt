@@ -107,6 +107,8 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+
+    src/plugins/datastoreinterface.h
 )
 
 SET(UIS
@@ -322,18 +324,19 @@ SET(PLUGINS
 
     # Plugins that extend some libraries (incl. third-party ones)
 
-    widget/Editor
-    widget/EditorList
-    widget/MathMLViewer
+    widget/EditorWidget
+    widget/GraphPanelWidget
+    widget/MathMLViewerWidget
+    widget/WebViewerWidget
 
     # Plugins that provide some generic features
 
-    editing/CoreEditing
+    editing/EditingView
 
     # Plugins that have dependencies on others
 
-    editing/CoreCellMLEditing
-    editing/CoreSEDMLEditing
+    editing/CellMLEditingView
+    editing/SEDMLEditingView
 
     # Selectable plugins
 
@@ -363,7 +366,7 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
-    tool/CellMLTools
+    tools/CellMLTools
 
     # Sample plugins
 
@@ -480,11 +483,21 @@ IF(APPLE)
     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Deploy our Qt libraries
+    # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
+    #       results in some of our tests generating messages about two
+    #       frameworks being available and that one of them will be used, but
+    #       that we don't know which one. So, to avoid those messages, we simply
+    #       don't deploy the Qt frameworks...
 
-    OS_X_DEPLOY_QT_LIBRARIES(${OS_X_QT_LIBRARIES})
+    IF(NOT ENABLE_TRAVIS_CI)
+        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
+            OS_X_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
+        ENDFOREACH()
+    ENDIF()
 
     # Deploy some plugins
 
+    OS_X_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
     OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
@@ -605,19 +618,25 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
+    ELSE()
+        SET(TEST)
+    ENDIF()
+
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+        WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
+    ENDFOREACH()
+
     MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
 
-    SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
-
-    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebChannel Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
-    WINDOWS_DEPLOY_QT_LIBRARIES(icudt${ICU_VERSION} icuin${ICU_VERSION} icuuc${ICU_VERSION})
-
-    IF(ENABLE_TESTS)
-        WINDOWS_DEPLOY_QT_LIBRARIES(Qt5Test)
-    ENDIF()
+    FOREACH(QT_LIBRARY icudt icuin icuuc)
+        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION})
+    ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
+    WINDOWS_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
     WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
@@ -720,9 +739,8 @@ ELSE()
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
-        LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+        LINUX_DEPLOY_QT_LIBRARY(${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                                 ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
@@ -734,14 +752,14 @@ ELSE()
         MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
 
         FOREACH(QT_FILE icudata icui18n icuuc)
-            LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1
+            LINUX_DEPLOY_QT_LIBRARY(${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1
                                     ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION})
         ENDFOREACH()
     ENDIF()
 
     # Qt plugins required by OpenCOR
 
+    LINUX_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)

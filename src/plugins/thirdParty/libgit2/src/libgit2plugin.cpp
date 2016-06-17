@@ -33,8 +33,8 @@ PLUGININFO_FUNC libgit2PluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://libgit2.github.com/\">libgit2</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à <a href=\"https://libgit2.github.com/\">libgit2</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://libgit2.github.com/\">libgit2</a> 0.24.1."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://libgit2.github.com/\">libgit2</a> 0.24.1."));
 
     return new PluginInfo("Third-party", false, false,
                           QStringList(),

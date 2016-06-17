@@ -27,6 +27,46 @@
         <source>no runtime</source>
         <translation>pas de modèle d&apos;exécution</translation>
     </message>
+    <message>
+        <source>Add Graph</source>
+        <translation>Ajouter Courbe</translation>
+    </message>
+    <message>
+        <source>Add a graph</source>
+        <translation>Ajouter une courbe</translation>
+    </message>
+    <message>
+        <source>Remove Current Graph</source>
+        <translation>Supprimer Courbe Actuelle</translation>
+    </message>
+    <message>
+        <source>Remove the current graph</source>
+        <translation>Supprimer la courbe actuelle</translation>
+    </message>
+    <message>
+        <source>Remove All Graphs</source>
+        <translation>Supprimer Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Remove all the graphs</source>
+        <translation>Supprimer toutes les courbes</translation>
+    </message>
+    <message>
+        <source>Select All Graphs</source>
+        <translation>Sélectionner Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Select all the graphs</source>
+        <translation>Sélectionner toutes les courbes</translation>
+    </message>
+    <message>
+        <source>Unselect All Graphs</source>
+        <translation>Déselectionner Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Unselect all the graphs</source>
+        <translation>Déselectionner toutes les courbes</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
@@ -360,6 +400,110 @@
         <source>Open the referenced CellML file using the %1 view</source>
         <translation>Ouvrir le fichier CellML référencé à l&apos;aide de la vue %1</translation>
     </message>
+    <message>
+        <source>Stop Simulation</source>
+        <translation>Arrêter Simulation</translation>
+    </message>
+    <message>
+        <source>Stop the simulation</source>
+        <translation>Arrêter la simulation</translation>
+    </message>
+    <message>
+        <source>Development Mode</source>
+        <translation>Mode Développement</translation>
+    </message>
+    <message>
+        <source>Enable/disable the development mode</source>
+        <translation>Activer/désactiver le mode développement</translation>
+    </message>
+    <message>
+        <source>Add Graph Panel</source>
+        <translation>Ajouter Panneau Graphique</translation>
+    </message>
+    <message>
+        <source>Add a graph panel</source>
+        <translation>Ajouter un panneau graphique</translation>
+    </message>
+    <message>
+        <source>Remove Graph Panel</source>
+        <translation>Supprimer Panneau Graphique</translation>
+    </message>
+    <message>
+        <source>Remove the current graph panel or all the graph panels</source>
+        <translation>Supprimer le panneau graphique actuel ou tous les panneaux graphiques</translation>
+    </message>
+    <message>
+        <source>Current</source>
+        <translation>Actuel</translation>
+    </message>
+    <message>
+        <source>Remove the current graph panel</source>
+        <translation>Supprimer le panneau graphique actuel</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>Tous</translation>
+    </message>
+    <message>
+        <source>Remove all the graph panels</source>
+        <translation>Supprimer tous les panneaux graphiques</translation>
+    </message>
+    <message>
+        <source>Reset Model Parameters</source>
+        <translation>Réinitialiser Paramètres Modèle</translation>
+    </message>
+    <message>
+        <source>Reset all the model parameters</source>
+        <translation>Réinitialiser tous les paramètres du modèle</translation>
+    </message>
+    <message>
+        <source>Clear Simulation Data</source>
+        <translation>Supprimer Données Simulation</translation>
+    </message>
+    <message>
+        <source>Clear the simulation data</source>
+        <translation>Supprimer les données de la simulation</translation>
+    </message>
+    <message>
+        <source>Simulation Data Export</source>
+        <translation>Exporter Données Simulation</translation>
+    </message>
+    <message>
+        <source>Export the simulation data</source>
+        <translation>Exporter les données de la simulation</translation>
+    </message>
+    <message>
+        <source>SED-ML Export</source>
+        <translation>Exporter Vers SED-ML</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML</source>
+        <translation>Exporter la simulation vers SED-ML</translation>
+    </message>
+    <message>
+        <source>SED-ML File...</source>
+        <translation>Fichier SED-ML...</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML using a SED-ML file</source>
+        <translation>Exporter la simulation vers SED-ML en utilisant un fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>COMBINE Archive...</source>
+        <translation>Archive COMBINE...</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML using a COMBINE archive</source>
+        <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
+    </message>
+    <message>
+        <source>CellML Open</source>
+        <translation>Ouvrir CellML</translation>
+    </message>
+    <message>
+        <source>Open the referenced CellML file</source>
+        <translation>Ouvrir le fichier CellML référencé</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
@@ -493,215 +637,6 @@
     <message>
         <source>Export To COMBINE Archive</source>
         <translation>Exporter Vers Archive COMBINE</translation>
-    </message>
-</context>
-<context>
-    <name>SingleCellViewGraphPanelPlotWidget</name>
-    <message>
-        <source>Copy To Clipboard</source>
-        <translation>Copier Dans Presse-Papier</translation>
-    </message>
-    <message>
-        <source>Copy the contents of the graph panel to the clipboard</source>
-        <translation>Copier le contenu du panneau graphique dans le presse-papier</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation>Aggrandir</translation>
-    </message>
-    <message>
-        <source>Zoom in the graph panel</source>
-        <translation>Aggrandir le panneau graphique</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation>Réduire</translation>
-    </message>
-    <message>
-        <source>Zoom out the graph panel</source>
-        <translation>Réduire le panneau graphique</translation>
-    </message>
-    <message>
-        <source>Reset Zoom</source>
-        <translation>Réinitialiser Zoom</translation>
-    </message>
-    <message>
-        <source>Reset the zoom level of the graph panel</source>
-        <translation>Réinitialiser la taille du panneau graphique</translation>
-    </message>
-</context>
-<context>
-    <name>SingleCellViewInformationGraphsWidget</name>
-    <message>
-        <source>Add a graph</source>
-        <translation>Ajouter une courbe</translation>
-    </message>
-    <message>
-        <source>Remove the current graph</source>
-        <translation>Supprimer la courbe actuelle</translation>
-    </message>
-    <message>
-        <source>Remove all the graphs</source>
-        <translation>Supprimer toutes les courbes</translation>
-    </message>
-    <message>
-        <source>Add Graph</source>
-        <translation>Ajouter Courbe</translation>
-    </message>
-    <message>
-        <source>Remove Current Graph</source>
-        <translation>Supprimer Courbe Actuelle</translation>
-    </message>
-    <message>
-        <source>Remove All Graphs</source>
-        <translation>Supprimer Toutes Courbes</translation>
-    </message>
-    <message>
-        <source>Select All Graphs</source>
-        <translation>Sélectionner Toutes Courbes</translation>
-    </message>
-    <message>
-        <source>Unselect All Graphs</source>
-        <translation>Déselectionner Toutes Courbes</translation>
-    </message>
-    <message>
-        <source>Select all the graphs</source>
-        <translation>Sélectionner toutes les courbes</translation>
-    </message>
-    <message>
-        <source>Unselect all the graphs</source>
-        <translation>Déselectionner toutes les courbes</translation>
-    </message>
-</context>
-<context>
-    <name>SingleCellViewSimulationWidget</name>
-    <message>
-        <source>Run the simulation</source>
-        <translation>Lancer la simulation</translation>
-    </message>
-    <message>
-        <source>F9</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Stop the simulation</source>
-        <translation>Arrêter la simulation</translation>
-    </message>
-    <message>
-        <source>Ctrl+F2</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Export the simulation data</source>
-        <translation>Exporter les données de la simulation</translation>
-    </message>
-    <message>
-        <source>Enable/disable the development mode</source>
-        <translation>Activer/désactiver le mode développement</translation>
-    </message>
-    <message>
-        <source>Add a graph panel</source>
-        <translation>Ajouter un panneau graphique</translation>
-    </message>
-    <message>
-        <source>Remove the current graph panel</source>
-        <translation>Supprimer le panneau graphique actuel</translation>
-    </message>
-    <message>
-        <source>Run Simulation</source>
-        <translation>Lancer Simulation</translation>
-    </message>
-    <message>
-        <source>Stop Simulation</source>
-        <translation>Arrêter Simulation</translation>
-    </message>
-    <message>
-        <source>Development Mode</source>
-        <translation>Mode Développement</translation>
-    </message>
-    <message>
-        <source>Add Graph Panel</source>
-        <translation>Ajouter Panneau Graphique</translation>
-    </message>
-    <message>
-        <source>Reset Model Parameters</source>
-        <translation>Réinitialiser Paramètres Modèle</translation>
-    </message>
-    <message>
-        <source>Simulation Data Export</source>
-        <translation>Exporter Données Simulation</translation>
-    </message>
-    <message>
-        <source>Remove Graph Panel</source>
-        <translation>Supprimer Panneau Graphique</translation>
-    </message>
-    <message>
-        <source>Reset all the model parameters</source>
-        <translation>Réinitialiser tous les paramètres du modèle</translation>
-    </message>
-    <message>
-        <source>Current</source>
-        <translation>Actuel</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Tous</translation>
-    </message>
-    <message>
-        <source>Remove all the graph panels</source>
-        <translation>Supprimer tous les panneaux graphiques</translation>
-    </message>
-    <message>
-        <source>Remove the current graph panel or all the graph panels</source>
-        <translation>Supprimer le panneau graphique actuel ou tous les panneaux graphiques</translation>
-    </message>
-    <message>
-        <source>Clear Simulation Data</source>
-        <translation>Supprimer Données Simulation</translation>
-    </message>
-    <message>
-        <source>Clear the simulation data</source>
-        <translation>Supprimer les données de la simulation</translation>
-    </message>
-    <message>
-        <source>SED-ML Export</source>
-        <translation>Exporter Vers SED-ML</translation>
-    </message>
-    <message>
-        <source>Export the simulation to SED-ML</source>
-        <translation>Exporter la simulation vers SED-ML</translation>
-    </message>
-    <message>
-        <source>SED-ML File...</source>
-        <translation>Fichier SED-ML...</translation>
-    </message>
-    <message>
-        <source>SED-ML File</source>
-        <translation>Fichier SED-ML</translation>
-    </message>
-    <message>
-        <source>Export the simulation to SED-ML using a SED-ML file</source>
-        <translation>Exporter la simulation vers SED-ML en utilisant un fichier SED-ML</translation>
-    </message>
-    <message>
-        <source>COMBINE Archive...</source>
-        <translation>Archive COMBINE...</translation>
-    </message>
-    <message>
-        <source>COMBINE Archive</source>
-        <translation>Archive COMBINE</translation>
-    </message>
-    <message>
-        <source>Export the simulation to SED-ML using a COMBINE archive</source>
-        <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
-    </message>
-    <message>
-        <source>Open the referenced CellML file</source>
-        <translation>Ouvrir le fichier CellML référencé</translation>
-    </message>
-    <message>
-        <source>CellML Open</source>
-        <translation>Ouvrir CellML</translation>
     </message>
 </context>
 </TS>

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Raw text view widget
+// Raw Text view widget
 //==============================================================================
 
 #include "corecliutils.h"
@@ -43,7 +43,7 @@ RawTextViewWidget::RawTextViewWidget(QWidget *pParent) :
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditor(0),
-    mEditors(QMap<QString, Editor::EditorWidget *>())
+    mEditors(QMap<QString, EditorWidget::EditorWidget *>())
 {
 }
 
@@ -94,7 +94,7 @@ void RawTextViewWidget::initialize(const QString &pFileName,
 {
     // Retrieve the editor associated with the given file, if any
 
-    Editor::EditorWidget *newEditor = mEditors.value(pFileName);
+    EditorWidget::EditorWidget *newEditor = mEditors.value(pFileName);
 
     if (!newEditor) {
         // No editor exists for the given file, so create one
@@ -103,9 +103,9 @@ void RawTextViewWidget::initialize(const QString &pFileName,
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
-        newEditor = new Editor::EditorWidget(fileContents,
-                                             !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                             0, parentWidget());
+        newEditor = new EditorWidget::EditorWidget(fileContents,
+                                                   !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                                   0, parentWidget());
 
         // Keep track of our editor and add it to ourselves
 
@@ -117,7 +117,7 @@ void RawTextViewWidget::initialize(const QString &pFileName,
     // Update our editor, if required
 
     if (pUpdate) {
-        Editor::EditorWidget *oldEditor = mEditor;
+        EditorWidget::EditorWidget *oldEditor = mEditor;
 
         mEditor = newEditor;
 
@@ -166,7 +166,7 @@ void RawTextViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editor, should there be one for the given file
 
-    Editor::EditorWidget *editor  = mEditors.value(pFileName);
+    EditorWidget::EditorWidget *editor  = mEditors.value(pFileName);
 
     if (editor) {
         // There is an editor for the given file name, so save our settings and
@@ -217,7 +217,7 @@ void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
 {
     // The given file has been renamed, so update our editors mapping
 
-    Editor::EditorWidget *editor = mEditors.value(pOldFileName);
+    EditorWidget::EditorWidget *editor = mEditors.value(pOldFileName);
 
     if (editor) {
         mEditors.insert(pNewFileName, editor);
@@ -227,7 +227,7 @@ void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-Editor::EditorWidget * RawTextViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawTextViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 

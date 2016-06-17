@@ -15,7 +15,6 @@ ADD_PLUGIN(PMRWindow
         src/pmrwindowwidget.h
         src/pmrwindowwindow.h
     UIS
-        src/pmrwindowwidget.ui
         src/pmrwindowwindow.ui
     INCLUDE_DIRS
         src
@@ -23,6 +22,7 @@ ADD_PLUGIN(PMRWindow
         Core
         ${LIBGIT2_PLUGIN}
         PMRSupport
+        WebViewerWidget
         ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
         ${LIBGIT2_PLUGIN_BINARY}

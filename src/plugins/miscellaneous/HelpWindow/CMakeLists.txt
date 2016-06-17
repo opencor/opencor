@@ -29,6 +29,7 @@ ADD_PLUGIN(HelpWindow
         src
     PLUGINS
         Core
+        WebViewerWidget
     QT_MODULES
         Help
         PrintSupport

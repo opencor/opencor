@@ -190,7 +190,7 @@ PluginManager::PluginManager(const bool &pGuiMode) :
 
 PluginManager::~PluginManager()
 {
-    // Delete all of the plugins
+    // Delete all our plugins
 
     foreach (Plugin *plugin, mPlugins)
         delete plugin;
@@ -229,9 +229,10 @@ Plugin * PluginManager::plugin(const QString &pName) const
 {
     // Return the plugin, if any, which name is the one we have been passed
 
-    foreach (Plugin *plugin, mPlugins)
+    foreach (Plugin *plugin, mPlugins) {
         if (!pName.compare(plugin->name()))
             return plugin;
+    }
 
     return 0;
 }

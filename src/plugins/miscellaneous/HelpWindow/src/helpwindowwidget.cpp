@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Help widget
+// Help window widget
 //==============================================================================
 
 #include "corecliutils.h"
@@ -48,8 +48,7 @@ namespace HelpWindow {
 HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
                                                const QByteArray &pData,
                                                const QString &pMimeType) :
-    mData(pData),
-    mOrigLen(pData.length())
+    mData(pData)
 {
     // Set a few things for the network reply
 
@@ -57,7 +56,7 @@ HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
     setOpenMode(QIODevice::ReadOnly);
     setHeader(QNetworkRequest::ContentTypeHeader, pMimeType);
     setHeader(QNetworkRequest::ContentLengthHeader,
-              QByteArray::number(mOrigLen));
+              QByteArray::number(pData.length()));
 
     // Let ourselves know immediately that data is available for reading
 
@@ -118,7 +117,7 @@ HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHel
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/helpWindowWidgetError.html", fileContents);
+    Core::readFileContentsFromFile(":/HelpWindow/error.html", fileContents);
 
     mErrorMessageTemplate = fileContents;
 }
@@ -190,7 +189,7 @@ enum {
 
 HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                                    const QUrl &pHomePage, QWidget *pParent) :
-    QWebView(pParent),
+    OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(),
     mHelpEngine(pHelpEngine),
     mHomePage(pHomePage),
@@ -202,16 +201,6 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
     setPage(new HelpWindowPage(this));
 
     page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
-
-    // Prevent objects from being dropped on us
-    // Note: by default, QWebView allows for objects to be dropped on itself,
-    //       while we don't want that...
-
-    setAcceptDrops(false);
-
-    // Prevent the widget from taking over the scrolling of other widgets
-
-    setFocusPolicy(Qt::NoFocus);
 
     // Set our initial zoom level to the default value
     // Note: to set mZoomLevel directly is not good enough since one of the
@@ -389,7 +378,7 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     } else {
         // Something else, so use the default handling of the event
 
-        QWebView::mouseReleaseEvent(pEvent);
+        OpenCOR::WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
     }
 }
 
@@ -413,7 +402,7 @@ void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
         // Not the modifier we were expecting, so call the default handling of
         // the event
 
-        QWebView::wheelEvent(pEvent);
+        OpenCOR::WebViewerWidget::WebViewerWidget::wheelEvent(pEvent);
     }
 }
 

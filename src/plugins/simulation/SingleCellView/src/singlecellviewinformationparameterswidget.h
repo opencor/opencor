@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view information parameters widget
+// Single Cell view information parameters widget
 //==============================================================================
 
 #pragma once

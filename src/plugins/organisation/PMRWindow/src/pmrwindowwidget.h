@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR widget
+// PMR window widget
 //==============================================================================
 
 #pragma once
@@ -27,13 +27,7 @@ limitations under the License.
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "pmrexposure.h"
-#include "webviewwidget.h"
-
-//==============================================================================
-
-namespace Ui {
-    class PmrWindowWidget;
-}
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -46,13 +40,13 @@ namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowWidget : public Core::WebViewWidget, public Core::CommonWidget
+class PmrWindowWidget : public OpenCOR::WebViewerWidget::WebViewerWidget,
+                        public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit PmrWindowWidget(QWidget *pParent);
-    ~PmrWindowWidget();
 
     virtual void retranslateUi();
 
@@ -66,9 +60,9 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
-    Ui::PmrWindowWidget *mGui;
-
     QMenu *mContextMenu;
+
+    QAction *mCopyAction;
 
     QStringList mExposureNames;
     QBoolList mExposureDisplayed;
@@ -106,7 +100,7 @@ public Q_SLOTS:
                           const QStringList &pExposureFiles);
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void copy();
 
     void linkClicked();
     void linkHovered();

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawCellMLView plugin
+// Raw CellML view plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -48,7 +48,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
 
     return new PluginInfo("Editing", true, false,
-                          QStringList() << "CoreCellMLEditing",
+                          QStringList() << "CellMLEditingView",
                           descriptions);
 }
 
@@ -81,7 +81,7 @@ bool RawCellMLViewPlugin::validCellml(const QString &pFileName,
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -106,7 +106,7 @@ bool RawCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) con
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file
 
-    Editor::EditorWidget *crtEditor = editor(pFileName);
+    EditorWidget::EditorWidget *crtEditor = editor(pFileName);
 
     return crtEditor?
                Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
@@ -136,7 +136,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
 
     // Save the given file
 
-    Editor::EditorWidget *crtEditor = editor(pOldFileName);
+    EditorWidget::EditorWidget *crtEditor = editor(pOldFileName);
 
     return crtEditor?
                Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):

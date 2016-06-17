@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SecondOrderRungeKuttaSolver plugin
+// Second-order Runge-Kutta solver plugin
 //==============================================================================
 
 #include "secondorderrungekuttasolver.h"

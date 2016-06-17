@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata raw view details widget
+// CellML Annotation view metadata raw view details widget
 //==============================================================================
 
 #include "cellmlannotationvieweditingwidget.h"

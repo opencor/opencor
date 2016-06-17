@@ -17,15 +17,16 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLTextView plugin
+// CellML Text view plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "cellmleditinginterface.h"
-#include "editinginterface.h"
+#include "cellmleditingviewinterface.h"
+#include "cliinterface.h"
+#include "editingviewinterface.h"
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -47,8 +48,8 @@ class CellmlTextViewWidget;
 
 //==============================================================================
 
-class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
-                             public EditingInterface,
+class CellMLTextViewPlugin : public QObject, public CellmlEditingViewInterface,
+                             public CliInterface, public EditingViewInterface,
                              public FileHandlingInterface,
                              public I18nInterface, public PluginInterface,
                              public ViewInterface
@@ -57,16 +58,18 @@ class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLTextViewPlugin" FILE "cellmltextviewplugin.json")
 
-    Q_INTERFACES(OpenCOR::CellmlEditingInterface)
-    Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::CellmlEditingViewInterface)
+    Q_INTERFACES(OpenCOR::CliInterface)
+    Q_INTERFACES(OpenCOR::EditingViewInterface)
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-#include "cellmleditinginterface.inl"
-#include "editinginterface.inl"
+#include "cellmleditingviewinterface.inl"
+#include "cliinterface.inl"
+#include "editingviewinterface.inl"
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
@@ -74,6 +77,12 @@ public:
 
 private:
     CellmlTextViewWidget *mViewWidget;
+
+    int importExport(const QStringList &pArguments, const bool &pImport);
+
+    void runHelpCommand();
+    int runImportCommand(const QStringList &pArguments);
+    int runExportCommand(const QStringList &pArguments);
 };
 
 //==============================================================================

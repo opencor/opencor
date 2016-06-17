@@ -567,10 +567,14 @@ namespace SampleView {
 //==============================================================================
 
 SampleViewWidget::SampleViewWidget(QWidget *pParent) :
-    ViewWidget(pParent, false),
+    ViewWidget(pParent),
     mGui(new Ui::SampleViewWidget),
     mFileName(QString())
 {
+    // Delete the layout that comes with ViewWidget
+
+    delete layout();
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -627,7 +631,7 @@ void SampleViewWidget::update(const QString &pFileName)
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>retranslateUi()</code> (lines 62-72) retranslates our view, as well as update its contents using <code>update()</code> (lines 76-94).
+            <code>retranslateUi()</code> (lines 66-76) retranslates our view, as well as update its contents using <code>update()</code> (lines 80-98).
         </p>
 
         <script type="text/javascript">

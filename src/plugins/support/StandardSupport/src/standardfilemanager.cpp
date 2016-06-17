@@ -58,10 +58,6 @@ StandardFileManager::StandardFileManager() :
 
 StandardFileManager::~StandardFileManager()
 {
-    // Remove all the managed files
-
-    foreach (QObject *file, mFiles)
-        delete file;
 }
 
 //==============================================================================

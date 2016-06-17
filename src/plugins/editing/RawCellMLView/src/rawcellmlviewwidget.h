@@ -38,15 +38,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreCellMLEditing {
-    class CoreCellmlEditingWidget;
-}   // namespace CoreCellMLEditing
+namespace CellMLEditingView {
+    class CellmlEditingViewWidget;
+}   // namespace CellMLEditingView
 
 //==============================================================================
 
-namespace Editor {
+namespace EditorWidget {
     class EditorWidget;
-}   // namespace Editor
+}   // namespace EditorWidget
 
 //==============================================================================
 
@@ -74,7 +74,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    Editor::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -87,8 +87,8 @@ private:
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
-    QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
+    CellMLEditingView::CellmlEditingViewWidget *mEditingWidget;
+    QMap<QString, CellMLEditingView::CellmlEditingViewWidget *> mEditingWidgets;
 
     QMap<QString, QString> mPresentationMathmlEquations;
 

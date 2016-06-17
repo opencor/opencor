@@ -8,11 +8,14 @@ ADD_PLUGIN(BioSignalMLDataStore
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/biosignalmldatastoredata.cpp
         src/biosignalmldatastoreplugin.cpp
         src/biosignalmldatastoreexporter.cpp
         src/biosignalmldatastoresavedialog.cpp
         src/biosignalmldatastoreselectvars.cpp
     HEADERS_MOC
+        ../../datastoreinterface.h
+
         src/biosignalmldatastoreplugin.h
         src/biosignalmldatastoresavedialog.h
         src/biosignalmldatastoreselectvars.h

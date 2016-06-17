@@ -64,7 +64,7 @@ static const auto SimulationCategory    = QStringLiteral("Simulation");
 static const auto SolverCategory        = QStringLiteral("Solver");
 static const auto SupportCategory       = QStringLiteral("Support");
 static const auto ThirdPartyCategory    = QStringLiteral("Third-party");
-static const auto ToolCategory          = QStringLiteral("Tool");
+static const auto ToolsCategory         = QStringLiteral("Tools");
 static const auto WidgetCategory        = QStringLiteral("Widget");
 
 //==============================================================================
