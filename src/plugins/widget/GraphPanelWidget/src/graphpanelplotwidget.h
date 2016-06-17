@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "graphpanelwidgetglobal.h"
 
 //==============================================================================
 
@@ -56,7 +57,7 @@ static const QRectF DefPlotRect = QRectF(DefMinAxis, DefMinAxis,
 
 //==============================================================================
 
-class GraphPanelPlotGraph : public QwtPlotCurve
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
     explicit GraphPanelPlotGraph(void *pParameterX = 0, void *pParameterY = 0);
@@ -146,7 +147,7 @@ typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
 
 //==============================================================================
 
-class GraphPanelPlotWidget : public QwtPlot, public Core::CommonWidget
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot, public Core::CommonWidget
 {
     Q_OBJECT
 

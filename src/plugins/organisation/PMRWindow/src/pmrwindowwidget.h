@@ -40,7 +40,7 @@ namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowWidget : public WebViewerWidget::WebViewerWidget,
+class PmrWindowWidget : public OpenCOR::WebViewerWidget::WebViewerWidget,
                         public Core::CommonWidget
 {
     Q_OBJECT

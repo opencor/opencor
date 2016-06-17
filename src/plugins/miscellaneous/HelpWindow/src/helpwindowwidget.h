@@ -98,7 +98,7 @@ private:
 
 //==============================================================================
 
-class HelpWindowWidget : public WebViewerWidget::WebViewerWidget,
+class HelpWindowWidget : public OpenCOR::WebViewerWidget::WebViewerWidget,
                          public Core::CommonWidget
 {
     Q_OBJECT

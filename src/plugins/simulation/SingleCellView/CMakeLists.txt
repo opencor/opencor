@@ -43,6 +43,8 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewwidget.h
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

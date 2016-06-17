@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidgetglobal.h"
 #include "widget.h"
 
 //==============================================================================
@@ -46,7 +47,7 @@ typedef QList<GraphPanelWidget *> GraphPanelWidgets;
 
 //==============================================================================
 
-class GraphPanelWidget : public Core::Widget
+class GRAPHPANELWIDGET_EXPORT GraphPanelWidget : public Core::Widget
 {
     Q_OBJECT
 

@@ -26,6 +26,7 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "graphpanelwidget.h"
+#include "graphpanelwidgetglobal.h"
 
 //==============================================================================
 
@@ -38,7 +39,7 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-class GraphPanelsWidget : public QSplitter, public Core::CommonWidget
+class GRAPHPANELWIDGET_EXPORT GraphPanelsWidget : public QSplitter, public Core::CommonWidget
 {
     Q_OBJECT
 
