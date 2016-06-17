@@ -80,7 +80,7 @@ Q_SIGNALS:
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);

@@ -351,13 +351,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
             graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)),
-            graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
             this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)),
-            this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -376,8 +376,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)),
-            this, SLOT(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphsWidget, SIGNAL(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            this, SLOT(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -2715,7 +2715,7 @@ void SingleCellViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::Graph
 //==============================================================================
 
 void SingleCellViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                   const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs)
+                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
 
@@ -2736,7 +2736,7 @@ void SingleCellViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::Gr
 //==============================================================================
 
 void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                   const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs)
+                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pPlot);
 
@@ -2851,7 +2851,7 @@ bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlot
                 endingPoint = simulation->data()->startingPoint();
             }
 
-            if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasAxesValues && needInitialisationX) {
                     minX = startingPoint;
                     maxX = endingPoint;
@@ -2865,7 +2865,7 @@ bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlot
                 canOptimiseAxisX = false;
             }
 
-            if (graph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
                 if (!hasAxesValues && needInitialisationY) {
                     minY = startingPoint;
@@ -2952,8 +2952,8 @@ void SingleCellViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPane
     if (pGraph->isValid()) {
         SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
 
-        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
-                              dataPoints(simulation, pGraph->parameterY()),
+        pGraph->setRawSamples(dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                              dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
                               pSize);
     }
 }

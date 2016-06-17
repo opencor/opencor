@@ -323,10 +323,10 @@ private Q_SLOTS:
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
     void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
     void openCellmlFile();
 

@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "cellmlfileruntime.h"
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
@@ -132,7 +133,7 @@ Q_SIGNALS:
                               const int &pNewSize);
 
     void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public Q_SLOTS:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
@@ -142,7 +143,7 @@ public Q_SLOTS:
     void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                   OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                      const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
+                      const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void addGraph();

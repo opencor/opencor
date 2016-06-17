@@ -53,8 +53,7 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelPlotGraph::GraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
+GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     QwtPlotCurve(),
     mSelected(true),
     mFileName(QString()),
@@ -115,7 +114,7 @@ void GraphPanelPlotGraph::setFileName(const QString &pFileName)
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * GraphPanelPlotGraph::parameterX() const
+void * GraphPanelPlotGraph::parameterX() const
 {
     // Return our parameter X
 
@@ -124,7 +123,7 @@ CellMLSupport::CellmlFileRuntimeParameter * GraphPanelPlotGraph::parameterX() co
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX)
+void GraphPanelPlotGraph::setParameterX(void *pParameterX)
 {
     // Set our parameter X
 
@@ -133,7 +132,7 @@ void GraphPanelPlotGraph::setParameterX(CellMLSupport::CellmlFileRuntimeParamete
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * GraphPanelPlotGraph::parameterY() const
+void * GraphPanelPlotGraph::parameterY() const
 {
     // Return our parameter Y
 
@@ -142,7 +141,7 @@ CellMLSupport::CellmlFileRuntimeParameter * GraphPanelPlotGraph::parameterY() co
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void GraphPanelPlotGraph::setParameterY(void *pParameterY)
 {
     // Set our parameter Y
 
@@ -463,7 +462,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
                                            QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(),
-    mGraphs(SingleCellViewGraphPanelPlotGraphs()),
+    mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -803,7 +802,7 @@ bool GraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
+GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
 

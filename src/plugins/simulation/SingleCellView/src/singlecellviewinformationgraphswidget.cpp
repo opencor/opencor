@@ -275,8 +275,14 @@ void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPane
 
     propertyEditor->addListProperty(graphProperty);
 
-    Core::Property *xProperty = propertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
-    Core::Property *yProperty = propertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
+    Core::Property *xProperty = propertyEditor->addStringProperty(pGraph->parameterX()?
+                                                                      static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
+                                                                      Core::UnknownValue,
+                                                                  graphProperty);
+    Core::Property *yProperty = propertyEditor->addStringProperty(pGraph->parameterY()?
+                                                                      static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
+                                                                      Core::UnknownValue,
+                                                                  graphProperty);
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
@@ -296,7 +302,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPane
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                         const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs)
+                                                         const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     // Make sure that we have a property editor
 
@@ -343,7 +349,7 @@ void SingleCellViewInformationGraphsWidget::removeCurrentGraph()
     // Ask the graph panel associated with our current property editor to remove
     // the current graph
 
-    mGraphPanels.value(mPropertyEditor)->removeGraphs(GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs() << mGraphs.value(mPropertyEditor->currentProperty()));
+    mGraphPanels.value(mPropertyEditor)->removeGraphs(GraphPanelWidget::GraphPanelPlotGraphs() << mGraphs.value(mPropertyEditor->currentProperty()));
 }
 
 //==============================================================================
@@ -764,8 +770,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     bool graphOk = true;
     CellMLSupport::CellmlFileRuntime *runtime = mPlugin->viewWidget()->runtime(fileName);
-    CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
-    CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
+    CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX());
+    CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY());
 
     graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
     graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
@@ -796,7 +802,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
         || (oldParameterY != graph->parameterY())
         || (oldPen != newPen)) {
         emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
-                           GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs() << graph);
+                           GraphPanelWidget::GraphPanelPlotGraphs() << graph);
     }
 }
 
@@ -818,7 +824,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
             graph->setSelected(pProperty->isChecked());
 
             emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
-                               GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs() << graph);
+                               GraphPanelWidget::GraphPanelPlotGraphs() << graph);
         }
     } else {
         // Either the model, X or Y parameter property of the graph has changed,

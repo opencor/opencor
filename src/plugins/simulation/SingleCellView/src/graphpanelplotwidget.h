@@ -44,15 +44,6 @@ class QwtPlotDirectPainter;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace CellMLSupport {
-    class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace GraphPanelWidget {
 
 //==============================================================================
@@ -68,8 +59,7 @@ static const QRectF DefPlotRect = QRectF(DefMinAxis, DefMinAxis,
 class GraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
-    explicit GraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX = 0,
-                                 CellMLSupport::CellmlFileRuntimeParameter *pParameterY = 0);
+    explicit GraphPanelPlotGraph(void *pParameterX = 0, void *pParameterY = 0);
 
     bool isValid() const;
 
@@ -79,24 +69,24 @@ public:
     QString fileName() const;
     void setFileName(const QString &pFileName);
 
-    CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
-    void setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX);
+    void * parameterX() const;
+    void setParameterX(void *pParameterX);
 
-    CellMLSupport::CellmlFileRuntimeParameter * parameterY() const;
-    void setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void * parameterY() const;
+    void setParameterY(void *pParameterY);
 
 private:
     bool mSelected;
 
     QString mFileName;
 
-    CellMLSupport::CellmlFileRuntimeParameter *mParameterX;
-    CellMLSupport::CellmlFileRuntimeParameter *mParameterY;
+    void *mParameterX;
+    void *mParameterY;
 };
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotGraph *> SingleCellViewGraphPanelPlotGraphs;
+typedef QList<GraphPanelPlotGraph *> GraphPanelPlotGraphs;
 
 //==============================================================================
 
@@ -169,7 +159,7 @@ public:
 
     virtual void retranslateUi();
 
-    SingleCellViewGraphPanelPlotGraphs graphs() const;
+    GraphPanelPlotGraphs graphs() const;
 
     bool addGraph(GraphPanelPlotGraph *pGraph);
     bool removeGraph(GraphPanelPlotGraph *pGraph);
@@ -220,7 +210,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    SingleCellViewGraphPanelPlotGraphs mGraphs;
+    GraphPanelPlotGraphs mGraphs;
 
     Action mAction;
 

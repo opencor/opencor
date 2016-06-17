@@ -62,10 +62,10 @@ public:
 
     GraphPanelPlotWidget * plot() const;
 
-    SingleCellViewGraphPanelPlotGraphs graphs() const;
+    GraphPanelPlotGraphs graphs() const;
 
     void addGraph(GraphPanelPlotGraph *pGraph);
-    void removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void removeGraphs(const GraphPanelPlotGraphs &pGraphs);
     void removeAllGraphs();
 
 protected:
@@ -87,7 +87,7 @@ Q_SIGNALS:
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 };
 
 //==============================================================================

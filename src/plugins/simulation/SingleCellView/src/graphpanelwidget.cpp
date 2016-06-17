@@ -153,7 +153,7 @@ GraphPanelPlotWidget * GraphPanelWidget::plot() const
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraphs GraphPanelWidget::graphs() const
+GraphPanelPlotGraphs GraphPanelWidget::graphs() const
 {
     // Return all our plot's graphs
 
@@ -172,11 +172,11 @@ void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
 //==============================================================================
 
-void GraphPanelWidget::removeGraphs(const SingleCellViewGraphPanelPlotGraphs &pGraphs)
+void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
 {
     // Remove the graphs from our plot
 
-    SingleCellViewGraphPanelPlotGraphs graphs = SingleCellViewGraphPanelPlotGraphs();
+    GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
     foreach (GraphPanelPlotGraph *graph, pGraphs)
         if (mPlot->removeGraph(graph))
