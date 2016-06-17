@@ -492,7 +492,7 @@ int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
 {
     // Return the width of the given column
 
-    return mPropertyEditor->columnWidth(pIndex);
+    return mPropertyEditor?mPropertyEditor->columnWidth(pIndex):0;
 }
 
 //==============================================================================
@@ -500,6 +500,11 @@ int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
 void SingleCellViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
                                                            const int &pColumnWidth)
 {
+    // Make sure that we have a property editor
+
+    if (!mPropertyEditor)
+        return;
+
     // Return the width of the given column
 
     mPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
