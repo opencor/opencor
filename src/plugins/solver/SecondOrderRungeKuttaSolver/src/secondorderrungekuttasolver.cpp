@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Second-order Runge-Kutta solver class
+// Second-order Runge-Kutta solver
 //==============================================================================
 
 #include "secondorderrungekuttasolver.h"

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata edit details widget
+// CellML Annotation view metadata edit details widget
 //==============================================================================
 
 #pragma once
@@ -59,9 +59,9 @@ namespace Core {
 
 //==============================================================================
 
-namespace WebViewer {
+namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewer
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -149,7 +149,7 @@ private:
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputOntologicalTermsTemplate;
-    WebViewer::WebViewerWidget *mOutputOntologicalTerms;
+    WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
 
     InformationType mInformationType;
 

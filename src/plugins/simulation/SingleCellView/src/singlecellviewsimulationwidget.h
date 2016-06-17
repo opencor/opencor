@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view simulation widget
+// Single Cell view simulation widget
 //==============================================================================
 
 #pragma once
@@ -26,8 +26,8 @@ limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
+#include "graphpanelplotwidget.h"
 #include "sedmlfileissue.h"
-#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewwidget.h"
 #include "widget.h"
 
@@ -79,6 +79,12 @@ namespace Core {
 
 //==============================================================================
 
+namespace GraphPanelWidget {
+    class GraphPanelWidget;
+}   // namespace GraphPanelWidget
+
+//==============================================================================
+
 namespace SEDMLSupport {
     class SedmlFile;
 }   // namespace SEDMLSupport
@@ -90,7 +96,6 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -107,9 +112,6 @@ public:
     ~SingleCellViewSimulationWidget();
 
     virtual void retranslateUi();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const bool &pReloadingView = false);
     void finalize();
@@ -212,8 +214,8 @@ private:
 
     ErrorType mErrorType;
 
-    SingleCellViewGraphPanelPlotWidgets mPlots;
-    QMap<SingleCellViewGraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
+    GraphPanelWidget::GraphPanelPlotWidgets mPlots;
+    QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
@@ -221,7 +223,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
 
     void reloadView();
 
@@ -240,18 +242,18 @@ private:
     void checkAxisValue(double &pValue, const double &pOrigValue,
                         const QList<double> &pTestValues);
 
-    bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
+    bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
     double * dataPoints(SingleCellViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
-    void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
+    void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
 
     QVariant value(Core::Property *pProperty) const;
 
-    void updateSimulationProperties(OpenCOR::Core::Property *pProperty = 0);
+    void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
@@ -311,20 +313,20 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+    void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
-    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
-                    SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-    void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
     void openCellmlFile();
 

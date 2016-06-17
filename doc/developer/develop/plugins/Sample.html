@@ -25,7 +25,7 @@
         </p>
 
         <pre class="prettyprint">...
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.h"><code>sampleutilities.h</code></a>"
 ...
 double addResult = Sample::add(3.0, 5.0);
 ...</pre>
@@ -39,8 +39,8 @@ double addResult = Sample::add(3.0, 5.0);
  &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleplugin.cpp">sampleplugin.cpp</a>
  &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleplugin.h">sampleplugin.h</a>
  &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleplugin.json">sampleplugin.json</a>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleutils.cpp">sampleutils.cpp</a>
- &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleutils.h">sampleutils.h</a>
+ &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleutilities.cpp">sampleutilities.cpp</a>
+ &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/src/sampleutilities.h">sampleutilities.h</a>
 <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/CMakeLists.txt">CMakeLists.txt</a></pre>
 
         <div class="section">
@@ -76,7 +76,7 @@ ADD_PLUGIN(Sample
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
 
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>src/sampleplugin.cpp</code></a>
-        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.cpp"><code>src/sampleutils.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.cpp"><code>src/sampleutilities.cpp</code></a>
     HEADERS_MOC
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.h"><code>src/sampleplugin.h</code></a>
     INCLUDE_DIRS
@@ -177,7 +177,7 @@ PLUGININFO_FUNC SamplePluginInfo()
         </div>
 
         <p>
-            Finally, we need to deal with our plugin's <code>add()</code> function. It is declared in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>:
+            Finally, we need to deal with our plugin's <code>add()</code> function. It is declared in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.h"><code>sampleutilities.h</code></a>:
         </p>
 
         <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>"
@@ -201,10 +201,10 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
         </p>
 
         <p>
-            The implementation our plugin's <code>add()</code> function can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.cpp"><code>sampleutils.cpp</code></a>:
+            The implementation our plugin's <code>add()</code> function can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.cpp"><code>sampleutilities.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:22">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>"
+        <pre class="prettyprint linenums:22">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.h"><code>sampleutilities.h</code></a>"
 
 //==============================================================================
 
@@ -226,7 +226,7 @@ double add(const double &pNb1, const double &pNb2)
 }   // namespace OpenCOR</pre>
 
         <p>
-            We start by including <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a> (line 22). Then, we have a straightforward implementation of our plugin's <code>add()</code> function (lines 31-36).
+            We start by including <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.h"><code>sampleutilities.h</code></a> (line 22). Then, we have a straightforward implementation of our plugin's <code>add()</code> function (lines 31-36).
         </p>
 
         <script type="text/javascript">

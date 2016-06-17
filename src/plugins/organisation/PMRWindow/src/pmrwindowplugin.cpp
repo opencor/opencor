@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMRWindow plugin
+// PMR window plugin
 //==============================================================================
 
 #include "coreguiutils.h"
@@ -48,7 +48,7 @@ PLUGININFO_FUNC PMRWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder le <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
 
     return new PluginInfo("Organisation", true, false,
-                          QStringList() << "PMRSupport" << "WebViewer",
+                          QStringList() << "PMRSupport" << "WebViewerWidget",
                           descriptions,
                           QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
 }

@@ -323,19 +323,19 @@ SET(PLUGINS
 
     # Plugins that extend some libraries (incl. third-party ones)
 
-    widget/Editor
-    widget/EditorList
-    widget/MathMLViewer
-    widget/WebViewer
+    widget/EditorWidget
+    widget/GraphPanelWidget
+    widget/MathMLViewerWidget
+    widget/WebViewerWidget
 
     # Plugins that provide some generic features
 
-    editing/CoreEditing
+    editing/EditingView
 
     # Plugins that have dependencies on others
 
-    editing/CoreCellMLEditing
-    editing/CoreSEDMLEditing
+    editing/CellMLEditingView
+    editing/SEDMLEditingView
 
     # Selectable plugins
 
@@ -364,7 +364,7 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
-    tool/CellMLTools
+    tools/CellMLTools
 
     # Sample plugins
 

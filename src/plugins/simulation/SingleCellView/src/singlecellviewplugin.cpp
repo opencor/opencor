@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SingleCellView plugin
+// Single Cell view plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -50,7 +50,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
     return new PluginInfo("Simulation", true, false,
-                          QStringList() << "COMBINESupport"<< "Qwt" << "SEDMLSupport",
+                          QStringList() << "COMBINESupport"<< "GraphPanelWidget" << "Qwt" << "SEDMLSupport",
                           descriptions);
 }
 

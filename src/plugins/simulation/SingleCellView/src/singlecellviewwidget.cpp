@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view widget
+// Single Cell view widget
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -255,14 +255,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         layout()->addWidget(mSimulationWidget);
 
-        // Load our simulation widget's settings
-
-        QSettings settings;
-
-        settings.beginGroup(mSettingsGroup);
-            mSimulationWidget->loadSettings(&settings);
-        settings.endGroup();
-
         // Initialise our simulation widget
 
         mSimulationWidget->initialize();
@@ -330,15 +322,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget) {
-        // There is a simulation widget for the given file name, so save its
-        // settings and those of some of its contents' children, if needed
-
-        QSettings settings;
-
-        settings.beginGroup(mSettingsGroup);
-            simulationWidget->saveSettings(&settings);
-        settings.endGroup();
-
         // Finalise our simulation widget
 
         simulationWidget->finalize();

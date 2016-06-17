@@ -40,7 +40,7 @@ ADD_PLUGIN(CellMLAnnotationView
         Compiler
         Core
         ${LLVM_PLUGIN}
-        WebViewer
+        WebViewerWidget
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
     EXTERNAL_BINARIES

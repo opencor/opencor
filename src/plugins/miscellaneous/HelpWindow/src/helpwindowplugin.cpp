@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// HelpWindow plugin
+// Help window plugin
 //==============================================================================
 
 #include "coreguiutils.h"
@@ -48,7 +48,7 @@ PLUGININFO_FUNC HelpWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour fournir de l'aide."));
 
     return new PluginInfo("Miscellaneous", true, false,
-                          QStringList() << "Core" << "WebViewer",
+                          QStringList() << "Core" << "WebViewerWidget",
                           descriptions);
 }
 

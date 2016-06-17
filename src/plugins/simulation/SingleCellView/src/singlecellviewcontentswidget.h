@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view contents widget
+// Single Cell view contents widget
 //==============================================================================
 
 #pragma once
@@ -34,11 +34,19 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace GraphPanelWidget {
+    class GraphPanelsWidget;
+}   // namespace GraphPanelWidget
+
+//==============================================================================
+
 namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelsWidget;
 class SingleCellViewInformationWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulationWidget;
@@ -56,15 +64,12 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     SingleCellViewInformationWidget * informationWidget() const;
-    SingleCellViewGraphPanelsWidget * graphPanelsWidget() const;
+    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
 
 private:
     SingleCellViewInformationWidget *mInformationWidget;
-    SingleCellViewGraphPanelsWidget *mGraphPanelsWidget;
+    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
 
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);

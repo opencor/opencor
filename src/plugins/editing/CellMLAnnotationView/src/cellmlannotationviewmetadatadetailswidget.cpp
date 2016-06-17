@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata details widget
+// CellML Annotation view metadata details widget
 //==============================================================================
 
 #include "borderedwidget.h"
@@ -89,7 +89,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, this);
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
-    mWebViewer           = new WebViewer::WebViewerWidget(this);
+    mWebViewer           = new WebViewerWidget::WebViewerWidget(this);
 
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
 

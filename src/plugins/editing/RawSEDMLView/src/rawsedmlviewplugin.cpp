@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawSEDMLView plugin
+// Raw SED-ML view plugin
 //==============================================================================
 
 #include "corecliutils.h"
@@ -48,7 +48,7 @@ PLUGININFO_FUNC RawSEDMLViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.sed-ml.org/\">SED-ML</a> à l'aide d'un éditeur XML."));
 
     return new PluginInfo("Editing", true, false,
-                          QStringList() << "CoreSEDMLEditing",
+                          QStringList() << "SEDMLEditingView",
                           descriptions);
 }
 
@@ -79,7 +79,7 @@ bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * RawSEDMLViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawSEDMLViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -104,7 +104,7 @@ bool RawSEDMLViewPlugin::isEditorContentsModified(const QString &pFileName) cons
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file
 
-    Editor::EditorWidget *crtEditor = editor(pFileName);
+    EditorWidget::EditorWidget *crtEditor = editor(pFileName);
 
     return crtEditor?
                Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
@@ -134,7 +134,7 @@ bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
 
     // Save the given file
 
-    Editor::EditorWidget *crtEditor = editor(pOldFileName);
+    EditorWidget::EditorWidget *crtEditor = editor(pOldFileName);
 
     return crtEditor?
                Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):

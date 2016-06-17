@@ -17,16 +17,16 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single cell view simulation widget
+// Single Cell view simulation widget
 //==============================================================================
 
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
+#include "graphpanelswidget.h"
 #include "progressbarwidget.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewcontentswidget.h"
-#include "singlecellviewgraphpanelswidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -97,12 +97,12 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
-    mPlots(SingleCellViewGraphPanelPlotWidgets()),
-    mUpdatablePlotViewports(QMap<SingleCellViewGraphPanelPlotWidget *, bool>()),
+    mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
+    mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<SingleCellViewGraphPanelPlotGraph *, qulonglong>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
     // Create our layout and actions
 
@@ -318,7 +318,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Keep track of whether we can remove graph panels
 
-    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
     connect(graphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mRemoveGraphPanelAction, SLOT(setEnabled(bool)));
@@ -327,20 +327,20 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)),
-            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *, const bool &)));
-    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
-            graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
+            graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
+            graphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)),
-            this, SLOT(graphPanelAdded(SingleCellViewGraphPanelWidget *, const bool &)));
-    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
-            this, SLOT(graphPanelRemoved(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
+            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
+            this, SLOT(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     // Keep track of whether a graph panel has been activated
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
-            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
+            graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     // Keep track of a graph being required
 
@@ -349,15 +349,15 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            graphsWidget, SLOT(removeGraphs(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)),
-            this, SLOT(graphAdded(SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SLOT(graphsRemoved(SingleCellViewGraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -376,8 +376,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphsUpdated(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SLOT(graphsUpdated(SingleCellViewGraphPanelPlotWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(graphsWidget, SIGNAL(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            this, SLOT(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -545,28 +545,6 @@ void SingleCellViewSimulationWidget::retranslateUi()
     // Retranslate our contents widget
 
     mContentsWidget->retranslateUi();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the settings of our contents widget
-
-    pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the settings of our contents widget
-
-    pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->saveSettings(pSettings);
-    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -1644,7 +1622,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     QList<Core::Properties> graphsList = QList<Core::Properties>();
     SingleCellViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
 
-    foreach (SingleCellViewGraphPanelWidget *graphPanel,
+    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
              mContentsWidget->graphPanelsWidget()->graphPanels()) {
         Core::Properties graphs = graphsWidget->graphProperties(graphPanel, mFileName);
 
@@ -2316,7 +2294,7 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
     // having made sure that the current graph panels are all of the same size
     // and that the first one of them is selected
 
-    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
@@ -2335,7 +2313,7 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
-        SingleCellViewGraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
         graphPanel->removeAllGraphs();
 
@@ -2351,7 +2329,7 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
                 return false;
             }
 
-            graphPanel->addGraph(new SingleCellViewGraphPanelPlotGraph(xParameter, yParameter));
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter));
         }
     }
 
@@ -2649,7 +2627,7 @@ void SingleCellViewSimulationWidget::simulationPropertyChanged(Core::Property *p
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (pProperty != simulationWidget->pointIntervalProperty()) {
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot);
     }
 }
@@ -2665,7 +2643,7 @@ void SingleCellViewSimulationWidget::solversPropertyChanged(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
+void SingleCellViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                                      const bool &pActive)
 {
     Q_UNUSED(pActive);
@@ -2676,7 +2654,7 @@ void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWid
     //       since we only want to do this if the plot actually has graphs
     //       associated with it (see graphAdded())...
 
-    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     mUpdatablePlotViewports.insert(plot, true);
 
@@ -2686,12 +2664,12 @@ void SingleCellViewSimulationWidget::graphPanelAdded(SingleCellViewGraphPanelWid
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been removed, so stop tracking its plot and the fact
     // that we wanted to know if its axes had been changed
 
-    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     disconnect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
                this, SLOT(plotAxesChanged()));
@@ -2707,13 +2685,13 @@ void SingleCellViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimePa
 {
     // Ask the current graph panel to add a new graph for the given parameters
 
-    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY));
+    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelWidget *pGraphPanel,
-                                                SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // A new graph has been added, so keep track of it and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as
@@ -2721,7 +2699,7 @@ void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelWidget *
     //       hand, if the plot's axes don't get updated, we need to draw our new
     //       graph...
 
-    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     updateGraphData(pGraph, mSimulation->results()->size());
 
@@ -2736,8 +2714,8 @@ void SingleCellViewSimulationWidget::graphAdded(SingleCellViewGraphPanelWidget *
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelWidget *pGraphPanel,
-                                                   const SingleCellViewGraphPanelPlotGraphs &pGraphs)
+void SingleCellViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
 
@@ -2747,7 +2725,7 @@ void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelWidge
     //       to replot the plot since at least one of its graphs has been
     //       removed...
 
-    SingleCellViewGraphPanelPlotWidget *plot = pGraphPanel->plot();
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     updatePlot(plot, true);
 
@@ -2757,17 +2735,17 @@ void SingleCellViewSimulationWidget::graphsRemoved(SingleCellViewGraphPanelWidge
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
-                                                   const SingleCellViewGraphPanelPlotGraphs &pGraphs)
+void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pPlot);
 
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
 
-    SingleCellViewGraphPanelPlotWidgets plots = SingleCellViewGraphPanelPlotWidgets();
+    GraphPanelWidget::GraphPanelPlotWidgets plots = GraphPanelWidget::GraphPanelPlotWidgets();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
+    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pGraphs) {
         // Show/hide the graph
 
         graph->setVisible(graph->isValid() && graph->isSelected());
@@ -2783,13 +2761,13 @@ void SingleCellViewSimulationWidget::graphsUpdated(SingleCellViewGraphPanelPlotW
 
         // Keep track of the plot that needs to be updated and replotted
 
-        plots << qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot());
+        plots << qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot());
     }
 
     // Update and replot our various plots, if allowed
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots) {
+        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, plots) {
             updatePlot(plot, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
@@ -2818,7 +2796,7 @@ void SingleCellViewSimulationWidget::checkAxisValue(double &pValue,
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
+bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                                                 const bool &pForceReplot)
 {
     // Retrieve the current axes' values or use some default ones, if none are
@@ -2826,10 +2804,10 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
 
     bool hasAxesValues = false;
 
-    double minX = DefMinAxis;
-    double maxX = DefMaxAxis;
-    double minY = DefMinAxis;
-    double maxY = DefMaxAxis;
+    double minX = GraphPanelWidget::DefMinAxis;
+    double maxX = GraphPanelWidget::DefMaxAxis;
+    double minY = GraphPanelWidget::DefMinAxis;
+    double maxY = GraphPanelWidget::DefMaxAxis;
 
     QRectF dataRect = pPlot->dataRect();
 
@@ -2856,7 +2834,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
     QList<double> startingPoints = QList<double>();
     QList<double> endingPoints = QList<double>();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
+    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
             SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
@@ -2873,7 +2851,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
                 endingPoint = simulation->data()->startingPoint();
             }
 
-            if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasAxesValues && needInitialisationX) {
                     minX = startingPoint;
                     maxX = endingPoint;
@@ -2887,7 +2865,7 @@ bool SingleCellViewSimulationWidget::updatePlot(SingleCellViewGraphPanelPlotWidg
                 canOptimiseAxisX = false;
             }
 
-            if (graph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
                 if (!hasAxesValues && needInitialisationY) {
                     minY = startingPoint;
@@ -2966,7 +2944,7 @@ double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pS
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
+void SingleCellViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                                                      const qulonglong &pSize)
 {
     // Update our graph's data
@@ -2974,8 +2952,8 @@ void SingleCellViewSimulationWidget::updateGraphData(SingleCellViewGraphPanelPlo
     if (pGraph->isValid()) {
         SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
 
-        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
-                              dataPoints(simulation, pGraph->parameterY()),
+        pGraph->setRawSamples(dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                              dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
                               pSize);
     }
 }
@@ -2999,7 +2977,7 @@ void SingleCellViewSimulationWidget::updateGui()
     if (mNeedUpdatePlots) {
         mNeedUpdatePlots = false;
 
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true);
     }
 
@@ -3032,7 +3010,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
     bool visible = isVisible();
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
+    foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
         // If our graphs are to be cleared (i.e. our plot's viewport are going
         // to be reset), then we want to be able to update our plot's viewport
         // if needed (i.e. a graph segment doesn't fit within our plot's current
@@ -3050,7 +3028,7 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
 
-        foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
+        foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->fileName())) {
                 if (pClearGraphs)
                     mOldDataSizes.remove(graph);
@@ -3236,7 +3214,7 @@ void SingleCellViewSimulationWidget::plotAxesChanged()
     // A plot has had its axes changed (e.g. its contents was panned), which
     // means that we don't want to allow its viewport to be updated anymore
 
-    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(sender());
+    GraphPanelWidget::GraphPanelPlotWidget *plot = qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(sender());
 
     mUpdatablePlotViewports.insert(plot, false);
 }

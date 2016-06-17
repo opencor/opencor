@@ -119,7 +119,7 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
-                       { "name": "Tool",
+                       { "name": "Tools",
                          "entries": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
@@ -271,7 +271,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "(Un)lock a file." },
                            { "type": "Added", "description": "Close a file by pressing <code>Ctrl+W</code> on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> support on <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a> and <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
-                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with improved <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
+                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with improved <a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> support." },
                            { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Plugins window." },
@@ -379,7 +379,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Show/hide all the recent/current docked widgets at once." },
                            { "type": "Added", "description": "<a href=\"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the <a href=\"https://www.cellml.org/\">CellML</a> file examples." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
-                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with <a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." },
+                           { "type": "Improved", "description": "<a href=\"userInterfaces/commandLineInterface.html\">CLI</a> with <a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." },
                            { "type": "Improved", "description": "Plugins window." },
                            { "type": "Improved", "description": "File handling." }
                          ]
@@ -395,7 +395,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Miscellaneous",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"plugins/miscellaneous/CellMLTools.html\">CellML tools</a>." }
+                           { "type": "Added", "description": "<a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." }
                          ]
                        },
                        { "name": "Organisation",

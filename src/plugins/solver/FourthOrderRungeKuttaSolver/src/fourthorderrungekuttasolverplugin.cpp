@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// FourthOrderRungeKuttaSolver plugin
+// Fourth-order Runge-Kutta solver plugin
 //==============================================================================
 
 #include "fourthorderrungekuttasolver.h"

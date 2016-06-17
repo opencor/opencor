@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view editing widget
+// CellML Annotation view editing widget
 //==============================================================================
 
 #include "borderedwidget.h"
@@ -110,12 +110,12 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Some connections to keep track of what our details widget wants
 
-    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(WebViewer::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithQualifierDetails(WebViewer::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(WebViewer::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithResourceDetails(WebViewer::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(idDetailsRequested(WebViewer::WebViewerWidget *, const QString &, const QString &)),
-            this, SLOT(updateWebViewerWithIdDetails(WebViewer::WebViewerWidget *, const QString &, const QString &)));
+    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &)),
+            this, SLOT(updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &)),
+            this, SLOT(updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(idDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &, const QString &)),
+            this, SLOT(updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *, const QString &, const QString &)));
 
     // Make our CellML list widget our focus proxy
 
@@ -177,7 +177,7 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewer::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                             const QString &pQualifier)
 {
     // The user requested a qualifier to be looked up, so generate a web page
@@ -304,7 +304,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebViewer::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                            const QString &pResource)
 {
     // The user requested a resource to be looked up, so retrieve it using
@@ -315,7 +315,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebVi
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewer::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                      const QString &pResource,
                                                                      const QString &pId)
 {

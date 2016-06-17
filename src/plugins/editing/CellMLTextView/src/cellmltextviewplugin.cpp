@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLTextView plugin
+// CellML Text view plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -44,11 +44,11 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using the CellML Text format."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide du format CellML Text."));
 
     return new PluginInfo("Editing", true, true,
-                          QStringList() << "CoreCellMLEditing",
+                          QStringList() << "CellMLEditingView",
                           descriptions);
 }
 
@@ -113,7 +113,7 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -452,7 +452,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                                                                 .arg(message.message());
                 }
             } else {
-                std::cout << QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
+                std::cout << QString(Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
             }
         }
     }

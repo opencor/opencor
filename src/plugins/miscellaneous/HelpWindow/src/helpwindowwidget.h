@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Help widget
+// Help window widget
 //==============================================================================
 
 #pragma once
@@ -98,7 +98,7 @@ private:
 
 //==============================================================================
 
-class HelpWindowWidget : public WebViewer::WebViewerWidget,
+class HelpWindowWidget : public WebViewerWidget::WebViewerWidget,
                          public Core::CommonWidget
 {
     Q_OBJECT

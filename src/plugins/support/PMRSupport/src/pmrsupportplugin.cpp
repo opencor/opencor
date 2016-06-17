@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMRSupport plugin
+// PMR support plugin
 //==============================================================================
 
 #include "pmrsupportplugin.h"
@@ -36,7 +36,7 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
 
-    return new PluginInfo("Support", true, false,
+    return new PluginInfo("Support", false, false,
                           QStringList() << "Core" << "libgit2" << "zlib",
                           descriptions);
 }

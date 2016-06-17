@@ -17,15 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawCellMLView plugin
+// Raw CellML view plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "cellmleditinginterface.h"
-#include "editinginterface.h"
+#include "cellmleditingviewinterface.h"
+#include "editingviewinterface.h"
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -47,8 +47,8 @@ class RawCellmlViewWidget;
 
 //==============================================================================
 
-class RawCellMLViewPlugin : public QObject, public CellmlEditingInterface,
-                            public EditingInterface,
+class RawCellMLViewPlugin : public QObject, public CellmlEditingViewInterface,
+                            public EditingViewInterface,
                             public FileHandlingInterface, public I18nInterface,
                             public PluginInterface, public ViewInterface
 {
@@ -56,16 +56,16 @@ class RawCellMLViewPlugin : public QObject, public CellmlEditingInterface,
 
     Q_PLUGIN_METADATA(IID "OpenCOR.RawCellMLViewPlugin" FILE "rawcellmlviewplugin.json")
 
-    Q_INTERFACES(OpenCOR::CellmlEditingInterface)
-    Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::CellmlEditingViewInterface)
+    Q_INTERFACES(OpenCOR::EditingViewInterface)
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-#include "cellmleditinginterface.inl"
-#include "editinginterface.inl"
+#include "cellmleditingviewinterface.inl"
+#include "editingviewinterface.inl"
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

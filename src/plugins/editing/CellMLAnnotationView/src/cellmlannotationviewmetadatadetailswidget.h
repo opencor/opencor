@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata details widget
+// CellML Annotation view metadata details widget
 //==============================================================================
 
 #pragma once
@@ -45,9 +45,9 @@ namespace Core {
 
 //==============================================================================
 
-namespace WebViewer {
+namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace Core
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -100,7 +100,7 @@ private:
 
     CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
-    WebViewer::WebViewerWidget *mWebViewer;
+    WebViewerWidget::WebViewerWidget *mWebViewer;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -112,11 +112,11 @@ Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
 
-    void qualifierDetailsRequested(WebViewer::WebViewerWidget *pWebViewer,
+    void qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                    const QString &pQualifier);
-    void resourceDetailsRequested(WebViewer::WebViewerWidget *pWebViewer,
+    void resourceDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                   const QString &pResource);
-    void idDetailsRequested(WebViewer::WebViewerWidget *pWebViewer,
+    void idDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                             const QString &pResource, const QString &pId);
 
 public Q_SLOTS:
