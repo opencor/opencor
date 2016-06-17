@@ -46,7 +46,7 @@ PLUGININFO_FUNC PMRWorkspacesPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to manage your Physiome Model Repository workspaces."));
 
     return new PluginInfo("Organisation", true, false,
-                          QStringList() << "Core" << "libgit2" << "PMRSupport",
+                          QStringList() << "PMRSupport" << "WebViewerWidget",
                           descriptions);
 }
 

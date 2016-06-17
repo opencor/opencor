@@ -39,17 +39,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "git2.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace PMRWorkspaces {
 
 //==============================================================================
 
 PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent) :
-    Core::WebViewWidget(pParent),
+    WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(),
     mPmrRepository(pPmrRepository),
     mExpandedItems(QMap<QString, bool>()),

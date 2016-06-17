@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "pmrworkspace.h"
-#include "webviewwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -48,7 +48,7 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-class PmrWorkspacesWidget : public Core::WebViewWidget, public Core::CommonWidget
+class PmrWorkspacesWidget : public WebViewerWidget::WebViewerWidget, public Core::CommonWidget
 {
     Q_OBJECT
 
