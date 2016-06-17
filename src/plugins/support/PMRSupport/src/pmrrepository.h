@@ -59,16 +59,20 @@ public:
     explicit PmrRepository(QObject *parent = 0);
     ~PmrRepository();
 
-    QString url(void) const;
+    static const QString Url(void);
+    static const QByteArray MimeType(void);
 
-    void cloneWorkspace(const QString &pUrl, const QString &pDirName);
-    void requestExposuresList(void);
     void requestExposureFiles(const QString &pUrl);
+    void requestExposuresList(void);
+
     void requestWorkspacesList(void);
-    void requestWorkspaceDetails(const QString &pUrl);
+    void requestWorkspaceInformation(const QString &pUrl);
+
+    void requestCloneExposureWorkspace(const QString &pUrl, const QString &pDirName);
+    void requestNewWorkspace(const QString &pName, const QString &pDescription,
+                             const QString &pDirName);
 
 private:
-
 
     enum Action {
         None,
@@ -78,17 +82,17 @@ private:
 
     PmrRepositoryManager *mPmrRepositoryManager;
 
-    int mNumberOfExposureFileUrlsLeft;
+    QMap<QString, PmrExposure *> mExposures;    // Exposure Url --> Exposure
 
-    QMap<QString, PmrWorkspace *> mWorkspaces;
-    QMap<QString, QString> mExposureUrls;
-    QMap<QString, QString> mExposureNames;
-    QMap<QString, QString> mExposureFileNames;
-
+    void emitInformation(const QString &pMessage);
     QString informationNoteMessage() const;
 
-    void doShowExposureFiles(const QString &pExposureUrl);
+    void requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl);
+    void requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction);
 
+    void requestCloneWorkspace(PmrWorkspace *pWorkspace, const QString &pDirName);
+    void requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
+                                     PmrExposure *pExposure=nullptr);
 
 Q_SIGNALS:
     void authenticated(const bool &pAuthenticated);
@@ -100,14 +104,13 @@ Q_SIGNALS:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-    void exposuresList(const PMRSupport::PmrExposureList &pExposureList,
-                       const QString &pErrorMessage,
-                       const bool &pInternetConnectionAvailable);
+    void exposureFilesList(const QString &pUrl, const QStringList &pExposureFiles);
+    void exposuresList(const PMRSupport::PmrExposureList &pExposureList);
 
-    void addExposureFiles(const QString &pUrl,
-                          const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl);
-
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCreated(const QString &pUrl);
+    void workspaceInformation(const QString &pUrl, const QString &pName,
+                              const QString &pDescription, const QString &pOwner);
     void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
 
 public Q_SLOTS:
@@ -115,7 +118,14 @@ public Q_SLOTS:
     void getAuthenticationStatus(void);
 
 private Q_SLOTS:
+    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
+    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
+    void exposuresListResponse(const QJsonDocument &pJsonDocument);
 
+    void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
+    void workspacesListResponse(const QJsonDocument &pJsonDocument);
+
+    void createWorkspaceResponse(const QString &pUrl);
 };
 
 //==============================================================================

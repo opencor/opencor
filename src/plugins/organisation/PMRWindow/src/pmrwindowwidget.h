@@ -84,18 +84,26 @@ private:
 
     QString mExposureUrl;
 
+    QTimer *mShowExposureFilesTimer;
+    QString mShowExposureFilesUrl;
+
     QString message() const;
+
+    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
+
+    void setShowExposureFilesUrl(const QString &pUrl);
+    void startShowExposureFilesTimer(void);
+    void stopShowExposureFilesTimer(void);
 
 Q_SIGNALS:
     void cloneWorkspaceRequested(const QString &pUrl);
-    void showExposureFilesRequested(const QString &pUrl);
+    void requestExposureFiles(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
 
 public Q_SLOTS:
     void addExposureFiles(const QString &pUrl,
                           const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
@@ -104,6 +112,8 @@ private Q_SLOTS:
     void linkHovered();
 
     void showCustomContextMenu();
+
+    void clearShowExposureFilesUrl(void);
 };
 
 //==============================================================================

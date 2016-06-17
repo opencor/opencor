@@ -34,6 +34,7 @@ limitations under the License.
 #include <QIODevice>
 #include <QMenu>
 #include <QRegularExpression>
+#include <Qtimer>
 #include <QWebElement>
 #include <QWebFrame>
 
@@ -267,14 +268,66 @@ void PmrWindowWidget::addExposureFiles(const QString &pUrl,
 {
     // Add the given exposure files to the exposure
 
+    auto sortedFiles = QStringList(pExposureFiles);
+    sortedFiles.sort(Qt::CaseInsensitive);
+
     static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
     QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
 
-    foreach (const QString &exposureFile, pExposureFiles) {
+    foreach (const QString &exposureFile, sortedFiles) {
         ulElement.appendInside(QString("<li class=\"exposureFile\">"
                                        "    <a href=\"%1\">%2</a>"
                                        "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
+    }
+
+    // Show the exposure files if we've been waiting for them
+
+    if (pUrl == mShowExposureFilesUrl) {
+        showExposureFiles(mShowExposureFilesUrl, true);
+        clearShowExposureFilesUrl();
+    }
+}
+
+//==============================================================================
+
+void PmrWindowWidget::clearShowExposureFilesUrl(void)
+{
+    stopShowExposureFilesTimer();
+    mShowExposureFilesUrl.clear();
+}
+
+//==============================================================================
+
+void PmrWindowWidget::setShowExposureFilesUrl(const QString &pUrl)
+{
+
+    mShowExposureFilesUrl = pUrl;
+    startShowExposureFilesTimer();
+}
+
+//==============================================================================
+
+void PmrWindowWidget::startShowExposureFilesTimer(void)
+{
+    // Only show exposure files if list recieved with 30 seconds
+    stopShowExposureFilesTimer();
+    mShowExposureFilesTimer = new QTimer(this);
+    mShowExposureFilesTimer->setSingleShot(true);
+    connect(mShowExposureFilesTimer, SIGNAL(timeout()), this, SLOT(clearShowExposureFilesUrl()));
+    mShowExposureFilesTimer->start(30000);
+}
+
+//==============================================================================
+
+void PmrWindowWidget::stopShowExposureFilesTimer(void)
+{
+    // Stop any active timer
+
+    if (mShowExposureFilesTimer) {
+        mShowExposureFilesTimer->stop();
+        delete mShowExposureFilesTimer;
+        mShowExposureFilesTimer = nullptr;
     }
 }
 
@@ -325,7 +378,6 @@ void PmrWindowWidget::linkClicked()
     QWebElement element = retrieveLinkInformation(link, textContent);
 
     // Check whether we have clicked a text or button link
-
     if (textContent.isEmpty()) {
         // We have clicked on a button link, so let people know whether we want
         // to clone a workspace or whether we want to show/hide exposure files
@@ -344,7 +396,11 @@ void PmrWindowWidget::linkClicked()
             QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
 
             if (ulElement.firstChild().isNull()) {
-                emit showExposureFilesRequested(linkList[1]);
+                // Remember the exposure so its files can be shown when they are recieved
+                // and request them
+
+                setShowExposureFilesUrl(linkList[1]);
+                emit requestExposureFiles(linkList[1]);
             } else {
                 showExposureFiles(linkList[1],
                                   documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id)).hasClass("button"));

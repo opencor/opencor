@@ -28,6 +28,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDir>
+#include <QStandardPaths>
+
+//==============================================================================
+
 #include "git2.h"
 
 //==============================================================================
@@ -37,17 +42,39 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent), mUrl(""), mName("")
+const QString PmrWorkspace::WorkspacesDirectory = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                                                + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
+
+
+//==============================================================================
+
+PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent),
+     mDescription(QString()), mName(QString()), mOwner(QString()), mPath(QString()), mUrl(QString())
 {
 }
 
 //==============================================================================
 
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent) :
-    QObject(parent), mUrl(pUrl), mName(pName)
+    QObject(parent),
+    mDescription(QString()), mName(pName), mOwner(QString()), mPath(QString()), mUrl(pUrl)
 {
-    connect(this, SIGNAL(warning(const QString &)), parent, SIGNAL(warning(const QString &)));
+    // Set name from PMR workspace info
 }
+
+//==============================================================================
+
+bool PmrWorkspace::isLocal(void) const
+{
+    return !mPath.isNull();
+  }
+
+//==============================================================================
+
+bool PmrWorkspace::isNull(void) const
+{
+    return mUrl.isNull();
+  }
 
 //==============================================================================
 
@@ -61,11 +88,30 @@ bool PmrWorkspace::compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSeco
 
 //==============================================================================
 
-QString PmrWorkspace::url() const
+void PmrWorkspace::setDescription(const QString &pDescription)
 {
-    // Return our URL
+    mDescription = pDescription;
+}
 
-    return mUrl;
+//==============================================================================
+
+void PmrWorkspace::setName(const QString &pName)
+{
+    mName = pName;
+}
+
+//==============================================================================
+
+void PmrWorkspace::setOwner(const QString &pOwner)
+{
+    mOwner = pOwner;
+}
+
+//==============================================================================
+
+QString PmrWorkspace::description() const
+{
+    return mDescription;
 }
 
 //==============================================================================
@@ -79,54 +125,61 @@ QString PmrWorkspace::name() const
 
 //==============================================================================
 
-PmrLocalWorkspace *PmrWorkspace::clone(const QString &pDirName)
+QString PmrWorkspace::owner() const
 {
-   // Clone the workspace
-
-   git_libgit2_init();
-
-   git_repository *gitRepository = 0;
-   QByteArray workspaceByteArray = mUrl.toUtf8();
-   QByteArray dirNameByteArray = pDirName.toUtf8();
-
-   int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                       dirNameByteArray.constData(), 0);
-
-   if (res) {
-       const git_error *gitError = giterr_last();
-
-       emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                Core::formatMessage(gitError->message)):
-                        tr("An error occurred while trying to clone the workspace."));
-   } else if (gitRepository) {
-       git_repository_free(gitRepository);
-   }
-
-   git_libgit2_shutdown();
-
-   // Return our newly cloned local workspace
-
-   return new PmrLocalWorkspace(pDirName, mName, parent());
+    return mOwner;
 }
 
 //==============================================================================
 
-PmrLocalWorkspace::PmrLocalWorkspace(QObject *parent) : PmrWorkspace(parent)
+QString PmrWorkspace::path() const
 {
+    return mPath;
 }
 
 //==============================================================================
 
-PmrLocalWorkspace::PmrLocalWorkspace(const QString &pPath,
-                                     const QString &pName,
-                                     QObject *parent) : PmrWorkspace("", pName, parent)
+QString PmrWorkspace::url() const
 {
-    Q_UNUSED(pPath);
+    // Return our URL
 
-    // Set pUrl from remote.origin.url
+    return mUrl;
 }
 
+//==============================================================================
+
+void PmrWorkspace::clone(const QString &pDirName)
+{
+    // Clone a workspace
+
+    git_libgit2_init();
+
+    git_repository *gitRepository = 0;
+    QByteArray workspaceByteArray = mUrl.toUtf8();
+    QByteArray dirNameByteArray = pDirName.toUtf8();
+
+    int res = git_clone(&gitRepository, workspaceByteArray.constData(),
+                        dirNameByteArray.constData(), 0);
+
+    if (res) {
+        const git_error *gitError = giterr_last();
+
+        emit warning(gitError?
+                         tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                 Core::formatMessage(gitError->message)):
+                         tr("An error occurred while trying to clone the workspace."));
+    } else if (gitRepository) {
+        git_repository_free(gitRepository);
+    }
+
+    git_libgit2_shutdown();
+
+    mPath = pDirName;
+
+    emit workspaceCloned(this);
+}
+
+//==============================================================================
 //==============================================================================
 
 PmrWorkspaceList::PmrWorkspaceList() :

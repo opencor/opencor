@@ -27,16 +27,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
 #include <QObject>
 #include <QString>
-#include <QList>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace PMRSupport {
-
-class PmrLocalWorkspace;
 
 //==============================================================================
 
@@ -50,30 +48,36 @@ public:
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
-    QString url() const;
-    QString name() const;
+    bool isLocal(void) const;
+    bool isNull(void) const;
 
-    PmrLocalWorkspace *clone(const QString &pDirName);
+    void setDescription(const QString &pDescription);
+    void setName(const QString &pName);
+    void setOwner(const QString &pOwner);
+
+    QString description() const;
+    QString name() const;
+    QString owner() const;
+    QString path() const;
+    QString url() const;
+
+    void clone(const QString &pDirName);
+
+    static const QString WorkspacesDirectory ;
 
 private:
-    QString mUrl;
+    QString mDescription;
     QString mName;
+    QString mOwner;
+    QString mPath;
+    QString mUrl;
 
 Q_SIGNALS:
-    void warning(const QString &pMessage);
+    void warning(const QString &pMessage) const;
+    void workspaceCloned(PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
-
-class PMRSUPPORT_EXPORT PmrLocalWorkspace : public PmrWorkspace
-{
-    Q_OBJECT
-
-public:
-    explicit PmrLocalWorkspace(QObject *parent=0);
-    PmrLocalWorkspace(const QString &pPath, const QString &pName, QObject *parent);
-};
-
 //==============================================================================
 
 class PmrWorkspaceList : public QList<PmrWorkspace *>

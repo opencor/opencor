@@ -95,25 +95,25 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
 
+    connect(mPmrRepository, SIGNAL(error(const QString &, const bool &)),
+            this, SLOT(repositoryError(const QString &, const bool &)));
     connect(mPmrRepository, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
     connect(mPmrRepository, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &, const QString &, const bool &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposureList &, const QString &, const bool &)));
+    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &)),
+            this, SLOT(gotExposuresList(const PMRSupport::PmrExposureList &)));
 
-    connect(mPmrRepository, SIGNAL(addExposureFiles(const QString &, const QStringList &)),
+    connect(mPmrRepository, SIGNAL(exposureFilesList(const QString &, const QStringList &)),
             mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
-    connect(mPmrRepository, SIGNAL(showExposureFiles(const QString &)),
-            mPmrWidget, SLOT(showExposureFiles(const QString &)));
 
     // Some connections to know what our PMR widget wants from us
 
     connect(mPmrWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
             this, SLOT(cloneWorkspace(const QString &)));
-    connect(mPmrWidget, SIGNAL(showExposureFilesRequested(const QString &)),
-            this, SLOT(showExposureFiles(const QString &)));
+    connect(mPmrWidget, SIGNAL(requestExposureFiles(const QString &)),
+            this, SLOT(requestExposureFiles(const QString &)));
 
     connect(mPmrWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
@@ -212,15 +212,22 @@ void PmrWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposureList &pExposures,
-                                       const QString &pErrorMessage,
-                                       const bool &pInternetConnectionAvailable)
+void PmrWindowWindow::gotExposuresList(const PMRSupport::PmrExposureList &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWidget->initialize(pExposures, pErrorMessage,
-                           mGui->filterValue->text(),
-                           pInternetConnectionAvailable);
+    mPmrWidget->initialize(pExposures, "", mGui->filterValue->text(), true);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::repositoryError(const QString &pErrorMessage,
+                                      const bool &pInternetConnectionAvailable)
+{
+    // Tell our PMR widget we have a problem
+
+    mPmrWidget->initialize(PMRSupport::PmrExposureList(), pErrorMessage,
+                           "", pInternetConnectionAvailable);
 }
 
 //==============================================================================
@@ -254,13 +261,13 @@ void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
         // We have got a directory name where we can clone the workspace, so
         // request a clone of it
 
-        mPmrRepository->cloneWorkspace(pUrl, dirName);
+        mPmrRepository->requestCloneExposureWorkspace(pUrl, dirName);
     }
 }
 
 //==============================================================================
 
-void PmrWindowWindow::showExposureFiles(const QString &pUrl)
+void PmrWindowWindow::requestExposureFiles(const QString &pUrl)
 {
     // Request a list of the exposure's files from our PMR repository
 

@@ -31,11 +31,14 @@ limitations under the License.
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <QStringList>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace PMRSupport {
+
+class PmrWorkspace;
 
 //==============================================================================
 
@@ -49,12 +52,29 @@ public:
 
     static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
 
-    QString url() const;
+    bool isNull() const;
+
     QString name() const;
+    QString url() const;
+
+    int fileUrlsLeftCount(void) const;
+    void setFileUrlsLeftCount(const int &count);
+
+    void addExposureFile(const QString &pFileName);
+    const QStringList exposureFileList(void) const;
+
+    PmrWorkspace *workspace(void) const;
+    void setWorkspace(PmrWorkspace *pWorkspace);
+
+    QString toHtml(void) const;
 
 private:
-    QString mUrl;
     QString mName;
+    QString mUrl;
+
+    QStringList mExposureFileList;
+    int mFileUrlsLeftCount;
+    PmrWorkspace *mWorkspace;
 };
 
 //==============================================================================

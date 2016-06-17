@@ -86,16 +86,15 @@ private Q_SLOTS:
 
     void busy(const bool &pBusy);
 
+    void repositoryError(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
     void showWarning(const QString &pMessage);
     void showInformation(const QString &pMessage);
 
     void retrieveExposuresList(const bool &pVisible);
 
-    void initializeWidget(const PMRSupport::PmrExposureList &pExposureList,
-                          const QString &pErrorMessage,
-                          const bool &pInternetConnectionAvailable);
+    void gotExposuresList(const PMRSupport::PmrExposureList &pExposureList);
 
-    void showExposureFiles(const QString &pUrl);
+    void requestExposureFiles(const QString &pUrl);
 
     void cloneWorkspace(const QString &pUrl);
 };
