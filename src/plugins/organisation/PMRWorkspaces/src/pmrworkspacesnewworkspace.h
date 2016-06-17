@@ -16,33 +16,20 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Workspaces window
+// Create a new PMR workspace dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "pmrworkspacesglobal.h"
-
-//==============================================================================
-
-#include "organisationwidget.h"
-#include "pmrrepository.h"
-
-//==============================================================================
-
-#include <QAbstractItemModel>
+#include <QDialog>
 
 //==============================================================================
 
 namespace Ui {
-    class PmrWorkspacesWindow;
+    class PmrWorkspacesNewWorkspace;
 }
-
-//==============================================================================
-
-class QMenu;
 
 //==============================================================================
 
@@ -51,46 +38,30 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-class PmrWorkspacesWidget;
-
-//==============================================================================
-
-class PMRWORKSPACE_EXPORT PmrWorkspacesWindow : public Core::OrganisationWidget
+class PmrWorkspacesNewWorkspace : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindow(QWidget *pParent);
-    ~PmrWorkspacesWindow();
+    explicit PmrWorkspacesNewWorkspace(QWidget * pParent=0);
+    ~PmrWorkspacesNewWorkspace();
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-private:
-    Ui::PmrWorkspacesWindow *mGui;
-
-    PMRSupport::PmrRepository *mPmrRepository;
-    PmrWorkspacesWidget *mWorkspacesWidget;
-
-    QMenu *mContextMenu;
-
-Q_SIGNALS:
-    void refreshWorkspaces(void);
+    const QString description(void) const;
+    const QString path(void) const;
+    const QString title(void) const;
 
 private Q_SLOTS:
-    void on_actionAuthenticate_triggered();
-    void on_actionNew_triggered();
-    void on_actionInfo_triggered();
-    void on_actionUnauthenticate_triggered();
+    void checkTitle(const QString &text);
 
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceCreated(const QString &pUrl);
+    void choosePath(const bool &checked);
+    void setPath(void);
+    void setPathToolTip(const QString &text);
 
-    void updateAuthenticationStatus(const bool &pAuthenticated);
 
-    void showCustomContextMenu() const;
+private:
+    Ui::PmrWorkspacesNewWorkspace *mGui;
 };
 
 //==============================================================================

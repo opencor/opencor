@@ -34,6 +34,8 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QStandardPaths>
 #include <QUrl>
+#include <QWebElement>
+#include <QWebFrame>
 
 //==============================================================================
 
@@ -51,7 +53,7 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
     Core::CommonWidget(),
     mPmrRepository(pPmrRepository),
     mExpandedItems(QMap<QString, bool>()),
-    mSelectedItem("")
+    mSelectedUrl(QString())
 {
     // Prevent objects from being dropped on us
 
@@ -101,7 +103,7 @@ QSize PmrWorkspacesWidget::sizeHint() const
 
 static const auto SettingsWorkspaces    = QStringLiteral("Workspaces");
 static const auto SettingsExpandedItems = QStringLiteral("ExpandedItems");
-static const auto SettingsSelectedItem  = QStringLiteral("SelectedItem");
+static const auto SettingsSelectedUrl   = QStringLiteral("SelectedUrl");
 
 //==============================================================================
 
@@ -117,10 +119,8 @@ void PmrWorkspacesWidget::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 
     // Retrieve the currently selected item, if any
-mExpandedItems.insert("https://models.physiomeproject.org/w/dbrooks/butterworth3", true);
-mExpandedItems.insert("/Users/dave/Documents/OpenCOR/Workspaces/3rd Order Butterworth Filter/subdir", true);
-mExpandedItems.insert("https://models.physiomeproject.org/workspace/251", true);
-    mSelectedItem = pSettings->value(SettingsSelectedItem).toString();
+
+    mSelectedUrl = pSettings->value(SettingsSelectedUrl).toString();
 }
 
 //==============================================================================
@@ -136,10 +136,17 @@ void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the currently selected item
 
-    pSettings->setValue(SettingsSelectedItem, mSelectedItem);
+    pSettings->setValue(SettingsSelectedUrl, mSelectedUrl);
 }
 
 //==============================================================================
+//==============================================================================
+
+void PmrWorkspacesWidget::setSelected(const QString &pSelectedUrl)
+{
+    mSelectedUrl = pSelectedUrl;
+}
+
 //==============================================================================
 
 // This needs to go into pmrworkspaces.cpp ...
@@ -148,52 +155,24 @@ QString PmrWorkspacesWidget::workspacePath(const QString &pUrl, const QString &p
 {
     Q_UNUSED(pUrl);
 
-    QString workspacePath = QStandardPaths::locate(QStandardPaths::DocumentsLocation,
-                                                   "OpenCOR/Workspaces/" + pPath,
-                                                   QStandardPaths::LocateDirectory);
+    QString workspacePath = PMRSupport::PmrWorkspace::WorkspacesDirectory + QDir::separator() + pPath;
 qDebug() << "Checking: " << pUrl << "  Local: " << workspacePath;
     QDir workspaceDirectory = QDir(workspacePath);
     if (!workspacePath.isEmpty() && workspaceDirectory.exists()) {
         return workspaceDirectory.absolutePath();
- /***
-        git_libgit2_init();
 
-        git_repository *gitRepository = 0;
-
-        QByteArray urlByteArray = pUrl.toUtf8();
-        QByteArray pathByteArray = pPath.toUtf8();
-
-        int res = git_repository_open(&gitRepository, pPathByteArray.constData());
-
-        int git_remote_list(git_strarray *out, git_repository *repo);
-
-        const char * git_remote_url(const git_remote *remote);
-
-        if (res) {
-            const git_error *gitError = giterr_last();
-
-            emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                Core::formatMessage(gitError->message)):
-                        tr("An error occurred while trying to clone the workspace."));
-        } else if (gitRepository) {
-            git_repository_free(gitRepository);
-        }
-
-        git_libgit2_shutdown();
-***/
     }
     return "";
 }
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::actionHtml(const QStringList &pActions)
+QString PmrWorkspacesWidget::actionHtml(const QList<QPair<QString, QString> > &pActions)
 {
-    QString action;
+    QPair<QString, QString> action;
     QStringList actions;
     foreach (action, pActions)
-        actions << QString("<img class=\"%1\" />").arg(action);
+        actions << QString("<a href=\"%1|%2\"><img class=\"%1\" /></a>").arg(action.first, action.second);
 
     return actions.join("");
 }
@@ -202,7 +181,8 @@ QString PmrWorkspacesWidget::actionHtml(const QStringList &pActions)
 
 QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString &pIcon,
                                            const QString &pId, const QString &pName,
-                                           const QString &pStatus, const QStringList &pActions)
+                                           const QString &pStatus,
+                                           const QList<QPair<QString, QString> > &pActions)
 {
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "  <td class=\"icon\"><img class=\"%3\" /></td>\n" /* tr.CLASS td.icon img.clone/open/close { } */
@@ -216,7 +196,8 @@ qDebug() << pClass << "container for " << pName << " is " << pIcon;
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::fileHtml(const QString &pName, const QString &pStatus, const QStringList &pActions)
+QString PmrWorkspacesWidget::fileHtml(const QString &pName, const QString &pStatus,
+                                      const QList<QPair<QString, QString> > &pActions)
 {
     static const QString html = "<tr>\n"
                                 "  <td colspan=\"2\">%1</td>\n"
@@ -264,7 +245,7 @@ QString PmrWorkspacesWidget::contentsHtml(const QString &pPath) const
         QFileInfo info;
         foreach(info, directory.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
             if (info.isDir()) itemHtml << folderHtml(info.absoluteFilePath());
-            else              itemHtml << fileHtml(info.fileName(), "", QStringList()); // status, actions
+            else              itemHtml << fileHtml(info.fileName(), "", QList<QPair<QString, QString> >()); // status, actions
         }
     }
 
@@ -280,7 +261,9 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const QString &pUrl, const QStrin
                  : mExpandedItems.contains(pUrl) ? "close"
                  :                                 "open";
 
-    QStringList html = QStringList(containerHtml("workspace", icon, pUrl, pName, "", QStringList() << "about"));
+    auto actionList = QList<QPair<QString, QString> >()
+                    << QPair<QString, QString>("about", pUrl);
+    QStringList html = QStringList(containerHtml("workspace", icon, pUrl, pName, "", actionList));
 
     if (!pPath.isEmpty() /*&& mExpandedItems.contains(pUrl)*/) html << contentsHtml(pPath);
     else                                                   html << emptyContentsHtml();
@@ -298,7 +281,7 @@ QStringList PmrWorkspacesWidget::folderHtml(const QString &pPath) const
     QString icon = mExpandedItems.contains(fullname) ? "close"
                  :                                     "open";
 
-    QStringList html = QStringList(containerHtml("folder", icon, fullname, info.fileName(), "", QStringList())); // status, actions
+    QStringList html = QStringList(containerHtml("folder", icon, fullname, info.fileName(), "", QList<QPair<QString, QString> >())); // status, actions
 
     if (true /* mExpandedItems.contains(fullname) */) html << contentsHtml(pPath);
     else                                   html << emptyContentsHtml();
@@ -363,6 +346,7 @@ void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceLis
         }
 //qDebug() << mTemplate.arg(html.join("\n"));
     setHtml(mTemplate.arg(html.join("\n")));
+    // Can we position view so that the selected line is shown??
 }
 
 //==============================================================================
@@ -437,12 +421,54 @@ void PmrWorkspacesWidget::refreshWorkspaces(void)
 
 void PmrWorkspacesWidget::linkClicked()
 {
+    // Retrieve some information about the link
+
+    QString link;
+    QString textContent;
+
+    QWebElement element = retrieveLinkInformation(link, textContent);
+
+    // Check whether we have clicked a text or button link
+
+    if (textContent.isEmpty()) {
+        // We have clicked on a button link, so let people know whether we want
+        // to clone a workspace or whether we want to show/hide exposure files
+
+        QStringList linkList = link.split("|");
+
+        if (!linkList[0].compare("about")) {
+            mPmrRepository->requestWorkspaceInformation(linkList[1]);
+            // And somewhere connect workspaceInformation SIGNAL to display result
+        }
+    }
 }
 
 //==============================================================================
 
 void PmrWorkspacesWidget::linkHovered()
 {
+    // Retrieve some information about the link
+
+    QString link;
+    QString textContent;
+
+    QWebElement element = retrieveLinkInformation(link, textContent);
+
+    // Update our tool tip based on whether we are hovering a text or button
+    // link
+    // Note: this follows the approach used in linkClicked()...
+
+    QString linkToolTip = QString();
+
+    if (textContent.isEmpty()) {
+        QStringList linkList = link.split("|");
+
+        if (!linkList[0].compare("about")) {
+            linkToolTip = tr("About the Workspace");
+        }
+    }
+
+    setLinkToolTip(linkToolTip);
 }
 
 //==============================================================================

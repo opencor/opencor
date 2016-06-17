@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Workspaces window
 //==============================================================================
 
+#include "pmrworkspacesnewworkspace.h"
 #include "pmrworkspaceswindow.h"
 #include "pmrworkspaceswidget.h"
 #include "toolbarwidget.h"
@@ -96,14 +97,18 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Some connections
 
-    connect(mWorkspacesWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mWorkspacesWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(showCustomContextMenu()));
 
     // Some connections to process responses from the PMR repository
 
-    connect(mPmrRepository, SIGNAL(authenticated(const bool &)), this, SLOT(updateAuthenticationStatus(const bool &)));
-    connect(mPmrRepository, SIGNAL(workspacesList(const PMRSupport::PmrWorkspaceList &)),
-            mWorkspacesWidget, SLOT(initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &)));
+    connect(mPmrRepository, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
+    connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
+            mWorkspacesWidget, SLOT(initialiseWorkspaces(PMRSupport::PmrWorkspaceList)));
+
+    connect(mPmrRepository, SIGNAL(workspaceCreated(QString)), this, SLOT(workspaceCreated(QString)));
+    connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
     // Some connections to update our state
 
@@ -190,6 +195,17 @@ void PmrWorkspacesWindow::on_actionAuthenticate_triggered()
 void PmrWorkspacesWindow::on_actionNew_triggered()
 {
     // Create a new workspace
+
+    auto newWorkspaceDialog = new PmrWorkspacesNewWorkspace();
+
+    if (newWorkspaceDialog->exec() == QDialog::Accepted) {
+
+        // Ask the PMR repository to create a new workspace
+
+        mPmrRepository->requestNewWorkspace(newWorkspaceDialog->title(),
+                                            newWorkspaceDialog->description(),
+                                            newWorkspaceDialog->path());
+    }
 }
 
 //==============================================================================
@@ -216,6 +232,28 @@ void PmrWorkspacesWindow::showCustomContextMenu() const
     // widget
 
     mContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::workspaceCreated(const QString &pUrl)
+{
+    Q_UNUSED(pUrl)
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    if (pWorkspace) {
+        // All good, so selected it in the list of workspaces
+
+        mWorkspacesWidget->setSelected(pWorkspace->url());
+
+        // And update the list of workspaces
+
+        mPmrRepository->requestWorkspacesList();
+    }
 }
 
 //==============================================================================

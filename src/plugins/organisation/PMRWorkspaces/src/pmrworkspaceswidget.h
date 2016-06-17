@@ -59,6 +59,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void setSelected(const QString &pSelectedUrl);
+
 protected:
     virtual QSize sizeHint() const;
 
@@ -68,15 +70,17 @@ private:
     PMRSupport::PmrRepository *mPmrRepository;
 
     QMap<QString, bool> mExpandedItems;
-    QString mSelectedItem;
+    QString mSelectedUrl;
 
     static QString workspacePath(const QString &pUrl, const QString &pPath);
 
-    static QString actionHtml(const QStringList &pActions);
+    static QString actionHtml(const QList<QPair<QString, QString> > &pActions);
     static QString containerHtml(const QString &pClass, const QString &pIcon,
                                  const QString &pId, const QString &pName,
-                                 const QString &pStatus, const QStringList &pActions);
-    static QString fileHtml(const QString &pName, const QString &pStatus, const QStringList &pActions);
+                                 const QString &pStatus,
+                                 const QList<QPair<QString, QString> > &pActions);
+    static QString fileHtml(const QString &pName, const QString &pStatus,
+                            const QList<QPair<QString, QString> > &pActions);
     static QString emptyContentsHtml(void);
 
     QString contentsHtml(const QString &pPath) const;
