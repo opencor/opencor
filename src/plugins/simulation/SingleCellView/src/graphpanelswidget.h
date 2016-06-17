@@ -34,11 +34,16 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewSimulationWidget;
+namespace SingleCellView {
+    class SingleCellViewSimulationWidget;
+}   // namespace SingleCellView
+
+//==============================================================================
+
+namespace GraphPanelWidget {
 
 //==============================================================================
 
@@ -48,7 +53,7 @@ class GraphPanelsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit GraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+    explicit GraphPanelsWidget(SingleCellView::SingleCellViewSimulationWidget *pSimulationWidget,
                                QWidget *pParent);
 
     virtual void retranslateUi();
@@ -69,7 +74,7 @@ public:
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
 private:
-    SingleCellViewSimulationWidget *mSimulationWidget;
+    SingleCellView::SingleCellViewSimulationWidget *mSimulationWidget;
 
     QIntList mSplitterSizes;
 
@@ -80,28 +85,28 @@ private:
     void removeGraphPanel(GraphPanelWidget *pGraphPanel);
 
 Q_SIGNALS:
-    void graphPanelAdded(GraphPanelWidget *pGraphPanel,
+    void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
-    void graphPanelRemoved(GraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
-    void graphPanelActivated(GraphPanelWidget *pGraphPanel);
+    void graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(GraphPanelWidget *pGraphPanel,
-                    GraphPanelPlotGraph *pGraph);
-    void graphsRemoved(GraphPanelWidget *pGraphPanel,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void splitterMoved();
 
-    void updateGraphPanels(GraphPanelWidget *pGraphPanel);
+    void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================

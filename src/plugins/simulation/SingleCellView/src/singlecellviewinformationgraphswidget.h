@@ -45,11 +45,16 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+namespace GraphPanelWidget {
+    class GraphPanelWidget;
+}   // namespace GraphPanelWidget
+
+//==============================================================================
+
 namespace SingleCellView {
 
 //==============================================================================
 
-class GraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 class SingleCellViewSimulationWidget;
@@ -75,7 +80,7 @@ public:
 
     void finishEditing();
 
-    Core::Properties graphProperties(GraphPanelWidget *pGraphPanel,
+    Core::Properties graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 
     int headerCount() const;
@@ -87,12 +92,12 @@ private:
     SingleCellViewPlugin *mPlugin;
     SingleCellViewSimulationWidget *mSimulationWidget;
 
-    QMap<Core::PropertyEditorWidget *, GraphPanelWidget *> mGraphPanels;
-    QMap<GraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
+    QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
+    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;
 
-    QMap<Core::Property *, GraphPanelPlotGraph *> mGraphs;
-    QMap<GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
+    QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
     QMenu *mContextMenu;
     QMenu *mParametersContextMenu;
@@ -112,7 +117,7 @@ private:
     void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
-                        GraphPanelPlotGraph *pGraph,
+                        GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                         Core::Property *pParameterProperty,
                         const bool &pParameterX) const;
 
@@ -126,18 +131,18 @@ Q_SIGNALS:
     void headerSectionResized(const int &pIndex, const int &pOldSize,
                               const int &pNewSize);
 
-    void graphsUpdated(GraphPanelPlotWidget *pPlot,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 public Q_SLOTS:
-    void initialize(GraphPanelWidget *pGraphPanel,
+    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     const bool &pActive = true);
-    void finalize(GraphPanelWidget *pGraphPanel);
+    void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void addGraph(GraphPanelWidget *pGraphPanel,
-                  GraphPanelPlotGraph *pGraph);
-    void removeGraphs(GraphPanelWidget *pGraphPanel,
-                      const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                      const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
     void addGraph();

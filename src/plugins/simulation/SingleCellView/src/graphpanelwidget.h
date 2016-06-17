@@ -34,7 +34,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace GraphPanelWidget {
 
 //==============================================================================
 
@@ -81,18 +81,18 @@ private:
     void updateMarkerColor();
 
 Q_SIGNALS:
-    void activated(GraphPanelWidget *pGraphPanel);
-    void inactivated(GraphPanelWidget *pGraphPanel);
+    void activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void inactivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(GraphPanelWidget *pGraphPanel,
-                    GraphPanelPlotGraph *pGraph);
-    void graphsRemoved(GraphPanelWidget *pGraphPanel,
-                       const SingleCellViewGraphPanelPlotGraphs &pGraphs);
+    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                       const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================

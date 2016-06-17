@@ -36,11 +36,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelsWidget::GraphPanelsWidget(SingleCellViewSimulationWidget *pSimulationWidget,
+GraphPanelsWidget::GraphPanelsWidget(SingleCellView::SingleCellViewSimulationWidget *pSimulationWidget,
                                      QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(),
@@ -93,7 +93,7 @@ void GraphPanelsWidget::loadSettings(QSettings *pSettings)
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
+    if (mSimulationWidget->fileType() == SingleCellView::SingleCellViewWidget::CellmlFile) {
         QIntList splitterSizes = QIntList();
 
         pSettings->beginGroup(mSimulationWidget->fileName());
@@ -129,7 +129,7 @@ void GraphPanelsWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the size of each graph panel, but only if we are dealing
     // with a CellML file
 
-    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile) {
+    if (mSimulationWidget->fileType() == SingleCellView::SingleCellViewWidget::CellmlFile) {
         pSettings->beginGroup(mSimulationWidget->fileName());
             pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
         pSettings->endGroup();
@@ -189,18 +189,18 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     // Keep track of whenever a graph panel gets activated
 
-    connect(res, SIGNAL(activated(GraphPanelWidget *)),
-            this, SIGNAL(graphPanelActivated(GraphPanelWidget *)));
+    connect(res, SIGNAL(activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
+            this, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
-    connect(res, SIGNAL(activated(GraphPanelWidget *)),
-            this, SLOT(updateGraphPanels(GraphPanelWidget *)));
+    connect(res, SIGNAL(activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
+            this, SLOT(updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     // Keep track of the addition and removal of a graph
 
-    connect(res, SIGNAL(graphAdded(GraphPanelWidget *, GraphPanelPlotGraph *)),
-            this, SIGNAL(graphAdded(GraphPanelWidget *, GraphPanelPlotGraph *)));
-    connect(res, SIGNAL(graphsRemoved(GraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)),
-            this, SIGNAL(graphsRemoved(GraphPanelWidget *, const SingleCellViewGraphPanelPlotGraphs &)));
+    connect(res, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(res, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)),
+            this, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &)));
 
     // In/activate the graph panel
 
@@ -335,13 +335,13 @@ void GraphPanelsWidget::splitterMoved()
 {
     // Our splitter has been moved, so keep track of its new sizes
 
-    if (mSimulationWidget->fileType() == SingleCellViewWidget::CellmlFile)
+    if (mSimulationWidget->fileType() == SingleCellView::SingleCellViewWidget::CellmlFile)
         mSplitterSizes = sizes();
 }
 
 //==============================================================================
 
-void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
+void GraphPanelsWidget::updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Keep track of the newly activated graph panel
 
@@ -361,7 +361,7 @@ void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================

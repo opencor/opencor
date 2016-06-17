@@ -31,7 +31,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace GraphPanelWidget {
 
 //==============================================================================
 
@@ -239,7 +239,7 @@ void GraphPanelWidget::setActive(const bool &pActive)
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -49,7 +49,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace GraphPanelWidget {
 
 //==============================================================================
 
@@ -1513,7 +1513,7 @@ void GraphPanelPlotWidget::resetZoom()
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================
