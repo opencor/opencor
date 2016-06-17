@@ -17,27 +17,20 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR repository
+// PMR network manager
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "pmrauthentication.h"
-#include "pmrexposure.h"
-#include "pmrsupportglobal.h"
-#include "pmrworkspace.h"
-
-//==============================================================================
-
+#include <QJsonDocument>
 #include <QList>
-#include <QObject>
-#include <QString>
+#include <QNetworkAccessManager>
+#include <QSslError>
 
 //==============================================================================
 
-class QNetworkAccessManager;
 class QNetworkReply;
 
 //==============================================================================
@@ -47,75 +40,41 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrRepositoryManager;
+class PmrOAuthClient;
+class PmrRepository;
+class PmrRepositoryResponse;
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrRepository : public QObject
+class PmrRepositoryManager : public QNetworkAccessManager
 {
     Q_OBJECT
 
 public:
-    static PmrRepository *instance();
-    ~PmrRepository();
+    explicit PmrRepositoryManager(PmrRepository *pPmrRepository);
+    virtual ~PmrRepositoryManager();
 
-    QString url(void) const;
+    void authenticate(const bool &pLink);
+    bool isAuthenticated(void) const;
 
-    void cloneWorkspace(const QString &pUrl, const QString &pDirName);
-    void requestExposuresList(void);
-    void requestExposureFiles(const QString &pUrl);
-    void requestWorkspacesList(void);
-    void requestWorkspaceDetails(const QString &pUrl);
-
+    PmrRepositoryResponse *sendPmrRequest(const QString &pUrl, const bool &secure,
+                                          const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
-    explicit PmrRepository();
-
-
-    enum Action {
-        None,
-        CloneExposureWorkspace,
-        RequestExposureFiles
-    };
-
-    PmrRepositoryManager *mPmrRepositoryManager;
-
-    int mNumberOfExposureFileUrlsLeft;
-
-    QMap<QString, PmrWorkspace *> mWorkspaces;
-    QMap<QString, QString> mExposureUrls;
-    QMap<QString, QString> mExposureNames;
-    QMap<QString, QString> mExposureFileNames;
-
-    QString informationNoteMessage() const;
-
-    void doShowExposureFiles(const QString &pExposureUrl);
-
+    PmrOAuthClient *mPmrOAuthClient;
+    PmrRepository *mPmrRepository;
 
 Q_SIGNALS:
     void authenticated(const bool &pAuthenticated);
-    //void authenticationChanged(const bool &pAuthenticated);
-
     void busy(const bool &pBusy);
-
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
-    void information(const QString &pMessage);
-    void warning(const QString &pMessage);
-
-    void exposuresList(const PMRSupport::PmrExposureList &pExposureList,
-                       const QString &pErrorMessage,
-                       const bool &pInternetConnectionAvailable);
-
-    void addExposureFiles(const QString &pUrl,
-                          const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl);
-
-    void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
-
-public Q_SLOTS:
-    void authenticate(const bool &pLink = true);
-    void getAuthenticationStatus(void);
 
 private Q_SLOTS:
+    void authenticationFailed();
+    void authenticationSucceeded();
+    void openBrowser(const QUrl &pUrl);
+
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
 
 };
 
