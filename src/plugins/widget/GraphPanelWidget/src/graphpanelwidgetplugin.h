@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "i18ninterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -37,11 +38,16 @@ PLUGININFO_FUNC GraphPanelWidgetPluginInfo();
 
 //==============================================================================
 
-class GraphPanelWidgetPlugin : public QObject
+class GraphPanelWidgetPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.GraphPanelWidgetPlugin" FILE "graphpanelwidgetplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "i18ninterface.inl"
 };
 
 //==============================================================================

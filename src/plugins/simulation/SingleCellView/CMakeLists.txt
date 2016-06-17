@@ -13,9 +13,6 @@ ADD_PLUGIN(SingleCellView
         ../../solverinterface.cpp
         ../../viewinterface.cpp
 
-        src/graphpanelplotwidget.cpp
-        src/graphpanelswidget.cpp
-        src/graphpanelwidget.cpp
         src/singlecellviewcontentswidget.cpp
         src/singlecellviewinformationgraphswidget.cpp
         src/singlecellviewinformationparameterswidget.cpp
@@ -33,9 +30,6 @@ ADD_PLUGIN(SingleCellView
         ../../pluginmanager.h
         ../../solverinterface.h
 
-        src/graphpanelplotwidget.h
-        src/graphpanelswidget.h
-        src/graphpanelwidget.h
         src/singlecellviewcontentswidget.h
         src/singlecellviewinformationgraphswidget.h
         src/singlecellviewinformationparameterswidget.h
@@ -49,14 +43,13 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport
         COMBINESupport
         Compiler
         Core
+        GraphPanelWidget
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
         SBMLAPI

@@ -21,7 +21,6 @@ limitations under the License.
 //==============================================================================
 
 #include "graphpanelswidget.h"
-#include "singlecellviewsimulationwidget.h"
 
 //==============================================================================
 
