@@ -35,7 +35,7 @@
   <action name="actionAuthenticate">
    <property name="icon">
     <iconset resource="../res/PmrWorkspaces_ui.qrc">
-     <normaloff>:/oxygen/actions/pmr-unauthenticated.png</normaloff>:/oxygen/actions/pmr-unauthenticated.png</iconset>
+     <normaloff>:/PMRWorkspaces/icons/pmr-unauthenticated.png</normaloff>:/PMRWorkspaces/icons/pmr-unauthenticated.png</iconset>
    </property>
    <property name="text">
     <string>Log on</string>
@@ -47,7 +47,7 @@
   <action name="actionUnauthenticate">
    <property name="icon">
     <iconset resource="../res/PmrWorkspaces_ui.qrc">
-     <normaloff>:/oxygen/actions/pmr-authenticated.png</normaloff>:/oxygen/actions/pmr-authenticated.png</iconset>
+     <normaloff>:/PMRWorkspaces/icons/pmr-authenticated.png</normaloff>:/PMRWorkspaces/icons/pmr-authenticated.png</iconset>
    </property>
    <property name="text">
     <string>Log off</string>

@@ -72,13 +72,13 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     QByteArray fileContents;
 
-    Core::readFileContentsFromFile(":/pmrworkspaceswidget.html", fileContents);
+    Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
 
     mTemplate = QString(fileContents).arg( // about, clone, close, open
                                           Core::iconDataUri(":/oxygen/actions/help-about.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/places/workspace-open.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/places/workspace-closed.png", 16, 16),
+                                          Core::iconDataUri(":/PMRWorkspaces/icons/workspace-open.png", 16, 16),
+                                          Core::iconDataUri(":/PMRWorkspaces/icons/workspace-closed.png", 16, 16),
                                           "%1");
 }
 
