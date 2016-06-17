@@ -34,32 +34,18 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace SingleCellView {
-    class SingleCellViewSimulationWidget;
-}   // namespace SingleCellView
-
-//==============================================================================
-
 namespace GraphPanelWidget {
 
 //==============================================================================
 
-class GraphPanelsWidget : public QSplitter,
-                                        public Core::CommonWidget
+class GraphPanelsWidget : public QSplitter, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit GraphPanelsWidget(SingleCellView::SingleCellViewSimulationWidget *pSimulationWidget,
-                               QWidget *pParent);
+    explicit GraphPanelsWidget(QWidget *pParent);
 
     virtual void retranslateUi();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize();
 
@@ -74,8 +60,6 @@ public:
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
 private:
-    SingleCellView::SingleCellViewSimulationWidget *mSimulationWidget;
-
     QIntList mSplitterSizes;
 
     GraphPanelWidgets mGraphPanels;
@@ -99,8 +83,6 @@ Q_SIGNALS:
                        const OpenCOR::GraphPanelWidget::SingleCellViewGraphPanelPlotGraphs &pGraphs);
 
 private Q_SLOTS:
-    void splitterMoved();
-
     void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 };
 

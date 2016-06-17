@@ -40,11 +40,9 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelsWidget::GraphPanelsWidget(SingleCellView::SingleCellViewSimulationWidget *pSimulationWidget,
-                                     QWidget *pParent) :
+GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(),
-    mSimulationWidget(pSimulationWidget),
     mSplitterSizes(QIntList()),
     mGraphPanels(GraphPanelWidgets()),
     mActiveGraphPanel(0)
@@ -52,14 +50,6 @@ GraphPanelsWidget::GraphPanelsWidget(SingleCellView::SingleCellViewSimulationWid
     // Set our orientation
 
     setOrientation(Qt::Vertical);
-
-    // Keep track of our movement
-    // Note: we need to keep track of our movement so that saveSettings() can
-    //       work fine even when we are not visible (which happens when a CellML
-    //       file cannot be run for some reason or another)...
-
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
 }
 
 //==============================================================================
@@ -74,75 +64,11 @@ void GraphPanelsWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsGraphPanelSizes = QStringLiteral("GraphPanelSizes");
-
-//==============================================================================
-
-void GraphPanelsWidget::loadSettings(QSettings *pSettings)
-{
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    emit removeGraphPanelsEnabled(false);
-
-    // Retrieve the number of graph panels and create the corresponding number
-    // of graphs, if we are dealing with a CellML file, or only one default
-    // graph panel
-    // Note: we don't assign the value of SettingsGraphPanelSizes directly to
-    //       mSplitterSizes because adding a graph panel will reset it. So,
-    //       instead, we assign the value to splitterSizes, which we then use to
-    //       properly initialise mSplitterSizes...
-
-    if (mSimulationWidget->fileType() == SingleCellView::SingleCellViewWidget::CellmlFile) {
-        QIntList splitterSizes = QIntList();
-
-        pSettings->beginGroup(mSimulationWidget->fileName());
-            splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
-        pSettings->endGroup();
-
-        int graphPanelsCount = splitterSizes.count();
-
-        if (!graphPanelsCount) {
-            // For some reasons, the settings for the number of graph panels to be
-            // created got messed up, so reset it
-
-            graphPanelsCount = 1;
-        }
-
-        for (int i = 0; i < graphPanelsCount; ++i)
-            addGraphPanel();
-
-        // Retrieve and set the size of each graph panel
-
-        mSplitterSizes = splitterSizes;
-
-        setSizes(mSplitterSizes);
-    } else {
-        addGraphPanel();
-    }
-}
-
-//==============================================================================
-
-void GraphPanelsWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the size of each graph panel, but only if we are dealing
-    // with a CellML file
-
-    if (mSimulationWidget->fileType() == SingleCellView::SingleCellViewWidget::CellmlFile) {
-        pSettings->beginGroup(mSimulationWidget->fileName());
-            pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
-        pSettings->endGroup();
-    }
-}
-
-//==============================================================================
-
 void GraphPanelsWidget::initialize()
 {
-    // Set the first graph panel
+    // Create a default graph panel
 
-    qobject_cast<GraphPanelWidget *>(widget(0))->setActive(true);
+    addGraphPanel();
 }
 
 //==============================================================================
@@ -205,10 +131,6 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     // In/activate the graph panel
 
     res->setActive(pActive);
-
-    // Keep track of our new sizes
-
-    splitterMoved();
 
     // Let people know that we have added a graph panel
 
@@ -278,10 +200,6 @@ void GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
     if (!mGraphPanels.isEmpty())
         mGraphPanels[0]->plot()->forceAlignWithNeighbors();
-
-    // Keep track of our new sizes
-
-    splitterMoved();
 }
 
 //==============================================================================
@@ -327,16 +245,6 @@ void GraphPanelsWidget::setActiveGraphPanel(GraphPanelWidget *pGraphPanel)
     // Make the given graph panel the active one
 
     pGraphPanel->setActive(true);
-}
-
-//==============================================================================
-
-void GraphPanelsWidget::splitterMoved()
-{
-    // Our splitter has been moved, so keep track of its new sizes
-
-    if (mSimulationWidget->fileType() == SingleCellView::SingleCellViewWidget::CellmlFile)
-        mSplitterSizes = sizes();
 }
 
 //==============================================================================

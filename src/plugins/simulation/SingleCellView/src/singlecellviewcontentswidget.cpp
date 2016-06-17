@@ -55,7 +55,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
     // Create our graph panels widget
 
-    mGraphPanelsWidget = new GraphPanelWidget::GraphPanelsWidget(pSimulationWidget, this);
+    mGraphPanelsWidget = new GraphPanelWidget::GraphPanelsWidget(this);
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
 
@@ -79,28 +79,6 @@ void SingleCellViewContentsWidget::retranslateUi()
 
     mInformationWidget->retranslateUi();
     mGraphPanelsWidget->retranslateUi();
-}
-
-//==============================================================================
-
-void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the settings of our graph panels widgets
-
-    pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the settings of our graph panels widgets
-
-    pSettings->beginGroup(mGraphPanelsWidget->objectName());
-        mGraphPanelsWidget->saveSettings(pSettings);
-    pSettings->endGroup();
 }
 
 //==============================================================================

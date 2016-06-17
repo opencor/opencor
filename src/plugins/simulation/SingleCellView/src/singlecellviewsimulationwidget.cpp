@@ -549,28 +549,6 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve the settings of our contents widget
-
-    pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the settings of our contents widget
-
-    pSettings->beginGroup(mContentsWidget->objectName());
-        mContentsWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
 void SingleCellViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions

@@ -113,9 +113,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
     void initialize(const bool &pReloadingView = false);
     void finalize();
 
