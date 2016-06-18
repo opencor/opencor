@@ -85,6 +85,7 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (either through a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "Added", "description": "Create a new or update an existing <a href=\"https://www.cellml.org/\">CellML</a> file based on the results of a simulation." },
+                               { "type": "Added", "description": "Specify the minimum/maximum values of the axes of a graph panel." },
                                { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for <a href=\"https://www.cellml.org/\">CellML</a> models." },
