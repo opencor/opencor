@@ -39,7 +39,7 @@ class QTextEdit;
 //==============================================================================
 
 namespace Ui {
-    class EditorFindReplaceWidget;
+    class EditorWidgetFindReplaceWidget;
 }
 
 //==============================================================================
@@ -49,13 +49,13 @@ namespace EditorWidget {
 
 //==============================================================================
 
-class EditorFindReplaceWidget : public Core::Widget
+class EditorWidgetFindReplaceWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit EditorFindReplaceWidget(QWidget *pParent);
-    ~EditorFindReplaceWidget();
+    explicit EditorWidgetFindReplaceWidget(QWidget *pParent);
+    ~EditorWidgetFindReplaceWidget();
 
     virtual void retranslateUi();
 
@@ -65,7 +65,7 @@ public:
 
     void setReadOnly(const bool &pReadOnly);
 
-    void updateFrom(EditorFindReplaceWidget *pFindReplace);
+    void updateFrom(EditorWidgetFindReplaceWidget *pFindReplace);
 
     bool isFindPreviousNextAvailable() const;
 
@@ -88,7 +88,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
-    Ui::EditorFindReplaceWidget *mGui;
+    Ui::EditorWidgetFindReplaceWidget *mGui;
 
     QAction *mDropDownAction;
 

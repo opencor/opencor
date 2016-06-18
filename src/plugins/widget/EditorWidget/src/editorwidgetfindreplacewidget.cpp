@@ -21,12 +21,12 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "editorfindreplacewidget.h"
+#include "editorwidgetfindreplacewidget.h"
 #include "i18ninterface.h"
 
 //==============================================================================
 
-#include "ui_editorfindreplacewidget.h"
+#include "ui_editorwidgetfindreplacewidget.h"
 
 //==============================================================================
 
@@ -53,9 +53,9 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
+EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::EditorFindReplaceWidget),
+    mGui(new Ui::EditorWidgetFindReplaceWidget),
     mActive(false)
 {
     // Set up the GUI
@@ -154,7 +154,7 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
 //==============================================================================
 
-EditorFindReplaceWidget::~EditorFindReplaceWidget()
+EditorWidgetFindReplaceWidget::~EditorWidgetFindReplaceWidget()
 {
     // Delete the GUI
 
@@ -163,7 +163,7 @@ EditorFindReplaceWidget::~EditorFindReplaceWidget()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::retranslateUi()
+void EditorWidgetFindReplaceWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -186,7 +186,7 @@ void EditorFindReplaceWidget::retranslateUi()
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::isCaseSensitive() const
+bool EditorWidgetFindReplaceWidget::isCaseSensitive() const
 {
     // Return whether the search is to be case sensitive
 
@@ -195,7 +195,7 @@ bool EditorFindReplaceWidget::isCaseSensitive() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::searchWholeWordsOnly() const
+bool EditorWidgetFindReplaceWidget::searchWholeWordsOnly() const
 {
     // Return whether we search whole words only
 
@@ -204,7 +204,7 @@ bool EditorFindReplaceWidget::searchWholeWordsOnly() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::useRegularExpression() const
+bool EditorWidgetFindReplaceWidget::useRegularExpression() const
 {
     // Return whether we use a regular expression
 
@@ -213,7 +213,7 @@ bool EditorFindReplaceWidget::useRegularExpression() const
 
 //==============================================================================
 
-void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
+void EditorWidgetFindReplaceWidget::setReadOnly(const bool &pReadOnly)
 {
     // Show/hide our replace-related widgets based on whether we are in
     // read-only mode
@@ -243,7 +243,7 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::isFindPreviousNextAvailable() const
+bool EditorWidgetFindReplaceWidget::isFindPreviousNextAvailable() const
 {
     // Return whether the find previous/next actions are available
 
@@ -252,7 +252,7 @@ bool EditorFindReplaceWidget::isFindPreviousNextAvailable() const
 
 //==============================================================================
 
-void EditorFindReplaceWidget::selectFindText() const
+void EditorWidgetFindReplaceWidget::selectFindText() const
 {
     // Select our find text
 
@@ -261,7 +261,7 @@ void EditorFindReplaceWidget::selectFindText() const
 
 //==============================================================================
 
-QString EditorFindReplaceWidget::findText() const
+QString EditorWidgetFindReplaceWidget::findText() const
 {
     // Return our find text
 
@@ -270,7 +270,7 @@ QString EditorFindReplaceWidget::findText() const
 
 //==============================================================================
 
-void EditorFindReplaceWidget::setFindText(const QString &pFindText)
+void EditorWidgetFindReplaceWidget::setFindText(const QString &pFindText)
 {
     // Set our find text and select it
 
@@ -281,7 +281,7 @@ void EditorFindReplaceWidget::setFindText(const QString &pFindText)
 
 //==============================================================================
 
-QString EditorFindReplaceWidget::replaceText() const
+QString EditorWidgetFindReplaceWidget::replaceText() const
 {
     // Return our replace text
 
@@ -290,7 +290,7 @@ QString EditorFindReplaceWidget::replaceText() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::findEditHasFocus() const
+bool EditorWidgetFindReplaceWidget::findEditHasFocus() const
 {
     // Return whether our find edit has the focus
 
@@ -299,7 +299,7 @@ bool EditorFindReplaceWidget::findEditHasFocus() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::replaceEditHasFocus() const
+bool EditorWidgetFindReplaceWidget::replaceEditHasFocus() const
 {
     // Return whether our replace edit has the focus
 
@@ -308,7 +308,7 @@ bool EditorFindReplaceWidget::replaceEditHasFocus() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::isActive() const
+bool EditorWidgetFindReplaceWidget::isActive() const
 {
     // Return whether we are active
 
@@ -317,7 +317,7 @@ bool EditorFindReplaceWidget::isActive() const
 
 //==============================================================================
 
-void EditorFindReplaceWidget::setActive(const bool &pActive)
+void EditorWidgetFindReplaceWidget::setActive(const bool &pActive)
 {
     if (pActive == mActive)
         return;
@@ -336,7 +336,7 @@ void EditorFindReplaceWidget::setActive(const bool &pActive)
 
 //==============================================================================
 
-void EditorFindReplaceWidget::updateFrom(EditorFindReplaceWidget *pFindReplace)
+void EditorWidgetFindReplaceWidget::updateFrom(EditorWidgetFindReplaceWidget *pFindReplace)
 {
     // Update our find and replace texts from the given find/replace widget
 
@@ -346,7 +346,7 @@ void EditorFindReplaceWidget::updateFrom(EditorFindReplaceWidget *pFindReplace)
 
 //==============================================================================
 
-void EditorFindReplaceWidget::updateHeight()
+void EditorWidgetFindReplaceWidget::updateHeight()
 {
     // Update our layout
     // Note: we shouldn't have to do this, but if the user opens a read-only and
@@ -364,7 +364,7 @@ void EditorFindReplaceWidget::updateHeight()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::updateStyleSheet()
+void EditorWidgetFindReplaceWidget::updateStyleSheet()
 {
     // Change the style of our tool buttons
 
@@ -394,7 +394,7 @@ void EditorFindReplaceWidget::updateStyleSheet()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::changeEvent(QEvent *pEvent)
+void EditorWidgetFindReplaceWidget::changeEvent(QEvent *pEvent)
 {
     // Check whether the palette has changed and if so then update our style
     // sheet
@@ -405,7 +405,7 @@ void EditorFindReplaceWidget::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
+void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Let people know that a key has been pressed
 
@@ -427,7 +427,7 @@ void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void EditorFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
+void EditorWidgetFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
 
@@ -440,7 +440,7 @@ void EditorFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void EditorFindReplaceWidget::on_findPreviousButton_clicked()
+void EditorWidgetFindReplaceWidget::on_findPreviousButton_clicked()
 {
     // Let people know that we want to find the previous occurrence of the text
 
@@ -449,7 +449,7 @@ void EditorFindReplaceWidget::on_findPreviousButton_clicked()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::on_findNextButton_clicked()
+void EditorWidgetFindReplaceWidget::on_findNextButton_clicked()
 {
     // Let people know that we want to find the next occurrence of the text
 
@@ -458,7 +458,7 @@ void EditorFindReplaceWidget::on_findNextButton_clicked()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::on_replaceButton_clicked()
+void EditorWidgetFindReplaceWidget::on_replaceButton_clicked()
 {
     // Let people know that we want to replace the current text
 
@@ -467,7 +467,7 @@ void EditorFindReplaceWidget::on_replaceButton_clicked()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::on_replaceAndFindButton_clicked()
+void EditorWidgetFindReplaceWidget::on_replaceAndFindButton_clicked()
 {
     // Let people know that we want to replace the current text and the find the
     // next occurence of the text
@@ -477,7 +477,7 @@ void EditorFindReplaceWidget::on_replaceAndFindButton_clicked()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::on_replaceAllButton_clicked()
+void EditorWidgetFindReplaceWidget::on_replaceAllButton_clicked()
 {
     // Let people know that we want to replace all the occurences of the text
 
@@ -486,7 +486,7 @@ void EditorFindReplaceWidget::on_replaceAllButton_clicked()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::searchOptionChanged()
+void EditorWidgetFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget
 
@@ -540,7 +540,7 @@ void EditorFindReplaceWidget::searchOptionChanged()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::updateClearFindTextAction(const QString &pText)
+void EditorWidgetFindReplaceWidget::updateClearFindTextAction(const QString &pText)
 {
     // Show/hide our clear text action, based on whether our find widget
     // contains some text
@@ -557,7 +557,7 @@ void EditorFindReplaceWidget::updateClearFindTextAction(const QString &pText)
 
 //==============================================================================
 
-void EditorFindReplaceWidget::updateClearReplaceTextAction(const QString &pText)
+void EditorWidgetFindReplaceWidget::updateClearReplaceTextAction(const QString &pText)
 {
     // Show/hide our clear text action, based on whether our replace widget
     // contains some text
