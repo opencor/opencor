@@ -34,6 +34,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QLineEdit;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace GraphPanelWidget {
 
@@ -59,7 +63,14 @@ public:
 private:
     Ui::GraphPanelWidgetCustomAxesWindow *mGui;
 
+    void checkValue(QLineEdit *pValue);
+
 private Q_SLOTS:
+    void on_xMinValue_textEdited(const QString &pValue);
+    void on_xMaxValue_textEdited(const QString &pValue);
+    void on_yMinValue_textEdited(const QString &pValue);
+    void on_yMaxValue_textEdited(const QString &pValue);
+
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 };

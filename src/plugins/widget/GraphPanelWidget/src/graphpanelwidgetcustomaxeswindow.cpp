@@ -118,13 +118,80 @@ double GraphPanelWidgetCustomAxesWindow::maxY() const
 
 //==============================================================================
 
+void GraphPanelWidgetCustomAxesWindow::checkValue(QLineEdit *pValue)
+{
+    // Check that we don't have an empty value and if we do then set the value
+    // to zero and select it
+
+    if (pValue->text().isEmpty()) {
+        pValue->setText("0");
+        pValue->selectAll();
+    }
+}
+
+//==============================================================================
+
+
+void GraphPanelWidgetCustomAxesWindow::on_xMinValue_textEdited(const QString &pValue)
+{
+    Q_UNUSED(pValue);
+
+    // Check our X-min value
+
+    checkValue(mGui->xMinValue);
+}
+
+//==============================================================================
+
+void GraphPanelWidgetCustomAxesWindow::on_xMaxValue_textEdited(const QString &pValue)
+{
+    Q_UNUSED(pValue);
+
+    // Check our X-max value
+
+    checkValue(mGui->xMaxValue);
+}
+
+//==============================================================================
+
+void GraphPanelWidgetCustomAxesWindow::on_yMinValue_textEdited(const QString &pValue)
+{
+    Q_UNUSED(pValue);
+
+    // Check our Y-min value
+
+    checkValue(mGui->yMinValue);
+}
+
+//==============================================================================
+
+void GraphPanelWidgetCustomAxesWindow::on_yMaxValue_textEdited(const QString &pValue)
+{
+    Q_UNUSED(pValue);
+
+    // Check our Y-max value
+
+    checkValue(mGui->yMaxValue);
+}
+
+//==============================================================================
+
 void GraphPanelWidgetCustomAxesWindow::on_buttonBox_accepted()
 {
     // Check that the values make sense
 
-    if ((minX() >= maxX()) || (minY() >= maxY())) {
+    bool xProblem = minX() >= maxX();
+    bool yProblem = minY() >= maxY();
+
+    if (xProblem && yProblem) {
         QMessageBox::warning(this, tr("Custom Axes"),
-                             tr("Both minimum values must be lower than their corresponding maximum values."));
+                             tr("X-min and Y-min must be lower than X-max and Y-max, respectively."));
+    } else if (xProblem) {
+        QMessageBox::warning(this, tr("Custom Axes"),
+                             tr("X-min must be lower than X-max."));
+    } else if (yProblem) {
+        QMessageBox::warning(this, tr("Custom Axes"),
+                             tr("Y-min must be lower than Y-max."));
     } else {
         // Confirm that we accepted the changes
 

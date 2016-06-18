@@ -8,20 +8,20 @@
         <translation>Axes Personnalisés</translation>
     </message>
     <message>
-        <source>X axis:</source>
-        <translation>Axe des X :</translation>
+        <source>X-min:</source>
+        <translation>X-min :</translation>
     </message>
     <message>
-        <source>Minimum:</source>
-        <translation>Minimum :</translation>
+        <source>X-max:</source>
+        <translation>X-max :</translation>
     </message>
     <message>
-        <source>Maximum:</source>
-        <translation>Maximum :</translation>
+        <source>Y-min:</source>
+        <translation>Y-min :</translation>
     </message>
     <message>
-        <source>Y axis:</source>
-        <translation>Axe des Y :</translation>
+        <source>Y-max:</source>
+        <translation>Y-max :</translation>
     </message>
 </context>
 <context>
@@ -74,8 +74,16 @@
         <translation>Axes Personnalisés</translation>
     </message>
     <message>
-        <source>Both minimum values must be lower than their corresponding maximum values.</source>
-        <translation>Les deux valeurs minimales doivent être inférieures à leurs valeurs maximales correspondantes.</translation>
+        <source>X-min and Y-min must be lower than X-max and Y-max, respectively.</source>
+        <translation>X-min et Y-min doivent être plus petits que X-max et Y-max, respectivement.</translation>
+    </message>
+    <message>
+        <source>X-min must be lower than X-max.</source>
+        <translation>X-min doit être plus petit que X-max.</translation>
+    </message>
+    <message>
+        <source>Y-min must be lower than Y-max.</source>
+        <translation>Y-min doit être plus petit que Y-max.</translation>
     </message>
 </context>
 </TS>
