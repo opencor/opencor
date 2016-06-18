@@ -231,6 +231,7 @@ private:
     QMenu *mContextMenu;
 
     QAction *mCopyToClipboardAction;
+    QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
@@ -281,6 +282,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void copyToClipboard();
+    void customAxes();
     void zoomIn();
     void zoomOut();
     void resetZoom();

@@ -99,7 +99,7 @@ void EditorListWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mClearAction, tr("Clear List"),
                                      tr("Clear the list"));
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy List To Clipboard"),
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy List to Clipboard"),
                                      tr("Copy the list to the clipboard"));
 }
 

@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidgetcustomaxeswindow.h"
 #include "i18ninterface.h"
 
 //==============================================================================
@@ -30,6 +31,7 @@ limitations under the License.
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QMenu>
+#include <QMessageBox>
 #include <QPaintEvent>
 
 //==============================================================================
@@ -517,12 +519,15 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu = new QMenu(this);
 
     mCopyToClipboardAction = Core::newAction(this);
+    mCustomAxesAction = Core::newAction(this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
+    connect(mCustomAxesAction, SIGNAL(triggered(bool)),
+            this, SLOT(customAxes()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -531,6 +536,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SLOT(resetZoom()));
 
     mContextMenu->addAction(mCopyToClipboardAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mZoomInAction);
     mContextMenu->addAction(mZoomOutAction);
@@ -567,8 +574,10 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
+    I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
+                                     tr("Specify custom axes for the graph panel"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                      tr("Zoom in the graph panel"));
     I18nInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
@@ -1479,6 +1488,37 @@ void GraphPanelPlotWidget::copyToClipboard()
     // Copy our contents to the clipboard
 
     QApplication::clipboard()->setPixmap(grab());
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::customAxes()
+{
+    // Specify custom axes for the graph panel
+
+    double oldMinX = minX();
+    double oldMaxX = maxX();
+    double oldMinY = minY();
+    double oldMaxY = maxY();
+
+    GraphPanelWidgetCustomAxesWindow customAxesWindow(oldMinX, oldMaxX, oldMinY, oldMaxY, this);
+
+    customAxesWindow.exec();
+
+    // Update our axes' values, if requested and only if they have actually
+    // changed
+
+    if (customAxesWindow.result() == QMessageBox::Accepted) {
+        double newMinX = customAxesWindow.minX();
+        double newMaxX = customAxesWindow.maxX();
+        double newMinY = customAxesWindow.minY();
+        double newMaxY = customAxesWindow.maxY();
+
+        if (   (newMinX != oldMinX) || (newMaxX != oldMaxX)
+            || (newMinY != oldMinY) || (newMaxY != oldMaxY)) {
+            setAxes(newMinX, newMaxX, newMinY, newMaxY);
+        }
+    }
 }
 
 //==============================================================================

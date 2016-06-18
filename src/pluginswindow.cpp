@@ -236,17 +236,19 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // if it doesn't contain any plugin
 
     foreach (QStandardItem *categoryItem, mPluginCategories) {
-        for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
+        for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
                 categoryItem->setCheckable(true);
 
                 break;
             }
+        }
 
-        if (!categoryItem->hasChildren())
+        if (!categoryItem->hasChildren()) {
             mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
                                                 mModel->invisibleRootItem()->index(),
                                                 true);
+        }
     }
 
     // Make sure that the loading state of all the plugins is right, including
@@ -311,13 +313,14 @@ void PluginsWindow::selectFirstVisibleCategory()
 {
     // Select the first visible category
 
-    foreach (QStandardItem *categoryItem, mPluginCategories)
+    foreach (QStandardItem *categoryItem, mPluginCategories) {
         if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
                                                 mModel->invisibleRootItem()->index())) {
             mGui->pluginsTreeView->setCurrentIndex(categoryItem->index());
 
             return;
         }
+    }
 
     // No visible category could be found
 
@@ -566,13 +569,14 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
         // Next, go through our selectable plugins and check whether one of them
         // needs our unselectable plugin
 
-        foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems)
+        foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems) {
             if (   (selectablePluginItem->checkState() == Qt::Checked)
                 && (mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies().contains(unselectablePluginItem->text()))) {
                 unselectablePluginItem->setCheckState(Qt::Checked);
 
                 break;
             }
+        }
     }
 
     // Update the selected state of all our categories which have at least one
@@ -599,12 +603,13 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
                 }
             }
 
-            if (nbOfPlugins != nbOfUnselectablePlugins)
+            if (nbOfPlugins != nbOfUnselectablePlugins) {
                 categoryItem->setCheckState(nbOfSelectedSelectablePlugins?
                                                 (nbOfSelectedSelectablePlugins == nbOfSelectablePlugins)?
                                                     Qt::Checked:
                                                     Qt::PartiallyChecked:
                                                 Qt::Unchecked);
+            }
         }
     }
 
@@ -614,24 +619,27 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
 
     // Check whether the OK and apply buttons should be enabled
 
-    if (pInitializing)
+    if (pInitializing) {
         // We are initialising the plugins window, so retrieve the initial
         // loading state of the plugins
 
         foreach (QStandardItem *plugin,
-                 mSelectablePluginItems+mUnselectablePluginItems)
+                 mSelectablePluginItems+mUnselectablePluginItems) {
             mInitialLoadingStates.insert(plugin->text(),
                                          plugin->checkState() == Qt::Checked);
+        }
+    }
 
     bool buttonsEnabled = false;
 
-    foreach (QStandardItem *plugin, mSelectablePluginItems+mUnselectablePluginItems)
+    foreach (QStandardItem *plugin, mSelectablePluginItems+mUnselectablePluginItems) {
         if (   mInitialLoadingStates.value(plugin->text())
             != (plugin->checkState() == Qt::Checked)) {
             buttonsEnabled = true;
 
             break;
         }
+    }
 
     mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(buttonsEnabled);
     mGui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(buttonsEnabled);
@@ -658,9 +666,10 @@ void PluginsWindow::on_buttonBox_accepted()
 {
     // Keep track of the loading state of the various selectable plugins
 
-    foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems)
+    foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems) {
         Plugin::setLoad(selectablePluginItem->text(),
                         selectablePluginItem->checkState() == Qt::Checked);
+    }
 
     // Confirm that we accepted the changes
 
@@ -719,9 +728,10 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
 {
     // Show/hide our unselectable plugins
 
-    foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems)
+    foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems) {
         mGui->pluginsTreeView->setRowHidden(unselectablePluginItem->row(),
                                             unselectablePluginItem->parent()->index(), pChecked);
+    }
 
     // Show/hide our categories, based on whether they contain visible plugins
 
@@ -734,13 +744,14 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
 
             bool hideCategory = true;
 
-            for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
+            for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
                 if (!mGui->pluginsTreeView->isRowHidden(categoryItem->child(i)->row(),
                                                         categoryItem->index())) {
                     hideCategory = false;
 
                     break;
                 }
+            }
 
             mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
                                                 mModel->invisibleRootItem()->index(),

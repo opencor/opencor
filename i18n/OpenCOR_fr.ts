@@ -4,8 +4,8 @@
 <context>
     <name>CheckForUpdatesWindow</name>
     <message>
-        <source>Check for updates...</source>
-        <translation>Vérifier pour des mises à jour...</translation>
+        <source>Check for Updates</source>
+        <translation>Vérifier pour des Mises à Jour</translation>
     </message>
     <message>
         <source>Recheck</source>
