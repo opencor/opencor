@@ -47,8 +47,8 @@
         <translation>Effacer la liste</translation>
     </message>
     <message>
-        <source>Copy List To Clipboard</source>
-        <translation>Copier Liste Dans Presse-Papier</translation>
+        <source>Copy List to Clipboard</source>
+        <translation>Copier Liste dans Presse-Papier</translation>
     </message>
     <message>
         <source>Copy the list to the clipboard</source>
