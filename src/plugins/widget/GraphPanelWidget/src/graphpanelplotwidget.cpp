@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidgetcustomaxeswindow.h"
 #include "i18ninterface.h"
 
 //==============================================================================
@@ -1494,7 +1495,9 @@ void GraphPanelPlotWidget::customAxes()
 {
     // Specify custom axes for the graph panel
 
-//---GRY--- TO BE DONE...
+    GraphPanelWidgetCustomAxesWindow customAxesWindow(this);
+
+    customAxesWindow.exec();
 }
 
 //==============================================================================

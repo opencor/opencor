@@ -53,6 +53,24 @@ GraphPanelWidgetCustomAxesWindow::~GraphPanelWidgetCustomAxesWindow()
 
 //==============================================================================
 
+void GraphPanelWidgetCustomAxesWindow::on_buttonBox_accepted()
+{
+    // Confirm that we accepted the changes
+
+    accept();
+}
+
+//==============================================================================
+
+void GraphPanelWidgetCustomAxesWindow::on_buttonBox_rejected()
+{
+    // Simply cancel whatever was done here
+
+    reject();
+}
+
+//==============================================================================
+
 }   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 

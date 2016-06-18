@@ -5,7 +5,23 @@
     <name>GraphPanelWidgetCustomAxesWindow</name>
     <message>
         <source>Custom axes...</source>
-        <translation>Coordonnées personnalisées...</translation>
+        <translation>Axes personnalisés...</translation>
+    </message>
+    <message>
+        <source>X axis:</source>
+        <translation>Axe des X :</translation>
+    </message>
+    <message>
+        <source>Minimum:</source>
+        <translation>Minimum :</translation>
+    </message>
+    <message>
+        <source>Maximum:</source>
+        <translation>Maximum :</translation>
+    </message>
+    <message>
+        <source>Y axis:</source>
+        <translation>Axe des Y :</translation>
     </message>
 </context>
 <context>
@@ -20,11 +36,11 @@
     </message>
     <message>
         <source>Custom Axes...</source>
-        <translation>Coordonnées Personnalisées...</translation>
+        <translation>Axes Personnalisés...</translation>
     </message>
     <message>
         <source>Specify custom axes for the graph panel</source>
-        <translation>Spécifier des coordonnées personnalisées pour le panneau graphique</translation>
+        <translation>Spécifier des axes personnalisés pour le panneau graphique</translation>
     </message>
     <message>
         <source>Zoom In</source>

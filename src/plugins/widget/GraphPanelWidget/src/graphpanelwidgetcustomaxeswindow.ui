@@ -7,15 +7,89 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>168</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Custom axes...</string>
   </property>
   <layout class="QVBoxLayout" name="layout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetFixedSize</enum>
+   </property>
    <item>
-    <widget class="QTextEdit" name="textEdit"/>
+    <widget class="QLabel" name="xAxisLabel">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>X axis:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="xLayout">
+     <item>
+      <widget class="QLabel" name="xMinimumLabel">
+       <property name="text">
+        <string>Minimum:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="xMinimumValue"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="xMaximumLabel">
+       <property name="text">
+        <string>Maximum:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="xMaximumValue"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="yAxisLabel">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Y axis:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="yLayout">
+     <item>
+      <widget class="QLabel" name="yMinimumLabel">
+       <property name="text">
+        <string>Minimum:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="yMinimumValue"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="yMaximumLabel">
+       <property name="text">
+        <string>Maximum:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="yMaximumValue"/>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

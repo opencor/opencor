@@ -49,6 +49,10 @@ public:
 
 private:
     Ui::GraphPanelWidgetCustomAxesWindow *mGui;
+
+private Q_SLOTS:
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
 };
 
 //==============================================================================
