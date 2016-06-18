@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>GraphPanelWidgetCustomAxesWindow</name>
+    <message>
+        <source>Custom axes...</source>
+        <translation>Coordonnées personnalisées...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
         <source>Copy To Clipboard</source>
