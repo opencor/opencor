@@ -1505,6 +1505,24 @@ void GraphPanelPlotWidget::forceAlignWithNeighbors()
 
 //==============================================================================
 
+void GraphPanelPlotWidget::setSynchronizeXAxis(const bool &pSynchronizeXAxis)
+{
+    // Update the checked state of our X axis synchronisation action
+
+    mSynchronizeXAxisAction->setChecked(pSynchronizeXAxis);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setSynchronizeYAxis(const bool &pSynchronizeYAxis)
+{
+    // Update the checked state of our Y axis synchronisation action
+
+    mSynchronizeYAxisAction->setChecked(pSynchronizeYAxis);
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::copyToClipboard()
 {
     // Copy our contents to the clipboard
@@ -1516,16 +1534,22 @@ void GraphPanelPlotWidget::copyToClipboard()
 
 void GraphPanelPlotWidget::synchronizeXAxis()
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> GraphPanelPlotWidget::synchronizeXAxis()...");
+    // Let our neighbours know about the checked state of our X axis
+    // synchronisation action
+
+    foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
+        neighbor->setSynchronizeXAxis(mSynchronizeXAxisAction->isChecked());
 }
 
 //==============================================================================
 
 void GraphPanelPlotWidget::synchronizeYAxis()
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> GraphPanelPlotWidget::synchronizeYAxis()...");
+    // Let our neighbours know about the checked state of our Y axis
+    // synchronisation action
+
+    foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
+        neighbor->setSynchronizeYAxis(mSynchronizeYAxisAction->isChecked());
 }
 
 //==============================================================================

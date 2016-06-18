@@ -192,6 +192,9 @@ public:
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
 
+    void setSynchronizeXAxis(const bool &pSynchronizeXAxis);
+    void setSynchronizeYAxis(const bool &pSynchronizeYAxis);
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
