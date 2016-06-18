@@ -519,6 +519,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu = new QMenu(this);
 
     mCopyToClipboardAction = Core::newAction(this);
+    mSynchronizeXAxisAction = Core::newAction(true, this);
+    mSynchronizeYAxisAction = Core::newAction(true, this);
     mCustomAxesAction = Core::newAction(this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
@@ -526,6 +528,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
+    connect(mSynchronizeXAxisAction, SIGNAL(triggered(bool)),
+            this, SLOT(synchronizeXAxis()));
+    connect(mSynchronizeYAxisAction, SIGNAL(triggered(bool)),
+            this, SLOT(synchronizeYAxis()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
@@ -536,6 +542,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SLOT(resetZoom()));
 
     mContextMenu->addAction(mCopyToClipboardAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mSynchronizeXAxisAction);
+    mContextMenu->addAction(mSynchronizeYAxisAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
@@ -576,6 +585,10 @@ void GraphPanelPlotWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
+    I18nInterface::retranslateAction(mSynchronizeXAxisAction, tr("Synchonise X Axis"),
+                                     tr("Synchronise the X axis of all graph panels"));
+    I18nInterface::retranslateAction(mSynchronizeYAxisAction, tr("Synchonise Y Axis"),
+                                     tr("Synchronise the Y axis of all graph panels"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
@@ -644,6 +657,9 @@ void GraphPanelPlotWidget::updateActions()
     mCanZoomOutY = crtRangeY < MaxAxisRange;
 
     // Update the enabled status of our actions
+
+    mSynchronizeXAxisAction->setEnabled(!mNeighbors.isEmpty());
+    mSynchronizeYAxisAction->setEnabled(!mNeighbors.isEmpty());
 
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
@@ -1398,19 +1414,25 @@ GraphPanelPlotWidgets GraphPanelPlotWidget::neighbors() const
 
 void GraphPanelPlotWidget::addNeighbor(GraphPanelPlotWidget *pPlot)
 {
-    // Add the plot as a neighbour
+    // Add the plot as a neighbour and make sure our actions are up to date
 
-    if ((pPlot != this) && !mNeighbors.contains(pPlot))
+    if ((pPlot != this) && !mNeighbors.contains(pPlot)) {
         mNeighbors << pPlot;
+
+        updateActions();
+    }
 }
 
 //==============================================================================
 
 void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 {
-    // Remove the plot from our neighbours
+    // Remove the plot from our neighbours and make sure our actions are up to
+    // date
 
     mNeighbors.removeOne(pPlot);
+
+    updateActions();
 }
 
 //==============================================================================
@@ -1488,6 +1510,22 @@ void GraphPanelPlotWidget::copyToClipboard()
     // Copy our contents to the clipboard
 
     QApplication::clipboard()->setPixmap(grab());
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::synchronizeXAxis()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> GraphPanelPlotWidget::synchronizeXAxis()...");
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::synchronizeYAxis()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> GraphPanelPlotWidget::synchronizeYAxis()...");
 }
 
 //==============================================================================
