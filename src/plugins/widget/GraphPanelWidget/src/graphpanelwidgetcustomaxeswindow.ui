@@ -33,24 +33,24 @@
    <item>
     <layout class="QHBoxLayout" name="xLayout">
      <item>
-      <widget class="QLabel" name="xMinimumLabel">
+      <widget class="QLabel" name="xMinLabel">
        <property name="text">
         <string>Minimum:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="xMinimumValue"/>
+      <widget class="QLineEdit" name="xMinValue"/>
      </item>
      <item>
-      <widget class="QLabel" name="xMaximumLabel">
+      <widget class="QLabel" name="xMaxLabel">
        <property name="text">
         <string>Maximum:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="xMaximumValue"/>
+      <widget class="QLineEdit" name="xMaxValue"/>
      </item>
     </layout>
    </item>
@@ -70,24 +70,24 @@
    <item>
     <layout class="QHBoxLayout" name="yLayout">
      <item>
-      <widget class="QLabel" name="yMinimumLabel">
+      <widget class="QLabel" name="yMinLabel">
        <property name="text">
         <string>Minimum:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="yMinimumValue"/>
+      <widget class="QLineEdit" name="yMinValue"/>
      </item>
      <item>
-      <widget class="QLabel" name="yMaximumLabel">
+      <widget class="QLabel" name="yMaxLabel">
        <property name="text">
         <string>Maximum:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="yMaximumValue"/>
+      <widget class="QLineEdit" name="yMaxValue"/>
      </item>
     </layout>
    </item>

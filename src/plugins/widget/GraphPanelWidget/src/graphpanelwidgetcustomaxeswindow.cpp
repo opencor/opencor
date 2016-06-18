@@ -33,13 +33,24 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelWidgetCustomAxesWindow::GraphPanelWidgetCustomAxesWindow(QWidget *pParent) :
+GraphPanelWidgetCustomAxesWindow::GraphPanelWidgetCustomAxesWindow(const double &pMinX,
+                                                                   const double &pMaxX,
+                                                                   const double &pMinY,
+                                                                   const double &pMaxY,
+                                                                   QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesWindow)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Populate ourselves
+
+    mGui->xMinValue->setText(QString::number(pMinX));
+    mGui->xMaxValue->setText(QString::number(pMaxX));
+    mGui->yMinValue->setText(QString::number(pMinY));
+    mGui->yMaxValue->setText(QString::number(pMaxY));
 }
 
 //==============================================================================
@@ -49,6 +60,42 @@ GraphPanelWidgetCustomAxesWindow::~GraphPanelWidgetCustomAxesWindow()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+double GraphPanelWidgetCustomAxesWindow::minX() const
+{
+    // Return our minimum X value
+
+    return mGui->xMinValue->text().toDouble();
+}
+
+//==============================================================================
+
+double GraphPanelWidgetCustomAxesWindow::maxX() const
+{
+    // Return our maximum X value
+
+    return mGui->xMaxValue->text().toDouble();
+}
+
+//==============================================================================
+
+double GraphPanelWidgetCustomAxesWindow::minY() const
+{
+    // Return our minimum Y value
+
+    return mGui->yMinValue->text().toDouble();
+}
+
+//==============================================================================
+
+double GraphPanelWidgetCustomAxesWindow::maxY() const
+{
+    // Return our maximum Y value
+
+    return mGui->yMaxValue->text().toDouble();
 }
 
 //==============================================================================

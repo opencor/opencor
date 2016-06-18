@@ -31,6 +31,7 @@ limitations under the License.
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QMenu>
+#include <QMessageBox>
 #include <QPaintEvent>
 
 //==============================================================================
@@ -1495,9 +1496,14 @@ void GraphPanelPlotWidget::customAxes()
 {
     // Specify custom axes for the graph panel
 
-    GraphPanelWidgetCustomAxesWindow customAxesWindow(this);
+    GraphPanelWidgetCustomAxesWindow customAxesWindow(minX(), maxX(), minY(), maxY(), this);
 
     customAxesWindow.exec();
+
+    if (customAxesWindow.result() == QMessageBox::Accepted) {
+        setAxes(customAxesWindow.minX(), customAxesWindow.maxX(),
+                customAxesWindow.minY(), customAxesWindow.maxY());
+    }
 }
 
 //==============================================================================

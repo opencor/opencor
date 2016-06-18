@@ -44,8 +44,17 @@ class GraphPanelWidgetCustomAxesWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit GraphPanelWidgetCustomAxesWindow(QWidget *pParent);
+    explicit GraphPanelWidgetCustomAxesWindow(const double &pMinX,
+                                              const double &pMaxX,
+                                              const double &pMinY,
+                                              const double &pMaxY,
+                                              QWidget *pParent);
     ~GraphPanelWidgetCustomAxesWindow();
+
+    double minX() const;
+    double maxX() const;
+    double minY() const;
+    double maxY() const;
 
 private:
     Ui::GraphPanelWidgetCustomAxesWindow *mGui;
