@@ -4,8 +4,8 @@
 <context>
     <name>GraphPanelWidgetCustomAxesWindow</name>
     <message>
-        <source>Custom axes...</source>
-        <translation>Axes personnalisés...</translation>
+        <source>Custom Axes</source>
+        <translation>Axes Personnalisés</translation>
     </message>
     <message>
         <source>X axis:</source>
@@ -27,8 +27,8 @@
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
-        <source>Copy To Clipboard</source>
-        <translation>Copier Dans Presse-Papier</translation>
+        <source>Copy to Clipboard</source>
+        <translation>Copier dans Presse-Papier</translation>
     </message>
     <message>
         <source>Copy the contents of the graph panel to the clipboard</source>
@@ -65,6 +65,17 @@
     <message>
         <source>Reset the zoom level of the graph panel</source>
         <translation>Réinitialiser la taille du panneau graphique</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::GraphPanelWidget::GraphPanelWidgetCustomAxesWindow</name>
+    <message>
+        <source>Custom Axes</source>
+        <translation>Axes Personnalisés</translation>
+    </message>
+    <message>
+        <source>Both minimum values must be lower than their corresponding maximum values.</source>
+        <translation>Les deux valeurs minimales doivent être inférieures à leurs valeurs maximales correspondantes.</translation>
     </message>
 </context>
 </TS>

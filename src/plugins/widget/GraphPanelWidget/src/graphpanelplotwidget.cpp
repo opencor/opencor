@@ -574,7 +574,7 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
@@ -1496,13 +1496,28 @@ void GraphPanelPlotWidget::customAxes()
 {
     // Specify custom axes for the graph panel
 
-    GraphPanelWidgetCustomAxesWindow customAxesWindow(minX(), maxX(), minY(), maxY(), this);
+    double oldMinX = minX();
+    double oldMaxX = maxX();
+    double oldMinY = minY();
+    double oldMaxY = maxY();
+
+    GraphPanelWidgetCustomAxesWindow customAxesWindow(oldMinX, oldMaxX, oldMinY, oldMaxY, this);
 
     customAxesWindow.exec();
 
+    // Update our axes' values, if requested and only if they have actually
+    // changed
+
     if (customAxesWindow.result() == QMessageBox::Accepted) {
-        setAxes(customAxesWindow.minX(), customAxesWindow.maxX(),
-                customAxesWindow.minY(), customAxesWindow.maxY());
+        double newMinX = customAxesWindow.minX();
+        double newMaxX = customAxesWindow.maxX();
+        double newMinY = customAxesWindow.minY();
+        double newMaxY = customAxesWindow.maxY();
+
+        if (   (newMinX != oldMinX) || (newMaxX != oldMaxX)
+            || (newMinY != oldMinY) || (newMaxY != oldMaxY)) {
+            setAxes(newMinX, newMaxX, newMinY, newMaxY);
+        }
     }
 }
 

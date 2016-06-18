@@ -24,6 +24,11 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QMessageBox>
+#include <QRegularExpressionValidator>
+
+//==============================================================================
+
 #include "ui_graphpanelwidgetcustomaxeswindow.h"
 
 //==============================================================================
@@ -45,12 +50,25 @@ GraphPanelWidgetCustomAxesWindow::GraphPanelWidgetCustomAxesWindow(const double 
 
     mGui->setupUi(this);
 
+    // Only allow double numbers
+
+    QRegularExpressionValidator *doubleRegExValidator = new QRegularExpressionValidator(QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$"), this);
+
+    mGui->xMinValue->setValidator(doubleRegExValidator);
+    mGui->xMaxValue->setValidator(doubleRegExValidator);
+    mGui->yMinValue->setValidator(doubleRegExValidator);
+    mGui->yMaxValue->setValidator(doubleRegExValidator);
+
     // Populate ourselves
 
     mGui->xMinValue->setText(QString::number(pMinX));
     mGui->xMaxValue->setText(QString::number(pMaxX));
     mGui->yMinValue->setText(QString::number(pMinY));
     mGui->yMaxValue->setText(QString::number(pMaxY));
+
+    // Select all of the minimum X value
+
+    mGui->xMinValue->selectAll();
 }
 
 //==============================================================================
@@ -102,9 +120,16 @@ double GraphPanelWidgetCustomAxesWindow::maxY() const
 
 void GraphPanelWidgetCustomAxesWindow::on_buttonBox_accepted()
 {
-    // Confirm that we accepted the changes
+    // Check that the values make sense
 
-    accept();
+    if ((minX() >= maxX()) || (minY() >= maxY())) {
+        QMessageBox::warning(this, tr("Custom Axes"),
+                             tr("Both minimum values must be lower than their corresponding maximum values."));
+    } else {
+        // Confirm that we accepted the changes
+
+        accept();
+    }
 }
 
 //==============================================================================
