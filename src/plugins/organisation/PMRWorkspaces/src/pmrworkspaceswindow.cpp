@@ -83,9 +83,15 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     mWorkspacesWidget = new PmrWorkspacesWidget(mPmrRepository, this);
 
-    mWorkspacesWidget->setObjectName("PmrWorkspacesWidget");
-
-    mGui->layout->addWidget(mWorkspacesWidget);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWorkspacesWidget,
+                                                                           true, true, true, true));
+#elif defined(Q_OS_MAC)
+    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWorkspacesWidget,
+                                                                           true, false, false, false));
+#else
+    #error Unsupported platform
+#endif
 
     // Create and populate our context menu
 

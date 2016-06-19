@@ -30,6 +30,25 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <item>
+     <layout class="QHBoxLayout" name="subLayout">
+      <property name="spacing">
+       <number>8</number>
+      </property>
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+     </layout>
+    </item>
    </layout>
   </widget>
   <action name="actionAuthenticate">
@@ -40,7 +59,7 @@
    <property name="text">
     <string>Log on</string>
    </property>
-   <property name="statusTip">
+   <property name="toolTip">
     <string>Log on to PMR</string>
    </property>
   </action>
@@ -52,7 +71,7 @@
    <property name="text">
     <string>Log off</string>
    </property>
-   <property name="statusTip">
+   <property name="toolTip">
     <string>Log off PMR</string>
    </property>
    <property name="visible">
@@ -65,9 +84,9 @@
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
-    <string>New workspace</string>
+    <string>New</string>
    </property>
-   <property name="statusTip">
+   <property name="toolTip">
     <string>Create a new workspace</string>
    </property>
   </action>
