@@ -80,6 +80,11 @@ Q_SIGNALS:
     void refreshWorkspaces(void);
 
 private Q_SLOTS:
+    void busy(const bool &pBusy);
+    void showError(const QString &pMessage);
+    void showInformation(const QString &pMessage);
+    void showWarning(const QString &pMessage);
+
     void on_actionAuthenticate_triggered();
     void on_actionNew_triggered();
     void on_actionInfo_triggered();

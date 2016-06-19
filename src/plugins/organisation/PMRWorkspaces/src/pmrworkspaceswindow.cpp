@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 // Workspaces window
 //==============================================================================
 
+#include "borderedwidget.h"
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "pmrworkspacesnewworkspace.h"
 #include "pmrworkspaceswindow.h"
 #include "pmrworkspaceswidget.h"
@@ -34,6 +37,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QMainWindow>
+#include <QMessageBox>
 #include <QMenu>
 #include <QPoint>
 #include <QSettings>
@@ -102,6 +107,12 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Some connections to process responses from the PMR repository
 
+    connect(mPmrRepository, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
+
+    connect(mPmrRepository, SIGNAL(error(QString, bool)), this, SLOT(showError(QString)));
+    connect(mPmrRepository, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
+    connect(mPmrRepository, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
+
     connect(mPmrRepository, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
     connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
             mWorkspacesWidget, SLOT(initialiseWorkspaces(PMRSupport::PmrWorkspaceList)));
@@ -159,6 +170,58 @@ void PmrWorkspacesWindow::saveSettings(QSettings *pSettings) const
     pSettings->beginGroup(mWorkspacesWidget->objectName());
         mWorkspacesWidget->saveSettings(pSettings);
     pSettings->endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::busy(const bool &pBusy)
+{
+    // Show ourselves as busy or not busy anymore
+
+    static int counter = 0;
+
+    counter += pBusy?1:-1;
+
+    if (pBusy && (counter == 1)) {
+        showBusyWidget(mWorkspacesWidget);
+
+        mGui->dockWidgetContents->setEnabled(false);
+    } else if (!pBusy && !counter) {
+        // Re-enable the GUI side
+
+        hideBusyWidget();
+
+        mGui->dockWidgetContents->setEnabled(true);
+
+        // And give focus to??
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::showError(const QString &pMessage)
+{
+    // Show the given message as an error
+
+    QMessageBox::critical(Core::mainWindow(), windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::showInformation(const QString &pMessage)
+{
+    // Show the given message as informative text
+
+    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::showWarning(const QString &pMessage)
+{
+    // Show the given message as a warning
+
+    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
