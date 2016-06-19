@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDir>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QMenu>
