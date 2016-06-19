@@ -43,6 +43,7 @@ specific language governing permissions and limitations under the License.
 #include <QMenu>
 #include <QPoint>
 #include <QSettings>
+#include <QTimer>
 
 //==============================================================================
 
@@ -94,6 +95,11 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
+    // Keep track of the window's visibility, so that we can request the list of
+    // exposures, if necessary
+
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(retrieveWorkspacesList(bool)));
+
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
@@ -128,10 +134,9 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
-    // Request authentication status which will result in workspace list being
-    // populated if we are in fact authenticated with PMR.
+    // Retranslate the GUI
 
-    mPmrRepository->getAuthenticationStatus();
+    retranslateUi();
 }
 
 //==============================================================================
@@ -232,6 +237,34 @@ void PmrWorkspacesWindow::showWarning(const QString &pMessage)
 
 //==============================================================================
 
+void PmrWorkspacesWindow::retrieveWorkspacesList(const bool &pVisible)
+{
+    // Request authentication status, if we are becoming visible and the list
+    // of workspaces has never been requested before (through a single shot, this
+    // to allow other events, such as the one asking OpenCOR's main window to
+    // resize itself, to be handled properly). This will result in the workspace
+    // list being populated if we are in fact authenticated with PMR.
+
+    static bool firstTime = true;
+
+    if (pVisible && firstTime) {
+        firstTime = false;
+
+        QTimer::singleShot(0, this, SLOT(getAuthenticationStatus()));
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::getAuthenticationStatus(void)
+{
+    // Results in us being sent an `authenticated` signal.
+
+    mPmrRepository->getAuthenticationStatus();
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
 {
     // Show authentication state and allow workspace creation if authenticated
@@ -292,7 +325,7 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
 
 void PmrWorkspacesWindow::on_actionRefresh_triggered()
 {
-    // Refresh the list of workspaces
+    // Request the list of workspaces
 
     mPmrRepository->requestWorkspacesList();
 }
@@ -302,6 +335,7 @@ void PmrWorkspacesWindow::on_actionRefresh_triggered()
 void PmrWorkspacesWindow::on_actionUnauthenticate_triggered()
 {
     // Log off PMR
+
     mPmrRepository->authenticate(false);
 }
 

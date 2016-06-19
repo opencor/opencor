@@ -82,6 +82,10 @@ private Q_SLOTS:
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
 
+    void getAuthenticationStatus(void);
+    void retrieveWorkspacesList(const bool &pVisible);
+    void updateAuthenticationStatus(const bool &pAuthenticated);
+
     void on_actionAuthenticate_triggered();
     void on_actionNew_triggered();
     void on_actionRefresh_triggered();
@@ -89,8 +93,6 @@ private Q_SLOTS:
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-
-    void updateAuthenticationStatus(const bool &pAuthenticated);
 
     void showCustomContextMenu() const;
 };
