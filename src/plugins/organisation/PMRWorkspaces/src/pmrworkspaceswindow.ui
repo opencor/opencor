@@ -71,16 +71,16 @@
     <string>Create a new workspace</string>
    </property>
   </action>
-  <action name="actionInfo">
+  <action name="actionRefresh">
    <property name="icon">
-    <iconset resource="../res/PmrWorkspaces_ui.qrc">
-     <normaloff>:/oxygen/actions/help-about.png</normaloff>:/oxygen/actions/help-about.png</iconset>
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
    </property>
    <property name="text">
-    <string>About</string>
+    <string>Refresh</string>
    </property>
-   <property name="statusTip">
-    <string>Show information about the selected object</string>
+   <property name="toolTip">
+    <string>Refresh the list of workspaces</string>
    </property>
   </action>
  </widget>

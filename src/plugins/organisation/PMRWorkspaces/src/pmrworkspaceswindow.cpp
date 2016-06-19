@@ -70,12 +70,12 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     toolBarWidget->addAction(mGui->actionUnauthenticate);
     toolBarWidget->addAction(mGui->actionNew);
 
-    // Right align info action
+    // Right align refresh tool
 
     QWidget *spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     toolBarWidget->addWidget(spacer);
-    toolBarWidget->addAction(mGui->actionInfo);
+    toolBarWidget->addAction(mGui->actionRefresh);
 
     mGui->layout->addWidget(toolBarWidget);
 
@@ -94,7 +94,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     mContextMenu->addAction(mGui->actionAuthenticate);
     mContextMenu->addAction(mGui->actionUnauthenticate);
     mContextMenu->addAction(mGui->actionNew);
-    mContextMenu->addAction(mGui->actionInfo);
+    mContextMenu->addAction(mGui->actionRefresh);
 
     // We want our own context menu for the workspaces widget
 
@@ -121,11 +121,10 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
-    // Some connections to update our state
+    // Request authentication status which will result in workspace list being
+    // populated if we are in fact authenticated with PMR.
 
-    connect(this, SIGNAL(refreshWorkspaces(void)), mPmrRepository, SLOT(getAuthenticationStatus()));
-
-    emit refreshWorkspaces();
+    mPmrRepository->getAuthenticationStatus();
 }
 
 //==============================================================================
@@ -233,12 +232,14 @@ void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
     if (pAuthenticated) {
         mGui->actionAuthenticate->setVisible(false);
         mGui->actionNew->setEnabled(true);
+        mGui->actionRefresh->setEnabled(true);
         mGui->actionUnauthenticate->setVisible(true);
         mWorkspacesWidget->refreshWorkspaces();
     }
     else {
         mGui->actionAuthenticate->setVisible(true);
         mGui->actionNew->setEnabled(false);
+        mGui->actionRefresh->setEnabled(false);
         mGui->actionUnauthenticate->setVisible(false);
         mWorkspacesWidget->clearWorkspaces();
     }
@@ -282,10 +283,11 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindow::on_actionInfo_triggered()
+void PmrWorkspacesWindow::on_actionRefresh_triggered()
 {
-    // Show information about the selected object
-    mPmrRepository->requestWorkspacesList();  // ***** TEMP
+    // Refresh the list of workspaces
+
+    mPmrRepository->requestWorkspacesList();
 }
 
 //==============================================================================
