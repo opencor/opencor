@@ -45,7 +45,8 @@ namespace PMRWorkspaces {
 
 PmrWorkspacesNewWorkspace::PmrWorkspacesNewWorkspace(QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesNewWorkspace)
+    mGui(new Ui::PmrWorkspacesNewWorkspace),
+    mPathChosen(false)
 {
     // Set up the GUI
 
@@ -63,9 +64,8 @@ PmrWorkspacesNewWorkspace::PmrWorkspacesNewWorkspace(QWidget *pParent) :
     connect(mGui->path, SIGNAL(textChanged(const QString &)),
             this, SLOT(setPathToolTip(const QString &)));
 
-    connect(mGui->title, SIGNAL(editingFinished()),  this, SLOT(setPath()));
     connect(mGui->title, SIGNAL(textChanged(const QString &)),
-            this, SLOT(checkTitle(const QString &)));
+            this, SLOT(titleTextChanged(const QString &)));
 
     connect(mGui->cancel_save, SIGNAL(accepted()), this, SLOT(accept()));
     connect(mGui->cancel_save, SIGNAL(rejected()), this, SLOT(reject()));
@@ -112,11 +112,18 @@ const QString PmrWorkspacesNewWorkspace::title(void) const
 
 //==============================================================================
 
-void PmrWorkspacesNewWorkspace::checkTitle(const QString &text)
+void PmrWorkspacesNewWorkspace::titleTextChanged(const QString &text)
 {
     // Only save if there is a title
 
     mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!text.trimmed().isEmpty());
+
+    // Set the path if the user hasn't explicitly chosen one
+
+    if (!text.trimmed().isEmpty() && !mPathChosen) {
+        mGui->path->setText(PMRSupport::PmrWorkspace::WorkspacesDirectory
+                            + QDir::separator() + text.trimmed());
+    }
 }
 
 //==============================================================================
@@ -132,18 +139,10 @@ void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
                          : mGui->path->text();
     QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"), defaultDir, true);
 
-    if (!dirName.isEmpty()) mGui->path->setText(dirName);
-}
-
-//==============================================================================
-
-void PmrWorkspacesNewWorkspace::setPath(void)
-{
-    // Set the default path to the new workspace's title
-
-    if (!mGui->title->text().isEmpty() && mGui->path->text().isEmpty())
-        mGui->path->setText(PMRSupport::PmrWorkspace::WorkspacesDirectory
-                            + QDir::separator() + mGui->title->text());
+    if (!dirName.isEmpty()) {
+        mGui->path->setText(dirName);
+        mPathChosen = true;
+        }
 }
 
 //==============================================================================

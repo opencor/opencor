@@ -53,15 +53,15 @@ public:
     const QString title(void) const;
 
 private Q_SLOTS:
-    void checkTitle(const QString &text);
+    void titleTextChanged(const QString &text);
 
     void choosePath(const bool &checked);
-    void setPath(void);
     void setPathToolTip(const QString &text);
 
 
 private:
     Ui::PmrWorkspacesNewWorkspace *mGui;
+    bool mPathChosen;
 };
 
 //==============================================================================
