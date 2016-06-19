@@ -53,11 +53,12 @@ private:
 Q_SIGNALS:
     void busy(bool);
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
+    void finished(void);
     void gotJsonResponse(const QJsonDocument &pJsonDocument);
     void movedLocation(const QString &locationUrl);
 
 private Q_SLOTS:
-    void finished(void);
+    void processResponse(void);
 };
 
 //==============================================================================

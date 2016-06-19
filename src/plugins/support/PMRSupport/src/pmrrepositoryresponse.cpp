@@ -48,12 +48,12 @@ const QStringList PmrRepositoryResponse::ResponseMimeTypes = QStringList()
 
 PmrRepositoryResponse::PmrRepositoryResponse(QNetworkReply *pNetworkReply) : mNetworkReply(pNetworkReply)
 {
-    connect(mNetworkReply, SIGNAL(finished()), this, SLOT(finished()));
+    connect(mNetworkReply, SIGNAL(finished()), this, SLOT(processResponse()));
 }
 
 //==============================================================================
 
-void PmrRepositoryResponse::finished()
+void PmrRepositoryResponse::processResponse(void)
 {
     // Uncompress the response body and check that it is valid JSON
 
@@ -156,6 +156,10 @@ void PmrRepositoryResponse::finished()
     emit busy(false);
 
     mNetworkReply->deleteLater();
+
+    // Let amyone waiting on us know that we are done
+
+    emit finished();
 }
 
 //==============================================================================
