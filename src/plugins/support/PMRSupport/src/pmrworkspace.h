@@ -51,6 +51,7 @@ public:
     bool isLocal(void) const;
     bool isNull(void) const;
 
+    void setCredentials(const QString &pUsername, const QString &pPassword);
     void setDescription(const QString &pDescription);
     void setName(const QString &pName);
     void setOwner(const QString &pOwner);
@@ -69,8 +70,10 @@ private:
     QString mDescription;
     QString mName;
     QString mOwner;
+    QString mPassword;
     QString mPath;
     QString mUrl;
+    QString mUsername;
 
 Q_SIGNALS:
     void warning(const QString &pMessage) const;

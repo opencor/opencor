@@ -57,7 +57,8 @@ PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent),
 
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent) :
     QObject(parent),
-    mDescription(QString()), mName(pName), mOwner(QString()), mPath(QString()), mUrl(pUrl)
+    mDescription(QString()), mName(pName), mOwner(QString()),
+    mPassword(QString()), mPath(QString()), mUrl(pUrl), mUsername(QString())
 {
     // Set name from PMR workspace info
 }
@@ -84,6 +85,14 @@ bool PmrWorkspace::compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSeco
     // worrying about casing)
 
     return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+void PmrWorkspace::setCredentials(const QString &pUsername, const QString &pPassword)
+{
+    mUsername = pUsername;
+    mPassword = pPassword;
 }
 
 //==============================================================================
@@ -147,6 +156,70 @@ QString PmrWorkspace::url() const
 }
 
 //==============================================================================
+//==============================================================================
+
+class GitCredentials
+{
+public:
+    GitCredentials(const QString &pUsername, const QString &pPassword) :
+        mUsername(pUsername), mPassword(pPassword)
+    {
+    }
+
+    const QString &username(void) const
+    {
+        return mUsername;
+    }
+
+    const QString &password(void) const
+    {
+        return mPassword;
+    }
+
+private:
+    const QString mUsername;
+    const QString mPassword;
+};
+
+//==============================================================================
+
+// See https://libgit2.github.com/libgit2/#HEAD/type/git_remote_callbacks
+
+// If cert verification fails, this is called to let the user make the final
+// decision of whether to allow the connection to proceed. Returns 1 to allow
+// the connection, 0 to disallow it or a negative value to indicate an error.
+
+static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload)
+{
+    Q_UNUSED(cert)
+    Q_UNUSED(valid)
+    Q_UNUSED(host)
+    Q_UNUSED(payload)
+
+    // pmrRepository.Url().compare(host)
+    return 1; // since we trust PMR (but should check host matches PMR...)
+              // 0 = disallow, -ve = error
+}
+
+//==============================================================================
+
+// This is called if the remote host requires authentication in order to connect to
+// it. Returning GIT_PASSTHROUGH will make libgit2 behave as though this field isn't set.
+
+static int credentials_cb(git_cred **out, const char *url, const char *username_from_url,
+                          unsigned int allowed_types, void *payload)
+{
+    Q_UNUSED(url)
+    Q_UNUSED(username_from_url)
+    Q_UNUSED(allowed_types)
+
+    auto credentials = (GitCredentials *)payload;
+
+    return git_cred_userpass_plaintext_new(out, credentials->username().toUtf8().constData(),
+                                                credentials->password().toUtf8().constData());
+}
+
+//==============================================================================
 
 void PmrWorkspace::clone(const QString &pDirName)
 {
@@ -158,8 +231,19 @@ void PmrWorkspace::clone(const QString &pDirName)
     QByteArray workspaceByteArray = mUrl.toUtf8();
     QByteArray dirNameByteArray = pDirName.toUtf8();
 
+    git_clone_options cloneOptions;
+    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
+
+    auto gitCredentials = GitCredentials(mUsername, mPassword);
+
+    if (!mUsername.isEmpty()) {
+        cloneOptions.fetch_opts.callbacks.credentials = credentials_cb;
+        cloneOptions.fetch_opts.callbacks.certificate_check = certificate_check_cb;
+        cloneOptions.fetch_opts.callbacks.payload = (void *)&gitCredentials;
+    }
+
     int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                        dirNameByteArray.constData(), 0);
+                        dirNameByteArray.constData(), &cloneOptions);
 
     if (res) {
         const git_error *gitError = giterr_last();

@@ -39,6 +39,13 @@ namespace PMRSupport {
 
 //==============================================================================
 
+const QStringList PmrRepositoryResponse::ResponseMimeTypes = QStringList()
+                                                           << QString("application/json")
+                                                           << QString(PmrRepository::RequestMimeType())
+                                                           << QString(PmrRepository::CollectionMimeType());
+
+//==============================================================================
+
 PmrRepositoryResponse::PmrRepositoryResponse(QNetworkReply *pNetworkReply) : mNetworkReply(pNetworkReply)
 {
     connect(mNetworkReply, SIGNAL(finished()), this, SLOT(finished()));
@@ -114,13 +121,12 @@ void PmrRepositoryResponse::finished()
 
     // Check we actually have JSON from PMR
 
-    else if (mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString() != PmrRepository::MimeType()) {
-
+    else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
         qCritical() << "Response has wrong content type: "
                     << mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString();
         qDebug() << contentData;
 
-        emit error(tr("Response has wrong content type"), true);
+        emit error(tr("Response has unexpected content type"), true);
     }
 
     else {

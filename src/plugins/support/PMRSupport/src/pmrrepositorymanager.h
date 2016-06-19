@@ -57,7 +57,8 @@ public:
     void authenticate(const bool &pLink);
     bool isAuthenticated(void) const;
 
-    PmrRepositoryResponse *sendPmrRequest(const QString &pUrl, const bool &secure,
+    PmrRepositoryResponse *sendPmrRequest(const QString &pUrl, const bool &pSecureRequest,
+                                          const bool &pUsePost=false, // When no document
                                           const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
     PmrOAuthClient *mPmrOAuthClient;

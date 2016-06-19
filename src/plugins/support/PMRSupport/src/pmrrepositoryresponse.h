@@ -45,6 +45,8 @@ class PmrRepositoryResponse : public QObject
 public:
     explicit PmrRepositoryResponse(QNetworkReply *pNetworkReply);
 
+    static const QStringList ResponseMimeTypes;
+
 private:
     QNetworkReply *mNetworkReply;
 

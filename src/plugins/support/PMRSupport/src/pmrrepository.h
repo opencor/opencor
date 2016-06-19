@@ -60,7 +60,8 @@ public:
     ~PmrRepository();
 
     static const QString Url(void);
-    static const QByteArray MimeType(void);
+    static const QByteArray CollectionMimeType(void);
+    static const QByteArray RequestMimeType(void);
 
     void requestExposureFiles(const QString &pUrl);
     void requestExposuresList(void);
@@ -91,6 +92,7 @@ private:
     void requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction);
 
     void requestCloneWorkspace(PmrWorkspace *pWorkspace, const QString &pDirName);
+    void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
     void requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
                                      PmrExposure *pExposure=nullptr);
 
@@ -126,7 +128,8 @@ private Q_SLOTS:
     void workspacesListResponse(const QJsonDocument &pJsonDocument);
 
     void cloneWorkspaceResponse(PmrWorkspace *pWorkspace);
-    void createWorkspaceResponse(const QString &pUrl);
+    void newWorkspaceResponse(const QString &pUrl);
+    void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 };
 
 //==============================================================================

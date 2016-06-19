@@ -122,8 +122,10 @@ void PmrRepositoryManager::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl, const bool &secure,
-                                                         const QJsonDocument &pJsonDocument)
+PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl,
+                                                            const bool &pSecureRequest,
+                                                            const bool &pUsePost,
+                                                            const QJsonDocument &pJsonDocument)
 {
     // Check that we are connected to the Internet
 
@@ -141,34 +143,36 @@ PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl,
 
     QNetworkRequest networkRequest;
 
-    networkRequest.setRawHeader("Accept", PmrRepository::MimeType());
-//        networkRequest.setRawHeader("Accept-Encoding", "gzip");
-    networkRequest.setRawHeader("Accept-Encoding", "identity");
+    networkRequest.setRawHeader("Accept", "application/json");
+    networkRequest.setRawHeader("Accept-Encoding", "gzip");
+//    networkRequest.setRawHeader("Accept-Encoding", "identity");
 
     networkRequest.setUrl(QUrl(pUrl));
 
     QNetworkReply *networkReply;
 
+    QByteArray requestData = pJsonDocument.isNull() ? ""
+                                                    : pJsonDocument.toJson(QJsonDocument::Compact);
+
     // Use the authenticated link if it's available
 
-    if (secure && mPmrOAuthClient->linked()) {
+    if (pSecureRequest && mPmrOAuthClient->linked()) {
         O1Requestor *requestor = new O1Requestor(this, mPmrOAuthClient, this);
-        if (pJsonDocument.isNull()) {
+        if (!pUsePost && pJsonDocument.isNull()) {
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
         }
         else {
-            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrRepository::MimeType());
-            networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(),
-                                           pJsonDocument.toJson(QJsonDocument::Compact));
+            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrRepository::RequestMimeType());
+            networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(), requestData);
         }
 
     } else {
-        if (pJsonDocument.isNull()) {
+        if (!pUsePost && pJsonDocument.isNull()) {
             networkReply = this->get(networkRequest);
         }
         else {
-            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrRepository::MimeType());
-            networkReply = this->post(networkRequest, pJsonDocument.toJson(QJsonDocument::Compact));
+            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrRepository::RequestMimeType());
+            networkReply = this->post(networkRequest, requestData);
         }
     }
 

@@ -200,7 +200,16 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
 
     if (newWorkspaceDialog->exec() == QDialog::Accepted) {
 
-        // Ask the PMR repository to create a new workspace
+        // Create the folder for the new workspace
+
+        QDir workspaceFolder(newWorkspaceDialog->path());
+        if (!workspaceFolder.exists()) {
+            workspaceFolder.mkpath(".");
+        }
+
+        // Ask the PMR repository to create a new workspace. This
+        // will result in the (empty) workspace being cloned into
+        // its folder.
 
         mPmrRepository->requestNewWorkspace(newWorkspaceDialog->title(),
                                             newWorkspaceDialog->description(),
