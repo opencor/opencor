@@ -1317,21 +1317,6 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::replotNow()
-{
-    // Replot ourselves
-
-    replot();
-
-    // Make sure that the replotting occurs immediately
-    // Note: this is needed when running a simulation since, otherwise,
-    //       replotting won't occur immediately (because of threading)...
-
-    QCoreApplication::processEvents();
-}
-
-//==============================================================================
-
 bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 {
     // Make sure that the given graph is not already attached to us
@@ -1379,7 +1364,6 @@ void GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
     if (mCanDirectPaint) {
         mDirectPainter->drawSeries(pGraph, pFrom, -1);
     } else {
-        replotNow();
 
         mCanDirectPaint = true;
     }
@@ -1423,7 +1407,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
 
     if (mNeighbors.isEmpty()) {
         if (pCanReplot)
-            replotNow();
     } else {
         for (int i = 0; i < 2; ++i) {
             // Note: we do the below twice because there are cases where it may
@@ -1462,9 +1445,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
                 if (pCanReplot) {
                     if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
                         plot->updateLayout();
-                        plot->replotNow();
                     } else if (plot == this) {
-                        replotNow();
                     }
                 }
             }

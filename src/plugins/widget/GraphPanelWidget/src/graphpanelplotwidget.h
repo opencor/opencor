@@ -178,10 +178,8 @@ public:
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pCanReplot = true, const bool &pEmitSignal = true);
 
-    void drawGraphFrom(GraphPanelPlotGraph *pGraph,
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
                        const qulonglong &pFrom);
-
-    void replotNow();
 
     GraphPanelPlotWidgets neighbors() const;
 
