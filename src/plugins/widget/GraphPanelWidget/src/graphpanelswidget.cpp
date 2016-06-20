@@ -150,10 +150,10 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
 //==============================================================================
 
-void GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
+bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 {
     if (!pGraphPanel)
-        return;
+        return false;
 
     // Retrieve the index of the given graph panel
 
@@ -197,22 +197,27 @@ void GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
     // Ask our first graph panel's plot, if any, to align itself against its
     // neighbours
 
-    if (!mGraphPanels.isEmpty())
+    if (!mGraphPanels.isEmpty()) {
         mGraphPanels[0]->plot()->forceAlignWithNeighbors();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-void GraphPanelsWidget::removeCurrentGraphPanel()
+bool GraphPanelsWidget::removeCurrentGraphPanel()
 {
     // Make sure that we don't have only one graph panel left
 
     if (mGraphPanels.count() == 1)
-        return;
+        return false;
 
     // Remove the current graph panel
 
-    removeGraphPanel(mActiveGraphPanel);
+    return removeGraphPanel(mActiveGraphPanel);
 }
 
 //==============================================================================

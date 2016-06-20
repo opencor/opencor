@@ -1402,7 +1402,11 @@ void SingleCellViewSimulationWidget::removeCurrentGraphPanel()
 {
     // Ask our graph panels widget to remove the current graph panel
 
-    mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel();
+    if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel()) {
+        QCoreApplication::processEvents();
+        // Note: this ensures that our remaining graph panels get realisnged at
+        //       once...
+    }
 }
 
 //==============================================================================
@@ -2627,8 +2631,17 @@ void SingleCellViewSimulationWidget::simulationPropertyChanged(Core::Property *p
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (pProperty != simulationWidget->pointIntervalProperty()) {
-        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
-            updatePlot(plot);
+        bool needProcessingEvents = false;
+        // Note: needProcessingEvents is used to ensure that our plots are all
+        //       updated at once...
+
+        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
+            if (updatePlot(plot))
+                needProcessingEvents = true;
+        }
+
+        if (needProcessingEvents)
+            QCoreApplication::processEvents();
     }
 }
 
@@ -2703,8 +2716,11 @@ void SingleCellViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::Graph
 
     updateGraphData(pGraph, mSimulation->results()->size());
 
-    if (!updatePlot(plot))
-        plot->drawGraphFrom(pGraph, 0);
+    if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
+        QCoreApplication::processEvents();
+        // Note: needProcessingEvents is used to ensure that our plot is updated
+        //       at once...
+    }
 
     // Keep track of the plot itself, if needed
 
@@ -2728,6 +2744,9 @@ void SingleCellViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::Gr
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     updatePlot(plot, true);
+
+    QCoreApplication::processEvents();
+    // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty())
         mPlots.removeOne(plot);
@@ -2773,6 +2792,9 @@ void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::Gr
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
         }
+
+        QCoreApplication::processEvents();
+        // Note: this ensures that our plots are all updated at once...
     }
 }
 
@@ -2907,7 +2929,7 @@ bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlot
     if (pPlot->setAxes(minX, maxX, minY, maxY, true, false)) {
         return true;
     } else if (pForceReplot) {
-        pPlot->replotNow();
+        pPlot->replot();
 
         return true;
     } else {
@@ -2979,6 +3001,9 @@ void SingleCellViewSimulationWidget::updateGui()
 
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true);
+
+        QCoreApplication::processEvents();
+        // Note: this ensures that our plots are all updated at once...
     }
 
     // Make sure that our progress bar is up to date
@@ -3007,8 +3032,11 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
         checkSimulationDataModified(simulation->data()->isModified());
 
     // Update all the graphs of all our plots, but only if we are visible
+    // Note: needProcessingEvents is used to ensure that our plots are all
+    //       updated at once...
 
     bool visible = isVisible();
+    bool needProcessingEvents = false;
 
     foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
         // If our graphs are to be cleared (i.e. our plot's viewport are going
@@ -3090,8 +3118,10 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                                          || (minY < plotMinY) || (maxY > plotMaxY);
                     }
 
-                    if (!needUpdatePlot)
-                        plot->drawGraphFrom(graph, realOldDataSize-1);
+                    if (!needUpdatePlot) {
+                        if (plot->drawGraphFrom(graph, realOldDataSize-1))
+                            needProcessingEvents = true;
+                    }
                 }
             }
         }
@@ -3106,6 +3136,8 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 // which case we need to update our plot
 
                 updatePlot(plot, true);
+
+                needProcessingEvents = true;
             } else if (!pSimulationResultsSize) {
                 // We came here as a result of starting a simulation or clearing
                 // our plot, so simply replot it (rather than update it)
@@ -3114,7 +3146,9 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
                 //       (expected) flickering, if some data is to be drawn
                 //       straightaway (e.g. when we start a simulation)...
 
-                plot->replotNow();
+                plot->replot();
+
+                needProcessingEvents = true;
             }
         } else if (needUpdatePlot || !pSimulationResultsSize) {
             // We would normally update our plot, but we are not visible, so no
@@ -3124,6 +3158,11 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
             mNeedUpdatePlots = true;
         }
     }
+
+    // Process events, if needed
+
+    if (needProcessingEvents)
+        QCoreApplication::processEvents();
 
     // Update our progress bar or our tab icon, if needed
 
