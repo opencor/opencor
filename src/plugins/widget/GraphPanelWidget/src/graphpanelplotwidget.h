@@ -176,6 +176,7 @@ public:
     double maxY() const;
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
+                 const bool &pSynchronizeAxes = true,
                  const bool &pCanReplot = true, const bool &pEmitSignal = true);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
