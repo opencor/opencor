@@ -1355,7 +1355,7 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
+bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
                                          const qulonglong &pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
@@ -1363,9 +1363,14 @@ void GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
 
     if (mCanDirectPaint) {
         mDirectPainter->drawSeries(pGraph, pFrom, -1);
+
+        return false;
     } else {
+        replot();
 
         mCanDirectPaint = true;
+
+        return true;
     }
 }
 
@@ -1402,52 +1407,33 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
                                               const bool &pForceAlignment)
 {
-    // Align ourselves with our neighbours unless we don't have any in which
-    // case we just replot ourselves, if allowed
+    // Align ourselves with our neighbours
 
-    if (mNeighbors.isEmpty()) {
-        if (pCanReplot)
-    } else {
-        for (int i = 0; i < 2; ++i) {
-            // Note: we do the below twice because there are cases where it may
-            //       not work properly. Indeed, say that we have two graph
-            //       panels, which by default will have their Y axis ranging
-            //       from 0 to 1,000. Now, say that we zoom out the first graph
-            //       panel and end up with somewhat wide Y labels, e.g. from
-            //       -1,000,000 to 1,000. While doing this, the second graph
-            //       panel will have kept aligning itself with the first graph
-            //       panel, as expected. Now, say that we reset the zoom of the
-            //       first graph panel. At this point, you would expect the Y
-            //       axis to range from 0 to 1,000 and it is the case, but we
-            //       can see loads of empty space to the left of the Y axis and
-            //       this on both graph panels. However, that empty space
-            //       disappears if we do the below twice...
+    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
+    double newMaxExtent = 0;
 
-            GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
-            double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
-            double newMaxExtent = 0;
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
+        QwtScaleDraw *scaleDraw = scaleWidget->scaleDraw();
 
-            foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-                QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
-                QwtScaleDraw *scaleDraw = scaleWidget->scaleDraw();
+        scaleDraw->setMinimumExtent(0.0);
 
-                scaleDraw->setMinimumExtent(0.0);
+        double extent = scaleDraw->extent(scaleWidget->font());
 
-                double extent = scaleDraw->extent(scaleWidget->font());
+        if (extent > newMaxExtent)
+            newMaxExtent = extent;
+    }
 
-                if (extent > newMaxExtent)
-                    newMaxExtent = extent;
-            }
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
 
-            foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-                plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
-
-                if (pCanReplot) {
-                    if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
-                        plot->updateLayout();
-                    } else if (plot == this) {
-                    }
-                }
+        if (pCanReplot) {
+            if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
+                plot->updateLayout();
+                plot->replot();
+            } else if (plot == this) {
+                replot();
             }
         }
     }
