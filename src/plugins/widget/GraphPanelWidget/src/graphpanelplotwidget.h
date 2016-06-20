@@ -176,7 +176,10 @@ public:
     double maxY() const;
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 const bool &pCanReplot = true, const bool &pEmitSignal = true);
+                 const bool &pSynchronizeAxes = true,
+                 const bool &pCanReplot = true, const bool &pEmitSignal = true,
+                 const bool &pForceXAxisSetting = false,
+                 const bool &pForceYAxisSetting = false);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
                        const qulonglong &pFrom);
@@ -189,6 +192,9 @@ public:
     void alignWithNeighbors(const bool &pCanReplot,
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
+
+    void setSynchronizeXAxis(const bool &pSynchronizeXAxis);
+    void setSynchronizeYAxis(const bool &pSynchronizeYAxis);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -229,6 +235,8 @@ private:
     QMenu *mContextMenu;
 
     QAction *mCopyToClipboardAction;
+    QAction *mSynchronizeXAxisAction;
+    QAction *mSynchronizeYAxisAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -280,6 +288,8 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void copyToClipboard();
+    void synchronizeXAxis();
+    void synchronizeYAxis();
     void customAxes();
     void zoomIn();
     void zoomOut();
