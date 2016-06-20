@@ -177,7 +177,9 @@ public:
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
-                 const bool &pCanReplot = true, const bool &pEmitSignal = true);
+                 const bool &pCanReplot = true, const bool &pEmitSignal = true,
+                 const bool &pForceXAxisSetting = false,
+                 const bool &pForceYAxisSetting = false);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
                        const qulonglong &pFrom);

@@ -941,7 +941,9 @@ void GraphPanelPlotWidget::setAxis(const int &pAxis, double pMin, double pMax)
 bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    double pMaxY, const bool &pSynchronizeAxes,
                                    const bool &pCanReplot,
-                                   const bool &pEmitSignal)
+                                   const bool &pEmitSignal,
+                                   const bool &pForceXAxisSetting,
+                                   const bool &pForceYAxisSetting)
 {
     // Keep track of our axes' old values
 
@@ -975,21 +977,23 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // result in ourselves, and maybe its neighbours, bein replotted, if
     // allowed), in case the axes' values have changed
 
-    if (xAxisValuesChanged || yAxisValuesChanged) {
+    if (   pForceXAxisSetting || pForceYAxisSetting
+        || xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
 
-        updateActions();
+        if (xAxisValuesChanged || yAxisValuesChanged)
+            updateActions();
 
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
                     neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
-            } else if (   xAxisValuesChanged
+            } else if (   (pForceXAxisSetting || xAxisValuesChanged)
                        && mSynchronizeXAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
                     neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(), false, false, false);
-            } else if (   yAxisValuesChanged
+            } else if (   (pForceYAxisSetting || yAxisValuesChanged)
                        && mSynchronizeYAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
                     neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
@@ -1461,6 +1465,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
 
         scaleDraw->setMinimumExtent(0.0);
 
+        plot->updateAxes();
+        // Note: this ensures that our major ticks (which are used to compute
+        //       the extent) are up to date...
+
         double extent = scaleDraw->extent(scaleWidget->font());
 
         if (extent > newMaxExtent)
@@ -1526,6 +1534,9 @@ void GraphPanelPlotWidget::synchronizeXAxis()
 
     foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
         neighbor->setSynchronizeXAxis(mSynchronizeXAxisAction->isChecked());
+
+    if (mSynchronizeXAxisAction->isChecked())
+        setAxes(minX(), maxX(), minY(), maxY(), true, true, true, true);
 }
 
 //==============================================================================
@@ -1537,6 +1548,9 @@ void GraphPanelPlotWidget::synchronizeYAxis()
 
     foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
         neighbor->setSynchronizeYAxis(mSynchronizeYAxisAction->isChecked());
+
+    if (mSynchronizeYAxisAction->isChecked())
+        setAxes(minX(), maxX(), minY(), maxY(), true, true, true, false, true);
 }
 
 //==============================================================================
