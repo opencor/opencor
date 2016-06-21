@@ -1,0 +1,276 @@
+<?xml version='1.0'?>
+<model name="bond_graph_model_new" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Automatically generated from MTT on 13-Jun-2016-->
+    <units name="flow">
+        <unit units="mole"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="effort">
+        <unit units="joule"/>
+        <unit exponent="-1" units="flow"/>
+    </units>
+    <units name="intflow">
+        <unit units="flow"/>
+        <unit units="second"/>
+    </units>
+    <units name="_intflow">
+        <unit exponent="-1" units="intflow"/>
+    </units>
+    <component name="environment">
+        <!-- Universal time-->
+        <variable initial_value="0" name="t" public_interface="out" units="second"/>
+    </component>
+    <component name="parameters">
+        <variable initial_value="1" name="RT" public_interface="out" units="effort"/>
+        <!-- Parameters for component C:A-->
+        <variable initial_value="1" name="K_A" public_interface="out" units="_intflow"/>
+        <variable initial_value="1" name="cr_A" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="stat_A" public_interface="out" units="dimensionless"/>
+        <!-- Parameters for component C:B-->
+        <variable initial_value="1" name="K_B" public_interface="out" units="_intflow"/>
+        <variable initial_value="1" name="cr_B" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="stat_B" public_interface="out" units="dimensionless"/>
+        <!-- Parameters for component C:C-->
+        <variable initial_value="1" name="K_C" public_interface="out" units="_intflow"/>
+        <variable initial_value="1" name="cr_C" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="stat_C" public_interface="out" units="dimensionless"/>
+        <!-- Parameters for component Re:r1-->
+        <variable initial_value="1" name="kappa_r1" public_interface="out" units="flow"/>
+        <variable initial_value="1" name="cr_r1" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="stat_r1" public_interface="out" units="dimensionless"/>
+        <!-- Parameters for component Re:r2-->
+        <variable initial_value="1" name="kappa_r2" public_interface="out" units="flow"/>
+        <variable initial_value="1" name="cr_r2" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="stat_r2" public_interface="out" units="dimensionless"/>
+        <!-- Parameters for component Re:r3-->
+        <variable initial_value="1" name="kappa_r3" public_interface="out" units="flow"/>
+        <variable initial_value="1" name="cr_r3" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="stat_r3" public_interface="out" units="dimensionless"/>
+    </component>
+    <component name="state">
+        <variable name="x_A" public_interface="in" units="intflow"/>
+        <variable name="x_B" public_interface="in" units="intflow"/>
+        <variable name="x_C" public_interface="in" units="intflow"/>
+    </component>
+    <component name="orientation">
+        <variable name="head" public_interface="out" units="dimensionless"/>
+        <variable name="tail" public_interface="out" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>head</ci>
+                <cn cellml:units="dimensionless">1</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>tail</ci>
+                <apply>
+                    <minus/>
+                    <cn cellml:units="dimensionless">1</cn>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <!-- Component C:A-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="C" name="A"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="A"/>
+        <map_variables variable_1="head" variable_2="h_1"/>
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="A"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="K_A" variable_2="K"/>
+        <map_variables variable_1="cr_A" variable_2="cr"/>
+        <map_variables variable_1="stat_A" variable_2="stat"/>
+    </connection>
+    <connection>
+        <map_components component_1="A" component_2="state"/>
+        <map_variables variable_1="x" variable_2="x_A"/>
+    </connection>
+    <connection>
+        <map_components component_1="environment" component_2="A"/>
+        <map_variables variable_1="t" variable_2="t"/>
+    </connection>
+    <!-- Component C:B-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="C" name="B"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="B"/>
+        <map_variables variable_1="head" variable_2="h_1"/>
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="B"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="K_B" variable_2="K"/>
+        <map_variables variable_1="cr_B" variable_2="cr"/>
+        <map_variables variable_1="stat_B" variable_2="stat"/>
+    </connection>
+    <connection>
+        <map_components component_1="B" component_2="state"/>
+        <map_variables variable_1="x" variable_2="x_B"/>
+    </connection>
+    <connection>
+        <map_components component_1="environment" component_2="B"/>
+        <map_variables variable_1="t" variable_2="t"/>
+    </connection>
+    <!-- Component C:C-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="C" name="C"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="C"/>
+        <map_variables variable_1="head" variable_2="h_1"/>
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="C"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="K_C" variable_2="K"/>
+        <map_variables variable_1="cr_C" variable_2="cr"/>
+        <map_variables variable_1="stat_C" variable_2="stat"/>
+    </connection>
+    <connection>
+        <map_components component_1="C" component_2="state"/>
+        <map_variables variable_1="x" variable_2="x_C"/>
+    </connection>
+    <connection>
+        <map_components component_1="environment" component_2="C"/>
+        <map_variables variable_1="t" variable_2="t"/>
+    </connection>
+    <!-- Component Re:r1-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="Re" name="r1"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="r1"/>
+        <map_variables variable_1="head" variable_2="h_1"/>
+        <map_variables variable_1="tail" variable_2="h_2"/>
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="r1"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="kappa_r1" variable_2="kappa"/>
+        <map_variables variable_1="cr_r1" variable_2="cr"/>
+        <map_variables variable_1="stat_r1" variable_2="stat"/>
+    </connection>
+    <!-- Component Re:r2-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="Re" name="r2"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="r2"/>
+        <map_variables variable_1="head" variable_2="h_1"/>
+        <map_variables variable_1="tail" variable_2="h_2"/>
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="r2"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="kappa_r2" variable_2="kappa"/>
+        <map_variables variable_1="cr_r2" variable_2="cr"/>
+        <map_variables variable_1="stat_r2" variable_2="stat"/>
+    </connection>
+    <!-- Component Re:r3-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="Re" name="r3"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="r3"/>
+        <map_variables variable_1="head" variable_2="h_1"/>
+        <map_variables variable_1="tail" variable_2="h_2"/>
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="r3"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="kappa_r3" variable_2="kappa"/>
+        <map_variables variable_1="cr_r3" variable_2="cr"/>
+        <map_variables variable_1="stat_r3" variable_2="stat"/>
+    </connection>
+    <!-- Component 0:mtt0-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="J0_3" name="mtt0"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="mtt0"/>
+        <map_variables variable_1="tail" variable_2="h_1"/>
+        <map_variables variable_1="tail" variable_2="h_2"/>
+        <map_variables variable_1="head" variable_2="h_3"/>
+    </connection>
+    <!-- Component 0:mtt0_2-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="J0_3" name="mtt0_2"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="mtt0_2"/>
+        <map_variables variable_1="tail" variable_2="h_1"/>
+        <map_variables variable_1="tail" variable_2="h_2"/>
+        <map_variables variable_1="head" variable_2="h_3"/>
+    </connection>
+    <!-- Component 0:mtt0_3-->
+    <import xlink:href="bond_graph_library_new.cellml">
+        <component component_ref="J0_3" name="mtt0_3"/>
+    </import>
+    <connection>
+        <map_components component_1="orientation" component_2="mtt0_3"/>
+        <map_variables variable_1="tail" variable_2="h_1"/>
+        <map_variables variable_1="head" variable_2="h_2"/>
+        <map_variables variable_1="tail" variable_2="h_3"/>
+    </connection>
+    <!-- Bonds-->
+    <!-- Bond from mtt0 to r1-->
+    <connection>
+        <map_components component_1="mtt0" component_2="r1"/>
+        <map_variables variable_1="e_2" variable_2="e_1"/>
+        <map_variables variable_1="f_2" variable_2="f_1"/>
+    </connection>
+    <!-- Bond from mtt0 to A-->
+    <connection>
+        <map_components component_1="mtt0" component_2="A"/>
+        <map_variables variable_1="e_1" variable_2="e_1"/>
+        <map_variables variable_1="f_1" variable_2="f_1"/>
+    </connection>
+    <!-- Bond from mtt0_2 to r2-->
+    <connection>
+        <map_components component_1="mtt0_2" component_2="r2"/>
+        <map_variables variable_1="e_2" variable_2="e_1"/>
+        <map_variables variable_1="f_2" variable_2="f_1"/>
+    </connection>
+    <!-- Bond from r1 to mtt0_2-->
+    <connection>
+        <map_components component_1="r1" component_2="mtt0_2"/>
+        <map_variables variable_1="e_2" variable_2="e_3"/>
+        <map_variables variable_1="f_2" variable_2="f_3"/>
+    </connection>
+    <!-- Bond from mtt0_2 to B-->
+    <connection>
+        <map_components component_1="mtt0_2" component_2="B"/>
+        <map_variables variable_1="e_1" variable_2="e_1"/>
+        <map_variables variable_1="f_1" variable_2="f_1"/>
+    </connection>
+    <!-- Bond from mtt0_3 to C-->
+    <connection>
+        <map_components component_1="mtt0_3" component_2="C"/>
+        <map_variables variable_1="e_1" variable_2="e_1"/>
+        <map_variables variable_1="f_1" variable_2="f_1"/>
+    </connection>
+    <!-- Bond from r2 to mtt0_3-->
+    <connection>
+        <map_components component_1="r2" component_2="mtt0_3"/>
+        <map_variables variable_1="e_2" variable_2="e_2"/>
+        <map_variables variable_1="f_2" variable_2="f_2"/>
+    </connection>
+    <!-- Bond from r3 to mtt0-->
+    <connection>
+        <map_components component_1="r3" component_2="mtt0"/>
+        <map_variables variable_1="e_2" variable_2="e_3"/>
+        <map_variables variable_1="f_2" variable_2="f_3"/>
+    </connection>
+    <!-- Bond from mtt0_3 to r3-->
+    <connection>
+        <map_components component_1="mtt0_3" component_2="r3"/>
+        <map_variables variable_1="e_3" variable_2="e_1"/>
+        <map_variables variable_1="f_3" variable_2="f_1"/>
+    </connection>
+</model>

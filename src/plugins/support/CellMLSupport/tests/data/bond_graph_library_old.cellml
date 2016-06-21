@@ -1,0 +1,278 @@
+<?xml version='1.0'?>
+<model name="bond_graph_library_old" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">
+    <!-- Basic BG library-->
+    <!-- 2-port Zero junction J0_2-->
+    <component name="J0_2">
+        <!-- Port 1: effort imposed-->
+        <variable name="e_1" public_interface="in" units="effort"/>
+        <variable name="f_1" public_interface="out" units="flow"/>
+        <variable name="h_1" public_interface="in" units="dimensionless"/>
+        <!-- Port 2: flow imposed-->
+        <variable name="e_2" public_interface="out" units="effort"/>
+        <variable name="f_2" public_interface="in" units="flow"/>
+        <variable name="h_2" public_interface="in" units="dimensionless"/>
+        <!-- All efforts are the same-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>e_2</ci>
+                <ci>e_1</ci>
+            </apply>
+            <!-- Compute flow taking acount of head (1) or tail (-1)-->
+            <apply>
+                <eq/>
+                <ci>f_1</ci>
+                <apply>
+                    <times/>
+                    <apply>
+                        <minus/>
+                        <ci>h_1</ci>
+                    </apply>
+                    <ci>h_2</ci>
+                    <ci>f_2</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <!-- 3-port Zero junction J0_3-->
+    <component name="J0_3">
+        <!-- Port 1: effort imposed-->
+        <variable name="e_1" public_interface="in" units="effort"/>
+        <variable name="f_1" public_interface="out" units="flow"/>
+        <variable name="h_1" public_interface="in" units="dimensionless"/>
+        <!-- Port 2: flow imposed-->
+        <variable name="e_2" public_interface="out" units="effort"/>
+        <variable name="f_2" public_interface="in" units="flow"/>
+        <variable name="h_2" public_interface="in" units="dimensionless"/>
+        <!-- Port 3: flow imposed-->
+        <variable name="e_3" public_interface="out" units="effort"/>
+        <variable name="f_3" public_interface="in" units="flow"/>
+        <variable name="h_3" public_interface="in" units="dimensionless"/>
+        <!-- All efforts are the same-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>e_2</ci>
+                <ci>e_1</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>e_3</ci>
+                <ci>e_1</ci>
+            </apply>
+            <!-- Compute flow taking acount of head (1) or tail (-1)-->
+            <apply>
+                <eq/>
+                <ci>f_1</ci>
+                <apply>
+                    <times/>
+                    <apply>
+                        <minus/>
+                        <ci>h_1</ci>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>h_2</ci>
+                            <ci>f_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>h_3</ci>
+                            <ci>f_3</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <!-- C component -->
+    <component name="C">
+        <!--  Version parameters-->
+        <variable initial_value="1" name="CR" units="dimensionless"/>
+        <variable initial_value="0" name="Chemostat" units="dimensionless"/>
+        <!-- Numerical parameters-->
+        <variable name="RT" public_interface="in" units="effort"/>
+        <variable name="K" public_interface="in" units="_intflow"/>
+        <!-- Internal variables-->
+        <variable initial_value="0" name="t" units="second"/>
+        <variable initial_value="1" name="x" units="intflow"/>
+        <variable name="f_int" units="flow"/>
+        <!-- Port-->
+        <variable name="e_1" public_interface="out" units="effort"/>
+        <variable name="f_1" public_interface="in" units="flow"/>
+        <variable name="h_1" public_interface="in" units="dimensionless"/>
+        <!-- CR ==0 Linear
+CR==1 Chemical-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>e_1</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <times/>
+                            <ci>RT</ci>
+                            <ci>K</ci>
+                            <ci>x</ci>
+                        </apply>
+                        <apply>
+                            <eq/>
+                            <ci>CR</ci>
+                            <cn cellml:units="dimensionless">0</cn>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                            <times/>
+                            <ci>RT</ci>
+                            <apply>
+                                <ln/>
+                                <apply>
+                                    <times/>
+                                    <ci>K</ci>
+                                    <ci>x</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <eq/>
+                            <ci>CR</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- Chemostat if Chemostat==1-->
+            <apply>
+                <eq/>
+                <ci>f_int</ci>
+                <piecewise>
+                    <piece>
+                        <cn cellml:units="flow">0</cn>
+                        <apply>
+                            <eq/>
+                            <ci>Chemostat</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <apply>
+                            <times/>
+                            <ci>h_1</ci>
+                            <ci>f_1</ci>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>x</ci>
+                </apply>
+                <ci>f_int</ci>
+            </apply>
+        </math>
+    </component>
+    <!-- Mass-action reaction component-->
+    <component name="Re">
+        <!--  Version parameters-->
+        <variable initial_value="1" name="CR" units="dimensionless"/>
+        <!-- Numerical parameter-->
+        <variable name="RT" public_interface="in" units="effort"/>
+        <variable name="kappa" public_interface="in" units="flow"/>
+        <!-- Ports (flow is common)-->
+        <variable name="e_1" public_interface="in" units="effort"/>
+        <variable name="f_1" public_interface="out" units="flow"/>
+        <variable name="h_1" public_interface="in" units="dimensionless"/>
+        <variable name="e_2" public_interface="in" units="effort"/>
+        <variable name="f_2" public_interface="out" units="flow"/>
+        <variable name="h_2" public_interface="in" units="dimensionless"/>
+        <!-- CR ==0 Linear
+CR==1 Chemical-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>f_1</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <ci>kappa</ci>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <times/>
+                                        <ci>h_1</ci>
+                                        <ci>e_1</ci>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <ci>h_2</ci>
+                                        <ci>e_2</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                            <ci>RT</ci>
+                        </apply>
+                        <apply>
+                            <eq/>
+                            <ci>CR</ci>
+                            <cn cellml:units="dimensionless">0</cn>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                            <times/>
+                            <ci>kappa</ci>
+                            <apply>
+                                <plus/>
+                                <apply>
+                                    <times/>
+                                    <ci>h_1</ci>
+                                    <apply>
+                                        <exp/>
+                                        <apply>
+                                            <divide/>
+                                            <ci>e_1</ci>
+                                            <ci>RT</ci>
+                                        </apply>
+                                    </apply>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <ci>h_2</ci>
+                                    <apply>
+                                        <exp/>
+                                        <apply>
+                                            <divide/>
+                                            <ci>e_2</ci>
+                                            <ci>RT</ci>
+                                        </apply>
+                                    </apply>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <eq/>
+                            <ci>CR</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                    </piece>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>f_2</ci>
+                <ci>f_1</ci>
+            </apply>
+        </math>
+    </component>
+</model>

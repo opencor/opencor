@@ -63,7 +63,6 @@ void Tests::doRuntimeTest(const QString &pFileName,
         modelParameters  << QString("%1 (%2)").arg(parameter->fullyFormattedName())
                                               .arg(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
     }
-qDebug("\n---------\n%s\n---------", qPrintable(modelParameters.join("\n")));
 
     QCOMPARE(modelParameters  << QString(), pModelParameters);
 }
@@ -74,7 +73,7 @@ void Tests::runtimeTests()
 {
     // Run some runtime-related tests on the Noble 1962 model
 
-    QStringList modelParameters = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/cellml_1_0_runtime_parameters.out"));
+    QStringList modelParameters = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/noble_model_1962.out"));
 
     doRuntimeTest(OpenCOR::fileName("models/noble_model_1962.cellml"), "1.0",
                   modelParameters);
@@ -91,6 +90,21 @@ void Tests::runtimeTests()
     QVERIFY(OpenCOR::Core::writeFileContentsToFile(fileName, fileContents));
 
     doRuntimeTest(fileName, "1.1", modelParameters);
+
+    // Finally, we do the same for some proper CellML 1.1 models:
+    //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
+    //    imports, etc.;
+    //  - An 'old' version of a bond graph model implementation where the
+    //    variable of integration is not visible in the main CellML file; and
+    //  - A 'new' version of a bond graph model implementation where the
+    //    variable of integration is now visible in the main CellML file.
+
+//    doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
+//                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
+    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
+                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
+    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
+                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.out")));
 
     // Clean up after ourselves
 
