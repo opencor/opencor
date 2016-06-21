@@ -66,22 +66,6 @@
         <source>Reset the zoom level of the graph panel</source>
         <translation>Réinitialiser la taille du panneau graphique</translation>
     </message>
-    <message>
-        <source>Synchonise X Axis</source>
-        <translation>Synchroniser Axe des X</translation>
-    </message>
-    <message>
-        <source>Synchronise the X axis of all graph panels</source>
-        <translation>Synchroniser l&apos;axe des X de tous les panneaux graphiques</translation>
-    </message>
-    <message>
-        <source>Synchonise Y Axis</source>
-        <translation>Synchroniser Axe des Y</translation>
-    </message>
-    <message>
-        <source>Synchronise the Y axis of all graph panels</source>
-        <translation>Synchroniser l&apos;axe des Y de tous les panneaux graphiques</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelWidgetCustomAxesWindow</name>
@@ -100,6 +84,25 @@
     <message>
         <source>Y-min must be lower than Y-max.</source>
         <translation>Y-min doit être plus petit que Y-max.</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::GraphPanelWidget::GraphPanelsWidget</name>
+    <message>
+        <source>Synchonise X Axis</source>
+        <translation>Synchroniser Axe des X</translation>
+    </message>
+    <message>
+        <source>Synchronise the X axis of all graph panels</source>
+        <translation>Synchroniser l&apos;axe des X de tous les panneaux graphiques</translation>
+    </message>
+    <message>
+        <source>Synchonise Y Axis</source>
+        <translation>Synchroniser Axe des Y</translation>
+    </message>
+    <message>
+        <source>Synchronise the Y axis of all graph panels</source>
+        <translation>Synchroniser l&apos;axe des Y de tous les panneaux graphiques</translation>
     </message>
 </context>
 </TS>

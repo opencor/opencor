@@ -53,6 +53,10 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelWidget : public Core::Widget
 
 public:
     explicit GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
+                              QAction *pSynchronizeXAxisAction,
+                              QAction *pSynchronizeYAxisAction,
+                              QWidget *pParent);
+    explicit GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                               QWidget *pParent);
     ~GraphPanelWidget();
 
@@ -78,6 +82,10 @@ private:
     GraphPanelPlotWidget *mPlot;
 
     bool mActive;
+
+    void constructor(const GraphPanelWidgets &pNeighbors,
+                     QAction *pSynchronizeXAxisAction,
+                     QAction *pSynchronizeYAxisAction);
 
     void updateMarkerColor();
 

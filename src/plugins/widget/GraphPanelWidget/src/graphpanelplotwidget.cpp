@@ -461,6 +461,8 @@ static const double MinAxisRange = 1.0e-5;
 //==============================================================================
 
 GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
+                                           QAction *pSynchronizeXAxisAction,
+                                           QAction *pSynchronizeYAxisAction,
                                            QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(),
@@ -474,6 +476,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanZoomInY(true),
     mCanZoomOutY(true),
     mNeedContextMenu(false),
+    mSynchronizeXAxisAction(pSynchronizeXAxisAction),
+    mSynchronizeYAxisAction(pSynchronizeYAxisAction),
     mNeighbors(pNeighbors)
 {
     // Get ourselves a direct painter
@@ -519,8 +523,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu = new QMenu(this);
 
     mCopyToClipboardAction = Core::newAction(this);
-    mSynchronizeXAxisAction = Core::newAction(true, this);
-    mSynchronizeYAxisAction = Core::newAction(true, this);
     mCustomAxesAction = Core::newAction(this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
@@ -528,10 +530,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
-    connect(mSynchronizeXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(synchronizeXAxis()));
-    connect(mSynchronizeYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(synchronizeYAxis()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
@@ -542,9 +540,13 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SLOT(resetZoom()));
 
     mContextMenu->addAction(mCopyToClipboardAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mSynchronizeXAxisAction);
-    mContextMenu->addAction(mSynchronizeYAxisAction);
+
+    if (pSynchronizeXAxisAction && pSynchronizeYAxisAction) {
+        mContextMenu->addSeparator();
+        mContextMenu->addAction(pSynchronizeXAxisAction);
+        mContextMenu->addAction(pSynchronizeYAxisAction);
+    }
+
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
@@ -585,10 +587,6 @@ void GraphPanelPlotWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
-    I18nInterface::retranslateAction(mSynchronizeXAxisAction, tr("Synchonise X Axis"),
-                                     tr("Synchronise the X axis of all graph panels"));
-    I18nInterface::retranslateAction(mSynchronizeYAxisAction, tr("Synchonise Y Axis"),
-                                     tr("Synchronise the Y axis of all graph panels"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
@@ -658,8 +656,8 @@ void GraphPanelPlotWidget::updateActions()
 
     // Update the enabled status of our actions
 
-    mSynchronizeXAxisAction->setEnabled(!mNeighbors.isEmpty());
-    mSynchronizeYAxisAction->setEnabled(!mNeighbors.isEmpty());
+    mSynchronizeXAxisAction->setVisible(!mNeighbors.isEmpty());
+    mSynchronizeYAxisAction->setVisible(!mNeighbors.isEmpty());
 
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
@@ -1500,57 +1498,11 @@ void GraphPanelPlotWidget::forceAlignWithNeighbors()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setSynchronizeXAxis(const bool &pSynchronizeXAxis)
-{
-    // Update the checked state of our X axis synchronisation action
-
-    mSynchronizeXAxisAction->setChecked(pSynchronizeXAxis);
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::setSynchronizeYAxis(const bool &pSynchronizeYAxis)
-{
-    // Update the checked state of our Y axis synchronisation action
-
-    mSynchronizeYAxisAction->setChecked(pSynchronizeYAxis);
-}
-
-//==============================================================================
-
 void GraphPanelPlotWidget::copyToClipboard()
 {
     // Copy our contents to the clipboard
 
     QApplication::clipboard()->setPixmap(grab());
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::synchronizeXAxis()
-{
-    // Let our neighbours know about the checked state of our X axis
-    // synchronisation action
-
-    foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-        neighbor->setSynchronizeXAxis(mSynchronizeXAxisAction->isChecked());
-
-    if (mSynchronizeXAxisAction->isChecked())
-        setAxes(minX(), maxX(), minY(), maxY(), true, true, true, true);
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::synchronizeYAxis()
-{
-    // Let our neighbours know about the checked state of our Y axis
-    // synchronisation action
-
-    foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-        neighbor->setSynchronizeYAxis(mSynchronizeYAxisAction->isChecked());
-
-    if (mSynchronizeYAxisAction->isChecked())
-        setAxes(minX(), maxX(), minY(), maxY(), true, true, true, false, true);
 }
 
 //==============================================================================

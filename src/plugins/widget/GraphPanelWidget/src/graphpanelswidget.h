@@ -67,6 +67,9 @@ private:
 
     GraphPanelWidget *mActiveGraphPanel;
 
+    QAction *mSynchronizeXAxisAction;
+    QAction *mSynchronizeYAxisAction;
+
     bool removeGraphPanel(GraphPanelWidget *pGraphPanel);
 
 Q_SIGNALS:
@@ -85,6 +88,9 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+
+    void synchronizeXAxis();
+    void synchronizeYAxis();
 };
 
 //==============================================================================

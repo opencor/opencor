@@ -155,6 +155,8 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot, public Core
 
 public:
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
+                                  QAction *pSynchronizeXAxisAction,
+                                  QAction *pSynchronizeYAxisAction,
                                   QWidget *pParent);
     ~GraphPanelPlotWidget();
 
@@ -192,9 +194,6 @@ public:
     void alignWithNeighbors(const bool &pCanReplot,
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
-
-    void setSynchronizeXAxis(const bool &pSynchronizeXAxis);
-    void setSynchronizeYAxis(const bool &pSynchronizeYAxis);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -288,8 +287,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void copyToClipboard();
-    void synchronizeXAxis();
-    void synchronizeYAxis();
     void customAxes();
     void zoomIn();
     void zoomOut();
