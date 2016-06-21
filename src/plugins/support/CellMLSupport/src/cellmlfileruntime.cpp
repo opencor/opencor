@@ -780,7 +780,7 @@ void CellmlFileRuntime::update()
     //       listed in a main CellML file can be referenced by SED-ML...
 
     CellMLSupport::CellmlFile::Version cellmlVersion = mCellmlFile->version();
-    QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
+    QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> sourceVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
 
     if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
         ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
@@ -795,7 +795,7 @@ void CellmlFileRuntime::update()
                  variable; variable = variablesIter->nextVariable()) {
                 ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-                mainVariables.insert(sourceVariable, variable);
+                sourceVariables.insert(sourceVariable, variable);
             }
         }
     }
@@ -810,17 +810,17 @@ void CellmlFileRuntime::update()
         // CellML file
 
         ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-        iface::cellml_api::CellMLVariable *mainVariable = variable;
+        iface::cellml_api::CellMLVariable *sourceVariable = variable;
         iface::cellml_api::CellMLVariable *realVariable = variable;
 
         if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
-            mainVariable = mainVariables.value(variable);
+            sourceVariable = sourceVariables.value(variable);
 
-            if (mainVariable)
-                realVariable = mainVariable;
+            if (sourceVariable)
+                realVariable = sourceVariable;
         }
 
-        if (   !mainVariable
+        if (   !sourceVariable
             &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
             continue;
         }
@@ -904,7 +904,7 @@ void CellmlFileRuntime::update()
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            if (mainVariable == variable)
+            if (sourceVariable == variable)
                 mParameters << parameter;
         }
     }
