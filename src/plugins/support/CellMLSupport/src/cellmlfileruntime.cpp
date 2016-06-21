@@ -795,7 +795,7 @@ void CellmlFileRuntime::update()
                  variable; variable = variablesIter->nextVariable()) {
                 ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-                sourceVariables.insert(sourceVariable, variable);
+                sourceVariables.insert(variable, sourceVariable);
             }
         }
     }
