@@ -85,9 +85,10 @@ void GraphPanelsWidget::retranslateUi()
 
 void GraphPanelsWidget::initialize()
 {
-    // Create a default graph panel
+    // Create a default graph panel, if none exists
 
-    addGraphPanel();
+    if (mGraphPanels.isEmpty())
+        addGraphPanel();
 }
 
 //==============================================================================
