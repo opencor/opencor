@@ -6,6 +6,8 @@ SET(OAUTH_PLUGIN OAuth PARENT_SCOPE)
 
 ADD_PLUGIN(OAuth
     THIRD_PARTY
+    DEFINITIONS
+        QT_NO_DEBUG_OUTPUT
     SOURCES
         ../../plugininfo.cpp
         o2/src/o0baseauth.cpp
