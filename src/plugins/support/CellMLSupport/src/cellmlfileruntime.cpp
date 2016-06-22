@@ -775,6 +775,29 @@ void CellmlFileRuntime::update()
         mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
+    // Determine whether the model imports some components
+    // Note #1: a model that only imports units will clearly not affect our
+    //          model's variables, hence such a model won't be relevant for our
+    //          mapping below...
+    // Note #2: a model cannot be fully instantiated if it imports an empty
+    //          component or a component with unmapped variables, so we don't
+    //          need to worry about this type of model...
+
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = model->imports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
+    bool hasComponentImports = false;
+
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
+         import; import = importsIter->nextImport()) {
+        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
+
+        if (importComponents->length()) {
+            hasComponentImports = true;
+
+            break;
+        }
+    }
+
     // If the model contains some imports then we want to to go through the
     // variables defined or referenced in our main CellML file and do a mapping
     // between the source of a variable and a variable in the main CellML file
@@ -786,10 +809,8 @@ void CellmlFileRuntime::update()
     QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
     ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
     ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = model->imports();
-    bool hasImports = imports->length();
 
-    if (hasImports) {
+    if (hasComponentImports) {
         for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
              component; component = localComponentsIter->nextComponent()) {
             ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
@@ -819,7 +840,7 @@ void CellmlFileRuntime::update()
         iface::cellml_api::CellMLVariable *mainVariable = mainVariables.value(variable);
         iface::cellml_api::CellMLVariable *realVariable = mainVariable?mainVariable:variable.getPointer();
 
-        if (   hasImports && !mainVariable
+        if (   hasComponentImports && !mainVariable
             &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
             continue;
         }
@@ -903,7 +924,7 @@ void CellmlFileRuntime::update()
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            if (!hasImports || (realVariable == mainVariable))
+            if (!hasComponentImports || (realVariable == mainVariable))
                 mParameters << parameter;
         }
     }

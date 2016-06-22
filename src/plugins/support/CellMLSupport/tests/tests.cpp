@@ -97,10 +97,12 @@ void Tests::runtimeTests()
     //  - An 'old' version of a bond graph model implementation where the
     //    variable of integration is not visible in the main CellML file (so the
     //    idea is to ensure that the model is still considered valid even though
-    //    the variable of integration is not directly visible); and
+    //    the variable of integration is not directly visible);
     //  - A 'new' version of a bond graph model implementation where the
     //    variable of integration is now visible in the main CellML file (as
-    //    well as some other model parameters).
+    //    well as some other model parameters); and
+    //  - A model (Noble 1962) that imports its units (and no components) from a
+    //    child model.
 
     doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
@@ -108,6 +110,8 @@ void Tests::runtimeTests()
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.out")));
+    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/units_import_only_parent_model.cellml"),
+                  "1.1", modelParameters);
 
     // Clean up after ourselves
 
