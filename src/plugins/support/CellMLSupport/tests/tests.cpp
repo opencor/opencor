@@ -95,12 +95,15 @@ void Tests::runtimeTests()
     //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
     //    imports, etc.;
     //  - An 'old' version of a bond graph model implementation where the
-    //    variable of integration is not visible in the main CellML file; and
+    //    variable of integration is not visible in the main CellML file (so the
+    //    idea is to ensure that the model is still considered valid even though
+    //    the variable of integration is not directly visible); and
     //  - A 'new' version of a bond graph model implementation where the
-    //    variable of integration is now visible in the main CellML file.
+    //    variable of integration is now visible in the main CellML file (as
+    //    well as some other model parameters).
 
-//    doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
-//                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
+    doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
+                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
