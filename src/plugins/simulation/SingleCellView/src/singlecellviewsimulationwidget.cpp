@@ -1147,20 +1147,14 @@ void SingleCellViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that we have effectively been closed and (re)opened
-    // Note #1: we don't want to call fileClosed() between finalize() and
-    //          initialize() since it will trigger the description of existing
-    //          graphs to be updated, which will result in them being
-    //          temporarily shown as invalid even though they may actually be
-    //          valid (since we have finalised the simulation)...
-    // Note #2: we temporarily disable updates since reloading a remote CellML
-    //          1.1 file may take several seconds, which would normally result
-    //          in the list of model parameters becoming and remaining empty
-    //          until the model has been fully reloaded...
+    // Note: we don't want to call fileClosed() between finalize() and
+    //       initialize() since it will trigger the description of existing
+    //       graphs to be updated, which will result in them being temporarily
+    //       shown as invalid even though they may actually be valid (since we
+    //       have finalised the simulation)...
 
-    setUpdatesEnabled(false);
-        finalize();
-        initialize(true);
-    setUpdatesEnabled(true);
+    finalize();
+    initialize(true);
 
     mNeedReloadView = false;
 }
