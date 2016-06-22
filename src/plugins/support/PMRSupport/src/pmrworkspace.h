@@ -75,7 +75,15 @@ private:
     QString mUrl;
     QString mUsername;
 
+    static void checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
+                                     void *payload);
+    static int transfer_progress_cb(const git_transfer_progress *stats, void *payload);
+
+    void emitProgress(const double &pProgress);
+
 Q_SIGNALS:
+    void progress(const double &pProgress);
+
     void warning(const QString &pMessage) const;
     void workspaceCloned(PmrWorkspace *pWorkspace);
 };

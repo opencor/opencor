@@ -156,6 +156,13 @@ QString PmrWorkspace::url() const
 }
 
 //==============================================================================
+
+void PmrWorkspace::emitProgress(const double &pProgress)
+{
+    emit progress(pProgress);
+}
+
+//==============================================================================
 //==============================================================================
 
 class GitCredentials
@@ -205,18 +212,33 @@ static int certificate_check_cb(git_cert *cert, int valid, const char *host, voi
 
 // This is called if the remote host requires authentication in order to connect to
 // it. Returning GIT_PASSTHROUGH will make libgit2 behave as though this field isn't set.
+int PmrWorkspace::transfer_progress_cb(const git_transfer_progress *stats, void *payload)
+{
+    auto workspace = (PmrWorkspace *)payload;
+
+    workspace->emitProgress((double)(stats->received_objects + stats->indexed_objects)
+                            /(2.0*stats->total_objects));
+    return 0;
+}
 
 static int credentials_cb(git_cred **out, const char *url, const char *username_from_url,
                           unsigned int allowed_types, void *payload)
+//==============================================================================
+
+void PmrWorkspace::checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
+                                        void *payload)
 {
     Q_UNUSED(url)
     Q_UNUSED(username_from_url)
     Q_UNUSED(allowed_types)
+    Q_UNUSED(path)
 
     auto credentials = (GitCredentials *)payload;
+    auto workspace = (PmrWorkspace *)payload;
 
     return git_cred_userpass_plaintext_new(out, credentials->username().toUtf8().constData(),
                                                 credentials->password().toUtf8().constData());
+    workspace->emitProgress((double)completed_steps/(double)total_steps);
 }
 
 //==============================================================================
@@ -235,7 +257,12 @@ void PmrWorkspace::clone(const QString &pDirName)
     git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
 
     auto gitCredentials = GitCredentials(mUsername, mPassword);
+    // Track clone and checkout progress
 
+    cloneOptions.fetch_opts.callbacks.transfer_progress = transfer_progress_cb ;
+    cloneOptions.fetch_opts.callbacks.payload = (void *)this;
+    cloneOptions.checkout_opts.progress_cb = checkout_progress_cb;
+    cloneOptions.checkout_opts.progress_payload = (void *)this;
     if (!mUsername.isEmpty()) {
         cloneOptions.fetch_opts.callbacks.credentials = credentials_cb;
         cloneOptions.fetch_opts.callbacks.certificate_check = certificate_check_cb;

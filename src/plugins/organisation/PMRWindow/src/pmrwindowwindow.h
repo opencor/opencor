@@ -85,6 +85,7 @@ private Q_SLOTS:
     void on_refreshButton_clicked();
 
     void busy(const bool &pBusy);
+    void showProgress(const double &pProgress);
 
     void repositoryError(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
     void showWarning(const QString &pMessage);

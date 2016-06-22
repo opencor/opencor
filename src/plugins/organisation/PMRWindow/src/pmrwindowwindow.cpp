@@ -94,6 +94,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     connect(mPmrRepository, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
+    connect(mPmrRepository, SIGNAL(progress(double)),
+            this, SLOT(showProgress(double)));
 
     connect(mPmrRepository, SIGNAL(error(const QString &, const bool &)),
             this, SLOT(repositoryError(const QString &, const bool &)));
@@ -176,8 +178,11 @@ void PmrWindowWindow::busy(const bool &pBusy)
 //==============================================================================
 
 void PmrWindowWindow::showWarning(const QString &pMessage)
+void PmrWindowWindow::showProgress(const double &pProgress)
 {
     // Show the given message as a warning
+    setBusyWidgetProgress(pProgress);
+}
 
     QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
 }

@@ -102,6 +102,7 @@ Q_SIGNALS:
     //void authenticationChanged(const bool &pAuthenticated);
 
     void busy(const bool &pBusy);
+    void progress(const double &pProgress);
 
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
     void information(const QString &pMessage);

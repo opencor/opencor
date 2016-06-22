@@ -316,6 +316,7 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
 {
     emit busy(true);
+    connect(pWorkspace, SIGNAL(progress(double)), this, SIGNAL(progress(double)));
     connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
     connect(pWorkspace, SIGNAL(workspaceCloned(PmrWorkspace *)),
             this, SLOT(workspaceCloneResponse(PmrWorkspace *)));

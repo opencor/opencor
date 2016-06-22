@@ -121,6 +121,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     // Some connections to process responses from the PMR repository
 
     connect(mPmrRepository, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
+    connect(mPmrRepository, SIGNAL(progress(double)), this, SLOT(showProgress(double)));
 
     connect(mPmrRepository, SIGNAL(error(QString, bool)), this, SLOT(showError(QString)));
     connect(mPmrRepository, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
@@ -206,6 +207,13 @@ void PmrWorkspacesWindow::busy(const bool &pBusy)
 
         // And give focus to??
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::showProgress(const double &pProgress)
+{
+    setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
