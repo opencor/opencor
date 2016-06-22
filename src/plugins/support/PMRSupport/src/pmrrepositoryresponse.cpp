@@ -104,12 +104,17 @@ void PmrRepositoryResponse::processResponse(void)
 
     if (mNetworkReply->error() != QNetworkReply::NoError) {
 
-        QString errorMessage = mNetworkReply->errorString();
+        if (httpStatusCode == 403) {
+            emit unauthorised(mNetworkReply->url().toString());
+        }
+        else {
+            QString errorMessage = mNetworkReply->errorString();
 
-        qCritical() << "Http status " << httpStatusCode << ": " << errorMessage;
-        qDebug() << contentData;
+            qCritical() << "Http status " << httpStatusCode << ": " << errorMessage;
+            qDebug() << contentData;
 
-        emit error(errorMessage, true);
+            emit error(errorMessage, true);
+        }
     }
 
     // Check for a moved location response
@@ -157,7 +162,7 @@ void PmrRepositoryResponse::processResponse(void)
 
     mNetworkReply->deleteLater();
 
-    // Let amyone waiting on us know that we are done
+    // Let anyone waiting on us know that we are done
 
     emit finished();
 }

@@ -56,6 +56,7 @@ Q_SIGNALS:
     void finished(void);
     void gotJsonResponse(const QJsonDocument &pJsonDocument);
     void movedLocation(const QString &locationUrl);
+    void unauthorised(const QString &pUrl);
 
 private Q_SLOTS:
     void processResponse(void);
