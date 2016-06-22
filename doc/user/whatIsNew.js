@@ -58,6 +58,7 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Added", "description": "Support for the <code>min()</code> and <code>max()</code> functions." },
                                { "type": "Added", "description": "Support for the <code>gcd()</code> and <code>lcm()</code> functions." },
+                               { "type": "Added", "description": "Save the contents of the view to a text file if it cannot be saved as a <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "cmeta:id's support by allowing hyphens and periods." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
