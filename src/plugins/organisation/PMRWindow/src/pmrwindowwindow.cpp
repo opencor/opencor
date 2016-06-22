@@ -261,7 +261,7 @@ void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
         // We have got a directory name where we can clone the workspace, so
         // request a clone of it
 
-        mPmrRepository->requestCloneExposureWorkspace(pUrl, dirName);
+        mPmrRepository->requestExposureWorkspaceClone(pUrl, dirName);
     }
 }
 

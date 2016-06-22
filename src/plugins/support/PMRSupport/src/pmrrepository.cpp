@@ -313,19 +313,19 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 
 //==============================================================================
 
-void PmrRepository::requestCloneWorkspace(PmrWorkspace *pWorkspace, const QString &pDirName)
+void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
 {
     emit busy(true);
     connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
     connect(pWorkspace, SIGNAL(workspaceCloned(PmrWorkspace *)),
-            this, SLOT(cloneWorkspaceResponse(PmrWorkspace *)));
+            this, SLOT(workspaceCloneResponse(PmrWorkspace *)));
 
     QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
 }
 
 //==============================================================================
 
-void PmrRepository::cloneWorkspaceResponse(PmrWorkspace *pWorkspace)
+void PmrRepository::workspaceCloneResponse(PmrWorkspace *pWorkspace)
 {
     emit busy(false);
     emit workspaceCloned(pWorkspace);
@@ -333,7 +333,7 @@ void PmrRepository::cloneWorkspaceResponse(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrRepository::requestCloneExposureWorkspace(const QString &pUrl, const QString &pDirName)
+void PmrRepository::requestExposureWorkspaceClone(const QString &pUrl, const QString &pDirName)
 {
     // Check whether we already know about the workspace for the given exposure
 
@@ -343,7 +343,7 @@ void PmrRepository::requestCloneExposureWorkspace(const QString &pUrl, const QSt
         emit warning(tr("Unknown exposore: ") + pUrl);
     }
     else if (!exposure->workspace()->isNull()) {
-        requestCloneWorkspace(exposure->workspace(), pDirName);
+        requestWorkspaceClone(exposure->workspace(), pDirName);
     }
     else {
         // To clone the workspace associated with the given exposure, we first
@@ -411,10 +411,6 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 workspaceName = dataMap["value"].toString();
         }
 
-        if (!workspaceUrl.isEmpty())
-            emit workspaceInformation(workspaceUrl, workspaceName,
-                                      workspaceDescription, workspaceOwner);
-
         auto exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
 
         if (!workspaceUrl.isEmpty()) {
@@ -422,6 +418,9 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storageValue.compare("git")) {
+
+                emit workspaceInformation(workspaceUrl, workspaceName,
+                                          workspaceDescription, workspaceOwner);
 
                 auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, exposure);
 
@@ -431,12 +430,12 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
                 // Cloning after creating a new workspace
 
-                else requestWorkspaceCredentials(workspace);
+                else getWorkspaceCredentials(workspace);
 
                 // Clone the workspace, if requested
 
                 auto dirName = sender()->property(DirNameProperty).toString();
-                if (!dirName.isEmpty()) requestCloneWorkspace(workspace, dirName);
+                if (!dirName.isEmpty()) requestWorkspaceClone(workspace, dirName);
 
             } else if (exposure) {
                     emitInformation(tr("The workspace for %1 is not a Git repository.").arg(exposure->toHtml()));
@@ -470,12 +469,12 @@ void PmrRepository::requestNewWorkspace(const QString &pName, const QString &pDe
                                               true, true, jsonCreateWorkspace);
     repositoryResponse->setProperty(DirNameProperty, pDirName);
 
-    connect(repositoryResponse, SIGNAL(movedLocation(QString)), this, SLOT(newWorkspaceResponse(QString)));
+    connect(repositoryResponse, SIGNAL(movedLocation(QString)), this, SLOT(workspaceCreatedResponse(QString)));
 }
 
 //==============================================================================
 
-void PmrRepository::newWorkspaceResponse(const QString &pUrl)
+void PmrRepository::workspaceCreatedResponse(const QString &pUrl)
 {
     emit workspaceCreated(pUrl);
 
@@ -527,7 +526,7 @@ void PmrRepository::workspacesListResponse(const QJsonDocument &pJsonDocument)
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
+void PmrRepository::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
     auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pWorkspace->url() + "/request_temporary_password",
                                                                     true, true);

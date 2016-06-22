@@ -65,11 +65,14 @@ public:
 
     void requestExposureFiles(const QString &pUrl);
     void requestExposuresList(void);
+    void requestExposureWorkspaceClone(const QString &pUrl, const QString &pDirName);
 
-    void requestWorkspacesList(void);
+    void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
+
+    void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
+    void requestWorkspacesList(void);
 
-    void requestCloneExposureWorkspace(const QString &pUrl, const QString &pDirName);
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pDirName);
 
@@ -91,8 +94,6 @@ private:
     void requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl);
     void requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction);
 
-    void requestCloneWorkspace(PmrWorkspace *pWorkspace, const QString &pDirName);
-    void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
     void requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
                                      PmrExposure *pExposure=nullptr);
 
@@ -127,8 +128,8 @@ private Q_SLOTS:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesListResponse(const QJsonDocument &pJsonDocument);
 
-    void cloneWorkspaceResponse(PmrWorkspace *pWorkspace);
-    void newWorkspaceResponse(const QString &pUrl);
+    void workspaceCloneResponse(PmrWorkspace *pWorkspace);
+    void workspaceCreatedResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 };
 
