@@ -526,8 +526,6 @@ void PmrRepository::workspacesListResponse(const QJsonDocument &pJsonDocument)
         }
     }
 
-    std::sort(workspaceList.begin(), workspaceList.end(), PmrWorkspace::compare);
-
     emit workspacesList(workspaceList);
 }
 
