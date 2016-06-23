@@ -121,7 +121,7 @@ void PmrWorkspacesNewWorkspace::titleTextChanged(const QString &text)
     // Set the path if the user hasn't explicitly chosen one
 
     if (!text.trimmed().isEmpty() && !mPathChosen) {
-        mGui->path->setText(PMRSupport::PmrWorkspace::WorkspacesDirectory
+        mGui->path->setText(PMRSupport::PmrWorkspace::WorkspacesDirectory()
                             + QDir::separator() + text.trimmed());
     }
 }
@@ -135,7 +135,7 @@ void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
     // Override the default path
 
     QString defaultDir = mGui->path->text().trimmed().isEmpty()
-                         ? PMRSupport::PmrWorkspace::WorkspacesDirectory
+                         ? PMRSupport::PmrWorkspace::WorkspacesDirectory()
                          : mGui->path->text();
     QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"), defaultDir, true);
 
