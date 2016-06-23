@@ -67,6 +67,7 @@ public:
     void requestExposuresList(void);
     void requestExposureWorkspaceClone(const QString &pUrl, const QString &pDirName);
 
+    PmrWorkspace *getWorkspace(const QString &pUrl);
     void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
@@ -125,6 +126,9 @@ private Q_SLOTS:
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
     void exposuresListResponse(const QJsonDocument &pJsonDocument);
+
+    void getWorkspaceResponse(const QJsonDocument &pJsonDocument);
+    void workspaceUnauthorised(const QString &pUrl);
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesListResponse(const QJsonDocument &pJsonDocument);

@@ -558,6 +558,90 @@ void PmrRepository::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 //==============================================================================
 //==============================================================================
 
+PmrWorkspace *PmrRepository::getWorkspace(const QString &pUrl)
+{
+    PmrWorkspace *newWorkspace = nullptr;
+
+    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pUrl, true);
+    repositoryResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
+    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+            this, SLOT(getWorkspaceResponse(QJsonDocument)));
+
+    // We want to catch any 403 (unauthorised) response
+
+    disconnect(repositoryResponse, SIGNAL(unauthorised(QString)), 0, 0);
+    connect(repositoryResponse, SIGNAL(unauthorised(QString)),
+            this, SLOT(workspaceUnauthorised(QString)));
+
+    // Don't return until response has been processed
+
+    QEventLoop waitLoop;
+    connect(repositoryResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+    waitLoop.exec();
+
+    return newWorkspace;
+}
+
+//==============================================================================
+
+void PmrRepository::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
+{
+    auto workspacePtr = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
+
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+
+    QVariantList itemsList = collectionMap["items"].toList();
+
+    if (itemsList.count()) {
+        // Retrieve details of the workspace we are dealing with
+
+        QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
+
+        QString storageValue = QString();
+        QString workspaceDescription = QString();
+        QString workspaceOwner = QString();
+        QString workspaceName = QString();
+        QString workspaceId = QString();
+
+        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
+            QVariantMap dataMap = dataVariant.toMap();
+            QString fieldName = dataMap["name"].toString();
+
+            if      (fieldName == "storage")     storageValue = dataMap["value"].toString();
+            else if (fieldName == "description") workspaceDescription = dataMap["value"].toString();
+            else if (fieldName == "owner")       workspaceOwner = dataMap["value"].toString();
+            else if (fieldName == "title")       workspaceName = dataMap["value"].toString();
+            else if (fieldName == "id")          workspaceId = dataMap["value"].toString();
+        }
+        if (workspaceName.isEmpty()) workspaceName = workspaceId;
+        if (workspaceName.isEmpty()) workspaceName = tr("** Unknown name **");
+
+        if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
+
+            auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, this);
+
+            workspace->setDescription(workspaceDescription);
+            workspace->setOwner(workspaceOwner);
+
+            // Return result to requestor
+
+            *workspacePtr = workspace;
+        }
+
+    }
+}
+//==============================================================================
+
+void PmrRepository::workspaceUnauthorised(const QString &pUrl)
+{
+    Q_UNUSED(pUrl)
+
+    // Do nothing, `getWorkspace()` will return `nullptr`.
+}
+
+//==============================================================================
+//==============================================================================
+
 }   // namespace PMRSupport
 }   // namespace OpenCOR
 
