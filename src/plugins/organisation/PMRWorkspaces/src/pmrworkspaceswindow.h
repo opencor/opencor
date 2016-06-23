@@ -89,6 +89,7 @@ private Q_SLOTS:
     void on_actionAuthenticate_triggered();
     void on_actionNew_triggered();
     void on_actionRefresh_triggered();
+    void on_actionRescan_triggered();
     void on_actionUnauthenticate_triggered();
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

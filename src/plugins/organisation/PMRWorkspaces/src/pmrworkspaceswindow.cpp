@@ -68,16 +68,22 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
+    toolBarWidget->addAction(mGui->actionNew);
+    toolBarWidget->addAction(mGui->actionRefresh);
+
+    // Right align logon/off
+
+    QWidget *spacer1 = new QWidget();
+    spacer1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    toolBarWidget->addWidget(spacer1);
+
     toolBarWidget->addAction(mGui->actionAuthenticate);
     toolBarWidget->addAction(mGui->actionUnauthenticate);
-    toolBarWidget->addAction(mGui->actionNew);
 
-    // Right align refresh tool
-
-    QWidget *spacer = new QWidget();
-    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    toolBarWidget->addWidget(spacer);
-    toolBarWidget->addAction(mGui->actionRefresh);
+    QWidget *spacer2 = new QWidget();
+    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    spacer2->setMinimumSize(4, 0);
+    toolBarWidget->addWidget(spacer2);
 
     mGui->layout->addWidget(toolBarWidget);
 
@@ -104,19 +110,21 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mContextMenu->addAction(mGui->actionAuthenticate);
-    mContextMenu->addAction(mGui->actionUnauthenticate);
     mContextMenu->addAction(mGui->actionNew);
     mContextMenu->addAction(mGui->actionRefresh);
+    mContextMenu->addAction(mGui->actionAuthenticate);
+    mContextMenu->addAction(mGui->actionUnauthenticate);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionRescan);
 
-    // We want our own context menu for the workspaces widget
+    // We want our own context menu for the toolbar widget
 
-    mWorkspacesWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    toolBarWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(toolBarWidget, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(showCustomContextMenu()));
 
     // Some connections
 
-    connect(mWorkspacesWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(showCustomContextMenu()));
 
     // Some connections to process responses from the PMR repository
 
@@ -281,6 +289,7 @@ void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
         mGui->actionAuthenticate->setVisible(false);
         mGui->actionNew->setEnabled(true);
         mGui->actionRefresh->setEnabled(true);
+        mGui->actionRescan->setEnabled(true);
         mGui->actionUnauthenticate->setVisible(true);
         mWorkspacesWidget->refreshWorkspaces();
     }
@@ -288,6 +297,7 @@ void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
         mGui->actionAuthenticate->setVisible(true);
         mGui->actionNew->setEnabled(false);
         mGui->actionRefresh->setEnabled(false);
+        mGui->actionRescan->setEnabled(false);
         mGui->actionUnauthenticate->setVisible(false);
         mWorkspacesWidget->clearWorkspaces();
     }
@@ -340,43 +350,41 @@ void PmrWorkspacesWindow::on_actionRefresh_triggered()
 
 //==============================================================================
 
+void PmrWorkspacesWindow::on_actionRescan_triggered()
+{
+    // Rescan the default workspace folders directory before refreshing
+
+    mWorkspacesWidget->refreshWorkspaces(true);
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindow::on_actionUnauthenticate_triggered()
 {
     // Log off PMR
 
-    mPmrRepository->authenticate(false);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindow::showCustomContextMenu() const
-{
-    // Show our context menu which items match the contents of our tool bar
-    // widget
-
-    mContextMenu->exec(QCursor::pos());
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindow::workspaceCreated(const QString &pUrl)
-{
-    Q_UNUSED(pUrl)
+    if (QMessageBox::question(this, tr("OpenCOR"),
+                              tr("Log off the Physiome Model Repository")) == QMessageBox::Ok)
+        mPmrRepository->authenticate(false);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindow::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindow::showCustomContextMenu() const
 {
     if (pWorkspace) {
         // All good, so selected it in the list of workspaces
 
         mWorkspacesWidget->setSelected(pWorkspace->url());
+    // Show our context menu which items match the contents of our tool bar
+    // widget
 
         // And update the list of workspaces
 
         mPmrRepository->requestWorkspacesList();
     }
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
