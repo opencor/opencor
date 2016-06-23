@@ -50,7 +50,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
     mInitialized(false),
-    mErrorMessage(QString()),
     mInternetConnectionAvailable(true),
     mNumberOfFilteredExposures(0),
     mExposureUrl(QString())
@@ -132,7 +131,7 @@ QString PmrWindowWidget::message() const
 
     QString res = QString();
 
-    if (mInternetConnectionAvailable && mErrorMessage.isEmpty()) {
+    if (mInternetConnectionAvailable) {
         if (!mNumberOfFilteredExposures) {
             if (!mExposureNames.isEmpty())
                 res = tr("No exposure matches your criteria.");
@@ -142,9 +141,7 @@ QString PmrWindowWidget::message() const
             res = tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures);
         }
     } else {
-        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mInternetConnectionAvailable?
-                                                                     mErrorMessage:
-                                                                     Core::noInternetConnectionAvailableMessage(),
+        res = tr("<strong>Error:</strong> ")+Core::formatMessage(Core::noInternetConnectionAvailableMessage(),
                                                                  true, true);
     }
 
@@ -154,7 +151,6 @@ QString PmrWindowWidget::message() const
 //==============================================================================
 
 void PmrWindowWidget::initialize(const PMRSupport::PmrExposureList &pExposureList,
-                                 const QString &pErrorMessage,
                                  const QString &pFilter,
                                  const bool &pInternetConnectionAvailable)
 {
@@ -163,8 +159,6 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposureList &pExposureLis
     mExposureNames.clear();
     mExposureDisplayed.clear();
     mExposureUrlId.clear();
-
-    mErrorMessage = pErrorMessage;
 
     mInternetConnectionAvailable = pInternetConnectionAvailable;
 

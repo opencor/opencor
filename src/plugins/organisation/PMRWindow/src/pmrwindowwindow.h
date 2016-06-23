@@ -88,8 +88,9 @@ private Q_SLOTS:
     void showProgress(const double &pProgress);
 
     void repositoryError(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
-    void showWarning(const QString &pMessage);
+    void showError(const QString &pMessage);
     void showInformation(const QString &pMessage);
+    void showWarning(const QString &pMessage);
 
     void retrieveExposuresList(const bool &pVisible);
 

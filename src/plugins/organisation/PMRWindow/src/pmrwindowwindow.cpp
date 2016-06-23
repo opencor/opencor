@@ -177,14 +177,18 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-void PmrWindowWindow::showWarning(const QString &pMessage)
 void PmrWindowWindow::showProgress(const double &pProgress)
 {
-    // Show the given message as a warning
     setBusyWidgetProgress(pProgress);
 }
 
-    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
+//==============================================================================
+
+void PmrWindowWindow::showError(const QString &pMessage)
+{
+    // Show the given message as an error
+
+    QMessageBox::critical(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -194,6 +198,15 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
     // Show the given message as informative text
 
     QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::showWarning(const QString &pMessage)
+{
+    // Show the given message as a warning
+
+    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -221,7 +234,7 @@ void PmrWindowWindow::gotExposuresList(const PMRSupport::PmrExposureList &pExpos
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWidget->initialize(pExposures, "", mGui->filterValue->text(), true);
+    mPmrWidget->initialize(pExposures, mGui->filterValue->text(), true);
 }
 
 //==============================================================================
@@ -231,8 +244,8 @@ void PmrWindowWindow::repositoryError(const QString &pErrorMessage,
 {
     // Tell our PMR widget we have a problem
 
-    mPmrWidget->initialize(PMRSupport::PmrExposureList(), pErrorMessage,
-                           "", pInternetConnectionAvailable);
+    mPmrWidget->initialize(PMRSupport::PmrExposureList(), "", pInternetConnectionAvailable);
+    showError(pErrorMessage);
 }
 
 //==============================================================================
