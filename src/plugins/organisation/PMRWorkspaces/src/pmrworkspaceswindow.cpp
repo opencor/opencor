@@ -125,6 +125,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Some connections
 
+    connect(mWorkspacesWidget, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
 
     // Some connections to process responses from the PMR repository
 

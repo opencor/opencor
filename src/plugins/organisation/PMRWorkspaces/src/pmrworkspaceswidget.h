@@ -106,6 +106,7 @@ Q_SIGNALS:
 //    void filesOpenRequested(const QStringList &pFileNames);
 
 //    void deleteItemsEnabled(const bool &pEnabled);
+    void warning(const QString &pMessage);
 
 public Q_SLOTS:
     void clearWorkspaces(void);
