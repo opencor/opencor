@@ -41,7 +41,11 @@ namespace PMRSupport {
 
 const QString PmrRepository::Url()
 {
+#if PMR_PRODUCTION
     return "https://models.physiomeproject.org";
+#else
+    return "http://staging.physiomeproject.org";
+#endif
 }
 
 //==============================================================================
