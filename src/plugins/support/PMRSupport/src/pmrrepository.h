@@ -121,6 +121,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void authenticate(const bool &pLink = true);
     void getAuthenticationStatus(void);
+    void unauthorised(const QString &pUrl);
 
 private Q_SLOTS:
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);

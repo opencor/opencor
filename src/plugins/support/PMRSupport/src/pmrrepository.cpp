@@ -113,6 +113,12 @@ void PmrRepository::emitInformation(const QString &pMessage)
 }
 
 //==============================================================================
+
+void PmrRepository::unauthorised(const QString &pUrl)
+{
+    emitInformation(tr("Not authorised to access %1").arg(pUrl));
+}
+
 //==============================================================================
 
 static const char *DirNameProperty    = "DirName";
