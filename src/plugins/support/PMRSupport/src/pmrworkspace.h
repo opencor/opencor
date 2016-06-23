@@ -33,6 +33,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "git2.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRSupport {
 
@@ -78,6 +82,8 @@ private:
     QString mPath;
     QString mUrl;
     QString mUsername;
+
+    static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
 
     static void checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
                                      void *payload);
