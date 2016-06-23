@@ -63,8 +63,13 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
             this, SLOT(linkClicked()));
     connect(page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
             this, SLOT(linkHovered()));
+   // Connections to handle responses from PMR
 
     // Retrieve the output template
+    connect(mPmrRepository, SIGNAL(workspaceCreated(QString)),
+            this, SLOT(workspaceCreated(QString)));
+    connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
     QByteArray fileContents;
 
