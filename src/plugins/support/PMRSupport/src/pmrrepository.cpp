@@ -127,10 +127,6 @@ static const char *NextActionProperty = "NextAction";
 static const char *WorkspaceProperty  = "Workspace";
 
 //==============================================================================
-
-
-
-//==============================================================================
 //==============================================================================
 
 void PmrRepository::requestExposuresList(void)
@@ -445,7 +441,7 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 if (!dirName.isEmpty()) requestWorkspaceClone(workspace, dirName);
 
             } else if (exposure) {
-                    emitInformation(tr("The workspace for %1 is not a Git repository.").arg(exposure->toHtml()));
+                emitInformation(tr("The workspace for %1 is not a Git repository.").arg(exposure->toHtml()));
             }
 
         } else if (exposure) {

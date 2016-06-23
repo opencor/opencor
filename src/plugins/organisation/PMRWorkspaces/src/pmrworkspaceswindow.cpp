@@ -325,6 +325,10 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
         if (!workspaceFolder.exists()) {
             workspaceFolder.mkpath(".");
         }
+        else {
+            // TODO Need to check the folder is empty...
+            // If not, give an error and return
+        }
 
         // Ask the PMR repository to create a new workspace. This
         // will result in the (empty) workspace being cloned into
@@ -340,7 +344,7 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
 
 void PmrWorkspacesWindow::on_actionRefresh_triggered()
 {
-    // Request the list of workspaces
+    // Ask the workspaces widget to refresh itself
 
     mWorkspacesWidget->refreshWorkspaces(false);
 }
