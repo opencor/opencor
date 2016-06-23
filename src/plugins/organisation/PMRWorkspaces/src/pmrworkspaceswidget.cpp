@@ -407,12 +407,8 @@ Is it then best to always have a <TABLE> element that gets rebuilt in the DOM??
 
 //==============================================================================
 
-void PmrWorkspacesWidget::refreshWorkspaces(void)
 {
-    mPmrRepository->requestWorkspacesList();
-}
 
-//==============================================================================
 
 
 void PmrWorkspacesWidget::linkClicked()
@@ -442,11 +438,17 @@ void PmrWorkspacesWidget::linkClicked()
 //==============================================================================
 
 void PmrWorkspacesWidget::linkHovered()
+void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
 {
     // Retrieve some information about the link
+    if (pScanFolders) scanDefaultWorkspaceDirectory();
+
+    mPmrRepository->requestWorkspacesList();
+}
 
     QString link;
     QString textContent;
+//==============================================================================
 
     QWebElement element = retrieveLinkInformation(link, textContent);
 

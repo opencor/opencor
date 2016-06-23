@@ -287,7 +287,7 @@ void PmrWorkspacesWindow::updateAuthenticationStatus(const bool &pAuthenticated)
         mGui->actionRefresh->setEnabled(true);
         mGui->actionRescan->setEnabled(true);
         mGui->actionUnauthenticate->setVisible(true);
-        mWorkspacesWidget->refreshWorkspaces();
+        mWorkspacesWidget->refreshWorkspaces(false);
     }
     else {
         mGui->actionAuthenticate->setVisible(true);
@@ -341,7 +341,7 @@ void PmrWorkspacesWindow::on_actionRefresh_triggered()
 {
     // Request the list of workspaces
 
-    mPmrRepository->requestWorkspacesList();
+    mWorkspacesWidget->refreshWorkspaces(false);
 }
 
 //==============================================================================

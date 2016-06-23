@@ -110,7 +110,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void clearWorkspaces(void);
     void initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaces);
-    void refreshWorkspaces(void);
+    void refreshWorkspaces(const bool &pScanFolders);
 
 private Q_SLOTS:
     void linkClicked();
