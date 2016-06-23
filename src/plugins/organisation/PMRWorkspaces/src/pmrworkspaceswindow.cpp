@@ -139,10 +139,6 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
             mWorkspacesWidget, SLOT(initialiseWorkspaces(PMRSupport::PmrWorkspaceList)));
 
-    connect(mPmrRepository, SIGNAL(workspaceCreated(QString)), this, SLOT(workspaceCreated(QString)));
-    connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-
     // Retranslate the GUI
 
     retranslateUi();
@@ -370,20 +366,11 @@ void PmrWorkspacesWindow::on_actionUnauthenticate_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindow::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 void PmrWorkspacesWindow::showCustomContextMenu() const
 {
-    if (pWorkspace) {
-        // All good, so selected it in the list of workspaces
-
-        mWorkspacesWidget->setSelected(pWorkspace->url());
     // Show our context menu which items match the contents of our tool bar
     // widget
 
-        // And update the list of workspaces
-
-        mPmrRepository->requestWorkspacesList();
-    }
     mContextMenu->exec(QCursor::pos());
 }
 

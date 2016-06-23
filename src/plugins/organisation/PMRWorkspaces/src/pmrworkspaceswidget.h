@@ -118,6 +118,8 @@ private Q_SLOTS:
 
 //    void fileChanged(const QString &pFileName) const;
 //    void fileDeleted(const QString &pFileName) const;
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCreated(const QString &pUrl);
 };
 
 //==============================================================================

@@ -465,6 +465,11 @@ void PmrWorkspacesWidget::linkHovered()
     }
 
     setLinkToolTip(linkToolTip);
+void PmrWorkspacesWidget::workspaceCreated(const QString &pUrl)
+{
+    Q_UNUSED(pUrl)
+
+    // Ignore as `workspaceCloned` will be called next
 }
 
 //==============================================================================
@@ -525,6 +530,19 @@ JSON:  "{
             ]
         },
         "version": "1.0"
+void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    if (pWorkspace) {
+        QString url = pWorkspace->url();
+
+        if (!mWorkspacesMap.contains(url))
+            addWorkspace(pWorkspace);
+
+        // Redisplay with workspace expanded and selected
+
+        mExpandedItems.insert(url);
+        displayWorkspaces();
+        setSelected(url);
     }
 }
 "

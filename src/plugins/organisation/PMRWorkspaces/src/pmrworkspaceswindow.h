@@ -92,8 +92,6 @@ private Q_SLOTS:
     void on_actionRescan_triggered();
     void on_actionUnauthenticate_triggered();
 
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceCreated(const QString &pUrl);
     void showProgress(const double &pProgress);
 
     void showCustomContextMenu() const;
