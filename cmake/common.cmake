@@ -63,27 +63,27 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
+    # Get our own copy of Qt WebKit
+
+    ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
+
     # Required packages
 
-    IF(WIN32)
-        SET(WEBKIT WebKit)
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
     ELSE()
-        SET(WEBKIT)
+        SET(TEST)
     ENDIF()
 
     SET(REQUIRED_QT_MODULES
         Network
-        ${WEBKIT}
+        ${TEST}
         Widgets
     )
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
     ENDFOREACH()
-
-    IF(ENABLE_TESTS)
-        FIND_PACKAGE(Qt5Test REQUIRED)
-    ENDIF()
 
     # Keep track of some information about Qt
 
@@ -1140,7 +1140,14 @@ MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+    IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
+       OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
+        SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/bin/osx)
+    ELSE()
+        SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
+    ENDIF()
+
+    OS_X_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                         ${LIBRARY_NAME})
 ENDMACRO()
