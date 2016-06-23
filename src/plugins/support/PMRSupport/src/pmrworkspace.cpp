@@ -175,11 +175,40 @@ void PmrWorkspace::emitProgress(const double &pProgress)
 //==============================================================================
 //==============================================================================
 
+QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 {
+    // Return remote.origin.url if the folder contains a git repository
+    // otherwise return an empty string.
 
+    auto url = QString();
 
+    git_libgit2_init();
+    git_repository *gitRepository = 0;
+
+    if (git_repository_open(&gitRepository, pFolder.toUtf8().constData()) == 0) {
+
+        git_strarray remotes ;
+        if (git_remote_list(&remotes, gitRepository) == 0) {
+
+            for (int i = 0; i < (int)remotes.count; i++) {
+                char *name = remotes.strings[i];
+                if (strcmp(name, "origin")==0) {
+                    git_remote *remote = {0};
+
+                    if (git_remote_lookup(&remote, gitRepository, name) == 0) {
+                        const char *remoteUrl = git_remote_url(remote);
+                        if (remoteUrl) url = QString(remoteUrl);
+                    }
+                }
+            }
+        }
+        git_repository_free(gitRepository);
     }
 
+    git_libgit2_shutdown();
+
+    return url;
+}
 
 //==============================================================================
 
@@ -279,6 +308,118 @@ void PmrWorkspace::clone(const QString &pDirName)
     mPath = pDirName;
 
     emit workspaceCloned(this);
+}
+
+//==============================================================================
+
+const QString PmrWorkspace::gitStatus(void) const
+{
+    // Get the status of the repository
+
+    auto status = QString("");
+
+    git_libgit2_init();
+
+    git_repository *gitRepository = 0;
+
+    int error = git_repository_open(&gitRepository, mPath.toUtf8().constData());
+
+    if (error == 0) {
+        git_oid masterOid, originMasterOid;
+
+        error = git_reference_name_to_id(&masterOid, gitRepository,
+                                         "refs/heads/master");
+        if (error == 0) {
+            error = git_reference_name_to_id(&originMasterOid, gitRepository,
+                                             "refs/remotes/origin/master");
+            if (error == 0) {
+                size_t ahead = 0;
+                size_t behind = 0;
+
+                error = git_graph_ahead_behind(&ahead, &behind, gitRepository,
+                                               &masterOid, &originMasterOid);
+                if (error == 0) {
+                    status = QString("%1 %2").arg((ahead  ? "A" : " "),
+                                                  (behind ? "B" : " "));
+                }
+            }
+        }
+    }
+
+    if (error) {
+        const git_error *gitError = giterr_last();
+        emit warning(gitError?
+                         tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                 Core::formatMessage(gitError->message)):
+                         tr("An error occurred while trying to get the status of %1").arg(mPath));
+    }
+
+    git_libgit2_shutdown();
+
+    return status;
+}
+
+//==============================================================================
+
+const QString PmrWorkspace::gitStatus(const QString &pPath) const
+{
+    // Get the status of a file
+
+    auto status = QString("");
+
+    git_libgit2_init();
+
+    git_repository *gitRepository = 0;
+
+    int error = git_repository_open(&gitRepository, mPath.toUtf8().constData());
+
+    if (error == 0) {
+        auto repoDir = QDir(mPath);
+        auto relativePath = repoDir.relativeFilePath(pPath);
+
+        unsigned int statusFlags = 0;
+        error = git_status_file(&statusFlags, gitRepository, relativePath.toUtf8().constData());
+qDebug() << relativePath << statusFlags;
+
+        if (error == 0) {
+            char istatus = ' ';
+            char wstatus = ' ';
+
+            if (statusFlags & GIT_STATUS_INDEX_NEW) istatus = 'A';
+            if (statusFlags & GIT_STATUS_INDEX_MODIFIED) istatus = 'M';
+            if (statusFlags & GIT_STATUS_INDEX_DELETED) istatus = 'D';
+            if (statusFlags & GIT_STATUS_INDEX_RENAMED) istatus = 'R';
+            if (statusFlags & GIT_STATUS_INDEX_TYPECHANGE) istatus = 'T';
+            if (statusFlags & GIT_STATUS_WT_NEW) {
+                if (istatus == ' ') istatus = '?';
+                wstatus = '?';
+            }
+            if (statusFlags & GIT_STATUS_WT_MODIFIED) wstatus = 'M';
+            if (statusFlags & GIT_STATUS_WT_DELETED) wstatus = 'D';
+            if (statusFlags & GIT_STATUS_WT_RENAMED) wstatus = 'R';
+            if (statusFlags & GIT_STATUS_WT_TYPECHANGE) wstatus = 'T';
+            if (statusFlags & GIT_STATUS_IGNORED) {
+                istatus = '!';
+                wstatus = '!';
+            }
+
+            status = QString(QChar(istatus)) + wstatus;
+        }
+
+        git_repository_free(gitRepository);
+    }
+
+    if (error) {
+        const git_error *gitError = giterr_last();
+        emit warning(gitError?
+                         tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                 Core::formatMessage(gitError->message)):
+                         tr("An error occurred while trying to get the status of %1").arg(pPath));
+    }
+
+    git_libgit2_shutdown();
+
+    return status;
 }
 
 //==============================================================================

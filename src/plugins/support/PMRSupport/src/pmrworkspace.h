@@ -52,6 +52,8 @@ public:
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
+    static QString getUrlFromFolder(const QString &pFolder);
+
     bool isLocal(void) const;
     bool isNull(void) const;
 
@@ -71,6 +73,9 @@ public:
     void clone(const QString &pDirName);
 
     static const QString WorkspacesDirectory ;
+    const QString gitStatus(void) const;
+    const QString gitStatus(const QString &pPath) const;
+
 
 private:
     bool mOwned;
