@@ -97,6 +97,8 @@ Q_SIGNALS:
     void warning(const QString &pMessage);
 
 public Q_SLOTS:
+    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
+    void addWorkspaceFolder(const QString &pFolder);
     void clearWorkspaces(void);
     void initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaces);
     void refreshWorkspaces(const bool &pScanFolders);
