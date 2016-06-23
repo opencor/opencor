@@ -38,9 +38,12 @@ namespace PMRSupport {
 
 //==============================================================================
 
-const QString PmrWorkspace::WorkspacesDirectory = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                                                + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
-
+QString PmrWorkspace::WorkspacesDirectory()
+{
+    static QString directory = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                             + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
+    return directory;
+}
 
 //==============================================================================
 
@@ -128,14 +131,21 @@ void PmrWorkspace::setOwner(const QString &pOwner)
 
 //==============================================================================
 
-QString PmrWorkspace::description() const
+void PmrWorkspace::setPath(const QString &pPath)
+{
+    mPath = pPath;
+}
+
+//==============================================================================
+
+const QString &PmrWorkspace::description() const
 {
     return mDescription;
 }
 
 //==============================================================================
 
-QString PmrWorkspace::name() const
+const QString &PmrWorkspace::name() const
 {
     // Return our name
 
@@ -144,21 +154,21 @@ QString PmrWorkspace::name() const
 
 //==============================================================================
 
-QString PmrWorkspace::owner() const
+const QString &PmrWorkspace::owner() const
 {
     return mOwner;
 }
 
 //==============================================================================
 
-QString PmrWorkspace::path() const
+const QString &PmrWorkspace::path() const
 {
     return mPath;
 }
 
 //==============================================================================
 
-QString PmrWorkspace::url() const
+const QString &PmrWorkspace::url() const
 {
     // Return our URL
 
@@ -276,6 +286,7 @@ void PmrWorkspace::clone(const QString &pDirName)
 
     cloneOptions.fetch_opts.callbacks.transfer_progress = transfer_progress_cb ;
     cloneOptions.fetch_opts.callbacks.payload = (void *)this;
+    cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
     cloneOptions.checkout_opts.progress_cb = checkout_progress_cb;
     cloneOptions.checkout_opts.progress_payload = (void *)this;
 
@@ -289,17 +300,17 @@ void PmrWorkspace::clone(const QString &pDirName)
         cloneOptions.fetch_opts.custom_headers = authorizationStrArray;
     }
 
-    int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                        dirNameByteArray.constData(), &cloneOptions);
+    int error = git_clone(&gitRepository, workspaceByteArray.constData(),
+                          dirNameByteArray.constData(), &cloneOptions);
 
-    if (res) {
+    if (error) {
         const git_error *gitError = giterr_last();
-
         emit warning(gitError?
                          tr("Error %1: %2.").arg(QString::number(gitError->klass),
                                                  Core::formatMessage(gitError->message)):
                          tr("An error occurred while trying to clone the workspace."));
-    } else if (gitRepository) {
+    }
+    else if (gitRepository) {
         git_repository_free(gitRepository);
     }
 
@@ -379,7 +390,6 @@ const QString PmrWorkspace::gitStatus(const QString &pPath) const
 
         unsigned int statusFlags = 0;
         error = git_status_file(&statusFlags, gitRepository, relativePath.toUtf8().constData());
-qDebug() << relativePath << statusFlags;
 
         if (error == 0) {
             char istatus = ' ';

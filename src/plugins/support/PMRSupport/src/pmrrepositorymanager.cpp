@@ -177,8 +177,12 @@ PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl,
     }
 
     auto pmrRepositoryResponse = new PmrRepositoryResponse(networkReply);
-    connect(pmrRepositoryResponse, SIGNAL(busy(bool)), mPmrRepository, SIGNAL(busy(bool)));
-    connect(pmrRepositoryResponse, SIGNAL(error(QString, bool)), mPmrRepository, SIGNAL(error(QString, bool)));
+    connect(pmrRepositoryResponse, SIGNAL(busy(bool)),
+            mPmrRepository, SIGNAL(busy(bool)));
+    connect(pmrRepositoryResponse, SIGNAL(error(QString, bool)),
+            mPmrRepository, SIGNAL(error(QString, bool)));
+    connect(pmrRepositoryResponse, SIGNAL(unauthorised(QString)),
+            mPmrRepository, SLOT(unauthorised(QString)));
 
     return pmrRepositoryResponse;
 }

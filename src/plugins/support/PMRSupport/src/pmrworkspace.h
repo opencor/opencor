@@ -61,21 +61,26 @@ public:
     void setDescription(const QString &pDescription);
     void setName(const QString &pName);
     void setOwner(const QString &pOwner);
+    void setPath(const QString &pPath);
 
-    QString description() const;
-    QString name() const;
-    QString owner() const;
-    QString path() const;
-    QString url() const;
     bool isOwned(void) const;
     void setOwned(const bool &pOwned);
 
+    const QString &description(void) const;
+    const QString &name(void) const;
+    const QString &owner(void) const;
+    const QString &path(void) const;
+    const QString &url(void) const;
+
     void clone(const QString &pDirName);
 
-    static const QString WorkspacesDirectory ;
     const QString gitStatus(void) const;
     const QString gitStatus(const QString &pPath) const;
 
+//    void pull();
+//    void push();
+
+    static QString WorkspacesDirectory();
 
 private:
     bool mOwned;
@@ -101,6 +106,8 @@ Q_SIGNALS:
 
     void warning(const QString &pMessage) const;
     void workspaceCloned(PmrWorkspace *pWorkspace);
+    void workspacePulled(PmrWorkspace *pWorkspace);
+    void workspacePushed(PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
