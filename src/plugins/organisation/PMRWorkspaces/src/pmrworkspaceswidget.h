@@ -31,6 +31,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMap>
+#include <QFileInfo>
+
+//==============================================================================
+
+class QContextMenuEvent ;
 
 //==============================================================================
 
@@ -59,39 +64,53 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void setSelected(const QString &pSelectedUrl);
+    virtual void contextMenuEvent(QContextMenuEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+
+    void setSelected(const QString &pId);
 
 protected:
     virtual QSize sizeHint() const;
 
 private:
-    QString mTemplate;
-
     PMRSupport::PmrRepository *mPmrRepository;
 
-    QMap<QString, bool> mExpandedItems;
-    QString mSelectedUrl;
+    QMap<QString, PMRSupport::PmrWorkspace *> mWorkspacesMap; // Url --> Workspace
 
-    static QString workspacePath(const QString &pUrl, const QString &pPath);
     QMap<QString, QString> mWorkspaceFolders;                 // Folder name --> Url
+    QMap<QString, QPair<QString, bool> > mWorkspaceUrls;      // Url --> (Folder name, mine)
 
-    static QString actionHtml(const QList<QPair<QString, QString> > &pActions);
-    static QString containerHtml(const QString &pClass, const QString &pIcon,
-                                 const QString &pId, const QString &pName,
-                                 const QString &pStatus,
-                                 const QList<QPair<QString, QString> > &pActions);
-    static QString fileHtml(const QString &pName, const QString &pStatus,
-                            const QList<QPair<QString, QString> > &pActions);
-    static QString emptyContentsHtml(void);
+    QSet<QString> mExpandedItems;
+    QString mSelectedItem;
 
-    QString contentsHtml(const QString &pPath) const;
-    QStringList folderHtml(const QString &pPath) const;
-    QStringList workspaceHtml(const QString &pUrl, const QString &pName, const QString &pPath) const;
+    QString mTemplate;
 
+    int mRow;
 
+    void scanDefaultWorkspaceDirectory(void);
 
+    void displayWorkspaces(void);
+    void expandHtmlTree(const QString &pId);
 
+    QString actionHtml(const QList<QPair<QString, QString> > &pActions);
+    QString containerHtml(const QString &pClass, const QString &pIcon,
+                          const QString &pId, const QString &pName,
+                          const QString &pStatus,
+                          const QList<QPair<QString, QString> > &pActions);
+    QString contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
+    QString emptyContentsHtml(void);
+    QString fileHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                     const QString &pId, const QString &pFileName,
+                     const QList<QPair<QString, QString> > &pActions);
+    QStringList folderHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
+    QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 
+    void aboutWorkspace(const QString &pUrl);
+    void cloneWorkspace(const QString &pUrl);
+    void duplicateCloneMessage(const QString &pUrl,
+                               const QString &pPath1, const QString &pPath2);
 
 Q_SIGNALS:
     void warning(const QString &pMessage);
@@ -102,10 +121,6 @@ public Q_SLOTS:
     void clearWorkspaces(void);
     void initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaces);
     void refreshWorkspaces(const bool &pScanFolders);
-
-private Q_SLOTS:
-    void linkClicked();
-    void linkHovered();
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
