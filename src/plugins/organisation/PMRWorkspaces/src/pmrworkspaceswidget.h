@@ -73,6 +73,7 @@ private:
     QString mSelectedUrl;
 
     static QString workspacePath(const QString &pUrl, const QString &pPath);
+    QMap<QString, QString> mWorkspaceFolders;                 // Folder name --> Url
 
     static QString actionHtml(const QList<QPair<QString, QString> > &pActions);
     static QString containerHtml(const QString &pClass, const QString &pIcon,

@@ -103,41 +103,54 @@ QSize PmrWorkspacesWidget::sizeHint() const
 //==============================================================================
 
 static const auto SettingsWorkspaces    = QStringLiteral("Workspaces");
+static const auto SettingsFolders       = QStringLiteral("Folders");
 static const auto SettingsExpandedItems = QStringLiteral("ExpandedItems");
-static const auto SettingsSelectedUrl   = QStringLiteral("SelectedUrl");
+static const auto SettingsSelectedItem  = QStringLiteral("SelectedItem");
 
 //==============================================================================
 
 void PmrWorkspacesWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the names of expanded workspaces and folders
-
-    mExpandedItems.clear();
     pSettings->beginGroup(SettingsWorkspaces);
-        QStringList expanded = pSettings->value(SettingsExpandedItems).toStringList();
-        QString item;
-        foreach (item, expanded) mExpandedItems.insert(item, true);
+
+        // Retrieve the names of folders containing cloned workspaces
+
+        QStringList folders = pSettings->value(SettingsFolders).toStringList();
+        foreach (QString folder, folders) {
+            if (!folder.isEmpty()) addWorkspaceFolder(folder);
+        }
+
+        // Retrieve the names of expanded workspaces and folders
+
+        mExpandedItems = pSettings->value(SettingsExpandedItems).toStringList().toSet();
+
+        // Retrieve the currently selected item, if any
+
+        mSelectedItem = pSettings->value(SettingsSelectedItem).toString();
+
     pSettings->endGroup();
-
-    // Retrieve the currently selected item, if any
-
-    mSelectedUrl = pSettings->value(SettingsSelectedUrl).toString();
 }
 
 //==============================================================================
 
 void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the names of expanded workspaces and folders
-
     pSettings->remove(SettingsWorkspaces);
     pSettings->beginGroup(SettingsWorkspaces);
-        pSettings->setValue(SettingsExpandedItems, mExpandedItems.key(true));
+
+        // Keep track of the names of folders containing cloned workspaces
+
+        pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolders.keys()));
+
+        // Keep track of the names of expanded workspaces and folders
+
+        pSettings->setValue(SettingsExpandedItems, QVariant(mExpandedItems.toList()));
+
+        // Keep track of the currently selected item
+
+        pSettings->setValue(SettingsSelectedItem, mSelectedItem);
+
     pSettings->endGroup();
-
-    // Keep track of the currently selected item
-
-    pSettings->setValue(SettingsSelectedUrl, mSelectedUrl);
 }
 
 //==============================================================================
