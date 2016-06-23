@@ -246,7 +246,6 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
                                 "  <td class=\"status\">%5</td>\n"
                                 "  <td class=\"action\">%6</td>\n"
                                 "</tr>\n";
-qDebug() << pClass << "container for " << pName << " is " << pIcon;
 
     const QString iconHtml = (pClass == "workspace")
                              ? ((pIcon == "star") ? "<img class=\"star\" />" : "")
@@ -267,7 +266,6 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace
                                 "  <td class=\"status\">%4</td>\n"
                                 "  <td class=\"action\">%5</td>\n"
                                 "</tr>\n";
-qDebug() << "File " << pName;
     mRow += 1;
     QString rowClass = (mRow % 2) ? "" : " even";
     if (pPath == mSelectedItem) rowClass += " selected";
@@ -358,7 +356,6 @@ QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspace *pWor
 
     if (mExpandedItems.contains(fullname)) html << contentsHtml(pWorkspace, pPath);
     else                                   html << emptyContentsHtml();
-qDebug() << "Folder " << pPath << "  Name: " << fullname;
 
     return html;
 }
