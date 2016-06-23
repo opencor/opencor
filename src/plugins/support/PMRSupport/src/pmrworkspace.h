@@ -61,12 +61,16 @@ public:
     QString owner() const;
     QString path() const;
     QString url() const;
+    bool isOwned(void) const;
+    void setOwned(const bool &pOwned);
 
     void clone(const QString &pDirName);
 
     static const QString WorkspacesDirectory ;
 
 private:
+    bool mOwned;
+
     QString mDescription;
     QString mName;
     QString mOwner;

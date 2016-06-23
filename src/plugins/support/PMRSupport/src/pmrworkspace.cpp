@@ -56,11 +56,11 @@ PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent),
 //==============================================================================
 
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent) :
-    QObject(parent),
+    QObject(parent), mOwned(false),
     mDescription(QString()), mName(pName), mOwner(QString()),
     mPassword(QString()), mPath(QString()), mUrl(pUrl), mUsername(QString())
 {
-    // Set name from PMR workspace info
+    // Name, description and owner are set from PMR workspace info
 }
 
 //==============================================================================
@@ -85,6 +85,20 @@ bool PmrWorkspace::compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSeco
     // worrying about casing)
 
     return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::isOwned(void) const
+{
+    return mOwned;
+}
+
+//==============================================================================
+
+void PmrWorkspace::setOwned(const bool &pOwned)
+{
+    mOwned = pOwned;
 }
 
 //==============================================================================

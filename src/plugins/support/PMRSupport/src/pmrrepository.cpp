@@ -515,6 +515,7 @@ void PmrRepository::workspacesListResponse(const QJsonDocument &pJsonDocument)
                 && !workspaceName.isEmpty()) {
 
                 workspaceList.add(workspaceUrl, workspaceName, this);
+                workspaceList.last()->setOwned(true);
             }
         }
     }
