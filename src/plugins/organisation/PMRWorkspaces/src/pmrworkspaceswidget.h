@@ -89,24 +89,11 @@ private:
     QStringList workspaceHtml(const QString &pUrl, const QString &pName, const QString &pPath) const;
 
 
-//    void dropItems(QStandardItem *pDropItem,
-//                   const QAbstractItemView::DropIndicatorPosition &pDropPosition,
-//                   QStandardItem *pNewParentItem, QList<QStandardItem *> pItems);
-//    void dropItem(QStandardItem *pDropItem,
-//                  const QAbstractItemView::DropIndicatorPosition &pDropPosition,
-//                  QStandardItem *pNewParentItem, QStandardItem *pItem);
 
-//    void moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
-//                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
-    //void resizeToContents();
 
-//    QStringList selectedFiles() const;
 
 Q_SIGNALS:
-//    void filesOpenRequested(const QStringList &pFileNames);
-
-//    void deleteItemsEnabled(const bool &pEnabled);
     void warning(const QString &pMessage);
 
 public Q_SLOTS:
@@ -118,8 +105,6 @@ private Q_SLOTS:
     void linkClicked();
     void linkHovered();
 
-//    void fileChanged(const QString &pFileName) const;
-//    void fileDeleted(const QString &pFileName) const;
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
 };
