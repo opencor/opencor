@@ -60,7 +60,7 @@ namespace EditorWidget {
 
 //==============================================================================
 
-class EditorFindReplaceWidget;
+class EditorWidgetFindReplaceWidget;
 
 //==============================================================================
 
@@ -141,7 +141,7 @@ public:
 private:
     QScintillaSupport::QScintillaWidget *mEditor;
     QFrame *mSeparator;
-    EditorFindReplaceWidget *mFindReplace;
+    EditorWidgetFindReplaceWidget *mFindReplace;
 
     int mCurrentLine;
     int mCurrentColumn;
@@ -150,7 +150,7 @@ private:
 
     QIntList mReadOnlyStyles;
 
-    EditorFindReplaceWidget * findReplace();
+    EditorWidgetFindReplaceWidget * findReplace();
 
     bool findText(const QString &pText, const bool &pForward);
 

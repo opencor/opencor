@@ -472,6 +472,9 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
     if (pResetIssues)
         mIssues.clear();
 
+    if (!mParameters.contains(mVariableOfIntegration))
+        delete mVariableOfIntegration;
+
     foreach (CellmlFileRuntimeParameter *parameter, mParameters)
         delete parameter;
 
@@ -772,20 +775,42 @@ void CellmlFileRuntime::update()
         mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
-    // In the case of a CellML 1.1 file, retrieve all the variables defined or
-    // referenced in our main CellML file
+    // Determine whether the model imports some components
+    // Note #1: a model that only imports units will clearly not affect our
+    //          model's variables, hence such a model won't be relevant for our
+    //          mapping below...
+    // Note #2: a model cannot be fully instantiated if it imports an empty
+    //          component or a component with unmapped variables, so we don't
+    //          need to worry about this type of model...
+
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = model->imports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
+    bool hasComponentImports = false;
+
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
+         import; import = importsIter->nextImport()) {
+        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
+
+        if (importComponents->length()) {
+            hasComponentImports = true;
+
+            break;
+        }
+    }
+
+    // If the model contains some imports then we want to to go through the
+    // variables defined or referenced in our main CellML file and do a mapping
+    // between the source of a variable and a variable in the main CellML file
     // Note: indeed, when it comes to CellML 1.1 files, we only want to list the
     //       parameters that are either defined or referenced in our main CellML
-    //       file. Not only does it make sense, but also only the variables
-    //       listed in a main CellML file can be referenced by SED-ML...
+    //       file. Not only does it make sense, but also only the parameters
+    //       listed in a main CellML file can be referenced in SED-ML...
 
-    CellMLSupport::CellmlFile::Version cellmlVersion = mCellmlFile->version();
     QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
+    ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
+    ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
-    if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
-        ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
-        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
-
+    if (hasComponentImports) {
         for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
              component; component = localComponentsIter->nextComponent()) {
             ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
@@ -800,32 +825,27 @@ void CellmlFileRuntime::update()
         }
     }
 
-    // Retrieve all the parameters and sort them by component/variable name
+    // Go through all our computation targets and determine which ones are
+    // referenced in our main CellML file, and sort them by component and
+    // variable name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = genericCodeInformation->iterateTargets();
 
     for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
          computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
-        // Make sure that the parameter is defined or referenced in our main
-        // CellML file
+        // Make sure that our computation target is defined or referenced in our
+        // main CellML file, if it has imports
 
         ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-        iface::cellml_api::CellMLVariable *mainVariable = variable;
-        iface::cellml_api::CellMLVariable *realVariable = variable;
+        iface::cellml_api::CellMLVariable *mainVariable = mainVariables.value(variable);
+        iface::cellml_api::CellMLVariable *realVariable = mainVariable?mainVariable:variable.getPointer();
 
-        if (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0) {
-            mainVariable = mainVariables.value(variable);
-
-            if (mainVariable)
-                realVariable = mainVariable;
-        }
-
-        if (   !mainVariable
+        if (   hasComponentImports && !mainVariable
             &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
             continue;
         }
 
-        // Determine the type of the parameter
+        // Determine the type of our computation target
 
         CellmlFileRuntimeParameter::ParameterType parameterType;
 
@@ -890,7 +910,7 @@ void CellmlFileRuntime::update()
             break;
         }
 
-        // Keep track of the parameter, should its type be of interest
+        // Keep track of our computation target, should its type be of interest
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
@@ -904,7 +924,7 @@ void CellmlFileRuntime::update()
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            if (mainVariable == variable)
+            if (!hasComponentImports || (realVariable == mainVariable))
                 mParameters << parameter;
         }
     }

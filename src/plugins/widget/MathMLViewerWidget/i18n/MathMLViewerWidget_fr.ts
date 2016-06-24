@@ -36,8 +36,8 @@
         <translation>Grouper les chiffres d&apos;un nombre par groupes de milles</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
+        <source>Copy to Clipboard</source>
+        <translation>Copier dans Presse-Papier</translation>
     </message>
     <message>
         <source>Copy the contents of the MathML viewer to the clipboard</source>

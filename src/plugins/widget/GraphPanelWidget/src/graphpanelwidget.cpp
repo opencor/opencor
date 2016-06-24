@@ -35,11 +35,14 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
-                                   QWidget *pParent) :
-    Widget(pParent),
-    mActive(false)
+void GraphPanelWidget::constructor(const GraphPanelWidgets &pNeighbors,
+                                   QAction *pSynchronizeXAxisAction,
+                                   QAction *pSynchronizeYAxisAction)
 {
+    // We are not active by default
+
+    mActive = false;
+
     // Create and set our horizontal layout
 
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -72,7 +75,8 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
     foreach (GraphPanelWidget *neighbor, pNeighbors)
         neighbors << neighbor->plot();
 
-    mPlot = new GraphPanelPlotWidget(neighbors, this);
+    mPlot = new GraphPanelPlotWidget(neighbors, pSynchronizeXAxisAction,
+                                     pSynchronizeYAxisAction, this);
 
     layout->addWidget(mPlot);
 
@@ -88,6 +92,30 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     foreach (GraphPanelPlotWidget *neighbor, neighbors)
         neighbor->addNeighbor(mPlot);
+}
+
+//==============================================================================
+
+GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
+                                   QAction *pSynchronizeXAxisAction,
+                                   QAction *pSynchronizeYAxisAction,
+                                   QWidget *pParent) :
+    Widget(pParent)
+{
+    // Construct our widget
+
+    constructor(pNeighbors, pSynchronizeXAxisAction, pSynchronizeYAxisAction);
+}
+
+//==============================================================================
+
+GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
+                                   QWidget *pParent) :
+    Widget(pParent)
+{
+    // Construct our widget
+
+    constructor(pNeighbors, 0, 0);
 }
 
 //==============================================================================

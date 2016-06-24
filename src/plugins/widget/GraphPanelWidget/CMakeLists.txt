@@ -10,12 +10,16 @@ ADD_PLUGIN(GraphPanelWidget
         src/graphpanelplotwidget.cpp
         src/graphpanelswidget.cpp
         src/graphpanelwidget.cpp
+        src/graphpanelwidgetcustomaxeswindow.cpp
         src/graphpanelwidgetplugin.cpp
     HEADERS_MOC
         src/graphpanelplotwidget.h
         src/graphpanelswidget.h
         src/graphpanelwidget.h
+        src/graphpanelwidgetcustomaxeswindow.h
         src/graphpanelwidgetplugin.h
+    UIS
+        src/graphpanelwidgetcustomaxeswindow.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

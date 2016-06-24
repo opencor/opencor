@@ -8,18 +8,18 @@ ADD_PLUGIN(EditorWidget
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/editorfindreplacewidget.cpp
         src/editorlistitem.cpp
         src/editorlistwidget.cpp
         src/editorwidget.cpp
+        src/editorwidgetfindreplacewidget.cpp
         src/editorwidgetplugin.cpp
     HEADERS_MOC
         src/editorlistwidget.h
-        src/editorfindreplacewidget.h
         src/editorwidget.h
+        src/editorwidgetfindreplacewidget.h
         src/editorwidgetplugin.h
     UIS
-        src/editorfindreplacewidget.ui
+        src/editorwidgetfindreplacewidget.ui
     INCLUDE_DIRS
         src
     PLUGINS

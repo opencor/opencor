@@ -54,14 +54,14 @@ void Tests::exportTests()
 {
     // Try to export a CellML 1.0 file to CellML 1.0
 
-    QString fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/noble_model_1962.cellml");
+    QString fileName = OpenCOR::fileName("models/noble_model_1962.cellml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
              QStringList() << "The file is already a CellML 1.0 file." << QString());
 
     // Export a CellML 1.1 file to CellML 1.0
 
-    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/experiments/periodic-stimulus.xml");
+    fileName = OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
@@ -77,17 +77,17 @@ void Tests::exportTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "non_existing_user_defined_format_file"),
              QStringList() << "The user-defined format file could not be found." << QString());
 
-    // Try to export a local file to a user-defined format, which file
+    // Try to export a local file to a user-defined (MATLAB) format, which file
     // description exists
 
-    QString userDefinedFormatFileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/user_defined_format.xml");
+    QString matlabFormatFileName = OpenCOR::fileName("formats/MATLAB.xml");
 
 #ifdef Q_OS_WIN
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << userDefinedFormatFileName),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/user_defined_format_export_on_windows.out")));
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_windows.out")));
 #else
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << userDefinedFormatFileName),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/user_defined_format_export_on_non_windows.out")));
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_non_windows.out")));
 #endif
 }
 

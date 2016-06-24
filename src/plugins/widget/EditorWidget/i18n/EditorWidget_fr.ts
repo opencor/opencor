@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>EditorFindReplaceWidget</name>
+    <name>EditorWidgetFindReplaceWidget</name>
     <message>
         <source>Find:</source>
         <translation>Trouver :</translation>
@@ -37,7 +37,46 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::EditorWidget::EditorFindReplaceWidget</name>
+    <name>OpenCOR::EditorWidget::EditorListWidget</name>
+    <message>
+        <source>Clear List</source>
+        <translation>Effacer Liste</translation>
+    </message>
+    <message>
+        <source>Clear the list</source>
+        <translation>Effacer la liste</translation>
+    </message>
+    <message>
+        <source>Copy List to Clipboard</source>
+        <translation>Copier Liste dans Presse-Papier</translation>
+    </message>
+    <message>
+        <source>Copy the list to the clipboard</source>
+        <translation>Copier la liste dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Avertissement</translation>
+    </message>
+    <message>
+        <source>Hint</source>
+        <translation>Conseil</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation>Fatal</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::EditorWidget::EditorWidgetFindReplaceWidget</name>
     <message>
         <source>Case Sensitive</source>
         <translation>Sensible À Différence Majuscules-Minuscules</translation>
@@ -69,45 +108,6 @@
     <message>
         <source>Clear the text</source>
         <translation>Effacer le texte</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::EditorWidget::EditorListWidget</name>
-    <message>
-        <source>Clear List</source>
-        <translation>Effacer Liste</translation>
-    </message>
-    <message>
-        <source>Clear the list</source>
-        <translation>Effacer la liste</translation>
-    </message>
-    <message>
-        <source>Copy List To Clipboard</source>
-        <translation>Copier Liste Dans Presse-Papier</translation>
-    </message>
-    <message>
-        <source>Copy the list to the clipboard</source>
-        <translation>Copier la liste dans le presse-papier</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erreur</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Avertissement</translation>
-    </message>
-    <message>
-        <source>Hint</source>
-        <translation>Conseil</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
-        <source>Fatal</source>
-        <translation>Fatal</translation>
     </message>
 </context>
 </TS>

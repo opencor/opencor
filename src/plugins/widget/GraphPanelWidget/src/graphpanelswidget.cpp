@@ -20,10 +20,13 @@ limitations under the License.
 // Single Cell view graph panels widget
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "graphpanelswidget.h"
+#include "i18ninterface.h"
 
 //==============================================================================
 
+#include <QAction>
 #include <QSettings>
 
 //==============================================================================
@@ -49,12 +52,29 @@ GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     // Set our orientation
 
     setOrientation(Qt::Vertical);
+
+    // Create our actions
+
+    mSynchronizeXAxisAction = Core::newAction(true, this);
+    mSynchronizeYAxisAction = Core::newAction(true, this);
+
+    connect(mSynchronizeXAxisAction, SIGNAL(triggered(bool)),
+            this, SLOT(synchronizeXAxis()));
+    connect(mSynchronizeYAxisAction, SIGNAL(triggered(bool)),
+            this, SLOT(synchronizeYAxis()));
 }
 
 //==============================================================================
 
 void GraphPanelsWidget::retranslateUi()
 {
+    // Retranslate our actions
+
+    I18nInterface::retranslateAction(mSynchronizeXAxisAction, tr("Synchonise X Axis"),
+                                     tr("Synchronise the X axis of all graph panels"));
+    I18nInterface::retranslateAction(mSynchronizeYAxisAction, tr("Synchonise Y Axis"),
+                                     tr("Synchronise the Y axis of all graph panels"));
+
     // Retranslate all our graph panels
 
     foreach (GraphPanelWidget *graphPanel, mGraphPanels)
@@ -65,9 +85,10 @@ void GraphPanelsWidget::retranslateUi()
 
 void GraphPanelsWidget::initialize()
 {
-    // Create a default graph panel
+    // Create a default graph panel, if none exists
 
-    addGraphPanel();
+    if (mGraphPanels.isEmpty())
+        addGraphPanel();
 }
 
 //==============================================================================
@@ -98,7 +119,10 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     // Create a new graph panel, add it to ourselves and keep track of it
 
-    GraphPanelWidget *res = new GraphPanelWidget(mGraphPanels, this);
+    GraphPanelWidget *res = new GraphPanelWidget(mGraphPanels,
+                                                 mSynchronizeXAxisAction,
+                                                 mSynchronizeYAxisAction,
+                                                 this);
 
     mGraphPanels << res;
 
@@ -140,8 +164,17 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
 
     // Ask our first graph panel's plot to align itself against its neighbours
+    // Synchronise the axes of our graph panels, if needed, and ensure that they
+    // are all aligned with one another by forcing the setting of the axes of
+    // our active graph panel
 
-    mGraphPanels[0]->plot()->forceAlignWithNeighbors();
+    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel->plot();
+
+    activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
+                                  activeGraphPanelPlot->maxX(),
+                                  activeGraphPanelPlot->minY(),
+                                  activeGraphPanelPlot->maxY(),
+                                  true, true, true, true);
 
     // Return our newly created graph panel
 
@@ -150,10 +183,10 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
 //==============================================================================
 
-void GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
+bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 {
     if (!pGraphPanel)
-        return;
+        return false;
 
     // Retrieve the index of the given graph panel
 
@@ -197,22 +230,27 @@ void GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
     // Ask our first graph panel's plot, if any, to align itself against its
     // neighbours
 
-    if (!mGraphPanels.isEmpty())
-        mGraphPanels[0]->plot()->forceAlignWithNeighbors();
+    if (!mGraphPanels.isEmpty()) {
+        mActiveGraphPanel->plot()->forceAlignWithNeighbors();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-void GraphPanelsWidget::removeCurrentGraphPanel()
+bool GraphPanelsWidget::removeCurrentGraphPanel()
 {
     // Make sure that we don't have only one graph panel left
 
     if (mGraphPanels.count() == 1)
-        return;
+        return false;
 
     // Remove the current graph panel
 
-    removeGraphPanel(mActiveGraphPanel);
+    return removeGraphPanel(mActiveGraphPanel);
 }
 
 //==============================================================================
@@ -263,6 +301,42 @@ void GraphPanelsWidget::updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelW
 
             graphPanel->setActive(false);
         }
+    }
+}
+
+//==============================================================================
+
+void GraphPanelsWidget::synchronizeXAxis()
+{
+    // Synchronise the X axis of our graph panels, if needed, by forcing the
+    // setting of the axes of our active graph panel
+
+    if (mSynchronizeXAxisAction->isChecked()) {
+        GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel->plot();
+
+        activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
+                                      activeGraphPanelPlot->maxX(),
+                                      activeGraphPanelPlot->minY(),
+                                      activeGraphPanelPlot->maxY(),
+                                      true, true, true, true);
+    }
+}
+
+//==============================================================================
+
+void GraphPanelsWidget::synchronizeYAxis()
+{
+    // Synchronise the Y axis of our graph panels, if needed, by forcing the
+    // setting of the axes of our active graph panel
+
+    if (mSynchronizeYAxisAction->isChecked()) {
+        GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel->plot();
+
+        activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
+                                      activeGraphPanelPlot->maxX(),
+                                      activeGraphPanelPlot->minY(),
+                                      activeGraphPanelPlot->maxY(),
+                                      true, true, true, true);
     }
 }
 

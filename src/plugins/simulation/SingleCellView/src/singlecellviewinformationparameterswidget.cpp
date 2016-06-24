@@ -40,7 +40,8 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     PropertyEditorWidget(false, pParent),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mSimulation(0)
+    mSimulation(0),
+    mNeedClearing(false)
 {
     // Create our context menu
 
@@ -97,6 +98,14 @@ void SingleCellViewInformationParametersWidget::initialize(SingleCellViewSimulat
 
     mSimulation = pSimulation;
 
+    // First clear ourselves, if needed
+
+    if (mNeedClearing) {
+        clear();
+
+        mNeedClearing = false;
+    }
+
     // Retranslate our core self, if needed
     // Note: part of reloading ourselves consists of finalising ourselves, which
     //       means clearing all of our contents including our header labels. So,
@@ -124,7 +133,7 @@ void SingleCellViewInformationParametersWidget::finalize()
     // Clear ourselves, as well as our context menu, parameters and parameter
     // actions
 
-    clear();
+    mNeedClearing = true;
 
     mContextMenu->clear();
 

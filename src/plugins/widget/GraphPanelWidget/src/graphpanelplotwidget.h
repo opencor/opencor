@@ -155,6 +155,8 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot, public Core
 
 public:
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
+                                  QAction *pSynchronizeXAxisAction,
+                                  QAction *pSynchronizeYAxisAction,
                                   QWidget *pParent);
     ~GraphPanelPlotWidget();
 
@@ -176,12 +178,13 @@ public:
     double maxY() const;
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 const bool &pCanReplot = true, const bool &pEmitSignal = true);
+                 const bool &pSynchronizeAxes = true,
+                 const bool &pCanReplot = true, const bool &pEmitSignal = true,
+                 const bool &pForceXAxisSetting = false,
+                 const bool &pForceYAxisSetting = false);
 
-    void drawGraphFrom(GraphPanelPlotGraph *pGraph,
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
                        const qulonglong &pFrom);
-
-    void replotNow();
 
     GraphPanelPlotWidgets neighbors() const;
 
@@ -231,6 +234,9 @@ private:
     QMenu *mContextMenu;
 
     QAction *mCopyToClipboardAction;
+    QAction *mSynchronizeXAxisAction;
+    QAction *mSynchronizeYAxisAction;
+    QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
@@ -281,6 +287,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void copyToClipboard();
+    void customAxes();
     void zoomIn();
     void zoomOut();
     void resetZoom();

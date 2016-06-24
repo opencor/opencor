@@ -21,8 +21,8 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "editorfindreplacewidget.h"
 #include "editorwidget.h"
+#include "editorwidgetfindreplacewidget.h"
 #include "qscintillawidget.h"
 
 //==============================================================================
@@ -66,7 +66,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     mEditor = new QScintillaSupport::QScintillaWidget(pLexer, this);
     mSeparator = Core::newLineWidget(this);
-    mFindReplace = new EditorFindReplaceWidget(this);
+    mFindReplace = new EditorWidgetFindReplaceWidget(this);
 
     // Check which styles can have their background changed when making them
     // read-only or writable
@@ -523,7 +523,7 @@ void EditorWidget::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
-EditorFindReplaceWidget * EditorWidget::findReplace()
+EditorWidgetFindReplaceWidget * EditorWidget::findReplace()
 {
     // Return our find/replace widget
 

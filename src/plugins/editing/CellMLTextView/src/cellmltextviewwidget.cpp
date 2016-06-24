@@ -537,6 +537,22 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
                 return false;
             }
         } else {
+            // The parsing was unsuccessful, so ask the user whether s/he wants
+            // to save the contents of the view to a text file
+
+            if (QMessageBox::question(Core::mainWindow(), tr("Save File"),
+                                      tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName),
+                                      QMessageBox::Yes|QMessageBox::No,
+                                      QMessageBox::Yes) == QMessageBox::Yes) {
+                QString fileName = Core::getSaveFileName(tr("Save File"),
+                                                         Core::newFileName(pNewFileName, "txt"));
+
+                if (!fileName.isEmpty())
+                    Core::writeFileContentsToFile(fileName, data->editingWidget()->editor()->contents().toUtf8());
+            }
+
+            pNeedFeedback = false;
+
             return false;
         }
     } else {

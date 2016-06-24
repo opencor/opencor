@@ -30,6 +30,10 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; nécessite des fonctionnalités qui ne sont pas présentes dans %2 et devrait donc être sauvegardé comme fichier %3. Voulez-vous continuer ?</translation>
     </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved. Do you want to save the contents of the view to a text file?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé. Voulez-vous sauvegarder le contenu de la vue dans un fichier texte ?</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
