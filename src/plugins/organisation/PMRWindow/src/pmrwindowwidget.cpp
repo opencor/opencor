@@ -32,7 +32,7 @@ limitations under the License.
 #include <QIODevice>
 #include <QMenu>
 #include <QRegularExpression>
-#include <Qtimer>
+#include <QTimer>
 #include <QWebElement>
 #include <QWebFrame>
 
