@@ -23,8 +23,8 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrworkspacesnewworkspace.h"
-#include "pmrworkspaceswindow.h"
 #include "pmrworkspaceswidget.h"
+#include "pmrworkspaceswindow.h"
 #include "toolbarwidget.h"
 
 //==============================================================================

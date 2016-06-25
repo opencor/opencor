@@ -29,7 +29,9 @@ specific language governing permissions and limitations under the License.
 
 #include <QList>
 #include <QObject>
+#include <QSet>
 #include <QString>
+#include <QVector>
 
 //==============================================================================
 
@@ -113,7 +115,10 @@ Q_SIGNALS:
 //==============================================================================
 //==============================================================================
 
-class PmrWorkspaceList : public QList<PmrWorkspace *>
+template class PMRSUPPORT_EXPORT QSet<PmrWorkspace *>;
+template class PMRSUPPORT_EXPORT QVector<PmrWorkspace *>;
+
+class PMRSUPPORT_EXPORT PmrWorkspaceList : public QList<PmrWorkspace *>
 {
 public:
     PmrWorkspaceList();

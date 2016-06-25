@@ -53,7 +53,7 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-class PmrWorkspacesWidget : public WebViewerWidget::WebViewerWidget, public Core::CommonWidget
+class PmrWorkspacesWidget : public OpenCOR::WebViewerWidget::WebViewerWidget, public Core::CommonWidget
 {
     Q_OBJECT
 

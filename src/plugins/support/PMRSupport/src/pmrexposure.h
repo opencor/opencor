@@ -30,8 +30,10 @@ limitations under the License.
 
 #include <QObject>
 #include <QList>
+#include <QSet>
 #include <QString>
 #include <QStringList>
+#include <QVector>
 
 //==============================================================================
 
@@ -79,7 +81,10 @@ private:
 
 //==============================================================================
 
-class PmrExposureList : public QList<PmrExposure *>
+template class PMRSUPPORT_EXPORT QSet<PmrExposure *>;
+template class PMRSUPPORT_EXPORT QVector<PmrExposure *>;
+
+class PMRSUPPORT_EXPORT PmrExposureList : public QList<PmrExposure *>
 {
 public:
     PmrExposureList();

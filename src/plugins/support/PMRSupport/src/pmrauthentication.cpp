@@ -52,20 +52,20 @@ PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *parent) : O1(parent
     setClientId(ConsumerKey());
     setClientSecret(ConsumerSecret());
 
-    setCallbackUrl(PmrOAuthClient::CallbackUrl);
-    setLocalPort(PmrOAuthClient::CallbackPort);
+    setCallbackUrl(PmrOAuthClient::CallbackUrl());
+    setLocalPort(PmrOAuthClient::CallbackPort());
 
     // Set the urls used to get authentication tokens
 
-    setAccessTokenUrl(QUrl(QString(AccessTokenUrl).arg(pUrl)));
-    setAuthorizeUrl(QUrl(QString(AuthorizeUrl).arg(pUrl)));
-    setRequestTokenUrl(QUrl(QString(RequestTokenUrl).arg(pUrl)));
+    setAccessTokenUrl(QUrl(AccessTokenUrl().arg(pUrl)));
+    setAuthorizeUrl(QUrl(AuthorizeUrl().arg(pUrl)));
+    setRequestTokenUrl(QUrl(RequestTokenUrl().arg(pUrl)));
 
     // Specify the scope of token requests
 
     QList<O0RequestParameter> reqParams = QList<O0RequestParameter>();
     reqParams << O0RequestParameter(QByteArray("scope"),
-                                    QString(RequestScope).arg(pUrl).toUtf8());
+                                    RequestScope().arg(pUrl).toUtf8());
     setRequestParameters(reqParams);
 
     // Create a store object for writing the received authentication tokens
@@ -77,16 +77,74 @@ PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *parent) : O1(parent
 
 //==============================================================================
 
+const char *PmrOAuthClient::CallbackUrl(void)
+{
+    static const char *callbackUrl = "http://localhost:%1/";
+
+    return callbackUrl;
+}
+
+//==============================================================================
+
+const int  PmrOAuthClient::CallbackPort(void)
+{
+    return 1234;
+}
+
+//==============================================================================
+
+const QString &PmrOAuthClient::AccessTokenUrl(void)
+{
+    static const QString accessTokenUrl = QString("%1/OAuthGetAccessToken");
+
+    return accessTokenUrl;
+}
+
+//==============================================================================
+
+const QString &PmrOAuthClient::AuthorizeUrl(void)
+{
+    static const QString authorizeUrl = QString("%1/OAuthAuthorizeToken");
+
+    return authorizeUrl;
+}
+
+//==============================================================================
+
+const QString &PmrOAuthClient::RequestTokenUrl(void)
+{
+    static const QString requestTokenUrl = QString("%1/OAuthRequestToken");
+
+    return requestTokenUrl;
+}
+
+//==============================================================================
+
+const QString &PmrOAuthClient::RequestScope(void)
+{
+    static const QString requestScope = QString("%1/oauth_scope/collection,"
+                                                "%1/oauth_scope/search,"
+                                                "%1/oauth_scope/workspace_tempauth,"
+                                                "%1/oauth_scope/workspace_full");
+    return requestScope;
+}  
+
+//==============================================================================
+
 const char *PmrOAuthClient::ConsumerKey(void)
 {
-    return "9uuENvnELA1cdoy7WhFg4Gsq";
+    static const char *consumerKey = "9uuENvnELA1cdoy7WhFg4Gsq";
+
+    return consumerKey;
 }
 
 //==============================================================================
 
 const char *PmrOAuthClient::ConsumerSecret(void)
 {
-    return "IqCnqYJZmYzVbFmMsRE_C66F";
+    static const char *consumerSecret = "IqCnqYJZmYzVbFmMsRE_C66F";
+
+    return consumerSecret;
 }
 
 //==============================================================================
@@ -95,7 +153,9 @@ const char *PmrOAuthClient::EncryptionKey(void)
 {
     // Used to encrypt saved access tokens
 
-    return "hgh189;;099!@7878";
+    static const char *encryptionKey = "hgh189;;099!@7878";
+
+    return encryptionKey;
 }
 
 //==============================================================================

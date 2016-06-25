@@ -42,7 +42,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-
 // PMR OAuth 1.0 client
 // Constants must match values assigned to the Physiome Model Repository
 
@@ -54,21 +53,18 @@ public:
     explicit PmrOAuthClient(const QString &pUrl, QObject *parent = 0);
 
 private:
-    static constexpr auto CallbackUrl = "http://localhost:%1/";
-    static constexpr auto CallbackPort = 1234;
+    static const char *CallbackUrl(void);
+    static const int   CallbackPort(void);
 
     // Authorisation Url templates
 
-    static constexpr auto AccessTokenUrl = "%1/OAuthGetAccessToken";
-    static constexpr auto AuthorizeUrl = "%1/OAuthAuthorizeToken";
-    static constexpr auto RequestTokenUrl = "%1/OAuthRequestToken";
+    static const QString &AccessTokenUrl(void);
+    static const QString &AuthorizeUrl(void);
+    static const QString &RequestTokenUrl(void);
 
     // Scope template for request
 
-    static constexpr auto RequestScope = "%1/oauth_scope/collection,"
-                                         "%1/oauth_scope/search,"
-                                         "%1/oauth_scope/workspace_tempauth,"
-                                         "%1/oauth_scope/workspace_full";
+    static const QString &RequestScope(void);
 
     // Keep these out of the header file
 

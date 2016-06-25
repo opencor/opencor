@@ -55,7 +55,7 @@ class PmrWorkspacesWidget;
 
 //==============================================================================
 
-class PMRWORKSPACE_EXPORT PmrWorkspacesWindow : public Core::OrganisationWidget
+class PmrWorkspacesWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
