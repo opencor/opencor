@@ -63,9 +63,9 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
-    # Get our own copy of Qt WebKit
+    # Make sure that we can find our copy of Qt WebKit
 
-    ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
+    SET(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
     # Required packages
 
@@ -75,9 +75,16 @@ MACRO(INITIALISE_PROJECT)
         SET(TEST)
     ENDIF()
 
+    IF(WIN32)
+        SET(WEBKIT WebKit)
+    ELSE()
+        SET(WEBKIT)
+    ENDIF()
+
     SET(REQUIRED_QT_MODULES
         Network
         ${TEST}
+        ${WEBKIT}
         Widgets
     )
 
