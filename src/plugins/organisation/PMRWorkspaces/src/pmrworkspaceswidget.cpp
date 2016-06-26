@@ -77,11 +77,11 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     QByteArray fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
-    mTemplate = QString(fileContents).arg( // about, clone, closed, open, star
+    mTemplate = QString(fileContents).arg( // clone, folder, open, star
                                           Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/places/folder.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/places/folder-open.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/places/favorites.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/places/folder-favorites.png", 16, 16),
                                           "%1");
 }
 
@@ -247,9 +247,7 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
                                 "  <td class=\"action\">%6</td>\n"
                                 "</tr>\n";
 
-    const QString iconHtml = (pClass == "workspace")
-                             ? ((pIcon == "star") ? "<img class=\"star\" />" : "")
-                             : QString("<img class=\"%1\" />").arg(pIcon);
+    const QString iconHtml = QString("<img class=\"%1\" />").arg(pIcon);
     const QString rowClass = pClass + ((pId == mSelectedItem) ? " selected" : "");
 
     return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActions));
@@ -322,7 +320,7 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
     const QString &name = pWorkspace->name();
     const QString &path = pWorkspace->path();
 
-    const QString icon = pWorkspace->isOwned() ? "star" : "";
+    const QString icon = pWorkspace->isOwned() ? "star" : "folder";
 
     auto actionList = QList<QPair<QString, QString> >();
     if (path.isEmpty()) {
@@ -347,7 +345,7 @@ QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspace *pWor
     QFileInfo info = QFileInfo(pPath);
     QString fullname = info.absoluteFilePath();
 
-    const QString icon = mExpandedItems.contains(fullname) ? "open" : "closed";
+    const QString icon = mExpandedItems.contains(fullname) ? "open" : "folder";
 
     mRow += 1;
     QStringList html = QStringList(containerHtml((mRow % 2) ? "folder" : "folder even",
