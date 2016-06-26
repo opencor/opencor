@@ -13,21 +13,73 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRWorkspaces::PmrWorkspacesNewWorkspace</name>
+    <message>
+        <source>Select Empty Directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PMRWorkspaces::PmrWorkspacesWidget</name>
+    <message>
+        <source>Open File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone the Workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone the workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About the workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Empty Directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PMRWorkspaces::PmrWorkspacesWindow</name>
+    <message>
+        <source>OpenCOR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log off the Physiome Model Repository</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PmrWorkspacesNewWorkspace</name>
+    <message>
+        <source>Create a New Workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Folder:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PmrWorkspacesWindow</name>
     <message>
-        <source>New</source>
-        <translation type="unfinished">Nouveau</translation>
-    </message>
-    <message>
-        <source>Log on</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Log on to PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Log off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -39,15 +91,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About</source>
+        <source>My PMR Workspaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show information about the selected object</source>
+        <source>New Workspace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>PMR Workspaces</source>
+        <source>Refresh List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh the list of workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan Folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan workspace folders</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
