@@ -8,6 +8,7 @@ ADD_PLUGIN(OAuth
     THIRD_PARTY
     DEFINITIONS
         QT_NO_DEBUG_OUTPUT
+        O2_DLL_EXPORT
     SOURCES
         ../../plugininfo.cpp
         o2/src/o0baseauth.cpp
