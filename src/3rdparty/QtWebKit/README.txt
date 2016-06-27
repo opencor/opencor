@@ -20,7 +20,9 @@ From there, do the following from the command prompt or terminal:
     > SET PATH=C:\icu\lib64;%PATH%
     > SET SQLITE3SRCDIR=C:\Qt\5.6\Src\qtbase\src\3rdparty\sqlite
     > qmake
-    > jom
+    > nmake
+      or
+      jom
  - Terminal:
     $ cd [QtWebKit]
     $ qmake
