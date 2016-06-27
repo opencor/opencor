@@ -115,8 +115,10 @@ Q_SIGNALS:
 //==============================================================================
 //==============================================================================
 
+#ifdef _MSC_VER
 template class PMRSUPPORT_EXPORT QSet<PmrWorkspace *>;
 template class PMRSUPPORT_EXPORT QVector<PmrWorkspace *>;
+#endif
 
 class PMRSUPPORT_EXPORT PmrWorkspaceList : public QList<PmrWorkspace *>
 {
