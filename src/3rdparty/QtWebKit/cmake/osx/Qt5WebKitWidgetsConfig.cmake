@@ -27,7 +27,7 @@ endmacro()
 macro(_populate_WebKitWidgets_target_properties Configuration LIB_LOCATION IMPLIB_LOCATION)
     set_property(TARGET Qt5::WebKitWidgets APPEND PROPERTY IMPORTED_CONFIGURATIONS ${Configuration})
 
-    set(imported_location "${_qt5WebKitWidgets_install_prefix}/bin/${LIB_LOCATION}")
+    set(imported_location "${_qt5WebKitWidgets_install_prefix}/lib/${LIB_LOCATION}")
     _qt5_WebKitWidgets_check_file_exists(${imported_location})
     set_target_properties(Qt5::WebKitWidgets PROPERTIES
         "INTERFACE_LINK_LIBRARIES" "${_Qt5WebKitWidgets_LIB_DEPENDENCIES}"
@@ -41,12 +41,12 @@ endmacro()
 if (NOT TARGET Qt5::WebKitWidgets)
 
     set(_Qt5WebKitWidgets_OWN_INCLUDE_DIRS
-      "${_qt5WebKitWidgets_install_prefix}/bin/QtWebKitWidgets.framework"
-      "${_qt5WebKitWidgets_install_prefix}/bin/QtWebKitWidgets.framework/Headers"
+      "${_qt5WebKitWidgets_install_prefix}/lib/QtWebKitWidgets.framework"
+      "${_qt5WebKitWidgets_install_prefix}/lib/QtWebKitWidgets.framework/Headers"
     )
     set(Qt5WebKitWidgets_PRIVATE_INCLUDE_DIRS
-        "${_qt5WebKitWidgets_install_prefix}/bin/QtWebKitWidgets.framework/Versions/5/Headers/5.6.1/"
-        "${_qt5WebKitWidgets_install_prefix}/bin/QtWebKitWidgets.framework/Versions/5/Headers/5.6.1/QtWebKitWidgets"
+        "${_qt5WebKitWidgets_install_prefix}/lib/QtWebKitWidgets.framework/Versions/5/Headers/5.6.1/"
+        "${_qt5WebKitWidgets_install_prefix}/lib/QtWebKitWidgets.framework/Versions/5/Headers/5.6.1/QtWebKitWidgets"
     )
 
     foreach(_dir ${_Qt5WebKitWidgets_OWN_INCLUDE_DIRS})

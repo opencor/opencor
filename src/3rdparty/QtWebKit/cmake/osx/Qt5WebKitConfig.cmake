@@ -27,7 +27,7 @@ endmacro()
 macro(_populate_WebKit_target_properties Configuration LIB_LOCATION IMPLIB_LOCATION)
     set_property(TARGET Qt5::WebKit APPEND PROPERTY IMPORTED_CONFIGURATIONS ${Configuration})
 
-    set(imported_location "${_qt5WebKit_install_prefix}/bin/${LIB_LOCATION}")
+    set(imported_location "${_qt5WebKit_install_prefix}/lib/${LIB_LOCATION}")
     _qt5_WebKit_check_file_exists(${imported_location})
     set_target_properties(Qt5::WebKit PROPERTIES
         "INTERFACE_LINK_LIBRARIES" "${_Qt5WebKit_LIB_DEPENDENCIES}"
@@ -41,12 +41,12 @@ endmacro()
 if (NOT TARGET Qt5::WebKit)
 
     set(_Qt5WebKit_OWN_INCLUDE_DIRS
-      "${_qt5WebKit_install_prefix}/bin/QtWebKit.framework"
-      "${_qt5WebKit_install_prefix}/bin/QtWebKit.framework/Headers"
+      "${_qt5WebKit_install_prefix}/lib/QtWebKit.framework"
+      "${_qt5WebKit_install_prefix}/lib/QtWebKit.framework/Headers"
     )
     set(Qt5WebKit_PRIVATE_INCLUDE_DIRS
-        "${_qt5WebKit_install_prefix}/bin/QtWebKit.framework/Versions/5/Headers/5.6.1/"
-        "${_qt5WebKit_install_prefix}/bin/QtWebKit.framework/Versions/5/Headers/5.6.1/QtWebKit"
+        "${_qt5WebKit_install_prefix}/lib/QtWebKit.framework/Versions/5/Headers/5.6.1/"
+        "${_qt5WebKit_install_prefix}/lib/QtWebKit.framework/Versions/5/Headers/5.6.1/QtWebKit"
     )
 
     foreach(_dir ${_Qt5WebKit_OWN_INCLUDE_DIRS})
