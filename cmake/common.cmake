@@ -1210,7 +1210,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
         ENDIF()
 
-        # We retrieve the compressed version of the file
+        # Retrieve the compressed version of the file
 
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
         SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
