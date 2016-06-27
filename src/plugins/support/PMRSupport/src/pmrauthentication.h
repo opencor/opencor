@@ -54,7 +54,7 @@ public:
 
 private:
     static const char *CallbackUrl(void);
-    static const int   CallbackPort(void);
+    static int         CallbackPort(void);
 
     // Authorisation Url templates
 

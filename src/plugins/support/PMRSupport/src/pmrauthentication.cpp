@@ -86,7 +86,7 @@ const char *PmrOAuthClient::CallbackUrl(void)
 
 //==============================================================================
 
-const int  PmrOAuthClient::CallbackPort(void)
+int PmrOAuthClient::CallbackPort(void)
 {
     return 1234;
 }
@@ -127,7 +127,7 @@ const QString &PmrOAuthClient::RequestScope(void)
                                                 "%1/oauth_scope/workspace_tempauth,"
                                                 "%1/oauth_scope/workspace_full");
     return requestScope;
-}  
+}
 
 //==============================================================================
 
