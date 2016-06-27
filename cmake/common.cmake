@@ -63,7 +63,7 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
-    # Make sure that we can find our copy of Qt WebKit
+    # Some initialisations related to our copy of Qt WebKit
 
     IF(WIN32)
         SET(PLATFORM_DIR windows)
@@ -73,8 +73,7 @@ MACRO(INITIALISE_PROJECT)
         SET(PLATFORM_DIR linux)
     ENDIF()
 
-    SET(Qt5WebKit_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/cmake/${PLATFORM_DIR})
-    SET(Qt5WebKitWidgets_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/cmake/${PLATFORM_DIR})
+    INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 
     # Required packages
 
@@ -1150,7 +1149,7 @@ MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
        OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
-        SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/bin)
+        SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/lib)
     ELSE()
         SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
     ENDIF()
@@ -1198,7 +1197,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         ENDIF()
     ENDIF()
 
-    # Retrieve the file from the OpenCOR website, if needed
+    # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
     #       call, but this would create an empty file to start with and if the
     #       file cannot be downloaded for some reason or another, then we would
