@@ -1197,7 +1197,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         ENDIF()
     ENDIF()
 
-    # Retrieve the file from the OpenCOR website, if needed
+    # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
     #       call, but this would create an empty file to start with and if the
     #       file cannot be downloaded for some reason or another, then we would
