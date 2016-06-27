@@ -65,7 +65,16 @@ MACRO(INITIALISE_PROJECT)
 
     # Make sure that we can find our copy of Qt WebKit
 
-    SET(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    IF(WIN32)
+        SET(PLATFORM_DIR windows)
+    ELSEIF(APPLE)
+        SET(PLATFORM_DIR osx)
+    ELSE()
+        SET(PLATFORM_DIR linux)
+    ENDIF()
+
+    SET(Qt5WebKit_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/cmake/${PLATFORM_DIR})
+    SET(Qt5WebKitWidgets_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/cmake/${PLATFORM_DIR})
 
     # Required packages
 
@@ -300,14 +309,6 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     # Default location of external dependencies
-
-    IF(WIN32)
-        SET(PLATFORM_DIR windows)
-    ELSEIF(APPLE)
-        SET(PLATFORM_DIR osx)
-    ELSE()
-        SET(PLATFORM_DIR linux)
-    ENDIF()
 
     IF(WIN32)
         IF(RELEASE_MODE)
@@ -1149,7 +1150,7 @@ MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
        OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
-        SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/bin/osx)
+        SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/bin)
     ELSE()
         SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
     ENDIF()

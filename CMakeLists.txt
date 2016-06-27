@@ -326,7 +326,7 @@ SET(PLUGINS
     widget/EditorWidget
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
-#    widget/WebViewerWidget
+    widget/WebViewerWidget
 
     # Plugins that provide some generic features
 
@@ -342,17 +342,17 @@ SET(PLUGINS
     dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
 
-#    editing/CellMLAnnotationView
+    editing/CellMLAnnotationView
     editing/CellMLTextView
     editing/RawCellMLView
     editing/RawSEDMLView
     editing/RawTextView
 
-#    miscellaneous/HelpWindow
+    miscellaneous/HelpWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
-#    organisation/PMRWindow
+    organisation/PMRWindow
 
     simulation/SingleCellView
 

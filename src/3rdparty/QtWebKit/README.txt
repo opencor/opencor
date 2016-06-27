@@ -27,3 +27,24 @@ From there, do the following from the command prompt or terminal:
     $ make
       or
       make release
+
+Once Qt WebKit has been fully built:
+ - Copy the CMake files (in [QtWebKit]/cmake/Qt5WebKit and [QtWebKit]/cmake/Qt5WebKitWidgets) to [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir];
+ - Edit [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitConfig.cmake as follows:
+    - Replace
+       get_filename_component(_qt5WebKit_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
+      with
+       set(_qt5WebKit_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
+    - Replaces instances of
+       ${_qt5WebKit_install_prefix}/lib
+      with
+       ${_qt5WebKit_install_prefix}/bin
+ - Edit [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgetsConfig.cmake as follows:
+    - Replace
+       get_filename_component(_qt5WebKitWidgets_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
+      with
+       set(_qt5WebKitWidgets_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
+    - Replaces instances of
+       ${_qt5WebKitWidgets_install_prefix}/lib
+      with
+       ${_qt5WebKitWidgets_install_prefix}/bin
