@@ -2,10 +2,10 @@ Qt WebKit has been officially replaced with Qt WebEngine starting with Qt 5.6 LT
  - Qt WebKit's core source code (see http://download.qt.io/community_releases/5.6/5.6.1/); and
  - Making sure that we are all set to to build Qt WebKit on:
     - Windows, i.e. installing:
-       - Perl 5.22 (see http://www.activestate.com/activeperl);
+       - Perl 5.22 (see http://www.activestate.com/activeperl/);
        - Python 2.7 (see https://www.python.org/);
        - Ruby >= 1.9 (see http://rubyinstaller.org/);
-       - Bison and Flex (see https://sourceforge.net/projects/winflexbison; you will need to make a copy of win_flex.exe and name it flex.exe);
+       - Bison and Flex (see https://sourceforge.net/projects/winflexbison/; you will need to make a copy of win_flex.exe and name it flex.exe);
        - gperf (see http://gnuwin32.sourceforge.net/packages/gperf.htm); and
        - ICU (see http://www.npcglib.org/~stathis/blog/precompiled-icu/; uncompress the binaries in C:\icu).
       Note: the GnuWin32 version of Flex is not suitable, hence we use Win flex-bison instead.
@@ -20,8 +20,10 @@ From there, do the following from the command prompt or terminal:
     > SET PATH=C:\icu\lib64;%PATH%
     > SET SQLITE3SRCDIR=C:\Qt\5.6\Src\qtbase\src\3rdparty\sqlite
     > qmake
-    > nmake
+    > jom
  - Terminal:
     $ cd [QtWebKit]
     $ qmake
     $ make
+      or
+      make release
