@@ -63,7 +63,26 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
+    # Make sure that we can find our copy of Qt WebKit
+
+    IF(WIN32)
+        SET(PLATFORM_DIR windows)
+    ELSEIF(APPLE)
+        SET(PLATFORM_DIR osx)
+    ELSE()
+        SET(PLATFORM_DIR linux)
+    ENDIF()
+
+    SET(Qt5WebKit_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/cmake/${PLATFORM_DIR})
+    SET(Qt5WebKitWidgets_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/cmake/${PLATFORM_DIR})
+
     # Required packages
+
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
+    ELSE()
+        SET(TEST)
+    ENDIF()
 
     IF(WIN32)
         SET(WEBKIT WebKit)
@@ -73,6 +92,7 @@ MACRO(INITIALISE_PROJECT)
 
     SET(REQUIRED_QT_MODULES
         Network
+        ${TEST}
         ${WEBKIT}
         Widgets
     )
@@ -80,10 +100,6 @@ MACRO(INITIALISE_PROJECT)
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
     ENDFOREACH()
-
-    IF(ENABLE_TESTS)
-        FIND_PACKAGE(Qt5Test REQUIRED)
-    ENDIF()
 
     # Keep track of some information about Qt
 
@@ -293,14 +309,6 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     # Default location of external dependencies
-
-    IF(WIN32)
-        SET(PLATFORM_DIR windows)
-    ELSEIF(APPLE)
-        SET(PLATFORM_DIR osx)
-    ELSE()
-        SET(PLATFORM_DIR linux)
-    ENDIF()
 
     IF(WIN32)
         IF(RELEASE_MODE)
@@ -1140,7 +1148,14 @@ MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+    IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
+       OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
+        SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/bin)
+    ELSE()
+        SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
+    ENDIF()
+
+    OS_X_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                         ${LIBRARY_NAME})
 ENDMACRO()
