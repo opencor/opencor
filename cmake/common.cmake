@@ -63,6 +63,24 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
+    # Required packages
+
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
+    ELSE()
+        SET(TEST)
+    ENDIF()
+
+    SET(REQUIRED_QT_MODULES
+        Network
+        ${TEST}
+        Widgets
+    )
+
+    FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
+        FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+    ENDFOREACH()
+
     # Some initialisations related to our copy of Qt WebKit
 
     IF(WIN32)
@@ -75,30 +93,13 @@ MACRO(INITIALISE_PROJECT)
 
     INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 
-    # Required packages
-
-    IF(ENABLE_TESTS)
-        SET(TEST Test)
-    ELSE()
-        SET(TEST)
-    ENDIF()
+    # The WebKit module is also needed on Windows
 
     IF(WIN32)
-        SET(WEBKIT WebKit)
-    ELSE()
-        SET(WEBKIT)
+        LIST(APPEND REQUIRED_QT_MODULES WebKit)
+
+        FIND_PACKAGE(Qt5WebKit REQUIRED)
     ENDIF()
-
-    SET(REQUIRED_QT_MODULES
-        Network
-        ${TEST}
-        ${WEBKIT}
-        Widgets
-    )
-
-    FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
-        FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
-    ENDFOREACH()
 
     # Keep track of some information about Qt
 
