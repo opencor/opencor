@@ -993,8 +993,8 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     # test things both from within Qt Creator and without first having to deploy
     # OpenCOR
 
-    IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
-       OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
+    IF(   "${LIBRARY_NAME}" STREQUAL "Qt5WebKit"
+       OR "${LIBRARY_NAME}" STREQUAL "Qt5WebKitWidgets")
         SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_BINARIES_DIR})
     ELSE()
         SET(REAL_QT_BINARY_DIR ${QT_BINARY_DIR})
