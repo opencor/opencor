@@ -526,7 +526,7 @@ ELSE()
         #       up. So, by copying them over, we are sure that the release/debug
         #       version of OpenCOR will work fine...
 
-        SET(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/redist")
+        SET(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/redist")
 
         IF(NOT RELEASE_MODE)
             SET(MSVC_DIRNAME "${MSVC_DIRNAME}/Debug_NonRedist")
@@ -536,13 +536,13 @@ ELSE()
 
         IF(RELEASE_MODE)
             SET(ADDITIONAL_FILES
-                ${MSVC_DIRNAME}/Microsoft.VC120.CRT/msvcp120.dll
-                ${MSVC_DIRNAME}/Microsoft.VC120.CRT/msvcr120.dll
+                ${MSVC_DIRNAME}/Microsoft.VC140.CRT/msvcp140.dll
+                ${MSVC_DIRNAME}/Microsoft.VC140.CRT/msvcr140.dll
             )
         ELSE()
             SET(ADDITIONAL_FILES
-                ${MSVC_DIRNAME}/Microsoft.VC120.DebugCRT/msvcp120d.dll
-                ${MSVC_DIRNAME}/Microsoft.VC120.DebugCRT/msvcr120d.dll
+                ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/msvcp140d.dll
+                ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/msvcr140d.dll
             )
         ENDIF()
 
