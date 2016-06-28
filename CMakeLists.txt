@@ -626,10 +626,8 @@ IF(WIN32)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-    MATH(EXPR ICU_MINOR_VERSION "${Qt5Core_VERSION_MINOR}-2")
-
     FOREACH(QT_LIBRARY icudt icuin icuuc)
-        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}${Qt5Core_VERSION_MAJOR}${ICU_MINOR_VERSION})
+        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
@@ -754,8 +752,6 @@ ELSE()
         # We are building OpenCOR locally, so we can deploy the ICU libraries
         # Note: indeed, on Travis CI, the PPA we use doesn't have those
         #       libraries...
-
-        MATH(EXPR ICU_MINOR_VERSION "${Qt5Core_VERSION_MINOR}-1")
 
         FOREACH(QT_FILE icudata icui18n icuuc)
             LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
