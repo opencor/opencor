@@ -68,6 +68,7 @@ public:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
 
+    void scrollToSelected(void);
     void setSelected(const QString &pId);
 
 protected:
@@ -87,6 +88,8 @@ private:
     QString mTemplate;
 
     int mRow;
+    int mRowAnchor;
+    QMap<QString, int> mAnchors;                               // Item id --> Anchor
 
     void scanDefaultWorkspaceDirectory(void);
 

@@ -57,7 +57,9 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
     mWorkspaceFolders(QMap<QString, QString>()),
     mWorkspaceUrls(QMap<QString, QPair<QString, bool> >()),
     mExpandedItems(QSet<QString>()),
-    mSelectedItem(QString())
+    mSelectedItem(QString()),
+    mRowAnchor(0),
+    mAnchors(QMap<QString, int>())
 {
     // Prevent objects from being dropped on us
 
@@ -247,7 +249,7 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
                                            const QList<QPair<QString, QString> > &pActions)
 {
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
-                                "  <td class=\"icon\">%3</td>\n"
+                                "  <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
                                 "  <td class=\"name\">%4</td>\n"
                                 "  <td class=\"status\">%5</td>\n"
                                 "  <td class=\"action\">%6</td>\n"
@@ -256,7 +258,12 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
     const QString iconHtml = QString("<img class=\"%1\" />").arg(pIcon);
     const QString rowClass = pClass + ((pId == mSelectedItem) ? " selected" : "");
 
-    return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActions));
+    // Use an anchor element to allow us to set the scroll position at a row
+
+    mRowAnchor += 1;
+    mAnchors.insert(pId, mRowAnchor);
+
+    return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActions)).arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -266,7 +273,7 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace
                                       const QList<QPair<QString, QString> > &pActions)
 {
     static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
-                                "  <td colspan=\"2\"><a href=\"%2\">%3</a></td>\n"
+                                "  <td colspan=\"2\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
                                 "  <td class=\"status\">%4</td>\n"
                                 "  <td class=\"action\">%5</td>\n"
                                 "</tr>\n";
@@ -276,7 +283,12 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace
 
     QString gitStatus = pWorkspace->gitStatus(pPath);
 
-    return html.arg(rowClass, pPath, pFileName, gitStatus, actionHtml(pActions));
+    // Use an anchor element to allow us to set the scroll position at a row
+
+    mRowAnchor += 1;
+    mAnchors.insert(pPath, mRowAnchor);
+
+    return html.arg(rowClass, pPath, pFileName, gitStatus, actionHtml(pActions)).arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -384,6 +396,19 @@ void PmrWorkspacesWidget::setSelected(const QString &pId)
 
 //==============================================================================
 
+void PmrWorkspacesWidget::scrollToSelected(void)
+{
+    // Position the frame so that the selected line is shown
+
+    if (!mSelectedItem.isEmpty() && mAnchors.contains(mSelectedItem)) {
+        // Position two rows before the selected item to show some context.
+
+        page()->mainFrame()->scrollToAnchor(QString("a_%1").arg(mAnchors.value(mSelectedItem) - 2));
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
 {
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
@@ -437,6 +462,7 @@ void PmrWorkspacesWidget::clearWorkspaces(void)
 //    mWorkspaceUrlId = QMap<QString, int>();
 
     setHtml(mTemplate.arg(QString()));
+    setSelected("");
 }
 
 //==============================================================================
@@ -449,6 +475,11 @@ void PmrWorkspacesWidget::displayWorkspaces(void)
 
     std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
 
+    // Reset our row anchors
+
+    mRowAnchor = 0;
+    mAnchors.clear();
+
     // Finally generate and emit HTML
 
     QStringList html;
@@ -457,9 +488,6 @@ void PmrWorkspacesWidget::displayWorkspaces(void)
         html.append(workspaceHtml(workspace));
 
     setHtml(mTemplate.arg(html.join("\n")));
-
-    // Can we position view so that the selected line is shown??
-
 }
 
 //==============================================================================
@@ -640,9 +668,13 @@ void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceLis
         }
     }
 
-    // Finally display the list of workspaces
+    // Display the list of workspaces
 
     displayWorkspaces();
+
+    // And scroll to the current selected item
+
+    scrollToSelected();
 }
 
 //==============================================================================
@@ -714,8 +746,9 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
         // Redisplay with workspace expanded and selected
 
         mExpandedItems.insert(url);
-        displayWorkspaces();
         setSelected(url);
+        displayWorkspaces();
+        scrollToSelected();
     }
 }
 
