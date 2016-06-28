@@ -14,6 +14,7 @@ ADD_PLUGIN(PMRSupport
         src/pmrrepositoryresponse.cpp
         src/pmrsupportplugin.cpp
         src/pmrworkspace.cpp
+        src/pmrworkspacesmanager.cpp
     HEADERS_MOC
         src/pmrauthentication.h
         src/pmrexposure.h
@@ -22,6 +23,7 @@ ADD_PLUGIN(PMRSupport
         src/pmrrepositoryresponse.h
         src/pmrsupportplugin.h
         src/pmrworkspace.h
+        src/pmrworkspacesmanager.h
     INCLUDE_DIRS
         src
     PLUGINS

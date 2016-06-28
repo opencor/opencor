@@ -105,9 +105,9 @@ private:
 
 Q_SIGNALS:
     void progress(const double &pProgress);
-
     void warning(const QString &pMessage) const;
-    void workspaceCloned(PmrWorkspace *pWorkspace);
+
+    void workspaceCloneFinished(void);
     void workspacePulled(PmrWorkspace *pWorkspace);
     void workspacePushed(PmrWorkspace *pWorkspace);
 };

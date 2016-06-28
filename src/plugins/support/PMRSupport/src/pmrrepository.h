@@ -134,7 +134,7 @@ private Q_SLOTS:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesListResponse(const QJsonDocument &pJsonDocument);
 
-    void workspaceCloneResponse(PmrWorkspace *pWorkspace);
+    void workspaceCloneFinished(void);
     void workspaceCreatedResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 };

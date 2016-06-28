@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "pmrrepository.h"
 #include "pmrworkspace.h"
+#include "pmrworkspacesmanager.h"
 #include "pmrworkspaceswidget.h"
 
 //==============================================================================
@@ -71,6 +72,11 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
     connect(mPmrRepository, SIGNAL(workspaceCreated(QString)),
             this, SLOT(workspaceCreated(QString)));
     connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
+
+    // Handle workspace cloned signals from other plugins
+
+    connect(OpenCOR::PMRSupport::PmrWorkspacesManager::instance(), SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
     // Retrieve the HTML template

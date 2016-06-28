@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "pmrworkspace.h"
+#include "pmrworkspacesmanager.h"
 
 //==============================================================================
 
@@ -318,7 +319,9 @@ void PmrWorkspace::clone(const QString &pDirName)
 
     mPath = pDirName;
 
-    emit workspaceCloned(this);
+    PmrWorkspacesManager::instance()->emitWorkspaceCloned(this);
+
+    emit workspaceCloneFinished();
 }
 
 //==============================================================================
