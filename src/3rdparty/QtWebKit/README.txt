@@ -46,5 +46,5 @@ Once Qt WebKit has been fully built:
  - Copy the OS X contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the OS X contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets; and
  - For each supported platform, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called QtWebKit.tar.gz that contains the contents of:
     - Windows: ...;
-    - Linux: ...; and
+    - Linux: [QtWebKit]/lib after the cmake and pkgconfig folders have been removed from it; and
     - OS X: [QtWebKit]/lib after the cmake folder has been removed from it.
