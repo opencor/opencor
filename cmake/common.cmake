@@ -14,8 +14,8 @@ MACRO(INITIALISE_PROJECT)
 
     IF(WIN32)
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-           OR NOT ${MSVC_VERSION} EQUAL 1800)
-            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2013 on Windows...")
+           OR NOT ${MSVC_VERSION} EQUAL 1900)
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2015 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
         IF(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
