@@ -537,12 +537,12 @@ ELSE()
         IF(RELEASE_MODE)
             SET(ADDITIONAL_FILES
                 ${MSVC_DIRNAME}/Microsoft.VC140.CRT/msvcp140.dll
-                ${MSVC_DIRNAME}/Microsoft.VC140.CRT/msvcr140.dll
+                ${MSVC_DIRNAME}/Microsoft.VC140.CRT/vcruntime140.dll
             )
         ELSE()
             SET(ADDITIONAL_FILES
                 ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/msvcp140d.dll
-                ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/msvcr140d.dll
+                ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/vcruntime140d.dll
             )
         ENDIF()
 
