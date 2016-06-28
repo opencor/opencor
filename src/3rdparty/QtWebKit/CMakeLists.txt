@@ -79,8 +79,8 @@ ENDMACRO()
 
 SET(QT_WEBKIT_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
 
-SET(Qt5WebKit_DIR ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR})
-SET(Qt5WebKitWidgets_DIR ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR})
+SET(Qt5WebKit_DIR ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKit)
+SET(Qt5WebKitWidgets_DIR ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKitWidgets)
 
 # Retrieve our two Qt WebKit libraries
 

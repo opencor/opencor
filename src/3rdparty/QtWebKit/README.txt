@@ -31,14 +31,15 @@ From there, do the following from the command prompt or terminal:
       make release
 
 Once Qt WebKit has been fully built:
- - Copy the CMake files (in [QtWebKit]/cmake/Qt5WebKit and [QtWebKit]/cmake/Qt5WebKitWidgets) to [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir];
+ - Copy, for each supported platform, the contents of [QtWebKit]/lib/cmake to [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir];
  - Replace
     get_filename_component(_qt5WebKit_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
    with
     set(_qt5WebKit_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
-   in [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitConfig.cmake; and
+   in [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKit/Qt5WebKitConfig.cmake;
  - Replace
     get_filename_component(_qt5WebKitWidgets_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
    with
     set(_qt5WebKitWidgets_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
-  in [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgetsConfig.cmake.
+  in [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake;
+ - Copy the OS X contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the OS X contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets.
