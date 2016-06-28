@@ -69,7 +69,7 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     setMouseTracking(true);
 
-   // Connections to handle responses from PMR
+    // Connections to handle responses from PMR
 
     connect(mPmrRepository, SIGNAL(workspaceCreated(QString)),
             this, SLOT(workspaceCreated(QString)));
@@ -180,9 +180,6 @@ void PmrWorkspacesWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
             mWorkspaceFolders.insert(folder, url);
             mWorkspaceUrls.insert(url, QPair<QString, bool>(folder, pOwned));
             mWorkspacesMap.insert(url, pWorkspace);
-
-// TODO This is where we need to insert workspace into displayed list...
-// At a minimum we need to redisplay html...
         }
     }
 
@@ -458,9 +455,6 @@ void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
 
 void PmrWorkspacesWidget::clearWorkspaces(void)
 {
-//    mWorkspaceNames = QStringList();
-//    mWorkspaceUrlId = QMap<QString, int>();
-
     setHtml(mTemplate.arg(QString()));
     setSelected("");
 }
