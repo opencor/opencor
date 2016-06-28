@@ -740,7 +740,7 @@ ELSE()
     FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
-            SET(REAL_QT_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/src/3rdparty/QtWebKit/lib)
+            SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})
         ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         ENDIF()
