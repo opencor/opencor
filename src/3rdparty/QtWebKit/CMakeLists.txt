@@ -2,8 +2,8 @@
 
 SET(QT_WEBKIT_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
 
-SET(Qt5WebKit_DIR ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKit)
-SET(Qt5WebKitWidgets_DIR ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKitWidgets)
+LIST(APPEND CMAKE_PREFIX_PATH ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKit)
+LIST(APPEND CMAKE_PREFIX_PATH ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKitWidgets)
 
 # Make sure that our copy of the Qt WebKit libraries, if they exist, have the
 # expected SHA-1 values
