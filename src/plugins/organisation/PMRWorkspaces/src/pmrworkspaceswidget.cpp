@@ -464,24 +464,6 @@ void PmrWorkspacesWidget::displayWorkspaces(void)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        auto aElement = page()->mainFrame()->hitTestContent(event->pos()).element();
-        while (!aElement.isNull() && aElement.tagName() != "A")
-            aElement = aElement.parent();
-
-        if (!aElement.isNull() && aElement.toPlainText().isEmpty()) {
-            QStringList linkList = aElement.attribute("href").split("|");
-            if (!linkList[0].compare("clone")) {
-                cloneWorkspace(linkList[1]);
-            }
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
 {
     auto webElement = page()->mainFrame()->hitTestContent(event->pos()).element();
@@ -524,17 +506,30 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
 void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        auto trElement = page()->mainFrame()->hitTestContent(event->pos()).element();
-        while (!trElement.isNull() && trElement.tagName() != "TR")
-            trElement = trElement.parent();
+        auto webElement = page()->mainFrame()->hitTestContent(event->pos()).element();
+        while (!webElement.isNull() && webElement.tagName() != "A" && webElement.tagName() != "TR")
+            webElement = webElement.parent();
 
-        if (!trElement.isNull()) {
-            QString link = trElement.attribute("id");
-            if (!link.isEmpty()) {
-                if (trElement.hasClass("workspace")
-                 || trElement.hasClass("folder"))
-                    expandHtmlTree(link);
-                setSelected(link);
+        if (!webElement.isNull()) {
+            if (webElement.tagName() == "A") {
+                if (webElement.toPlainText().isEmpty()) {
+                    QStringList linkList = webElement.attribute("href").split("|");
+                    if (!linkList[0].compare("clone")) {
+                        cloneWorkspace(linkList[1]);
+                    }
+                }
+                else {
+                    // Text link clicked, e.g. to open a file
+                }
+            }
+            else {
+                QString link = webElement.attribute("id");
+                if (!link.isEmpty()) {
+                    if (webElement.hasClass("workspace")
+                     || webElement.hasClass("folder"))
+                        expandHtmlTree(link);
+                    setSelected(link);
+                }
             }
         }
     }

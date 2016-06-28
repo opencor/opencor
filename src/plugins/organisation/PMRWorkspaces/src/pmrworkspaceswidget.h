@@ -65,7 +65,6 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual void contextMenuEvent(QContextMenuEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
 
