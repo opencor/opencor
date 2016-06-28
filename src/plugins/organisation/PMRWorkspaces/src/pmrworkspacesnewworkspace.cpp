@@ -117,13 +117,6 @@ void PmrWorkspacesNewWorkspace::titleTextChanged(const QString &text)
     // Only save if there is a title
 
     mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!text.trimmed().isEmpty());
-
-    // Set the path if the user hasn't explicitly chosen one
-
-    if (!text.trimmed().isEmpty() && !mPathChosen) {
-        mGui->path->setText(PMRSupport::PmrWorkspace::WorkspacesDirectory()
-                            + QDir::separator() + text.trimmed());
-    }
 }
 
 //==============================================================================
@@ -132,12 +125,9 @@ void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
 {
     Q_UNUSED(checked)
 
-    // Override the default path
-
-    QString defaultDir = mGui->path->text().trimmed().isEmpty()
-                         ? PMRSupport::PmrWorkspace::WorkspacesDirectory()
-                         : mGui->path->text();
-    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"), defaultDir, true);
+    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
+                                                 PMRSupport::PmrWorkspace::WorkspacesDirectory(),
+                                                 true);
 
     if (!dirName.isEmpty()) {
         mGui->path->setText(dirName);

@@ -26,6 +26,7 @@ limitations under the License.
 #include "pmrrepository.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
+#include "pmrworkspace.h"
 
 //==============================================================================
 
@@ -273,7 +274,8 @@ void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
     // Retrieve the name of an empty directory
 
     QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
-                                                 QString(), true);
+                                                 PMRSupport::PmrWorkspace::WorkspacesDirectory(),
+                                                 true);
 
     if (!dirName.isEmpty()) {
         // We have got a directory name where we can clone the workspace, so
