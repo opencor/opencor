@@ -44,7 +44,9 @@ Once Qt WebKit has been fully built:
        set(_qt5WebKitWidgets_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
       in [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake.
  - Copy the OS X contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the OS X contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets; and
- - For each supported platform, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called QtWebKit.tar.gz that contains the contents of:
-    - Windows: ...;
-    - Linux: [QtWebKit]/lib after the cmake and pkgconfig folders have been removed from it; and
-    - OS X: [QtWebKit]/lib after the cmake folder has been removed from it.
+ - For each supported platform, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called QtWebKit.tar.gz that contains:
+    - Windows:
+       - [QtWebKit]/bin minus all of its original contents, but plus the .dll files from [QtWebKit]/lib; and
+       - [QtWebKit]/lib minus the cmake folder, as well as the .dll, .exp and .ilk files;
+    - Linux: [QtWebKit]/lib minus the cmake and pkgconfig folders; and
+    - OS X: [QtWebKit]/lib minus the cmake folder.
