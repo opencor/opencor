@@ -1,0 +1,104 @@
+# Make sure that Qt WebKit's CMake files can be found
+
+SET(QT_WEBKIT_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
+
+LIST(APPEND CMAKE_PREFIX_PATH ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKit)
+LIST(APPEND CMAKE_PREFIX_PATH ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKitWidgets)
+
+# Make sure that our copy of the Qt WebKit libraries, if they exist, have the
+# expected SHA-1 values
+
+SET(QT_WEBKIT_BINARIES_DIR ${QT_WEBKIT_DIR}/bin)
+SET(QT_WEBKIT_LIBRARIES_DIR ${QT_WEBKIT_DIR}/lib)
+
+IF(WIN32)
+    SET(QT_WEBKIT_LIBRARY_FILENAME ${QT_WEBKIT_BINARIES_DIR}/Qt5WebKit.dll)
+    SET(QT_WEBKITWIDGETS_LIBRARY_FILENAME ${QT_WEBKIT_BINARIES_DIR}/Qt5WebKitWidgets.dll)
+
+    SET(QT_WEBKIT_LIBRARY_SHA1_VALUE        b981d94114dd7049b94e048f055bef802b29b998)
+    SET(QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE 8bcbdcb1e734a837ad36236ebd4dc6c078fc4d91)
+ELSEIF(APPLE)
+    SET(QT_WEBKIT_LIBRARY_FILENAME ${QT_WEBKIT_LIBRARIES_DIR}/QtWebKit.framework/QtWebKit)
+    SET(QT_WEBKITWIDGETS_LIBRARY_FILENAME ${QT_WEBKIT_LIBRARIES_DIR}/QtWebKitWidgets.framework/QtWebKitWidgets)
+
+    SET(QT_WEBKIT_LIBRARY_SHA1_VALUE        5b4b5b3498c18352dba700636bfbc03f2961f9e9)
+    SET(QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE 587045ad5a47e384ac02f0d598c7d79af1bc2cfc)
+ELSE()
+    SET(QT_WEBKIT_LIBRARY_FILENAME ${QT_WEBKIT_LIBRARIES_DIR}/libQt5WebKit.so.5.6.1)
+    SET(QT_WEBKITWIDGETS_LIBRARY_FILENAME ${QT_WEBKIT_LIBRARIES_DIR}/libQt5WebKitWidgets.so.5.6.1)
+
+    SET(QT_WEBKIT_LIBRARY_SHA1_VALUE        1386a195db58e9e806746bf5fcfb3fab19644e79)
+    SET(QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE d74868590d8a6d6bf45f7e6a3d0b78449ada8ca6)
+ENDIF()
+
+IF(    EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
+   AND EXISTS ${QT_WEBKITWIDGETS_LIBRARY_FILENAME})
+    FILE(SHA1 ${QT_WEBKIT_LIBRARY_FILENAME} REAL_QT_WEBKIT_LIBRARY_SHA1_VALUE)
+    FILE(SHA1 ${QT_WEBKITWIDGETS_LIBRARY_FILENAME} REAL_QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE)
+
+    IF(   NOT "${REAL_QT_WEBKIT_LIBRARY_SHA1_VALUE}" STREQUAL "${QT_WEBKIT_LIBRARY_SHA1_VALUE}"
+       OR NOT "${REAL_QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE}" STREQUAL "${QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE}")
+        # Our copy of the Qt WebKit libraries don't have the expected SHA-1
+        # value, so remove the Qt WebKit binaries and libraries folders
+
+        FILE(REMOVE_RECURSE ${QT_WEBKIT_BINARIES_DIR})
+        FILE(REMOVE_RECURSE ${QT_WEBKIT_LIBRARIES_DIR})
+    ENDIF()
+ENDIF()
+
+# Retrieve our copy of the Qt WebKit libraries from the OpenCOR website, if
+# needed
+
+IF(   NOT EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
+   OR NOT EXISTS ${QT_WEBKITWIDGETS_LIBRARY_FILENAME})
+    IF(SHOW_INFORMATION_MESSAGE)
+        MESSAGE("Retrieving Qt WebKit...")
+    ENDIF()
+
+    # Retrieve the compressed version of our copy of the Qt WebKit libraries
+
+    SET(COMPRESSED_FILENAME QtWebKit.tar.gz)
+    SET(REAL_COMPRESSED_FILENAME ${QT_WEBKIT_DIR}/${COMPRESSED_FILENAME})
+
+    FILE(DOWNLOAD "http://www.opencor.ws/binaries/src/3rdparty/QtWebKit/${PLATFORM_DIR}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+         SHOW_PROGRESS STATUS STATUS)
+
+    # Uncompress the compressed version of our copy of the Qt WebKit libraries,
+    # should we have managed to retrieve it
+
+    LIST(GET STATUS 0 STATUS_CODE)
+
+    IF(${STATUS_CODE} EQUAL 0)
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
+                        WORKING_DIRECTORY ${QT_WEBKIT_DIR} OUTPUT_QUIET)
+
+        FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+    ELSE()
+        FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+        # Note: this is in case we had an HTTP error of sorts, in which case we
+        #       would end up with an empty file...
+
+        MESSAGE(FATAL_ERROR "The compressed version of Qt WebKit could not be retrieved...")
+    ENDIF()
+
+    # Check that our copy of the Qt WebKit libraries, if we managed to retrieve
+    # it, has the expected SHA-1 values
+
+    IF(    EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
+       AND EXISTS ${QT_WEBKITWIDGETS_LIBRARY_FILENAME})
+        FILE(SHA1 ${QT_WEBKIT_LIBRARY_FILENAME} REAL_QT_WEBKIT_LIBRARY_SHA1_VALUE)
+        FILE(SHA1 ${QT_WEBKITWIDGETS_LIBRARY_FILENAME} REAL_QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE)
+
+        IF(   NOT "${REAL_QT_WEBKIT_LIBRARY_SHA1_VALUE}" STREQUAL "${QT_WEBKIT_LIBRARY_SHA1_VALUE}"
+           OR NOT "${REAL_QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE}" STREQUAL "${QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE}")
+            FILE(REMOVE_RECURSE ${QT_WEBKIT_BINARIES_DIR})
+            FILE(REMOVE_RECURSE ${QT_WEBKIT_LIBRARIES_DIR})
+
+            MESSAGE(FATAL_ERROR "Qt WebKit does not have the expected SHA-1 values...")
+        ENDIF()
+    ELSE()
+        FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+
+        MESSAGE(FATAL_ERROR "Qt WebKit could not be uncompressed...")
+    ENDIF()
+ENDIF()

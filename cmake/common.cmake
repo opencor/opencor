@@ -14,8 +14,8 @@ MACRO(INITIALISE_PROJECT)
 
     IF(WIN32)
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-           OR NOT ${MSVC_VERSION} EQUAL 1800)
-            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2013 on Windows...")
+           OR NOT ${MSVC_VERSION} EQUAL 1900)
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2015 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
         IF(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
@@ -65,15 +65,15 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
-    IF(WIN32)
-        SET(WEBKIT WebKit)
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
     ELSE()
-        SET(WEBKIT)
+        SET(TEST)
     ENDIF()
 
     SET(REQUIRED_QT_MODULES
         Network
-        ${WEBKIT}
+        ${TEST}
         Widgets
     )
 
@@ -81,8 +81,24 @@ MACRO(INITIALISE_PROJECT)
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
     ENDFOREACH()
 
-    IF(ENABLE_TESTS)
-        FIND_PACKAGE(Qt5Test REQUIRED)
+    # Some initialisations related to our copy of Qt WebKit
+
+    IF(WIN32)
+        SET(PLATFORM_DIR windows)
+    ELSEIF(APPLE)
+        SET(PLATFORM_DIR osx)
+    ELSE()
+        SET(PLATFORM_DIR linux)
+    ENDIF()
+
+    INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
+
+    # The WebKit module is also needed on Windows
+
+    IF(WIN32)
+        LIST(APPEND REQUIRED_QT_MODULES WebKit)
+
+        FIND_PACKAGE(Qt5WebKit REQUIRED)
     ENDIF()
 
     # Keep track of some information about Qt
@@ -293,14 +309,6 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     # Default location of external dependencies
-
-    IF(WIN32)
-        SET(PLATFORM_DIR windows)
-    ELSEIF(APPLE)
-        SET(PLATFORM_DIR osx)
-    ELSE()
-        SET(PLATFORM_DIR linux)
-    ENDIF()
 
     IF(WIN32)
         IF(RELEASE_MODE)
@@ -985,10 +993,20 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     # test things both from within Qt Creator and without first having to deploy
     # OpenCOR
 
+    IF(   "${LIBRARY_NAME}" STREQUAL "Qt5WebKit"
+       OR "${LIBRARY_NAME}" STREQUAL "Qt5WebKitWidgets"
+       OR "${LIBRARY_NAME}" STREQUAL "icudt57"
+       OR "${LIBRARY_NAME}" STREQUAL "icuin57"
+       OR "${LIBRARY_NAME}" STREQUAL "icuuc57")
+        SET(REAL_QT_BINARY_DIR ${QT_WEBKIT_BINARIES_DIR})
+    ELSE()
+        SET(REAL_QT_BINARY_DIR ${QT_BINARY_DIR})
+    ENDIF()
+
     SET(LIBRARY_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}d${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    IF(NOT EXISTS ${QT_BINARY_DIR}/${LIBRARY_DEBUG_FILENAME})
+    IF(NOT EXISTS ${REAL_QT_BINARY_DIR}/${LIBRARY_DEBUG_FILENAME})
         # No debug version of the Qt library exists, so use its release version
         # instead
 
@@ -1001,12 +1019,12 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
         SET(LIBRARY_FILENAME ${LIBRARY_DEBUG_FILENAME})
     ENDIF()
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_FILENAME})
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${REAL_QT_BINARY_DIR} . ${LIBRARY_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${REAL_QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
 
     # Deploy the Qt library
 
-    INSTALL(FILES ${QT_BINARY_DIR}/${LIBRARY_FILENAME}
+    INSTALL(FILES ${REAL_QT_BINARY_DIR}/${LIBRARY_FILENAME}
             DESTINATION bin)
 ENDMACRO()
 
@@ -1038,13 +1056,13 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(LINUX_DEPLOY_QT_LIBRARY ORIG_FILENAME DEST_FILENAME)
+MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_LIBRARY_DIR} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
 
     # Strip the library of all its local symbols
 
@@ -1140,7 +1158,14 @@ MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+    IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
+       OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
+        SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})
+    ELSE()
+        SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
+    ENDIF()
+
+    OS_X_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                         ${LIBRARY_NAME})
 ENDMACRO()
@@ -1183,7 +1208,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         ENDIF()
     ENDIF()
 
-    # Retrieve the file from the OpenCOR website, if needed
+    # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
     #       call, but this would create an empty file to start with and if the
     #       file cannot be downloaded for some reason or another, then we would
@@ -1196,7 +1221,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
         ENDIF()
 
-        # We retrieve the compressed version of the file
+        # Retrieve the compressed version of the file
 
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
         SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
@@ -1212,6 +1237,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         IF(${STATUS_CODE} EQUAL 0)
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME} OUTPUT_QUIET)
+
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
         ELSE()
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
