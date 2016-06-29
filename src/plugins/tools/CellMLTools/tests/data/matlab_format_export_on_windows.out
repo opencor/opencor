@@ -22,7 +22,7 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel()
     tspan = [0, 10];
 
     % Set numerical accuracy options for ODE solver
-    options = odeset('RelTol', 1e-006, 'AbsTol', 1e-006, 'MaxStep', 1);
+    options = odeset('RelTol', 1e-06, 'AbsTol', 1e-06, 'MaxStep', 1);
 
     % Solve model with ODE solver
     [VOI, STATES] = ode15s(@(VOI, STATES)computeRates(VOI, STATES, CONSTANTS), tspan, INIT_STATES, options);
