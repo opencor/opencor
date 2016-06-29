@@ -96,7 +96,7 @@ class RawPCHContainerReader : public PCHContainerReader {
 class PCHContainerOperations {
 */
 //---OPENCOR--- BEGIN
-class LLVM_EXPORT PCHContainerOperations {
+class LLVM_EXPORT PCHContainerOperations : private llvm::NonCopyable{
 //---OPENCOR--- END
   llvm::StringMap<std::unique_ptr<PCHContainerWriter>> Writers;
   llvm::StringMap<std::unique_ptr<PCHContainerReader>> Readers;
