@@ -2,6 +2,6 @@
 
 /distrib/bin/
 
-/src/3rdparty/*/lib/
 /src/3rdparty/*/bin/
+/src/3rdparty/*/lib/
 /src/plugins/*/*/bin/
