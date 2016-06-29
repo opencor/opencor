@@ -5,7 +5,7 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Customise libSEDML:
     ===> LIBSBML_INCLUDE_DIR=<libSBMLIncludeDirectory>
     ===> LIBSBML_LIBRARY=<libSBMLLibraryFile>
-    ===> LIBZ_INCLUDE_DIR=<libSBMLDependenciesIncludeDirectory> (if needed)
+    ===> LIBZ_INCLUDE_DIR=<libSBMLDependenciesIncludeDirectory>
     ===> WITH_CPP_NAMESPACE=ON
     ===> WITH_SWIG=OFF
     ===> WITH_ZLIB=ON
