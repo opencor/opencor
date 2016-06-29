@@ -487,7 +487,7 @@ FileManager::Status FileManager::create(const QString &pUrl,
     QString fileName;
 
     if (newFile(fileName, pContents)) {
-        // Let people know that we have created a file
+        // Let people know that we have created a new file
 
         emit fileCreated(fileName, pUrl);
 
