@@ -39,7 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> merged and renamed some of our plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1004\">#1004</a>)." },
+                       { "change": "<strong>General:</strong> merged and renamed some of our plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1004\">#1004</a>). Upgraded to Qt 5.6.1 LTS + Qt WebKit (see issue <a href=\"https://github.com/opencor/opencor/issues/1015\">#1015</a>)." },
                        { "change": "<strong>CellML support:</strong> can now detect a variable of integration no matter where it is defined in a model (see issue <a href=\"https://github.com/opencor/opencor/issues/995\">#995</a>)." },
                        { "change": "<strong>Data stores:</strong> data export is now done in its own thread (ee issue <a href=\"https://github.com/opencor/opencor/issues/849\">#849</a>)." },
                        { "change": "<strong>Text-based editing views:</strong> fixed a small problem with losing the focus and not being able to track changes to a file after having reloaded another file that depends on it (see issue <a href=\"https://github.com/opencor/opencor/issues/996\">#996</a>)." },
