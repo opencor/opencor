@@ -694,7 +694,7 @@ void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
                                   QUrl(url).fileName():
                                   QFileInfo(fileName).fileName();
 
-        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isLocalNewOrModified(fileName)?
+        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isModified(fileName)?
                                                    "*":
                                                    QString()));
         mFileTabs->setTabToolTip(pIndex, fileIsNew?
@@ -1267,7 +1267,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
 
-    if (fileManagerInstance->isLocalNewOrModified(fileName)) {
+    if (fileManagerInstance->isModified(fileName)) {
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
@@ -1896,7 +1896,7 @@ void CentralWidget::fileChanged(const QString &pFileName,
     FileManager *fileManagerInstance = FileManager::instance();
 
     if (    (    pFileChanged
-             && !fileManagerInstance->isLocalNewOrModified(pFileName)
+             && !fileManagerInstance->isModified(pFileName)
              &&  fileManagerInstance->isDifferent(pFileName))
         || pDependenciesChanged) {
         // The given file and/or one or several of its dependencies has changed,
@@ -1989,16 +1989,16 @@ void CentralWidget::fileDeleted(const QString &pFileName)
 
 void CentralWidget::updateModifiedSettings()
 {
-    // Update all our file tabs and determine the number of new/modified files
+    // Update all our file tabs and determine the number of modified files
 
     FileManager *fileManagerInstance = FileManager::instance();
-    int nbOfLocalNewOrModifiedFiles = 0;
+    int nbOfModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         updateFileTab(i);
 
-        if (fileManagerInstance->isLocalNewOrModified(mFileNames[i]))
-            ++nbOfLocalNewOrModifiedFiles;
+        if (fileManagerInstance->isModified(mFileNames[i]))
+            ++nbOfModifiedFiles;
     }
 
     // Reset the enabled state and tool tip of our Mode tabs and of all our View
@@ -2033,8 +2033,8 @@ void CentralWidget::updateModifiedSettings()
 
     // Let people know whether we can save the current file and/or all files
 
-    emit canSave(fileManagerInstance->isLocalNewOrModified(fileName));
-    emit canSaveAll(nbOfLocalNewOrModifiedFiles);
+    emit canSave(fileManagerInstance->isModified(fileName));
+    emit canSaveAll(nbOfModifiedFiles);
 }
 
 //==============================================================================
