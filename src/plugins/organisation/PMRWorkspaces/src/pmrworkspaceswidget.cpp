@@ -53,7 +53,7 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
     OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(),
     mPmrRepository(pPmrRepository),
-    mWorkspacesMap(QMap<QString, PMRSupport::PmrWorkspace *>()),
+    mWorkspacesManager(OpenCOR::PMRSupport::PmrWorkspacesManager::instance()),
     mWorkspaceFolders(QMap<QString, QString>()),
     mWorkspaceUrls(QMap<QString, QPair<QString, bool> >()),
     mExpandedItems(QSet<QString>()),
@@ -179,7 +179,7 @@ void PmrWorkspacesWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
         else {
             mWorkspaceFolders.insert(folder, url);
             mWorkspaceUrls.insert(url, QPair<QString, bool>(folder, pOwned));
-            mWorkspacesMap.insert(url, pWorkspace);
+            mWorkspacesManager->addWorkspace(pWorkspace);
         }
     }
 
@@ -219,10 +219,8 @@ void PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
 void PmrWorkspacesWidget::scanDefaultWorkspaceDirectory(void)
 {
     QDir workspaceDirectory = QDir(PMRSupport::PmrWorkspace::WorkspacesDirectory());
-    if (workspaceDirectory.exists()) {
-        foreach(QFileInfo info, workspaceDirectory.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
-            if (info.isDir()) addWorkspaceFolder(info.absoluteFilePath());
-        }
+    foreach(QFileInfo info, workspaceDirectory.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+        if (info.isDir()) addWorkspaceFolder(info.absoluteFilePath());
     }
 }
 
@@ -432,7 +430,7 @@ void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
             }
 
             if (!workspaceElement.isNull()) {
-                auto workspace = mWorkspacesMap.value(workspaceElement.attribute("id"));
+                auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
                 if (workspace) {
                     // We have a valid parent so fill empty row with content
 
@@ -463,7 +461,7 @@ void PmrWorkspacesWidget::clearWorkspaces(void)
 
 void PmrWorkspacesWidget::displayWorkspaces(void)
 {
-    auto workspaces = mWorkspacesMap.values();
+    QList<PMRSupport::PmrWorkspace *> workspaces = mWorkspacesManager->workspaces();
 
     // We want the HTML table in name order
 
@@ -512,7 +510,7 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
         else {
             QString link = webElement.attribute("id");
             if (webElement.hasClass("workspace")) {
-                auto workspace = mWorkspacesMap.value(link);
+                auto workspace = mWorkspacesManager->workspace(link);
 
                 toolTip = QString("%1\n%2").arg(workspace->url(), workspace->path());
             }
@@ -613,14 +611,13 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
 void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaceList)
 {
-    // First clear existing workspaces' map
+    // First clear existing workspaces from the manager
 
-    mWorkspacesMap.clear();
+    mWorkspacesManager->clearWorkspaces();
 
-    // We populate `mWorkspacesMap`, a map from a URL to the corresponding
-    // `PmrWorkspace` instance by reconciling URLs of `my-workspaces` (on PMR)
-    // with those from workspace folders. In doing so folders/URLs that do not
-    // correspond to an actual PMR workspace are pruned from the relevant maps.
+    // We now reconcile URLs of `my-workspaces` (on PMR) with those from workspace
+    // folders. In doing so folders/URLs that don't correspond to an actual PMR
+    // workspace are pruned from the relevant maps.
 
     // First clear the `owned` flag from the list of URLs with workspace folders
 
@@ -636,7 +633,7 @@ void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceLis
 
         const QString &url = workspace->url();
 
-        mWorkspacesMap.insert(url, workspace);
+        mWorkspacesManager->addWorkspace(workspace);
 
         // Check if we know its folder and flag it is ours
 
@@ -659,7 +656,7 @@ void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceLis
 
             auto workspace = mPmrRepository->getWorkspace(url);
             if (workspace) {
-                mWorkspacesMap.insert(url, workspace);
+                mWorkspacesManager->addWorkspace(workspace);
                 workspace->setPath(urlsIterator.value().first);
             }
             else {
@@ -698,19 +695,11 @@ void PmrWorkspacesWidget::aboutWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWidget::cloneWorkspace(const QString &pUrl)
 {
-    auto workspace = mWorkspacesMap.value(pUrl);
+    auto workspace = mWorkspacesManager->workspace(pUrl);
 
     if (workspace && !(workspace->isNull() || workspace->isLocal())) {
+        auto dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
 
-        auto workspacesFolder = QDir(PMRSupport::PmrWorkspace::WorkspacesDirectory());
-        if (!workspacesFolder.exists()) {
-            workspacesFolder.mkpath(".");
-        }
-
-        auto path = workspacesFolder.absolutePath() + QDir::separator()
-                                                    + workspace->name().trimmed();
-
-        auto dirName = Core::getExistingDirectory(tr("Select Empty Directory"), path, true);
         if (!dirName.isEmpty()) {
             // Create the folder for the new workspace
 
@@ -741,7 +730,7 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
     if (pWorkspace) {
         QString url = pWorkspace->url();
 
-        if (!mWorkspacesMap.contains(url))
+        if (!mWorkspacesManager->hasWorkspace(url))
             addWorkspace(pWorkspace);
 
         // Redisplay with workspace expanded and selected

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacesmanager.h"
 
@@ -41,9 +42,28 @@ namespace PMRSupport {
 
 QString PmrWorkspace::WorkspacesDirectory()
 {
-    static QString directory = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                             + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
-    return directory;
+    static QString workspacesHome = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                                  + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
+
+    static bool checkedFolder = false;
+    if (!checkedFolder) {
+        auto workspacesFolder = QDir(workspacesHome);
+        if (!workspacesFolder.exists()) workspacesFolder.mkpath(".");
+        checkedFolder = true;
+    }
+
+    return workspacesHome;
+}
+
+//==============================================================================
+
+QString PmrWorkspace::getEmptyWorkspaceDirectory(void)
+{
+    // Retrieve the name of an empty directory
+
+    return Core::getExistingDirectory(tr("Select Empty Directory"),
+                                      PMRSupport::PmrWorkspace::WorkspacesDirectory(),
+                                      true);
 }
 
 //==============================================================================

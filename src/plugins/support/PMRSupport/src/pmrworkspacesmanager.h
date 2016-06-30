@@ -23,7 +23,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "pmrsupportglobal.h"
+#include "pmrworkspace.h"
+
+//==============================================================================
+
+#include <QMap>
 #include <QObject>
+#include <QString>
 
 //==============================================================================
 
@@ -36,16 +43,28 @@ class PmrWorkspace;
 
 //==============================================================================
 
-class PmrWorkspacesManager : public QObject
+class PMRSUPPORT_EXPORT PmrWorkspacesManager : public QObject
 {
     Q_OBJECT
 
 public:
     explicit PmrWorkspacesManager(QObject *parent = 0);
+    virtual ~PmrWorkspacesManager();
 
     static PmrWorkspacesManager *instance(void);
 
     void emitWorkspaceCloned(PmrWorkspace *pWorkspace);
+
+    void addWorkspace(PmrWorkspace *pWorkspace);
+    void clearWorkspaces(void);
+    size_t count(void) const;
+
+    bool hasWorkspace(const QString &pUrl) const ;
+    PmrWorkspace *workspace(const QString &pUrl) const;
+    QList<PmrWorkspace *> workspaces(void) const;
+
+private:
+    QMap<QString, PMRSupport::PmrWorkspace *> mWorkspacesMap;  // Url --> Workspace
 
 Q_SIGNALS:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

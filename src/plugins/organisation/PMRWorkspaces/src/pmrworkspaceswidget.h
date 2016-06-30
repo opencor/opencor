@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
-#include "pmrworkspace.h"
+#include "pmrworkspacesmanager.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -77,7 +77,7 @@ protected:
 private:
     PMRSupport::PmrRepository *mPmrRepository;
 
-    QMap<QString, PMRSupport::PmrWorkspace *> mWorkspacesMap; // Url --> Workspace
+    OpenCOR::PMRSupport::PmrWorkspacesManager *mWorkspacesManager;
 
     QMap<QString, QString> mWorkspaceFolders;                 // Folder name --> Url
     QMap<QString, QPair<QString, bool> > mWorkspaceUrls;      // Url --> (Folder name, mine)

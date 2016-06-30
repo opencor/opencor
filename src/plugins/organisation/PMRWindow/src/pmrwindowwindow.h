@@ -98,7 +98,7 @@ private Q_SLOTS:
 
     void requestExposureFiles(const QString &pUrl);
 
-    void cloneWorkspace(const QString &pUrl);
+    void cloneWorkspace(const QString &pExposureUrl);
 };
 
 //==============================================================================

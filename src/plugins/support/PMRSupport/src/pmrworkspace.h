@@ -54,7 +54,9 @@ public:
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
+    static QString getEmptyWorkspaceDirectory(void);
     static QString getUrlFromFolder(const QString &pFolder);
+    static QString WorkspacesDirectory(void);
 
     bool isLocal(void) const;
     bool isNull(void) const;
@@ -81,8 +83,6 @@ public:
 
 //    void pull();
 //    void push();
-
-    static QString WorkspacesDirectory();
 
 private:
     bool mOwned;

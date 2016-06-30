@@ -29,7 +29,15 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspacesManager::PmrWorkspacesManager(QObject *parent) : QObject(parent)
+PmrWorkspacesManager::PmrWorkspacesManager(QObject *parent) :
+  QObject(parent),
+  mWorkspacesMap(QMap<QString, PMRSupport::PmrWorkspace *>())
+{
+}
+
+//==============================================================================
+
+PmrWorkspacesManager::~PmrWorkspacesManager()
 {
 }
 
@@ -52,6 +60,48 @@ void PmrWorkspacesManager::emitWorkspaceCloned(PmrWorkspace *pWorkspace)
     // This tells the PMR Workspaces plugin that a workspace has been cloned
 
     emit workspaceCloned(pWorkspace);
+}
+
+//==============================================================================
+
+void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
+{
+    if (pWorkspace) mWorkspacesMap.insert(pWorkspace->url(), pWorkspace);
+}
+
+//==============================================================================
+
+void PmrWorkspacesManager::clearWorkspaces(void)
+{
+    mWorkspacesMap.clear();
+}
+
+//==============================================================================
+
+size_t PmrWorkspacesManager::count(void) const
+{
+    return mWorkspacesMap.count();
+}
+
+//==============================================================================
+
+bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
+{
+    return mWorkspacesMap.contains(pUrl);
+}
+
+//==============================================================================
+
+PmrWorkspace *PmrWorkspacesManager::workspace(const QString &pUrl) const
+{
+    return mWorkspacesMap.value(pUrl);
+}
+
+//==============================================================================
+
+QList<PmrWorkspace *> PmrWorkspacesManager::workspaces(void) const
+{
+    return mWorkspacesMap.values();
 }
 
 //==============================================================================

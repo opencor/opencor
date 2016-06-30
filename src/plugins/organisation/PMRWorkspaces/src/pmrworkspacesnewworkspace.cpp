@@ -125,10 +125,7 @@ void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
 {
     Q_UNUSED(checked)
 
-    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
-                                                 PMRSupport::PmrWorkspace::WorkspacesDirectory(),
-                                                 true);
-
+    QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
     if (!dirName.isEmpty()) {
         mGui->path->setText(dirName);
         mPathChosen = true;

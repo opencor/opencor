@@ -24,6 +24,7 @@ limitations under the License.
 #include "pmrrepository.h"
 #include "pmrrepositorymanager.h"
 #include "pmrrepositoryresponse.h"
+#include "pmrworkspacesmanager.h"
 
 //==============================================================================
 
@@ -247,11 +248,10 @@ void PmrRepository::exposureInformationResponse(const QJsonDocument &pJsonDocume
         if (workspaceUrl.isEmpty()) {
             emitInformation(tr("No workspace URL could be found for %1.").arg(exposure->toHtml()));
         }
-        else {
-            // Retrieve the workspace and exposure file information from PMR
+        else if (Action(sender()->property(NextActionProperty).toInt()) == CloneExposureWorkspace) {
+            // Retrieve workspace file information and clone the workspace
 
-            auto dirName = sender()->property(DirNameProperty).toString();
-            requestWorkspaceInformation(workspaceUrl, dirName, exposure);
+            requestWorkspaceInformation(workspaceUrl, QString(), exposure);
         }
 
         if (exposureFileUrls.isEmpty()
@@ -338,26 +338,45 @@ void PmrRepository::workspaceCloneFinished(void)
 
 //==============================================================================
 
-void PmrRepository::requestExposureWorkspaceClone(const QString &pUrl, const QString &pDirName)
+void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
 {
     // Check whether we already know about the workspace for the given exposure
 
-    auto exposure = mExposures.value(pUrl);
+    auto exposure = mExposures.value(pExposureUrl);
 
     if (exposure->isNull()) {
-        emit warning(tr("Unknown exposore: ") + pUrl);
+        emit warning(tr("Unknown exposure: ") + pExposureUrl);
     }
     else if (!exposure->workspace()->isNull()) {
-        requestWorkspaceClone(exposure->workspace(), pDirName);
+        auto url = exposure->workspace()->url();
+        auto dirName = exposure->workspace()->path();
+
+        // Check that we aren't already managing a clone of the workspace
+        if (!dirName.isEmpty()) {
+            emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, dirName));
+            // TODO Prompt user to create a fork on PMR??
+        }
+        else {
+            auto existing = PmrWorkspacesManager::instance()->workspace(url);
+            if (existing == nullptr) {
+                // Retrieve the name of an empty directory
+
+                dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
+                if (!dirName.isEmpty()) requestWorkspaceClone(exposure->workspace(), dirName);
+            }
+            else {
+                emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, existing->path()));
+                // TODO Prompt user to create a fork on PMR??
+            }
+        }
     }
     else {
         // To clone the workspace associated with the given exposure, we first
         // need to retrieve some information about the exposure itself
 
-        auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pUrl, false);
+        auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pExposureUrl, false);
         repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)exposure));
         repositoryResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
-        repositoryResponse->setProperty(DirNameProperty, pDirName);
         connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
                 this, SLOT(exposureInformationResponse(QJsonDocument)));
     }
@@ -423,23 +442,36 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storageValue.compare("git")) {
-
                 emit workspaceInformation(workspaceUrl, workspaceName,
                                           workspaceDescription, workspaceOwner);
 
                 auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, exposure);
 
-                // Cloning a workspace from an exposure
+                auto dirName = QString();
 
-                if (exposure) exposure->setWorkspace(workspace);
+                if (exposure) {         // Cloning a workspace from an exposure
+                    exposure->setWorkspace(workspace);
 
-                // Cloning after creating a new workspace
+                    // Check that we aren't already managing a clone of the workspace
 
-                else getWorkspaceCredentials(workspace);
+                    auto existing = PmrWorkspacesManager::instance()->workspace(workspaceUrl);
+                    if (existing == nullptr) {
+                        // Retrieve the name of an empty directory
 
-                // Clone the workspace, if requested
+                        dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
+                    }
+                    else {
+                        emit warning(tr("Workspace %1 is already cloned in %2.").arg(workspaceUrl, existing->path()));
+                        // TODO Prompt user to create a fork on PMR??
+                    }
+                }
+                else {                  // Cloning after creating a new workspace
+                    getWorkspaceCredentials(workspace);
+                    dirName = sender()->property(DirNameProperty).toString();
+                }
 
-                auto dirName = sender()->property(DirNameProperty).toString();
+                // Clone the workspace, if we have a directory
+
                 if (!dirName.isEmpty()) requestWorkspaceClone(workspace, dirName);
 
             } else if (exposure) {

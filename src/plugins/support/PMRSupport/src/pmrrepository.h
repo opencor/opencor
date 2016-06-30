@@ -65,7 +65,7 @@ public:
 
     void requestExposureFiles(const QString &pUrl);
     void requestExposuresList(void);
-    void requestExposureWorkspaceClone(const QString &pUrl, const QString &pDirName);
+    void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
     PmrWorkspace *getWorkspace(const QString &pUrl);
     void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
