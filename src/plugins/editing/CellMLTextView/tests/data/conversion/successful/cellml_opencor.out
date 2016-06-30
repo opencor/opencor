@@ -1,4 +1,20 @@
-// A comment before the model definition itself...
+//
+
+//-
+
+//--
+
+//---
+
+// Some comments before the model definition itself...
+
+//---
+
+//--
+
+//-
+
+//
 
 def model{cellml_1_1_cmeta_id} cellml_1_1 as
     // A comment can fit on one line...

@@ -1,5 +1,13 @@
 <?xml version='1.0'?>
-<!-- A comment before the model definition itself...-->
+<!-- -->
+<!--- -->
+<!--&#45;&#45;-->
+<!--&#45;&#45;- -->
+<!-- Some comments before the model definition itself...-->
+<!--&#45;&#45;- -->
+<!--&#45;&#45;-->
+<!--- -->
+<!-- -->
 <model name="my_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <!-- In between comment #1...-->
     <units base_units="yes" name="my_base_unit">

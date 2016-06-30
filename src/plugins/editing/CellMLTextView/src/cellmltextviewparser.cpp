@@ -927,6 +927,20 @@ bool CellmlTextViewParser::usingToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+QString CellmlTextViewParser::processCommentString(const QString &pComment)
+{
+    // From https://www.w3.org/TR/xml/#sec-comments, we can see that XML
+    // comments cannot have "--" within them, yet we want to allow them in a
+    // comment and one way to allow this is by replacing all occurrences of "--"
+    // with its corresponding decimal HTML entity
+
+    QString realComment = pComment;
+
+    return realComment.replace("--", "&#45;&#45;");
+}
+
+//==============================================================================
+
 void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
 {
     // Check whether there are some comments
@@ -940,7 +954,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             // being tracked
 
             if (singleLineComments.isEmpty()) {
-                singleLineComments = mScanner.tokenString();
+                singleLineComments = processCommentString(mScanner.tokenString());
             } else {
                 // There is at least one other line comment that is being
                 // tracked, so compare line numbers
@@ -950,7 +964,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
                     // previous line comment, so add it to the list of tracked
                     // line comments
 
-                    singleLineComments += "\n"+mScanner.tokenString();
+                    singleLineComments += "\n"+processCommentString(mScanner.tokenString());
                 } else {
                     // The line comment is not directly on the line following
                     // the previous line comment, so add the previous line
@@ -959,7 +973,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
 
                     pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
 
-                    singleLineComments = mScanner.tokenString();
+                    singleLineComments = processCommentString(mScanner.tokenString());
                 }
             }
 
