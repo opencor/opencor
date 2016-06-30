@@ -20,7 +20,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 6, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 30, "month": 6, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
