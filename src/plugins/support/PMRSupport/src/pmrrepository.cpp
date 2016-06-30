@@ -114,7 +114,7 @@ QString PmrRepository::informationNoteMessage() const
 
 void PmrRepository::emitInformation(const QString &pMessage)
 {
-    emit pMessage + "<br/><br/>" + informationNoteMessage();
+    emit information(pMessage + "<br/><br/>" + informationNoteMessage());
 }
 
 //==============================================================================
