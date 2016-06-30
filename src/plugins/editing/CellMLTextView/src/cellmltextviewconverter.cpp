@@ -457,6 +457,37 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 
 //==============================================================================
 
+QString CellMLTextViewConverter::processCommentString(const QString &pComment)
+{
+    // An empty comment will have been serialised as "<!-- -->", which means
+    // that pComment will be equal to " ", in which case we need to return an
+    // empty string
+
+    if (!pComment.compare(" "))
+        return QString();
+
+    // We cannot have "--" in an XML comment, so those were replaced with
+    // "&#45;&#45;", which means that we need to convert them back
+
+    QString realComment = pComment;
+
+    realComment.replace("&#45;&#45;", "--");
+
+    // If newComment ends with "- ", it's because the comment ends with a dash,
+    // but that a space had to be added to it to avoid problems with the end of
+    // an XML comment ("-->"), so we need to chop that space to get the real
+    // comment
+
+    if (realComment.endsWith("- "))
+        realComment.chop(1);
+
+    // We are all done, so we can now return our real comment
+
+    return realComment;
+}
+
+//==============================================================================
+
 void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
 {
     // Process the given comment node
@@ -478,7 +509,7 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
     }
 
     foreach (const QString commentLine, commentLines)
-        outputString(Comment, QString("//%1").arg(commentLine));
+        outputString(Comment, QString("//%1").arg(processCommentString(commentLine)));
 }
 
 //==============================================================================

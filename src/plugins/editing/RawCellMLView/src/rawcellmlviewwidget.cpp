@@ -276,11 +276,12 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditingWidget)
+    if (mEditingWidget) {
         return QList<QWidget *>() << mEditingWidget->editor()->cursorPositionWidget()
                                   << mEditingWidget->editor()->editingModeWidget();
-    else
+    } else {
         return QList<QWidget *>();
+    }
 }
 
 //==============================================================================
@@ -336,11 +337,11 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
             nbOfReportedIssues +=    !pOnlyErrors
-                                  || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
+                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
         }
 
         if (   (cellmlFile->version() != CellMLSupport::CellmlFile::Cellml_1_0)
-            && cellmlFile->model()->imports()->length()
+            && cellmlFile->model() && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
             editorList->addItem(EditorWidget::EditorListItem::Information,
                                 (nbOfReportedIssues == 1)?

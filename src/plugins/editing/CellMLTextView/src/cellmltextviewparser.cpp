@@ -927,6 +927,20 @@ bool CellmlTextViewParser::usingToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+QString CellmlTextViewParser::processCommentString(const QString &pComment)
+{
+    // From https://www.w3.org/TR/xml/#sec-comments, we can see that XML
+    // comments cannot have "--" within them, yet we want to allow them in a
+    // comment and one way to allow this is by replacing all occurrences of "--"
+    // with its corresponding decimal HTML entity
+
+    QString realComment = pComment;
+
+    return realComment.replace("--", "&#45;&#45;");
+}
+
+//==============================================================================
+
 void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
 {
     // Check whether there are some comments
@@ -939,8 +953,8 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             // Keep track of the line comment, if no previous line comments are
             // being tracked
 
-            if (singleLineComments.isEmpty()) {
-                singleLineComments = mScanner.tokenString();
+            if (!prevLineCommentLine) {
+                singleLineComments = processCommentString(mScanner.tokenString());
             } else {
                 // There is at least one other line comment that is being
                 // tracked, so compare line numbers
@@ -950,16 +964,16 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
                     // previous line comment, so add it to the list of tracked
                     // line comments
 
-                    singleLineComments += "\n"+mScanner.tokenString();
+                    singleLineComments += "\n"+processCommentString(mScanner.tokenString());
                 } else {
                     // The line comment is not directly on the line following
                     // the previous line comment, so add the previous line
                     // comment(s) to the current node and keep track of the new
                     // line comment
 
-                    pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+                    pDomNode.appendChild(mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments));
 
-                    singleLineComments = mScanner.tokenString();
+                    singleLineComments = processCommentString(mScanner.tokenString());
                 }
             }
 
@@ -972,8 +986,8 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             // No (more) comment(s left), so add the tracked line comment(s) to
             // the current node, if any, and leave
 
-            if (!singleLineComments.isEmpty())
-                pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+            if (prevLineCommentLine)
+                pDomNode.appendChild(mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments));
 
             return;
         }

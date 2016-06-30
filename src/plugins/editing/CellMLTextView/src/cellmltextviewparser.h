@@ -176,6 +176,7 @@ private:
     bool unitToken(QDomNode &pDomNode);
     bool usingToken(QDomNode &pDomNode);
 
+    QString processCommentString(const QString &pComment);
     void parseComments(QDomNode &pDomNode);
     bool parseCmetaId(QDomElement &pDomElement);
     bool parseModelDefinition(QDomNode &pDomNode);
