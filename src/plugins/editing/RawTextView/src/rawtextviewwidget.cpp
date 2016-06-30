@@ -138,10 +138,12 @@ void RawTextViewWidget::initialize(const QString &pFileName,
 
         // Show/hide our editors
 
-        newEditor->show();
+        setUpdatesEnabled(false);
+            newEditor->show();
 
-        if (oldEditor && (newEditor != oldEditor))
-            oldEditor->hide();
+            if (oldEditor && (newEditor != oldEditor))
+                oldEditor->hide();
+        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editor and make sure that the latter
         // immediately gets the focus

@@ -300,10 +300,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Hide our previous simulation widget and show our new one
 
-    mSimulationWidget->show();
+    setUpdatesEnabled(false);
+        mSimulationWidget->show();
 
-    if (oldSimulationWidget && (mSimulationWidget != oldSimulationWidget))
-        oldSimulationWidget->hide();
+        if (oldSimulationWidget && (mSimulationWidget != oldSimulationWidget))
+            oldSimulationWidget->hide();
+    setUpdatesEnabled(true);
 
     // Set our focus proxy to our 'new' simulation widget and make sure that the
     // latter immediately gets the focus

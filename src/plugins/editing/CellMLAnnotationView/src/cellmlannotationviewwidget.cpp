@@ -146,10 +146,12 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 
     // Hide our previous editing widget and show our new one
 
-    mEditingWidget->show();
+    setUpdatesEnabled(false);
+        mEditingWidget->show();
 
-    if (oldEditingWidget && (mEditingWidget != oldEditingWidget))
-        oldEditingWidget->hide();
+        if (oldEditingWidget && (mEditingWidget != oldEditingWidget))
+            oldEditingWidget->hide();
+    setUpdatesEnabled(true);
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
