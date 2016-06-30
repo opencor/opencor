@@ -953,7 +953,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             // Keep track of the line comment, if no previous line comments are
             // being tracked
 
-            if (singleLineComments.isEmpty()) {
+            if (!prevLineCommentLine) {
                 singleLineComments = processCommentString(mScanner.tokenString());
             } else {
                 // There is at least one other line comment that is being
@@ -971,7 +971,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
                     // comment(s) to the current node and keep track of the new
                     // line comment
 
-                    pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+                    pDomNode.appendChild(mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments));
 
                     singleLineComments = processCommentString(mScanner.tokenString());
                 }
@@ -986,8 +986,8 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             // No (more) comment(s left), so add the tracked line comment(s) to
             // the current node, if any, and leave
 
-            if (!singleLineComments.isEmpty())
-                pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+            if (prevLineCommentLine)
+                pDomNode.appendChild(mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments));
 
             return;
         }
