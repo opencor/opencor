@@ -775,63 +775,40 @@ void CellmlFileRuntime::update()
         mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
-    // Determine whether the model imports some components
-    // Note #1: a model that only imports units will clearly not affect our
-    //          model's variables, hence such a model won't be relevant for our
-    //          mapping below...
-    // Note #2: a model cannot be fully instantiated if it imports an empty
-    //          component or a component with unmapped variables, so we don't
-    //          need to worry about this type of model...
-
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = model->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
-    bool hasComponentImports = false;
-
-    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
-         import; import = importsIter->nextImport()) {
-        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
-
-        if (importComponents->length()) {
-            hasComponentImports = true;
-
-            break;
-        }
-    }
-
-    // If the model contains some imports then we want to to go through the
-    // variables defined or referenced in our main CellML file and do a mapping
-    // between the source of a variable and a variable in the main CellML file
-    // Note: indeed, when it comes to CellML 1.1 files, we only want to list the
-    //       parameters that are either defined or referenced in our main CellML
-    //       file. Not only does it make sense, but also only the parameters
-    //       listed in a main CellML file can be referenced in SED-ML...
+    // Go through the variables defined or referenced in our main CellML file
+    // and do a mapping between the source of that variable and that variable
+    // itself
+    // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. not CellML
+    //       1.1 files that don't import any components), we only want to list
+    //       the parameters that are either defined or referenced in our main
+    //       CellML file. Not only does it make sense, but also only the
+    //       parameters listed in a main CellML file can be referenced in
+    //       SED-ML...
 
     QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
     QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
     ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
     ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
-    if (hasComponentImports) {
-        for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
-             component; component = localComponentsIter->nextComponent()) {
-            ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
-            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
+    for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
+         component; component = localComponentsIter->nextComponent()) {
+        ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
+        ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
 
-            for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
-                 variable; variable = variablesIter->nextVariable()) {
-                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+        for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
+             variable; variable = variablesIter->nextVariable()) {
+            ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-                mainVariables.insert(sourceVariable, variable);
+            mainVariables.insert(sourceVariable, variable);
 
-                // In some CellML 1.1 models, the source variable may be defined
-                // in the main CellML file and used (and therefore referenced)
-                // in different places in that same main CellML file, in which
-                // case we need to keep track of the real main variable which is
-                // the one which source variable is the same
+            // In CellML 1.0 models / some CellML 1.1 models, the source
+            // variable is / may be defined in the main CellML file and may be
+            // used (and therefore referenced) in different places in that same
+            // main CellML file, in which case we need to keep track of the real
+            // main variable, which is the one which source variable is the same
 
-                if (variable == sourceVariable)
-                    realMainVariables << variable;
-            }
+            if (variable == sourceVariable)
+                realMainVariables << variable;
         }
     }
 
@@ -852,7 +829,7 @@ void CellmlFileRuntime::update()
                                                               mainVariables.value(variable);
         iface::cellml_api::CellMLVariable *realVariable = mainVariable?mainVariable:variable.getPointer();
 
-        if (   hasComponentImports && !mainVariable
+        if (   !mainVariable
             &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
             continue;
         }
@@ -936,7 +913,7 @@ void CellmlFileRuntime::update()
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
 
-            if (!hasComponentImports || (realVariable == mainVariable))
+            if (realVariable == mainVariable)
                 mParameters << parameter;
         }
     }
