@@ -64,7 +64,7 @@ void Tests::doRuntimeTest(const QString &pFileName,
                                               .arg(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
     }
 
-    QCOMPARE(modelParameters  << QString(), pModelParameters);
+    QCOMPARE(modelParameters << QString(), pModelParameters);
 }
 
 //==============================================================================
