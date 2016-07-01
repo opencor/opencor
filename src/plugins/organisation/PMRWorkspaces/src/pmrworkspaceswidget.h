@@ -65,6 +65,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual void contextMenuEvent(QContextMenuEvent *event);
+    virtual void mouseDoubleClickEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
 
@@ -115,6 +116,7 @@ private:
                                const QString &pPath1, const QString &pPath2);
 
 Q_SIGNALS:
+    void openFileRequested(const QString &pFile);
     void warning(const QString &pMessage);
 
 public Q_SLOTS:

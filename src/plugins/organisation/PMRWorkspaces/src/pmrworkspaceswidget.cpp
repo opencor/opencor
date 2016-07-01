@@ -557,9 +557,21 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
             }
             else {
                 // Text link clicked, e.g. to open a file
+
+                emit openFileRequested(aElement.attribute("href"));
             }
         }
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    // We handle this event ourselves so default event processing
+    // doesn't do anything (such as follow a link or open a file).
 }
 
 //==============================================================================

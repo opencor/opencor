@@ -140,6 +140,10 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
             mWorkspacesWidget, SLOT(initialiseWorkspaces(PMRSupport::PmrWorkspaceList)));
 
+    // Process requests from our widget
+
+    connect(mWorkspacesWidget, SIGNAL(openFileRequested(QString)), this, SLOT(openFile(QString)));
+
     // Retranslate the GUI
 
     retranslateUi();
