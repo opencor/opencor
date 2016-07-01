@@ -143,8 +143,7 @@ void SingleCellViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateParameters(const double &pCurrentPoint,
-                                                                 const bool &pProcessEvents)
+void SingleCellViewInformationParametersWidget::updateParameters(const double &pCurrentPoint)
 {
     // Update our data
 
@@ -180,19 +179,6 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
                 break;
             }
         }
-
-        // Make sure that we don't hang up the GUI unnecessarily
-        // Note #1: this is useful when we run a model with loads of parameters
-        //          since otherwise the simulation won't finish smoothly (see
-        //          issue #656)...
-        // Note #2: we don't want to process events all the time otherwise it
-        //          would mean that whenever we move the mouse while editing a
-        //          parameter, then the GUI would keep flashing because of the
-        //          editor closing and then reopening repeatedly until we stop
-        //          moving the mouse (see issue #733)...
-
-        if (pProcessEvents)
-            QCoreApplication::processEvents();
     }
 
     // Check whether any of our properties has actually been modified
