@@ -52,7 +52,9 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mInitialized(false),
     mInternetConnectionAvailable(true),
     mNumberOfFilteredExposures(0),
-    mExposureUrl(QString())
+    mExposureUrl(QString()),
+    mShowExposureFilesTimer(nullptr),
+    mShowExposureFilesUrl(QString())
 {
     // Create and populate our context menu
 
