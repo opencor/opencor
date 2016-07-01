@@ -490,52 +490,74 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget
 
-    static const QIcon DefaultIcon           = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/magnifier.png");
+    static const QIcon MagnifierIcon         = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/magnifier.png");
     static const QIcon CaseSensitiveIcon     = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
     static const QIcon WholeWordsOnlyIcon    = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
     static const QIcon RegularExpressionIcon = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
+    static const int IconSize                = 16;
+    static const int MagnifierIconWidth      = 17;
+    static const int MagnifierIconHeight     = 11;
+    static const int CaseSensitiveIconShift  =  6;
+    static const int WholeWordsOnlyIconShift =  6;
+    static const int RegularExpressionShift  =  7;
+    static const int CaseSensitiveIconWidth  =  5;
+    static const int WholeWordsOnlyIconWidth =  5;
+    static const int RegularExpressionWidth  =  4;
 
     int nbOfOptions =  mCaseSensitiveAction->isChecked()
                       +mWholeWordsOnlyAction->isChecked()
                       +mRegularExpressionAction->isChecked();
+    QPixmap dropDownPixmap = QPixmap(IconSize, IconSize);
+
+    dropDownPixmap.fill(Qt::transparent);
+
+    QPainter dropDownPixmapPainter(&dropDownPixmap);
 
     if (nbOfOptions) {
-        static const int IconSize = 16;
-        static const int IconWidth = 6;
-
-        QPixmap dropDownPixmap = QPixmap(nbOfOptions*IconWidth-mRegularExpressionAction->isChecked(),
-                                         IconSize);
-        // Note: -mRegularExpressionAction->isChecked(), because
-        //       regularExpressionIcon is effectively one pixel narrower than
-        //       caseSensitiveIcon and wholeWordsOnlyIcon...
-
-        dropDownPixmap.fill(Qt::transparent);
-
-        QPainter dropDownPixmapPainter(&dropDownPixmap);
-
-        int left = -IconWidth;
+        int left = ( IconSize-nbOfOptions+1
+                    -mCaseSensitiveAction->isChecked()*CaseSensitiveIconWidth
+                    -mWholeWordsOnlyAction->isChecked()*WholeWordsOnlyIconWidth
+                    -mRegularExpressionAction->isChecked()*RegularExpressionWidth) >> 1;
 
         if (mCaseSensitiveAction->isChecked()) {
-            CaseSensitiveIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
+            CaseSensitiveIcon.paint(&dropDownPixmapPainter,
+                                    left-CaseSensitiveIconShift, 0,
+                                    IconSize, IconSize);
 
-            left += IconWidth;
+            left += CaseSensitiveIconWidth+1;
         }
 
         if (mWholeWordsOnlyAction->isChecked()) {
-            WholeWordsOnlyIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
+            WholeWordsOnlyIcon.paint(&dropDownPixmapPainter,
+                                     left-WholeWordsOnlyIconShift, 0,
+                                     IconSize, IconSize);
 
-            left += IconWidth;
+            left += WholeWordsOnlyIconWidth+1;
         }
 
-        if (mRegularExpressionAction->isChecked())
-            RegularExpressionIcon.paint(&dropDownPixmapPainter, left-1, 0, IconSize, IconSize);
-
-        mDropDownAction->setIcon(dropDownPixmap);
+        if (mRegularExpressionAction->isChecked()) {
+            RegularExpressionIcon.paint(&dropDownPixmapPainter,
+                                        left-RegularExpressionShift, 0,
+                                        IconSize, IconSize);
+        }
     } else {
-        // No options are set, so use our default icon
+        // We hack of magnifier icon away so that it ends up looking the way we
+        // want it (since it's wider than 16 pixels)
 
-        mDropDownAction->setIcon(DefaultIcon);
+        MagnifierIcon.paint(&dropDownPixmapPainter,
+                            -1, ((IconSize-MagnifierIconHeight) >> 1)+1,
+                            MagnifierIconWidth, MagnifierIconHeight);
+
+        QPen pen = dropDownPixmapPainter.pen();
+
+        pen.setColor(Qt::white);
+
+        dropDownPixmapPainter.setPen(pen);
+
+        dropDownPixmapPainter.drawPoint(0, 13);
     }
+
+    mDropDownAction->setIcon(dropDownPixmap);
 }
 
 //==============================================================================
