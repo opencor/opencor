@@ -102,7 +102,8 @@ void Tests::runtimeTests()
     //    variable of integration is now visible in the main CellML file (as
     //    well as some other model parameters); and
     //  - A model (Noble 1962) that imports its units (and no components) from a
-    //    child model.
+    //    child model; and
+    //  - A somewhat comprehensive model (Faville 2008).
 
     doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
@@ -112,6 +113,8 @@ void Tests::runtimeTests()
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.out")));
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/units_import_only_parent_model.cellml"),
                   "1.1", modelParameters);
+    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.cellml"),
+                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.out")));
 
     // Clean up after ourselves
 

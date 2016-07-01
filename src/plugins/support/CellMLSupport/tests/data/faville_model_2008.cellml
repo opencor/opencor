@@ -1,0 +1,2766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  FILE :  faville_pullan_sanders_koh_lloyd_smith_2009.xml
+
+CREATED :  14th May 2008
+
+LAST MODIFIED : 14th May 2008
+
+AUTHOR :  Catherine Lloyd
+          Bioengineering Institute
+          The University of Auckland
+          
+MODEL STATUS :  This model conforms to the CellML 1.1 Specification.
+
+DESCRIPTION :  This file contains a CellML description of Richard Faville et al.'s 2008 biophysically based mathematical model of interstitial cells of Cajal and the pacemaker potentials produced from a unitary potential basis.
+
+CHANGES:  
+  
+-->
+<model
+    name="faville_pullan_sanders_koh_lloyd_smith_2009"
+    cmeta:id="faville_pullan_sanders_koh_lloyd_smith_2009"
+    xmlns="http://www.cellml.org/cellml/1.1#"
+    xmlns:cellml="http://www.cellml.org/cellml/1.1#"
+    xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+    xmlns:bqs="http://www.cellml.org/bqs/1.0#" 
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#"  >
+
+<documentation xmlns="http://cellml.org/tmp-documentation">
+<article>
+  <articleinfo>
+  <title>Biophysically based mathematical modeling of interstitial cells of Cajal slow wave activity generated from a discrete unitary potential basis</title>
+  <author>
+    <firstname>Catherine</firstname>
+          <surname>Lloyd</surname>
+    <affiliation>
+      <shortaffil>Auckland Bioengineering Institute, The University of Auckland</shortaffil>
+    </affiliation>
+  </author>
+</articleinfo>
+  <section id="sec_status">
+    <title>Model Status</title>
+    <para>
+        This CellML model is known to run PCEnv. Because the model is in a CellML 1.1 format (as opposed to CellML 1.0) COR is unable to run the model. The units have been checked and they are consistent.  Please note that the CellML model has been updated since the 2009 publication accccording the the first author's changes. 
+</para>
+  </section>
+  <sect1 id="sec_structure">
+  <title>Model Structure</title>
+
+<para>
+ABSTRACT: Spontaneously rhythmic pacemaker activity produced by interstitial cells of Cajal (ICC) is the result of the entrainment of unitary potential depolarizations generated at intracellular sites termed pacemaker units. In this study, we present a mathematical modeling framework that quantitatively represents the transmembrane ion flows and intracellular Ca2+ dynamics from a single ICC operating over the physiological membrane potential range. The mathematical model presented here extends our recently developed biophysically based pacemaker unit modeling framework by including mechanisms necessary for coordinating unitary potential events, such as a T-Type Ca2+ current, Vm-dependent K+ currents, and global Ca2+ diffusion. Model simulations produce spontaneously rhythmic slow wave depolarizations with an amplitude of 65 mV at a frequency of 17.4 cpm. Our model predicts that activity at the spatial scale of the pacemaker unit is fundamental for ICC slow wave generation, and Ca2+ influx from activation of the T-Type Ca2+ current is required for unitary potential entrainment. These results suggest that intracellular Ca2+ levels, particularly in the region local to the mitochondria and endoplasmic reticulum, significantly influence pacing frequency and synchronization of pacemaker unit discharge. Moreover, numerical investigations show that our ICC model is capable of qualitatively replicating a wide range of experimental observations.
+</para>
+
+<para>
+In the study described here, Richard Faville <emphasis>et al.</emphasis> have developed a mathematical model of the ICC pacemaker potential.  The model can be divided into two distinct components: the bulk cytoplasm and the pacemaker units.  The later have been described previously (Faville <emphasis>et al.</emphasis>, 2008, and the CellML description of this model can be found <ulink url="http://models.cellml.org/workspace/faville_pullan_sanders_koh_lloyd_smith_2009/@@file/a69dfff7b0d090bc51b49b5e4cda835130354d8d/faville_pacemaker_unit_2008.cellml">here</ulink>).  The pacemaker unit model quantitatively describes the transmembrane ion flows and intracellular Ca2+ dynamics from a single ICC pacemaker unit, and a schematic diagram of this model can be seen in the figure immediately below.
+</para>
+
+<informalfigure float="0" id="fig_reaction_diagram">
+<mediaobject>
+  <imageobject>
+    <objectinfo>
+      <title>model diagram</title>
+    </objectinfo>
+    <imagedata fileref="faville_2008_new.png"/>
+  </imageobject>
+</mediaobject>
+<caption>A schematic diagram of the pacemaker unit illustrating all the compartmental volumes and ionic conductances, together with their interactions.</caption>
+</informalfigure>
+
+<para>
+The combined model is described here in CellML 1.1.  The pacemaker unit is defined and is imported into the bulk cytoplasm 10 times (note that the number of pacemaker units that could be used within the modelling framework is completely arbitrary, however 10 appears to be the minimum number required to adequately describe the pacemaker potential depolarisation).  In order to embed the pacemaker model within the bulk cytoplasm modelling framework the original pacemaker model had to be modified slightly.  This is because the it was only representative of pacemaker activity near the resting membrane potential of -70mV.  In its modified form and embedded within the bulk cytoplasm it is now capable of simulating pacemaker activity under conditions of membrane depolarisation (Vm > -60mV).  A full schematic diagram of the combined model is illustrated in the figure below. 
+</para>
+
+<informalfigure float="0" id="fig_reaction_diagram">
+<mediaobject>
+  <imageobject>
+    <objectinfo>
+      <title>model diagram</title>
+    </objectinfo>
+    <imagedata fileref="faville2_2008.png"/>
+  </imageobject>
+</mediaobject>
+<caption>A full schematic diagram of the bulk cytoplasm model with the imported pacemaker units illustrating all the compartmental volumes and ionic conductances, together with their interactions.</caption>
+</informalfigure>
+
+<para>
+The original paper reference is cited below:
+</para>
+
+<para>
+Biophysically based mathematical modeling of interstitial cells of Cajal slow wave activity generated from a discrete unitary potential basis, R.A. Faville, A.J. Pullan, K.M. Sanders, S.D. Koh, C.M. Lloyd and N.P. Smith, 2009, <emphasis>Biophysical Journal</emphasis>, 96, 4834-4852.
+          <ulink url="http://www.ncbi.nlm.nih.gov/pubmed/19527643">PubMed ID: 19527643</ulink>
+</para>
+
+
+</sect1>
+</article>
+</documentation> 
+      
+      
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          The equations defined here in this model decribe the Bulk Cytoplasm Equations from Appendix A in the original paper.  There are 10 pacemaker units (n_PU=10), and all of these equations which are listed in Appendix B of the current paper and also in the previously publihsed paper by Faville et al., are defined in a different CellML model called faville_pacemaker_unit_2008.cellml. This model is imported 10 times, via an intermediate model called PU, where JS1S2 is defined (this variable differs between pacemakers) and the two variables JS2Cy and I_ion_PU are passed from the pacemaker unit into the bulk cytoplasm model via PU, while Vm, time and CS2 are passed in the opposite direction - from the bulk cytoplasm model to the pacemaker unit model, again via PU.  The imports are listed below. The connections between the importing model and each pacemaker unit are also listed beneath each appropriate import.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model1" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model1" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU1" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model1" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy1" />
+    <map_variables variable_1="CS2" variable_2="CS21" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model1" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_1" />
+    <map_variables variable_1="CS1" variable_2="CS11" />
+	<map_variables variable_1="CS2" variable_2="CS21" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model1" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model1" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model2" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model2" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU2" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model2" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy2" />
+    <map_variables variable_1="CS2" variable_2="CS22" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model2" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_2" />
+    <map_variables variable_1="CS1" variable_2="CS12" />
+	<map_variables variable_1="CS2" variable_2="CS22" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model2" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model2" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model3" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model3" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU3" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model3" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy3" />
+    <map_variables variable_1="CS2" variable_2="CS23" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model3" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_3" />
+    <map_variables variable_1="CS1" variable_2="CS13" />
+	<map_variables variable_1="CS2" variable_2="CS23" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model3" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model3" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model4" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model4" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU4" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model4" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy4" />
+    <map_variables variable_1="CS2" variable_2="CS24" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model4" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_4" />
+    <map_variables variable_1="CS1" variable_2="CS14" />
+	<map_variables variable_1="CS2" variable_2="CS24" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model4" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model4" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model5" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model5" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU5" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model5" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy5" />
+    <map_variables variable_1="CS2" variable_2="CS25" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model5" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_5" />
+    <map_variables variable_1="CS1" variable_2="CS15" />
+	<map_variables variable_1="CS2" variable_2="CS25" />  
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model5" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model5" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model6" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model6" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU6" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model6" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy6" />
+    <map_variables variable_1="CS2" variable_2="CS26" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model6" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_6" />
+    <map_variables variable_1="CS1" variable_2="CS16" />
+	<map_variables variable_1="CS2" variable_2="CS26" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model6" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model6" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model7" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model7" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU7" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model7" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy7" />
+    <map_variables variable_1="CS2" variable_2="CS27" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model7" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_7" />
+    <map_variables variable_1="CS1" variable_2="CS17" />
+	<map_variables variable_1="CS2" variable_2="CS27" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model7" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model7" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+  
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model8" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model8" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU8" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model8" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy8" />
+    <map_variables variable_1="CS2" variable_2="CS28" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model8" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_8" />
+    <map_variables variable_1="CS1" variable_2="CS18" />
+	<map_variables variable_1="CS2" variable_2="CS28" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model8" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model8" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+  
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model9" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model9" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU9" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model9" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy9" />
+    <map_variables variable_1="CS2" variable_2="CS29" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model9" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_9" />
+    <map_variables variable_1="CS1" variable_2="CS19" />
+	<map_variables variable_1="CS2" variable_2="CS29" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model9" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model9" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+	
+  <import xlink:href="faville_pacemaker_unit_2008.cellml">
+    <component name="pacemaker_unit_model10" component_ref="pacemaker_unit_model" />
+  </import>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model10" component_2="membrane" />
+    <map_variables variable_1="Vm" variable_2="Vm" />
+    <map_variables variable_1="I_ion_PU" variable_2="I_ion_PU10" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model10" component_2="JS2Cy" />
+    <map_variables variable_1="JS2Cy" variable_2="JS2Cy10" />
+    <map_variables variable_1="CS2" variable_2="CS210" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model10" component_2="JS1S2" />
+    <map_variables variable_1="JS1S2" variable_2="JS1S2_10" />
+    <map_variables variable_1="CS1" variable_2="CS110" />
+	<map_variables variable_1="CS2" variable_2="CS210" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="pacemaker_unit_model10" component_2="model_parameters" />
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+
+  <connection>
+    <map_components component_1="pacemaker_unit_model10" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+<!-- unit definitions --> 
+
+  <units name="millivolt">
+    <unit prefix="milli" units="volt" />
+  </units>
+
+  <units name="per_millivolt">
+    <unit units="millivolt" exponent="-1" />
+  </units>
+  
+  <units name="first_order_rate_constant_per_millivolt">
+    <unit units="second" exponent="-1" />
+	<unit units="millivolt" exponent="-1" />
+  </units>
+  
+  <units name="micromolar">
+    <unit prefix="micro" units="mole" />
+    <unit units="litre" exponent="-1" />
+  </units>
+
+  <units name="per_micromolar">
+    <unit units="micromolar" exponent="-1" />
+  </units>
+
+  <units name="per_micromolar2">
+    <unit units="micromolar" exponent="-2" />
+  </units>
+
+  <units name="picofarad">
+    <unit prefix="pico" units="farad" />
+  </units>
+
+  <units name="picosiemens">
+    <unit prefix="pico" units="siemens" />
+  </units>
+
+  <units name="picoampere">
+    <unit prefix="pico" units="ampere" />
+  </units>
+
+  <units name="femtoampere">
+    <unit prefix="femto" units="ampere" />
+  </units>
+
+  <units name="micromolar_per_coulomb">
+    <unit units="micromolar" />
+    <unit units="coulomb" exponent="-1" />
+  </units>
+
+  <units name="femtocoulomb_per_zeptomole">
+    <unit prefix="femto" units="coulomb" />
+    <unit prefix="zepto" units="mole" exponent="-1" />
+  </units>
+
+  <units name="attojoule_per_zeptomole_kelvin">
+    <unit prefix="atto" units="joule"/>
+    <unit prefix="zepto" units="mole" exponent="-1" />
+    <unit units="kelvin" exponent="-1" />
+  </units>
+
+  <units name="first_order_rate_constant">
+    <unit units="second" exponent="-1" />
+  </units>
+
+  <units name="first_order_rate_constant_squared">
+    <unit units="second" exponent="-2" />
+  </units>
+
+  <units name="flux">
+    <unit units="micromolar" />
+    <unit units="second" exponent="-1" />
+  </units>
+  
+  
+  <component name="environment">
+    <variable name="time" public_interface="out" units="second" />
+  </component>
+
+     <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          Bulk cytoplasm equations.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+
+  <component name="I_CaT" cmeta:id="I_CaT">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_CaT">
+        <dc:title>I_CaT</dc:title>
+        <dcterms:alternative>T-type calcium current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_CaT" public_interface="out" units="picoampere" />
+    
+    <variable name="g_CaT" initial_value="700.0" units="picosiemens" />
+    <variable name="ECaT" initial_value="17.0" units="millivolt" />
+	<variable name="alpha_OT" initial_value="800.0" units="first_order_rate_constant" />
+    <variable name="beta_OT" initial_value="72" units="first_order_rate_constant" />
+	<variable name="OCaT" initial_value="0" units="dimensionless" />
+    
+    <variable name="time" public_interface="in" private_interface="out" units="second" />
+    <variable name="Vm" public_interface="in" private_interface="out" units="millivolt" />
+	 
+    <variable name="dT" private_interface="in" units="dimensionless" />
+    <variable name="fT" private_interface="in" units="dimensionless" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="40">
+      <apply><eq />
+        <ci> I_CaT </ci>
+        <apply><times />
+          <ci> g_CaT </ci>
+          <ci> OCaT </ci>
+          <apply><minus />
+            <ci> Vm </ci>
+            <ci> ECaT </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="41" >  
+	  <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> OCaT </ci>
+        </apply>
+        <apply><minus />
+          <apply><times />
+            <ci> alpha_OT </ci>
+		    <ci> dT </ci>
+            <ci> fT </ci>
+			<apply><minus />
+		      <cn cellml:units="dimensionless"> 1.0 </cn>
+			  <ci> OCaT </ci>
+            </apply>
+		  </apply>
+          <apply><times />
+            <ci> beta_OT </ci>
+		    <ci> OCaT </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  
+  <component name="I_CaT_d_gate">
+    <variable name="dT" initial_value="0.010" public_interface="out" units="dimensionless" />
+    
+    <variable name="infinity_dT" units="dimensionless" />    
+    <variable name="tau_dT1" units="second" />
+    <variable name="A_dT1" initial_value="0.0025" units="second" />
+    <variable name="k_dT" initial_value="-0.60" units="per_millivolt" />
+    <variable name="V_dT" initial_value="-53" units="millivolt" />
+
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="42">
+      <apply><eq />
+        <ci> infinity_dT </ci>
+        <apply><divide />
+		  <cn cellml:units="dimensionless"> 1.0 </cn>
+          <apply><plus />
+		    <cn cellml:units="dimensionless"> 1.0 </cn>
+            <apply><exp />
+              <apply><times />
+                <ci> k_dT </ci>
+                <apply><minus />
+                  <ci> Vm </ci>
+                  <ci> V_dT </ci>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="43" >  
+      <apply><eq />
+        <ci> tau_dT1 </ci>
+        <ci> A_dT1 </ci>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="44" >  
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> dT </ci>
+        </apply>
+        <apply><divide />
+          <apply><minus />
+            <ci> infinity_dT </ci>
+            <ci> dT </ci>
+          </apply>
+          <ci> tau_dT1 </ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_CaT_f_gate">
+    <variable name="fT" initial_value="0.001" public_interface="out" units="dimensionless" />
+    
+    <variable name="infinity_fT" units="dimensionless" />    
+    <variable name="tau_fT1" units="second" />
+    <variable name="A_fT1" initial_value="0.019" units="second" />
+	<variable name="A_fT2" initial_value="6.75" units="second" />
+	<variable name="A_fT3" initial_value="2" units="per_millivolt" />
+	<variable name="A_fT4" initial_value="-40" units="millivolt" />
+    <variable name="k_fT" initial_value="1" units="per_millivolt" />
+    <variable name="V_fT" initial_value="-65" units="millivolt" />
+    
+	<variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="45">
+      <apply><eq />
+        <ci> infinity_fT </ci>
+        <apply><divide />
+		  <cn cellml:units="dimensionless"> 1.0 </cn>
+          <apply><plus />
+		    <cn cellml:units="dimensionless"> 1.0 </cn>
+            <apply><exp />
+              <apply><times />
+                <ci> k_fT </ci>
+                <apply><minus />
+                  <ci> Vm </ci>
+                  <ci> V_fT </ci>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="46" >  
+      <apply><eq />
+        <ci> tau_fT1 </ci>
+        <apply><plus />
+		  <ci> A_fT1 </ci>
+		  <apply><divide />
+		    <apply><minus />
+              <ci> A_fT2 </ci>
+              <ci> A_fT1 </ci>
+            </apply>
+			<apply><plus />
+		      <cn cellml:units="dimensionless"> 1.0 </cn>
+              <apply><exp />
+                <apply><times />
+                  <ci> A_fT3 </ci>
+                  <apply><minus />
+                    <ci> Vm </ci>
+                    <ci> A_fT4 </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="47" >  
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> fT </ci>
+        </apply>
+        <apply><divide />
+          <apply><minus />
+            <ci> infinity_fT </ci>
+            <ci> fT </ci>
+          </apply>
+          <ci> tau_fT1 </ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_CaExt" cmeta:id="I_CaExt">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_CaExt">
+        <dc:title>I_CaExt</dc:title>
+        <dcterms:alternative>calcium extrusion current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_CaExt" public_interface="out" units="picoampere" />
+    
+    <variable name="gCaExt" initial_value="100.0" units="femtoampere" /> 
+    <variable name="KCaExt" initial_value="1.0" units="micromolar" />  
+   
+    <variable name="CCy" public_interface="in" units="micromolar" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="48">
+      <apply><eq />
+        <ci> I_CaExt </ci>
+        <apply><times />
+          <ci> gCaExt </ci>
+          <apply><divide />
+            <ci> CCy </ci>
+            <apply><plus />
+              <ci> KCaExt </ci>
+              <ci> CCy </ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_Kv1_1" cmeta:id="I_Kv1_1">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_Kv1_1">
+        <dc:title>I_Kv1_1</dc:title>
+        <dcterms:alternative>voltage-dependent potassium current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_Kv1_1" public_interface="out" units="picoampere" />
+    
+    <variable name="g_Kv1_1" initial_value="10.0" units="picosiemens" />
+    
+    <variable name="time" public_interface="in" private_interface="out" units="second" />
+    <variable name="Vm" public_interface="in" private_interface="out" units="millivolt" />
+    <variable name="EK" public_interface="in" units="millivolt" />
+     
+    <variable name="dv1_1" private_interface="in" units="dimensionless" />
+    <variable name="fv1_1" private_interface="in" units="dimensionless" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="49">
+      <apply><eq />
+        <ci> I_Kv1_1 </ci>
+        <apply><times />
+          <ci> g_Kv1_1 </ci>
+          <ci> dv1_1 </ci>
+          <ci> fv1_1 </ci>
+          <apply><minus />
+            <ci> Vm </ci>
+            <ci> EK </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  
+  <component name="I_Kv1_1_d_gate">
+    <variable name="dv1_1" initial_value="0.000" public_interface="out" units="dimensionless" />
+    
+    <variable name="alpha_dv1_1" units="first_order_rate_constant" />    
+    <variable name="A_dv1_11" units="first_order_rate_constant" />
+	<variable name="A_dv1_11a" initial_value="0.0" units="first_order_rate_constant" />
+	<variable name="A_dv1_11b" initial_value="250.0" units="first_order_rate_constant" />
+	<variable name="A_dv1_11c" initial_value="-0.077" units="per_millivolt" />
+	<variable name="A_dv1_11d" initial_value="-4.8" units="millivolt" />
+    <variable name="A_dv1_12" initial_value="0.80" units="dimensionless" />
+    <variable name="A_dv1_13" initial_value="-0.13" units="per_millivolt" />
+    <variable name="A_dv1_14" initial_value="-25.0" units="millivolt" />
+    <variable name="beta_dv1_1" units="first_order_rate_constant" /> 
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="50">
+      <apply><eq />
+        <ci> alpha_dv1_1 </ci>
+        <apply><times />
+          <ci> A_dv1_11 </ci>
+          <apply><plus />
+            <apply><divide />
+              <ci> A_dv1_12 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+				  <apply><times />
+                    <ci> A_dv1_13 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_dv1_14 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> A_dv1_12 </ci>    
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="51" >  
+      <apply><eq />
+        <ci> beta_dv1_1 </ci>
+        <apply><times />
+          <ci> A_dv1_11 </ci>
+          <apply><minus />
+            <ci> A_dv1_12 </ci>
+            <apply><divide />
+              <ci> A_dv1_12 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_dv1_13 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_dv1_14 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="51b" >  
+      <apply><eq />
+        <ci> A_dv1_11 </ci>
+        <apply><plus />
+          <ci> A_dv1_11a </ci>
+          <apply><divide />
+		    <apply><minus />
+              <ci> A_dv1_11b </ci>
+			  <ci> A_dv1_11a </ci>
+			</apply>
+            <apply><plus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <apply><exp />
+                <apply><times />
+                  <ci> A_dv1_11c </ci>
+                  <apply><minus />
+                    <ci> Vm </ci>
+                    <ci> A_dv1_11d </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="52" >
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> dv1_1 </ci>
+        </apply>
+        <apply><minus />
+          <apply><times />
+            <ci> alpha_dv1_1 </ci>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> dv1_1 </ci>
+            </apply>
+          </apply>
+          <apply><times />
+            <ci> beta_dv1_1 </ci>
+            <ci> dv1_1 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_Kv1_1_f_gate">
+    <variable name="fv1_1" initial_value="1.0" public_interface="out" units="dimensionless" />
+    
+    <variable name="alpha_fv1_1" units="first_order_rate_constant" />    
+    <variable name="A_fv1_11" initial_value="333.0" units="first_order_rate_constant" />
+    <variable name="A_fv1_12" initial_value="0.10" units="dimensionless" />
+    <variable name="A_fv1_13" initial_value="0.23" units="per_millivolt" />
+    <variable name="A_fv1_14" initial_value="-44.8" units="millivolt" />
+    <variable name="beta_fv1_1" units="first_order_rate_constant" /> 
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="53">
+      <apply><eq />
+        <ci> alpha_fv1_1 </ci>
+        <apply><times />
+          <ci> A_fv1_11 </ci>
+          <apply><plus />
+            <apply><divide />
+              <ci> A_fv1_12 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_fv1_13 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_fv1_14 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> A_fv1_12 </ci>    
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="54" >  
+      <apply><eq />
+        <ci> beta_fv1_1 </ci>
+        <apply><times />
+          <ci> A_fv1_11 </ci>
+          <apply><minus />
+            <ci> A_fv1_12 </ci>
+            <apply><divide />
+              <ci> A_fv1_12 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_fv1_13 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_fv1_14 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+			  </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="55" >
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> fv1_1 </ci>
+        </apply>
+        <apply><minus />
+          <apply><times />
+            <ci> alpha_fv1_1 </ci>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> fv1_1 </ci>
+            </apply>
+          </apply>
+          <apply><times />
+            <ci> beta_fv1_1 </ci>
+            <ci> fv1_1 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_KERG" cmeta:id="I_KERG">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_KERG">
+        <dc:title>I_KERG</dc:title>
+        <dcterms:alternative>ERG potassium current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_KERG" public_interface="out" units="picoampere" />
+    
+    <variable name="g_KERG" initial_value="10.0" units="picosiemens" />
+    
+    <variable name="time" public_interface="in" private_interface="out" units="second" />
+    <variable name="Vm" public_interface="in" private_interface="out" units="millivolt" />
+    <variable name="EK" public_interface="in" units="millivolt" />
+     
+    <variable name="dERG" private_interface="in" units="dimensionless" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="56">
+      <apply><eq />
+        <ci> I_KERG </ci>
+        <apply><times />
+          <ci> g_KERG </ci>
+          <ci> dERG </ci>
+          <apply><minus />
+            <ci> Vm </ci>
+            <ci> EK </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  
+  <component name="I_KERG_d_gate">
+    <variable name="dERG" initial_value="0.000" public_interface="out" units="dimensionless" />
+    
+    <variable name="alpha_dERG" units="first_order_rate_constant" />    
+    <variable name="A_dERG1" initial_value="1000.0" units="first_order_rate_constant" />
+    <variable name="A_dERG2" initial_value="0.70" units="dimensionless" />
+    <variable name="A_dERG3" initial_value="-0.56" units="per_millivolt" />
+    <variable name="A_dERG4" initial_value="30" units="millivolt" />
+    <variable name="beta_dERG" units="first_order_rate_constant" /> 
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="57">
+      <apply><eq />
+        <ci> alpha_dERG </ci>
+        <apply><times />
+          <ci> A_dERG1 </ci>
+          <apply><plus />
+            <apply><divide />
+              <ci> A_dERG2 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_dERG3 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_dERG4 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> A_dERG2 </ci>    
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="58" >  
+      <apply><eq />
+        <ci> beta_dERG </ci>
+        <apply><times />
+          <ci> A_dERG1 </ci>
+          <apply><minus />
+            <ci> A_dERG2 </ci>
+            <apply><divide />
+              <ci> A_dERG2 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_dERG3 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_dERG4 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="59" >
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> dERG </ci>
+        </apply>
+        <apply><minus />
+          <apply><times />
+            <ci> alpha_dERG </ci>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> dERG </ci>
+            </apply>
+          </apply>
+          <apply><times />
+            <ci> beta_dERG </ci>
+            <ci> dERG </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_KB" cmeta:id="I_KB">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_KB">
+        <dc:title>I_KB</dc:title>
+        <dcterms:alternative>background potassium leakage current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_KB" public_interface="out" units="picoampere" />
+    
+    <variable name="g_KB" initial_value="6.0" units="picosiemens" />
+	
+	<variable name="EK" public_interface="in" units="millivolt" />
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="60">
+      <apply><eq />
+        <ci> I_KB </ci>
+        <apply><times />
+          <ci> g_KB </ci>
+          <apply><minus />
+            <ci> Vm </ci>
+            <ci> EK </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  
+  <component name="I_Na" cmeta:id="I_Na">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_Na">
+        <dc:title>I_Na</dc:title>
+        <dcterms:alternative>fast sodium current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_Na" public_interface="out" units="picoampere" />
+    
+    <variable name="g_Na" initial_value="2000.0" units="picosiemens" />
+    
+    <variable name="time" public_interface="in" private_interface="out" units="second" />
+    <variable name="Vm" public_interface="in" private_interface="out" units="millivolt" />
+    <variable name="ENa_Cy" public_interface="in" units="millivolt" />
+     
+    <variable name="dNa" private_interface="in" units="dimensionless" />
+    <variable name="fNa" private_interface="in" units="dimensionless" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="60a">
+      <apply><eq />
+        <ci> I_Na </ci>
+        <apply><times />
+          <ci> g_Na </ci>
+          <ci> dNa </ci>
+          <ci> fNa </ci>
+          <apply><minus />
+            <ci> Vm </ci>
+            <ci> ENa_Cy </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  
+  <component name="I_Na_d_gate">
+    <variable name="dNa" initial_value="0.000" public_interface="out" units="dimensionless" />
+    
+    <variable name="alpha_dNa" units="first_order_rate_constant" />  
+    <variable name="A_dNa1" units="first_order_rate_constant" />	
+    <variable name="A_dNa1a" initial_value="250.0" units="first_order_rate_constant" />
+	<variable name="A_dNa1b" initial_value="1000.0" units="first_order_rate_constant" />
+	<variable name="A_dNa1c" initial_value="-0.2" units="per_millivolt" />
+	<variable name="A_dNa1d" initial_value="-15.0" units="millivolt" />
+    <variable name="A_dNa2" initial_value="1.0" units="dimensionless" />
+    <variable name="A_dNa3" initial_value="-0.147" units="per_millivolt" />
+    <variable name="A_dNa4" initial_value="-35.3" units="millivolt" />
+    <variable name="beta_dNa" units="first_order_rate_constant" /> 
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="60b">
+      <apply><eq />
+        <ci> alpha_dNa </ci>
+        <apply><times />
+          <ci> A_dNa1 </ci>
+          <apply><plus />
+            <apply><divide />
+              <ci> A_dNa2 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+				  <apply><times />
+                    <ci> A_dNa3 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_dNa4 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> A_dNa2 </ci>    
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="60c" >  
+      <apply><eq />
+        <ci> beta_dNa </ci>
+        <apply><times />
+          <ci> A_dNa1 </ci>
+          <apply><minus />
+            <ci> A_dNa2 </ci>
+            <apply><divide />
+              <ci> A_dNa2 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_dNa3 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_dNa4 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="60d" >  
+      <apply><eq />
+        <ci> A_dNa1 </ci>
+        <apply><plus />
+          <ci> A_dNa1a </ci>
+          <apply><divide />
+		    <apply><minus />
+              <ci> A_dNa1b </ci>
+			  <ci> A_dNa1a </ci>
+			</apply>
+            <apply><plus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <apply><exp />
+                <apply><times />
+                  <ci> A_dNa1c </ci>
+                  <apply><minus />
+                    <ci> Vm </ci>
+                    <ci> A_dNa1d </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="60e" >
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> dNa </ci>
+        </apply>
+        <apply><minus />
+          <apply><times />
+            <ci> alpha_dNa </ci>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> dNa </ci>
+            </apply>
+          </apply>
+          <apply><times />
+            <ci> beta_dNa </ci>
+            <ci> dNa </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_Na_f_gate">
+    <variable name="fNa" initial_value="0.100" public_interface="out" units="dimensionless" />
+    
+    <variable name="alpha_fNa" units="first_order_rate_constant" />
+    <variable name="A_fNa1" units="first_order_rate_constant" />    
+    <variable name="A_fNa1a" initial_value="10.0" units="first_order_rate_constant" />
+	<variable name="A_fNa1b" initial_value="50.0" units="first_order_rate_constant" />
+	<variable name="A_fNa1c" initial_value="-0.036" units="per_millivolt" />
+	<variable name="A_fNa1d" initial_value="-38.0" units="millivolt" />
+    <variable name="A_fNa2" initial_value="1.00" units="dimensionless" />
+    <variable name="A_fNa3" initial_value="0.167" units="per_millivolt" />
+    <variable name="A_fNa4" initial_value="-83.0" units="millivolt" />
+    <variable name="beta_fNa" units="first_order_rate_constant" /> 
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="time" public_interface="in" units="second" />
+   
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="60f">
+      <apply><eq />
+        <ci> alpha_fNa </ci>
+        <apply><times />
+          <ci> A_fNa1 </ci>
+          <apply><plus />
+            <apply><divide />
+              <ci> A_fNa2 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_fNa3 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_fNa4 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> A_fNa2 </ci>    
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="60g" >  
+      <apply><eq />
+        <ci> beta_fNa </ci>
+        <apply><times />
+          <ci> A_fNa1 </ci>
+          <apply><minus />
+            <ci> A_fNa2 </ci>
+            <apply><divide />
+              <ci> A_fNa2 </ci>
+              <apply><plus />
+                <cn cellml:units="dimensionless"> 1.0 </cn>
+                <apply><exp />
+                  <apply><times />
+                    <ci> A_fNa3 </ci>
+                    <apply><minus />
+                      <ci> Vm </ci>
+                      <ci> A_fNa4 </ci>
+                    </apply>
+                  </apply>
+                </apply>
+			  </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="60h" >  
+      <apply><eq />
+        <ci> A_fNa1 </ci>
+        <apply><plus />
+          <ci> A_fNa1a </ci>
+          <apply><divide />
+		    <apply><minus />
+              <ci> A_fNa1b </ci>
+			  <ci> A_fNa1a </ci>
+			</apply>
+            <apply><plus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <apply><exp />
+                <apply><times />
+                  <ci> A_fNa1c </ci>
+                  <apply><minus />
+                    <ci> Vm </ci>
+                    <ci> A_fNa1d </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="60i" >
+      <apply><eq />
+        <apply><diff />
+          <bvar><ci> time </ci></bvar>
+          <ci> fNa </ci>
+        </apply>
+        <apply><minus />
+          <apply><times />
+            <ci> alpha_fNa </ci>
+            <apply><minus />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> fNa </ci>
+            </apply>
+          </apply>
+          <apply><times />
+            <ci> beta_fNa </ci>
+            <ci> fNa </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="I_L" cmeta:id="I_L">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#I_L">
+        <dc:title>I_L</dc:title>
+        <dcterms:alternative>non-specific inward leakage current</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="I_L" public_interface="out" units="picoampere" />
+    
+    <variable name="g_L" initial_value="0.20" units="picosiemens" />
+    <variable name="EL" initial_value="0.0" units="millivolt" />
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="61">
+      <apply><eq />
+        <ci> I_L </ci>
+        <apply><times />
+          <ci> g_L </ci>
+          <apply><minus />
+            <ci> Vm </ci>
+            <ci> EL </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="membrane">
+    <variable name="Vm" public_interface="out" initial_value="-70.0" units="millivolt" />
+    
+    <variable name="I_ion_Cy" units="picoampere" />
+    <variable name="Cm" initial_value="20.0" units="picofarad" />
+    
+    <variable name="I_ion_PU1" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU2" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU3" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU4" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU5" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU6" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU7" public_interface="in" units="picoampere" />
+	<variable name="I_ion_PU8" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU9" public_interface="in" units="picoampere" />
+    <variable name="I_ion_PU10" public_interface="in" units="picoampere" />
+    <variable name="I_CaT" public_interface="in" units="picoampere" />
+    <variable name="I_CaExt" public_interface="in" units="picoampere" />
+    <variable name="I_Kv1_1" public_interface="in" units="picoampere" />
+    <variable name="I_KERG" public_interface="in" units="picoampere" />
+    <variable name="I_KB" public_interface="in" units="picoampere" />
+	<variable name="I_Na" public_interface="in" units="picoampere" />
+    <variable name="I_L" public_interface="in" units="picoampere" />
+    <variable name="time" public_interface="in" units="second" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="62">
+      <apply><eq /> 
+        <apply><diff /> 
+          <bvar><ci>time</ci></bvar> 
+          <ci> Vm </ci> 
+        </apply>
+        <apply><times />
+          <apply><minus />
+            <apply><divide />
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+              <ci> Cm </ci>
+            </apply>
+	      </apply>
+          <apply><plus />
+            <ci> I_ion_Cy </ci>
+            <ci> I_ion_PU1 </ci>
+            <ci> I_ion_PU2 </ci>
+            <ci> I_ion_PU3 </ci>
+            <ci> I_ion_PU4 </ci>
+            <ci> I_ion_PU5 </ci>
+            <ci> I_ion_PU6 </ci>
+            <ci> I_ion_PU7 </ci>
+			<ci> I_ion_PU8 </ci>
+            <ci> I_ion_PU9 </ci>
+            <ci> I_ion_PU10 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="63" > 
+      <apply><eq />
+        <ci> I_ion_Cy </ci>
+        <apply><plus />
+          <ci> I_CaT </ci>
+          <ci> I_CaExt </ci>
+          <ci> I_Kv1_1 </ci>
+          <ci> I_KERG </ci>
+          <ci> I_KB </ci>
+		  <ci> I_Na </ci>
+          <ci> I_L </ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="Nerst_potentials" cmeta:id="Nerst_potentials">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#Nerst_potentials">
+        <dc:title>Nerst_potentials</dc:title>
+        <dcterms:alternative>Nerst potentials</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="ECa_Cy" public_interface="out" units="millivolt" />
+    <variable name="ENa_Cy" public_interface="out" units="millivolt" />
+	<variable name="EK" public_interface="out" units="millivolt" />
+    
+    <variable name="Vm" public_interface="in" units="millivolt" />
+    <variable name="T" public_interface="in" units="kelvin" />
+    <variable name="R" public_interface="in" units="attojoule_per_zeptomole_kelvin" />
+    <variable name="F" public_interface="in" units="femtocoulomb_per_zeptomole" />
+    <variable name="CO" public_interface="in" units="micromolar" />
+    <variable name="CCy" public_interface="in" units="micromolar" />
+    <variable name="KO" public_interface="in" units="micromolar" />
+    <variable name="Ki" public_interface="in" units="micromolar" />
+	<variable name="NO" public_interface="in" units="micromolar" />
+    <variable name="Ni" public_interface="in" units="micromolar" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="64">
+      <apply><eq /> 
+        <ci> ECa_Cy </ci> 
+        <apply><times />
+          <apply><divide />
+            <apply><times />
+              <ci> R </ci>
+              <ci> T </ci>
+            </apply>
+            <apply><times />
+              <cn cellml:units="dimensionless"> 2.0 </cn>
+              <ci> F </ci>
+            </apply>
+          </apply>
+          <apply><ln />
+            <apply><divide />
+              <ci> CO </ci>
+              <ci> CCy </ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="64b">
+      <apply><eq /> 
+        <ci> ENa_Cy </ci> 
+        <apply><times />
+          <apply><divide />
+            <apply><times />
+              <ci> R </ci>
+              <ci> T </ci>
+            </apply>
+            <ci> F </ci>
+          </apply>
+          <apply><ln />
+            <apply><divide />
+              <ci> NO </ci>
+              <ci> Ni </ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="65" >
+      <apply><eq /> 
+        <ci> EK </ci> 
+        <apply><times />
+          <apply><divide />
+            <apply><times />
+              <ci> R </ci>
+              <ci> T </ci>
+            </apply>
+            <ci> F </ci>
+          </apply>
+          <apply><ln />
+            <apply><divide />
+              <ci> KO </ci>
+              <ci> Ki </ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="CCy" cmeta:id="CCy">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#CCy">
+        <dc:title>CCy</dc:title>
+        <dcterms:alternative>bulk cytoplasmic calcium</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="CCy" initial_value="0.12" public_interface="out" units="micromolar" />
+    
+    <variable name="lambda_S2_Cy" initial_value="1.0E-3" units="dimensionless" />
+    <variable name="delta_SCy" initial_value="0.002" units="micromolar_per_coulomb" />
+    
+    <variable name="JCy" public_interface="in" units="flux" />
+    <variable name="JS2Cy1" public_interface="in" units="flux" />
+    <variable name="JS2Cy2" public_interface="in" units="flux" />
+    <variable name="JS2Cy3" public_interface="in" units="flux" />
+    <variable name="JS2Cy4" public_interface="in" units="flux" />
+    <variable name="JS2Cy5" public_interface="in" units="flux" />
+    <variable name="JS2Cy6" public_interface="in" units="flux" />
+    <variable name="JS2Cy7" public_interface="in" units="flux" />
+	<variable name="JS2Cy8" public_interface="in" units="flux" />
+    <variable name="JS2Cy9" public_interface="in" units="flux" />
+    <variable name="JS2Cy10" public_interface="in" units="flux" />
+    <variable name="I_CaT" public_interface="in" units="picoampere" />
+    <variable name="I_CaExt" public_interface="in" units="picoampere" />
+    <variable name="time" public_interface="in" units="second" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="66">
+      <apply><eq /> 
+        <apply><diff /> 
+          <bvar><ci>time</ci></bvar> 
+          <ci> CCy </ci> 
+        </apply>
+        <apply><minus />
+          <ci> JCy </ci>
+          <apply><plus />
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy1 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy2 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy3 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy4 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy5 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy6 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy7 </ci>
+            </apply>
+			<apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy8 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy9 </ci>
+            </apply>
+            <apply><times />
+              <ci> lambda_S2_Cy </ci>
+              <ci> JS2Cy10 </ci>
+            </apply>
+            <apply><times />
+              <apply><divide />
+                <ci> delta_SCy </ci>
+                <cn cellml:units="dimensionless"> 2.0 </cn>
+              </apply>
+              <apply><plus />
+                <ci> I_CaT </ci>
+                <ci> I_CaExt </ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+     <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          Calcium flux which occurs between the pacemaker unit(s) and the bulk cytosol.  The value of mu_S2Cy is imported from the "model_parameters" component of the main model.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+
+  <component name="JS2Cy" cmeta:id="JS2Cy">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#JS2Cy">
+        <dc:title>JS2Cy</dc:title>
+        <dcterms:alternative>inter-cytoplasmic-pacemaker unit Ca2+ flux</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="JS2Cy1" public_interface="out" units="flux" />
+    <variable name="JS2Cy2" public_interface="out" units="flux" />
+    <variable name="JS2Cy3" public_interface="out" units="flux" />
+    <variable name="JS2Cy4" public_interface="out" units="flux" />
+    <variable name="JS2Cy5" public_interface="out" units="flux" />
+    <variable name="JS2Cy6" public_interface="out" units="flux" />
+    <variable name="JS2Cy7" public_interface="out" units="flux" />
+	<variable name="JS2Cy8" public_interface="out" units="flux" />
+    <variable name="JS2Cy9" public_interface="out" units="flux" />
+    <variable name="JS2Cy10" public_interface="out" units="flux" />
+    
+    <variable name="mu_S2Cy1" initial_value="0.000" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy2" initial_value="0.3361" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy3" initial_value="0.3658" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy4" initial_value="0.4357" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy5" initial_value="0.5351" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy6" initial_value="0.6366" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy7" initial_value="0.7386" units="first_order_rate_constant" />
+	<variable name="mu_S2Cy8" initial_value="0.8361" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy9" initial_value="0.9320" units="first_order_rate_constant" />
+    <variable name="mu_S2Cy10" initial_value="1.0185" units="first_order_rate_constant" />
+    
+    <variable name="CCy" public_interface="in" units="micromolar" />
+    <variable name="CS21" public_interface="in" units="micromolar" />
+    <variable name="CS22" public_interface="in" units="micromolar" />
+    <variable name="CS23" public_interface="in" units="micromolar" />
+    <variable name="CS24" public_interface="in" units="micromolar" />
+    <variable name="CS25" public_interface="in" units="micromolar" />
+    <variable name="CS26" public_interface="in" units="micromolar" />
+    <variable name="CS27" public_interface="in" units="micromolar" />
+	<variable name="CS28" public_interface="in" units="micromolar" />
+    <variable name="CS29" public_interface="in" units="micromolar" />
+    <variable name="CS210" public_interface="in" units="micromolar" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="67">
+      <apply><eq />
+        <ci> JS2Cy1 </ci>
+        <apply><times />
+          <ci> mu_S2Cy1 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS21 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="68">
+      <apply><eq />
+        <ci> JS2Cy2 </ci>
+        <apply><times />
+          <ci> mu_S2Cy2 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS22 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="69" >
+      <apply><eq />
+        <ci> JS2Cy3 </ci>
+        <apply><times />
+          <ci> mu_S2Cy3 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS23 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="70">
+      <apply><eq />
+        <ci> JS2Cy4 </ci>
+        <apply><times />
+          <ci> mu_S2Cy4 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS24 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="71">
+      <apply><eq />
+        <ci> JS2Cy5 </ci>
+        <apply><times />
+          <ci> mu_S2Cy5 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS25 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="72">
+      <apply><eq />
+        <ci> JS2Cy6 </ci>
+        <apply><times />
+          <ci> mu_S2Cy6 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS26 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="73">
+      <apply><eq />
+        <ci> JS2Cy7 </ci>
+        <apply><times />
+          <ci> mu_S2Cy7 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS27 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="73a">
+      <apply><eq />
+        <ci> JS2Cy8 </ci>
+        <apply><times />
+          <ci> mu_S2Cy8 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS28 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="73b">
+      <apply><eq />
+        <ci> JS2Cy9 </ci>
+        <apply><times />
+          <ci> mu_S2Cy9 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS29 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="73c">
+      <apply><eq />
+        <ci> JS2Cy10 </ci>
+        <apply><times />
+          <ci> mu_S2Cy10 </ci>
+          <apply><minus />
+            <ci> CCy </ci>
+            <ci> CS210 </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          Calcium flux which occurs between the two subspaces of a pacemaker unit.  Heterogeneity between pacemaker units means this flux is defined 7 times, once per pacemaker unit.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+  
+  <component name="JS1S2" cmeta:id="JS1S2">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#JS1S2">
+        <dc:title>JS1S2</dc:title>
+        <dcterms:alternative>inter-subspace Ca2+ flux</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="JS1S2_1" public_interface="out" units="flux" />
+	<variable name="JS1S2_2" public_interface="out" units="flux" />
+	<variable name="JS1S2_3" public_interface="out" units="flux" />
+	<variable name="JS1S2_4" public_interface="out" units="flux" />
+	<variable name="JS1S2_5" public_interface="out" units="flux" />
+	<variable name="JS1S2_6" public_interface="out" units="flux" />
+	<variable name="JS1S2_7" public_interface="out" units="flux" />
+	<variable name="JS1S2_8" public_interface="out" units="flux" />
+	<variable name="JS1S2_9" public_interface="out" units="flux" />
+	<variable name="JS1S2_10" public_interface="out" units="flux" />
+    
+    <variable name="mu_S1S2_1" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_2" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_3" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_4" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_5" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_6" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_7" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_8" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_9" units="first_order_rate_constant" />
+	<variable name="mu_S1S2_10" units="first_order_rate_constant" />
+	<variable name="mu_A" initial_value="0.30" units="first_order_rate_constant" />	
+	<variable name="mu_B" initial_value="0.24" units="first_order_rate_constant" />
+	
+	<variable name="n_PU" public_interface="in" units="dimensionless" />
+    <variable name="CS11" public_interface="in" units="micromolar" />
+    <variable name="CS12" public_interface="in" units="micromolar" />
+    <variable name="CS13" public_interface="in" units="micromolar" />
+    <variable name="CS14" public_interface="in" units="micromolar" />
+    <variable name="CS15" public_interface="in" units="micromolar" />
+    <variable name="CS16" public_interface="in" units="micromolar" />
+    <variable name="CS17" public_interface="in" units="micromolar" />
+	<variable name="CS18" public_interface="in" units="micromolar" />
+    <variable name="CS19" public_interface="in" units="micromolar" />
+    <variable name="CS110" public_interface="in" units="micromolar" />
+	<variable name="CS21" public_interface="in" units="micromolar" />
+    <variable name="CS22" public_interface="in" units="micromolar" />
+    <variable name="CS23" public_interface="in" units="micromolar" />
+    <variable name="CS24" public_interface="in" units="micromolar" />
+    <variable name="CS25" public_interface="in" units="micromolar" />
+    <variable name="CS26" public_interface="in" units="micromolar" />
+    <variable name="CS27" public_interface="in" units="micromolar" />
+	<variable name="CS28" public_interface="in" units="micromolar" />
+    <variable name="CS29" public_interface="in" units="micromolar" />
+    <variable name="CS210" public_interface="in" units="micromolar" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="74">
+      <apply><eq />
+        <ci> JS1S2_1 </ci>
+        <apply><times />
+          <ci> mu_S1S2_1 </ci>
+          <apply><minus />
+            <ci> CS21 </ci>
+            <ci> CS11 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="75" >  
+	  <apply><eq />
+        <ci> JS1S2_2 </ci>
+        <apply><times />
+          <ci> mu_S1S2_2 </ci>
+          <apply><minus />
+            <ci> CS22 </ci>
+            <ci> CS12 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="76" >  
+	  <apply><eq />
+        <ci> JS1S2_3 </ci>
+        <apply><times />
+          <ci> mu_S1S2_3 </ci>
+          <apply><minus />
+            <ci> CS23 </ci>
+            <ci> CS13 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="77" >  
+	  <apply><eq />
+        <ci> JS1S2_4 </ci>
+        <apply><times />
+          <ci> mu_S1S2_4 </ci>
+          <apply><minus />
+            <ci> CS24 </ci>
+            <ci> CS14 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="78" >  
+	  <apply><eq />
+        <ci> JS1S2_5 </ci>
+        <apply><times />
+          <ci> mu_S1S2_5 </ci>
+          <apply><minus />
+            <ci> CS25 </ci>
+            <ci> CS15 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="79" >  
+	  <apply><eq />
+        <ci> JS1S2_6 </ci>
+        <apply><times />
+          <ci> mu_S1S2_6 </ci>
+          <apply><minus />
+            <ci> CS26 </ci>
+            <ci> CS16 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="80" >  
+	  <apply><eq />
+        <ci> JS1S2_7 </ci>
+        <apply><times />
+          <ci> mu_S1S2_7 </ci>
+          <apply><minus />
+            <ci> CS27 </ci>
+            <ci> CS17 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="80a" >  
+	  <apply><eq />
+        <ci> JS1S2_8 </ci>
+        <apply><times />
+          <ci> mu_S1S2_8 </ci>
+          <apply><minus />
+            <ci> CS28 </ci>
+            <ci> CS18 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="80b" >  
+	  <apply><eq />
+        <ci> JS1S2_9 </ci>
+        <apply><times />
+          <ci> mu_S1S2_9 </ci>
+          <apply><minus />
+            <ci> CS29 </ci>
+            <ci> CS19 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="80c" >  
+	  <apply><eq />
+        <ci> JS1S2_10 </ci>
+        <apply><times />
+          <ci> mu_S1S2_10 </ci>
+          <apply><minus />
+            <ci> CS210 </ci>
+            <ci> CS110 </ci>
+          </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="81" >  
+	  <apply><eq />
+        <ci> mu_S1S2_1 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 1 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="82" > 
+	  <apply><eq />
+        <ci> mu_S1S2_2 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 2 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="83" >  
+	  <apply><eq />
+        <ci> mu_S1S2_3 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 3 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="84" >  
+	  <apply><eq />
+        <ci> mu_S1S2_4 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 4 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="85" >  
+	  <apply><eq />
+        <ci> mu_S1S2_5 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 5 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="86" >  
+	  <apply><eq />
+        <ci> mu_S1S2_6 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 6 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+	</math>
+    
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="87" >  
+	  <apply><eq />
+        <ci> mu_S1S2_7 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 7 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="87a" >  
+	  <apply><eq />
+        <ci> mu_S1S2_8 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 8 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="87b" >  
+	  <apply><eq />
+        <ci> mu_S1S2_9 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 9 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+    </math>
+	
+	<math xmlns="http://www.w3.org/1998/Math/MathML" id="87c" >  
+	  <apply><eq />
+        <ci> mu_S1S2_10 </ci>
+        <apply><plus />
+          <ci> mu_A </ci>
+          <apply><times />
+            <apply><minus />
+              <ci> mu_B </ci>
+              <ci> mu_A </ci>
+            </apply>
+			<apply><divide />
+              <apply><minus />
+                <cn cellml:units="dimensionless"> 10 </cn>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+			  <apply><minus />
+                <ci> n_PU </ci>
+                <cn cellml:units="dimensionless"> 1 </cn>
+              </apply>
+            </apply>
+	      </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+     <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          Calcium flux which occurs within the bulk cytosol.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+
+  <component name="JCy" cmeta:id="JCy">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/0P/PP-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="#JCy">
+        <dc:title>JCy</dc:title>
+        <dcterms:alternative>intracellular Ca2+ flux</dcterms:alternative>  
+      </rdf:Description>
+    </rdf:RDF>  
+    <variable name="JCy" public_interface="out" units="flux" />
+    
+    <variable name="mu_Cy" initial_value="1.30" units="first_order_rate_constant" />      
+    <variable name="C_infinity" initial_value="0.12" units="micromolar" />
+
+    <variable name="CCy" public_interface="in" units="micromolar" />
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML" id="88" >
+      <apply><eq />
+        <ci> JCy </ci>
+        <apply><times />
+          <ci> mu_Cy </ci>
+          <apply><minus />
+            <ci> C_infinity </ci>
+            <ci> CCy </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <component name="model_parameters">
+    <variable name="R" public_interface="out" initial_value="8.314E-3" units="attojoule_per_zeptomole_kelvin" /> 
+    <variable name="F" public_interface="out" initial_value="0.09649" units="femtocoulomb_per_zeptomole" />
+    <variable name="T" public_interface="out" initial_value="310.16" units="kelvin" />
+    <variable name="CO" public_interface="out" initial_value="1.8E3" units="micromolar" />
+    <variable name="KO" public_interface="out" initial_value="5400.0" units="micromolar" />
+    <variable name="Ki" public_interface="out" initial_value="145E3" units="micromolar" />
+	<variable name="NO" public_interface="out" initial_value="140E3" units="micromolar" />
+	<variable name="Ni" public_interface="out" initial_value="10E3" units="micromolar" />
+    <variable name="P" public_interface="out" initial_value="1.0" units="micromolar" />
+	<variable name="n_PU" public_interface="out" initial_value="10.0" units="dimensionless" />
+  </component>
+ 
+   <group>
+      <relationship_ref relationship="encapsulation" />
+      <component_ref component="I_CaT">
+         <component_ref component="I_CaT_d_gate" />
+         <component_ref component="I_CaT_f_gate" />
+	  </component_ref>
+      <component_ref component="I_Kv1_1">
+         <component_ref component="I_Kv1_1_d_gate" />
+         <component_ref component="I_Kv1_1_f_gate" />
+      </component_ref>
+      <component_ref component="I_KERG">
+         <component_ref component="I_KERG_d_gate" />
+      </component_ref>
+	  <component_ref component="I_Na">
+         <component_ref component="I_Na_d_gate" />
+         <component_ref component="I_Na_f_gate" />
+      </component_ref>
+   </group>
+
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          The connections between the main components of the bulk cytoplasm model .
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+ 
+  <connection>
+    <map_components component_1="I_CaT" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <connection>
+    <map_components component_1="I_Kv1_1" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <connection>
+    <map_components component_1="I_KERG" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="I_Na" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <connection>
+    <map_components component_1="CCy" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <connection>
+    <map_components component_1="membrane" component_2="environment" />
+    <map_variables variable_1="time" variable_2="time" />
+  </connection>
+
+  <connection>
+    <map_components component_1="membrane" component_2="I_CaT"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="I_CaT" variable_2="I_CaT"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="membrane" component_2="I_CaExt"/>
+    <map_variables variable_1="I_CaExt" variable_2="I_CaExt"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="membrane" component_2="I_Kv1_1"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="I_Kv1_1" variable_2="I_Kv1_1"/>
+  </connection> 
+
+  <connection>
+    <map_components component_1="membrane" component_2="I_KERG"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="I_KERG" variable_2="I_KERG"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="membrane" component_2="I_KB"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="I_KB" variable_2="I_KB"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="membrane" component_2="I_Na"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="I_Na" variable_2="I_Na"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="membrane" component_2="I_L"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="I_L" variable_2="I_L"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="I_CaExt" component_2="CCy" />
+    <map_variables variable_1="CCy" variable_2="CCy" />
+    <map_variables variable_1="I_CaExt" variable_2="I_CaExt" />
+  </connection>
+
+  <connection>
+    <map_components component_1="I_Kv1_1" component_2="Nerst_potentials" />
+    <map_variables variable_1="EK" variable_2="EK" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="I_KB" component_2="Nerst_potentials" />
+    <map_variables variable_1="EK" variable_2="EK" />
+  </connection>
+
+  <connection>
+    <map_components component_1="I_KERG" component_2="Nerst_potentials" />
+    <map_variables variable_1="EK" variable_2="EK" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="I_Na" component_2="Nerst_potentials" />
+    <map_variables variable_1="ENa_Cy" variable_2="ENa_Cy" />
+  </connection>
+
+  <connection>
+    <map_components component_1="Nerst_potentials" component_2="membrane"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="Nerst_potentials" component_2="model_parameters"/>
+    <map_variables variable_1="R" variable_2="R" />
+    <map_variables variable_1="T" variable_2="T" />
+    <map_variables variable_1="F" variable_2="F" />
+    <map_variables variable_1="CO" variable_2="CO" />
+    <map_variables variable_1="Ki" variable_2="Ki" />
+    <map_variables variable_1="KO" variable_2="KO" />
+	<map_variables variable_1="Ni" variable_2="Ni" />
+    <map_variables variable_1="NO" variable_2="NO" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="Nerst_potentials" component_2="CCy"/>
+    <map_variables variable_1="CCy" variable_2="CCy" />
+  </connection>
+
+  <connection>
+    <map_components component_1="JCy" component_2="CCy" />
+    <map_variables variable_1="CCy" variable_2="CCy" />
+    <map_variables variable_1="JCy" variable_2="JCy" />
+  </connection>
+
+  <connection>
+    <map_components component_1="JS2Cy" component_2="CCy" />
+    <map_variables variable_1="CCy" variable_2="CCy" />
+    <map_variables variable_1="JS2Cy1" variable_2="JS2Cy1" />
+    <map_variables variable_1="JS2Cy2" variable_2="JS2Cy2" />
+    <map_variables variable_1="JS2Cy3" variable_2="JS2Cy3" />
+    <map_variables variable_1="JS2Cy4" variable_2="JS2Cy4" />
+    <map_variables variable_1="JS2Cy5" variable_2="JS2Cy5" />
+    <map_variables variable_1="JS2Cy6" variable_2="JS2Cy6" />
+    <map_variables variable_1="JS2Cy7" variable_2="JS2Cy7" />
+	<map_variables variable_1="JS2Cy8" variable_2="JS2Cy8" />
+    <map_variables variable_1="JS2Cy9" variable_2="JS2Cy9" />
+    <map_variables variable_1="JS2Cy10" variable_2="JS2Cy10" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="JS1S2" component_2="model_parameters"/>
+    <map_variables variable_1="n_PU" variable_2="n_PU" />
+  </connection>
+  
+  <connection>
+    <map_components component_1="CCy" component_2="I_CaT" />
+    <map_variables variable_1="I_CaT" variable_2="I_CaT" />
+  </connection>
+
+     <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          The connections between the ion channels and their encapsulated gates.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+
+  <connection>
+    <map_components component_1="I_CaT" component_2="I_CaT_d_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="dT" variable_2="dT"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="I_CaT" component_2="I_CaT_f_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="fT" variable_2="fT"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="I_Kv1_1" component_2="I_Kv1_1_d_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="dv1_1" variable_2="dv1_1"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="I_Kv1_1" component_2="I_Kv1_1_f_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="fv1_1" variable_2="fv1_1"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="I_KERG" component_2="I_KERG_d_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="dERG" variable_2="dERG"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="I_Na" component_2="I_Na_d_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="dNa" variable_2="dNa"/>
+  </connection>
+
+  <connection>
+    <map_components component_1="I_Na" component_2="I_Na_f_gate"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="fNa" variable_2="fNa"/>
+  </connection>
+ 
+<rdf:RDF>
+  <rdf:Seq rdf:about="rdf:#039e270e-01f3-4567-9918-dcfdde5b2867">
+    <rdf:li rdf:resource="rdf:#cd48aac2-482a-4262-a789-1a2b8dbdea80" />
+    <rdf:li rdf:resource="rdf:#f71ab052-86ba-4e1c-b567-3a14d5597099" />
+    <rdf:li rdf:resource="rdf:#871a94a1-348e-4761-abd3-a55a8dedf14d" />
+    <rdf:li rdf:resource="rdf:#7d4cac6f-fae3-4949-844f-d8450a1ad1c1" />
+    <rdf:li rdf:resource="rdf:#c8ebfc7b-04de-4e36-aa5a-d3fa34081b0a" />
+    <rdf:li rdf:resource="rdf:#40669c50-2345-4a58-888c-c66ebd75701a" />
+  </rdf:Seq>
+  <rdf:Description rdf:about="">
+    <dc:publisher>Auckland Bioengineering Institute</dc:publisher>
+    <cmeta:comment rdf:resource="rdf:#549027dd-357a-4dfe-8f26-0f7f9ada5dca" />
+    <dcterms:created rdf:resource="rdf:#ec474e88-d701-4f91-90f8-be7aec3933dd" />
+    <dc:creator rdf:resource="rdf:#03715598-e325-406e-a3aa-a54f8b403f5c" />
+  </rdf:Description>
+  <rdf:Description rdf:about="#faville_pullan_sanders_koh_lloyd_smith_2009">
+    <bqs:reference rdf:resource="rdf:#dfd304da-1773-482c-974f-5181d11f0653" />
+<bqs:reference rdf:parseType="Resource">
+  <dc:subject rdf:parseType="Resource">
+    <bqs:subject_type>keyword</bqs:subject_type>
+    <rdf:value>
+      <rdf:Bag>
+        <rdf:li>electrophysiology</rdf:li>
+      </rdf:Bag>
+    </rdf:value>
+  </dc:subject>
+</bqs:reference>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#94dd2276-f37f-4c93-b9d2-8505082f7ad0">
+    <vCard:Given>S</vCard:Given>
+    <vCard:Family>Koh</vCard:Family>
+    <vCard:Other>D</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#871a94a1-348e-4761-abd3-a55a8dedf14d">
+    <rdf:type rdf:resource="http://www.cellml.org/bqs/1.0#Person" />
+    <vCard:N rdf:resource="rdf:#0937cef4-641f-4c33-a8f3-b16a898594d0" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#5e176239-303b-4797-96c8-d73c80339d9b">
+    <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet" />
+    <rdf:value>c.lloyd@auckland.ac.nz</rdf:value>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#0a9804db-c2ed-4ab5-8bc8-b007f2b5d051">
+    <dc:creator rdf:resource="rdf:#039e270e-01f3-4567-9918-dcfdde5b2867" />
+    <dc:title>Biophysically based mathematical modeling of interstitial cells of Cajal slow wave activity generated from a discrete unitary potential basis</dc:title>
+    <bqs:volume>96(12)</bqs:volume>
+    <bqs:first_page>4834</bqs:first_page>
+    <bqs:Journal rdf:resource="rdf:#ea87676f-e567-476c-9b19-bebb93f8b654" />
+    <dcterms:issued rdf:resource="rdf:#3a7d058d-e5a6-4497-97ee-d2f0f344873b" />
+    <bqs:last_page>4852</bqs:last_page>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#cd48aac2-482a-4262-a789-1a2b8dbdea80">
+    <rdf:type rdf:resource="http://www.cellml.org/bqs/1.0#Person" />
+    <vCard:N rdf:resource="rdf:#7cc1ffa6-84cb-4336-a880-de88db575f7c" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#c8ebfc7b-04de-4e36-aa5a-d3fa34081b0a">
+    <rdf:type rdf:resource="http://www.cellml.org/bqs/1.0#Person" />
+    <vCard:N rdf:resource="rdf:#68ea6a8e-7622-4fbb-b1c0-89180fbb2d1a" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#7d4cac6f-fae3-4949-844f-d8450a1ad1c1">
+    <rdf:type rdf:resource="http://www.cellml.org/bqs/1.0#Person" />
+    <vCard:N rdf:resource="rdf:#94dd2276-f37f-4c93-b9d2-8505082f7ad0" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#7cc1ffa6-84cb-4336-a880-de88db575f7c">
+    <vCard:Given>Richard</vCard:Given>
+    <vCard:Family>Favile</vCard:Family>
+    <vCard:Other>A</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#0e81a051-5576-4377-8e30-89249c631dfd">
+    <vCard:Orgname>The University of Auckland</vCard:Orgname>
+    <vCard:Orgunit>Auckland Bioengineering Institute</vCard:Orgunit>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#549027dd-357a-4dfe-8f26-0f7f9ada5dca">
+    <dc:creator rdf:resource="rdf:#6d4f9f56-a3d2-46fc-afc7-0eda33a7eda0" />
+    <rdf:value />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#68ea6a8e-7622-4fbb-b1c0-89180fbb2d1a">
+    <vCard:Given>Catherine</vCard:Given>
+    <vCard:Family>Lloyd</vCard:Family>
+    <vCard:Other>M</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#dfd304da-1773-482c-974f-5181d11f0653">
+    <bqs:Pubmed_id>19527643</bqs:Pubmed_id>
+    <bqs:JournalArticle rdf:resource="rdf:#0a9804db-c2ed-4ab5-8bc8-b007f2b5d051" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#f71ab052-86ba-4e1c-b567-3a14d5597099">
+    <rdf:type rdf:resource="http://www.cellml.org/bqs/1.0#Person" />
+    <vCard:N rdf:resource="rdf:#cbb72790-dc82-4e19-a153-705191d8c261" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#40669c50-2345-4a58-888c-c66ebd75701a">
+    <rdf:type rdf:resource="http://www.cellml.org/bqs/1.0#Person" />
+    <vCard:N rdf:resource="rdf:#b6663ab5-651b-48d5-9e26-d9904ae47443" />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#73d1c5a6-d8a8-4742-809c-fee499c3db21">
+    <vCard:Given>Catherine</vCard:Given>
+    <vCard:Family>Lloyd</vCard:Family>
+    <vCard:Other>May</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#ea87676f-e567-476c-9b19-bebb93f8b654">
+    <dc:title>Biophysical Journal</dc:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#cbb72790-dc82-4e19-a153-705191d8c261">
+    <vCard:Given>Andrew</vCard:Given>
+    <vCard:Family>Pullan</vCard:Family>
+    <vCard:Other>J</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#b6663ab5-651b-48d5-9e26-d9904ae47443">
+    <vCard:Given>Nicholas</vCard:Given>
+    <vCard:Family>Smith</vCard:Family>
+    <vCard:Other>P</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#6d4f9f56-a3d2-46fc-afc7-0eda33a7eda0">
+    <vCard:FN />
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#0937cef4-641f-4c33-a8f3-b16a898594d0">
+    <vCard:Given>Kenton</vCard:Given>
+    <vCard:Family>Sanders</vCard:Family>
+    <vCard:Other>M</vCard:Other>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#3a7d058d-e5a6-4497-97ee-d2f0f344873b">
+    <dcterms:W3CDTF>2009-06-17 00:00</dcterms:W3CDTF>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#ec474e88-d701-4f91-90f8-be7aec3933dd">
+    <dcterms:W3CDTF>2008-07-01T00:00:00+12:00</dcterms:W3CDTF>
+  </rdf:Description>
+  <rdf:Description rdf:about="rdf:#03715598-e325-406e-a3aa-a54f8b403f5c">
+    <vCard:ORG rdf:resource="rdf:#0e81a051-5576-4377-8e30-89249c631dfd" />
+    <vCard:EMAIL rdf:resource="rdf:#5e176239-303b-4797-96c8-d73c80339d9b" />
+    <vCard:N rdf:resource="rdf:#73d1c5a6-d8a8-4742-809c-fee499c3db21" />
+  </rdf:Description>
+</rdf:RDF>
+
+</model>
