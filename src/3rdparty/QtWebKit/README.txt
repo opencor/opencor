@@ -22,13 +22,14 @@ From there, do the following from the command prompt or terminal:
     > qmake
     > nmake
       or
-      jom
+    > jom
  - Terminal:
     $ cd [QtWebKit]
     $ qmake
     $ make
-      or
-      make release
+      on Linux or
+    $ make release
+      on OS X
 
 Once Qt WebKit has been fully built:
  - For each supported platform:
