@@ -11,7 +11,7 @@
 
 #######
 
-You might also be interested in our [published article](http://dx.doi.org/10.3389/fphys.2015.00026).
+You might also be interested in our [users](https://groups.google.com/forum/#!forum/opencor-users) and/or [developers](https://groups.google.com/forum/#!forum/opencor-developers) mailing lists, as well as in our [published article](http://dx.doi.org/10.3389/fphys.2015.00026).
 
 #######
 

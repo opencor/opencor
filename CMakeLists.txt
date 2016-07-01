@@ -752,13 +752,21 @@ ELSE()
 
     IF(NOT ENABLE_TRAVIS_CI)
         # We are building OpenCOR locally, so we can deploy the ICU libraries
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       libraries...
+        # Note #1: indeed, on Travis CI, the PPA we use doesn't have those
+        #          libraries...
+        # Note #2: we need to deploy two sets of ICU libraries, one for the Qt
+        #          libraries themselves and another for our copy of Qt WebKit.
+        #          If we were only to deploy the latter, then OpenCOR would work
+        #          on Ubuntu 14.04 LTS, but not on Ubuntu 16.04 LTS (and maybe
+        #          also other versions of Ubuntu)...
 
         FOREACH(QT_FILE icudata icui18n icuuc)
+            LINUX_DEPLOY_QT_LIBRARY(/usr/lib/x86_64-linux-gnu
+                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52.1
+                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
             LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${Qt5Core_VERSION_MAJOR}${Qt5Core_VERSION_MINOR}.1
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${Qt5Core_VERSION_MAJOR}${Qt5Core_VERSION_MINOR})
+                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56.1
+                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
         ENDFOREACH()
     ENDIF()
 

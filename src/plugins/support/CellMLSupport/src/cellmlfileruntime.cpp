@@ -807,6 +807,7 @@ void CellmlFileRuntime::update()
     //       listed in a main CellML file can be referenced in SED-ML...
 
     QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
+    QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
     ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
     ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
@@ -821,6 +822,15 @@ void CellmlFileRuntime::update()
                 ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
                 mainVariables.insert(sourceVariable, variable);
+
+                // In some CellML 1.1 models, the source variable may be defined
+                // in the main CellML file and used (and therefore referenced)
+                // in different places in that same main CellML file, in which
+                // case we need to keep track of the real main variable which is
+                // the one which source variable is the same
+
+                if (variable == sourceVariable)
+                    realMainVariables << variable;
             }
         }
     }
@@ -837,7 +847,9 @@ void CellmlFileRuntime::update()
         // main CellML file, if it has imports
 
         ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-        iface::cellml_api::CellMLVariable *mainVariable = mainVariables.value(variable);
+        iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
+                                                              variable.getPointer():
+                                                              mainVariables.value(variable);
         iface::cellml_api::CellMLVariable *realVariable = mainVariable?mainVariable:variable.getPointer();
 
         if (   hasComponentImports && !mainVariable

@@ -843,7 +843,7 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
         // The given values are the same, so update them so that we can properly
         // optimise them below
 
-        double powerValue = pMin?qFloor(log10(qAbs(pMin)))-1.0:0.0;
+        double powerValue = pMin?std::floor(log10(qAbs(pMin)))-1.0:0.0;
 
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
@@ -860,8 +860,8 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
                                                           axisMaxMinor(pAxisId),
                                                           base);
 
-    pMin = qFloor(pMin/minorStep)*minorStep;
-    pMax = qCeil(pMax/minorStep)*minorStep;
+    pMin = std::floor(pMin/minorStep)*minorStep;
+    pMax = std::ceil(pMax/minorStep)*minorStep;
 }
 
 //==============================================================================

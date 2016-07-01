@@ -352,10 +352,12 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
         // Show/hide our editing widgets
 
-        newEditingWidget->show();
+        setUpdatesEnabled(false);
+            newEditingWidget->show();
 
-        if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
-            oldEditingWidget->hide();
+            if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
+                oldEditingWidget->hide();
+        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editing widget and make sure that
         // the latter immediately gets the focus
