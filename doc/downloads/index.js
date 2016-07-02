@@ -39,6 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> fixed an issue with switching from one file to another with the mouse over a button-like widget and the status bar visible resulting in some bad flickering (see issue <a href=\"https://github.com/opencor/opencor/issues/1027\">#1027</a>)." },
                        { "change": "<strong>Editor widget:</strong> fixed a problem with the icon for the search options / magnifier looking wrong (see issue <a href=\"https://github.com/opencor/opencor/issues/1026\">#1026</a>)." }
                      ]
                    },

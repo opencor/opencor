@@ -1792,13 +1792,26 @@ void CentralWidget::updateGui()
     emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one
-    // Note: we temporarily disable updates so as to avoid any potential
-    //       flickering...
+    // Note: to do this as smoothly as possible, we temporarily hide the status
+    //       bar and disable updates for ourselves, before asking for remaining
+    //       events to be processed straightaway. Indeed, not do this will
+    //       result in some awful flickering when switching from one file to
+    //       another with the mouse over a button-like widget and the status bar
+    //       visible (see issues #405 and #1027). Now, although this approach
+    //       works fine on Windows and Linux, it will 'freeze' the switching on
+    //       OS X. However, there is no awful flickering, so it's probably
+    //       better than nothing when it comes to OS X...
 
-    setUpdatesEnabled(false);
-        mContents->removeWidget(mContents->currentWidget());
-        mContents->addWidget(newView);
-    setUpdatesEnabled(true);
+    bool statusBarVisible = mainWindow()->statusBar()->isVisible();
+
+    mainWindow()->statusBar()->setVisible(false);
+        setUpdatesEnabled(false);
+            mContents->removeWidget(mContents->currentWidget());
+            mContents->addWidget(newView);
+        setUpdatesEnabled(true);
+    mainWindow()->statusBar()->setVisible(statusBarVisible);
+
+    QCoreApplication::processEvents();
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
