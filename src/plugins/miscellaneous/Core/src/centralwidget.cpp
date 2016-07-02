@@ -1811,7 +1811,8 @@ void CentralWidget::updateGui()
         setUpdatesEnabled(true);
     mainWindow()->statusBar()->setVisible(statusBarVisible);
 
-    QCoreApplication::processEvents();
+    if (statusBarVisible)
+        QCoreApplication::processEvents();
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
