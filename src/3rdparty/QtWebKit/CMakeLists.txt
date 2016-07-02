@@ -51,11 +51,9 @@ ENDIF()
 
 IF(   NOT EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
    OR NOT EXISTS ${QT_WEBKITWIDGETS_LIBRARY_FILENAME})
-    IF(SHOW_INFORMATION_MESSAGE)
-        MESSAGE("Retrieving Qt WebKit...")
-    ENDIF()
-
     # Retrieve the compressed version of our copy of the Qt WebKit libraries
+
+    MESSAGE("Retrieving Qt WebKit...")
 
     SET(COMPRESSED_FILENAME QtWebKit.tar.gz)
     SET(REAL_COMPRESSED_FILENAME ${QT_WEBKIT_DIR}/${COMPRESSED_FILENAME})

@@ -4,7 +4,7 @@ PROJECT(HelpWindowPlugin)
 
 EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
                                                            -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc
-                ${OUTPUT_QUIET})
+                OUTPUT_QUIET)
 
 KEEP_TRACK_OF_FILE(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qch)
 KEEP_TRACK_OF_FILE(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
