@@ -270,10 +270,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
-
         QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
-
-        action->setToolTip(dataStoreName);
 
         mDataStoreInterfaces.insert(action, dataStoreInterface);
 
@@ -553,8 +550,11 @@ void SingleCellViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions
 
-    foreach (QAction *action, mDataStoreInterfaces.keys())
-        action->setStatusTip(tr("Export the simulation data to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
+    foreach (QAction *action, mDataStoreInterfaces.keys()) {
+        I18nInterface::retranslateAction(action,
+                                         action->text(),
+                                         tr("Export the simulation data to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
+    }
 }
 
 //==============================================================================
@@ -626,26 +626,17 @@ void SingleCellViewSimulationWidget::updateRunPauseAction(const bool &pRunAction
 
     bool simulationPaused = mSimulation && mSimulation->isPaused();
 
-    mRunPauseResumeSimulationAction->setIconText(pRunActionEnabled?
-                                                     simulationPaused?
-                                                         tr("Resume Simulation"):
-                                                         tr("Run Simulation"):
-                                                     tr("Pause Simulation"));
-    mRunPauseResumeSimulationAction->setStatusTip(pRunActionEnabled?
-                                                      simulationPaused?
-                                                          tr("Resume the simulation"):
-                                                          tr("Run the simulation"):
-                                                      tr("Pause the simulation"));
-    mRunPauseResumeSimulationAction->setText(pRunActionEnabled?
-                                                 simulationPaused?
-                                                     tr("Resume Simulation"):
-                                                     tr("Run Simulation"):
-                                                 tr("Pause Simulation"));
-    mRunPauseResumeSimulationAction->setToolTip(pRunActionEnabled?
-                                                    simulationPaused?
-                                                        tr("Resume Simulation"):
-                                                        tr("Run Simulation"):
-                                                    tr("Pause Simulation"));
+    I18nInterface::retranslateAction(mRunPauseResumeSimulationAction,
+                                     pRunActionEnabled?
+                                         simulationPaused?
+                                             tr("Resume Simulation"):
+                                             tr("Run Simulation"):
+                                         tr("Pause Simulation"),
+                                     pRunActionEnabled?
+                                         simulationPaused?
+                                             tr("Resume the simulation"):
+                                             tr("Run the simulation"):
+                                         tr("Pause the simulation"));
 }
 
 //==============================================================================
