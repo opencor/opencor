@@ -642,35 +642,35 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.pull").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/places/folder-downloads.png"),
+            auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-down-double.png"),
                                                  tr("Pull"), this);
             cloneAction->setData(QString("pull|%1").arg(trElement.attribute("id")));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.commit").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/places/folder-downloads.png"),
+            auto cloneAction = new QAction(QIcon(":/oxygen/places/dialog-ok-apply.png"),
                                                  tr("Commit"), this);
             cloneAction->setData(QString("commit|%1").arg(trElement.attribute("id")));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.push").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-down-double.png"),
+            auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-up-double.png"),
                                                  tr("Push"), this);
             cloneAction->setData(QString("push|%1").arg(trElement.attribute("id")));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else {
-            auto refreshAction = new QAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
+            auto refreshAction = new QAction(QIcon(":/oxygen/actions/view-refresh.png"),
                                                  tr("Refresh"), this);
             refreshAction->setData(QString("refresh|%1").arg(trElement.attribute("id")));
             menu->addAction(refreshAction);
             menu->addSeparator();
         }
 
-        auto aboutAction = new QAction(QIcon(":/oxygen/actions/arrow-up-double.png"),
+        auto aboutAction = new QAction(QIcon(":/oxygen/actions/help-about.png"),
                                        tr("About"), this);
         aboutAction->setData(QString("about|%1").arg(trElement.attribute("id")));
         menu->addAction(aboutAction);
