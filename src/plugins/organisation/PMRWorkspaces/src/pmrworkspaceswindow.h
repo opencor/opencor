@@ -68,6 +68,9 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+    void fileReloaded(const QString &pFileName);
+
 private:
     Ui::PmrWorkspacesWindow *mGui;
 
@@ -95,6 +98,10 @@ private Q_SLOTS:
     void showProgress(const double &pProgress);
 
     void showCustomContextMenu() const;
+
+    void fileCreated(const QString &pFileName, const QString &pUrl);
+    void fileDeleted(const QString &pFileName);
+    void fileDuplicated(const QString &pFileName);
 };
 
 //==============================================================================

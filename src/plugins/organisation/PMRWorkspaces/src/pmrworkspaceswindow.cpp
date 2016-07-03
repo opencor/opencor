@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "filemanager.h"
 #include "pmrworkspacesnewworkspace.h"
 #include "pmrworkspaceswidget.h"
 #include "pmrworkspaceswindow.h"
@@ -120,14 +121,17 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     // We want our own context menu for the toolbar widget
 
     toolBarWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(toolBarWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(showCustomContextMenu()));
+    connect(toolBarWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showCustomContextMenu()));
 
-    // Some connections
 
-    connect(mWorkspacesWidget, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
+    // Watch for changes to managed files
 
-    // Some connections to process responses from the PMR repository
+    auto fileManagerInstance = Core::FileManager::instance();
+    connect(fileManagerInstance, SIGNAL(fileCreated(QString, QString)), this, SLOT(fileCreated(QString, QString)));
+    connect(fileManagerInstance, SIGNAL(fileDuplicated(QString)), this, SLOT(fileDuplicated(QString)));
+    connect(fileManagerInstance, SIGNAL(fileDeleted(QString)), this, SLOT(fileDeleted(QString)));
+
+    // Connections to process responses from the PMR repository
 
     connect(mPmrRepository, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
     connect(mPmrRepository, SIGNAL(progress(double)), this, SLOT(showProgress(double)));
@@ -140,9 +144,11 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
             mWorkspacesWidget, SLOT(initialiseWorkspaces(PMRSupport::PmrWorkspaceList)));
 
-    // Process requests from our widget
+    // Connections to process requests from our widget
 
+    connect(mWorkspacesWidget, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
     connect(mWorkspacesWidget, SIGNAL(openFileRequested(QString)), this, SLOT(openFile(QString)));
+    connect(mWorkspacesWidget, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
 
     // Retranslate the GUI
 
@@ -330,8 +336,14 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
             workspaceFolder.mkpath(".");
         }
         else {
-            // TODO Need to check the folder is empty...
-            // If not, give an error and return
+            // TODO Need to check the folder is empty and if not, give
+            // an error and return.
+            //
+            // However folder selection in the new workspace dialog
+            // should ensure we have an empty folder.
+            //
+            // What error message do we see from git if the folder
+            // isn't empty??
         }
 
         // Ask the PMR repository to create a new workspace. This
@@ -381,6 +393,48 @@ void PmrWorkspacesWindow::showCustomContextMenu() const
     // widget
 
     mContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::fileCreated(const QString &pFileName, const QString &pUrl)
+{
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pUrl)
+//qDebug() << "Created: " << pFileName << "  Url: " << pUrl;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::fileDeleted(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+//qDebug() << "Deleted: " << pFileName;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::fileDuplicated(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+//qDebug() << "Duplicated: " << pFileName;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::fileReloaded(const QString &pFileName)
+{
+//qDebug() << "Reloaded: " << pFileName;
+    mWorkspacesWidget->refreshWorkspaceFile(pFileName);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindow::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
+{
+//qDebug() << "Renamed: " << pOldFileName << "  to: " << pNewFileName;
+    mWorkspacesWidget->refreshWorkspaceFile(pOldFileName);
+    mWorkspacesWidget->refreshWorkspaceFile(pNewFileName);
 }
 
 //==============================================================================

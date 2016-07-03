@@ -51,6 +51,81 @@ PLUGININFO_FUNC PMRWorkspacesPluginInfo()
 }
 
 //==============================================================================
+// File handling interface
+//==============================================================================
+
+bool PMRWorkspacesPlugin::isIndirectRemoteFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+
+    return false;
+}
+
+//==============================================================================
+
+bool PMRWorkspacesPlugin::saveFile(const QString &pOldFileName,
+                                   const QString &pNewFileName,
+                                   bool &pNeedFeedback)
+{
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback);
+
+    return true;
+}
+
+//==============================================================================
+
+void PMRWorkspacesPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+}
+
+//==============================================================================
+
+void PMRWorkspacesPlugin::filePermissionsChanged(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+}
+
+//==============================================================================
+
+void PMRWorkspacesPlugin::fileModified(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+}
+
+//==============================================================================
+
+void PMRWorkspacesPlugin::fileReloaded(const QString &pFileName,
+                                       const bool &pFileChanged)
+{
+    Q_UNUSED(pFileChanged)
+
+    // The given file has been reloaded, so let its corresponding view widget
+    // know about it
+
+    mPmrWorkspacesWindow->fileReloaded(pFileName);
+}
+
+//==============================================================================
+
+void PMRWorkspacesPlugin::fileRenamed(const QString &pOldFileName,
+                                      const QString &pNewFileName)
+{
+    // Let our view widget know that a file has been renamed
+
+    mPmrWorkspacesWindow->fileRenamed(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
+
+void PMRWorkspacesPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 

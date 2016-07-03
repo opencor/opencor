@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
@@ -43,18 +44,21 @@ class PmrWorkspacesWindow;
 
 //==============================================================================
 
-class PMRWorkspacesPlugin : public QObject, public I18nInterface,
-                            public PluginInterface, public WindowInterface
+class PMRWorkspacesPlugin : public QObject, public FileHandlingInterface,
+                            public I18nInterface, public PluginInterface,
+                            public WindowInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.PMRWorkspacesPlugin" FILE "pmrworkspacesplugin.json")
 
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
+#include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "windowinterface.inl"
