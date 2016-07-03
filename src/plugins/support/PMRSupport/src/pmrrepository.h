@@ -73,6 +73,7 @@ public:
     void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
     void requestWorkspacesList(void);
+    void requestWorkspacePush(PmrWorkspace *pWorkspace);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pDirName);
@@ -117,6 +118,7 @@ Q_SIGNALS:
     void workspaceInformation(const QString &pUrl, const QString &pName,
                               const QString &pDescription, const QString &pOwner);
     void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
+    void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
 
 public Q_SLOTS:
     void authenticate(const bool &pLink = true);
@@ -134,9 +136,10 @@ private Q_SLOTS:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesListResponse(const QJsonDocument &pJsonDocument);
 
-    void workspaceCloneFinished(void);
+    void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreatedResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
+    void workspacePushFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

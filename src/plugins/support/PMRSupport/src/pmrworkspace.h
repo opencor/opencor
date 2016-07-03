@@ -51,11 +51,15 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
 public:
     explicit PmrWorkspace(QObject *parent=0);
     PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent);
+    virtual ~PmrWorkspace();
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
     static QString getEmptyWorkspaceDirectory(void);
+
+    static QString getUrlFromFile(const QString &pPath);
     static QString getUrlFromFolder(const QString &pFolder);
+
     static QString WorkspacesDirectory(void);
 
     bool isLocal(void) const;
@@ -77,11 +81,23 @@ public:
     const QString &url(void) const;
 
     void clone(const QString &pDirName);
+    void close(void);
+    bool open(void);
+    bool opened(void) const;
+    void push(void);
 
-    const QString gitStatus(void) const;
-    const QString gitStatus(const QString &pPath) const;
+    enum RemoteStatus {
+        StatusUnknown = 0,
+        StatusAhead,
+        StatusBehind,
+        StatusCommit,
+        StatusCurrent
+    };
+    RemoteStatus gitRemoteStatus(void) const;
 
-//    void pull();
+    const QString gitFileStatus(const QString &pPath) const;
+
+
 //    void push();
 
 private:
@@ -90,26 +106,31 @@ private:
     QString mDescription;
     QString mName;
     QString mOwner;
-    QString mPassword;
-    QString mPath;
     QString mUrl;
+
+    QString mPassword;
     QString mUsername;
 
-    static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
+    git_repository *mGitRepository;
+    QString mPath;
 
+    void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
+
+    static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
     static void checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
                                      void *payload);
     static int transfer_progress_cb(const git_transfer_progress *stats, void *payload);
 
-    void emitProgress(const double &pProgress);
+    void emitGitError(const QString &pMessage) const;
+    void emitProgress(const double &pProgress) const;
 
 Q_SIGNALS:
-    void progress(const double &pProgress);
+    void progress(const double &pProgress) const;
     void warning(const QString &pMessage) const;
 
-    void workspaceCloneFinished(void);
-    void workspacePulled(PmrWorkspace *pWorkspace);
-    void workspacePushed(PmrWorkspace *pWorkspace);
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspacePulled(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

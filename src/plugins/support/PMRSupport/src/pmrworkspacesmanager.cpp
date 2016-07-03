@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "git2.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRSupport {
 
@@ -33,12 +37,14 @@ PmrWorkspacesManager::PmrWorkspacesManager(QObject *parent) :
   QObject(parent),
   mWorkspacesMap(QMap<QString, PMRSupport::PmrWorkspace *>())
 {
+    git_libgit2_init();
 }
 
 //==============================================================================
 
 PmrWorkspacesManager::~PmrWorkspacesManager()
 {
+    git_libgit2_shutdown();
 }
 
 //==============================================================================
@@ -73,6 +79,8 @@ void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 
 void PmrWorkspacesManager::clearWorkspaces(void)
 {
+    foreach (PmrWorkspace *workspace, mWorkspacesMap.values())
+        workspace->close();
     mWorkspacesMap.clear();
 }
 

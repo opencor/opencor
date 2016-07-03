@@ -217,7 +217,6 @@ void PmrRepository::exposureInformationResponse(const QJsonDocument &pJsonDocume
     if (exposure) {
         QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
-
         // Retrieve the URLs that will help us to retrieve some
         // information about the exposure's workspace and exposure
         // files
@@ -324,15 +323,18 @@ void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QStrin
     emit busy(true);
     connect(pWorkspace, SIGNAL(progress(double)), this, SIGNAL(progress(double)));
     connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
-    connect(pWorkspace, SIGNAL(workspaceCloneFinished(void)), this, SLOT(workspaceCloneFinished(void)));
+    connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
     QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
 }
 
 //==============================================================================
 
-void PmrRepository::workspaceCloneFinished(void)
+void PmrRepository::workspaceCloneFinished(PmrWorkspace *pWorkspace)
 {
+    Q_UNUSED(pWorkspace)
+
     emit busy(false);
 }
 
@@ -383,6 +385,27 @@ void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
 }
 
 //==============================================================================
+
+void PmrRepository::requestWorkspacePush(PmrWorkspace *pWorkspace)
+{
+    emit busy(true);
+
+    connect(pWorkspace, SIGNAL(progress(double)), this, SIGNAL(progress(double)));
+    connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
+    connect(pWorkspace, SIGNAL(workspacePushed(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspacePushFinished(PMRSupport::PmrWorkspace *)));
+
+    QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::push);
+}
+
+//==============================================================================
+
+void PmrRepository::workspacePushFinished(PmrWorkspace *pWorkspace)
+{
+    emit busy(false);
+    emit workspacePushed(pWorkspace);
+}
+
 //==============================================================================
 
 void PmrRepository::requestWorkspaceInformation(const QString &pUrl)
@@ -664,6 +687,7 @@ void PmrRepository::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 
     }
 }
+
 //==============================================================================
 
 void PmrRepository::workspaceUnauthorised(const QString &pUrl)

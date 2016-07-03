@@ -40,36 +40,9 @@ namespace PMRSupport {
 
 //==============================================================================
 
-QString PmrWorkspace::WorkspacesDirectory()
-{
-    static QString workspacesHome = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                                  + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
-
-    static bool checkedFolder = false;
-    if (!checkedFolder) {
-        auto workspacesFolder = QDir(workspacesHome);
-        if (!workspacesFolder.exists()) workspacesFolder.mkpath(".");
-        checkedFolder = true;
-    }
-
-    return workspacesHome;
-}
-
-//==============================================================================
-
-QString PmrWorkspace::getEmptyWorkspaceDirectory(void)
-{
-    // Retrieve the name of an empty directory
-
-    return Core::getExistingDirectory(tr("Select Empty Directory"),
-                                      PMRSupport::PmrWorkspace::WorkspacesDirectory(),
-                                      true);
-}
-
-//==============================================================================
-
-PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent),
-     mDescription(QString()), mName(QString()), mOwner(QString()), mPath(QString()), mUrl(QString())
+PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent), mOwned(false),
+    mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
+    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString())
 {
 }
 
@@ -77,10 +50,17 @@ PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent),
 
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent) :
     QObject(parent), mOwned(false),
-    mDescription(QString()), mName(pName), mOwner(QString()),
-    mPassword(QString()), mPath(QString()), mUrl(pUrl), mUsername(QString())
+    mDescription(QString()), mName(pName), mOwner(QString()), mUrl(pUrl),
+    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString())
 {
     // Name, description and owner are set from PMR workspace info
+}
+
+//==============================================================================
+
+PmrWorkspace::~PmrWorkspace()
+{
+    close();
 }
 
 //==============================================================================
@@ -105,6 +85,34 @@ bool PmrWorkspace::compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSeco
     // worrying about casing)
 
     return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+QString PmrWorkspace::WorkspacesDirectory()
+{
+    static QString workspacesHome = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                                  + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
+
+    static bool checkedFolder = false;
+    if (!checkedFolder) {
+        auto workspacesFolder = QDir(workspacesHome);
+        if (!workspacesFolder.exists()) workspacesFolder.mkpath(".");
+        checkedFolder = true;
+    }
+
+    return workspacesHome;
+}
+
+//==============================================================================
+
+QString PmrWorkspace::getEmptyWorkspaceDirectory(void)
+{
+    // Retrieve the name of an empty directory
+
+    return Core::getExistingDirectory(tr("Select Empty Directory"),
+                                      PMRSupport::PmrWorkspace::WorkspacesDirectory(),
+                                      true);
 }
 
 //==============================================================================
@@ -198,12 +206,79 @@ const QString &PmrWorkspace::url() const
 
 //==============================================================================
 
-void PmrWorkspace::emitProgress(const double &pProgress)
+void PmrWorkspace::emitProgress(const double &pProgress) const
 {
     emit progress(pProgress);
 }
 
 //==============================================================================
+
+void PmrWorkspace::emitGitError(const QString &pMessage) const
+{
+    const git_error *gitError = giterr_last();
+
+    emit warning(pMessage + (gitError ? (QString("<br></br>")
+                                         + tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                                   Core::formatMessage(gitError->message)))
+                                      : ""));
+}
+
+//==============================================================================
+
+bool PmrWorkspace::open(void)
+{
+    close();
+    if (!mPath.isEmpty()) {
+        if (mGitRepository == nullptr) {
+            if (git_repository_open(&mGitRepository, mPath.toUtf8().constData())) {
+                emitGitError(tr("An error occurred while trying to open the workspace."));
+                return false;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::opened(void) const
+{
+    return (mGitRepository != nullptr);
+}
+
+//==============================================================================
+
+void PmrWorkspace::close(void)
+{
+    if (mGitRepository != nullptr) {
+        git_repository_free(mGitRepository);
+        mGitRepository = nullptr;
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspace::setGitAuthorisation(git_strarray *pAuthorisationStrArray)
+{
+    if (!mUsername.isEmpty()) {
+        // Initialise a git_strarray with a Basic Authorization header
+
+        auto authorisationHeader = QByteArray();
+        authorisationHeader.append("Authorization: Basic ");
+        authorisationHeader.append((mUsername + ":" + mPassword).toUtf8().toBase64());
+
+        char *authorisationStrArrayData = (char *)malloc(authorisationHeader.count() + 1);
+        memcpy(authorisationStrArrayData, authorisationHeader.constData(), authorisationHeader.count() + 1);
+
+        char **authorisationStrArrayArray = (char **)malloc(sizeof(char *));
+        authorisationStrArrayArray[0] = authorisationStrArrayData;
+
+        pAuthorisationStrArray->strings = authorisationStrArrayArray;
+        pAuthorisationStrArray->count = 1;
+    }
+}
+
 //==============================================================================
 
 QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
@@ -213,9 +288,7 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 
     auto url = QString();
 
-    git_libgit2_init();
     git_repository *gitRepository = 0;
-
     if (git_repository_open(&gitRepository, pFolder.toUtf8().constData()) == 0) {
 
         git_strarray remotes ;
@@ -235,9 +308,6 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
         }
         git_repository_free(gitRepository);
     }
-
-    git_libgit2_shutdown();
-
     return url;
 }
 
@@ -290,9 +360,6 @@ void PmrWorkspace::clone(const QString &pDirName)
 {
     // Clone a workspace
 
-    git_libgit2_init();
-
-    git_repository *gitRepository = 0;
     QByteArray workspaceByteArray = mUrl.toUtf8();
     QByteArray dirNameByteArray = pDirName.toUtf8();
 
@@ -311,112 +378,173 @@ void PmrWorkspace::clone(const QString &pDirName)
     cloneOptions.checkout_opts.progress_cb = checkout_progress_cb;
     cloneOptions.checkout_opts.progress_payload = (void *)this;
 
-    auto authorizationHeader = QByteArray();
-    if (!mUsername.isEmpty()) {
-        authorizationHeader.append("Authorization: Basic ");
-        authorizationHeader.append((mUsername + ":" + mPassword).toUtf8().toBase64());
+    // Set up Basic authorization
 
-        const char *authorizationStrArrayData[] = { authorizationHeader.constData() };
-        git_strarray authorizationStrArray = { (char **)authorizationStrArrayData, 1 };
-        cloneOptions.fetch_opts.custom_headers = authorizationStrArray;
-    }
+    git_strarray authorisationStrArray = { nullptr, 0 };
+    setGitAuthorisation(&authorisationStrArray);
+    cloneOptions.fetch_opts.custom_headers = authorisationStrArray;
 
-    int error = git_clone(&gitRepository, workspaceByteArray.constData(),
-                          dirNameByteArray.constData(), &cloneOptions);
+    // Perform the clone
 
-    if (error) {
-        const git_error *gitError = giterr_last();
-        emit warning(gitError?
-                         tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                 Core::formatMessage(gitError->message)):
-                         tr("An error occurred while trying to clone the workspace."));
-    }
-    else if (gitRepository) {
-        git_repository_free(gitRepository);
-    }
+    if (git_clone(&mGitRepository, workspaceByteArray.constData(),
+                          dirNameByteArray.constData(), &cloneOptions))
+        emitGitError(tr("An error occurred while trying to clone the workspace."));
 
-    git_libgit2_shutdown();
+    git_strarray_free(&authorisationStrArray);
 
     mPath = pDirName;
 
     PmrWorkspacesManager::instance()->emitWorkspaceCloned(this);
-
-    emit workspaceCloneFinished();
+    emit workspaceCloned(this);
 }
 
 //==============================================================================
 
-const QString PmrWorkspace::gitStatus(void) const
+void PmrWorkspace::push(void)
 {
-    // Get the status of the repository
+    // Push a workspace
 
-    auto status = QString("");
+    git_push_options pushOptions;
+    git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
 
-    git_libgit2_init();
+    // We trust PMR's SSL certificate
 
-    git_repository *gitRepository = 0;
+    pushOptions.callbacks.certificate_check = certificate_check_cb;
 
-    int error = git_repository_open(&gitRepository, mPath.toUtf8().constData());
+    // Track push progress
 
-    if (error == 0) {
-        git_oid masterOid, originMasterOid;
+    pushOptions.callbacks.transfer_progress = transfer_progress_cb ;
+    pushOptions.callbacks.payload = (void *)this;
 
-        error = git_reference_name_to_id(&masterOid, gitRepository,
-                                         "refs/heads/master");
-        if (error == 0) {
-            error = git_reference_name_to_id(&originMasterOid, gitRepository,
-                                             "refs/remotes/origin/master");
-            if (error == 0) {
-                size_t ahead = 0;
-                size_t behind = 0;
+    // Set up Basic authorization
 
-                error = git_graph_ahead_behind(&ahead, &behind, gitRepository,
-                                               &masterOid, &originMasterOid);
-                if (error == 0) {
-                    status = QString("%1 %2").arg((ahead  ? "A" : " "),
-                                                  (behind ? "B" : " "));
-                }
-            }
+    git_strarray authorisationStrArray = { nullptr, 0 };
+    setGitAuthorisation(&authorisationStrArray);
+    pushOptions.custom_headers = authorisationStrArray;
+
+    if (this->open()) {
+
+        git_remote_callbacks remoteCallbacks;
+        git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+        remoteCallbacks.certificate_check = certificate_check_cb;
+
+        // Get the remote, connect to it, add a refspec, and do the push
+
+        git_remote* gitRemote = nullptr;
+        if (git_remote_add_push(mGitRepository, "origin", "refs/heads/master:refs/heads/master")
+         || git_remote_lookup(&gitRemote, mGitRepository, "origin")
+         || git_remote_connect(gitRemote, GIT_DIRECTION_PUSH, &remoteCallbacks, &authorisationStrArray)
+         || git_remote_upload(gitRemote, nullptr, &pushOptions)) {
+            emitGitError(tr("An error occurred while trying to push the workspace."));
         }
     }
 
-    if (error) {
-        const git_error *gitError = giterr_last();
-        emit warning(gitError?
-                         tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                 Core::formatMessage(gitError->message)):
-                         tr("An error occurred while trying to get the status of %1").arg(mPath));
-    }
+    git_strarray_free(&authorisationStrArray);
 
-    git_libgit2_shutdown();
+    emit workspacePushed(this);
+}
+
+/*
+if (this->open()) {
+
+    git_index *index;
+    // Get the index to the repository
+    git_repository_index(&index, mGitRepository);
+
+    // Add modified files
+    git_index_add_bypath(&index, "path/relative/to/working/dir/of/file");
+    // Remove deleted files
+    git_index_remove_bypath(&index, "path/relative/to/working/dir/of/file");
+
+    git_tree treeId;
+    git_index_write_tree(&treeId, index);
+
+    git_index_free(index);
+
+    git_tree *tree;
+    git_tree_lookup(&tree, mGitRepository, &treeId);
+
+    git_oid parentId;
+
+    // Get HEAD as a commit object to use as the parent of the commit
+    git_reference_name_to_id(parentId, mGitRepository, "HEAD");
+
+    git_commit *parent;
+    git_commit_lookup(&parent, mGitRepository, parentId);
+
+    gir_oid commitId;
+
+    // Do the commit
+    git_commit_create_v(
+        &commitId,
+        mGitRepository,
+        "HEAD",           // The commit will update the position of HEAD
+        author,
+        committer,
+        NULL,             // UTF-8 encoding
+        message,
+        tree,             // The tree from the index
+        1,                // Only one parent
+        parent            // No need to make a list with create_v
+    );
+
+    git_tree_free(tree);
+    git_commit_free(parent);
+}
+
+*/
+
+//==============================================================================
+
+PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
+{
+    // Get the status of the repository
+
+    auto status = StatusUnknown;
+
+    if (this->opened()) {
+        git_oid masterOid, originMasterOid;
+
+        if (git_reference_name_to_id(&masterOid, mGitRepository,
+                                                 "refs/heads/master") == 0
+         && git_reference_name_to_id(&originMasterOid, mGitRepository,
+                                                 "refs/remotes/origin/master") == 0) {
+            size_t ahead = 0;
+            size_t behind = 0;
+
+            if (git_graph_ahead_behind(&ahead, &behind, mGitRepository,
+                                       &masterOid, &originMasterOid) == 0) {
+                status = behind ? StatusBehind
+                       : ahead  ? StatusAhead
+                       :          StatusCurrent;
+// TODO If there are uncommitted files or files in the index (to be committed)
+//      then return StatusCommit
+            }
+        }
+        if (status == StatusUnknown)
+            emitGitError(tr("An error occurred while trying to get the status of %1").arg(mPath));
+    }
 
     return status;
 }
 
 //==============================================================================
 
-const QString PmrWorkspace::gitStatus(const QString &pPath) const
+const QString PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
     // Get the status of a file
 
-    auto status = QString("");
-
-    git_libgit2_init();
-
-    git_repository *gitRepository = 0;
-
-    int error = git_repository_open(&gitRepository, mPath.toUtf8().constData());
-
-    if (error == 0) {
+    auto status = QString();
+//qDebug() << "Get status: " << pPath;
+    if (this->opened()) {
         auto repoDir = QDir(mPath);
         auto relativePath = repoDir.relativeFilePath(pPath);
 
         unsigned int statusFlags = 0;
-        error = git_status_file(&statusFlags, gitRepository, relativePath.toUtf8().constData());
-
-        if (error == 0) {
+        if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0) {
             char istatus = ' ';
             char wstatus = ' ';
+//qDebug() << "   Flags: " << statusFlags;
 
             if (statusFlags & GIT_STATUS_INDEX_NEW) istatus = 'A';
             if (statusFlags & GIT_STATUS_INDEX_MODIFIED) istatus = 'M';
@@ -435,22 +563,15 @@ const QString PmrWorkspace::gitStatus(const QString &pPath) const
                 istatus = '!';
                 wstatus = '!';
             }
-
             status = QString(QChar(istatus)) + wstatus;
+// TODO Combine istatus and wstatus?? A/M/D/R/T/?/!
+//      What has precedence? Index? "AM" --> "A" but "AD" --> "D"
+//      Whatever the result after adding the work file?? Then "MM" could goto "".
         }
-
-        git_repository_free(gitRepository);
+        else {
+            emitGitError(tr("An error occurred while trying to get the status of %1").arg(pPath));
+        }
     }
-
-    if (error) {
-        const git_error *gitError = giterr_last();
-        emit warning(gitError?
-                         tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                 Core::formatMessage(gitError->message)):
-                         tr("An error occurred while trying to get the status of %1").arg(pPath));
-    }
-
-    git_libgit2_shutdown();
 
     return status;
 }

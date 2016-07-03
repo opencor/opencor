@@ -110,13 +110,17 @@ private:
     QStringList folderHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
     QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 
-    void aboutWorkspace(const QString &pUrl);
     void cloneWorkspace(const QString &pUrl);
     void duplicateCloneMessage(const QString &pUrl,
                                const QString &pPath1, const QString &pPath2);
 
+    void commitWorkspace(const QString &pUrl);
+    void pullWorkspace(const QString &pUrl);
+    void pushWorkspace(const QString &pUrl);
+
 Q_SIGNALS:
     void openFileRequested(const QString &pFile);
+    void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
 public Q_SLOTS:
@@ -124,10 +128,16 @@ public Q_SLOTS:
     void addWorkspaceFolder(const QString &pFolder);
     void clearWorkspaces(void);
     void initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaces);
+
+    void aboutWorkspace(const QString &pUrl);
+
+    void refreshWorkspace(const QString &pUrl);
+    void refreshWorkspaceFile(const QString &pPath);
     void refreshWorkspaces(const bool &pScanFolders);
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
+    void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
