@@ -4,8 +4,8 @@
 <context>
     <name>CheckForUpdatesWindow</name>
     <message>
-        <source>Check for Updates</source>
-        <translation>Vérifier pour des Mises à Jour</translation>
+        <source>Check For Updates</source>
+        <translation>Vérifier Pour Des Mises À Jour</translation>
     </message>
     <message>
         <source>Recheck</source>
@@ -155,8 +155,8 @@
         <translation>Quitter OpenCOR</translation>
     </message>
     <message>
-        <source>Check for Updates...</source>
-        <translation>Vérifier pour des Mises à Jour...</translation>
+        <source>Check For Updates...</source>
+        <translation>Vérifier Pour Des Mises À Jour...</translation>
     </message>
     <message>
         <source>Check for updates</source>

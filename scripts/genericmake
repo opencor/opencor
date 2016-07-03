@@ -31,7 +31,7 @@ echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
 
 cd build
 
-cmake -G "$cmakeGenerator" -DSHOW_INFORMATION_MESSAGE=ON -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
+cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
 exitCode=$?
 

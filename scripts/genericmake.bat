@@ -44,7 +44,7 @@ IF DEFINED NinjaFound (
     SET CMakeGenerator=NMake Makefiles JOM
 )
 
-cmake -G "!CMakeGenerator!" -DSHOW_INFORMATION_MESSAGE=ON -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! ..
+cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! ..
 
 SET ExitCode=!ERRORLEVEL!
 

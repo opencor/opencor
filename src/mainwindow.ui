@@ -21,7 +21,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -267,7 +267,7 @@
      <normaloff>:/oxygen/actions/system-software-update.png</normaloff>:/oxygen/actions/system-software-update.png</iconset>
    </property>
    <property name="text">
-    <string>Check for Updates...</string>
+    <string>Check For Updates...</string>
    </property>
    <property name="toolTip">
     <string>Check for updates</string>

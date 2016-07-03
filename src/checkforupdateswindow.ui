@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Check for Updates</string>
+   <string>Check For Updates</string>
   </property>
   <layout class="QVBoxLayout" name="layout">
    <property name="sizeConstraint">

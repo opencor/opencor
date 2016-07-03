@@ -2,14 +2,6 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-    # Check whether we want some EXECUTE_PROCESS() calls to be OUTPUT_QUIET
-
-    IF(SHOW_INFORMATION_MESSAGE)
-        SET(OUTPUT_QUIET)
-    ELSE()
-        SET(OUTPUT_QUIET OUTPUT_QUIET)
-    ENDIF()
-
     # Make sure that we are using the compiler we support
 
     IF(WIN32)
@@ -48,15 +40,11 @@ MACRO(INITIALISE_PROJECT)
 
     IF(   "${CMAKE_BUILD_TYPE}" STREQUAL ""
        OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-        IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
-        ENDIF()
+        SET(BUILD_INFORMATION "Building a release version of ${CMAKE_PROJECT_NAME}")
 
         SET(RELEASE_MODE TRUE)
     ELSEIF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "Building a debug version of ${CMAKE_PROJECT_NAME}")
-        ENDIF()
+        SET(BUILD_INFORMATION "Building a debug version of ${CMAKE_PROJECT_NAME}")
 
         SET(RELEASE_MODE FALSE)
     ELSE()
@@ -294,9 +282,7 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
         ENDIF()
 
-        IF(SHOW_INFORMATION_MESSAGE)
-            SET(BUILD_INFORMATION "${BUILD_INFORMATION} for (Mac) OS X ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
-        ENDIF()
+        SET(BUILD_INFORMATION "${BUILD_INFORMATION} for (Mac) OS X ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
     ENDIF()
 
     # Destination of our plugins so that we don't have to deploy OpenCOR on
@@ -335,9 +321,7 @@ MACRO(INITIALISE_PROJECT)
 
     # Show the build information, if allowed
 
-    IF(SHOW_INFORMATION_MESSAGE)
-        MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
-    ENDIF()
+    MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
 ENDMACRO()
 
 #===============================================================================
@@ -375,10 +359,10 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
                                                              -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                            ${OUTPUT_QUIET})
+                            OUTPUT_QUIET)
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
                                                           -qm ${QM_FILE}
-                            ${OUTPUT_QUIET})
+                            OUTPUT_QUIET)
 
             KEEP_TRACK_OF_FILE(${QM_FILE})
         ENDIF()
@@ -1217,11 +1201,9 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
     #       so we handle everything ourselves...
 
     IF(NOT EXISTS ${REAL_FILENAME})
-        IF(SHOW_INFORMATION_MESSAGE)
-            MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
-        ENDIF()
-
         # Retrieve the compressed version of the file
+
+        MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
 
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
         SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
