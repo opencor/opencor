@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <QHelpEvent>
 #include <QMenu>
 #include <QMutableMapIterator>
+#include <QProcess>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QToolTip>
@@ -669,6 +670,18 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
                                              tr("Refresh"), this);
         refreshAction->setData(QString("refresh|%1").arg(elementId));
         menu->addAction(refreshAction);
+
+        auto workspace = mWorkspacesManager->workspace(elementId);
+        if (workspace && workspace->isLocal()) {
+#if defined(Q_OS_WIN)
+            auto showAction = new QAction(tr("Show in Explorer..."), this);
+#elif defined(Q_OS_MAC)
+            auto showAction = new QAction(tr("Show in Finder..."), this);
+#else
+// TODO auto showAction = new QAction(tr("Show containing folder..."), this);
+#endif
+            showAction->setData(QString("show|%1").arg(workspace->path()));
+            menu->addAction(showAction);
         }
 
         menu->addSeparator();
@@ -676,8 +689,6 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
                                        tr("About"), this);
         aboutAction->setData(QString("about|%1").arg(elementId));
         menu->addAction(aboutAction);
-
-        // TODO Add "Show in Finder" (plus Windows/Linux equivalents) to menu...
     }
 
     if (!menu->isEmpty()) {
@@ -704,11 +715,57 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
             else if (action == "push") {
                 pushWorkspace(rowId);
             }
+            else if (action == "show") {
+                showInGraphicalShell(rowId);
+            }
         }
     }
 }
 
 //==============================================================================
+
+// Based on https://gitlab.com/pteam/pteam-qt-creator/blob/master/src/plugins/coreplugin/fileutils.cpp#L76
+
+void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
+{
+#if defined(Q_OS_WIN)
+    const QString explorer = QStandardPaths::findExecutable("explorer.exe");
+    if (explorer.isEmpty()) {
+        emit warning(tr("Windows Explorer is not in PATH"));
+        return;
+    }
+    auto parameters = QStringList();
+    if (!QFileInfo(pPath).isDir())
+        parameters << QString("/select,");
+    parameters << QDir::toNativeSeparators(pPath);
+    QProcess::startDetached(explorer, parameters);
+#elif defined(Q_OS_MAC)
+    auto parameters = QStringList();
+    parameters << "-e" << "tell application \"Finder\"";
+    parameters << "-e" << "activate";
+    parameters << "-e" << QString("open POSIX file \"%1\"").arg(pPath);
+    parameters << "-e" << "end tell";
+    QProcess::startDetached("osascript", parameters);
+#else
+    Q_UNUSED(pPath)
+/*  TODO
+    // we cannot select a file here, because no file browser really supports it...
+    const QFileInfo fileInfo(pPath);
+    const QString folder = fileInfo.isDir() ? fileInfo.absoluteFilePath() : fileInfo.filePath();
+    // https://gitlab.com/pteam/pteam-qt-creator/blob/master/src/libs/utils/unixutils.cpp#L44
+    const QString app = UnixUtils::fileBrowser(ICore::settings());
+    // https://gitlab.com/pteam/pteam-qt-creator/blob/master/src/libs/utils/unixutils.cpp#L71
+    const QString browserArgs = UnixUtils::substituteFileBrowserParameters(app, folder);
+    QProcess browserProc;
+    bool success = browserProc.startDetached(browserArgs);
+    const QString error = QString::fromLocal8Bit(browserProc.readAllStandardError());
+    success = success && error.isEmpty();
+    if (!success)
+        showGraphicalShellError(parent, app, error);
+*/
+#endif
+}
+
 //==============================================================================
 
 void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaceList)

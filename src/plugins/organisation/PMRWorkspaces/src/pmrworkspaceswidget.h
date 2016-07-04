@@ -118,6 +118,8 @@ private:
     void pullWorkspace(const QString &pUrl);
     void pushWorkspace(const QString &pUrl);
 
+    void showInGraphicalShell(const QString &pPath);
+
 Q_SIGNALS:
     void openFileRequested(const QString &pFile);
     void information(const QString &pMessage);
