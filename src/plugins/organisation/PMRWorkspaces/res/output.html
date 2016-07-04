@@ -51,6 +51,10 @@
               margin-top: 0;
               }
 
+            td.status {
+              width: 2.5em;
+              text-align: right;
+            }
             td.action {
               width: 30px;
               text-align: right;
@@ -96,17 +100,6 @@
               padding-bottom: 0;
             }
 
-            td.action,
-            td.icon {
-              padding-left: 5px;
-              width: 30px;
-            }
-
-            td.status {
-              width: 2.5em;
-              text-align: right;
-            }
-
             tr.folder td.icon {
               padding-left: 0;
             }
@@ -114,6 +107,7 @@
             td.name {
               width: 100%;
               padding-top: 2px;
+              overflow-wrap: break-word;
             }
 
             tr.workspace > td.name {

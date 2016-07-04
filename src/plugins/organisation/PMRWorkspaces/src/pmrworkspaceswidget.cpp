@@ -295,7 +295,7 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace
                                       const QString &pPath, const QString &pFileName)
 {
     static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
-                                "  <td colspan=\"2\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
+                                "  <td colspan=\"2\" class=\"name\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
                                 "  <td class=\"status\">%4</td>\n"
                                 "  <td class=\"action\">%5</td>\n"
                                 "</tr>\n";
@@ -331,6 +331,12 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorks
                                 "  <td></td>\n"
                                 "  <td colspan=\"3\">\n"
                                 "    <table>\n"
+                                "      <tr class=\"spacing\">\n"
+                                "        <td class=\"icon\"></td>\n"
+                                "        <td class=\"name\"></td>\n"
+                                "        <td class=\"status\"></td>\n"
+                                "        <td class=\"action\"></td>\n"
+                                "      </tr>\n"
                                 "      %1\n"
                                 "    </table>\n"
                                 "  </td>\n"
