@@ -88,15 +88,17 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     QByteArray fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
-    mTemplate = QString(fileContents).arg( // clone, folder, open, star, pull, commit, push
+    mTemplate = QString(fileContents).arg( // clone, folder, open, star, pull, stage, unstage, commit, push
                                           Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/places/folder.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/places/folder-open.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/places/folder-favorites.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/actions/arrow-down-double.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/actions/view-task.png", 16, 16),
+                                          Core::iconDataUri(":/oxygen/actions/archive-remove.png", 16, 16),
                                           Core::iconDataUri(":/oxygen/actions/dialog-ok-apply.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/arrow-up-double.png", 16, 16),
-                                          "%1");
+                                          Core::iconDataUri(":/oxygen/actions/arrow-up-double.png", 16, 16))
+                                          .arg("%1");
 // TODO Use constants for icon names -- CloneIcon etc
 }
 
@@ -233,7 +235,7 @@ void PmrWorkspacesWidget::scanDefaultWorkspaceDirectory(void)
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::actionHtml(const QList<QPair<QString, QString> > &pActions)
+const QString PmrWorkspacesWidget::actionHtml(const QList<QPair<QString, QString> > &pActions)
 {
     QPair<QString, QString> action;
     QStringList actions;
@@ -248,7 +250,7 @@ QString PmrWorkspacesWidget::actionHtml(const QList<QPair<QString, QString> > &p
 QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString &pIcon,
                                            const QString &pId, const QString &pName,
                                            const QString &pStatus,
-                                           const QList<QPair<QString, QString> > &pActions)
+                                           const QList<QPair<QString, QString> > &pActionList)
 {
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "  <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
@@ -265,14 +267,32 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
     mRowAnchor += 1;
     mAnchors.insert(pId, mRowAnchor);
 
-    return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActions)).arg(mRowAnchor);
+    return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActionList)).arg(mRowAnchor);
+}
+
+//==============================================================================
+
+const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath)
+{
+    static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
+
+    auto gitStatus = pWorkspace->gitFileStatus(pPath);
+
+    auto actionList = QList<QPair<QString, QString> >();
+    if      (gitStatus[1] != ' ')
+        actionList << QPair<QString, QString>("stage", pPath);
+    else if (gitStatus[0] != ' ')
+        actionList << QPair<QString, QString>("unstage", pPath);
+//qDebug() << "S: " << gitStatus << " " << actionList;
+
+    return QStringList() << statusHtml.arg(gitStatus[0]).arg(gitStatus[1])
+                         << actionHtml(actionList);
 }
 
 //==============================================================================
 
 QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                      const QString &pPath, const QString &pFileName,
-                                      const QList<QPair<QString, QString> > &pActions)
+                                      const QString &pPath, const QString &pFileName)
 {
     static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
                                 "  <td colspan=\"2\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
@@ -283,14 +303,14 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace
     QString rowClass = (mRow % 2) ? "" : " even";
     if (pPath == mSelectedItem) rowClass += " selected";
 
-    QString gitStatus = pWorkspace->gitFileStatus(pPath);
+    auto statusActionHtml = fileStatusActionHtml(pWorkspace, pPath);
 
     // Use an anchor element to allow us to set the scroll position at a row
 
     mRowAnchor += 1;
     mAnchors.insert(pPath, mRowAnchor);
 
-    return html.arg(rowClass, pPath, pFileName, gitStatus, actionHtml(pActions)).arg(mRowAnchor);
+    return html.arg(rowClass, pPath, pFileName, statusActionHtml[0], statusActionHtml[1]).arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -323,8 +343,7 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorks
                 directory.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
             if (info.isDir()) itemHtml << folderHtml(pWorkspace, info.absoluteFilePath());
             else              itemHtml << fileHtml(pWorkspace,
-                                                   info.absoluteFilePath(), info.fileName(),
-                                                   QList<QPair<QString, QString> >()); // status, actions
+                                                   info.absoluteFilePath(), info.fileName());
         }
     }
 
@@ -518,25 +537,29 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
     if (!webElement.isNull()) {
         if (webElement.tagName() == "A") {
             QString link = webElement.attribute("href");
-            if (webElement.parent().parent().hasClass("file")) {
+            QString action = link.split("|")[0];
+
+            if      (action == "stage") {
+                toolTip = tr("Stage changes");
+            }
+            else if (action == "unstage") {
+                toolTip = tr("Unstage changes");
+            }
+            else if (webElement.parent().parent().hasClass("file")) {
                 toolTip = tr("Open File");
                 mouseCursor = QCursor(Qt::PointingHandCursor);
             }
-            else {
-                QStringList linkList = link.split("|");
-                QString action = linkList[0];
-                if      (action == "clone") {
-                    toolTip = tr("Clone the Workspace");
-                }
-                else if (action == "pull") {
-                    toolTip = tr("Pull updates from PMR");
-                }
-                else if (action == "commit") {
-                    toolTip = tr("Commit changes");
-                }
-                else if (action == "push") {
-                    toolTip = tr("Push committed changes to PMR");
-                }
+            else if      (action == "clone") {
+                toolTip = tr("Clone the Workspace");
+            }
+            else if (action == "pull") {
+                toolTip = tr("Pull updates from PMR");
+            }
+            else if (action == "commit") {
+                toolTip = tr("Commit staged changes");
+            }
+            else if (action == "push") {
+                toolTip = tr("Push committed changes to PMR");
             }
         }
         else {
@@ -574,23 +597,50 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
             if (aElement.toPlainText().isEmpty()) {
                 QStringList linkList = aElement.attribute("href").split("|");
                 QString action = linkList[0];
-                QString rowId = linkList[1];
+                QString linkUrl = linkList[1];
                 if      (action == "clone") {
-                    cloneWorkspace(rowId);
+                    cloneWorkspace(linkUrl);
                 }
                 else if (action == "pull") {
-                    pullWorkspace(rowId);
+                    pullWorkspace(linkUrl);
                 }
                 else if (action == "commit") {
-                    commitWorkspace(rowId);
+                    commitWorkspace(linkUrl);
                 }
                 else if (action == "push") {
-                    pushWorkspace(rowId);
+                    pushWorkspace(linkUrl);
                 }
 // TODO
 // commit      }  Both against a workspace (i.e. commit is for all C/A/D ??)
 // push        }  Auto-push after a commit??
+                else if (action == "stage" || action == "unstage") {
+                    auto workspaceElement = trElement;
+                    while (!workspaceElement.isNull()
+                        && !(workspaceElement.tagName() == "TR"
+                          && workspaceElement.hasClass("workspace"))) {
+                        workspaceElement = workspaceElement.parent();
+                        if (workspaceElement.hasClass("contents"))
+                            workspaceElement = workspaceElement.previousSibling();
+                    }
+                    if (!workspaceElement.isNull()) {
+                        // Stage/unstage the file
 
+                        auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+                        workspace->stageFile(linkUrl, (action == "stage"));
+
+                        // Now update the file's status and action
+
+                        auto statusActionHtml = fileStatusActionHtml(workspace, linkUrl);
+
+                        auto statusElement = trElement.findFirst("td.status");
+                        if (!statusElement.isNull()) statusElement.setInnerXml(statusActionHtml[0]);
+
+                        auto actionElement = trElement.findFirst("td.action");
+                        if (!actionElement.isNull()) actionElement.setInnerXml(statusActionHtml[1]);
+
+                        // TODO Update workspace header (to add Commit)
+                    }
+               }
             }
             else {
                 // Text link clicked, e.g. to open a file
@@ -639,35 +689,35 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
         if (!trElement.findFirst("img.clone").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/places/folder-downloads.png"),
-                                                 tr("Clone"), this);
+                                                 tr("Clone workspace"), this);
             cloneAction->setData(QString("clone|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.pull").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-down-double.png"),
-                                                 tr("Pull"), this);
+                                                 tr("Pull updates"), this);
             cloneAction->setData(QString("pull|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.commit").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/places/dialog-ok-apply.png"),
-                                                 tr("Commit"), this);
+                                                 tr("Commit staged changes"), this);
             cloneAction->setData(QString("commit|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.push").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-up-double.png"),
-                                                 tr("Push"), this);
+                                                 tr("Push commits"), this);
             cloneAction->setData(QString("push|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
 
         auto refreshAction = new QAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                             tr("Refresh"), this);
+                                             tr("Refresh display"), this);
         refreshAction->setData(QString("refresh|%1").arg(elementId));
         menu->addAction(refreshAction);
 
@@ -686,7 +736,7 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
         menu->addSeparator();
         auto aboutAction = new QAction(QIcon(":/oxygen/actions/help-about.png"),
-                                       tr("About"), this);
+                                       tr("About the workspace"), this);
         aboutAction->setData(QString("about|%1").arg(elementId));
         menu->addAction(aboutAction);
     }
@@ -696,27 +746,27 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
         if (item) {
             QStringList linkList = item->data().toString().split("|");
             QString action = linkList[0];
-            QString rowId = linkList[1];
+            QString linkId = linkList[1];
             if      (action == "about") {
-                aboutWorkspace(rowId);
+                aboutWorkspace(linkId);
             }
             else if (action == "clone") {
-                cloneWorkspace(rowId);
+                cloneWorkspace(linkId);
             }
             else if (action == "refresh") {
-                refreshWorkspace(rowId);
+                refreshWorkspace(linkId);
             }
             else if (action == "pull") {
-                pullWorkspace(rowId);
+                pullWorkspace(linkId);
             }
             else if (action == "commit") {
-                commitWorkspace(rowId);
+                commitWorkspace(linkId);
             }
             else if (action == "push") {
-                pushWorkspace(rowId);
+                pushWorkspace(linkId);
             }
             else if (action == "show") {
-                showInGraphicalShell(rowId);
+                showInGraphicalShell(linkId);
             }
         }
     }
@@ -926,7 +976,11 @@ void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
     if (!workspaceElement.isNull()) {
         auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
         if (workspace) {
-            // We have a valid workplace so replace its header and content row
+            // We have a valid workplace so reopen it
+
+            workspace->open();
+
+            // And replace its header and content row
 
             auto htmlRows = workspaceHtml(workspace);
 
@@ -962,9 +1016,13 @@ void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
         if (workspace) {
             // We have a valid workspace so update file's status
 
+            auto statusActionHtml = fileStatusActionHtml(workspace, pPath);
+
             auto statusElement = fileElement.findFirst("td.status");
-            if (!statusElement.isNull())
-                statusElement.setPlainText(workspace->gitFileStatus(pPath));
+            if (!statusElement.isNull()) statusElement.setInnerXml(statusActionHtml[0]);
+
+            auto actionElement = fileElement.findFirst("td.action");
+            if (!actionElement.isNull()) actionElement.setInnerXml(statusActionHtml[1]);
         }
     }
 }

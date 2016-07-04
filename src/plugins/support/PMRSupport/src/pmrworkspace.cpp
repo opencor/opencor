@@ -531,11 +531,11 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
 
 //==============================================================================
 
-const QString PmrWorkspace::gitFileStatus(const QString &pPath) const
+const QList<QChar> PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
     // Get the status of a file
 
-    auto status = QString();
+    auto status = QList<QChar>() << ' ' << ' ';
 //qDebug() << "Get status: " << pPath;
     if (this->opened()) {
         auto repoDir = QDir(mPath);
@@ -564,7 +564,8 @@ const QString PmrWorkspace::gitFileStatus(const QString &pPath) const
                 istatus = '!';
                 wstatus = '!';
             }
-            status = QString(QChar(istatus)) + wstatus;
+            status[0] = istatus;
+            status[1] = wstatus;
 // TODO Combine istatus and wstatus?? A/M/D/R/T/?/!
 //      What has precedence? Index? "AM" --> "A" but "AD" --> "D"
 //      Whatever the result after adding the work file?? Then "MM" could goto "".
@@ -575,6 +576,27 @@ const QString PmrWorkspace::gitFileStatus(const QString &pPath) const
     }
 
     return status;
+}
+
+//==============================================================================
+
+void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
+{
+    if (this->open()) {
+        auto repoDir = QDir(mPath);
+        auto relativePath = repoDir.relativeFilePath(pPath);
+
+        git_index *index;
+        git_repository_index(&index, mGitRepository);
+
+        if (pStage) git_index_add_bypath(index, relativePath.toUtf8().constData());
+        else        git_index_remove_bypath(index, relativePath.toUtf8().constData());
+
+        git_index_write(index);
+
+// TODO check return values
+        git_index_free(index);
+    }
 }
 
 //==============================================================================

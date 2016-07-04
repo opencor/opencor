@@ -97,16 +97,17 @@ private:
     void displayWorkspaces(void);
     void expandHtmlTree(const QString &pId);
 
-    QString actionHtml(const QList<QPair<QString, QString> > &pActions);
+    static const QString actionHtml(const QList<QPair<QString, QString> > &pActions);
     QString containerHtml(const QString &pClass, const QString &pIcon,
                           const QString &pId, const QString &pName,
                           const QString &pStatus,
-                          const QList<QPair<QString, QString> > &pActions);
+                          const QList<QPair<QString, QString> > &pActionList);
     QString contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
     QString emptyContentsHtml(void);
-    QString fileHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                     const QString &pId, const QString &pFileName,
-                     const QList<QPair<QString, QString> > &pActions);
+
+    static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                                                  const QString &pPath);
+    QString fileHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pId, const QString &pFileName);
     QStringList folderHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
     QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 

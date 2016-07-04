@@ -39,7 +39,6 @@
 
 /* NEW */
             td.action img,
-            td.status img {
                 margin-top: 2px;
                 margin-right: 2px;
                 margin-left: 0;
@@ -59,9 +58,6 @@
               }
               td.icon {
                 width: 24px;
-              }
-              td.status {
-                width: 50px;
               }
 
             td.icon a,
@@ -101,16 +97,19 @@
                 padding-bottom: 0;
               }
 
-              td.action,
-              td.icon,
-              td.status {
-                padding-left: 5px;
-                width: 30px;
-              }
+            td.action,
+            td.icon {
+              padding-left: 5px;
+              width: 30px;
+            }
 
               tr.folder td.icon {
                 padding-left: 0;
               }
+            td.status {
+              width: 2.5em;
+              text-align: right;
+            }
 
               td.name {
                 width: 100%;
@@ -148,6 +147,17 @@
               }
 
 /* END NEW */
+            /* Colour of file status indicators */
+            span.istatus {
+              color: #080;
+              display: inline-block;
+              width: 1em;
+            }
+            span.wstatus {
+              color: #800;
+              display: inline-block;
+              width: 1em;
+            }
 
             img.button {
                 position: relative;
@@ -197,18 +207,36 @@
             img.pull {
                 content: url("%5");
             }
-            img.commit {
+            img.stage {
                 content: url("%6");
+                /* Overide button class */
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                margin-right: 2px;
+            }
+            img.unstage {
+                content: url("%7");
+                /* Overide button class */
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                margin-right: 2px;
+            }
+            img.commit {
+                content: url("%8");
             }
             img.push {
-                content: url("%7");
+                content: url("%9");
             }
         </style>
     </head>
     <body ondragstart="return false;" ondrop="return false;">
         <table class="fullWidth">
             <tbody id="workspaces">
-                %8
+                %10
             </tbody>
         </table>
     </body>

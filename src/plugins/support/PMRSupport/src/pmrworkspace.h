@@ -94,11 +94,9 @@ public:
         StatusCurrent
     };
     RemoteStatus gitRemoteStatus(void) const;
+    const QList<QChar> gitFileStatus(const QString &pPath) const;
 
-    const QString gitFileStatus(const QString &pPath) const;
-
-
-//    void push();
+    void stageFile(const QString &pPath, const bool &pStage);
 
 private:
     bool mOwned;
