@@ -523,16 +523,17 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
             }
             else {
                 QStringList linkList = link.split("|");
-                if (!linkList[0].compare("clone")) {
+                QString action = linkList[0];
+                if      (action == "clone") {
                     toolTip = tr("Clone the Workspace");
                 }
-                else if (!linkList[0].compare("pull")) {
+                else if (action == "pull") {
                     toolTip = tr("Pull updates from PMR");
                 }
-                else if (!linkList[0].compare("commit")) {
+                else if (action == "commit") {
                     toolTip = tr("Commit changes");
                 }
-                else if (!linkList[0].compare("push")) {
+                else if (action == "push") {
                     toolTip = tr("Push committed changes to PMR");
                 }
             }
@@ -571,20 +572,20 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
         if (!aElement.isNull()) {
             if (aElement.toPlainText().isEmpty()) {
                 QStringList linkList = aElement.attribute("href").split("|");
-                if (!linkList[0].compare("clone")) {
-                    cloneWorkspace(linkList[1]);
+                QString action = linkList[0];
+                QString rowId = linkList[1];
+                if      (action == "clone") {
+                    cloneWorkspace(rowId);
                 }
-                else if (!linkList[0].compare("pull")) {
-                    pullWorkspace(linkList[1]);
+                else if (action == "pull") {
+                    pullWorkspace(rowId);
                 }
-                else if (!linkList[0].compare("commit")) {
-                    commitWorkspace(linkList[1]);
+                else if (action == "commit") {
+                    commitWorkspace(rowId);
                 }
-                else if (!linkList[0].compare("push")) {
-qDebug() << "pushing " << linkList[1];
-                    pushWorkspace(linkList[1]);
+                else if (action == "push") {
+                    pushWorkspace(rowId);
                 }
-
 // TODO
 // commit      }  Both against a workspace (i.e. commit is for all C/A/D ??)
 // push        }  Auto-push after a commit??
@@ -633,46 +634,47 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
         trElement = trElement.parent();
 
     if (!trElement.isNull() && trElement.hasClass("workspace")) {
+        QString elementId = trElement.attribute("id");
 
         if (!trElement.findFirst("img.clone").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/places/folder-downloads.png"),
                                                  tr("Clone"), this);
-            cloneAction->setData(QString("clone|%1").arg(trElement.attribute("id")));
+            cloneAction->setData(QString("clone|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.pull").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-down-double.png"),
                                                  tr("Pull"), this);
-            cloneAction->setData(QString("pull|%1").arg(trElement.attribute("id")));
+            cloneAction->setData(QString("pull|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.commit").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/places/dialog-ok-apply.png"),
                                                  tr("Commit"), this);
-            cloneAction->setData(QString("commit|%1").arg(trElement.attribute("id")));
+            cloneAction->setData(QString("commit|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
         else if (!trElement.findFirst("img.push").isNull()) {
             auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-up-double.png"),
                                                  tr("Push"), this);
-            cloneAction->setData(QString("push|%1").arg(trElement.attribute("id")));
+            cloneAction->setData(QString("push|%1").arg(elementId));
             menu->addAction(cloneAction);
             menu->addSeparator();
         }
-        else {
-            auto refreshAction = new QAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                                 tr("Refresh"), this);
-            refreshAction->setData(QString("refresh|%1").arg(trElement.attribute("id")));
-            menu->addAction(refreshAction);
-            menu->addSeparator();
+
+        auto refreshAction = new QAction(QIcon(":/oxygen/actions/view-refresh.png"),
+                                             tr("Refresh"), this);
+        refreshAction->setData(QString("refresh|%1").arg(elementId));
+        menu->addAction(refreshAction);
         }
 
+        menu->addSeparator();
         auto aboutAction = new QAction(QIcon(":/oxygen/actions/help-about.png"),
                                        tr("About"), this);
-        aboutAction->setData(QString("about|%1").arg(trElement.attribute("id")));
+        aboutAction->setData(QString("about|%1").arg(elementId));
         menu->addAction(aboutAction);
 
         // TODO Add "Show in Finder" (plus Windows/Linux equivalents) to menu...
@@ -682,23 +684,25 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
         QAction *item = menu->exec(mapToGlobal(pos));
         if (item) {
             QStringList linkList = item->data().toString().split("|");
-            if      (linkList[0] == "about") {
-                aboutWorkspace(linkList[1]);
+            QString action = linkList[0];
+            QString rowId = linkList[1];
+            if      (action == "about") {
+                aboutWorkspace(rowId);
             }
-            else if (linkList[0] == "clone") {
-                cloneWorkspace(linkList[1]);
+            else if (action == "clone") {
+                cloneWorkspace(rowId);
             }
-            else if (linkList[0] == "refresh") {
-                refreshWorkspace(linkList[1]);
+            else if (action == "refresh") {
+                refreshWorkspace(rowId);
             }
-            else if (linkList[0] == "pull") {
-                pullWorkspace(linkList[1]);
+            else if (action == "pull") {
+                pullWorkspace(rowId);
             }
-            else if (linkList[0] == "commit") {
-                commitWorkspace(linkList[1]);
+            else if (action == "commit") {
+                commitWorkspace(rowId);
             }
-            else if (linkList[0] == "push") {
-                pushWorkspace(linkList[1]);
+            else if (action == "push") {
+                pushWorkspace(rowId);
             }
         }
     }
