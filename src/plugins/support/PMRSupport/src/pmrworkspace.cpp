@@ -430,12 +430,13 @@ void PmrWorkspace::push(void)
 
         // Get the remote, connect to it, add a refspec, and do the push
 
-        git_remote* gitRemote = nullptr;
+        git_remote *gitRemote = nullptr;
         if (git_remote_add_push(mGitRepository, "origin", "refs/heads/master:refs/heads/master")
          || git_remote_lookup(&gitRemote, mGitRepository, "origin")
          || git_remote_connect(gitRemote, GIT_DIRECTION_PUSH, &remoteCallbacks, &authorisationStrArray)
-         || git_remote_upload(gitRemote, nullptr, &pushOptions)) {
+         || git_remote_push(gitRemote, nullptr, &pushOptions)) {
             emitGitError(tr("An error occurred while trying to push the workspace."));
+        if (gitRemote) git_remote_free(gitRemote);
         }
     }
 
