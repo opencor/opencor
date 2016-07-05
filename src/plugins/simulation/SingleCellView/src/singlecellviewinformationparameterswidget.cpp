@@ -41,7 +41,8 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mSimulation(0),
-    mNeedClearing(false)
+    mNeedClearing(false),
+    mVoiAccessible(false)
 {
     // Create our context menu
 
@@ -66,9 +67,11 @@ void SingleCellViewInformationParametersWidget::retranslateContextMenu()
 {
     // Retranslate our context menu, in case it has been populated
 
-    if (mContextMenu->actions().count() >= 2) {
-        mContextMenu->actions()[0]->setText(tr("Plot Against Variable of Integration"));
-        mContextMenu->actions()[1]->setText(tr("Plot Against"));
+    if (mContextMenu->actions().count() >= mVoiAccessible+1) {
+        if (mVoiAccessible)
+            mContextMenu->actions()[0]->setText(tr("Plot Against Variable of Integration"));
+
+        mContextMenu->actions()[(mVoiAccessible?0:-1)+1]->setText(tr("Plot Against"));
     }
 }
 
@@ -106,6 +109,13 @@ void SingleCellViewInformationParametersWidget::initialize(SingleCellViewSimulat
         mNeedClearing = false;
     }
 
+    // Check whether our model's variable of integration is among our model's
+    // parameters (i.e. it is defined in the main CellML file)
+
+    CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
+
+    mVoiAccessible = runtime->parameters().contains(runtime->variableOfIntegration());
+
     // Retranslate our core self, if needed
     // Note: part of reloading ourselves consists of finalising ourselves, which
     //       means clearing all of our contents including our header labels. So,
@@ -117,8 +127,8 @@ void SingleCellViewInformationParametersWidget::initialize(SingleCellViewSimulat
 
     // Populate our property editor and context menu
 
-    populateModel(pSimulation->runtime());
-    populateContextMenu(pSimulation->runtime());
+    populateModel(runtime);
+    populateContextMenu(runtime);
 
     // Keep track of when some of the model's data has changed
 
@@ -379,7 +389,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSuppor
 {
     // Create our two main menu items
 
-    QAction *voiAction = mContextMenu->addAction(QString());
+    QAction *voiAction = mVoiAccessible?mContextMenu->addAction(QString()):0;
     QMenu *plotAgainstMenu = new QMenu(mContextMenu);
 
     mContextMenu->addAction(plotAgainstMenu->menuAction());
@@ -389,14 +399,15 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSuppor
     retranslateContextMenu();
 
     // Create a connection to handle the graph requirement against our variable
-    // of integration
+    // of integration, and keep track of the parameter associated with our first
+    // main menu item
 
-    connect(voiAction, SIGNAL(triggered(bool)),
-            this, SLOT(emitGraphRequired()));
+    if (mVoiAccessible) {
+        connect(voiAction, SIGNAL(triggered(bool)),
+                this, SLOT(emitGraphRequired()));
 
-    // Keep track of the parameter associated with our first main menu item
-
-    mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
+        mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
+    }
 
     // Populate our context menu with the parameters
 

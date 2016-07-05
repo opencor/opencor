@@ -71,6 +71,7 @@ private:
     SingleCellViewSimulation *mSimulation;
 
     bool mNeedClearing;
+    bool mVoiAccessible;
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
