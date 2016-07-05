@@ -541,9 +541,8 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
     auto mouseCursor = QCursor(Qt::ArrowCursor);
 
     if (!webElement.isNull()) {
-        if (webElement.tagName() == "A") {
-            QString link = webElement.attribute("href");
-            QString action = link.split("|")[0];
+        if (webElement.tagName() == "A" && !webElement.attribute("href").isEmpty()) {
+            QString action = webElement.attribute("href").split("|")[0];
 
             if      (action == "stage") {
                 toolTip = tr("Stage changes");
@@ -594,14 +593,15 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
             trElement = trElement.parent();
 
         auto aElement = page()->mainFrame()->hitTestContent(event->pos()).element();
-        while (!aElement.isNull() && aElement.tagName() != "A")
+        while (!aElement.isNull() && aElement.tagName() != "A" && aElement.tagName() != "TR")
             aElement = aElement.parent();
 
         // Check if an `<a>` element has been clicked
 
-        if (!aElement.isNull()) {
-            if (aElement.toPlainText().isEmpty()) {
-                QStringList linkList = aElement.attribute("href").split("|");
+        auto aLink = aElement.attribute("href");
+        if (!aElement.isNull() && aElement.tagName() == "A" && !aLink.isEmpty()) {
+            if (aElement.toPlainText().isEmpty() && aLink.contains("|")) {
+                QStringList linkList = aLink.split("|");
                 QString action = linkList[0];
                 QString linkUrl = linkList[1];
                 if      (action == "clone") {
@@ -648,10 +648,10 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                     }
                }
             }
-            else {
+            else if (!aLink.isEmpty()) {
                 // Text link clicked, e.g. to open a file
 
-                emit openFileRequested(aElement.attribute("href"));
+                emit openFileRequested(aLink);
             }
         }
         else if (!trElement.isNull()) {
