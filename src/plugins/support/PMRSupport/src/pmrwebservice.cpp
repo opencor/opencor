@@ -381,7 +381,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                     break;
                 }
                 case ExposureFileInformation: {
-                    bool hasExposureFileInformation = true;
+                    bool hasExposureFileInformation = false;
                     QVariantList itemsList = collectionMap["items"].toList();
 
                     exposureUrl = mExposureUrls.value(url);
@@ -396,6 +396,8 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                             QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
 
                             if (!exposureFile.isEmpty()) {
+                                hasExposureFileInformation = true;
+
                                 exposureUrl = mExposureUrls.value(url);
 
                                 mExposureFileNames.insertMulti(exposureUrl, exposureFile);
@@ -415,11 +417,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                                     emit addExposureFiles(exposureUrl, exposureFileNames);
                                 }
                             }
-                        } else {
-                            hasExposureFileInformation = false;
                         }
-                    } else {
-                        hasExposureFileInformation = false;
                     }
 
                     if (!hasExposureFileInformation)
