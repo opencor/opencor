@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "pmrrepository.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacesmanager.h"
 
@@ -40,7 +41,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent), mOwned(false),
+PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(false),
     mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString())
 {
@@ -48,12 +49,14 @@ PmrWorkspace::PmrWorkspace(QObject *parent) : QObject(parent), mOwned(false),
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent) :
+PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, PmrRepository *parent) :
     QObject(parent), mOwned(false),
     mDescription(QString()), mName(pName), mOwner(QString()), mUrl(pUrl),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString())
 {
     // Name, description and owner are set from PMR workspace info
+    connect(this, SIGNAL(progress(double)), parent, SIGNAL(progress(double)));
+    connect(this, SIGNAL(warning(QString)), parent, SIGNAL(warning(QString)));
 }
 
 //==============================================================================
@@ -609,7 +612,7 @@ PmrWorkspaceList::PmrWorkspaceList() :
 
 //==============================================================================
 
-void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, QObject *parent)
+void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, PmrRepository *parent)
 {
     // Add a new workspace to the list
 

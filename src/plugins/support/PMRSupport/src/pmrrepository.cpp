@@ -321,8 +321,6 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
 {
     emit busy(true);
-    connect(pWorkspace, SIGNAL(progress(double)), this, SIGNAL(progress(double)));
-    connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
@@ -389,9 +387,6 @@ void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
 void PmrRepository::requestWorkspacePush(PmrWorkspace *pWorkspace)
 {
     emit busy(true);
-
-    connect(pWorkspace, SIGNAL(progress(double)), this, SIGNAL(progress(double)));
-    connect(pWorkspace, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
     connect(pWorkspace, SIGNAL(workspacePushed(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspacePushFinished(PMRSupport::PmrWorkspace *)));
 
@@ -468,7 +463,7 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 emit workspaceInformation(workspaceUrl, workspaceName,
                                           workspaceDescription, workspaceOwner);
 
-                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, exposure);
+                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, this);
 
                 auto dirName = QString();
 

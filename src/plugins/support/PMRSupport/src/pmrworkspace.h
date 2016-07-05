@@ -44,13 +44,17 @@ namespace PMRSupport {
 
 //==============================================================================
 
+class PmrRepository;
+
+//==============================================================================
+
 class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(QObject *parent=0);
-    PmrWorkspace(const QString &pUrl, const QString &pName, QObject *parent);
+    explicit PmrWorkspace(PmrRepository *parent=0);
+    PmrWorkspace(const QString &pUrl, const QString &pName, PmrRepository *parent);
     virtual ~PmrWorkspace();
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
@@ -144,7 +148,7 @@ class PMRSUPPORT_EXPORT PmrWorkspaceList : public QList<PmrWorkspace *>
 public:
     PmrWorkspaceList();
 
-    void add(const QString &pUrl, const QString &pName, QObject *parent);
+    void add(const QString &pUrl, const QString &pName, PmrRepository *parent);
 };
 
 //==============================================================================
