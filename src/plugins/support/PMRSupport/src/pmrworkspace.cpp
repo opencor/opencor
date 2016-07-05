@@ -220,7 +220,7 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
     const git_error *gitError = giterr_last();
 
-    emit warning(pMessage + (gitError ? (QString("<br></br>")
+    emit warning(pMessage + (gitError ? (QString("<br></br><br></br>")
                                          + tr("Error %1: %2.").arg(QString::number(gitError->klass),
                                                                    Core::formatMessage(gitError->message)))
                                       : ""));
@@ -548,30 +548,26 @@ const QList<QChar> PmrWorkspace::gitFileStatus(const QString &pPath) const
         if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0) {
             char istatus = ' ';
             char wstatus = ' ';
-//qDebug() << "   Flags: " << statusFlags;
 
             if (statusFlags & GIT_STATUS_INDEX_NEW) istatus = 'A';
             if (statusFlags & GIT_STATUS_INDEX_MODIFIED) istatus = 'M';
             if (statusFlags & GIT_STATUS_INDEX_DELETED) istatus = 'D';
             if (statusFlags & GIT_STATUS_INDEX_RENAMED) istatus = 'R';
             if (statusFlags & GIT_STATUS_INDEX_TYPECHANGE) istatus = 'T';
-            if (statusFlags & GIT_STATUS_WT_NEW) {
-                if (istatus == ' ') istatus = '?';
-                wstatus = '?';
-            }
+
+            if (statusFlags & GIT_STATUS_WT_NEW) wstatus = 'A';
             if (statusFlags & GIT_STATUS_WT_MODIFIED) wstatus = 'M';
             if (statusFlags & GIT_STATUS_WT_DELETED) wstatus = 'D';
             if (statusFlags & GIT_STATUS_WT_RENAMED) wstatus = 'R';
             if (statusFlags & GIT_STATUS_WT_TYPECHANGE) wstatus = 'T';
+
             if (statusFlags & GIT_STATUS_IGNORED) {
                 istatus = '!';
                 wstatus = '!';
             }
+
             status[0] = istatus;
             status[1] = wstatus;
-// TODO Combine istatus and wstatus?? A/M/D/R/T/?/!
-//      What has precedence? Index? "AM" --> "A" but "AD" --> "D"
-//      Whatever the result after adding the work file?? Then "MM" could goto "".
         }
         else {
             emitGitError(tr("An error occurred while trying to get the status of %1").arg(pPath));
@@ -587,18 +583,48 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
     if (this->open()) {
         auto repoDir = QDir(mPath);
-        auto relativePath = repoDir.relativeFilePath(pPath);
+        auto relativePath = repoDir.relativeFilePath(pPath).toUtf8();
+        bool success = false;
 
         git_index *index;
-        git_repository_index(&index, mGitRepository);
+        if (git_repository_index(&index, mGitRepository) == 0) {
 
-        if (pStage) git_index_add_bypath(index, relativePath.toUtf8().constData());
-        else        git_index_remove_bypath(index, relativePath.toUtf8().constData());
+            if (pStage) {
+                success = (git_index_add_bypath(index, relativePath.constData()) == 0);
+            }
 
-        git_index_write(index);
+            else {
+                // Need to add a "reset stage" to the index
+                // Get tree of HEAD, then tree_entry for file
+                git_reference *headReference;
+                if (git_repository_head(&headReference, mGitRepository) == 0) {
+                    git_tree *headTree;
+                    if (git_reference_peel((git_object **)&headTree, headReference, GIT_OBJ_TREE) == 0) {
+                        git_tree_entry *headEntry;
+                        if (git_tree_entry_bypath(&headEntry, headTree, relativePath.constData()) == 0) {
+                            git_index_entry indexEntry;
+                            memset(&indexEntry, '\0', sizeof(git_index_entry));
+                            indexEntry.id = *git_tree_entry_id(headEntry);
+                            indexEntry.mode = git_tree_entry_filemode(headEntry);
+                            indexEntry.path = relativePath.constData();
+                            git_index_add(index, &indexEntry);
+                            git_tree_entry_free(headEntry);
+                            success = true;
+                        }
+                        else if (git_index_remove_bypath(index, relativePath.constData()) == 0) {
+                            success = true;
+                        }
+                        git_tree_free(headTree);
+                    }
+                    git_reference_free(headReference);
+                }
+            }
 
-// TODO check return values
-        git_index_free(index);
+            if (success) git_index_write(index);
+            git_index_free(index);
+        }
+        if (!success)
+            emitGitError(tr("An error occurred while trying to stage %1").arg(pPath));
     }
 }
 
