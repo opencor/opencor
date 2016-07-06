@@ -102,7 +102,8 @@ private:
                           const QString &pId, const QString &pName,
                           const QString &pStatus,
                           const QList<QPair<QString, QString> > &pActionList);
-    QString contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
+    QString contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath,
+                         const bool &pHidden);
     QString emptyContentsHtml(void);
 
     static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,

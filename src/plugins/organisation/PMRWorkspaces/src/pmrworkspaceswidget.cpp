@@ -325,9 +325,9 @@ QString PmrWorkspacesWidget::emptyContentsHtml(void)
 //==============================================================================
 
 QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                          const QString &pPath)
+                                          const QString &pPath, const bool &pHidden)
 {
-    static const QString html = "<tr class=\"contents\">\n"
+    static const QString html = "<tr class=\"contents%1\">\n"
                                 "  <td></td>\n"
                                 "  <td colspan=\"3\">\n"
                                 "    <table>\n"
@@ -337,7 +337,7 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorks
                                 "        <td class=\"status\"></td>\n"
                                 "        <td class=\"action\"></td>\n"
                                 "      </tr>\n"
-                                "      %1\n"
+                                "      %2\n"
                                 "    </table>\n"
                                 "  </td>\n"
                                 "</tr>\n";
@@ -353,7 +353,7 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorks
         }
     }
 
-    return html.arg(itemHtml.join("\n"));
+    return html.arg(pHidden ? " hidden" : "", itemHtml.join("\n"));
 }
 
 //==============================================================================
@@ -388,8 +388,8 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
     mRow = 0;
     QStringList html = QStringList(containerHtml("workspace", icon, url, name, "", actionList));
 
-    if (!path.isEmpty() && mExpandedItems.contains(url)) html << contentsHtml(pWorkspace, path);
-    else                                                 html << emptyContentsHtml();
+    if (!path.isEmpty()) html << contentsHtml(pWorkspace, path, !mExpandedItems.contains(url));
+    else                 html << emptyContentsHtml();
 
     return html;
 }
@@ -409,8 +409,7 @@ QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspace *pWor
                                                  icon, fullname, info.fileName(), "",
                                                  QList<QPair<QString, QString> >())); // status, actions
 
-    if (mExpandedItems.contains(fullname)) html << contentsHtml(pWorkspace, pPath);
-    else                                   html << emptyContentsHtml();
+    html << contentsHtml(pWorkspace, pPath, !mExpandedItems.contains(fullname));
 
     return html;
 }
@@ -454,40 +453,11 @@ void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
                                                    QString("tr[id=\"%1\"] + tr").arg(pId));
     if (!trElement.isNull()) {
         if (mExpandedItems.contains(pId)) {
-            trElement.setStyleProperty("display", "none");
+            trElement.addClass("hidden");
             mExpandedItems.remove(pId);
         }
         else if (trElement.hasClass("contents")) {
-            trElement.setStyleProperty("display", "table-row");
-            mExpandedItems.insert(pId);
-        }
-        else {
-            // First find parent workspace
-
-            QWebElement workspaceElement = trElement.previousSibling();
-            while (!workspaceElement.isNull()
-                && !(workspaceElement.tagName() == "TR"
-                  && workspaceElement.hasClass("workspace"))) {
-                workspaceElement = workspaceElement.parent();
-                if (workspaceElement.hasClass("contents"))
-                    workspaceElement = workspaceElement.previousSibling();
-            }
-
-            if (!workspaceElement.isNull()) {
-                auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
-                if (workspace) {
-                    // We have a valid parent so fill empty row with content
-
-                    if (pId == workspace->url()) {
-                        QString path = workspace->path();
-                        if (!path.isEmpty()) trElement.setOuterXml(contentsHtml(workspace, path));
-                    }
-                    else {
-                        trElement.setOuterXml(contentsHtml(workspace, pId));
-                    }
-                }
-            }
-
+            trElement.removeClass("hidden");
             mExpandedItems.insert(pId);
         }
     }
