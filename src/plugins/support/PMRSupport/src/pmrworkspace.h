@@ -87,6 +87,7 @@ public:
 
     void clone(const QString &pDirName);
     void close(void);
+    bool commit(const QString &pMessage);
     bool open(void);
     bool opened(void) const;
     void push(void);

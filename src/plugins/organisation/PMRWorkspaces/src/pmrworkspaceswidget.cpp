@@ -22,12 +22,14 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "pmrrepository.h"
 #include "pmrworkspace.h"
+#include "pmrworkspacescommit.h"
 #include "pmrworkspacesmanager.h"
 #include "pmrworkspaceswidget.h"
 
 //==============================================================================
 
 #include <QContextMenuEvent>
+#include <QDialog>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -603,9 +605,6 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                 else if (action == "push") {
                     pushWorkspace(linkUrl);
                 }
-// TODO
-// commit      }  Both against a workspace (i.e. commit is for all C/A/D ??)
-// push        }  Auto-push after a commit??
                 else if (action == "stage" || action == "unstage") {
                     auto workspaceElement = trElement;
                     while (!workspaceElement.isNull()
@@ -935,8 +934,17 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
     if (workspace && !workspace->isNull() && workspace->isLocal()) {
-// TODO  Show list of files to be committed (the index?) and get commit message
-//      workspace->commit(message);
+
+        auto commitDialog = new PmrWorkspacesCommit();
+
+// TODO  Set list of files to be committed (the index?) and get commit message
+//      commitDialog->setMessage(workspace->defaultCommitMessage());
+        if (commitDialog->exec() == QDialog::Accepted) {
+
+            if (workspace->commit(commitDialog->message()))
+                refreshWorkspace(workspace->url());
+
+        }
     }
 }
 
@@ -953,8 +961,6 @@ void PmrWorkspacesWidget::pushWorkspace(const QString &pUrl)
 }
 
 //==============================================================================
-
-// TODO this after a commit
 
 void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
 {

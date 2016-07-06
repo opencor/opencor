@@ -7,16 +7,19 @@ ADD_PLUGIN(PMRWorkspaces
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/pmrworkspacescommit.cpp
         src/pmrworkspacesnewworkspace.cpp
         src/pmrworkspacesplugin.cpp
         src/pmrworkspaceswidget.cpp
         src/pmrworkspaceswindow.cpp
     HEADERS_MOC
+        src/pmrworkspacescommit.h
         src/pmrworkspacesnewworkspace.h
         src/pmrworkspacesplugin.h
         src/pmrworkspaceswidget.h
         src/pmrworkspaceswindow.h
     UIS
+        src/pmrworkspacescommit.ui
         src/pmrworkspacesnewworkspace.ui
         src/pmrworkspaceswindow.ui
     INCLUDE_DIRS

@@ -491,55 +491,69 @@ void PmrWorkspace::push(void)
     emit workspacePushed(this);
 }
 
-/*
-if (this->open()) {
+//==============================================================================
 
-    git_index *index;
-    // Get the index to the repository
-    git_repository_index(&index, mGitRepository);
+bool PmrWorkspace::commit(const QString &pMessage)
+{
+    bool success = false;
 
-    // Add modified files
-    git_index_add_bypath(&index, "path/relative/to/working/dir/of/file");
-    // Remove deleted files
-    git_index_remove_bypath(&index, "path/relative/to/working/dir/of/file");
+    if (this->open()) {
+        // Get an empty buffer to hold the cleaned message
 
-    git_tree treeId;
-    git_index_write_tree(&treeId, index);
+        git_buf msg;
+        msg.ptr = nullptr;
+        git_buf_set(&msg, nullptr, 0);
 
-    git_index_free(index);
+        // Clean up message and remove `;` comments
 
-    git_tree *tree;
-    git_tree_lookup(&tree, mGitRepository, &treeId);
+        git_message_prettify(&msg, pMessage.toUtf8().constData(), true, ';');
 
-    git_oid parentId;
+        if (msg.size > 0) {
 
-    // Get HEAD as a commit object to use as the parent of the commit
-    git_reference_name_to_id(parentId, mGitRepository, "HEAD");
+            git_index *index;
+            if (git_repository_index(&index, mGitRepository) == 0) {
 
-    git_commit *parent;
-    git_commit_lookup(&parent, mGitRepository, parentId);
+                git_oid treeId;
+                if (git_index_write_tree(&treeId, index) == 0) {
 
-    gir_oid commitId;
+                    git_tree *tree;
+                    if (git_tree_lookup(&tree, mGitRepository, &treeId) == 0) {
 
-    // Do the commit
-    git_commit_create_v(
-        &commitId,
-        mGitRepository,
-        "HEAD",           // The commit will update the position of HEAD
-        author,
-        committer,
-        NULL,             // UTF-8 encoding
-        message,
-        tree,             // The tree from the index
-        1,                // Only one parent
-        parent            // No need to make a list with create_v
-    );
+                        // Get HEAD as a commit object to use as the parent of the commit
 
-    git_tree_free(tree);
-    git_commit_free(parent);
+                        git_oid parentId;
+                        if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0) {
+
+                            git_commit *parent;
+                            if (git_commit_lookup(&parent, mGitRepository, &parentId) == 0) {
+                                // Do the commit
+
+                                git_signature *author;
+                                if (git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org") == 0) {
+
+                                    git_oid commitId;
+                                    if (git_commit_create_v(&commitId, mGitRepository, "HEAD",
+                                                            author, author, NULL, msg.ptr,
+                                                            tree, 1, parent) == 0) {
+                                        success = true;
+                                    }
+                                    git_signature_free(author);
+                                }
+                                git_commit_free(parent);
+                            }
+                        }
+                    }
+                    git_tree_free(tree);
+                }
+                git_index_free(index);
+            }
+            if (!success)
+                emitGitError(tr("An error occurred while trying to commit to the workspace"));
+        }
+        git_buf_free(&msg);
+    }
+    return success;
 }
-
-*/
 
 //==============================================================================
 
