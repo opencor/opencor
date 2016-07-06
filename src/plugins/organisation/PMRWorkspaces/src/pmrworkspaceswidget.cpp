@@ -1045,7 +1045,9 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
     if (pWorkspace) {
         QString url = pWorkspace->url();
 
-        if (!mWorkspacesManager->hasWorkspace(url))
+        // Ensure our widget knows about the workspace
+
+        if (!mWorkspaceUrls.contains(url))
             addWorkspace(pWorkspace);
 
         // Redisplay with workspace expanded and selected
