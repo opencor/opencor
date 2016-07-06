@@ -433,7 +433,8 @@ void PmrWorkspace::clone(const QString &pDirName)
     // Perform the clone
 
     if (git_clone(&mGitRepository, workspaceByteArray.constData(),
-                          dirNameByteArray.constData(), &cloneOptions))
+                          dirNameByteArray.constData(), &cloneOptions)
+     || git_remote_add_push(mGitRepository, "origin", "refs/heads/master:refs/heads/master"))
         emitGitError(tr("An error occurred while trying to clone the workspace."));
 
     git_strarray_free(&authorisationStrArray);
@@ -477,11 +478,12 @@ void PmrWorkspace::push(void)
         // Get the remote, connect to it, add a refspec, and do the push
 
         git_remote *gitRemote = nullptr;
-        if (git_remote_add_push(mGitRepository, "origin", "refs/heads/master:refs/heads/master")
-         || git_remote_lookup(&gitRemote, mGitRepository, "origin")
-         || git_remote_connect(gitRemote, GIT_DIRECTION_PUSH, &remoteCallbacks, &authorisationStrArray)
-         || git_remote_push(gitRemote, nullptr, &pushOptions)) {
+        git_strarray refSpecsStrArray = { nullptr, 0 };
+
+        if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
+         || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
             emitGitError(tr("An error occurred while trying to push the workspace."));
+
         if (gitRemote) git_remote_free(gitRemote);
         }
     }
