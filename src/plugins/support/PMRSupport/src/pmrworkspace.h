@@ -93,10 +93,10 @@ public:
 
     enum RemoteStatus {
         StatusUnknown = 0,
-        StatusAhead,
-        StatusBehind,
-        StatusCommit,
-        StatusCurrent
+        StatusAhead   = 1,
+        StatusBehind  = 2,
+        StatusCurrent = 4,
+        StatusCommit  = 128
     };
     RemoteStatus gitRemoteStatus(void) const;
     const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;

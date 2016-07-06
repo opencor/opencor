@@ -572,6 +572,7 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
             emitGitError(tr("An error occurred while trying to get the status of %1").arg(mPath));
     }
 
+        if (mStagedCount > 0) status = (RemoteStatus)(status | StatusCommit);
     return status;
 }
 
