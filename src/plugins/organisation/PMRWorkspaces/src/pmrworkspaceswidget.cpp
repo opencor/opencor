@@ -288,7 +288,8 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath)
+const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                                                            const QString &pPath)
 {
     static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
 

@@ -26,10 +26,8 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDebug>
 #include <QDir>
 #include <QPushButton>
-#include <QStandardPaths> // Temp
 #include <QString>
 
 //==============================================================================
