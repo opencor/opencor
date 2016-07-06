@@ -404,6 +404,31 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
 
                                 --mNumberOfExposureFileUrlsLeft;
 
+                                // Check whether the exposure file has a link
+                                // called "Launch with OpenCOR"
+
+                                foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
+                                    QVariantMap linksMap = linksVariant.toMap();
+                                    QString promptValue = linksMap["prompt"].toString();
+                                    QString relValue = linksMap["rel"].toString();
+
+                                    if (   !promptValue.compare("Launch with OpenCOR")
+                                        && !relValue.compare("section")) {
+                                        // Our exposure file has a link called
+                                        // "Launch with OpenCOR", so check
+                                        // whether its href value is already
+                                        // listed in our list of exposure files
+                                        // and, if not, then add it to it
+
+                                        exposureFile = linksMap["href"].toString().trimmed().remove("opencor://openFile/");
+
+                                        if (   !exposureFile.isEmpty()
+                                            && !mExposureFileNames.values(exposureUrl).contains(exposureFile)) {
+                                            mExposureFileNames.insertMulti(exposureUrl, exposureFile);
+                                        }
+                                    }
+                                }
+
                                 // Ask our widget to add our exposure files,
                                 // should we have no exposure file URL left to
                                 // handle

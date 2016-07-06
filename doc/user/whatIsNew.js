@@ -74,6 +74,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
                              "entries": [
+                               { "type": "Added", "description": "Listing of <a href=\"http://www.sed-ml.org/\">SED-ML</a> files." },
                                { "type": "Added", "description": "Cloning of a workspace." },
                                { "type": "Added", "description": "Open a file from a published exposure." }
                              ]
