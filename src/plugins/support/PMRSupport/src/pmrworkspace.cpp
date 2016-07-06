@@ -43,7 +43,9 @@ namespace PMRSupport {
 
 PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(false),
     mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
-    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString())
+    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
+    mRepositoryStatusMap(QMap<QString, QPair<QChar, QChar> >())
+
 {
 }
 
@@ -52,7 +54,8 @@ PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(fals
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, PmrRepository *parent) :
     QObject(parent), mOwned(false),
     mDescription(QString()), mName(pName), mOwner(QString()), mUrl(pUrl),
-    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString())
+    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
+    mRepositoryStatusMap(QMap<QString, QPair<QChar, QChar> >())
 {
     // Name, description and owner are set from PMR workspace info
     connect(this, SIGNAL(progress(double)), parent, SIGNAL(progress(double)));
@@ -232,14 +235,52 @@ bool PmrWorkspace::open(void)
 {
     close();
     if (!mPath.isEmpty()) {
-        if (mGitRepository == nullptr) {
-            if (git_repository_open(&mGitRepository, mPath.toUtf8().constData())) {
-                emitGitError(tr("An error occurred while trying to open the workspace."));
-                return false;
+        if (git_repository_open(&mGitRepository, mPath.toUtf8().constData()) == 0) {
+
+            git_index *index;
+            if (git_repository_index(&index, mGitRepository) == 0) {
+
+                git_status_options statusOptions;
+                git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
+                statusOptions.show  = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
+                statusOptions.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
+                                    | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
+                                    | GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
+                                    | GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY
+                                    | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+
+                git_status_list *statusList;
+                if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == 0) {
+
+                    size_t entries = git_status_list_entrycount(statusList);
+                    auto lastComponents = QStringList();
+                    for (size_t i = 0; i < entries; ++i) {
+                        auto status = git_status_byindex(statusList, i);
+                        const char *filePath = (status->head_to_index)    ? status->head_to_index->old_file.path
+                                             : (status->index_to_workdir) ? status->index_to_workdir->old_file.path
+                                             :                              nullptr;
+                        if (filePath) {
+                            auto pathComponents = QString(filePath).split('/'); // This is also valid for Windows
+                            auto statusChars = gitStatusChars(status->status);
+
+                            if (statusChars.first != ' ') mStagedCount += 1;
+
+
+                            mRepositoryStatusMap.insert(QString(filePath), statusChars);
+                        }
+                    }
+                    git_status_list_free(statusList);
+                }
+                git_index_free(index);
             }
             return true;
         }
+        emitGitError(tr("An error occurred while trying to open the workspace."));
     }
+
+// TODO Keep a map with the status of all workspace files (and folders).
+//      Update it wheh getFileStatus(pPath) is called -- unknown file ==> Add etc
+
     return false;
 }
 
@@ -254,6 +295,8 @@ bool PmrWorkspace::opened(void) const
 
 void PmrWorkspace::close(void)
 {
+    mStagedCount = 0;
+    mRepositoryStatusMap.clear();
     if (mGitRepository != nullptr) {
         git_repository_free(mGitRepository);
         mGitRepository = nullptr;
@@ -534,46 +577,49 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
 
 //==============================================================================
 
-const QList<QChar> PmrWorkspace::gitFileStatus(const QString &pPath) const
+const QPair<QChar, QChar> PmrWorkspace::gitStatusChars(const int &flags)
+{
+    char istatus = ' ';
+    char wstatus = ' ';
+
+    if (flags & GIT_STATUS_INDEX_NEW) istatus = 'A';
+    if (flags & GIT_STATUS_INDEX_MODIFIED) istatus = 'M';
+    if (flags & GIT_STATUS_INDEX_DELETED) istatus = 'D';
+    if (flags & GIT_STATUS_INDEX_RENAMED) istatus = 'R';
+    if (flags & GIT_STATUS_INDEX_TYPECHANGE) istatus = 'T';
+
+    if (flags & GIT_STATUS_WT_NEW) wstatus = 'A';
+    if (flags & GIT_STATUS_WT_MODIFIED) wstatus = 'M';
+    if (flags & GIT_STATUS_WT_DELETED) wstatus = 'D';
+    if (flags & GIT_STATUS_WT_RENAMED) wstatus = 'R';
+    if (flags & GIT_STATUS_WT_TYPECHANGE) wstatus = 'T';
+
+    if (flags & GIT_STATUS_IGNORED) {
+        istatus = '!';
+        wstatus = '!';
+    }
+    return QPair<QChar, QChar>(istatus, wstatus);
+}
+
+//==============================================================================
+
+const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
     // Get the status of a file
+// TODO from statusmap
 
-    auto status = QList<QChar>() << ' ' << ' ';
+    auto status = QPair<QChar, QChar>(' ', ' ');
 //qDebug() << "Get status: " << pPath;
     if (this->opened()) {
         auto repoDir = QDir(mPath);
         auto relativePath = repoDir.relativeFilePath(pPath);
 
         unsigned int statusFlags = 0;
-        if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0) {
-            char istatus = ' ';
-            char wstatus = ' ';
-
-            if (statusFlags & GIT_STATUS_INDEX_NEW) istatus = 'A';
-            if (statusFlags & GIT_STATUS_INDEX_MODIFIED) istatus = 'M';
-            if (statusFlags & GIT_STATUS_INDEX_DELETED) istatus = 'D';
-            if (statusFlags & GIT_STATUS_INDEX_RENAMED) istatus = 'R';
-            if (statusFlags & GIT_STATUS_INDEX_TYPECHANGE) istatus = 'T';
-
-            if (statusFlags & GIT_STATUS_WT_NEW) wstatus = 'A';
-            if (statusFlags & GIT_STATUS_WT_MODIFIED) wstatus = 'M';
-            if (statusFlags & GIT_STATUS_WT_DELETED) wstatus = 'D';
-            if (statusFlags & GIT_STATUS_WT_RENAMED) wstatus = 'R';
-            if (statusFlags & GIT_STATUS_WT_TYPECHANGE) wstatus = 'T';
-
-            if (statusFlags & GIT_STATUS_IGNORED) {
-                istatus = '!';
-                wstatus = '!';
-            }
-
-            status[0] = istatus;
-            status[1] = wstatus;
-        }
-        else {
+        if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0)
+            status = gitStatusChars(statusFlags);
+        else
             emitGitError(tr("An error occurred while trying to get the status of %1").arg(pPath));
-        }
     }
-
     return status;
 }
 

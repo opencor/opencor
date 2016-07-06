@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QList>
+#include <QMap>
 #include <QObject>
 #include <QSet>
 #include <QString>
@@ -98,7 +99,7 @@ public:
         StatusCurrent
     };
     RemoteStatus gitRemoteStatus(void) const;
-    const QList<QChar> gitFileStatus(const QString &pPath) const;
+    const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
 
     void stageFile(const QString &pPath, const bool &pStage);
 
@@ -116,6 +117,9 @@ private:
     git_repository *mGitRepository;
     QString mPath;
 
+    QMap<QString, QPair<QChar, QChar> > mRepositoryStatusMap;
+    int mStagedCount;
+
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
@@ -125,6 +129,8 @@ private:
 
     void emitGitError(const QString &pMessage) const;
     void emitProgress(const double &pProgress) const;
+
+    static const QPair<QChar, QChar> gitStatusChars(const int &flags);
 
 Q_SIGNALS:
     void progress(const double &pProgress) const;

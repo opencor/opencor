@@ -279,13 +279,13 @@ const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::Pm
     auto gitStatus = pWorkspace->gitFileStatus(pPath);
 
     auto actionList = QList<QPair<QString, QString> >();
-    if      (gitStatus[1] != ' ')
+    if      (gitStatus.second != ' ')
         actionList << QPair<QString, QString>("stage", pPath);
-    else if (gitStatus[0] != ' ')
+    else if (gitStatus.first != ' ')
         actionList << QPair<QString, QString>("unstage", pPath);
 //qDebug() << "S: " << gitStatus << " " << actionList;
 
-    return QStringList() << statusHtml.arg(gitStatus[0]).arg(gitStatus[1])
+    return QStringList() << statusHtml.arg(gitStatus.first).arg(gitStatus.second)
                          << actionHtml(actionList);
 }
 
