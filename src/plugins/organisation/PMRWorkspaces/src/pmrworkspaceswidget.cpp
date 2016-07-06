@@ -50,6 +50,20 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
+#define ICON_CLONE        ":/oxygen/places/folder-downloads.png"
+#define ICON_FOLDER       ":/oxygen/places/folder.png"
+#define ICON_FOLDER_OPEN  ":/oxygen/places/folder-open.png"
+#define ICON_OWNED        ":/oxygen/places/folder-favorites.png"
+#define ICON_PULL         ":/oxygen/actions/arrow-down-double.png"
+#define ICON_STAGE        ":/oxygen/actions/dialog-ok-apply.png"
+#define ICON_UNSTAGE      ":/oxygen/actions/dialog-cancel.png"
+#define ICON_COMMIT       ":/oxygen/actions/view-task.png"
+#define ICON_PUSH         ":/oxygen/actions/arrow-up-double.png"
+#define ICON_REFRESH      ":/oxygen/actions/view-refresh.png"
+#define ICON_ABOUT        ":/oxygen/actions/help-about.png"
+
+//==============================================================================
+
 PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent) :
     OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(),
@@ -89,15 +103,15 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
     QByteArray fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
     mTemplate = QString(fileContents).arg( // clone, folder, open, star, pull, stage, unstage, commit, push
-                                          Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/places/folder.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/places/folder-open.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/places/folder-favorites.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/arrow-down-double.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/view-task.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/archive-remove.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/dialog-ok-apply.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/arrow-up-double.png", 16, 16))
+                                          Core::iconDataUri(ICON_CLONE, 16, 16),
+                                          Core::iconDataUri(ICON_FOLDER, 16, 16),
+                                          Core::iconDataUri(ICON_FOLDER_OPEN, 16, 16),
+                                          Core::iconDataUri(ICON_OWNED, 16, 16),
+                                          Core::iconDataUri(ICON_PULL, 16, 16),
+                                          Core::iconDataUri(ICON_STAGE, 16, 16),
+                                          Core::iconDataUri(ICON_UNSTAGE, 16, 16),
+                                          Core::iconDataUri(ICON_COMMIT, 16, 16),
+                                          Core::iconDataUri(ICON_PUSH, 16, 16))
                                           .arg("%1");
 // TODO Use constants for icon names -- CloneIcon etc
 }
@@ -512,17 +526,17 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
             QString action = webElement.attribute("href").split("|")[0];
 
             if      (action == "stage") {
-                toolTip = tr("Stage changes");
+                toolTip = tr("Stage");
             }
             else if (action == "unstage") {
-                toolTip = tr("Unstage changes");
+                toolTip = tr("Unstage");
             }
             else if (webElement.parent().parent().hasClass("file")) {
-                toolTip = tr("Open File");
+                toolTip = tr("Open file");
                 mouseCursor = QCursor(Qt::PointingHandCursor);
             }
             else if      (action == "clone") {
-                toolTip = tr("Clone the Workspace");
+                toolTip = tr("Clone workspace");
             }
             else if (action == "pull") {
                 toolTip = tr("Pull updates from PMR");
@@ -558,6 +572,12 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
         auto trElement = page()->mainFrame()->hitTestContent(event->pos()).element();
         while (!trElement.isNull() && trElement.tagName() != "TR")
             trElement = trElement.parent();
+
+        // Select the row that's been clicked in before doing anything else
+
+        QString rowLink = trElement.attribute("id");
+        if (!rowLink.isEmpty())
+            setSelected(rowLink);
 
         auto aElement = page()->mainFrame()->hitTestContent(event->pos()).element();
         while (!aElement.isNull() && aElement.tagName() != "A" && aElement.tagName() != "TR")
@@ -611,7 +631,9 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                         auto actionElement = trElement.findFirst("td.action");
                         if (!actionElement.isNull()) actionElement.setInnerXml(statusActionHtml[1]);
 
-                        // TODO Update workspace header (to add Commit)
+                        // And update the workspace's header icons
+
+                        refreshWorkspace(workspace->url());
                     }
                }
             }
@@ -621,14 +643,8 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                 emit openFileRequested(aLink);
             }
         }
-        else if (!trElement.isNull()) {
-            QString link = trElement.attribute("id");
-            if (!link.isEmpty()) {
-                if (trElement.hasClass("workspace")
-                 || trElement.hasClass("folder"))
-                    expandHtmlTree(link);
-                setSelected(link);
-            }
+        else if (trElement.hasClass("workspace") || trElement.hasClass("folder")) {
+            expandHtmlTree(rowLink);
         }
     }
 }
@@ -659,57 +675,55 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
     if (!trElement.isNull() && trElement.hasClass("workspace")) {
         QString elementId = trElement.attribute("id");
+        bool separator = false ;
 
         if (!trElement.findFirst("img.clone").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/places/folder-downloads.png"),
-                                                 tr("Clone workspace"), this);
-            cloneAction->setData(QString("clone|%1").arg(elementId));
-            menu->addAction(cloneAction);
-            menu->addSeparator();
+            auto action = new QAction(QIcon(ICON_CLONE), tr("Clone workspace"), this);
+            action->setData(QString("clone|%1").arg(elementId));
+            menu->addAction(action);
+            separator = true;
         }
         else if (!trElement.findFirst("img.pull").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-down-double.png"),
-                                                 tr("Pull updates"), this);
-            cloneAction->setData(QString("pull|%1").arg(elementId));
-            menu->addAction(cloneAction);
-            menu->addSeparator();
+            auto action = new QAction(QIcon(ICON_PULL), tr("Pull updates"), this);
+            action->setData(QString("pull|%1").arg(elementId));
+            menu->addAction(action);
+            separator = true;
         }
-        else if (!trElement.findFirst("img.commit").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/places/dialog-ok-apply.png"),
-                                                 tr("Commit staged changes"), this);
-            cloneAction->setData(QString("commit|%1").arg(elementId));
-            menu->addAction(cloneAction);
-            menu->addSeparator();
+        else {
+            if (!trElement.findFirst("img.commit").isNull()) {
+                auto action = new QAction(QIcon(ICON_COMMIT), tr("Commit staged changes"), this);
+                action->setData(QString("commit|%1").arg(elementId));
+                menu->addAction(action);
+                separator = true;
+            }
+            if (!trElement.findFirst("img.push").isNull()) {
+                auto action = new QAction(QIcon(ICON_PUSH), tr("Push commits"), this);
+                action->setData(QString("push|%1").arg(elementId));
+                menu->addAction(action);
+                separator = true;
+            }
         }
-        else if (!trElement.findFirst("img.push").isNull()) {
-            auto cloneAction = new QAction(QIcon(":/oxygen/actions/arrow-up-double.png"),
-                                                 tr("Push commits"), this);
-            cloneAction->setData(QString("push|%1").arg(elementId));
-            menu->addAction(cloneAction);
-            menu->addSeparator();
-        }
+        if (separator) menu->addSeparator();
 
-        auto refreshAction = new QAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                             tr("Refresh display"), this);
+        auto refreshAction = new QAction(QIcon(ICON_REFRESH), tr("Refresh display"), this);
         refreshAction->setData(QString("refresh|%1").arg(elementId));
         menu->addAction(refreshAction);
 
         auto workspace = mWorkspacesManager->workspace(elementId);
         if (workspace && workspace->isLocal()) {
 #if defined(Q_OS_WIN)
-            auto showAction = new QAction(tr("Show in Explorer..."), this);
+            auto action = new QAction(tr("Show in Explorer..."), this);
 #elif defined(Q_OS_MAC)
-            auto showAction = new QAction(tr("Show in Finder..."), this);
+            auto action = new QAction(tr("Show in Finder..."), this);
 #else
 // TODO auto showAction = new QAction(tr("Show containing folder..."), this);
 #endif
-            showAction->setData(QString("show|%1").arg(workspace->path()));
-            menu->addAction(showAction);
+            action->setData(QString("show|%1").arg(workspace->path()));
+            menu->addAction(action);
         }
 
         menu->addSeparator();
-        auto aboutAction = new QAction(QIcon(":/oxygen/actions/help-about.png"),
-                                       tr("About the workspace"), this);
+        auto aboutAction = new QAction(QIcon(ICON_ABOUT), tr("About the workspace"), this);
         aboutAction->setData(QString("about|%1").arg(elementId));
         menu->addAction(aboutAction);
     }
