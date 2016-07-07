@@ -381,7 +381,7 @@ void PmrWorkspacesWindow::on_actionUnauthenticate_triggered()
     // Log off PMR
 
     if (QMessageBox::question(this, tr("OpenCOR"),
-                              tr("Log off the Physiome Model Repository?")) == QMessageBox::Ok)
+                              tr("Log off the Physiome Model Repository?")) == QMessageBox::Yes)
         mPmrRepository->authenticate(false);
 }
 
