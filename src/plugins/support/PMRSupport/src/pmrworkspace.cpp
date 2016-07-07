@@ -434,8 +434,7 @@ void PmrWorkspace::clone(const QString &pDirName)
     // Perform the clone
 
     if (git_clone(&mGitRepository, workspaceByteArray.constData(),
-                          dirNameByteArray.constData(), &cloneOptions)
-     || git_remote_add_push(mGitRepository, "origin", "refs/heads/master:refs/heads/master"))
+                          dirNameByteArray.constData(), &cloneOptions))
         emitGitError(tr("An error occurred while trying to clone the workspace."));
 
     git_strarray_free(&authorisationStrArray);
@@ -479,14 +478,15 @@ void PmrWorkspace::push(void)
         // Get the remote, connect to it, add a refspec, and do the push
 
         git_remote *gitRemote = nullptr;
-        git_strarray refSpecsStrArray = { nullptr, 0 };
+
+        const char *masterReference = "refs/heads/master";
+        git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
 
         if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
          || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
             emitGitError(tr("An error occurred while trying to push the workspace."));
-
-        if (gitRemote) git_remote_free(gitRemote);
         }
+        if (gitRemote) git_remote_free(gitRemote);
     }
 
     git_strarray_free(&authorisationStrArray);
@@ -512,44 +512,56 @@ bool PmrWorkspace::commit(const QString &pMessage)
         git_message_prettify(&msg, pMessage.toUtf8().constData(), true, ';');
 
         if (msg.size > 0) {
+// TODO Get user's name and email... From preferences?? Git configuration settings??
+//                                   Should OpenCOR set git's global configuration settings?? NO.
+            git_signature *author;
+            if (git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org") == 0) {
 
-            git_index *index;
-            if (git_repository_index(&index, mGitRepository) == 0) {
+                git_index *index;
+                if (git_repository_index(&index, mGitRepository) == 0) {
 
-                git_oid treeId;
-                if (git_index_write_tree(&treeId, index) == 0) {
+                    git_oid treeId;
+                    if (git_index_write_tree(&treeId, index) == 0) {
 
-                    git_tree *tree;
-                    if (git_tree_lookup(&tree, mGitRepository, &treeId) == 0) {
+                        git_tree *tree;
+                        if (git_tree_lookup(&tree, mGitRepository, &treeId) == 0) {
 
-                        // Get HEAD as a commit object to use as the parent of the commit
+                            git_oid commitId;
 
-                        git_oid parentId;
-                        if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0) {
-
-                            git_commit *parent;
-                            if (git_commit_lookup(&parent, mGitRepository, &parentId) == 0) {
-                                // Do the commit
-
-                                git_signature *author;
-                                if (git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org") == 0) {
-
-                                    git_oid commitId;
-                                    if (git_commit_create_v(&commitId, mGitRepository, "HEAD",
-                                                            author, author, NULL, msg.ptr,
-                                                            tree, 1, parent) == 0) {
-                                        success = true;
-                                    }
-                                    git_signature_free(author);
+                            if (git_repository_head_unborn(mGitRepository) == 1) {
+// The initial commit will have no parent, so ...create_v(...., tree, 0, NULL)
+                                if (git_commit_create_v(&commitId, mGitRepository, "HEAD",
+                                                        author, author, NULL, msg.ptr,
+                                                        tree, 0, nullptr) == 0) {
+                                    success = true;
                                 }
-                                git_commit_free(parent);
+                            }
+                            else {
+                                // Get HEAD as a commit object to use as the parent of the commit
+                                git_oid parentId;
+                                if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0) {
+
+                                    git_commit *parent;
+                                    if (git_commit_lookup(&parent, mGitRepository, &parentId) == 0) {
+                                        // Do the commit
+
+                                        if (git_commit_create_v(&commitId, mGitRepository, "HEAD",
+                                                                author, author, NULL, msg.ptr,
+                                                                tree, 1, parent) == 0) {
+                                            success = true;
+                                        }
+                                        git_commit_free(parent);
+                                    }
+                                }
                             }
                         }
+                        git_tree_free(tree);
                     }
-                    git_tree_free(tree);
                 }
                 git_index_free(index);
             }
+            git_signature_free(author);
+
             if (!success)
                 emitGitError(tr("An error occurred while trying to commit to the workspace"));
         }
@@ -567,30 +579,43 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
     auto status = StatusUnknown;
 
     if (this->opened()) {
-        git_oid masterOid, originMasterOid;
 
-        if (git_reference_name_to_id(&masterOid, mGitRepository,
-                                                 "refs/heads/master") == 0
-         && git_reference_name_to_id(&originMasterOid, mGitRepository,
-                                                 "refs/remotes/origin/master") == 0) {
-            size_t ahead = 0;
-            size_t behind = 0;
-
-            if (git_graph_ahead_behind(&ahead, &behind, mGitRepository,
-                                       &masterOid, &originMasterOid) == 0) {
-                status = behind ? StatusBehind
-                       : ahead  ? StatusAhead
-                       :          StatusCurrent;
-// TODO If there are uncommitted files or files in the index (to be committed)
-//      then return StatusCommit
-            }
+        if (git_repository_head_unborn(mGitRepository) == 1) {
+            status = StatusCurrent;
         }
-        if (status == StatusUnknown)
-            emitGitError(tr("An error occurred while trying to get the remote status of %1").arg(mPath));
+        else {
+            bool error=false;
+
+            git_oid masterOid;
+            if (git_reference_name_to_id(&masterOid, mGitRepository,
+                                         "refs/heads/master") == 0) {
+                git_oid originMasterOid;
+                if (git_reference_name_to_id(&originMasterOid, mGitRepository,
+                                             "refs/remotes/origin/master") == 0) {
+                    size_t ahead = 0;
+                    size_t behind = 0;
+                    if (git_graph_ahead_behind(&ahead, &behind, mGitRepository,
+                                               &masterOid, &originMasterOid) == 0) {
+                        status = behind ? StatusBehind
+                               : ahead  ? StatusAhead
+                               :          StatusCurrent;
+                    }
+                    else error = true;
+                }
+                else {
+                    status = StatusAhead;    // Need an initial `push origin master`
+                }
+            }
+            else error = true;
+
+            if (error)
+                emitGitError(tr("An error occurred while trying to get the remote status of %1").arg(mPath));
+        }
 
         if (mStagedCount > 0) status = (RemoteStatus)(status | StatusCommit);
         if (mUnstagedCount > 0) status = (RemoteStatus)(status | StatusUnstaged);
     }
+
     return status;
 }
 
@@ -628,7 +653,7 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 // TODO from statusmap
 
     auto status = QPair<QChar, QChar>(' ', ' ');
-//qDebug() << "Get status: " << pPath;
+
     if (this->opened()) {
         auto repoDir = QDir(mPath);
         auto relativePath = repoDir.relativeFilePath(pPath);
@@ -656,6 +681,11 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 
             if (pStage) {
                 success = (git_index_add_bypath(index, relativePath.constData()) == 0);
+            }
+
+            else if (git_repository_head_unborn(mGitRepository) == 1) {
+                if (git_index_remove_bypath(index, relativePath.constData()) == 0)
+                    success = true;
             }
 
             else {
@@ -686,6 +716,7 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
             }
 
             if (success) git_index_write(index);
+
             git_index_free(index);
         }
         if (!success)
