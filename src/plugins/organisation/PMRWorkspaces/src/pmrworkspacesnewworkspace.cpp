@@ -114,7 +114,8 @@ void PmrWorkspacesNewWorkspace::titleTextChanged(const QString &text)
 {
     // Only save if there is a title
 
-    mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!text.trimmed().isEmpty());
+    mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!text.trimmed().isEmpty()
+                                                                  && mPathChosen);
 }
 
 //==============================================================================
@@ -127,7 +128,11 @@ void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
     if (!dirName.isEmpty()) {
         mGui->path->setText(dirName);
         mPathChosen = true;
-        }
+        mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!title().isEmpty());
+    }
+    else {
+        mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(false);
+    }
 }
 
 //==============================================================================
