@@ -93,11 +93,12 @@ public:
     void push(void);
 
     enum RemoteStatus {
-        StatusUnknown = 0,
-        StatusAhead   = 1,
-        StatusBehind  = 2,
-        StatusCurrent = 4,
-        StatusCommit  = 128
+        StatusUnknown  = 0,
+        StatusAhead    = 1,
+        StatusBehind   = 2,
+        StatusCurrent  = 4,
+        StatusCommit   = 64,
+        StatusUnstaged = 128
     };
     RemoteStatus gitRemoteStatus(void) const;
     const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
@@ -120,6 +121,7 @@ private:
 
     QMap<QString, QPair<QChar, QChar> > mRepositoryStatusMap;
     int mStagedCount;
+    int mUnstagedCount;
 
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 

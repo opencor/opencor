@@ -383,10 +383,11 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
     const QString &path = pWorkspace->path();
 
     const QString icon = pWorkspace->isOwned() ? "star" : "folder";
+    auto status = QString("");
+    auto actionList = QList<QPair<QString, QString> >();
 
     auto remoteStatus = pWorkspace->gitRemoteStatus();
 
-    auto actionList = QList<QPair<QString, QString> >();
     if (path.isEmpty()) {
         actionList << QPair<QString, QString>("clone", url);
     }
@@ -401,9 +402,12 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
             actionList << QPair<QString, QString>("push", url);
         }
     }
+    if (remoteStatus & PMRSupport::PmrWorkspace::StatusUnstaged) {
+        status = "?";
+    }
 
     mRow = 0;
-    QStringList html = QStringList(containerHtml("workspace", icon, url, name, "", actionList));
+    QStringList html = QStringList(containerHtml("workspace", icon, url, name, status, actionList));
 
     if (!path.isEmpty()) html << contentsHtml(pWorkspace, path, !mExpandedItems.contains(url));
     else                 html << emptyContentsHtml();

@@ -264,7 +264,7 @@ bool PmrWorkspace::open(void)
                             auto statusChars = gitStatusChars(status->status);
 
                             if (statusChars.first != ' ') mStagedCount += 1;
-
+                            if (statusChars.second != ' ') mUnstagedCount += 1;
 
                             mRepositoryStatusMap.insert(QString(filePath), statusChars);
                         }
@@ -296,6 +296,7 @@ bool PmrWorkspace::opened(void) const
 void PmrWorkspace::close(void)
 {
     mStagedCount = 0;
+    mUnstagedCount = 0;
     mRepositoryStatusMap.clear();
     if (mGitRepository != nullptr) {
         git_repository_free(mGitRepository);
@@ -588,6 +589,7 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
             emitGitError(tr("An error occurred while trying to get the remote status of %1").arg(mPath));
 
         if (mStagedCount > 0) status = (RemoteStatus)(status | StatusCommit);
+        if (mUnstagedCount > 0) status = (RemoteStatus)(status | StatusUnstaged);
     }
     return status;
 }
