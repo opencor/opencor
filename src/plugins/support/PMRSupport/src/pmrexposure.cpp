@@ -119,6 +119,13 @@ void PmrExposure::addExposureFile(const QString &pFileName)
 
 //==============================================================================
 
+void PmrExposure::addOtherFile(const QString &pFileName)
+{
+    if (!mExposureFileList.contains(pFileName))
+        mExposureFileList << pFileName;
+}
+
+//==============================================================================
 const QStringList PmrExposure::exposureFileList(void) const
 {
     return mExposureFileList;

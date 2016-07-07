@@ -63,6 +63,7 @@ public:
     void setFileUrlsLeftCount(const int &count);
 
     void addExposureFile(const QString &pFileName);
+    void addOtherFile(const QString &pFileName);
     const QStringList exposureFileList(void) const;
 
     PmrWorkspace *workspace(void) const;
