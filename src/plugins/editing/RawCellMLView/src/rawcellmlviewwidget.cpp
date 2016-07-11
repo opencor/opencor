@@ -131,9 +131,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
 
         // Update our viewer whenever necessary
 
-        connect(newEditingWidget->editor(), SIGNAL(textChanged()),
+        connect(newEditingWidget->editorWidget(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
-        connect(newEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
+        connect(newEditingWidget->editorWidget(), SIGNAL(cursorPositionChanged(const int &, const int &)),
                 this, SLOT(updateViewer()));
 
         // Keep track of our editing widget
@@ -174,9 +174,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
         //       our 'old' editing widget (see CentralWidget::updateGui()),
         //       which is clearly not what we want...
 
-        setFocusProxy(newEditingWidget->editor());
+        setFocusProxy(newEditingWidget->editorWidget());
 
-        newEditingWidget->editor()->setFocus();
+        newEditingWidget->editorWidget()->setFocus();
     } else {
         // Hide our 'new' editing widget
 
@@ -258,7 +258,7 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pF
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editor():0;
+    return editingWidget?editingWidget->editorWidget():0;
 }
 
 //==============================================================================
@@ -268,8 +268,8 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
     // Return our status bar widgets
 
     if (mEditingWidget) {
-        return QList<QWidget *>() << mEditingWidget->editor()->cursorPositionWidget()
-                                  << mEditingWidget->editor()->editingModeWidget();
+        return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
+                                  << mEditingWidget->editorWidget()->editingModeWidget();
     } else {
         return QList<QWidget *>();
     }
@@ -287,14 +287,14 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
         int cursorLine;
         int cursorColumn;
 
-        editingWidget->editor()->cursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->cursorPosition(cursorLine, cursorColumn);
 
         QDomDocument domDocument;
 
-        domDocument.setContent(editingWidget->editor()->contents());
+        domDocument.setContent(editingWidget->editorWidget()->contents());
 
-        editingWidget->editor()->setContents(Core::serialiseDomDocument(domDocument), true);
-        editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
+        editingWidget->editorWidget()->setCursorPosition(cursorLine, cursorColumn);
     }
 }
 
@@ -319,7 +319,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-        bool res = cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues);
+        bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues);
 
         // Warn the user about the CellML issues being maybe for a (in)direclty
         // imported CellML file, should we be dealing with a CellML 1.1 file
@@ -391,7 +391,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
             int childNodeStartPosition;
 
             Core::stringLineColumnAsPosition(pContentMathmlBlock,
-                                             mEditingWidget->editor()->eolString(),
+                                             mEditingWidget->editorWidget()->eolString(),
                                              childElement.lineNumber(),
                                              childElement.columnNumber(),
                                              childNodeStartPosition);
@@ -411,7 +411,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                 QDomElement nextChildElement = childElement.nextSiblingElement();
 
                 Core::stringLineColumnAsPosition(pContentMathmlBlock,
-                                                 mEditingWidget->editor()->eolString(),
+                                                 mEditingWidget->editorWidget()->eolString(),
                                                  nextChildElement.lineNumber(),
                                                  nextChildElement.columnNumber(),
                                                  childNodeEndPosition);
@@ -477,7 +477,7 @@ void RawCellmlViewWidget::updateViewer()
     static const QString StartMathTag = "<math ";
     static const QString EndMathTag = "</math>";
 
-    EditorWidget::EditorWidget *editor = mEditingWidget->editor();
+    EditorWidget::EditorWidget *editor = mEditingWidget->editorWidget();
     int crtPosition = editor->currentPosition();
 
     int crtStartMathTagPos = editor->findTextInRange(crtPosition+StartMathTag.length(), 0, StartMathTag, false, true, false);

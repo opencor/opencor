@@ -79,15 +79,15 @@ public:
     void updateSettings(CellmlEditingViewWidget *pCellmlEditingViewWidget);
 
     MathMLViewerWidget::MathmlViewerWidget * mathmlViewer() const;
-    EditorWidget::EditorWidget * editor() const;
+    EditorWidget::EditorWidget * editorWidget() const;
     EditorWidget::EditorListWidget * editorList() const;
 
     QIntList editingWidgetSizes() const;
 
 private:
-    MathMLViewerWidget::MathmlViewerWidget *mMathmlViewer;
-    EditorWidget::EditorWidget *mEditor;
-    EditorWidget::EditorListWidget *mEditorList;
+    MathMLViewerWidget::MathmlViewerWidget *mMathmlViewerWidget;
+    EditorWidget::EditorWidget *mEditorWidget;
+    EditorWidget::EditorListWidget *mEditorWidgetList;
 
     QIntList mEditingWidgetSizes;
 
