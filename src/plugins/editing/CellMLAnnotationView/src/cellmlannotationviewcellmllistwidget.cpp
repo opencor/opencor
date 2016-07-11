@@ -417,6 +417,11 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // Make our tree view widget our focus proxy
 
     setFocusProxy(mTreeViewWidget);
+
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
