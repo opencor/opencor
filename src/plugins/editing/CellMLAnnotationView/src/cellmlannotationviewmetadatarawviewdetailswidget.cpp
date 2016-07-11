@@ -69,10 +69,6 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     if (!pElement)
         return;
 
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
-
     // Remove all previous RDF triples from our tree view widget
 
     while (mModel->rowCount()) {
@@ -103,10 +99,6 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     resizeColumnToContents(1);
     resizeColumnToContents(2);
     resizeColumnToContents(3);
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
 }
 
 //==============================================================================

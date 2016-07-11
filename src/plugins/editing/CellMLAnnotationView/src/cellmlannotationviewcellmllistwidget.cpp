@@ -970,16 +970,8 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 void CellmlAnnotationViewCellmlListWidget::expandAll()
 {
     // Expand all the CellML elements below the current one
-    // Note: we disable and then re-enable updates before expanding all the
-    //       index since it may end up in quite a few updates...
 
-    mTreeViewWidget->setUpdatesEnabled(false);
-        qApp->setOverrideCursor(Qt::WaitCursor);
-
-        indexExpandAll(mTreeViewWidget->currentIndex());
-
-        qApp->restoreOverrideCursor();
-    mTreeViewWidget->setUpdatesEnabled(true);
+    indexExpandAll(mTreeViewWidget->currentIndex());
 }
 
 //==============================================================================
@@ -987,15 +979,8 @@ void CellmlAnnotationViewCellmlListWidget::expandAll()
 void CellmlAnnotationViewCellmlListWidget::collapseAll()
 {
     // Collapse all the CellML elements below the current one
-    // Note: see the note in on_actionExpandAll_triggered() above...
 
-    mTreeViewWidget->setUpdatesEnabled(false);
-        qApp->setOverrideCursor(Qt::WaitCursor);
-
-        indexCollapseAll(mTreeViewWidget->currentIndex());
-
-        qApp->restoreOverrideCursor();
-    mTreeViewWidget->setUpdatesEnabled(true);
+    indexCollapseAll(mTreeViewWidget->currentIndex());
 }
 
 //==============================================================================
