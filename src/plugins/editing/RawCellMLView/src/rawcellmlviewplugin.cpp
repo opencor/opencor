@@ -20,6 +20,7 @@ limitations under the License.
 // Raw CellML view plugin
 //==============================================================================
 
+#include "cellmleditingviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
@@ -332,7 +333,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editorWidget(pFileName);
+    return mViewWidget->editingWidget(pFileName);
 }
 
 //==============================================================================

@@ -20,6 +20,7 @@ limitations under the License.
 // CellML Text view plugin
 //==============================================================================
 
+#include "cellmleditingviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewplugin.h"
@@ -353,7 +354,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editorWidget(pFileName);
+    return mViewWidget->editingWidget(pFileName);
 }
 
 //==============================================================================

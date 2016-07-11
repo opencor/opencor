@@ -263,6 +263,15 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pF
 
 //==============================================================================
 
+CellMLEditingView::CellmlEditingViewWidget * RawCellmlViewWidget::editingWidget(const QString &pFileName) const
+{
+    // Return the requested editing widget
+
+    return mEditingWidgets.value(pFileName);
+}
+
+//==============================================================================
+
 QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets

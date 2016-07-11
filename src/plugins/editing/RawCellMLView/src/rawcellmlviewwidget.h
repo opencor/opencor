@@ -75,6 +75,7 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
+    CellMLEditingView::CellmlEditingViewWidget * editingWidget(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
