@@ -115,9 +115,9 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 
 EditorWidget::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
-    return mViewWidget->editor(pFileName);
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================
@@ -352,7 +352,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editor(pFileName);
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================

@@ -252,9 +252,9 @@ void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 

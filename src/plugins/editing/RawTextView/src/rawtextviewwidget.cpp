@@ -218,9 +218,9 @@ void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * RawTextViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawTextViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     return mEditors.value(pFileName);
 }

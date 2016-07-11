@@ -74,7 +74,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 

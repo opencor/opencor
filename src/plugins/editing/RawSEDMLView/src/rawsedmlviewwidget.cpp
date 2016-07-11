@@ -232,9 +232,9 @@ void RawSedmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * RawSedmlViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 

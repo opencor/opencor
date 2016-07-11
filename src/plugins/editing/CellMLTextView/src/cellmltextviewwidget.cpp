@@ -437,9 +437,9 @@ void CellmlTextViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * CellmlTextViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellmlTextViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
@@ -619,33 +619,33 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 
 //==============================================================================
 
-void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditor,
+void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
                                                   const int &pLineNumber,
                                                   const bool &pCommentLine)
 {
     // (Un)comment the current line
 
-    QString line = pEditor->text(pLineNumber).trimmed();
+    QString line = pEditorWidget->text(pLineNumber).trimmed();
 
     if (!line.isEmpty()) {
         // We are not dealing with an empty line, so we can (un)comment it
 
         if (pCommentLine) {
-            pEditor->insertAt(SingleLineCommentString, pLineNumber, 0);
+            pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
         } else {
             // Uncomment the line, should it be commented
 
             if (line.startsWith(SingleLineCommentString)) {
                 int commentLineNumber, commentColumnNumber;
 
-                pEditor->lineIndexFromPosition(pEditor->findTextInRange(pEditor->positionFromLineIndex(pLineNumber, 0),
-                                                                        pEditor->contentsSize(), SingleLineCommentString,
-                                                                        false, false, false),
-                                               &commentLineNumber, &commentColumnNumber);
+                pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
+                                                                                    pEditorWidget->contentsSize(), SingleLineCommentString,
+                                                                                    false, false, false),
+                                                     &commentLineNumber, &commentColumnNumber);
 
-                pEditor->setSelection(commentLineNumber, commentColumnNumber,
-                                      commentLineNumber, commentColumnNumber+SingleLineCommentLength);
-                pEditor->removeSelectedText();
+                pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
+                                            commentLineNumber, commentColumnNumber+SingleLineCommentLength);
+                pEditorWidget->removeSelectedText();
             }
         }
     }

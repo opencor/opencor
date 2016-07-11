@@ -117,7 +117,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
     bool isEditorUseable(const QString &pFileName) const;
     bool isEditorContentsModified(const QString &pFileName) const;
@@ -150,7 +150,7 @@ private:
 
     QString mContentMathmlEquation;
 
-    void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *editor,
+    void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
                                 const int &pLineNumber,
                                 const bool &pCommentLine);
 
