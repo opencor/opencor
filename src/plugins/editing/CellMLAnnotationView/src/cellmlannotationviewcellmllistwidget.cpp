@@ -452,7 +452,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
     // Check whether we are dealing with a category
 
-    if (pCellmlElementItem->isCategory())
+    if (pCellmlElementItem->isCategory()) {
         // We are dealing with a category, so retranslate its type
 
         switch (pCellmlElementItem->type()) {
@@ -493,7 +493,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             ;
         }
-    else
+    } else {
         // We are not dealing with a category, so check the type and see whether
         // a CellML element needs retranslating
 
@@ -511,6 +511,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             ;
         }
+    }
 }
 
 //==============================================================================
