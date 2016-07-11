@@ -113,7 +113,7 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 // Editing interface
 //==============================================================================
 
-EditorWidget::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellMLTextViewPlugin::editorWidget(const QString &pFileName) const
 {
     // Return the requested editor widget
 
@@ -122,20 +122,21 @@ EditorWidget::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileNa
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::isEditorUseable(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
-    // Return whether the requested editor is useable
+    // Return whether the requested editor widget is useable
 
-    return mViewWidget->isEditorUseable(pFileName);
+    return mViewWidget->isEditorWidgetUseable(pFileName);
 }
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileName) const
 {
-    // Return whether the contents of the requested editor has been modified
+    // Return whether the contents of the requested editor widget has been
+    // modified
 
-    return mViewWidget->isEditorContentsModified(pFileName);
+    return mViewWidget->isEditorWidgetContentsModified(pFileName);
 }
 
 //==============================================================================

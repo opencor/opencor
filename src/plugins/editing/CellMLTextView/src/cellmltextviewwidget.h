@@ -119,8 +119,8 @@ public:
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
-    bool isEditorUseable(const QString &pFileName) const;
-    bool isEditorContentsModified(const QString &pFileName) const;
+    bool isEditorWidgetUseable(const QString &pFileName) const;
+    bool isEditorWidgetContentsModified(const QString &pFileName) const;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName,
                   bool &pNeedFeedback);

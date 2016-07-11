@@ -448,9 +448,9 @@ EditorWidget::EditorWidget * CellmlTextViewWidget::editorWidget(const QString &p
 
 //==============================================================================
 
-bool CellmlTextViewWidget::isEditorUseable(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorWidgetUseable(const QString &pFileName) const
 {
-    // Return whether the requested editor is useable
+    // Return whether the requested editor widget is useable
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
@@ -459,9 +459,10 @@ bool CellmlTextViewWidget::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileName) const
 {
-    // Return whether the contents of the requested editor has been modified
+    // Return whether the contents of the requested editor widget has been
+    // modified
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
