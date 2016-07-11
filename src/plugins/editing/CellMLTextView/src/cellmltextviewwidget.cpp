@@ -290,7 +290,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         }
 
         // Keep track of our editing widget (and of whether the conversion was
-        // successful) and add it to ourselves
+        // successful)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
@@ -303,8 +303,6 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                                             fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes());
 
         mData.insert(pFileName, data);
-
-        layout()->addWidget(editingWidget);
 
         // Add support for some key mappings to our editor
 
@@ -349,15 +347,6 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
         }
-
-        // Show/hide our editing widgets
-
-        setUpdatesEnabled(false);
-            newEditingWidget->show();
-
-            if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
-                oldEditingWidget->hide();
-        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editing widget and make sure that
         // the latter immediately gets the focus
@@ -448,9 +437,9 @@ void CellmlTextViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * CellmlTextViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellmlTextViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
@@ -459,9 +448,9 @@ EditorWidget::EditorWidget * CellmlTextViewWidget::editor(const QString &pFileNa
 
 //==============================================================================
 
-bool CellmlTextViewWidget::isEditorUseable(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorWidgetUseable(const QString &pFileName) const
 {
-    // Return whether the requested editor is useable
+    // Return whether the requested editor widget is useable
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
@@ -470,9 +459,10 @@ bool CellmlTextViewWidget::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileName) const
 {
-    // Return whether the contents of the requested editor has been modified
+    // Return whether the contents of the requested editor widget has been
+    // modified
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
@@ -630,33 +620,33 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 
 //==============================================================================
 
-void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditor,
+void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
                                                   const int &pLineNumber,
                                                   const bool &pCommentLine)
 {
     // (Un)comment the current line
 
-    QString line = pEditor->text(pLineNumber).trimmed();
+    QString line = pEditorWidget->text(pLineNumber).trimmed();
 
     if (!line.isEmpty()) {
         // We are not dealing with an empty line, so we can (un)comment it
 
         if (pCommentLine) {
-            pEditor->insertAt(SingleLineCommentString, pLineNumber, 0);
+            pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
         } else {
             // Uncomment the line, should it be commented
 
             if (line.startsWith(SingleLineCommentString)) {
                 int commentLineNumber, commentColumnNumber;
 
-                pEditor->lineIndexFromPosition(pEditor->findTextInRange(pEditor->positionFromLineIndex(pLineNumber, 0),
-                                                                        pEditor->contentsSize(), SingleLineCommentString,
-                                                                        false, false, false),
-                                               &commentLineNumber, &commentColumnNumber);
+                pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
+                                                                                    pEditorWidget->contentsSize(), SingleLineCommentString,
+                                                                                    false, false, false),
+                                                     &commentLineNumber, &commentColumnNumber);
 
-                pEditor->setSelection(commentLineNumber, commentColumnNumber,
-                                      commentLineNumber, commentColumnNumber+SingleLineCommentLength);
-                pEditor->removeSelectedText();
+                pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
+                                            commentLineNumber, commentColumnNumber+SingleLineCommentLength);
+                pEditorWidget->removeSelectedText();
             }
         }
     }

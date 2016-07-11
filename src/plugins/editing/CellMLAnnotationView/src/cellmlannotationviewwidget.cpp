@@ -113,8 +113,6 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CellmlAnnotationViewEditingWidget *oldEditingWidget = mEditingWidget;
-
     mEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!mEditingWidget) {
@@ -131,11 +129,9 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
         connect(mEditingWidget->metadataDetails(), SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(metadataDetailsWidgetSplitterMoved(const QIntList &)));
 
-        // Keep track of our editing widget and add it to ourselves
+        // Keep track of our editing widget
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
-
-        layout()->addWidget(mEditingWidget);
     }
 
     // Update the sizes of our new editing widget and those of its metadata
@@ -143,15 +139,6 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 
     mEditingWidget->setSizes(mEditingWidgetSizes);
     mEditingWidget->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
-
-    // Hide our previous editing widget and show our new one
-
-    setUpdatesEnabled(false);
-        mEditingWidget->show();
-
-        if (oldEditingWidget && (mEditingWidget != oldEditingWidget))
-            oldEditingWidget->hide();
-    setUpdatesEnabled(true);
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus

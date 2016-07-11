@@ -33,9 +33,6 @@ ViewWidget::ViewWidget(QWidget *pParent) :
     Widget(pParent),
     BusySupportWidget()
 {
-    // Create a layout for ourselves
-
-    createLayout();
 }
 
 //==============================================================================

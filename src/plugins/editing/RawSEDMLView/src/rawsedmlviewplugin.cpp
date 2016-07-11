@@ -79,16 +79,16 @@ bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
 // Editing interface
 //==============================================================================
 
-EditorWidget::EditorWidget * RawSEDMLViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawSEDMLViewPlugin::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
-    return mViewWidget->editor(pFileName);
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================
 
-bool RawSEDMLViewPlugin::isEditorUseable(const QString &pFileName) const
+bool RawSEDMLViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -99,15 +99,15 @@ bool RawSEDMLViewPlugin::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool RawSEDMLViewPlugin::isEditorContentsModified(const QString &pFileName) const
+bool RawSEDMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileName) const
 {
-    // Return whether the requested editor has been modified, which here is done
-    // by comparing its contents to that of the given file
+    // Return whether the requested editor widget has been modified, which here
+    // is done by comparing its contents to that of the given file
 
-    EditorWidget::EditorWidget *crtEditor = editor(pFileName);
+    EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
-    return crtEditor?
-               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
+    return crtEditorWidget?
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents().toUtf8()):
                false;
 }
 
@@ -134,10 +134,10 @@ bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
 
     // Save the given file
 
-    EditorWidget::EditorWidget *crtEditor = editor(pOldFileName);
+    EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
-    return crtEditor?
-               Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):
+    return crtEditorWidget?
+               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents().toUtf8()):
                false;
 }
 
@@ -327,14 +327,10 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // Update and return our raw SED-ML view widget using the given SED-ML file
-    // Note: we temporarily disable updates for our raw SED-ML view widget, so
-    //       as to avoid any risk of known/unknown/potential flickering...
 
-    mViewWidget->setUpdatesEnabled(false);
-        mViewWidget->initialize(pFileName);
-    mViewWidget->setUpdatesEnabled(true);
+    mViewWidget->initialize(pFileName);
 
-    return mViewWidget;
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================

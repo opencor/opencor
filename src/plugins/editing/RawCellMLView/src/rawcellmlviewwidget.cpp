@@ -136,11 +136,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
         connect(newEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
                 this, SLOT(updateViewer()));
 
-        // Keep track of our editing widget and add it to ourselves
+        // Keep track of our editing widget
 
         mEditingWidgets.insert(pFileName, newEditingWidget);
-
-        layout()->addWidget(newEditingWidget);
     }
 
     // Update our editing widget, if required
@@ -168,15 +166,6 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
         // Update our viewer
 
         updateViewer();
-
-        // Show/hide our editing widgets
-
-        setUpdatesEnabled(false);
-            newEditingWidget->show();
-
-            if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
-                oldEditingWidget->hide();
-        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editing widget and make sure that
         // the latter immediately gets the focus
@@ -263,9 +252,9 @@ void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 

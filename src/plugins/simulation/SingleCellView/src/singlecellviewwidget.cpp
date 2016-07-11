@@ -249,11 +249,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
 
-        // Keep track of our editing widget and add it to ourselves
+        // Keep track of our editing widget
 
         mSimulationWidgets.insert(pFileName, mSimulationWidget);
-
-        layout()->addWidget(mSimulationWidget);
 
         // Initialise our simulation widget
 
@@ -297,15 +295,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
             this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
     connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
             this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
-
-    // Hide our previous simulation widget and show our new one
-
-    setUpdatesEnabled(false);
-        mSimulationWidget->show();
-
-        if (oldSimulationWidget && (mSimulationWidget != oldSimulationWidget))
-            oldSimulationWidget->hide();
-    setUpdatesEnabled(true);
 
     // Set our focus proxy to our 'new' simulation widget and make sure that the
     // latter immediately gets the focus
@@ -499,6 +488,15 @@ QStringList SingleCellViewWidget::fileNames() const
     // Return our file names
 
     return mFileNames;
+}
+
+//==============================================================================
+
+SingleCellViewSimulationWidget * SingleCellViewWidget::simulationWidget(const QString &pFileName) const
+{
+    // Return the simulation widget for the given file name
+
+    return mSimulationWidgets.value(pFileName);
 }
 
 //==============================================================================
