@@ -349,14 +349,10 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 
     // Update and return our CellML text view widget using the given CellML
     // file
-    // Note: we temporarily disable updates for our CellML text view widget, so
-    //       as to avoid any risk of known/unknown/potential flickering...
 
-    mViewWidget->setUpdatesEnabled(false);
-        mViewWidget->initialize(pFileName);
-    mViewWidget->setUpdatesEnabled(true);
+    mViewWidget->initialize(pFileName);
 
-    return mViewWidget;
+    return mViewWidget->editor(pFileName);
 }
 
 //==============================================================================

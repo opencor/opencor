@@ -88,6 +88,7 @@ public:
 
     QStringList fileNames() const;
 
+    SingleCellViewSimulationWidget * simulationWidget(const QString &pFileName) const;
     SingleCellViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 

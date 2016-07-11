@@ -290,7 +290,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         }
 
         // Keep track of our editing widget (and of whether the conversion was
-        // successful) and add it to ourselves
+        // successful)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
@@ -303,8 +303,6 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                                             fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes());
 
         mData.insert(pFileName, data);
-
-        layout()->addWidget(editingWidget);
 
         // Add support for some key mappings to our editor
 
@@ -349,15 +347,6 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
         }
-
-        // Show/hide our editing widgets
-
-        setUpdatesEnabled(false);
-            newEditingWidget->show();
-
-            if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
-                oldEditingWidget->hide();
-        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editing widget and make sure that
         // the latter immediately gets the focus

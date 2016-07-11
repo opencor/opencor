@@ -107,11 +107,9 @@ void RawTextViewWidget::initialize(const QString &pFileName,
                                                    !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                                    0, parentWidget());
 
-        // Keep track of our editor and add it to ourselves
+        // Keep track of our editor
 
         mEditors.insert(pFileName, newEditor);
-
-        layout()->addWidget(newEditor);
     }
 
     // Update our editor, if required
@@ -135,15 +133,6 @@ void RawTextViewWidget::initialize(const QString &pFileName,
         } else {
             newEditor->updateSettings(oldEditor);
         }
-
-        // Show/hide our editors
-
-        setUpdatesEnabled(false);
-            newEditor->show();
-
-            if (oldEditor && (newEditor != oldEditor))
-                oldEditor->hide();
-        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editor and make sure that the latter
         // immediately gets the focus

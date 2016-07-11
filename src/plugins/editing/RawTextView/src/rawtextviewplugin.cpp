@@ -297,14 +297,10 @@ QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // Update and return our raw text view widget using the given file
-    // Note: we temporarily disable updates for our raw text view widget, so as
-    //       to avoid any risk of known/unknown/potential flickering...
 
-    mViewWidget->setUpdatesEnabled(false);
-        mViewWidget->initialize(pFileName);
-    mViewWidget->setUpdatesEnabled(true);
+    mViewWidget->initialize(pFileName);
 
-    return mViewWidget;
+    return mViewWidget->editor(pFileName);
 }
 
 //==============================================================================

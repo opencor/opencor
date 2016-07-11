@@ -120,11 +120,9 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
 
-        // Keep track of our editing widget and add it to ourselves
+        // Keep track of our editing widget
 
         mEditingWidgets.insert(pFileName, newEditingWidget);
-
-        layout()->addWidget(newEditingWidget);
     }
 
     // Update our editing widget, if required
@@ -148,15 +146,6 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
         } else {
             newEditingWidget->updateSettings(oldEditingWidget);
         }
-
-        // Show/hide our editing widgets
-
-        setUpdatesEnabled(false);
-            newEditingWidget->show();
-
-            if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
-                oldEditingWidget->hide();
-        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editing widget and make sure that
         // the latter immediately gets the focus

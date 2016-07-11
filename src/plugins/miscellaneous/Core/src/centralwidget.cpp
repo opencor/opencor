@@ -1791,28 +1791,21 @@ void CentralWidget::updateGui()
 
     emit guiUpdated(viewPlugin, fileName);
 
-    // Replace the current view with the new one
+    // Replace the current view with the new one, if needed
     // Note: to do this as smoothly as possible, we temporarily hide the status
-    //       bar and disable updates for ourselves, before asking for remaining
-    //       events to be processed straightaway. Indeed, not do this will
-    //       result in some awful flickering when switching from one file to
-    //       another with the mouse over a button-like widget and the status bar
-    //       visible (see issues #405 and #1027). Now, although this approach
-    //       works fine on Windows and Linux, it will 'freeze' the switching on
-    //       OS X. However, there is no awful flickering, so it's probably
-    //       better than nothing when it comes to OS X...
+    //       bar. Indeed, not do this will result in some awful flickering when
+    //       switching from one file to another with the mouse over a
+    //       button-like widget and the status bar visible (see issues #405 and
+    //       #1027)...
 
-    bool statusBarVisible = mainWindow()->statusBar()->isVisible();
+    if (mContents->currentWidget() != newView) {
+        bool statusBarVisible = mainWindow()->statusBar()->isVisible();
 
-    mainWindow()->statusBar()->setVisible(false);
-        setUpdatesEnabled(false);
+        mainWindow()->statusBar()->setVisible(false);
             mContents->removeWidget(mContents->currentWidget());
             mContents->addWidget(newView);
-        setUpdatesEnabled(true);
-    mainWindow()->statusBar()->setVisible(statusBarVisible);
-
-    if (statusBarVisible)
-        QCoreApplication::processEvents();
+        mainWindow()->statusBar()->setVisible(statusBarVisible);
+    }
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
