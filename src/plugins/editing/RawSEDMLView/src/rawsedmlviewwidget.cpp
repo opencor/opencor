@@ -258,11 +258,12 @@ QList<QWidget *> RawSedmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditingWidget)
+    if (mEditingWidget) {
         return QList<QWidget *>() << mEditingWidget->editor()->cursorPositionWidget()
                                   << mEditingWidget->editor()->editingModeWidget();
-    else
+    } else {
         return QList<QWidget *>();
+    }
 }
 
 //==============================================================================
