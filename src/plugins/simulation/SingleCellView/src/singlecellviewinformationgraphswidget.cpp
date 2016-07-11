@@ -246,10 +246,6 @@ void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPane
     if (!propertyEditor)
         return;
 
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    propertyEditor->setUpdatesEnabled(false);
-
     // Create a section for our newly added graph
 
     Core::Property *graphProperty = propertyEditor->addSectionProperty();
@@ -293,10 +289,6 @@ void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPane
     // Update the information about our new graph
 
     updateGraphsInfo(graphProperty);
-
-    // Allow ourselves to be updated again
-
-    propertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -311,10 +303,6 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidg
     if (!propertyEditor)
         return;
 
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    propertyEditor->setUpdatesEnabled(false);
-
     // Remove the graph properties associated with the given graphs, as well as
     // their trace
 
@@ -326,10 +314,6 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidg
         mGraphs.remove(property);
         mGraphProperties.remove(graph);
     }
-
-    // Allow ourselves to be updated again
-
-    propertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
