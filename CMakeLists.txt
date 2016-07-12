@@ -370,6 +370,9 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
 )
+SET(PLUGINS
+    thirdParty/LLVM
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
