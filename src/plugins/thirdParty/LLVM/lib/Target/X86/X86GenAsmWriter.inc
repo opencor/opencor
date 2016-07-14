@@ -2928,10 +2928,12 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     17308784U,	// LAR64rr
     8464940U,	// LCMPXCHG16
     1180533U,	// LCMPXCHG16B
+    623477U,	// LCMPXCHG16B_SAVE_RBX
     25236365U,	// LCMPXCHG32
     37821122U,	// LCMPXCHG64
     46203902U,	// LCMPXCHG8
     852865U,	// LCMPXCHG8B
+    557953U,	// LCMPXCHG8B_SAVE_EBX
     1103734781U,	// LDDQUrm
     466757U,	// LDMXCSR
     1453115U,	// LDS16rm
@@ -17346,10 +17348,12 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     0U,	// LAR64rr
     0U,	// LCMPXCHG16
     0U,	// LCMPXCHG16B
+    0U,	// LCMPXCHG16B_SAVE_RBX
     0U,	// LCMPXCHG32
     0U,	// LCMPXCHG64
     0U,	// LCMPXCHG8
     0U,	// LCMPXCHG8B
+    0U,	// LCMPXCHG8B_SAVE_EBX
     0U,	// LDDQUrm
     0U,	// LDMXCSR
     0U,	// LDS16rm
@@ -31764,10 +31768,12 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     0U,	// LAR64rr
     0U,	// LCMPXCHG16
     0U,	// LCMPXCHG16B
+    0U,	// LCMPXCHG16B_SAVE_RBX
     0U,	// LCMPXCHG32
     0U,	// LCMPXCHG64
     0U,	// LCMPXCHG8
     0U,	// LCMPXCHG8B
+    0U,	// LCMPXCHG8B_SAVE_EBX
     0U,	// LDDQUrm
     0U,	// LDMXCSR
     0U,	// LDS16rm
