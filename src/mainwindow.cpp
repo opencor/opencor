@@ -1180,7 +1180,7 @@ void MainWindow::on_actionPlugins_triggered()
             restart(true);
     } else {
         QMessageBox::warning(this, tr("Plugins"),
-                             tr("No plugin could be found."));
+                             tr("No plugins could be found."));
     }
 }
 
