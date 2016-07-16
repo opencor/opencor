@@ -725,6 +725,14 @@ ELSE()
                 RENAME ${FULL_SYSTEM_LIBRARY})
     ENDFOREACH()
 
+    # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.06 LTS
+    # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
+    #       present on Ubuntu 14.04 LTS...
+
+    INSTALL(FILES /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.22
+            DESTINATION lib
+            RENAME libstdc++.so.6)
+
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and OS X, we don't have a macro for deploying all
     #       of our Qt libraries at once. Indeed, on Linux, the version of a file
