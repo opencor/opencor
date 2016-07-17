@@ -32,8 +32,6 @@ From there, do the following from the command prompt or terminal:
     > jom
  - Terminal (Linux):
     $ cd [QtWebKit]
-    $ export LD_LIBRARY_PATH=[ICU]/install/lib:$LD_LIBRARY_PATH
-    $ export PATH=[ICU]/install/bin:$PATH
     $ export PKG_CONFIG_PATH=[ICU]/install/lib/pkgconfig:$PKG_CONFIG_PATH
     $ qmake
     $ make
