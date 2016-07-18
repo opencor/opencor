@@ -70,8 +70,8 @@ void BusySupportWidget::doShowBusyWidget(QWidget *pParent, const bool &pGlobal,
     // central widget), if any
     // Note: if our parent is the central widget, we really want to disable the
     //       whole application otherwise we could, for example, be loading a
-    //       remote file and still be able to switch files, which would mess up
-    //       our GUI...
+    //       remote file and still be able to switch files, which could
+    //       potentially mess up our GUI...
 
     QWidget *effectiveParentWidget = mBusyWidget->effectiveParentWidget();
 
