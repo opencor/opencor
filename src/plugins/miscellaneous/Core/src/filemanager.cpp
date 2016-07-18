@@ -273,6 +273,15 @@ bool FileManager::isModified(const QString &pFileName) const
 
 //==============================================================================
 
+bool FileManager::isNewOrModified(const QString &pFileName) const
+{
+    // Return whether the given file is new or modified
+
+    return isNew(pFileName) || isModified(pFileName);
+}
+
+//==============================================================================
+
 bool FileManager::isLocalNewOrModified(const QString &pFileName) const
 {
     // Return whether the given file is a local one, as well as is new or

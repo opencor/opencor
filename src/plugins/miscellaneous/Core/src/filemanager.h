@@ -112,6 +112,7 @@ public:
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
     bool isModified(const QString &pFileName) const;
+    bool isNewOrModified(const QString &pFileName) const;
     bool isLocalNewOrModified(const QString &pFileName) const;
 
     void makeNew(const QString &pFileName);

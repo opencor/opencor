@@ -694,7 +694,7 @@ void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
                                   QUrl(url).fileName():
                                   QFileInfo(fileName).fileName();
 
-        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isModified(fileName)?
+        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?
                                                    "*":
                                                    QString()));
         mFileTabs->setTabToolTip(pIndex, fileIsNew?
@@ -2003,7 +2003,7 @@ void CentralWidget::updateModifiedSettings()
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         updateFileTab(i);
 
-        if (fileManagerInstance->isModified(mFileNames[i]))
+        if (fileManagerInstance->isNewOrModified(mFileNames[i]))
             ++nbOfModifiedFiles;
     }
 
@@ -2039,7 +2039,7 @@ void CentralWidget::updateModifiedSettings()
 
     // Let people know whether we can save the current file and/or all files
 
-    emit canSave(fileManagerInstance->isModified(fileName));
+    emit canSave(fileManagerInstance->isNewOrModified(fileName));
     emit canSaveAll(nbOfModifiedFiles);
 }
 
