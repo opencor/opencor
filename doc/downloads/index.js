@@ -44,7 +44,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Editor widget:</strong> fixed a problem with the icon for the search options / magnifier looking wrong (see issue <a href=\"https://github.com/opencor/opencor/issues/1026\">#1026</a>)." },
                        { "change": "<strong>Text-based editing views:</strong> fixed a small problem with switching editing views for the same file resulting in file changes (and other things) not being tracked anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1040\">#1040</a>)." },
                        { "change": "<strong>Single Cell view:</strong> the variable of integration isn't listed in the popup menu of the Parameters panel anymore, if it isn't defined in the main CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1030\">#1030</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a> to version 3.8.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1036\">#1036</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1041\">#1041</a>) and <a href=\"http://www.llvm.org/\">LLVM</a> to version 3.8.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1036\">#1036</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
