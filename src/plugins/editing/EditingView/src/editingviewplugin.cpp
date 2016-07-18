@@ -171,7 +171,7 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
-    if (mEditingViewInterface && pFileName.compare(mFileName)) {
+    if (mEditingViewInterface) {
         // Reset our previous editor's connections
 
         if (mEditor) {
