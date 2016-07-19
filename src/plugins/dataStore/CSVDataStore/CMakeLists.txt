@@ -18,4 +18,5 @@ ADD_PLUGIN(CSVDataStore
         src
     PLUGINS
         Core
+        DataStore
 )
