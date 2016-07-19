@@ -45,7 +45,7 @@ class CORE_EXPORT OrganisationWidget : public WindowWidget
 public:
     explicit OrganisationWidget(QWidget *pParent);
 
-protected Q_SLOTS:
+protected slots:
     void openFile(const QString &pFileName) const;
     void openFiles(const QStringList &pFileNames) const;
 };

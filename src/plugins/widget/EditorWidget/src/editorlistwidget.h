@@ -75,13 +75,13 @@ private:
     QAction *mClearAction;
     QAction *mCopyToClipboardAction;
 
-Q_SIGNALS:
+signals:
     void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
 
-public Q_SLOTS:
+public slots:
     void clear();
 
-private Q_SLOTS:
+private slots:
     void showCustomContextMenu() const;
 
     void copyToClipboard();

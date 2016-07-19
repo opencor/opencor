@@ -77,7 +77,7 @@ private:
     QString mFileName;
     SedmlEditingViewInterface *mSedmlEditingViewInterface;
 
-private Q_SLOTS:
+private slots:
     void reformat();
 
     void sedmlValidation();

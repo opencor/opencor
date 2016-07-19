@@ -77,7 +77,7 @@ private:
     QString mFileName;
     CellmlEditingViewInterface *mCellmlEditingViewInterface;
 
-private Q_SLOTS:
+private slots:
     void reformat();
 
     void cellmlValidation();

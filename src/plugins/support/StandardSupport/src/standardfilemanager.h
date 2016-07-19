@@ -62,7 +62,7 @@ protected:
 
     virtual QObject * newFile(const QString &pFileName) const = 0;
 
-private Q_SLOTS:
+private slots:
     void manageFile(const QString &pFileName);
     void unmanageFile(const QString &pFileName);
 

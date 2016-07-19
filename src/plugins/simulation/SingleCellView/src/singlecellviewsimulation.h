@@ -154,7 +154,7 @@ private:
     void createArrays();
     void deleteArrays();
 
-Q_SIGNALS:
+signals:
     void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
 
@@ -261,7 +261,7 @@ private:
 
     bool simulationSettingsOk(const bool &pEmitSignal = true);
 
-Q_SIGNALS:
+signals:
     void running(const bool &pIsResuming);
     void paused();
     void stopped(const qint64 &pElapsedTime);

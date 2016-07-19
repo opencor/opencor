@@ -139,7 +139,7 @@ private:
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
                        const InformationType &pInformationType = None);
 
-Q_SIGNALS:
+signals:
     void qualifierLookUpRequested(const QString &pQualifier);
     void resourceLookUpRequested(const QString &pResource);
     void idLookUpRequested(const QString &pResource, const QString &pId);
@@ -147,7 +147,7 @@ Q_SIGNALS:
 
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
-private Q_SLOTS:
+private slots:
     void copy();
 
     void disableLookUpInformation();

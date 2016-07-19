@@ -112,7 +112,7 @@ private:
 
     void reopenFile(const QString &pFileName);
 
-private Q_SLOTS:
+private slots:
     void newFile();
 
     void updateFileReopenMenu(const bool &pEnabled = true);

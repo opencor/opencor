@@ -32,7 +32,7 @@ class ScanningTests : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void basicScanningTests();
     void scanningCommentTests();
     void scanningKeywordTests();

@@ -108,7 +108,7 @@ private:
 
     void retranslateUnsupportedMetadataMessage();
 
-Q_SIGNALS:
+signals:
     void splitterMoved(const QIntList &pSizes);
 
 
@@ -119,10 +119,10 @@ Q_SIGNALS:
     void idDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                             const QString &pResource, const QString &pId);
 
-public Q_SLOTS:
+public slots:
     void updateGui(iface::cellml_api::CellMLElement *pElement);
 
-private Q_SLOTS:
+private slots:
     void emitSplitterMoved();
 
     void lookUpQualifier(const QString &pQualifier);

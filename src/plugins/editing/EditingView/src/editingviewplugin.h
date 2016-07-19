@@ -103,7 +103,7 @@ private:
     void unpopulateEditMenu();
     void populateEditMenu(QAction *pBeforeAction = 0);
 
-private Q_SLOTS:
+private slots:
     void clipboardDataChanged();
 
     void updateUndoAndRedoActions();

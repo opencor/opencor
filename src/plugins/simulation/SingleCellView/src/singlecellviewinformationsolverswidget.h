@@ -109,7 +109,7 @@ private:
     void setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
-private Q_SLOTS:
+private slots:
     void solverChanged(Core::Property *pProperty);
 };
 

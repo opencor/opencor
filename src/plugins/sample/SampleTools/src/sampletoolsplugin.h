@@ -66,7 +66,7 @@ private:
     void runHelpCommand();
     int runAddCommand(const QStringList &pArguments);
 
-private Q_SLOTS:
+private slots:
     void addTwoNumbers();
 };
 

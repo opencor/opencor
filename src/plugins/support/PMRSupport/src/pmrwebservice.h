@@ -89,7 +89,7 @@ private:
                         const Action pAction = None,
                         const QString &pName = QString());
 
-Q_SIGNALS:
+signals:
     void busy(const bool &pBusy);
 
     void warning(const QString &pMessage);
@@ -103,7 +103,7 @@ Q_SIGNALS:
                           const QStringList &pExposureFiles);
     void showExposureFiles(const QString &pUrl);
 
-private Q_SLOTS:
+private slots:
     void finished(QNetworkReply *pNetworkReply = 0);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);

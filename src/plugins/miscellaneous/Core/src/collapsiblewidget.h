@@ -58,7 +58,7 @@ public:
 protected:
     virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
 
-Q_SIGNALS:
+signals:
     void doubleClicked();
 };
 
@@ -97,10 +97,10 @@ private:
 
     void updateBottomSeparatorVisibleStatus();
 
-Q_SIGNALS:
+signals:
     void widgetVisible(const bool &pVisible);
 
-private Q_SLOTS:
+private slots:
     void toggleCollapsedState();
 };
 
@@ -133,10 +133,10 @@ private:
 
     void constructor(const QColor &pSeparatorColor = borderColor());
 
-Q_SIGNALS:
+signals:
     void collapsed(const int &pIndex, const bool &pCollapsed);
 
-private Q_SLOTS:
+private slots:
     void emitCollapsed();
 };
 

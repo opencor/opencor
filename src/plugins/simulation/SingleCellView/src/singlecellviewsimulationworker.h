@@ -87,7 +87,7 @@ private:
 
     SingleCellViewSimulationWorker *&mSelf;
 
-Q_SIGNALS:
+signals:
     void running(const bool &pIsResuming);
     void paused();
 
@@ -95,7 +95,7 @@ Q_SIGNALS:
 
     void error(const QString &pMessage);
 
-private Q_SLOTS:
+private slots:
     void started();
 
     void emitError(const QString &pMessage);

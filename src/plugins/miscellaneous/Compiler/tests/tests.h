@@ -53,7 +53,7 @@ private:
     double mBigB;
     double mBigC;
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
     void cleanupTestCase();
 

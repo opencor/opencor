@@ -49,7 +49,7 @@ class MathmlTests : public QObject
 private:
     void tests(const QString &pCategory);
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
 
     void plusTests();

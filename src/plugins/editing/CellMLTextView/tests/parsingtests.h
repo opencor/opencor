@@ -32,7 +32,7 @@ class ParsingTests : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void basicTests();
     void fileTests();
     void importTests();

@@ -59,7 +59,7 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
-Q_SIGNALS:
+signals:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 };
@@ -98,7 +98,7 @@ protected:
     virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
-Q_SIGNALS:
+signals:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 };
@@ -136,13 +136,13 @@ protected:
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 
-Q_SIGNALS:
+signals:
     void openEditor(QWidget *pEditor) const;
 
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-private Q_SLOTS:
+private slots:
     void listPropertyChanged(const QString &pValue);
     void booleanPropertyChanged(const QString &pValue);
 };
@@ -278,7 +278,7 @@ private:
 
     QList<QStandardItem *> items() const;
 
-Q_SIGNALS:
+signals:
     void visibilityChanged(const bool &pVisible);
     void valueChanged(const QString &pOldValue, const QString &pNewValue);
 };
@@ -382,10 +382,10 @@ private:
 
     void deleteProperty(Property *pProperty);
 
-Q_SIGNALS:
+signals:
     void propertyChanged(Core::Property *pProperty);
 
-private Q_SLOTS:
+private slots:
     void updateHeight();
 
     void checkCheckState(QStandardItem *pItem);

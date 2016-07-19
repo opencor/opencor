@@ -116,7 +116,7 @@ private:
 
     double mProgress;
 
-private Q_SLOTS:
+private slots:
     void rotate();
 };
 
