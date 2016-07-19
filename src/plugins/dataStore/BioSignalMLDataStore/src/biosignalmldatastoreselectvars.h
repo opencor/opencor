@@ -44,9 +44,9 @@ class BioSignalMLSelectVariables : public QDialog
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSelectVariables(QWidget * pParent,
-                                        const QVector<QString> & pLabels,
-                                        const QVector<bool> & pChecked);
+    explicit BioSignalMLSelectVariables(const QVector<QString> &pLabels,
+                                        const QVector<bool> &pChecked,
+                                        QWidget *pParent);
     ~BioSignalMLSelectVariables();
 
     virtual void retranslateUi();

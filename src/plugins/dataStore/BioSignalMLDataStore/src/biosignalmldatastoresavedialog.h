@@ -49,30 +49,30 @@ class BioSignalMLSaveDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSaveDialog(QWidget * pParent = nullptr);
+    explicit BioSignalMLSaveDialog(QWidget *pParent);
     ~BioSignalMLSaveDialog();
 
     virtual void retranslateUi();
 
-    bool run(void);
+    bool run();
 
     void setDefaultFileName(const QString &pFileName);
-    QString fileName(void) const;
-    QString shortName(void) const;
-    QString description(void) const;
-    QString author(void) const;
-    void setComment(const QString & pComment);
+    QString fileName() const;
+    QString shortName() const;
+    QString description() const;
+    QString author() const;
+    void setComment(const QString &pComment);
     void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
     QVector<bool> selectedVariables() const;
     bool selectedVariable(const size_t pIndex) const;
 
 private slots:
-    void accepted(void);
+    void accepted();
     void setFileName(bool checked = false);
     void selectVariables(bool checked = false);
 
 private:
-    void setButtonStates(void) const;
+    void setButtonStates() const;
 
     Ui::BioSignalMLSaveDialog *mGui;
 

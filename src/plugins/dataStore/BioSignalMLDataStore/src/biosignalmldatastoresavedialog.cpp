@@ -76,14 +76,14 @@ void BioSignalMLSaveDialog::retranslateUi()
 
 //==============================================================================
 
-void BioSignalMLSaveDialog::accepted(void)
+void BioSignalMLSaveDialog::accepted()
 {
     mAccepted = true;
 }
 
 //==============================================================================
 
-bool BioSignalMLSaveDialog::run(void)
+bool BioSignalMLSaveDialog::run()
 {
     mAccepted = false;
     mGui->fileNameValue->clear();
@@ -92,7 +92,7 @@ bool BioSignalMLSaveDialog::run(void)
 
     this->open();
     QEventLoop loop;
-    connect(this, SIGNAL(finished(int)), & loop, SLOT(quit()));
+    connect(this, SIGNAL(finished(int)), &loop, SLOT(quit()));
     mGui->setFileName->clicked(true);
     loop.exec();
 
@@ -102,7 +102,7 @@ bool BioSignalMLSaveDialog::run(void)
 
 //==============================================================================
 
-void BioSignalMLSaveDialog::setButtonStates(void) const
+void BioSignalMLSaveDialog::setButtonStates() const
 {
     if (mGui->fileNameValue->text() != "" && mGotSignals) {
         mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(true);
@@ -148,7 +148,7 @@ void BioSignalMLSaveDialog::setFileName(bool checked)
 
 //==============================================================================
 
-QString BioSignalMLSaveDialog::fileName(void) const
+QString BioSignalMLSaveDialog::fileName() const
 {
     return mGui->fileNameValue->text();
 }
@@ -217,28 +217,28 @@ bool BioSignalMLSaveDialog::selectedVariable(const size_t pIndex) const
 //==============================================================================
 
 
-QString BioSignalMLSaveDialog::shortName(void) const
+QString BioSignalMLSaveDialog::shortName() const
 {
     return mGui->shortNameValue->text();
 }
 
 //==============================================================================
 
-QString BioSignalMLSaveDialog::description(void) const
+QString BioSignalMLSaveDialog::description() const
 {
     return mGui->descriptionValue->toPlainText();
 }
 
 //==============================================================================
 
-QString BioSignalMLSaveDialog::author(void) const
+QString BioSignalMLSaveDialog::author() const
 {
     return mGui->authorValue->text();
 }
 
 //==============================================================================
 
-void BioSignalMLSaveDialog::setComment(const QString & pComment)
+void BioSignalMLSaveDialog::setComment(const QString &pComment)
 {
    mGui->commentValue->setText(pComment);
 }

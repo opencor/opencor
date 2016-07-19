@@ -33,9 +33,9 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BioSignalMLSelectVariables::BioSignalMLSelectVariables(QWidget *pParent,
-                                                       const QVector<QString> & pLabels,
-                                                       const QVector<bool> & pChecked) :
+BioSignalMLSelectVariables::BioSignalMLSelectVariables(const QVector<QString> &pLabels,
+                                                       const QVector<bool> &pChecked,
+                                                       QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::BioSignalMLSelectVariables)
 {
