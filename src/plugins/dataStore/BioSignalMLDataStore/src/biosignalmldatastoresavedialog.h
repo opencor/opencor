@@ -44,13 +44,13 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BioSignalMLSaveDialog : public QDialog
+class BiosignalmlSaveDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSaveDialog(QWidget *pParent);
-    ~BioSignalMLSaveDialog();
+    explicit BiosignalmlSaveDialog(QWidget *pParent);
+    ~BiosignalmlSaveDialog();
 
     virtual void retranslateUi();
 
