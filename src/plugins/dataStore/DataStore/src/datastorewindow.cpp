@@ -53,6 +53,24 @@ DataStoreWindow::~DataStoreWindow()
 
 //==============================================================================
 
+void DataStoreWindow::on_buttonBox_accepted()
+{
+    // Confirm that we accepted the data selection
+
+    accept();
+}
+
+//==============================================================================
+
+void DataStoreWindow::on_buttonBox_rejected()
+{
+    // Simply cancel whatever was done here
+
+    reject();
+}
+
+//==============================================================================
+
 }   // namespace DataStore
 }   // namespace OpenCOR
 
