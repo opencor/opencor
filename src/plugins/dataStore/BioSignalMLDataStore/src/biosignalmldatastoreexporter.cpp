@@ -22,16 +22,19 @@ limitations under the License.
 
 #include "biosignalmldatastoredata.h"
 #include "biosignalmldatastoreexporter.h"
-#include "biosignalml/biosignalml.h"
-#include "biosignalml/data/hdf5.h"
 
 //==============================================================================
 
 #include <QApplication>
+#include <QDateTime>
 #include <QFile>
 #include <QTextStream>
-#include <QDateTime>
 #include <QUrl>
+
+//==============================================================================
+
+#include "biosignalml/biosignalml.h"
+#include "biosignalml/data/hdf5.h"
 
 //==============================================================================
 
@@ -49,86 +52,103 @@ BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(const QString &pFileN
 
 //==============================================================================
 
-void BiosignalmlDataStoreExporter::execute() const
+void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 {
     // Export the given data store to a BioSignalML file
 
     BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
-
     QString fileName = dataStoreData->fileName();
-    std::string rec_uri = QUrl::fromLocalFile(fileName).toEncoded().toStdString();
-    std::string base_units = mDataStore->uri().toStdString() + "/units#";
+    std::string recordingUri = QUrl::fromLocalFile(fileName).toEncoded().toStdString();
+    std::string baseUnits = mDataStore->uri().toStdString()+"/units#";
+    bsml::HDF5::Recording *recording = 0;
 
-    bsml::HDF5::Recording *recording = nullptr;
     try {
-        recording = new bsml::HDF5::Recording(rec_uri, fileName.toStdString(), true);
-        recording->set_comment(dataStoreData->comment().toStdString()); // Set language in rdf::Literal()
-        // Requires https://github.com/dbrnz/typedobject/issues/6
-        // Language code is QLocale::bcp47Name().toStdString()
-        recording->set_label(dataStoreData->shortName().toStdString()) ;
-        recording->set_description(dataStoreData->description().toStdString()) ;
-        recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString())) ;
-
-        recording->add_prefix(rdf::Namespace("units", base_units)) ;
+        // Create and populate a recording
 
         DataStore::DataStoreVariable *voi = mDataStore->voi();
-        auto clock = recording->new_clock(rec_uri + "/clock/" + voi->uri().toStdString(),
-                                          rdf::URI(base_units + voi->unit().toStdString()),
-                                          voi->values(), voi->size());
-        clock->set_label(voi->label().toStdString()) ;
+        recording = new bsml::HDF5::Recording(recordingUri, fileName.toStdString(), true);
 
-        double duration = voi->value(voi->size()-1) - voi->value(0);
-        recording->set_duration(xsd::Duration(duration, voi->unit().toStdString()));
+        recording->add_prefix(rdf::Namespace("units", baseUnits));
+
+        recording->set_comment(dataStoreData->comment().toStdString());
+        recording->set_description(dataStoreData->description().toStdString());
+        recording->set_duration(xsd::Duration(voi->value(voi->size()-1)-voi->value(0),
+                                              voi->unit().toStdString()));
+        recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString()));
+        recording->set_label(dataStoreData->shortName().toStdString());
+
+        // Create and poluate a clock
+
+        bsml::HDF5::Clock::Ptr clock = recording->new_clock(recordingUri+"/clock/"+voi->uri().toStdString(),
+                                                            rdf::URI(baseUnits+voi->unit().toStdString()),
+                                                            voi->values(),
+                                                            voi->size());
+
+        clock->set_label(voi->label().toStdString());
+
+        // Retrieve some information about the different variables that are to
+        // be exported
 
         std::vector<std::string> uris;
         std::vector<rdf::URI> units;
-        std::vector<size_t> varindex;
+        std::vector<int> indexes;
         DataStore::DataStoreVariables variables = mDataStore->variables();
-        size_t nvars = variables.size();
-        for (size_t i = 0 ;  i < nvars ;  ++i) {
+        int nbOfVariables = variables.size();
+
+        for (int i = 0;  i < nbOfVariables; ++i) {
             if (dataStoreData->selectedVariables()[i]) {
-                uris.push_back(rec_uri + "/signal/" + variables[i]->uri().toStdString());
-                units.push_back(rdf::URI(base_units + variables[i]->unit().toStdString()));
-                varindex.push_back(i);
+                uris.push_back(recordingUri+"/signal/"+variables[i]->uri().toStdString());
+                units.push_back(rdf::URI(baseUnits+variables[i]->unit().toStdString()));
+                indexes.push_back(i);
             }
         }
-        auto sigs = recording->new_signalarray(uris, units, clock) ;
-        nvars = sigs->size();
-        for (size_t i = 0 ;  i < nvars ;  ++i) {
-            (*sigs)[i]->set_label(variables[varindex[i]]->label().toStdString()) ;
-        }
 
-#define BUFFER_ROWS 50000
-        double *data = new double[BUFFER_ROWS*nvars];
-        double *dp = data;
+        // Create and populate a signal array
+
+        static const int BufferRows = 50000;
+
+        bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
+        nbOfVariables = signalArray->size();
+
+        for (int i = 0;  i < nbOfVariables;  ++i)
+            (*signalArray)[i]->set_label(variables[indexes[i]]->label().toStdString());
+
+        double *data = new double[nbOfVariables*BufferRows];
+        double *dataPointer = data;
         int rowcount = 0;
 
         for (qulonglong i = 0; i < mDataStore->size(); ++i) {
-            for (size_t j = 0 ;  j < nvars ;  ++j) {
-                *dp++ = variables[varindex[j]]->value(i);
-                }
+            for (int j = 0; j < nbOfVariables; ++j)
+                *dataPointer++ = variables[indexes[j]]->value(i);
+
             ++rowcount;
-            if (rowcount >= BUFFER_ROWS) {
-                sigs->extend(data, BUFFER_ROWS*nvars);
-                dp = data;
+
+            if (rowcount >= BufferRows) {
+                signalArray->extend(data, BufferRows*nbOfVariables);
+                dataPointer = data;
                 rowcount = 0;
             }
 
             emit progress(double(i)/(mDataStore->size()-1));
         }
 
-        sigs->extend(data, rowcount*nvars);
+        signalArray->extend(data, nbOfVariables*rowcount);
 
         delete[] data;
+    } catch (bsml::data::Exception e) {
+        // Something went wrong, so retrieve the error message and delete our
+        // BioSignalML file
+
+        pErrorMessage = tr("The simulation data could not be exported to BioSignalML (%1).").arg(e.what());
+
+        QFile::remove(fileName);
     }
 
-    catch (bsml::data::Exception e) {
-        std::cerr << "EXCEPTION: " << e.what() << std::endl;
-                                    // **** Need to bring up alert....
-    }
+    // Close and delete our recording, if any
 
-    if (recording != nullptr) {
+    if (recording) {
         recording->close();
+
         delete recording;
     }
 }

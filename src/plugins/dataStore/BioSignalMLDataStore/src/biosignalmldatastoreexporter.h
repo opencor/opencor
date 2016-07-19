@@ -29,10 +29,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QMainWindow>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace BioSignalMLDataStore {
 
@@ -45,7 +41,7 @@ public:
                                           DataStore::DataStore *pDataStore,
                                           DataStore::DataStoreData *pDataStoreData);
 
-    virtual void execute() const;
+    virtual void execute(QString &pErrorMessage) const;
 };
 
 //==============================================================================

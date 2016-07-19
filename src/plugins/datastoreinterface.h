@@ -133,7 +133,7 @@ public:
 
     void start();
 
-    virtual void execute() const = 0;
+    virtual void execute(QString &pErrorMessage) const = 0;
 
 private:
     QThread *mThread;
@@ -144,7 +144,7 @@ protected:
     DataStoreData *mDataStoreData;
 
 Q_SIGNALS:
-    void done();
+    void done(const QString &pErrorMessage);
     void progress(const double &pProgress) const;
 
 private Q_SLOTS:

@@ -332,7 +332,7 @@ private Q_SLOTS:
 
     void plotAxesChanged();
 
-    void dataStoreExportDone();
+    void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(const double &pProgress);
 };
 

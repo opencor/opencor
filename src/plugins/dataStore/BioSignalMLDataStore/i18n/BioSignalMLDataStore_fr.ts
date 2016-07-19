@@ -64,6 +64,13 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreExporter</name>
+    <message>
+        <source>The simulation data could not be exported to BioSignalML (%1).</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Enter BioSignalML file name</source>
