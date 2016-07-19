@@ -193,7 +193,7 @@ private:
     QString viewKey(const int &pMode, const int &pView,
                     const QString &pFileName);
 
-Q_SIGNALS:
+signals:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
     void atLeastOneView(const bool &pAtLeastOneView);
@@ -205,7 +205,7 @@ Q_SIGNALS:
     void atLeastOneFile(const bool &pAtLeastOneFile);
     void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
 
-private Q_SLOTS:
+private slots:
     void updateGui();
 
     void openFile();

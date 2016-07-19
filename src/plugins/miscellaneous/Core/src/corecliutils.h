@@ -101,7 +101,7 @@ public:
     bool download(const QString &pUrl, QByteArray &pContents,
                   QString *pErrorMessage) const;
 
-private Q_SLOTS:
+private slots:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
                                        const QList<QSslError> &pSslErrors);
 };

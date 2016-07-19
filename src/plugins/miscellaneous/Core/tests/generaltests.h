@@ -36,7 +36,7 @@ private:
     QString mString;
     QString mEol;
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
 
     void qSameStringListsTests();

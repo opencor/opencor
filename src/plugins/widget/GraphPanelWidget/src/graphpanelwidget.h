@@ -89,7 +89,7 @@ private:
 
     void updateMarkerColor();
 
-Q_SIGNALS:
+signals:
     void activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
     void inactivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 

@@ -71,10 +71,10 @@ private:
     SingleCellViewInformationWidget *mInformationWidget;
     GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
 
-Q_SIGNALS:
+signals:
     void splitterMoved(const QIntList &pSizes);
 
-private Q_SLOTS:
+private slots:
     void emitSplitterMoved();
 };
 

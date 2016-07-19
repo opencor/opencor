@@ -50,7 +50,7 @@ public:
 private:
     Ui::SampleWindowWindow *mGui;
 
-private Q_SLOTS:
+private slots:
     void updateSum();
 };
 

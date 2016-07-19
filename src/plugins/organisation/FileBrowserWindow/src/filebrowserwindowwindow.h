@@ -68,7 +68,7 @@ private:
 
     QMenu *mContextMenu;
 
-private Q_SLOTS:
+private slots:
     void on_actionHome_triggered();
     void on_actionParent_triggered();
     void on_actionPrevious_triggered();

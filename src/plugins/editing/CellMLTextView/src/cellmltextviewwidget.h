@@ -163,7 +163,7 @@ private:
     QString endOfPiecewiseStatement(int &pPosition) const;
     QString statement(const int &pPosition) const;
 
-private Q_SLOTS:
+private slots:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
     void updateViewer();

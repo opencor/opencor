@@ -99,10 +99,10 @@ private:
 
     QString mQualifierInformationTemplate;
 
-Q_SIGNALS:
+signals:
     void splitterMoved(const QIntList &pSizes);
 
-private Q_SLOTS:
+private slots:
     void emitSplitterMoved();
 
     void updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,

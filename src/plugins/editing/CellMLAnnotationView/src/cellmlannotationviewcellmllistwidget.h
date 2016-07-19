@@ -159,10 +159,10 @@ private:
 
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
-Q_SIGNALS:
+signals:
     void metadataDetailsRequested(iface::cellml_api::CellMLElement *pCellElement);
 
-private Q_SLOTS:
+private slots:
     void expandAll();
     void collapseAll();
     void removeCurrentMetadata();

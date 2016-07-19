@@ -47,7 +47,7 @@ public:
 protected:
     void resizeEvent(QResizeEvent *pEvent);
 
-Q_SIGNALS:
+signals:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);
 };

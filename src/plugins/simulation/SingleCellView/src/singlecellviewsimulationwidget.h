@@ -274,10 +274,10 @@ private:
 
     void checkSimulationDataModified(const bool &pIsModified);
 
-Q_SIGNALS:
+signals:
     void splitterMoved(const QIntList &pSizes);
 
-private Q_SLOTS:
+private slots:
     void runPauseResumeSimulation();
     void stopSimulation();
     void developmentMode();

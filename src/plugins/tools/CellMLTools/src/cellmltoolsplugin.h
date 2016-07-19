@@ -81,7 +81,7 @@ private:
     void runHelpCommand();
     int runExportCommand(const QStringList &pArguments);
 
-private Q_SLOTS:
+private slots:
     void exportToCellml10();
     void exportToCellml11();
 

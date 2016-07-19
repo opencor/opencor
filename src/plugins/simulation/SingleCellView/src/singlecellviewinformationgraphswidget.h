@@ -128,14 +128,14 @@ private:
 
     void selectAllGraphs(const bool &pSelect);
 
-Q_SIGNALS:
+signals:
     void headerSectionResized(const int &pIndex, const int &pOldSize,
                               const int &pNewSize);
 
     void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-public Q_SLOTS:
+public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     const bool &pActive = true);
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
@@ -145,7 +145,7 @@ public Q_SLOTS:
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-private Q_SLOTS:
+private slots:
     void addGraph();
     void removeCurrentGraph();
     void removeAllGraphs();

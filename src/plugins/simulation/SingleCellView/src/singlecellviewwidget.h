@@ -152,7 +152,7 @@ private:
                            COMBINESupport::CombineArchive *pCombineArchive,
                            COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
-private Q_SLOTS:
+private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
     void contentsWidgetSplitterMoved(const QIntList &pSizes);
 

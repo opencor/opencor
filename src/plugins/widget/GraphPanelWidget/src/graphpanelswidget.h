@@ -72,7 +72,7 @@ private:
 
     bool removeGraphPanel(GraphPanelWidget *pGraphPanel);
 
-Q_SIGNALS:
+signals:
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
@@ -86,7 +86,7 @@ Q_SIGNALS:
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-private Q_SLOTS:
+private slots:
     void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void synchronizeXAxis();

@@ -143,11 +143,11 @@ protected:
     DataStore *mDataStore;
     DataStoreData *mDataStoreData;
 
-Q_SIGNALS:
+signals:
     void done(const QString &pErrorMessage);
     void progress(const double &pProgress) const;
 
-private Q_SLOTS:
+private slots:
     void started();
 };
 
