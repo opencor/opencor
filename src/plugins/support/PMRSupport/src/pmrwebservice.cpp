@@ -526,7 +526,7 @@ void PmrWebService::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-void PmrWebService::requestExposuresList(void)
+void PmrWebService::requestExposuresList()
 {
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset

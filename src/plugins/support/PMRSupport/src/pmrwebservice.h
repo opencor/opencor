@@ -53,7 +53,7 @@ public:
     ~PmrWebService();
 
     void cloneWorkspace(const QString &pUrl, const QString &pDirName);
-    void requestExposuresList(void);
+    void requestExposuresList();
     void requestExposureFiles(const QString &pUrl);
 
 private:
