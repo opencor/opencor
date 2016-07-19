@@ -20,8 +20,7 @@ limitations under the License.
 // Save as BioSignalML widget
 //==============================================================================
 
-#ifndef BioSignalMLDATASTORESAVEDIALOG_H
-#define BioSignalMLDATASTORESAVEDIALOG_H
+#pragma once
 
 //==============================================================================
 
@@ -88,10 +87,6 @@ private:
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

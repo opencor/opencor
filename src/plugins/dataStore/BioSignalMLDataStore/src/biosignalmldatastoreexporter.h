@@ -20,8 +20,7 @@ limitations under the License.
 // BioSignalML data store exporter
 //==============================================================================
 
-#ifndef BioSignalMLDATASTOREEXPORTER_H
-#define BioSignalMLDATASTOREEXPORTER_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ public:
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -20,15 +20,11 @@ limitations under the License.
 // BioSignalML data store plugin
 //==============================================================================
 
-#ifndef BioSignalMLDATASTOREPLUGIN_H
-#define BioSignalMLDATASTOREPLUGIN_H
+#pragma once
 
 //==============================================================================
 
 #include "biosignalmldatastoreexporter.h"
-
-//==============================================================================
-
 #include "datastoreinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -63,10 +59,6 @@ public:
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

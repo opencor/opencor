@@ -87,10 +87,10 @@ bool BioSignalMLSaveDialog::run(void)
 {
     mAccepted = false;
     mGui->fileNameValue->clear();
-    mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(false) ;
+    mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(false);
     this->setVisible(true);
 
-    this->open() ;
+    this->open();
     QEventLoop loop;
     connect(this, SIGNAL(finished(int)), & loop, SLOT(quit()));
     mGui->setFileName->clicked(true);
@@ -179,19 +179,25 @@ void BioSignalMLSaveDialog::selectVariables(bool checked)
     BioSignalMLSelectVariables selection(this, mVariableLabels, mSelectedVariables);
     if (selection.exec() == QDialog::Accepted) {
         int selected = 0;
-        for (auto i = 0 ;  i < mVariableLabels.size() ;  ++i) {
-            mSelectedVariables[i] = selection.checked(i) ;
-            if (mSelectedVariables[i]) ++selected;
-            }
-        mGui->selectedVariables->setText(
-            selected == 0                     ? QObject::tr("No variables")
-          : selected < mVariableLabels.size() ? QObject::tr("As specified")
-                                              : QObject::tr("All variables"));
-        mGotSignals = (selected > 0);
+
+        for (int i = 0; i < mVariableLabels.size(); ++i) {
+            mSelectedVariables[i] = selection.checked(i);
+
+            if (mSelectedVariables[i])
+                ++selected;
+        }
+
+        mGui->selectedVariables->setText((!selected)?
+                                             QObject::tr("No variables"):
+                                             (selected < mVariableLabels.size())?
+                                                 QObject::tr("As specified"):
+                                                 QObject::tr("All variables"));
+        mGotSignals = selected;
+
         setButtonStates();
     }
 
-    this->activateWindow();
+    activateWindow();
 }
 
 //==============================================================================

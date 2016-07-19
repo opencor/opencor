@@ -20,8 +20,7 @@ limitations under the License.
 // BioSignalML data store data
 //==============================================================================
 
-#ifndef BIOSIGNALMLDATASTOREDATA_H
-#define BIOSIGNALMLDATASTOREDATA_H
+#pragma once
 
 //==============================================================================
 
@@ -62,10 +61,6 @@ private:
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
