@@ -105,13 +105,13 @@ private:
 
     bool canCreateNewFolder() const;
 
-Q_SIGNALS:
+signals:
     void filesOpenRequested(const QStringList &pFileNames);
 
     void newFolderEnabled(const bool &pEnabled);
     void deleteItemsEnabled(const bool &pEnabled);
 
-private Q_SLOTS:
+private slots:
     void expandedFolder(const QModelIndex &pFolderIndex);
     void collapsedFolder(const QModelIndex &pFolderIndex);
 

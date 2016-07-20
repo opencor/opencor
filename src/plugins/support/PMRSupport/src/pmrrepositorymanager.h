@@ -64,12 +64,12 @@ private:
     PmrOAuthClient *mPmrOAuthClient;
     PmrRepository *mPmrRepository;
 
-Q_SIGNALS:
+signals:
     void authenticated(const bool &pAuthenticated);
     void busy(const bool &pBusy);
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
 
-private Q_SLOTS:
+private slots:
     void authenticationFailed();
     void authenticationSucceeded();
     void openBrowser(const QUrl &pUrl);

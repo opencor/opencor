@@ -20,7 +20,6 @@ limitations under the License.
 // Preferences window
 //==============================================================================
 
-#include "mainwindow.h"
 #include "preferenceswindow.h"
 
 //==============================================================================

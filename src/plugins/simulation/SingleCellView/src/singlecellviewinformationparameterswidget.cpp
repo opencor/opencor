@@ -265,7 +265,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
             // create a new section hierarchy for our 'new' component, reusing
             // existing sections, whenever possible
 
-            Core::Property *section = 0;
+            Core::Property *parentSectionProperty = 0;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a section for our current
@@ -277,11 +277,11 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
                 QList<Core::Property *> subSections = QList<Core::Property *>();
 
-                if (section) {
-                    // We have a section, so go through its children and keep
-                    // track of its propeties that are a section
+                if (parentSectionProperty) {
+                    // We have a parent section, so go through its children and
+                    // keep track of its propeties that are a section
 
-                    foreach (QObject *object, section->children()) {
+                    foreach (QObject *object, parentSectionProperty->children()) {
                         Core::Property *property = qobject_cast<Core::Property *>(object);
 
                         if (   property
@@ -314,11 +314,11 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                 // be found
 
                 if (!sectionProperty)
-                    sectionProperty = addSectionProperty(component, section);
+                    sectionProperty = addSectionProperty(component, parentSectionProperty);
 
                 // Get ready for the next component in our component hierarchy
 
-                section = sectionProperty;
+                parentSectionProperty = sectionProperty;
             }
 
             // Keep track of the new component hierarchy

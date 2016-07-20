@@ -378,11 +378,13 @@ void DataStoreExporter::started()
 {
     // Do the export itself
 
-    execute();
+    QString errorMessage = QString();
+
+    execute(errorMessage);
 
     // Let people know that we are done with the export
 
-    emit done();
+    emit done(errorMessage);
 }
 
 //==============================================================================

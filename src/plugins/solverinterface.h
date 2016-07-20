@@ -67,7 +67,7 @@ public:
 protected:
     Properties mProperties;
 
-Q_SIGNALS:
+signals:
     void error(const QString &pErrorMessage);
 };
 

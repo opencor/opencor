@@ -11,6 +11,13 @@ Qt WebKit has been officially replaced with Qt WebEngine starting with Qt 5.6 LT
       Note: the GnuWin32 version of Flex is not suitable, hence we use Win flex-bison instead.
     - Linux, i.e. running the following command from the terminal:
        $ sudo apt-get install bison flex gperf libicu-dev libsqlite3-dev libxrender-dev
+      as well as building ICU from source (see http://site.icu-project.org/download/; make sure to get the version used by Qt) and from there:
+       $ cd [ICU]
+       $ mkdir build
+       $ cd build
+       $ ../source/runConfigureICU Linux --prefix=[ICU]/install
+       $ make
+       $ make install
 
 From there, do the following from the command prompt or terminal:
  - Command prompt:
@@ -23,13 +30,15 @@ From there, do the following from the command prompt or terminal:
     > nmake
       or
     > jom
- - Terminal:
+ - Terminal (Linux):
     $ cd [QtWebKit]
+    $ export PKG_CONFIG_PATH=[ICU]/install/lib/pkgconfig:$PKG_CONFIG_PATH
     $ qmake
     $ make
-      on Linux or
+ - Terminal (OS X):
+    $ cd [QtWebKit]
+    $ qmake
     $ make release
-      on OS X
 
 Once Qt WebKit has been fully built:
  - For each supported platform:

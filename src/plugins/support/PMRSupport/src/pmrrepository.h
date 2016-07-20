@@ -99,7 +99,7 @@ private:
     void requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
                                      PmrExposure *pExposure=nullptr);
 
-Q_SIGNALS:
+signals:
     void authenticated(const bool &pAuthenticated);
     //void authenticationChanged(const bool &pAuthenticated);
 
@@ -120,12 +120,12 @@ Q_SIGNALS:
     void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
     void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
 
-public Q_SLOTS:
+public slots:
     void authenticate(const bool &pLink = true);
     void getAuthenticationStatus(void);
     void unauthorised(const QString &pUrl);
 
-private Q_SLOTS:
+private slots:
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
     void exposuresListResponse(const QJsonDocument &pJsonDocument);

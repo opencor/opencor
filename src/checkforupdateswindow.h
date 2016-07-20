@@ -95,7 +95,7 @@ private:
 
     void updateGui();
 
-private Q_SLOTS:
+private slots:
     void on_buttonBox_accepted();
     void on_statusLabel_linkActivated(const QString &pLink);
     void on_recheckButton_clicked();

@@ -417,6 +417,11 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // Make our tree view widget our focus proxy
 
     setFocusProxy(mTreeViewWidget);
+
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -452,7 +457,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
     // Check whether we are dealing with a category
 
-    if (pCellmlElementItem->isCategory())
+    if (pCellmlElementItem->isCategory()) {
         // We are dealing with a category, so retranslate its type
 
         switch (pCellmlElementItem->type()) {
@@ -493,7 +498,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             ;
         }
-    else
+    } else {
         // We are not dealing with a category, so check the type and see whether
         // a CellML element needs retranslating
 
@@ -511,6 +516,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             ;
         }
+    }
 }
 
 //==============================================================================
@@ -969,16 +975,8 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 void CellmlAnnotationViewCellmlListWidget::expandAll()
 {
     // Expand all the CellML elements below the current one
-    // Note: we disable and then re-enable updates before expanding all the
-    //       index since it may end up in quite a few updates...
 
-    mTreeViewWidget->setUpdatesEnabled(false);
-        qApp->setOverrideCursor(Qt::WaitCursor);
-
-        indexExpandAll(mTreeViewWidget->currentIndex());
-
-        qApp->restoreOverrideCursor();
-    mTreeViewWidget->setUpdatesEnabled(true);
+    indexExpandAll(mTreeViewWidget->currentIndex());
 }
 
 //==============================================================================
@@ -986,15 +984,8 @@ void CellmlAnnotationViewCellmlListWidget::expandAll()
 void CellmlAnnotationViewCellmlListWidget::collapseAll()
 {
     // Collapse all the CellML elements below the current one
-    // Note: see the note in on_actionExpandAll_triggered() above...
 
-    mTreeViewWidget->setUpdatesEnabled(false);
-        qApp->setOverrideCursor(Qt::WaitCursor);
-
-        indexCollapseAll(mTreeViewWidget->currentIndex());
-
-        qApp->restoreOverrideCursor();
-    mTreeViewWidget->setUpdatesEnabled(true);
+    indexCollapseAll(mTreeViewWidget->currentIndex());
 }
 
 //==============================================================================

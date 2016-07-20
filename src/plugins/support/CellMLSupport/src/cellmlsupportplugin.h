@@ -70,7 +70,7 @@ public:
 private:
     QAction *mFileNewCellmlFileAction;
 
-private Q_SLOTS:
+private slots:
     void newCellmlFile();
 };
 

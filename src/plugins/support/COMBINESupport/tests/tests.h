@@ -45,7 +45,7 @@ private:
 
     void doBasicTests(const QString &pFileName = QString());
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
     void cleanupTestCase();
 

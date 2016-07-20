@@ -74,7 +74,8 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    EditorWidget::EditorWidget * editor(const QString &pFileName) const;
+    EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
+    CellMLEditingView::CellmlEditingViewWidget * editingWidget(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -99,7 +100,7 @@ private:
     QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
                                           const int &pPosition) const;
 
-private Q_SLOTS:
+private slots:
     void updateViewer();
 
     void mathmlConversionDone(const QString &pContentMathml,

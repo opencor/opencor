@@ -111,7 +111,7 @@ private:
     void processNode(const QDomNode &pDomNode) const;
     QString processedContents() const;
 
-private Q_SLOTS:
+private slots:
     void showCustomContextMenu() const;
 
     void updateMathmlViewerWidget();

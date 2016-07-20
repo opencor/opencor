@@ -55,11 +55,11 @@ public:
 private:
     XslTransformer *mXslTransformer;
 
-Q_SIGNALS:
+signals:
     void done(const QString &pContentMathml,
               const QString &pPresentationMathml);
 
-private Q_SLOTS:
+private slots:
     void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };
 

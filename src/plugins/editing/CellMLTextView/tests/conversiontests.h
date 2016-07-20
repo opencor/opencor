@@ -32,7 +32,7 @@ class ConversionTests : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void successfulConversionTests();
     void failingConversionTests();
     void warningConversionTests();

@@ -88,6 +88,7 @@ public:
 
     QStringList fileNames() const;
 
+    SingleCellViewSimulationWidget * simulationWidget(const QString &pFileName) const;
     SingleCellViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
@@ -151,7 +152,7 @@ private:
                            COMBINESupport::CombineArchive *pCombineArchive,
                            COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
-private Q_SLOTS:
+private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
     void contentsWidgetSplitterMoved(const QIntList &pSizes);
 

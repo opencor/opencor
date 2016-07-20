@@ -97,7 +97,7 @@ private:
 
     void selectFirstVisibleCategory();
 
-private Q_SLOTS:
+private slots:
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
 
     void on_buttonBox_accepted();

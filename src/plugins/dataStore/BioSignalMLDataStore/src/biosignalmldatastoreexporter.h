@@ -20,16 +20,11 @@ limitations under the License.
 // BioSignalML data store exporter
 //==============================================================================
 
-#ifndef BioSignalMLDATASTOREEXPORTER_H
-#define BioSignalMLDATASTOREEXPORTER_H
+#pragma once
 
 //==============================================================================
 
 #include "datastoreinterface.h"
-
-//==============================================================================
-
-#include <QMainWindow>
 
 //==============================================================================
 
@@ -45,17 +40,13 @@ public:
                                           DataStore::DataStore *pDataStore,
                                           DataStore::DataStoreData *pDataStoreData);
 
-    virtual void execute() const;
+    virtual void execute(QString &pErrorMessage) const;
 };
 
 //==============================================================================
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -9,8 +9,8 @@ ADD_PLUGIN(BioSignalMLDataStore
         ../../plugininfo.cpp
 
         src/biosignalmldatastoredata.cpp
-        src/biosignalmldatastoreplugin.cpp
         src/biosignalmldatastoreexporter.cpp
+        src/biosignalmldatastoreplugin.cpp
         src/biosignalmldatastoresavedialog.cpp
         src/biosignalmldatastoreselectvars.cpp
     HEADERS_MOC

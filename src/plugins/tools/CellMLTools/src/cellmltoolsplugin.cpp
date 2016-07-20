@@ -374,7 +374,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                 CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(fileName);
 
                 if (!cellmlFile->load()) {
-                    errorMessage = "A problem occurred while loading the file.";
+                    errorMessage = "The file could not be loaded.";
                 } else {
                     // At this stage, everything is fine with the file, so now
                     // we need to check the type of export the user wants

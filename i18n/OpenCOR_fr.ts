@@ -197,16 +197,16 @@
         <translation>Extensions</translation>
     </message>
     <message>
-        <source>No plugin could be found.</source>
-        <translation>Aucune extension n&apos;a pu être trouvée.</translation>
-    </message>
-    <message>
         <source>About</source>
         <translation>À Propos</translation>
     </message>
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
+    </message>
+    <message>
+        <source>No plugins could be found.</source>
+        <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
     </message>
 </context>
 <context>

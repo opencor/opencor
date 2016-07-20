@@ -98,7 +98,7 @@ QString allFilters(const QStringList &pFilters)
             ".*"
 #endif
             ")"
-           +(filters.isEmpty()?QString():";;"+filters.join(";;")) ;
+           +(filters.isEmpty()?QString():";;"+filters.join(";;"));
 }
 
 //==============================================================================

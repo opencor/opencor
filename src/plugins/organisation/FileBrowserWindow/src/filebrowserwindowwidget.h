@@ -85,7 +85,7 @@ private:
     void updateItems(const QString &pItemPath, QStringList &pItems) const;
     void goToOtherItem(QStringList &pItems, QStringList &pOtherItems);
 
-Q_SIGNALS:
+signals:
     void filesOpenRequested(const QStringList &pFileNames);
 
     void notHomeFolder(const bool &pNotHomeFolder);
@@ -94,7 +94,7 @@ Q_SIGNALS:
     void goToPreviousFileOrFolderEnabled(const bool &pEnabled);
     void goToNextFileOrFolderEnabled(const bool &pEnabled);
 
-private Q_SLOTS:
+private slots:
     void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 
     void directoryLoaded(const QString &pPath);

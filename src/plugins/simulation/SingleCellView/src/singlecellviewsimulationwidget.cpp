@@ -2407,8 +2407,8 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
 
-        connect(dataStoreExporter, SIGNAL(done()),
-                this, SLOT(dataStoreExportDone()));
+        connect(dataStoreExporter, SIGNAL(done(const QString &)),
+                this, SLOT(dataStoreExportDone(const QString &)));
         connect(dataStoreExporter, SIGNAL(progress(const double &)),
                 this, SLOT(dataStoreExportProgress(const double &)));
 
@@ -3245,11 +3245,18 @@ void SingleCellViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::dataStoreExportDone()
+void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
 {
     // We are done with the export, so hide our busy widget
 
     mPlugin->viewWidget()->hideBusyWidget();
+
+    // Display the given error message, if any
+
+    if (!pErrorMessage.isEmpty()) {
+        QMessageBox::warning(Core::mainWindow(), tr("Simulation Data Export"),
+                             pErrorMessage);
+    }
 }
 
 //==============================================================================

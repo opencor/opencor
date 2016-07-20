@@ -33,9 +33,9 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BioSignalMLSelectVariables::BioSignalMLSelectVariables(QWidget *pParent,
-                                                       const QVector<QString> & pLabels,
-                                                       const QVector<bool> & pChecked) :
+BioSignalMLSelectVariables::BioSignalMLSelectVariables(const QVector<QString> &pLabels,
+                                                       const QVector<bool> &pChecked,
+                                                       QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::BioSignalMLSelectVariables)
 {
@@ -43,10 +43,11 @@ BioSignalMLSelectVariables::BioSignalMLSelectVariables(QWidget *pParent,
 
     mGui->setupUi(this);
     QTableWidget *varlist = mGui->selectedVariables;
-    for (auto i = 0 ;  i < pLabels.size() ;  ++i) {
+    for (auto i = 0;  i < pLabels.size();  ++i) {
         varlist->insertRow(i);
         QTableWidgetItem *checked = new QTableWidgetItem();
-        checked->setCheckState(pChecked[i] ? Qt::Checked : Qt::Unchecked);
+
+        checked->setCheckState(pChecked[i]?Qt::Checked:Qt::Unchecked);
         varlist->setItem(i, 0, checked);
         varlist->setItem(i, 1, new QTableWidgetItem(pLabels[i]));
     }
@@ -77,9 +78,9 @@ void BioSignalMLSelectVariables::retranslateUi()
 
 void BioSignalMLSelectVariables::selectAllVariables(bool checked)
 {
-    auto state = checked ? Qt::Checked : Qt::Unchecked;
+    auto state = checked?Qt::Checked:Qt::Unchecked;
     QTableWidget *varlist = mGui->selectedVariables;
-    for (auto row = 0 ;  row < varlist->rowCount() ;  ++row)
+    for (auto row = 0; row < varlist->rowCount(); ++row)
       varlist->item(row, 0)->setCheckState(state);
 }
 
@@ -87,7 +88,7 @@ void BioSignalMLSelectVariables::selectAllVariables(bool checked)
 
 bool BioSignalMLSelectVariables::checked(size_t pIndex)
 {
-    return (mGui->selectedVariables->item(pIndex, 0)->checkState() == Qt::Checked) ;
+    return (mGui->selectedVariables->item(pIndex, 0)->checkState() == Qt::Checked);
 }
 
 //==============================================================================

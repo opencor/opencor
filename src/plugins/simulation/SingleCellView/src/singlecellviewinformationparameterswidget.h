@@ -80,14 +80,14 @@ private:
 
     void retranslateContextMenu();
 
-Q_SIGNALS:
+signals:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-public Q_SLOTS:
+public slots:
     void updateParameters(const double &pCurrentPoint);
 
-private Q_SLOTS:
+private slots:
     void propertyEditorContextMenu(const QPoint &pPosition) const;
 
     void propertyChanged(Core::Property *pProperty);

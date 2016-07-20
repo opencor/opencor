@@ -54,16 +54,16 @@ PLUGININFO_FUNC RawTextViewPluginInfo()
 // Editing interface
 //==============================================================================
 
-EditorWidget::EditorWidget * RawTextViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawTextViewPlugin::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
-    return mViewWidget->editor(pFileName);
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================
 
-bool RawTextViewPlugin::isEditorUseable(const QString &pFileName) const
+bool RawTextViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -74,15 +74,15 @@ bool RawTextViewPlugin::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool RawTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
+bool RawTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileName) const
 {
-    // Return whether the requested editor has been modified, which here is done
-    // by comparing its contents to that of the given file
+    // Return whether the requested editor widget has been modified, which here
+    // is done by comparing its contents to that of the given file
 
-    EditorWidget::EditorWidget *crtEditor = editor(pFileName);
+    EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
-    return crtEditor?
-               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents().toUtf8()):
+    return crtEditorWidget?
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents().toUtf8()):
                false;
 }
 
@@ -109,10 +109,10 @@ bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
 
     // Save the given file
 
-    EditorWidget::EditorWidget *crtEditor = editor(pOldFileName);
+    EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
-    return crtEditor?
-               Core::writeFileContentsToFile(pNewFileName, crtEditor->contents().toUtf8()):
+    return crtEditorWidget?
+               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents().toUtf8()):
                false;
 }
 
@@ -297,14 +297,10 @@ QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // Update and return our raw text view widget using the given file
-    // Note: we temporarily disable updates for our raw text view widget, so as
-    //       to avoid any risk of known/unknown/potential flickering...
 
-    mViewWidget->setUpdatesEnabled(false);
-        mViewWidget->initialize(pFileName);
-    mViewWidget->setUpdatesEnabled(true);
+    mViewWidget->initialize(pFileName);
 
-    return mViewWidget;
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================

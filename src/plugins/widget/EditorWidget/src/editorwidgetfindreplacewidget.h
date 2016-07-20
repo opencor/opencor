@@ -104,7 +104,7 @@ private:
     void updateHeight();
     void updateStyleSheet();
 
-Q_SIGNALS:
+signals:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
     void findTextChanged(const QString &pText);
@@ -118,7 +118,7 @@ Q_SIGNALS:
     void replaceAndFindRequested();
     void replaceAllRequested();
 
-private Q_SLOTS:
+private slots:
     void on_findPreviousButton_clicked();
     void on_findNextButton_clicked();
 

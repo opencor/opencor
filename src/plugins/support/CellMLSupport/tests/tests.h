@@ -36,7 +36,7 @@ private:
     void doRuntimeTest(const QString &pFileName, const QString &pCellmlVersion,
                        const QStringList &pModelParameters);
 
-private Q_SLOTS:
+private slots:
     void runtimeTests();
 };
 

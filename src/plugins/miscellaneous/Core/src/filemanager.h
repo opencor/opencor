@@ -112,6 +112,7 @@ public:
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
     bool isModified(const QString &pFileName) const;
+    bool isNewOrModified(const QString &pFileName) const;
     bool isLocalNewOrModified(const QString &pFileName) const;
 
     void makeNew(const QString &pFileName);
@@ -156,7 +157,7 @@ private:
 
     bool newFile(QString &pFileName, const QByteArray &pContents = QByteArray());
 
-Q_SIGNALS:
+signals:
     void fileManaged(const QString &pFileName);
     void fileUnmanaged(const QString &pFileName);
 
@@ -175,7 +176,7 @@ Q_SIGNALS:
 
     void fileSaved(const QString &pFileName);
 
-private Q_SLOTS:
+private slots:
     void checkFiles();
 };
 

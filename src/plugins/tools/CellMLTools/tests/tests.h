@@ -32,7 +32,7 @@ class Tests : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void helpTests();
     void exportTests();
 };

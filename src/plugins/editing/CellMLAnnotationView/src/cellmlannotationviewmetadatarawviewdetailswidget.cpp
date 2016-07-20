@@ -69,15 +69,12 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     if (!pElement)
         return;
 
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
-
     // Remove all previous RDF triples from our tree view widget
 
-    while (mModel->rowCount())
+    while (mModel->rowCount()) {
         foreach (QStandardItem *item, mModel->takeRow(0))
             delete item;
+    }
 
     // Add the 'new' RDF triples to our tree view widget
     // Note: for the RDF triple's subject, we try to remove the CellML file's
@@ -87,13 +84,14 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
     int rdfTripleCounter = 0;
 
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, mCellmlFile->rdfTriples(pElement))
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, mCellmlFile->rdfTriples(pElement)) {
         mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
                                                                         << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
                                                                                                  rdfTriple->metadataId():
                                                                                                  rdfTriple->subject()->asString())
                                                                         << new QStandardItem(rdfTriple->predicate()->asString())
                                                                         << new QStandardItem(rdfTriple->object()->asString()));
+    }
 
     // Make sure that all the columns have their contents fit
 
@@ -101,10 +99,6 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     resizeColumnToContents(1);
     resizeColumnToContents(2);
     resizeColumnToContents(3);
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
 }
 
 //==============================================================================

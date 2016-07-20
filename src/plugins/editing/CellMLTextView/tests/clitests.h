@@ -32,7 +32,7 @@ class CliTests : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void helpTests();
     void importTests();
     void exportTests();

@@ -58,24 +58,24 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
 
-    // Create our viewer, editor and editor list
+    // Create our viewer, editor and editor list widgets
 
-    mMathmlViewer = new MathMLViewerWidget::MathmlViewerWidget(this);
-    mEditor = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
-    mEditorList = new EditorWidget::EditorListWidget(this);
+    mMathmlViewerWidget = new MathMLViewerWidget::MathmlViewerWidget(this);
+    mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
+    mEditorWidgetList = new EditorWidget::EditorListWidget(this);
 
-    connect(mEditorList, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
+    connect(mEditorWidgetList, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
             this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
 
-    // Add the bordered viewer, editor and editor list to ourselves
+    // Add the bordered viewer, editor and editor list widgets to ourselves
 
-    addWidget(new Core::BorderedWidget(mMathmlViewer, false, false, true, false));
-    addWidget(new Core::BorderedWidget(mEditor, true, false, true, false));
-    addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
+    addWidget(new Core::BorderedWidget(mMathmlViewerWidget, false, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditorWidget, true, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditorWidgetList, true, false, false, false));
 
     // Set our focus proxy to our editor
 
-    setFocusProxy(mEditor);
+    setFocusProxy(mEditorWidget);
 }
 
 //==============================================================================
@@ -103,10 +103,10 @@ void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
 
     setSizes(mEditingWidgetSizes);
 
-    // Retrieve our viewer's and editor's settings
+    // Retrieve our viewer widget's and editor widget's settings
 
-    mMathmlViewer->loadSettings(pSettings);
-    mEditor->loadSettings(pSettings);
+    mMathmlViewerWidget->loadSettings(pSettings);
+    mEditorWidget->loadSettings(pSettings);
 }
 
 //==============================================================================
@@ -117,21 +117,21 @@ void CellmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsCellmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
-    // Keep track of our viewer's and editor's settings
+    // Keep track of our viewer widget's and editor widget's settings
 
-    mMathmlViewer->saveSettings(pSettings);
-    mEditor->saveSettings(pSettings);
+    mMathmlViewerWidget->saveSettings(pSettings);
+    mEditorWidget->saveSettings(pSettings);
 }
 
 //==============================================================================
 
 void CellmlEditingViewWidget::retranslateUi()
 {
-    // Retranslate our viewer, editor and editor list
+    // Retranslate our viewer, editor and editor list widget
 
-    mMathmlViewer->retranslateUi();
-    mEditor->retranslateUi();
-    mEditorList->retranslateUi();
+    mMathmlViewerWidget->retranslateUi();
+    mEditorWidget->retranslateUi();
+    mEditorWidgetList->retranslateUi();
 }
 
 //==============================================================================
@@ -143,41 +143,41 @@ void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pCellmlEdi
     if (!pCellmlEditingViewWidget || (pCellmlEditingViewWidget == this))
         return;
 
-    // Update our sizes, viewer settings and editor settings
+    // Update our sizes, viewer widget settings and editor widget settings
 
     mEditingWidgetSizes = pCellmlEditingViewWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mMathmlViewer->updateSettings(pCellmlEditingViewWidget->mathmlViewer());
-    mEditor->updateSettings(pCellmlEditingViewWidget->editor());
+    mMathmlViewerWidget->updateSettings(pCellmlEditingViewWidget->mathmlViewer());
+    mEditorWidget->updateSettings(pCellmlEditingViewWidget->editorWidget());
 }
 
 //==============================================================================
 
 MathMLViewerWidget::MathmlViewerWidget *CellmlEditingViewWidget::mathmlViewer() const
 {
-    // Return our MathML viewer
+    // Return our MathML viewer widget
 
-    return mMathmlViewer;
+    return mMathmlViewerWidget;
 }
 
 //==============================================================================
 
-EditorWidget::EditorWidget * CellmlEditingViewWidget::editor() const
+EditorWidget::EditorWidget * CellmlEditingViewWidget::editorWidget() const
 {
-    // Return our editor
+    // Return our editor widget
 
-    return mEditor;
+    return mEditorWidget;
 }
 
 //==============================================================================
 
 EditorWidget::EditorListWidget * CellmlEditingViewWidget::editorList() const
 {
-    // Return our editor list
+    // Return our editor list widget
 
-    return mEditorList;
+    return mEditorWidgetList;
 }
 
 //==============================================================================
@@ -207,8 +207,8 @@ void CellmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListIte
     // item (otherwise it will be mEditorList that will have the focus since we
     // just double-clicked on it)
 
-    mEditor->setCursorPosition(pItem->line()-1, pItem->column()-1);
-    mEditor->setFocus();
+    mEditorWidget->setCursorPosition(pItem->line()-1, pItem->column()-1);
+    mEditorWidget->setFocus();
 }
 
 //==============================================================================

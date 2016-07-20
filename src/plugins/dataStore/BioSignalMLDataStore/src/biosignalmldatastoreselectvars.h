@@ -20,8 +20,7 @@ limitations under the License.
 // Save as BioSignalML widget
 //==============================================================================
 
-#ifndef BioSignalMLDATASTORESELECTVARS_H
-#define BioSignalMLDATASTORESELECTVARS_H
+#pragma once
 
 //==============================================================================
 
@@ -45,9 +44,9 @@ class BioSignalMLSelectVariables : public QDialog
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSelectVariables(QWidget * pParent,
-                                        const QVector<QString> & pLabels,
-                                        const QVector<bool> & pChecked);
+    explicit BioSignalMLSelectVariables(const QVector<QString> &pLabels,
+                                        const QVector<bool> &pChecked,
+                                        QWidget *pParent);
     ~BioSignalMLSelectVariables();
 
     virtual void retranslateUi();
@@ -64,10 +63,6 @@ private:
 
 }   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

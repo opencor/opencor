@@ -20,6 +20,7 @@ limitations under the License.
 // CellML Text view plugin
 //==============================================================================
 
+#include "cellmleditingviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewplugin.h"
@@ -113,29 +114,30 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 // Editing interface
 //==============================================================================
 
-EditorWidget::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * CellMLTextViewPlugin::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
-    return mViewWidget->editor(pFileName);
+    return mViewWidget->editorWidget(pFileName);
 }
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::isEditorUseable(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
-    // Return whether the requested editor is useable
+    // Return whether the requested editor widget is useable
 
-    return mViewWidget->isEditorUseable(pFileName);
+    return mViewWidget->isEditorWidgetUseable(pFileName);
 }
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileName) const
 {
-    // Return whether the contents of the requested editor has been modified
+    // Return whether the contents of the requested editor widget has been
+    // modified
 
-    return mViewWidget->isEditorContentsModified(pFileName);
+    return mViewWidget->isEditorWidgetContentsModified(pFileName);
 }
 
 //==============================================================================
@@ -349,14 +351,10 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 
     // Update and return our CellML text view widget using the given CellML
     // file
-    // Note: we temporarily disable updates for our CellML text view widget, so
-    //       as to avoid any risk of known/unknown/potential flickering...
 
-    mViewWidget->setUpdatesEnabled(false);
-        mViewWidget->initialize(pFileName);
-    mViewWidget->setUpdatesEnabled(true);
+    mViewWidget->initialize(pFileName);
 
-    return mViewWidget;
+    return mViewWidget->editingWidget(pFileName);
 }
 
 //==============================================================================

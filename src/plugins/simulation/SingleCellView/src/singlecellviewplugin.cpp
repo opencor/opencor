@@ -28,6 +28,7 @@ limitations under the License.
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewplugin.h"
+#include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
 //==============================================================================
@@ -329,7 +330,7 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget;
+    return mViewWidget->simulationWidget(pFileName);
 }
 
 //==============================================================================

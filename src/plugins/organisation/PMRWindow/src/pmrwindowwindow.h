@@ -80,7 +80,7 @@ private:
 
     PmrWindowWidget *mPmrWidget;
 
-private Q_SLOTS:
+private slots:
     void on_filterValue_textChanged(const QString &pText);
     void on_refreshButton_clicked();
 

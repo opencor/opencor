@@ -36,7 +36,7 @@ private:
     QString mOrigPath;
     QString mFileName;
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
     void cleanupTestCase();
 

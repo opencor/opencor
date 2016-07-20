@@ -107,11 +107,9 @@ void RawTextViewWidget::initialize(const QString &pFileName,
                                                    !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                                    0, parentWidget());
 
-        // Keep track of our editor and add it to ourselves
+        // Keep track of our editor
 
         mEditors.insert(pFileName, newEditor);
-
-        layout()->addWidget(newEditor);
     }
 
     // Update our editor, if required
@@ -135,15 +133,6 @@ void RawTextViewWidget::initialize(const QString &pFileName,
         } else {
             newEditor->updateSettings(oldEditor);
         }
-
-        // Show/hide our editors
-
-        setUpdatesEnabled(false);
-            newEditor->show();
-
-            if (oldEditor && (newEditor != oldEditor))
-                oldEditor->hide();
-        setUpdatesEnabled(true);
 
         // Set our focus proxy to our 'new' editor and make sure that the latter
         // immediately gets the focus
@@ -229,9 +218,9 @@ void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-EditorWidget::EditorWidget * RawTextViewWidget::editor(const QString &pFileName) const
+EditorWidget::EditorWidget * RawTextViewWidget::editorWidget(const QString &pFileName) const
 {
-    // Return the requested editor
+    // Return the requested editor widget
 
     return mEditors.value(pFileName);
 }
@@ -242,11 +231,12 @@ QList<QWidget *> RawTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditor)
+    if (mEditor) {
         return QList<QWidget *>() << mEditor->cursorPositionWidget()
                                   << mEditor->editingModeWidget();
-    else
+    } else {
         return QList<QWidget *>();
+    }
 }
 
 //==============================================================================

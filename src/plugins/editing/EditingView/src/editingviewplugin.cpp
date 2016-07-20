@@ -171,7 +171,7 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
-    if (mEditingViewInterface && pFileName.compare(mFileName)) {
+    if (mEditingViewInterface) {
         // Reset our previous editor's connections
 
         if (mEditor) {
@@ -185,9 +185,9 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                        this, SLOT(updateSelectAllAction()));
         }
 
-        // Retrieve our new editor
+        // Retrieve our new editor widget
 
-        mEditor = mEditingViewInterface->editor(pFileName);
+        mEditor = mEditingViewInterface->editorWidget(pFileName);
         mFileName = pFileName;
 
         // Set our new editor's context menu, connections and background
@@ -431,11 +431,11 @@ void EditingViewPlugin::updateGui(const QString &pFileName)
         updateFindPreviousNextActions();
         updateSelectAllAction();
 
-        // Make our editor read-only or writable
+        // Make our editor widget read-only or writable
 
         if (mEditor) {
             mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                 || !mEditingViewInterface->isEditorUseable(pFileName));
+                                 || !mEditingViewInterface->isEditorWidgetUseable(pFileName));
         }
     }
 }
@@ -513,7 +513,7 @@ void EditingViewPlugin::updateUndoAndRedoActions()
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
         fileManagerInstance->setModified(mFileName,
-                                         mEditor && mEditingViewInterface->isEditorContentsModified(mFileName));
+                                         mEditor && mEditingViewInterface->isEditorWidgetContentsModified(mFileName));
     }
 }
 

@@ -6,7 +6,7 @@ MACRO(INITIALISE_PROJECT)
 
     IF(WIN32)
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-           OR NOT ${MSVC_VERSION} EQUAL 1900)
+           OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19")
             MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2015 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
@@ -15,8 +15,9 @@ MACRO(INITIALISE_PROJECT)
             MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on OS X...")
         ENDIF()
     ELSE()
-        IF(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC on Linux...")
+        IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
+           OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 4.9+ on Linux...")
         ENDIF()
     ENDIF()
 

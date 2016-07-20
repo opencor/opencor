@@ -87,17 +87,17 @@ private:
     void startShowExposureFilesTimer(void);
     void stopShowExposureFilesTimer(void);
 
-Q_SIGNALS:
+signals:
     void cloneWorkspaceRequested(const QString &pUrl);
     void requestExposureFiles(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
 
-public Q_SLOTS:
+public slots:
     void addExposureFiles(const QString &pUrl,
                           const QStringList &pExposureFiles);
 
-private Q_SLOTS:
+private slots:
     void copy();
 
     void linkClicked();

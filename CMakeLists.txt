@@ -713,9 +713,11 @@ ELSE()
     INSTALL(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
     # System libraries required by OpenCOR
-    # Note: not needed on Ubuntu 14.04 LTS, but it is on Ubuntu 16.04 LTS...
 
     FOREACH(SYSTEM_LIBRARY app base interfaces pbutils reamer video)
+        # Library not needed on Ubuntu 14.04 LTS, but it is on (at least) Ubuntu
+        # 16.04 LTS
+
         SET(FULL_SYSTEM_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${SYSTEM_LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
 
         GET_FILENAME_COMPONENT(REAL_FULL_SYSTEM_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_SYSTEM_LIBRARY} REALPATH)
@@ -724,6 +726,14 @@ ELSE()
                 DESTINATION lib
                 RENAME ${FULL_SYSTEM_LIBRARY})
     ENDFOREACH()
+
+    # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.06 LTS
+    # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
+    #       present on Ubuntu 14.04 LTS...
+
+    INSTALL(FILES /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.22
+            DESTINATION lib
+            RENAME libstdc++.so.6)
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and OS X, we don't have a macro for deploying all
@@ -752,18 +762,10 @@ ELSE()
 
     IF(NOT ENABLE_TRAVIS_CI)
         # We are building OpenCOR locally, so we can deploy the ICU libraries
-        # Note #1: indeed, on Travis CI, the PPA we use doesn't have those
-        #          libraries...
-        # Note #2: we need to deploy two sets of ICU libraries, one for the Qt
-        #          libraries themselves and another for our copy of Qt WebKit.
-        #          If we were only to deploy the latter, then OpenCOR would work
-        #          on Ubuntu 14.04 LTS, but not on Ubuntu 16.04 LTS (and maybe
-        #          also other versions of Ubuntu)...
+        # Note: indeed, on Travis CI, the PPA we use doesn't have those
+        #       libraries...
 
         FOREACH(QT_FILE icudata icui18n icuuc)
-            LINUX_DEPLOY_QT_LIBRARY(/usr/lib/x86_64-linux-gnu
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52.1
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
             LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
                                     ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56.1
                                     ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)

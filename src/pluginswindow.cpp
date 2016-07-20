@@ -540,11 +540,6 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
     disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                this, SLOT(updatePluginsSelectedState(QStandardItem *)));
 
-    // Prevent the list view from being updated, since we may end up changing
-    // quite a bit of its visual contents
-
-    mGui->pluginsTreeView->setUpdatesEnabled(false);
-
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
 
@@ -612,10 +607,6 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
             }
         }
     }
-
-    // Re-enable the updating of the list view
-
-    mGui->pluginsTreeView->setUpdatesEnabled(true);
 
     // Check whether the OK and apply buttons should be enabled
 

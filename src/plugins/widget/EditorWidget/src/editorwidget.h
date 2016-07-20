@@ -154,7 +154,7 @@ private:
 
     bool findText(const QString &pText, const bool &pForward);
 
-Q_SIGNALS:
+signals:
     void zoomLevelChanged(const int &pZoomLevel);
 
     void cursorPositionChanged(const int &pRow, const int &pColumn);
@@ -167,7 +167,7 @@ Q_SIGNALS:
 
     void canSelectAll(const bool &pCanSelectAll);
 
-public Q_SLOTS:
+public slots:
     bool findPrevious();
     bool findNext();
 
@@ -175,7 +175,7 @@ public Q_SLOTS:
     void replaceAndFind();
     void replaceAll();
 
-private Q_SLOTS:
+private slots:
     void zoomLevelChanged();
 
     void keepTrackOfCursorPosition(const int &pLine, const int &pColumn);
