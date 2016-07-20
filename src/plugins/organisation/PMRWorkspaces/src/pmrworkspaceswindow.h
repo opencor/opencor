@@ -79,7 +79,7 @@ private:
 
     QMenu *mContextMenu;
 
-private Q_SLOTS:
+private slots:
     void busy(const bool &pBusy);
     void showError(const QString &pMessage);
     void showInformation(const QString &pMessage);

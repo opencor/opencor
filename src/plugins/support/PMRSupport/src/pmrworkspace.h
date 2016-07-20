@@ -135,7 +135,7 @@ private:
 
     static const QPair<QChar, QChar> gitStatusChars(const int &flags);
 
-Q_SIGNALS:
+signals:
     void progress(const double &pProgress) const;
     void warning(const QString &pMessage) const;
 

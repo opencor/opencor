@@ -52,7 +52,7 @@ public:
     const QString path(void) const;
     const QString title(void) const;
 
-private Q_SLOTS:
+private slots:
     void titleTextChanged(const QString &text);
 
     void choosePath(const bool &checked);

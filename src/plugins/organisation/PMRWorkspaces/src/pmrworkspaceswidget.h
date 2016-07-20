@@ -122,12 +122,12 @@ private:
 
     void showInGraphicalShell(const QString &pPath);
 
-Q_SIGNALS:
+signals:
     void openFileRequested(const QString &pFile);
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-public Q_SLOTS:
+public slots:
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
     void addWorkspaceFolder(const QString &pFolder);
     void clearWorkspaces(void);

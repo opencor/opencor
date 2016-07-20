@@ -66,7 +66,7 @@ public:
 private:
     QMap<QString, PMRSupport::PmrWorkspace *> mWorkspacesMap;  // Url --> Workspace
 
-Q_SIGNALS:
+signals:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
 };
 

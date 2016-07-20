@@ -50,7 +50,7 @@ public:
 private:
     QNetworkReply *mNetworkReply;
 
-Q_SIGNALS:
+signals:
     void busy(bool);
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
     void finished(void);
@@ -58,7 +58,7 @@ Q_SIGNALS:
     void movedLocation(const QString &locationUrl);
     void unauthorised(const QString &pUrl);
 
-private Q_SLOTS:
+private slots:
     void processResponse(void);
 };
 
