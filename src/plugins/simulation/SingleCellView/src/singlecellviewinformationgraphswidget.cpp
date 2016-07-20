@@ -587,7 +587,7 @@ void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellML
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
-            QMenu *menu = mParametersContextMenu;
+            QMenu *parentComponentMenu = mParametersContextMenu;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current
@@ -595,7 +595,7 @@ void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellML
 
                 componentMenu = 0;
 
-                foreach (QObject *object, menu->children()) {
+                foreach (QObject *object, parentComponentMenu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);
 
                     if (subMenu && !subMenu->menuAction()->text().compare(component)) {
@@ -609,14 +609,14 @@ void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellML
                 // found
 
                 if (!componentMenu) {
-                    componentMenu = new QMenu(component, menu);
+                    componentMenu = new QMenu(component, parentComponentMenu);
 
-                    menu->addMenu(componentMenu);
+                    parentComponentMenu->addMenu(componentMenu);
                 }
 
                 // Get ready for the next component in our component hierarchy
 
-                menu = componentMenu;
+                parentComponentMenu = componentMenu;
             }
 
             // Keep track of the new component hierarchy
