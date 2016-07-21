@@ -65,7 +65,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     auto variableEnd = variables.constEnd();
 
     for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-        if ((*variable)->isValid()) {
+        if ((*variable)->isVisible()) {
             if (!data.isEmpty())
                 data += ",";
 
@@ -85,7 +85,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
             rowData += QString::number(voi->value(i));
 
         for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if ((*variable)->isValid()) {
+            if ((*variable)->isVisible()) {
                 if (!rowData.isEmpty())
                     rowData += ",";
 
