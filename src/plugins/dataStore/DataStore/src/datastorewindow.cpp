@@ -20,7 +20,12 @@ limitations under the License.
 // Data store window
 //==============================================================================
 
+#include "datastoreinterface.h"
 #include "datastorewindow.h"
+
+//==============================================================================
+
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -33,13 +38,33 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreWindow::DataStoreWindow(QWidget *pParent) :
+DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::DataStoreWindow)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+#ifdef Q_OS_MAC
+    mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our tree view widget...
+#endif
+
+    // Populate our tree view
+
+    QStandardItemModel *model = new QStandardItemModel(mGui->treeView);
+
+    mGui->treeView->setModel(model);
+
+    foreach (DataStoreVariable *variable, pDataStore->variables()) {
+        QStandardItem *variableItem = new QStandardItem(variable->label());
+
+        variableItem->setCheckable(true);
+
+        model->invisibleRootItem()->appendRow(variableItem);
+    }
 }
 
 //==============================================================================

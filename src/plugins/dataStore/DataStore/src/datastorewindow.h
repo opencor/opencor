@@ -39,12 +39,16 @@ namespace DataStore {
 
 //==============================================================================
 
+class DataStore;
+
+//==============================================================================
+
 class DataStoreWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreWindow(QWidget *pParent);
+    explicit DataStoreWindow(DataStore *pDataStore, QWidget *pParent);
     ~DataStoreWindow();
 
 private:
