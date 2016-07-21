@@ -94,6 +94,7 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
                         hierarchyItem = new QStandardItem(hierarchyPart);
 
                         hierarchyItem->setAutoTristate(true);
+                        hierarchyItem->setCheckable(true);
                         hierarchyItem->setEditable(false);
 
                         parentHierarchyItem->appendRow(hierarchyItem);
@@ -117,6 +118,8 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
     }
 
     mGui->treeView->expandAll();
+
+    updateVariablesSelectedState(0, true);
 }
 
 //==============================================================================
@@ -144,6 +147,49 @@ void DataStoreWindow::on_buttonBox_rejected()
     // Simply cancel whatever was done here
 
     reject();
+}
+
+//==============================================================================
+
+void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem,
+                                                   const Qt::CheckState &pCheckState)
+{
+    // Update the selected state of the given item's children
+
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+        QStandardItem *childItem = pItem->child(i);
+
+        childItem->setCheckState(pCheckState);
+
+        if (childItem->rowCount())
+            updateVariablesSelectedState(childItem, pCheckState);
+    }
+}
+
+//==============================================================================
+
+void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem,
+                                                   const bool &pInitializing)
+{
+Q_UNUSED(pInitializing);
+    // Disable the connection that handles a change in a variable's selected
+    // state (otherwise what we are doing here is going to be completely
+    // uneffective)
+
+    disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+               this, SLOT(updateVariablesSelectedState(QStandardItem *)));
+
+    // In case we un/select a hierarchy, then go through its variables and
+    // un/select them accordingly
+
+    if (pItem && pItem->isAutoTristate())
+        updateVariablesSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
+
+    // Re-enable the connection that handles a change in a variable's selected
+    // state
+
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(updateVariablesSelectedState(QStandardItem *)));
 }
 
 //==============================================================================

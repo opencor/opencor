@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QDialog>
 
 //==============================================================================
@@ -34,6 +38,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QStandardItem;
 class QStandardItemModel;
 
 //==============================================================================
@@ -60,9 +65,15 @@ private:
 
     QStandardItemModel *mModel;
 
+    void updateVariablesSelectedState(QStandardItem *pItem,
+                                      const Qt::CheckState &pCheckState);
+
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
+
+    void updateVariablesSelectedState(QStandardItem *pItem = 0,
+                                      const bool &pInitializing = false);
 };
 
 //==============================================================================
