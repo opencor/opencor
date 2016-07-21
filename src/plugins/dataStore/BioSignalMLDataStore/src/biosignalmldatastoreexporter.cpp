@@ -77,7 +77,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString()));
         recording->set_label(dataStoreData->shortName().toStdString());
 
-        // Create and poluate a clock
+        // Create and populate a clock
 
         bsml::HDF5::Clock::Ptr clock = recording->new_clock(recordingUri+"/clock/"+voi->uri().toStdString(),
                                                             rdf::URI(baseUnits+voi->unit().toStdString()),
@@ -95,7 +95,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         DataStore::DataStoreVariables variables = mDataStore->variables();
         int nbOfVariables = variables.size();
 
-        for (int i = 0;  i < nbOfVariables; ++i) {
+        for (int i = 0; i < nbOfVariables; ++i) {
             if (dataStoreData->selectedVariables()[i]) {
                 uris.push_back(recordingUri+"/signal/"+variables[i]->uri().toStdString());
                 units.push_back(rdf::URI(baseUnits+variables[i]->unit().toStdString()));
@@ -110,7 +110,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
         nbOfVariables = signalArray->size();
 
-        for (int i = 0;  i < nbOfVariables;  ++i)
+        for (int i = 0; i < nbOfVariables; ++i)
             (*signalArray)[i]->set_label(variables[indexes[i]]->label().toStdString());
 
         double *data = new double[nbOfVariables*BufferRows];

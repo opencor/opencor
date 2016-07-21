@@ -43,7 +43,7 @@ BioSignalMLSelectVariables::BioSignalMLSelectVariables(const QVector<QString> &p
 
     mGui->setupUi(this);
     QTableWidget *varlist = mGui->selectedVariables;
-    for (auto i = 0;  i < pLabels.size();  ++i) {
+    for (auto i = 0; i < pLabels.size(); ++i) {
         varlist->insertRow(i);
         QTableWidgetItem *checked = new QTableWidgetItem();
 
