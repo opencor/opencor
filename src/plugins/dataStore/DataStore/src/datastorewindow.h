@@ -34,6 +34,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QStandardItemModel;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace DataStore {
 
@@ -53,6 +57,8 @@ public:
 
 private:
     Ui::DataStoreWindow *mGui;
+
+    QStandardItemModel *mModel;
 
 private slots:
     void on_buttonBox_accepted();

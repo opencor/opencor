@@ -54,20 +54,69 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
     // Populate our tree view
 
-    QStandardItemModel *model = new QStandardItemModel(mGui->treeView);
+    mModel = new QStandardItemModel(mGui->treeView);
 
-    mGui->treeView->setModel(model);
+    mGui->treeView->setModel(mModel);
+
+    QString variableHierarchy = QString();
+    QStandardItem *hierarchyItem = 0;
 
     foreach (DataStoreVariable *variable, pDataStore->voiAndVariables()) {
         if (variable->isVisible()) {
+            // Check whether the variable is in the same hierarchy as the
+            // previous one
+
+            static const QRegularExpression VariableNameRegEx = QRegularExpression("/[^/]+(/prime)*$");
+
+            QString crtVariableHierarchy = variable->uri().remove(VariableNameRegEx);
+
+            if (crtVariableHierarchy.compare(variableHierarchy)) {
+                // The variable is in a different component hierarchy, so create
+                // a new section hierarchy for our 'new' component, reusing
+                // existing sections, whenever possible
+
+                QStandardItem *parentHierarchyItem = mModel->invisibleRootItem();
+
+                foreach (const QString &hierarchyPart, crtVariableHierarchy.split("/")) {
+                    hierarchyItem = 0;
+
+                    for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {
+                        QStandardItem *childHierarchyItem = parentHierarchyItem->child(i);
+
+                        if (!childHierarchyItem->text().compare(hierarchyPart)) {
+                            hierarchyItem = childHierarchyItem;
+
+                            break;
+                        }
+                    }
+
+                    if (!hierarchyItem) {
+                        hierarchyItem = new QStandardItem(hierarchyPart);
+
+                        hierarchyItem->setAutoTristate(true);
+                        hierarchyItem->setEditable(false);
+hierarchyItem->setCheckState(Qt::Checked);
+
+                        parentHierarchyItem->appendRow(hierarchyItem);
+                    }
+
+                    parentHierarchyItem = hierarchyItem;
+                }
+
+                variableHierarchy = crtVariableHierarchy;
+            }
+
             QStandardItem *variableItem = new QStandardItem(variable->label());
 
             variableItem->setCheckable(true);
             variableItem->setCheckState(Qt::Checked);
+            variableItem->setEditable(false);
 
-            model->invisibleRootItem()->appendRow(variableItem);
+            hierarchyItem->appendRow(variableItem);
         }
     }
+
+    mGui->treeView->expandAll();
 }
 
 //==============================================================================
