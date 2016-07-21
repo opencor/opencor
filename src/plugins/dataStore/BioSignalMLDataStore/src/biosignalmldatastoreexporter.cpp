@@ -64,6 +64,9 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
     try {
         // Create and populate a recording
+        // Note: although a variable of integration may not officially be
+        //       visible to a user, we still need to export it since it's needed
+        //       by BioSignalML...
 
         DataStore::DataStoreVariable *voi = mDataStore->voi();
         recording = new bsml::HDF5::Recording(recordingUri, fileName.toStdString(), true);

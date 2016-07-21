@@ -56,16 +56,21 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
     QByteArray data = QByteArray();
 
-    data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
-                       voi->unit());
+    if (voi->isVisible()) {
+        data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+                           voi->unit());
+    }
 
     auto variableBegin = variables.constBegin();
     auto variableEnd = variables.constEnd();
 
     for (auto variable = variableBegin; variable != variableEnd; ++variable) {
         if ((*variable)->isValid()) {
-            data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
-                                   (*variable)->unit());
+            if (!data.isEmpty())
+                data += ",";
+
+            data += Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
+                               (*variable)->unit());
         }
     }
 
@@ -74,14 +79,21 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     // Data itself
 
     for (qulonglong i = 0; i < mDataStore->size(); ++i) {
-        data += QString::number(voi->value(i));
+        QString rowData = QString();
+
+        if (voi->isVisible())
+            rowData += QString::number(voi->value(i));
 
         for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if ((*variable)->isValid())
-                data += ","+QString::number((*variable)->value(i));
+            if ((*variable)->isValid()) {
+                if (!rowData.isEmpty())
+                    rowData += ",";
+
+                rowData += QString::number((*variable)->value(i));
+            }
         }
 
-        data += "\n";
+        data += rowData+"\n";
 
         emit progress(double(i)/(mDataStore->size()-1));
     }
