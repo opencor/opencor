@@ -58,10 +58,11 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
     mGui->treeView->setModel(model);
 
-    foreach (DataStoreVariable *variable, pDataStore->variables()) {
+    foreach (DataStoreVariable *variable, pDataStore->voiAndVariables()) {
         QStandardItem *variableItem = new QStandardItem(variable->label());
 
         variableItem->setCheckable(true);
+        variableItem->setCheckState(Qt::Checked);
 
         model->invisibleRootItem()->appendRow(variableItem);
     }

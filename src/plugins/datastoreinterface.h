@@ -102,6 +102,8 @@ public:
 
     qulonglong size() const;
 
+    DataStoreVariables voiAndVariables();
+
     DataStoreVariable * voi() const;
     DataStoreVariable * addVoi();
 
