@@ -67,13 +67,14 @@ private:
 
     void updateVariablesSelectedState(QStandardItem *pItem,
                                       const Qt::CheckState &pCheckState);
+    void checkVariablesSelectedState(QStandardItem *pItem);
 
 private slots:
+    void on_allVariablesCheckBox_clicked();
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
-    void updateVariablesSelectedState(QStandardItem *pItem = 0,
-                                      const bool &pInitializing = false);
+    void updateVariablesSelectedState(QStandardItem *pItem = 0);
 };
 
 //==============================================================================

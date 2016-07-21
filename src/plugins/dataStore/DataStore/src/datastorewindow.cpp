@@ -119,7 +119,7 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
     mGui->treeView->expandAll();
 
-    updateVariablesSelectedState(0, true);
+    updateVariablesSelectedState();
 }
 
 //==============================================================================
@@ -129,6 +129,16 @@ DataStoreWindow::~DataStoreWindow()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void DataStoreWindow::on_allVariablesCheckBox_clicked()
+{
+    // Un/select all the variables
+
+    updateVariablesSelectedState(mModel->invisibleRootItem(),
+                                 mGui->allVariablesCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
 }
 
 //==============================================================================
@@ -168,10 +178,38 @@ void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem,
 
 //==============================================================================
 
-void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem,
-                                                   const bool &pInitializing)
+void DataStoreWindow::checkVariablesSelectedState(QStandardItem *pItem)
 {
-Q_UNUSED(pInitializing);
+    // Update the selected state of the given item's children
+
+    int nbOfSelectedChildItems = 0;
+    bool partiallySelectedChildItems = false;
+
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+        QStandardItem *childItem = pItem->child(i);
+
+        if (childItem->rowCount())
+            checkVariablesSelectedState(childItem);
+
+        nbOfSelectedChildItems += childItem->checkState() == Qt::Checked;
+
+        if (childItem->checkState() == Qt::PartiallyChecked)
+            partiallySelectedChildItems = true;
+    }
+
+    pItem->setCheckState(nbOfSelectedChildItems?
+                             (nbOfSelectedChildItems == pItem->rowCount())?
+                                 Qt::Checked:
+                                 Qt::PartiallyChecked:
+                             partiallySelectedChildItems?
+                                 Qt::PartiallyChecked:
+                                 Qt::Unchecked);
+}
+
+//==============================================================================
+
+void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem)
+{
     // Disable the connection that handles a change in a variable's selected
     // state (otherwise what we are doing here is going to be completely
     // uneffective)
@@ -184,6 +222,24 @@ Q_UNUSED(pInitializing);
 
     if (pItem && pItem->isAutoTristate())
         updateVariablesSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
+
+    // Update the selected state of all our hierarchies
+
+    int nbOfTopLevelHierarchiesChecked = 0;
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *childItem = mModel->invisibleRootItem()->child(i);
+
+        checkVariablesSelectedState(childItem);
+
+        nbOfTopLevelHierarchiesChecked += childItem->checkState() == Qt::Checked;
+    }
+
+    mGui->allVariablesCheckBox->setCheckState(nbOfTopLevelHierarchiesChecked?
+                                                  (nbOfTopLevelHierarchiesChecked == mModel->invisibleRootItem()->rowCount())?
+                                                      Qt::Checked:
+                                                      Qt::PartiallyChecked:
+                                                  Qt::Unchecked);
 
     // Re-enable the connection that handles a change in a variable's selected
     // state

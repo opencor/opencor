@@ -22,6 +22,16 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="allVariablesCheckBox">
+     <property name="text">
+      <string>Select all variables</string>
+     </property>
+     <property name="tristate">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
