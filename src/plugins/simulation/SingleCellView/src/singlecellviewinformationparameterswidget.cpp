@@ -273,10 +273,6 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
                 sectionProperty = 0;
 
-                // Retrieve the sub-sections for the current section
-
-                QList<Core::Property *> subSections = QList<Core::Property *>();
-
                 if (parentSectionProperty) {
                     // We have a parent section, so go through its children and
                     // keep track of its propeties that are a section
@@ -284,9 +280,12 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                     foreach (QObject *object, parentSectionProperty->children()) {
                         Core::Property *property = qobject_cast<Core::Property *>(object);
 
-                        if (   property
-                            && (property->type() == Core::Property::Section)) {
-                            subSections << property;
+                        if (    property
+                            &&  (property->type() == Core::Property::Section)
+                            && !property->name().compare(component)) {
+                            sectionProperty = property;
+
+                            break;
                         }
                     }
                 } else {
@@ -294,19 +293,12 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                     // keep tack of those that are a section
 
                     foreach (Core::Property *property, properties()) {
-                        if (property->type() == Core::Property::Section)
-                            subSections << property;
-                    }
-                }
+                        if (    (property->type() == Core::Property::Section)
+                            && !property->name().compare(component)) {
+                            sectionProperty = property;
 
-                // Go through the sub-sections and check if one of them is the
-                // one we are after
-
-                foreach (Core::Property *subSection, subSections) {
-                    if (!subSection->name().compare(component)) {
-                        sectionProperty = subSection;
-
-                        break;
+                            break;
+                        }
                     }
                 }
 
