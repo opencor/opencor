@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QIcon>
 #include <QVector>
 
 //==============================================================================
@@ -58,6 +59,9 @@ public:
 
     bool isVisible() const;
 
+    QIcon icon() const;
+    void setIcon(const QIcon &pIcon);
+
     QString uri() const;
     void setUri(const QString &pUri);
 
@@ -76,6 +80,7 @@ public:
     double * values() const;
 
 private:
+    QIcon mIcon;
     QString mUri;
     QString mName;
     QString mUnit;

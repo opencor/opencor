@@ -85,6 +85,24 @@ bool DataStoreVariable::isVisible() const
 
 //==============================================================================
 
+QIcon DataStoreVariable::icon() const
+{
+    // Return our icon
+
+    return mIcon;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setIcon(const QIcon &pIcon)
+{
+    // Set our icon
+
+    mIcon = pIcon;
+}
+
+//==============================================================================
+
 QString DataStoreVariable::uri() const
 {
     // Return our URI

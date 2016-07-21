@@ -23,6 +23,7 @@ limitations under the License.
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
 
 //==============================================================================
 
@@ -703,6 +704,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+            mPoints->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
             mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
                                 mRuntime->variableOfIntegration()->name()));
             mPoints->setLabel(mRuntime->variableOfIntegration()->name());
@@ -733,6 +735,7 @@ bool SingleCellViewSimulationResults::createDataStore()
         }
 
         if (variable) {
+            variable->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(),
                                  parameter->formattedName()));
             variable->setLabel(parameter->formattedName());

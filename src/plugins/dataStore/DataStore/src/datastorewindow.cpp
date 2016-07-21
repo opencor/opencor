@@ -95,7 +95,6 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
                         hierarchyItem->setAutoTristate(true);
                         hierarchyItem->setEditable(false);
-hierarchyItem->setCheckState(Qt::Checked);
 
                         parentHierarchyItem->appendRow(hierarchyItem);
                     }
@@ -106,7 +105,8 @@ hierarchyItem->setCheckState(Qt::Checked);
                 variableHierarchy = crtVariableHierarchy;
             }
 
-            QStandardItem *variableItem = new QStandardItem(variable->label());
+            QStandardItem *variableItem = new QStandardItem(variable->icon(),
+                                                            variable->label());
 
             variableItem->setCheckable(true);
             variableItem->setCheckState(Qt::Checked);
