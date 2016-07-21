@@ -7,5 +7,9 @@
         <source>Data Selector</source>
         <translation>Sélecteur De Données</translation>
     </message>
+    <message>
+        <source>Select all the data</source>
+        <translation>Sélectionner toutes les données</translation>
+    </message>
 </context>
 </TS>

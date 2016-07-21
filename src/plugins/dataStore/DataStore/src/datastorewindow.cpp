@@ -58,7 +58,7 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
     mGui->treeView->setModel(mModel);
 
-    QString variableHierarchy = QString();
+    QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;
 
     foreach (DataStoreVariable *variable, pDataStore->voiAndVariables()) {
@@ -68,16 +68,16 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
             static const QRegularExpression VariableNameRegEx = QRegularExpression("/[^/]+(/prime)*$");
 
-            QString crtVariableHierarchy = variable->uri().remove(VariableNameRegEx);
+            QString crtDataHierarchy = variable->uri().remove(VariableNameRegEx);
 
-            if (crtVariableHierarchy.compare(variableHierarchy)) {
+            if (crtDataHierarchy.compare(dataHierarchy)) {
                 // The variable is in a different component hierarchy, so create
                 // a new section hierarchy for our 'new' component, reusing
                 // existing sections, whenever possible
 
                 QStandardItem *parentHierarchyItem = mModel->invisibleRootItem();
 
-                foreach (const QString &hierarchyPart, crtVariableHierarchy.split("/")) {
+                foreach (const QString &hierarchyPart, crtDataHierarchy.split("/")) {
                     hierarchyItem = 0;
 
                     for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {
@@ -103,23 +103,23 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
                     parentHierarchyItem = hierarchyItem;
                 }
 
-                variableHierarchy = crtVariableHierarchy;
+                dataHierarchy = crtDataHierarchy;
             }
 
-            QStandardItem *variableItem = new QStandardItem(variable->icon(),
-                                                            variable->label());
+            QStandardItem *dataItem = new QStandardItem(variable->icon(),
+                                                        variable->label());
 
-            variableItem->setCheckable(true);
-            variableItem->setCheckState(Qt::Checked);
-            variableItem->setEditable(false);
+            dataItem->setCheckable(true);
+            dataItem->setCheckState(Qt::Checked);
+            dataItem->setEditable(false);
 
-            hierarchyItem->appendRow(variableItem);
+            hierarchyItem->appendRow(dataItem);
         }
     }
 
     mGui->treeView->expandAll();
 
-    updateVariablesSelectedState();
+    updateDataSelectedState();
 }
 
 //==============================================================================
@@ -133,12 +133,12 @@ DataStoreWindow::~DataStoreWindow()
 
 //==============================================================================
 
-void DataStoreWindow::on_allVariablesCheckBox_clicked()
+void DataStoreWindow::on_allDataCheckBox_clicked()
 {
-    // Un/select all the variables
+    // Un/select all the data
 
-    updateVariablesSelectedState(mModel->invisibleRootItem(),
-                                 mGui->allVariablesCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
+    updateDataSelectedState(mModel->invisibleRootItem(),
+                            mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
 }
 
 //==============================================================================
@@ -161,8 +161,8 @@ void DataStoreWindow::on_buttonBox_rejected()
 
 //==============================================================================
 
-void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem,
-                                                   const Qt::CheckState &pCheckState)
+void DataStoreWindow::updateDataSelectedState(QStandardItem *pItem,
+                                              const Qt::CheckState &pCheckState)
 {
     // Update the selected state of the given item's children
 
@@ -172,13 +172,13 @@ void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem,
         childItem->setCheckState(pCheckState);
 
         if (childItem->rowCount())
-            updateVariablesSelectedState(childItem, pCheckState);
+            updateDataSelectedState(childItem, pCheckState);
     }
 }
 
 //==============================================================================
 
-void DataStoreWindow::checkVariablesSelectedState(QStandardItem *pItem)
+void DataStoreWindow::checkDataSelectedState(QStandardItem *pItem)
 {
     // Update the selected state of the given item's children
 
@@ -189,7 +189,7 @@ void DataStoreWindow::checkVariablesSelectedState(QStandardItem *pItem)
         QStandardItem *childItem = pItem->child(i);
 
         if (childItem->rowCount())
-            checkVariablesSelectedState(childItem);
+            checkDataSelectedState(childItem);
 
         nbOfSelectedChildItems += childItem->checkState() == Qt::Checked;
 
@@ -208,20 +208,20 @@ void DataStoreWindow::checkVariablesSelectedState(QStandardItem *pItem)
 
 //==============================================================================
 
-void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem)
+void DataStoreWindow::updateDataSelectedState(QStandardItem *pItem)
 {
-    // Disable the connection that handles a change in a variable's selected
+    // Disable the connection that handles a change in some data's selected
     // state (otherwise what we are doing here is going to be completely
     // uneffective)
 
     disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-               this, SLOT(updateVariablesSelectedState(QStandardItem *)));
+               this, SLOT(updateDataSelectedState(QStandardItem *)));
 
-    // In case we un/select a hierarchy, then go through its variables and
-    // un/select them accordingly
+    // In case we un/select a hierarchy, then go through its data and un/select
+    // it accordingly
 
     if (pItem && pItem->isAutoTristate())
-        updateVariablesSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
+        updateDataSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
 
     // Update the selected state of all our hierarchies
 
@@ -230,22 +230,22 @@ void DataStoreWindow::updateVariablesSelectedState(QStandardItem *pItem)
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *childItem = mModel->invisibleRootItem()->child(i);
 
-        checkVariablesSelectedState(childItem);
+        checkDataSelectedState(childItem);
 
         nbOfTopLevelHierarchiesChecked += childItem->checkState() == Qt::Checked;
     }
 
-    mGui->allVariablesCheckBox->setCheckState(nbOfTopLevelHierarchiesChecked?
-                                                  (nbOfTopLevelHierarchiesChecked == mModel->invisibleRootItem()->rowCount())?
-                                                      Qt::Checked:
-                                                      Qt::PartiallyChecked:
-                                                  Qt::Unchecked);
+    mGui->allDataCheckBox->setCheckState(nbOfTopLevelHierarchiesChecked?
+                                             (nbOfTopLevelHierarchiesChecked == mModel->invisibleRootItem()->rowCount())?
+                                                 Qt::Checked:
+                                                 Qt::PartiallyChecked:
+                                             Qt::Unchecked);
 
-    // Re-enable the connection that handles a change in a variable's selected
+    // Re-enable the connection that handles a change in some data's selected
     // state
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updateVariablesSelectedState(QStandardItem *)));
+            this, SLOT(updateDataSelectedState(QStandardItem *)));
 }
 
 //==============================================================================

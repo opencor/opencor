@@ -22,9 +22,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="allVariablesCheckBox">
+    <widget class="QCheckBox" name="allDataCheckBox">
      <property name="text">
-      <string>Select all variables</string>
+      <string>Select all the data</string>
      </property>
      <property name="tristate">
       <bool>true</bool>

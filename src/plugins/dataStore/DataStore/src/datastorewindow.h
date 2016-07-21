@@ -65,16 +65,16 @@ private:
 
     QStandardItemModel *mModel;
 
-    void updateVariablesSelectedState(QStandardItem *pItem,
-                                      const Qt::CheckState &pCheckState);
-    void checkVariablesSelectedState(QStandardItem *pItem);
+    void updateDataSelectedState(QStandardItem *pItem,
+                                 const Qt::CheckState &pCheckState);
+    void checkDataSelectedState(QStandardItem *pItem);
 
 private slots:
-    void on_allVariablesCheckBox_clicked();
+    void on_allDataCheckBox_clicked();
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
-    void updateVariablesSelectedState(QStandardItem *pItem = 0);
+    void updateDataSelectedState(QStandardItem *pItem = 0);
 };
 
 //==============================================================================
