@@ -50,12 +50,9 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     // Determine what should be exported
 
     DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(mDataStore->voi())?mDataStore->voi():0;
-    DataStore::DataStoreVariables variables = DataStore::DataStoreVariables();
+    DataStore::DataStoreVariables variables = mDataStoreData->selectedVariables();
 
-    foreach (DataStore::DataStoreVariable *variable, mDataStore->variables()) {
-        if (mDataStoreData->selectedVariables().contains(variable))
-            variables << variable;
-    }
+    variables.removeOne(voi);
 
     // Header
 
