@@ -262,6 +262,24 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 
 //==============================================================================
 
+void DataStoreDialog::on_allDataCheckBox_clicked()
+{
+    // Un/select all the data
+    // Note: we temporally disable the handling of the itemChanged() signal
+    //       since we 'manually' set everything ourselves...
+
+    disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+               this, SLOT(updateDataSelectedState(QStandardItem *)));
+
+    updateDataSelectedState(mModel->invisibleRootItem(),
+                            mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
+
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(updateDataSelectedState(QStandardItem *)));
+}
+
+//==============================================================================
+
 void DataStoreDialog::on_buttonBox_accepted()
 {
     // Confirm that we accepted the data selection, but only if we have at least
