@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "graphpanelplotwidget.h"
-#include "graphpanelwidgetcustomaxeswindow.h"
+#include "graphpanelwidgetcustomaxesdialog.h"
 #include "i18ninterface.h"
 
 //==============================================================================
@@ -1516,18 +1516,18 @@ void GraphPanelPlotWidget::customAxes()
     double oldMinY = minY();
     double oldMaxY = maxY();
 
-    GraphPanelWidgetCustomAxesWindow customAxesWindow(oldMinX, oldMaxX, oldMinY, oldMaxY, this);
+    GraphPanelWidgetCustomAxesDialog customAxesDialog(oldMinX, oldMaxX, oldMinY, oldMaxY, this);
 
-    customAxesWindow.exec();
+    customAxesDialog.exec();
 
     // Update our axes' values, if requested and only if they have actually
     // changed
 
-    if (customAxesWindow.result() == QMessageBox::Accepted) {
-        double newMinX = customAxesWindow.minX();
-        double newMaxX = customAxesWindow.maxX();
-        double newMinY = customAxesWindow.minY();
-        double newMaxY = customAxesWindow.maxY();
+    if (customAxesDialog.result() == QMessageBox::Accepted) {
+        double newMinX = customAxesDialog.minX();
+        double newMaxX = customAxesDialog.maxX();
+        double newMinY = customAxesDialog.minY();
+        double newMaxY = customAxesDialog.maxY();
 
         if (   (newMinX != oldMinX) || (newMaxX != oldMaxX)
             || (newMinY != oldMinY) || (newMaxY != oldMaxY)) {

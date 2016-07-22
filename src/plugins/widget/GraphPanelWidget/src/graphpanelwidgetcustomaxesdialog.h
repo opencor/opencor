@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Graph Panel widget custom axes window
+// Graph Panel widget custom axes dialog
 //==============================================================================
 
 #pragma once
@@ -29,7 +29,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class GraphPanelWidgetCustomAxesWindow;
+    class GraphPanelWidgetCustomAxesDialog;
 }
 
 //==============================================================================
@@ -43,17 +43,17 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-class GraphPanelWidgetCustomAxesWindow : public QDialog
+class GraphPanelWidgetCustomAxesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit GraphPanelWidgetCustomAxesWindow(const double &pMinX,
+    explicit GraphPanelWidgetCustomAxesDialog(const double &pMinX,
                                               const double &pMaxX,
                                               const double &pMinY,
                                               const double &pMaxY,
                                               QWidget *pParent);
-    ~GraphPanelWidgetCustomAxesWindow();
+    ~GraphPanelWidgetCustomAxesDialog();
 
     double minX() const;
     double maxX() const;
@@ -61,7 +61,7 @@ public:
     double maxY() const;
 
 private:
-    Ui::GraphPanelWidgetCustomAxesWindow *mGui;
+    Ui::GraphPanelWidgetCustomAxesDialog *mGui;
 
     void checkValue(QLineEdit *pValue);
 

@@ -17,10 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Graph Panel widget custom axes window
+// Graph Panel widget custom axes dialog
 //==============================================================================
 
-#include "graphpanelwidgetcustomaxeswindow.h"
+#include "graphpanelwidgetcustomaxesdialog.h"
 
 //==============================================================================
 
@@ -29,7 +29,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_graphpanelwidgetcustomaxeswindow.h"
+#include "ui_graphpanelwidgetcustomaxesdialog.h"
 
 //==============================================================================
 
@@ -38,13 +38,13 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelWidgetCustomAxesWindow::GraphPanelWidgetCustomAxesWindow(const double &pMinX,
+GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double &pMinX,
                                                                    const double &pMaxX,
                                                                    const double &pMinY,
                                                                    const double &pMaxY,
                                                                    QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::GraphPanelWidgetCustomAxesWindow)
+    mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
     // Set up the GUI
 
@@ -73,7 +73,7 @@ GraphPanelWidgetCustomAxesWindow::GraphPanelWidgetCustomAxesWindow(const double 
 
 //==============================================================================
 
-GraphPanelWidgetCustomAxesWindow::~GraphPanelWidgetCustomAxesWindow()
+GraphPanelWidgetCustomAxesDialog::~GraphPanelWidgetCustomAxesDialog()
 {
     // Delete the GUI
 
@@ -82,7 +82,7 @@ GraphPanelWidgetCustomAxesWindow::~GraphPanelWidgetCustomAxesWindow()
 
 //==============================================================================
 
-double GraphPanelWidgetCustomAxesWindow::minX() const
+double GraphPanelWidgetCustomAxesDialog::minX() const
 {
     // Return our minimum X value
 
@@ -91,7 +91,7 @@ double GraphPanelWidgetCustomAxesWindow::minX() const
 
 //==============================================================================
 
-double GraphPanelWidgetCustomAxesWindow::maxX() const
+double GraphPanelWidgetCustomAxesDialog::maxX() const
 {
     // Return our maximum X value
 
@@ -100,7 +100,7 @@ double GraphPanelWidgetCustomAxesWindow::maxX() const
 
 //==============================================================================
 
-double GraphPanelWidgetCustomAxesWindow::minY() const
+double GraphPanelWidgetCustomAxesDialog::minY() const
 {
     // Return our minimum Y value
 
@@ -109,7 +109,7 @@ double GraphPanelWidgetCustomAxesWindow::minY() const
 
 //==============================================================================
 
-double GraphPanelWidgetCustomAxesWindow::maxY() const
+double GraphPanelWidgetCustomAxesDialog::maxY() const
 {
     // Return our maximum Y value
 
@@ -118,7 +118,7 @@ double GraphPanelWidgetCustomAxesWindow::maxY() const
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesWindow::checkValue(QLineEdit *pValue)
+void GraphPanelWidgetCustomAxesDialog::checkValue(QLineEdit *pValue)
 {
     // Check that we don't have an empty value and if we do then set the value
     // to zero and select it
@@ -132,7 +132,7 @@ void GraphPanelWidgetCustomAxesWindow::checkValue(QLineEdit *pValue)
 //==============================================================================
 
 
-void GraphPanelWidgetCustomAxesWindow::on_xMinValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::on_xMinValue_textEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -143,7 +143,7 @@ void GraphPanelWidgetCustomAxesWindow::on_xMinValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesWindow::on_xMaxValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::on_xMaxValue_textEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -154,7 +154,7 @@ void GraphPanelWidgetCustomAxesWindow::on_xMaxValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesWindow::on_yMinValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::on_yMinValue_textEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -165,7 +165,7 @@ void GraphPanelWidgetCustomAxesWindow::on_yMinValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesWindow::on_yMaxValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::on_yMaxValue_textEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -176,7 +176,7 @@ void GraphPanelWidgetCustomAxesWindow::on_yMaxValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesWindow::on_buttonBox_accepted()
+void GraphPanelWidgetCustomAxesDialog::on_buttonBox_accepted()
 {
     // Check that the values make sense
 
@@ -201,7 +201,7 @@ void GraphPanelWidgetCustomAxesWindow::on_buttonBox_accepted()
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesWindow::on_buttonBox_rejected()
+void GraphPanelWidgetCustomAxesDialog::on_buttonBox_rejected()
 {
     // Simply cancel whatever was done here
 
