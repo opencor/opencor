@@ -1208,7 +1208,7 @@ void MainWindow::on_actionHomePage_triggered()
 
 void MainWindow::on_actionCheckForUpdates_triggered()
 {
-    // Show the check for updates window
+    // Show the check for updates dialog
 
     CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
