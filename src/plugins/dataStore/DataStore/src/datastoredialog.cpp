@@ -156,15 +156,6 @@ DataStoreDialog::~DataStoreDialog()
 
 //==============================================================================
 
-{
-
-
-
-
-}
-
-//==============================================================================
-
 DataStoreVariables DataStoreDialog::selectedData() const
 {
     // Return our selected data
