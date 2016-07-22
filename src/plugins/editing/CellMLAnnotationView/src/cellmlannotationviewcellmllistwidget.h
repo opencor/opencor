@@ -136,7 +136,6 @@ private:
 
     Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mTreeViewModel;
-    CellmlAnnotationViewCellmlElementItemDelegate *mTreeViewItemDelegate;
 
     QAction *mExpandAllAction;
     QAction *mCollapseAllAction;

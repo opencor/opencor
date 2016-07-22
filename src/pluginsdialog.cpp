@@ -123,7 +123,6 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     // cannot decide whether they should be loaded)
 
     mModel = new QStandardItemModel(mGui->pluginsTreeView);
-    mItemDelegate = new PluginItemDelegate();
 
 #ifdef Q_OS_MAC
     mGui->pluginsTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -131,7 +130,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     //       our plugins tree view widget...
 #endif
     mGui->pluginsTreeView->setModel(mModel);
-    mGui->pluginsTreeView->setItemDelegate(mItemDelegate);
+    mGui->pluginsTreeView->setItemDelegate(new PluginItemDelegate());
 
     // Populate the data model with our different categories of plugins, making
     // sure that they are in alphabetical order, no matter the locale
