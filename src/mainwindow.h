@@ -133,6 +133,8 @@ private:
     void showEnableActions(const QList<QAction *> &pActions);
 
 private slots:
+    void aboutToQuit();
+
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
     void handleMessage(const QString &pMessage);
 
