@@ -40,6 +40,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> fixed an issue with switching from one file to another with the mouse over a button-like widget and the status bar visible resulting in some bad flickering (see issue <a href=\"https://github.com/opencor/opencor/issues/1027\">#1027</a>). Qt WebKit now uses the same version of ICU as Qt itself on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1037\">#1037</a>)." },
+                       { "change": "<strong>Data stores:</strong> now allow the selection of model parameters (see issue <a href=\"https://github.com/opencor/opencor/issues/1008\">#1008</a>)." },
                        { "change": "<strong>PMR window:</strong> file exposures now include SED-ML files, if any (see issue <a href=\"https://github.com/opencor/opencor/issues/1032\">#1032</a>)." },
                        { "change": "<strong>Editor widget:</strong> fixed a problem with the icon for the search options / magnifier looking wrong (see issue <a href=\"https://github.com/opencor/opencor/issues/1026\">#1026</a>)." },
                        { "change": "<strong>Text-based editing views:</strong> fixed a small problem with switching editing views for the same file resulting in file changes (and other things) not being tracked anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1040\">#1040</a>)." },
