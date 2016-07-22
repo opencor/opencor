@@ -74,12 +74,16 @@ public:
     explicit DataStoreDialog(DataStore *pDataStore, QWidget *pParent);
     ~DataStoreDialog();
 
+    DataStoreVariables selectedData() const;
+
 private:
     Ui::DataStoreDialog *mGui;
 
     QStandardItemModel *mModel;
 
-    DataStoreVariables selectedData() const;
+    QMap<QStandardItem *, DataStoreVariable*> mData;
+
+    DataStoreVariables doSelectedData(QStandardItem *pItem) const;
 
     void updateDataSelectedState(QStandardItem *pItem,
                                  const Qt::CheckState &pCheckState);

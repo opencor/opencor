@@ -62,7 +62,8 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::DataStoreDialog)
+    mGui(new Ui::DataStoreDialog),
+    mData(QMap<QStandardItem *, DataStoreVariable*>())
 {
     // Set up the GUI
 
@@ -137,6 +138,8 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
             dataItem->setEditable(false);
 
             hierarchyItem->appendRow(dataItem);
+
+            mData.insert(dataItem, variable);
         }
     }
 
@@ -156,12 +159,36 @@ DataStoreDialog::~DataStoreDialog()
 
 //==============================================================================
 
+DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
+{
+    // Return the selected data for the given item
+
+    if (pItem->rowCount()) {
+        DataStoreVariables res = DataStoreVariables();
+
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+            res << doSelectedData(pItem->child(i));
+
+        return res;
+    } else if (pItem->checkState() == Qt::Checked) {
+        return DataStoreVariables() << mData.value(pItem);
+    } else {
+        return DataStoreVariables();
+    }
+}
+
+//==============================================================================
+
 DataStoreVariables DataStoreDialog::selectedData() const
 {
     // Return our selected data
-//---ISSUE1008--- TO BE DONE...
 
-    return DataStoreVariables();
+    DataStoreVariables res = DataStoreVariables();
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        res << doSelectedData(mModel->invisibleRootItem()->child(i));
+
+    return res;
 }
 
 //==============================================================================

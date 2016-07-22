@@ -33,22 +33,6 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName) :
-    mFileName(pFileName)
-{
-}
-
-//==============================================================================
-
-QString DataStoreData::fileName() const
-{
-    // Return our file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
 DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
     mUri(QString()),
     mName(QString()),
@@ -206,6 +190,33 @@ double * DataStoreVariable::values() const
     // Return our values
 
     return mValues;
+}
+
+//==============================================================================
+
+DataStoreData::DataStoreData(const QString &pFileName,
+                             const DataStoreVariables &pSelectedVariables) :
+    mFileName(pFileName),
+    mSelectedVariables(pSelectedVariables)
+{
+}
+
+//==============================================================================
+
+QString DataStoreData::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStoreData::selectedVariables() const
+{
+    // Return our selected variables
+
+    return mSelectedVariables;
 }
 
 //==============================================================================

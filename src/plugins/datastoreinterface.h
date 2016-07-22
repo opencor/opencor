@@ -37,19 +37,6 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataStoreData
-{
-public:
-    explicit DataStoreData(const QString &pFileName);
-
-    QString fileName() const;
-
-private:
-    QString mFileName;
-};
-
-//==============================================================================
-
 class DataStoreVariable
 {
 public:
@@ -93,6 +80,22 @@ private:
 //==============================================================================
 
 typedef QList<DataStoreVariable *> DataStoreVariables;
+
+//==============================================================================
+
+class DataStoreData
+{
+public:
+    explicit DataStoreData(const QString &pFileName,
+                           const DataStoreVariables &pSelectedVariables);
+
+    QString fileName() const;
+    DataStoreVariables selectedVariables() const;
+
+private:
+    QString mFileName;
+    DataStoreVariables mSelectedVariables;
+};
 
 //==============================================================================
 

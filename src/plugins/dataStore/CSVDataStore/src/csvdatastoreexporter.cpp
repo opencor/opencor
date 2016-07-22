@@ -51,12 +51,13 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
     static const QString Header = "%1 (%2)";
 
+    DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
     DataStore::DataStoreVariable *voi = mDataStore->voi();
     DataStore::DataStoreVariables variables = mDataStore->variables();
 
     QByteArray data = QByteArray();
 
-    if (voi->isVisible()) {
+    if (selectedVariables.contains(voi)) {
         data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
                            voi->unit());
     }
@@ -65,7 +66,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     auto variableEnd = variables.constEnd();
 
     for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-        if ((*variable)->isVisible()) {
+        if (selectedVariables.contains(*variable)) {
             if (!data.isEmpty())
                 data += ",";
 
@@ -81,11 +82,11 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     for (qulonglong i = 0; i < mDataStore->size(); ++i) {
         QString rowData = QString();
 
-        if (voi->isVisible())
+        if (selectedVariables.contains(voi))
             rowData += QString::number(voi->value(i));
 
         for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if ((*variable)->isVisible()) {
+            if (selectedVariables.contains(*variable)) {
                 if (!rowData.isEmpty())
                     rowData += ",";
 

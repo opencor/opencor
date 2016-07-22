@@ -12,4 +12,15 @@
         <translation>Sélectionner toutes les données</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::DataStore::DataStoreDialog</name>
+    <message>
+        <source>Data Selector</source>
+        <translation>Sélecteur De Données</translation>
+    </message>
+    <message>
+        <source>Some data must be selected.</source>
+        <translation>Des données doivent être sélectionnées.</translation>
+    </message>
+</context>
 </TS>

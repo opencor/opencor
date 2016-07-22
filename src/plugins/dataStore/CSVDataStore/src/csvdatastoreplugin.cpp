@@ -93,7 +93,7 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
         DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
 
         if (dataStoreDialog.exec())
-            return new DataStore::DataStoreData(fileName);
+            return new DataStore::DataStoreData(fileName, dataStoreDialog.selectedData());
         else
             return 0;
     } else {
