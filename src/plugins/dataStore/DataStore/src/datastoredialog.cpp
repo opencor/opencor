@@ -239,18 +239,18 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 
     // Update the selected state of all our hierarchies
 
-    int nbOfTopLevelHierarchiesChecked = 0;
+    int nbOfTopLevelHierarchiesCheckedOrPartiallyChecked = 0;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *childItem = mModel->invisibleRootItem()->child(i);
 
         checkDataSelectedState(childItem);
 
-        nbOfTopLevelHierarchiesChecked += childItem->checkState() == Qt::Checked;
+        nbOfTopLevelHierarchiesCheckedOrPartiallyChecked += childItem->checkState() != Qt::Unchecked;
     }
 
-    mGui->allDataCheckBox->setCheckState(nbOfTopLevelHierarchiesChecked?
-                                             (nbOfTopLevelHierarchiesChecked == mModel->invisibleRootItem()->rowCount())?
+    mGui->allDataCheckBox->setCheckState(nbOfTopLevelHierarchiesCheckedOrPartiallyChecked?
+                                             (nbOfTopLevelHierarchiesCheckedOrPartiallyChecked == mModel->invisibleRootItem()->rowCount())?
                                                  Qt::Checked:
                                                  Qt::PartiallyChecked:
                                              Qt::Unchecked);
