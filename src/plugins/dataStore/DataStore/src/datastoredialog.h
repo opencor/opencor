@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "datastoreinterface.h"
+
+//==============================================================================
+
 #include <Qt>
 
 //==============================================================================
@@ -74,6 +78,8 @@ private:
     Ui::DataStoreDialog *mGui;
 
     QStandardItemModel *mModel;
+
+    DataStoreVariables selectedData() const;
 
     void updateDataSelectedState(QStandardItem *pItem,
                                  const Qt::CheckState &pCheckState);

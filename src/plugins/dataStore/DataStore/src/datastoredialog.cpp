@@ -183,6 +183,16 @@ void DataStoreDialog::on_buttonBox_rejected()
 
 //==============================================================================
 
+DataStoreVariables DataStoreDialog::selectedData() const
+{
+    // Return our selected data
+//---ISSUE1008--- TO BE DONE...
+
+    return DataStoreVariables();
+}
+
+//==============================================================================
+
 void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
                                               const Qt::CheckState &pCheckState)
 {
