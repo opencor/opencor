@@ -25,6 +25,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QMessageBox>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -155,30 +156,11 @@ DataStoreDialog::~DataStoreDialog()
 
 //==============================================================================
 
-void DataStoreDialog::on_allDataCheckBox_clicked()
 {
-    // Un/select all the data
 
-    updateDataSelectedState(mModel->invisibleRootItem(),
-                            mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
-}
 
-//==============================================================================
 
-void DataStoreDialog::on_buttonBox_accepted()
-{
-    // Confirm that we accepted the data selection
 
-    accept();
-}
-
-//==============================================================================
-
-void DataStoreDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
 }
 
 //==============================================================================
@@ -278,6 +260,30 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updateDataSelectedState(QStandardItem *)));
+}
+
+//==============================================================================
+
+void DataStoreDialog::on_buttonBox_accepted()
+{
+    // Confirm that we accepted the data selection, but only if we have at least
+    // one selected data
+
+    if (mGui->allDataCheckBox->checkState() == Qt::Unchecked) {
+        QMessageBox::warning(this, tr("Data Selector"),
+                             tr("Some data must be selected."));
+    } else {
+        accept();
+    }
+}
+
+//==============================================================================
+
+void DataStoreDialog::on_buttonBox_rejected()
+{
+    // Simply cancel whatever was done here
+
+    reject();
 }
 
 //==============================================================================
