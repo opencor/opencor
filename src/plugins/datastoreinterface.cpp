@@ -215,7 +215,7 @@ DataStore::DataStore(const QString &pUri,
     mlUri(pUri),
     mSize(pSize),
     mVoi(0),
-    mVariables(0)
+    mVariables(DataStoreVariables())
 {
 }
 
@@ -329,13 +329,12 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 {
     // Add some variables to our data store
 
-    DataStoreVariables variables(pCount);
+    DataStoreVariables variables = DataStoreVariables();
 
-    for (int i = 0; i < pCount; ++i, ++pValues) {
-        variables[i] = new DataStoreVariable(mSize, pValues);
+    for (int i = 0; i < pCount; ++i, ++pValues)
+        variables << new DataStoreVariable(mSize, pValues);
 
-        mVariables << variables[i];
-    }
+    mVariables << variables;
 
     return variables;
 }
