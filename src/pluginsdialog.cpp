@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Plugins window
+// Plugins dialog
 //==============================================================================
 
 #include "cliutils.h"
@@ -25,11 +25,11 @@ limitations under the License.
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
-#include "pluginswindow.h"
+#include "pluginsdialog.h"
 
 //==============================================================================
 
-#include "ui_pluginswindow.h"
+#include "ui_pluginsdialog.h"
 
 //==============================================================================
 
@@ -92,10 +92,10 @@ bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
 
 //==============================================================================
 
-PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
+PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                              QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PluginsWindow),
+    mGui(new Ui::PluginsDialog),
     mPluginManager(pPluginManager),
     mMappedCategories(QMap<QString, QString>()),
     mSelectablePluginItems(QList<QStandardItem *>()),
@@ -270,11 +270,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mGui->pluginsTreeView->setMinimumWidth(1.15*mGui->pluginsTreeView->columnWidth(0));
     mGui->pluginsTreeView->setMaximumWidth(mGui->pluginsTreeView->minimumWidth());
 
-    // Make, through the note label, sure that the window has a minimum width
+    // Make, through the note label, sure that the dialog has a minimum width
 
     mGui->noteLabel->setMinimumWidth(2.5*mGui->pluginsTreeView->minimumWidth());
 
-    // Make sure that the window has a reasonable starting size
+    // Make sure that the dialog has a reasonable starting size
 
     mGui->layout->setSizeConstraint(QLayout::SetMinimumSize);
 
@@ -288,7 +288,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     connect(mGui->fieldThreeValue, SIGNAL(linkActivated(const QString &)),
             this, SLOT(openLink(const QString &)));
 
-    // Connection to handle the window's buttons
+    // Connection to handle the dialog's buttons
 
     connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
             this, SLOT(apply()));
@@ -300,7 +300,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
 //==============================================================================
 
-PluginsWindow::~PluginsWindow()
+PluginsDialog::~PluginsDialog()
 {
     // Delete the GUI
 
@@ -309,7 +309,7 @@ PluginsWindow::~PluginsWindow()
 
 //==============================================================================
 
-void PluginsWindow::selectFirstVisibleCategory()
+void PluginsDialog::selectFirstVisibleCategory()
 {
     // Select the first visible category
 
@@ -333,7 +333,7 @@ static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySe
 
 //==============================================================================
 
-void PluginsWindow::loadSettings(QSettings *pSettings)
+void PluginsDialog::loadSettings(QSettings *pSettings)
 {
     // Retrieve whether to show selectable plugins
 
@@ -346,7 +346,7 @@ void PluginsWindow::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PluginsWindow::saveSettings(QSettings *pSettings) const
+void PluginsDialog::saveSettings(QSettings *pSettings) const
 {
     // Keep track of whether to show selectable plugins
 
@@ -356,7 +356,7 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QString PluginsWindow::statusDescription(Plugin *pPlugin) const
+QString PluginsDialog::statusDescription(Plugin *pPlugin) const
 {
     // Return the plugin's status' description, if any
 
@@ -393,7 +393,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 
 //==============================================================================
 
-void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
+void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
                                       const QModelIndex &pOldIndex)
 {
     Q_UNUSED(pOldIndex);
@@ -531,7 +531,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
-void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
+void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
                                                const bool &pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
@@ -611,7 +611,7 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
     // Check whether the OK and apply buttons should be enabled
 
     if (pInitializing) {
-        // We are initialising the plugins window, so retrieve the initial
+        // We are initialising the plugins dialog, so retrieve the initial
         // loading state of the plugins
 
         foreach (QStandardItem *plugin,
@@ -644,7 +644,7 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
 
 //==============================================================================
 
-void PluginsWindow::openLink(const QString &pLink) const
+void PluginsDialog::openLink(const QString &pLink) const
 {
     // Open the link in the user's browser
 
@@ -653,7 +653,7 @@ void PluginsWindow::openLink(const QString &pLink) const
 
 //==============================================================================
 
-void PluginsWindow::on_buttonBox_accepted()
+void PluginsDialog::on_buttonBox_accepted()
 {
     // Keep track of the loading state of the various selectable plugins
 
@@ -669,7 +669,7 @@ void PluginsWindow::on_buttonBox_accepted()
 
 //==============================================================================
 
-void PluginsWindow::on_buttonBox_rejected()
+void PluginsDialog::on_buttonBox_rejected()
 {
     // Simply cancel whatever was done here
 
@@ -678,7 +678,7 @@ void PluginsWindow::on_buttonBox_rejected()
 
 //==============================================================================
 
-void PluginsWindow::apply()
+void PluginsDialog::apply()
 {
     if (QMessageBox::question(mainWindow(), qAppName(),
                               tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
@@ -697,7 +697,7 @@ void PluginsWindow::apply()
 
 //==============================================================================
 
-void PluginsWindow::newPluginCategory(const QString &pCategory,
+void PluginsDialog::newPluginCategory(const QString &pCategory,
                                       const QString &pName)
 {
     // Create and add a category item to our data model
@@ -715,7 +715,7 @@ void PluginsWindow::newPluginCategory(const QString &pCategory,
 
 //==============================================================================
 
-void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
+void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 {
     // Show/hide our unselectable plugins
 

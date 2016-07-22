@@ -31,7 +31,7 @@ limitations under the License.
 #include "mainwindow.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
-#include "pluginswindow.h"
+#include "pluginsdialog.h"
 #include "preferenceswindow.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
@@ -1156,27 +1156,27 @@ void MainWindow::on_actionFrench_triggered()
 void MainWindow::on_actionPlugins_triggered()
 {
     if (mPluginManager->plugins().count()) {
-        // There are some plugins, so we can show the plugins window
+        // There are some plugins, so we can show the plugins dialog
 
-        PluginsWindow pluginsWindow(mPluginManager, this);
+        PluginsDialog pluginsDialog(mPluginManager, this);
 
-        mSettings->beginGroup(pluginsWindow.objectName());
-            pluginsWindow.loadSettings(mSettings);
+        mSettings->beginGroup(pluginsDialog.objectName());
+            pluginsDialog.loadSettings(mSettings);
         mSettings->endGroup();
 
-        pluginsWindow.exec();
-        // Note: the execution of the plugins window may result in the saving of
+        pluginsDialog.exec();
+        // Note: the execution of the plugins dialog may result in the saving of
         //       the application's settings, so for this to work we must ensure
         //       that any opened settings group has first been closed...
 
-        mSettings->beginGroup(pluginsWindow.objectName());
-            pluginsWindow.saveSettings(mSettings);
+        mSettings->beginGroup(pluginsDialog.objectName());
+            pluginsDialog.saveSettings(mSettings);
         mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
 
-        if (pluginsWindow.result() == QMessageBox::Apply)
+        if (pluginsDialog.result() == QMessageBox::Apply)
             restart(true);
     } else {
         QMessageBox::warning(this, tr("Plugins"),

@@ -78,7 +78,7 @@ SET(SOURCES
     src/checkforupdatesdialog.cpp
     src/main.cpp
     src/mainwindow.cpp
-    src/pluginswindow.cpp
+    src/pluginsdialog.cpp
     src/preferenceswindow.cpp
     src/splashscreenwindow.cpp
 
@@ -98,7 +98,7 @@ SET(SOURCES
 SET(HEADERS_MOC
     src/checkforupdatesdialog.h
     src/mainwindow.h
-    src/pluginswindow.h
+    src/pluginsdialog.h
     src/preferenceswindow.h
     src/splashscreenwindow.h
 
@@ -114,7 +114,7 @@ SET(HEADERS_MOC
 SET(UIS
     src/checkforupdatesdialog.ui
     src/mainwindow.ui
-    src/pluginswindow.ui
+    src/pluginsdialog.ui
     src/preferenceswindow.ui
     src/splashscreenwindow.ui
 )
