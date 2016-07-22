@@ -122,7 +122,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
 GraphPanelWidget::~GraphPanelWidget()
 {
-    // Let our plot's neighbours that our plot is not going to be their
+    // Let our plot's neighbours know that our plot is not going to be their
     // neighbour anymore
 
     foreach (GraphPanelPlotWidget *plot, mPlot->neighbors()) {

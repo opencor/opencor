@@ -46,6 +46,15 @@ QMainWindow * mainWindow()
 
 //==============================================================================
 
+bool aboutToQuit()
+{
+    // Return whether we are about to quit
+
+    return qApp->property("OpenCOR::aboutToQuit()").toBool();
+}
+
+//==============================================================================
+
 void showEnableAction(QAction *pAction, const bool &pVisible,
                       const bool &pEnabled)
 {

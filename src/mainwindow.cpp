@@ -107,6 +107,11 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
+    // Keep track of when we are about to quit
+
+    QObject::connect(qApp, SIGNAL(aboutToQuit()),
+                     this, SLOT(aboutToQuit()));
+
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
     // itself
@@ -1033,6 +1038,15 @@ void MainWindow::handleArguments(const QStringList &pArguments)
     //       make sure that the status bar is shown/hidden, as needed...
 
     mGui->statusBar->setVisible(mGui->actionStatusBar->isChecked());
+}
+
+//==============================================================================
+
+void MainWindow::aboutToQuit()
+{
+    // Keep track of the fact that we are about to quit
+
+    qApp->setProperty("OpenCOR::aboutToQuit()", true);
 }
 
 //==============================================================================

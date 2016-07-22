@@ -22,6 +22,8 @@ limitations under the License.
 
 QMainWindow CORE_EXPORT * mainWindow();
 
+bool CORE_EXPORT aboutToQuit();
+
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
                                   const bool &pEnabled = true);
 

@@ -638,6 +638,13 @@ void GraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void GraphPanelPlotWidget::updateActions()
 {
+    // Leave straightaway if we are about to quit
+    // Note: indeed, to update our actions when we are about to quit can cause
+    //       problems such as the one described in issue #1044...
+
+    if (Core::aboutToQuit())
+        return;
+
     // Update our actions
 
     double crtMinX = minX();
