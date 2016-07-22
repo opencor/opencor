@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Data store window
+// Data store dialog
 //==============================================================================
 
 #pragma once
@@ -33,7 +33,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class DataStoreWindow;
+    class DataStoreDialog;
 }
 
 //==============================================================================
@@ -52,16 +52,16 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreWindow : public QDialog
+class DataStoreDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreWindow(DataStore *pDataStore, QWidget *pParent);
-    ~DataStoreWindow();
+    explicit DataStoreDialog(DataStore *pDataStore, QWidget *pParent);
+    ~DataStoreDialog();
 
 private:
-    Ui::DataStoreWindow *mGui;
+    Ui::DataStoreDialog *mGui;
 
     QStandardItemModel *mModel;
 

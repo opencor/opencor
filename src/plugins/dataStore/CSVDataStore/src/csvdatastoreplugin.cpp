@@ -24,7 +24,7 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 #include "csvdatastoreplugin.h"
-#include "datastorewindow.h"
+#include "datastoredialog.h"
 
 //==============================================================================
 
@@ -90,9 +90,9 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                              &csvFilter);
 
     if (!fileName.isEmpty()) {
-        DataStore::DataStoreWindow dataStoreWindow(pDataStore, Core::mainWindow());
+        DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
 
-        if (dataStoreWindow.exec())
+        if (dataStoreDialog.exec())
             return new DataStore::DataStoreData(fileName);
         else
             return 0;

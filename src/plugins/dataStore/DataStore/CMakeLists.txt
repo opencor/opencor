@@ -8,15 +8,15 @@ ADD_PLUGIN(DataStore
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/datastoredialog.cpp
         src/datastoreplugin.cpp
-        src/datastorewindow.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
 
+        src/datastoredialog.h
         src/datastoreplugin.h
-        src/datastorewindow.h
     UIS
-        src/datastorewindow.ui
+        src/datastoredialog.ui
     INCLUDE_DIRS
         src
     PLUGINS

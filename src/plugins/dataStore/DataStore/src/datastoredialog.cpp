@@ -17,11 +17,11 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Data store window
+// Data store dialog
 //==============================================================================
 
 #include "datastoreinterface.h"
-#include "datastorewindow.h"
+#include "datastoredialog.h"
 
 //==============================================================================
 
@@ -29,7 +29,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_datastorewindow.h"
+#include "ui_datastoredialog.h"
 
 //==============================================================================
 
@@ -38,9 +38,9 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
+DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::DataStoreWindow)
+    mGui(new Ui::DataStoreDialog)
 {
     // Set up the GUI
 
@@ -124,7 +124,7 @@ DataStoreWindow::DataStoreWindow(DataStore *pDataStore, QWidget *pParent) :
 
 //==============================================================================
 
-DataStoreWindow::~DataStoreWindow()
+DataStoreDialog::~DataStoreDialog()
 {
     // Delete the GUI
 
@@ -133,7 +133,7 @@ DataStoreWindow::~DataStoreWindow()
 
 //==============================================================================
 
-void DataStoreWindow::on_allDataCheckBox_clicked()
+void DataStoreDialog::on_allDataCheckBox_clicked()
 {
     // Un/select all the data
 
@@ -143,7 +143,7 @@ void DataStoreWindow::on_allDataCheckBox_clicked()
 
 //==============================================================================
 
-void DataStoreWindow::on_buttonBox_accepted()
+void DataStoreDialog::on_buttonBox_accepted()
 {
     // Confirm that we accepted the data selection
 
@@ -152,7 +152,7 @@ void DataStoreWindow::on_buttonBox_accepted()
 
 //==============================================================================
 
-void DataStoreWindow::on_buttonBox_rejected()
+void DataStoreDialog::on_buttonBox_rejected()
 {
     // Simply cancel whatever was done here
 
@@ -161,7 +161,7 @@ void DataStoreWindow::on_buttonBox_rejected()
 
 //==============================================================================
 
-void DataStoreWindow::updateDataSelectedState(QStandardItem *pItem,
+void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
                                               const Qt::CheckState &pCheckState)
 {
     // Update the selected state of the given item's children
@@ -178,7 +178,7 @@ void DataStoreWindow::updateDataSelectedState(QStandardItem *pItem,
 
 //==============================================================================
 
-void DataStoreWindow::checkDataSelectedState(QStandardItem *pItem)
+void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem)
 {
     // Update the selected state of the given item's children
 
@@ -208,7 +208,7 @@ void DataStoreWindow::checkDataSelectedState(QStandardItem *pItem)
 
 //==============================================================================
 
-void DataStoreWindow::updateDataSelectedState(QStandardItem *pItem)
+void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 {
     // Disable the connection that handles a change in some data's selected
     // state (otherwise what we are doing here is going to be completely
