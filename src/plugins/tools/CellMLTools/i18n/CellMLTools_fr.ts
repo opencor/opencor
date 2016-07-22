@@ -49,11 +49,11 @@
     </message>
     <message>
         <source>Select User-Defined Format File</source>
-        <translation>Sélectionner Fichier Format Défini Par L&apos;Utilisateur</translation>
+        <translation>Sélectionner Fichier Format Défini Par Utilisateur</translation>
     </message>
     <message>
         <source>Export CellML File To User-Defined Format</source>
-        <translation>Exporter Fichier CellML Vers Fichier Format Défini Par L&apos;Utilisateur</translation>
+        <translation>Exporter Fichier CellML Vers Fichier Format Défini Par Utilisateur</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to the user-defined format described in &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
