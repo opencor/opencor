@@ -9,11 +9,23 @@
     </message>
     <message>
         <source>Show/hide the Physiome Model Repository window</source>
-        <translation>Montrer/cacher la fenêtre du Répertoire de Modèles Physiome</translation>
+        <translation>Montrer/cacher la fenêtre du Répertoire De Modèles Physiome</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>No exposure matches your criteria.</source>
+        <translation>Aucune exposition ne correspond à votre critère.</translation>
+    </message>
     <message>
         <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>
         <translation>&lt;strong&gt;1&lt;/strong&gt; exposition a été trouvée :</translation>
@@ -21,10 +33,6 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; exposures were found:</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; expositions ont été trouvées :</translation>
-    </message>
-    <message>
-        <source>No exposure matches your criteria.</source>
-        <translation>Aucune exposition ne correspond à votre critère.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
@@ -50,14 +58,6 @@
         <source>Browse Exposure</source>
         <translation>Naviguer Exposition</translation>
     </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-    <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
@@ -70,19 +70,19 @@
     <name>PmrWindowWindow</name>
     <message>
         <source>Physiome Model Repository</source>
-        <translation>Répertoire de Modèles Physiome</translation>
+        <translation>Répertoire De Modèles Physiome</translation>
     </message>
     <message>
         <source>Filter:</source>
         <translation>Filtre :</translation>
     </message>
     <message>
-        <source>Refresh the list of exposures</source>
-        <translation>Rafraîchir la liste d&quot;expositions</translation>
-    </message>
-    <message>
         <source>Refresh</source>
         <translation>Rafraîchir</translation>
+    </message>
+    <message>
+        <source>Refresh the list of exposures</source>
+        <translation>Rafraîchir la liste d&quot;expositions</translation>
     </message>
 </context>
 </TS>

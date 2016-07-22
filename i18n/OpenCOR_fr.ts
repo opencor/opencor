@@ -47,6 +47,18 @@
         <translation>&amp;Voir</translation>
     </message>
     <message>
+        <source>&amp;Quit</source>
+        <translation>&amp;Quitter</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
+        <source>Quit OpenCOR</source>
+        <translation>Quitter OpenCOR</translation>
+    </message>
+    <message>
         <source>&amp;English</source>
         <translation>&amp;Anglais</translation>
     </message>
@@ -119,12 +131,12 @@
         <translation>Dé/sélectionner des extensions</translation>
     </message>
     <message>
-        <source>Docked Windows</source>
-        <translation>Fenêtres Ancrées</translation>
-    </message>
-    <message>
         <source>&amp;Docked Windows</source>
         <translation>&amp;Fenêtres Ancrées</translation>
+    </message>
+    <message>
+        <source>Docked Windows</source>
+        <translation>Fenêtres Ancrées</translation>
     </message>
     <message>
         <source>Show/hide all the recent/current docked windows</source>
@@ -141,18 +153,6 @@
     <message>
         <source>Preferences for OpenCOR and its plugins</source>
         <translation>Préférences pour OpenCOR et ses extensions</translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation>&amp;Quitter</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Quitter</translation>
-    </message>
-    <message>
-        <source>Quit OpenCOR</source>
-        <translation>Quitter OpenCOR</translation>
     </message>
     <message>
         <source>Check For Updates...</source>
@@ -197,16 +197,16 @@
         <translation>Extensions</translation>
     </message>
     <message>
+        <source>No plugins could be found.</source>
+        <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>À Propos</translation>
     </message>
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
-    </message>
-    <message>
-        <source>No plugins could be found.</source>
-        <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
     </message>
 </context>
 <context>

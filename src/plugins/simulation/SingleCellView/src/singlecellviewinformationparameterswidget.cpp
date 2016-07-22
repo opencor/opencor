@@ -69,7 +69,7 @@ void SingleCellViewInformationParametersWidget::retranslateContextMenu()
 
     if (mContextMenu->actions().count() >= mVoiAccessible+1) {
         if (mVoiAccessible)
-            mContextMenu->actions()[0]->setText(tr("Plot Against Variable of Integration"));
+            mContextMenu->actions()[0]->setText(tr("Plot Against Variable Of Integration"));
 
         mContextMenu->actions()[(mVoiAccessible?0:-1)+1]->setText(tr("Plot Against"));
     }
