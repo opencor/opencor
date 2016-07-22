@@ -224,9 +224,8 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem)
 
 void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 {
-    // Disable the connection that handles a change in some data's selected
-    // state (otherwise what we are doing here is going to be completely
-    // uneffective)
+    // Disable the handling of the itemChanged() signal (otherwise what we are
+    // doing here is going to be completely uneffective)
 
     disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                this, SLOT(updateDataSelectedState(QStandardItem *)));
@@ -255,8 +254,7 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
                                                  Qt::PartiallyChecked:
                                              Qt::Unchecked);
 
-    // Re-enable the connection that handles a change in some data's selected
-    // state
+    // Re-enable the handling of the itemChanged() signal
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updateDataSelectedState(QStandardItem *)));
