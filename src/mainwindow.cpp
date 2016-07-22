@@ -32,7 +32,7 @@ limitations under the License.
 #include "plugininterface.h"
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
-#include "preferenceswindow.h"
+#include "preferencesdialog.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -1188,11 +1188,11 @@ void MainWindow::on_actionPlugins_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    // Show the preferences window
+    // Show the preferences dialog
 
-    PreferencesWindow preferencesWindow(this);
+    PreferencesDialog preferencesDialog(this);
 
-    preferencesWindow.exec();
+    preferencesDialog.exec();
 }
 
 //==============================================================================

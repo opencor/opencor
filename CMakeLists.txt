@@ -79,7 +79,7 @@ SET(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
-    src/preferenceswindow.cpp
+    src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
@@ -99,7 +99,7 @@ SET(HEADERS_MOC
     src/checkforupdatesdialog.h
     src/mainwindow.h
     src/pluginsdialog.h
-    src/preferenceswindow.h
+    src/preferencesdialog.h
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
@@ -115,7 +115,7 @@ SET(UIS
     src/checkforupdatesdialog.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
-    src/preferenceswindow.ui
+    src/preferencesdialog.ui
     src/splashscreenwindow.ui
 )
 

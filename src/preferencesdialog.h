@@ -17,14 +17,20 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences window
+// Preferences dialog
 //==============================================================================
 
-#include "preferenceswindow.h"
+#pragma once
 
 //==============================================================================
 
-#include "ui_preferenceswindow.h"
+#include <QDialog>
+
+//==============================================================================
+
+namespace Ui {
+    class PreferencesDialog;
+}
 
 //==============================================================================
 
@@ -32,23 +38,17 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PreferencesWindow::PreferencesWindow(QWidget *pParent) :
-    QDialog(pParent),
-    mGui(new Ui::PreferencesWindow)
+class PreferencesDialog : public QDialog
 {
-    // Set up the GUI
+    Q_OBJECT
 
-    mGui->setupUi(this);
-}
+public:
+    explicit PreferencesDialog(QWidget *pParent);
+    ~PreferencesDialog();
 
-//==============================================================================
-
-PreferencesWindow::~PreferencesWindow()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
+private:
+    Ui::PreferencesDialog *mGui;
+};
 
 //==============================================================================
 

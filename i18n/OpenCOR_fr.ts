@@ -409,7 +409,7 @@
     </message>
 </context>
 <context>
-    <name>PreferencesWindow</name>
+    <name>PreferencesDialog</name>
     <message>
         <source>Preferences</source>
         <translation>Préférences</translation>
