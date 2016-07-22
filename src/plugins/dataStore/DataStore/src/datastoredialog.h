@@ -29,6 +29,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QDialog>
+#include <QStyledItemDelegate>
 
 //==============================================================================
 
@@ -49,6 +50,15 @@ namespace DataStore {
 //==============================================================================
 
 class DataStore;
+
+//==============================================================================
+
+class DataItemDelegate : public QStyledItemDelegate
+{
+public:
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+};
 
 //==============================================================================
 

@@ -38,6 +38,27 @@ namespace DataStore {
 
 //==============================================================================
 
+void DataItemDelegate::paint(QPainter *pPainter,
+                               const QStyleOptionViewItem &pOption,
+                               const QModelIndex &pIndex) const
+{
+    // Paint the item as normal unless it's a hierarchy item, in which case we
+    // make it bold
+
+    QStandardItem *dataItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+
+    QStyleOptionViewItemV4 option(pOption);
+
+    initStyleOption(&option, pIndex);
+
+    if (dataItem->rowCount())
+        option.font.setBold(true);
+
+    QStyledItemDelegate::paint(pPainter, option, pIndex);
+}
+
+//==============================================================================
+
 DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::DataStoreDialog)
@@ -57,6 +78,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     mModel = new QStandardItemModel(mGui->treeView);
 
     mGui->treeView->setModel(mModel);
+    mGui->treeView->setItemDelegate(new DataItemDelegate());
 
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;
