@@ -17,41 +17,67 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences window
+// Graph Panel widget custom axes dialog
 //==============================================================================
 
-#include "preferenceswindow.h"
+#pragma once
 
 //==============================================================================
 
-#include "ui_preferenceswindow.h"
+#include <QDialog>
+
+//==============================================================================
+
+namespace Ui {
+    class GraphPanelWidgetCustomAxesDialog;
+}
+
+//==============================================================================
+
+class QLineEdit;
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace GraphPanelWidget {
 
 //==============================================================================
 
-PreferencesWindow::PreferencesWindow(QWidget *pParent) :
-    QDialog(pParent),
-    mGui(new Ui::PreferencesWindow)
+class GraphPanelWidgetCustomAxesDialog : public QDialog
 {
-    // Set up the GUI
+    Q_OBJECT
 
-    mGui->setupUi(this);
-}
+public:
+    explicit GraphPanelWidgetCustomAxesDialog(const double &pMinX,
+                                              const double &pMaxX,
+                                              const double &pMinY,
+                                              const double &pMaxY,
+                                              QWidget *pParent);
+    ~GraphPanelWidgetCustomAxesDialog();
+
+    double minX() const;
+    double maxX() const;
+    double minY() const;
+    double maxY() const;
+
+private:
+    Ui::GraphPanelWidgetCustomAxesDialog *mGui;
+
+    void checkValue(QLineEdit *pValue);
+
+private slots:
+    void on_xMinValue_textEdited(const QString &pValue);
+    void on_xMaxValue_textEdited(const QString &pValue);
+    void on_yMinValue_textEdited(const QString &pValue);
+    void on_yMaxValue_textEdited(const QString &pValue);
+
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
+};
 
 //==============================================================================
 
-PreferencesWindow::~PreferencesWindow()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================

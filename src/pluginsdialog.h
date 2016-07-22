@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Plugins window
+// Plugins dialog
 //==============================================================================
 
 #pragma once
@@ -41,7 +41,7 @@ class QStandardItemModel;
 //==============================================================================
 
 namespace Ui {
-    class PluginsWindow;
+    class PluginsDialog;
 }
 
 //==============================================================================
@@ -63,19 +63,19 @@ public:
 
 //==============================================================================
 
-class PluginsWindow : public QDialog
+class PluginsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PluginsWindow(PluginManager *pPluginManager, QWidget *pParent);
-    ~PluginsWindow();
+    explicit PluginsDialog(PluginManager *pPluginManager, QWidget *pParent);
+    ~PluginsDialog();
 
     void loadSettings(QSettings *pSettings);
     void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::PluginsWindow *mGui;
+    Ui::PluginsDialog *mGui;
 
     PluginManager *mPluginManager;
 

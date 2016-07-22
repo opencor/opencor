@@ -4,6 +4,10 @@
 <context>
     <name>OpenCOR::Core::CentralWidget</name>
     <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
+    <message>
         <source>Editing</source>
         <translation>Édition</translation>
     </message>
@@ -16,60 +20,44 @@
         <translation>Analyse</translation>
     </message>
     <message>
-        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
-        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
+        <source>Open Remote File</source>
+        <translation>Ouvrir Fichier À Distance</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL :</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
     </message>
     <message>
         <source>Open File</source>
         <translation>Ouvrir Fichier</translation>
     </message>
     <message>
-        <source>Save File</source>
-        <translation>Sauvegarder Fichier</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; is new. Do you want to save it before closing it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; est nouveau. Voulez-vous le sauvegarder avant de le fermer ?</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
-    </message>
-    <message>
-        <source>The file is being edited, so switching modes is not possible for now</source>
-        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
-    </message>
-    <message>
-        <source>The file is being edited, so switching views is not possible for now</source>
-        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore. Do you want to close it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus. Voulez-vous le fermer ?</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le recharger ?</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; has had one or several of its dependencies modified. Do you want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a eu une ou plusieurs de ses dépendances modifiées. Voulez-vous le recharger ?</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; and one or several of its dependencies has been modified. Do you want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; et une ou plusieurs de ses dépendances a été modifié. Voulez-vous le recharger ?</translation>
+        <source>File Modified</source>
+        <translation>Fichier Modifié</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you still want to reload it?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous quand même le recharger ?</translation>
     </message>
     <message>
-        <source>The &lt;strong&gt;%1&lt;/strong&gt; view could not save &lt;strong&gt;%2&lt;/strong&gt;.</source>
-        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
+        <source>Reload Remote File</source>
+        <translation>Recharger Fichier À Distance</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be reloaded (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être rechargé (%2).</translation>
     </message>
     <message>
         <source>Unlock File</source>
@@ -92,44 +80,16 @@
         <translation>vérouillé</translation>
     </message>
     <message>
-        <source>File</source>
-        <translation>Fichier</translation>
-    </message>
-    <message>
-        <source>Open Remote File</source>
-        <translation>Ouvrir Fichier À Distance</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL :</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
-    </message>
-    <message>
-        <source>Reload Remote File</source>
-        <translation>Recharger Fichier À Distance</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be reloaded (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être rechargé (%2).</translation>
+        <source>Save File</source>
+        <translation>Sauvegarder Fichier</translation>
     </message>
     <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support saving files.</source>
         <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas la sauvegarde de fichiers.</translation>
     </message>
     <message>
-        <source>Sample</source>
-        <translation>Exemple</translation>
-    </message>
-    <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view cannot save &lt;strong&gt;%2&lt;/strong&gt;.</source>
         <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne peut pas sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
     </message>
     <message>
         <source>Save File As</source>
@@ -140,103 +100,83 @@
         <translation>Nouveau</translation>
     </message>
     <message>
-        <source>File Modified</source>
-        <translation>Fichier Modifié</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view could not save &lt;strong&gt;%2&lt;/strong&gt;.</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
     </message>
     <message>
         <source>New File</source>
         <translation>Nouveau Fichier</translation>
     </message>
     <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; is new. Do you want to save it before closing it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; est nouveau. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+    </message>
+    <message>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; and one or several of its dependencies has been modified. Do you want to reload it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; et une ou plusieurs de ses dépendances a été modifié. Voulez-vous le recharger ?</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to reload it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le recharger ?</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; has had one or several of its dependencies modified. Do you want to reload it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a eu une ou plusieurs de ses dépendances modifiées. Voulez-vous le recharger ?</translation>
+    </message>
+    <message>
         <source>File Deleted</source>
         <translation>Fichier Supprimé</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore. Do you want to close it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus. Voulez-vous le fermer ?</translation>
+    </message>
+    <message>
+        <source>The file is being edited, so switching modes is not possible for now</source>
+        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
+    </message>
+    <message>
+        <source>The file is being edited, so switching views is not possible for now</source>
+        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
     <message>
-        <source>Open a file</source>
-        <translation>Ouvrir un fichier</translation>
+        <source>File</source>
+        <translation>Fichier</translation>
     </message>
     <message>
-        <source>Save the current file</source>
-        <translation>Sauvegarder le fichier actuel</translation>
-    </message>
-    <message>
-        <source>Save the current file under a different name</source>
-        <translation>Sauvegarder le fichier actuel sous un nom différent</translation>
-    </message>
-    <message>
-        <source>Save All</source>
-        <translation>Sauvegader Tout</translation>
-    </message>
-    <message>
-        <source>Save all the files</source>
-        <translation>Sauvegader tous les fichiers</translation>
-    </message>
-    <message>
-        <source>Close the current file</source>
-        <translation>Fermer le fichier actuel</translation>
-    </message>
-    <message>
-        <source>Close All</source>
-        <translation>Tout Fermer</translation>
-    </message>
-    <message>
-        <source>Close all the files</source>
-        <translation>Fermer tous les fichiers</translation>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation>Précédent</translation>
-    </message>
-    <message>
-        <source>Select the previous file</source>
-        <translation>Sélectionner le fichier précédent</translation>
-    </message>
-    <message>
-        <source>Next</source>
-        <translation>Suivant</translation>
-    </message>
-    <message>
-        <source>Select the next file</source>
-        <translation>Sélectionner le fichier suivant</translation>
-    </message>
-    <message>
-        <source>Reopen</source>
-        <translation>Réouvrir</translation>
-    </message>
-    <message>
-        <source>Clear Menu</source>
-        <translation>Nettoyer Menu</translation>
-    </message>
-    <message>
-        <source>Clear the menu</source>
-        <translation>Nettoyer le menu</translation>
-    </message>
-    <message>
-        <source>Reopen File</source>
-        <translation>Réouvrir Fichier</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
+        <source>Create a new file</source>
+        <translation>Créer un nouveau fichier</translation>
     </message>
     <message>
         <source>Open...</source>
         <translation>Ouvrir...</translation>
     </message>
     <message>
-        <source>Save</source>
-        <translation>Sauvegarder</translation>
+        <source>Open a file</source>
+        <translation>Ouvrir un fichier</translation>
     </message>
     <message>
-        <source>Save As...</source>
-        <translation>Sauvegarder Sous...</translation>
+        <source>Open Remote...</source>
+        <translation>Ouvrir À Distance...</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation>Fermer</translation>
+        <source>Open a remote file</source>
+        <translation>Ouvrir un fichier à distance</translation>
     </message>
     <message>
         <source>Reload</source>
@@ -263,12 +203,64 @@
         <translation>Basculer l&apos;état vérouillé du fichier actuel</translation>
     </message>
     <message>
-        <source>Open Remote...</source>
-        <translation>Ouvrir À Distance...</translation>
+        <source>Save</source>
+        <translation>Sauvegarder</translation>
     </message>
     <message>
-        <source>Open a remote file</source>
-        <translation>Ouvrir un fichier à distance</translation>
+        <source>Save the current file</source>
+        <translation>Sauvegarder le fichier actuel</translation>
+    </message>
+    <message>
+        <source>Save As...</source>
+        <translation>Sauvegarder Sous...</translation>
+    </message>
+    <message>
+        <source>Save the current file under a different name</source>
+        <translation>Sauvegarder le fichier actuel sous un nom différent</translation>
+    </message>
+    <message>
+        <source>Save All</source>
+        <translation>Tout Sauvegader</translation>
+    </message>
+    <message>
+        <source>Save all the files</source>
+        <translation>Sauvegader tous les fichiers</translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation>Précédent</translation>
+    </message>
+    <message>
+        <source>Select the previous file</source>
+        <translation>Sélectionner le fichier précédent</translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation>Suivant</translation>
+    </message>
+    <message>
+        <source>Select the next file</source>
+        <translation>Sélectionner le fichier suivant</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Fermer</translation>
+    </message>
+    <message>
+        <source>Close the current file</source>
+        <translation>Fermer le fichier actuel</translation>
+    </message>
+    <message>
+        <source>Close All</source>
+        <translation>Tout Fermer</translation>
+    </message>
+    <message>
+        <source>Close all the files</source>
+        <translation>Fermer tous les fichiers</translation>
+    </message>
+    <message>
+        <source>Reopen</source>
+        <translation>Réouvrir</translation>
     </message>
     <message>
         <source>Most Recent</source>
@@ -279,12 +271,20 @@
         <translation>Réouvrir le fichier qui a été le plus récemment fermé</translation>
     </message>
     <message>
-        <source>File</source>
-        <translation>Fichier</translation>
+        <source>Clear Menu</source>
+        <translation>Nettoyer Menu</translation>
     </message>
     <message>
-        <source>Create a new file</source>
-        <translation>Créer un nouveau fichier</translation>
+        <source>Clear the menu</source>
+        <translation>Nettoyer le menu</translation>
+    </message>
+    <message>
+        <source>Reopen File</source>
+        <translation>Réouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
     </message>
 </context>
 <context>
@@ -305,12 +305,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Copyright</source>
-        <translation>Tous droits réservés</translation>
+        <source>No Internet connection available.</source>
+        <translation>Aucune connexion Internet disponible.</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
+        <source>Copyright</source>
+        <translation>Tous droits réservés</translation>
     </message>
     <message>
         <source>B</source>
@@ -325,10 +325,6 @@
         <translation>Mo</translation>
     </message>
     <message>
-        <source>EB</source>
-        <translation>Eo</translation>
-    </message>
-    <message>
         <source>GB</source>
         <translation>Go</translation>
     </message>
@@ -341,6 +337,10 @@
         <translation>Po</translation>
     </message>
     <message>
+        <source>EB</source>
+        <translation>Eo</translation>
+    </message>
+    <message>
         <source>ZB</source>
         <translation>Zo</translation>
     </message>
@@ -349,24 +349,24 @@
         <translation>Yo</translation>
     </message>
     <message>
-        <source>: </source>
-        <translation> : </translation>
-    </message>
-    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
     </message>
     <message>
-        <source>No Internet connection available.</source>
-        <translation>Aucune connexion Internet disponible.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
+        <source>: </source>
+        <translation> : </translation>
     </message>
 </context>
 </TS>

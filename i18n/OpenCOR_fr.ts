@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CheckForUpdatesWindow</name>
+    <name>CheckForUpdatesDialog</name>
     <message>
         <source>Check For Updates</source>
         <translation>Vérifier Pour Des Mises À Jour</translation>
@@ -45,6 +45,18 @@
     <message>
         <source>&amp;View</source>
         <translation>&amp;Voir</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation>&amp;Quitter</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
+        <source>Quit OpenCOR</source>
+        <translation>Quitter OpenCOR</translation>
     </message>
     <message>
         <source>&amp;English</source>
@@ -119,12 +131,12 @@
         <translation>Dé/sélectionner des extensions</translation>
     </message>
     <message>
-        <source>Docked Windows</source>
-        <translation>Fenêtres Ancrées</translation>
-    </message>
-    <message>
         <source>&amp;Docked Windows</source>
         <translation>&amp;Fenêtres Ancrées</translation>
+    </message>
+    <message>
+        <source>Docked Windows</source>
+        <translation>Fenêtres Ancrées</translation>
     </message>
     <message>
         <source>Show/hide all the recent/current docked windows</source>
@@ -143,18 +155,6 @@
         <translation>Préférences pour OpenCOR et ses extensions</translation>
     </message>
     <message>
-        <source>&amp;Quit</source>
-        <translation>&amp;Quitter</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Quitter</translation>
-    </message>
-    <message>
-        <source>Quit OpenCOR</source>
-        <translation>Quitter OpenCOR</translation>
-    </message>
-    <message>
         <source>Check For Updates...</source>
         <translation>Vérifier Pour Des Mises À Jour...</translation>
     </message>
@@ -164,7 +164,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CheckForUpdatesWindow</name>
+    <name>OpenCOR::CheckForUpdatesDialog</name>
     <message>
         <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
@@ -197,6 +197,10 @@
         <translation>Extensions</translation>
     </message>
     <message>
+        <source>No plugins could be found.</source>
+        <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>À Propos</translation>
     </message>
@@ -204,68 +208,60 @@
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
-    <message>
-        <source>No plugins could be found.</source>
-        <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
-    </message>
 </context>
 <context>
-    <name>OpenCOR::PluginsWindow</name>
+    <name>OpenCOR::PluginsDialog</name>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
+        <source>Analysis</source>
+        <translation>Analyse</translation>
     </message>
     <message>
         <source>API</source>
         <translation></translation>
     </message>
     <message>
-        <source>Organisation</source>
-        <translation></translation>
+        <source>Data Store</source>
+        <translation>Magasin de Données</translation>
     </message>
     <message>
         <source>Editing</source>
         <translation>Édition</translation>
     </message>
     <message>
+        <source>Miscellaneous</source>
+        <translation>Divers</translation>
+    </message>
+    <message>
+        <source>Organisation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
+    <message>
         <source>Simulation</source>
         <translation></translation>
     </message>
     <message>
-        <source>Analysis</source>
-        <translation>Analyse</translation>
+        <source>Solver</source>
+        <translation>Solveur</translation>
+    </message>
+    <message>
+        <source>Support</source>
+        <translation></translation>
     </message>
     <message>
         <source>Third-party</source>
         <translation>Externe</translation>
     </message>
     <message>
-        <source>Miscellaneous</source>
-        <translation>Divers</translation>
+        <source>Tools</source>
+        <translation>Outils</translation>
     </message>
     <message>
-        <source>Plugin:</source>
-        <translation>Extension :</translation>
-    </message>
-    <message>
-        <source>Dependencies:</source>
-        <translation>Dépendances :</translation>
-    </message>
-    <message>
-        <source>Description:</source>
-        <translation>Description :</translation>
-    </message>
-    <message>
-        <source>Status:</source>
-        <translation>Statut :</translation>
-    </message>
-    <message>
-        <source>Category:</source>
-        <translation>Catégorie :</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>aucune</translation>
+        <source>Widget</source>
+        <translation>Gadget</translation>
     </message>
     <message>
         <source>the plugin is not wanted.</source>
@@ -284,12 +280,28 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
     </message>
     <message>
-        <source>the plugin could not be loaded due to the %1 plugin being missing or invalid.</source>
-        <translation>l&apos;extension n&apos;a pas pu être installée à cause de l&apos;extension %1 étant manquante ou invalide.</translation>
-    </message>
-    <message>
         <source>this is not a plugin.</source>
         <translation>ce n&apos;est pas une extension.</translation>
+    </message>
+    <message>
+        <source>the plugin claims to be the core plugin, but it is not.</source>
+        <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
+    </message>
+    <message>
+        <source>the plugin should be the core plugin, but it does not support the core interface.</source>
+        <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
+    </message>
+    <message>
+        <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
+        <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
+    </message>
+    <message>
+        <source>the plugin claims to be CLI-capable, but it does not support the CLI interface.</source>
+        <translation>l&apos;extension prétend être capable de CLI, mais elle ne supporte pas l&apos;interface CLI.</translation>
+    </message>
+    <message>
+        <source>the plugin could not be loaded due to the %1 plugin being missing or invalid.</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause de l&apos;extension %1 étant manquante ou invalide.</translation>
     </message>
     <message>
         <source>the plugin could not be loaded due to missing or invalid plugins:
@@ -297,16 +309,32 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :\n%1</translation>
     </message>
     <message>
-        <source>Solver</source>
-        <translation>Solveur</translation>
+        <source>Plugin:</source>
+        <translation>Extension :</translation>
     </message>
     <message>
-        <source>Support</source>
-        <translation></translation>
+        <source>Dependencies:</source>
+        <translation>Dépendances :</translation>
     </message>
     <message>
-        <source>Widget</source>
-        <translation>Gadget</translation>
+        <source>none</source>
+        <translation>aucune</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
+    </message>
+    <message>
+        <source>Status:</source>
+        <translation>Statut :</translation>
+    </message>
+    <message>
+        <source>Error:</source>
+        <translation>Erreur :</translation>
+    </message>
+    <message>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
     </message>
     <message>
         <source>plugins to analyse files.</source>
@@ -315,6 +343,10 @@
     <message>
         <source>plugins to access various APIs.</source>
         <translation>extensions pour accéder différentes APIs.</translation>
+    </message>
+    <message>
+        <source>plugins to store and manipulate data.</source>
+        <translation>extensions pour stocker et manipuler des données.</translation>
     </message>
     <message>
         <source>plugins to edit files.</source>
@@ -327,6 +359,10 @@
     <message>
         <source>plugins to organise files.</source>
         <translation>extensions pour organiser des fichiers.</translation>
+    </message>
+    <message>
+        <source>plugins that illustrate various plugin-related aspects.</source>
+        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
     </message>
     <message>
         <source>plugins to simulate files.</source>
@@ -345,56 +381,20 @@
         <translation>extensions pour accéder différentes librairies externes.</translation>
     </message>
     <message>
-        <source>plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
-        <translation>extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
-    </message>
-    <message>
-        <source>Error:</source>
-        <translation>Erreur :</translation>
-    </message>
-    <message>
-        <source>Sample</source>
-        <translation>Exemple</translation>
-    </message>
-    <message>
-        <source>plugins that illustrate various plugin-related aspects.</source>
-        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
-    </message>
-    <message>
-        <source>the plugin claims to be the core plugin, but it is not.</source>
-        <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
-    </message>
-    <message>
-        <source>the plugin should be the core plugin, but it does not support the core interface.</source>
-        <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
-    </message>
-    <message>
-        <source>the plugin claims to be CLI-capable, but it does not support the CLI interface.</source>
-        <translation>l&apos;extension prétend être capable de CLI, mais elle ne supporte pas l&apos;interface CLI.</translation>
-    </message>
-    <message>
-        <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
-        <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
-    </message>
-    <message>
-        <source>Data Store</source>
-        <translation>Magasin de Données</translation>
-    </message>
-    <message>
-        <source>plugins to store and manipulate data.</source>
-        <translation>extensions pour stocker et manipuler des données.</translation>
-    </message>
-    <message>
         <source>plugins to access various tools.</source>
         <translation>extensions pour accéder différents outils.</translation>
     </message>
     <message>
-        <source>Tools</source>
-        <translation>Outils</translation>
+        <source>plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
+        <translation>extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>
-    <name>PluginsWindow</name>
+    <name>PluginsDialog</name>
     <message>
         <source>Plugins</source>
         <translation>Extensions</translation>
@@ -409,7 +409,7 @@
     </message>
 </context>
 <context>
-    <name>PreferencesWindow</name>
+    <name>PreferencesDialog</name>
     <message>
         <source>Preferences</source>
         <translation>Préférences</translation>

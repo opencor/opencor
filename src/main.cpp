@@ -20,7 +20,7 @@ limitations under the License.
 // Main
 //==============================================================================
 
-#include "checkforupdateswindow.h"
+#include "checkforupdatesdialog.h"
 #include "cliapplication.h"
 #include "cliutils.h"
 #include "guiapplication.h"
