@@ -173,7 +173,7 @@ int main(int pArgC, char *pArgV[])
     QSettings settings;
 
 #ifndef QT_DEBUG
-    settings.beginGroup("CheckForUpdatesWindow");
+    settings.beginGroup("CheckForUpdatesDialog");
         bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
         bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
     settings.endGroup();
@@ -203,18 +203,18 @@ int main(int pArgC, char *pArgV[])
 
             // Show the check for updates window
             // Note: checkForUpdatesEngine gets deleted by
-            //       checkForUpdatesWindow...
+            //       checkForUpdatesDialog...
 
-            OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(checkForUpdatesEngine);
+            OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(checkForUpdatesEngine);
 
-            settings.beginGroup(checkForUpdatesWindow.objectName());
-                checkForUpdatesWindow.loadSettings(&settings);
+            settings.beginGroup(checkForUpdatesDialog.objectName());
+                checkForUpdatesDialog.loadSettings(&settings);
             settings.endGroup();
 
-            checkForUpdatesWindow.exec();
+            checkForUpdatesDialog.exec();
 
-            settings.beginGroup(checkForUpdatesWindow.objectName());
-                checkForUpdatesWindow.saveSettings(&settings);
+            settings.beginGroup(checkForUpdatesDialog.objectName());
+                checkForUpdatesDialog.saveSettings(&settings);
             settings.endGroup();
         } else {
             delete checkForUpdatesEngine;
