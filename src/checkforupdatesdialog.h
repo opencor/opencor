@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Check for updates window
+// Check for updates dialog
 //==============================================================================
 
 #pragma once
@@ -30,7 +30,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class CheckForUpdatesWindow;
+    class CheckForUpdatesDialog;
 }
 
 //==============================================================================
@@ -72,21 +72,21 @@ private:
 
 //==============================================================================
 
-class CheckForUpdatesWindow : public QDialog
+class CheckForUpdatesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesWindow(const QString &pApplicationDate,
+    explicit CheckForUpdatesDialog(const QString &pApplicationDate,
                                    QWidget *pParent);
-    explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine);
-    ~CheckForUpdatesWindow();
+    explicit CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine);
+    ~CheckForUpdatesDialog();
 
     void loadSettings(QSettings *pSettings);
     void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::CheckForUpdatesWindow *mGui;
+    Ui::CheckForUpdatesDialog *mGui;
 
     CheckForUpdatesEngine *mEngine;
 

@@ -75,7 +75,7 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
-    src/checkforupdateswindow.cpp
+    src/checkforupdatesdialog.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/pluginswindow.cpp
@@ -96,7 +96,7 @@ SET(SOURCES
 )
 
 SET(HEADERS_MOC
-    src/checkforupdateswindow.h
+    src/checkforupdatesdialog.h
     src/mainwindow.h
     src/pluginswindow.h
     src/preferenceswindow.h
@@ -112,7 +112,7 @@ SET(HEADERS_MOC
 )
 
 SET(UIS
-    src/checkforupdateswindow.ui
+    src/checkforupdatesdialog.ui
     src/mainwindow.ui
     src/pluginswindow.ui
     src/preferenceswindow.ui

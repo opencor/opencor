@@ -21,7 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "checkforupdateswindow.h"
+#include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "coreinterface.h"
 #include "guiapplication.h"
@@ -1210,16 +1210,16 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Show the check for updates window
 
-    CheckForUpdatesWindow checkForUpdatesWindow(mApplicationDate, this);
+    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-    mSettings->beginGroup(checkForUpdatesWindow.objectName());
-        checkForUpdatesWindow.loadSettings(mSettings);
+    mSettings->beginGroup(checkForUpdatesDialog.objectName());
+        checkForUpdatesDialog.loadSettings(mSettings);
     mSettings->endGroup();
 
-    checkForUpdatesWindow.exec();
+    checkForUpdatesDialog.exec();
 
-    mSettings->beginGroup(checkForUpdatesWindow.objectName());
-        checkForUpdatesWindow.saveSettings(mSettings);
+    mSettings->beginGroup(checkForUpdatesDialog.objectName());
+        checkForUpdatesDialog.saveSettings(mSettings);
     mSettings->endGroup();
 }
 

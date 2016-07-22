@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CheckForUpdatesWindow</name>
+    <name>CheckForUpdatesDialog</name>
     <message>
         <source>Check For Updates</source>
         <translation>Vérifier Pour Des Mises À Jour</translation>
@@ -164,7 +164,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CheckForUpdatesWindow</name>
+    <name>OpenCOR::CheckForUpdatesDialog</name>
     <message>
         <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>

@@ -17,16 +17,16 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Check for updates window
+// Check for updates dialog
 //==============================================================================
 
-#include "checkforupdateswindow.h"
+#include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "mainwindow.h"
 
 //==============================================================================
 
-#include "ui_checkforupdateswindow.h"
+#include "ui_checkforupdatesdialog.h"
 
 //==============================================================================
 
@@ -161,12 +161,12 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 
 //==============================================================================
 
-void CheckForUpdatesWindow::constructor(const QString &pApplicationDate,
+void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
                                         CheckForUpdatesEngine *pEngine)
 {
     // Set up the GUI
 
-    mGui = new Ui::CheckForUpdatesWindow;
+    mGui = new Ui::CheckForUpdatesDialog;
 
     mGui->setupUi(this);
 
@@ -185,28 +185,28 @@ void CheckForUpdatesWindow::constructor(const QString &pApplicationDate,
 
 //==============================================================================
 
-CheckForUpdatesWindow::CheckForUpdatesWindow(const QString &pApplicationDate,
+CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
                                              QWidget *pParent) :
     QDialog(pParent)
 {
-    // Construct our window
+    // Construct our dialog
 
     constructor(pApplicationDate, 0);
 }
 
 //==============================================================================
 
-CheckForUpdatesWindow::CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine) :
+CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
     QDialog()
 {
-    // Construct our window
+    // Construct our dialog
 
     constructor(QString(), pEngine);
 }
 
 //==============================================================================
 
-CheckForUpdatesWindow::~CheckForUpdatesWindow()
+CheckForUpdatesDialog::~CheckForUpdatesDialog()
 {
     // Delete some internal objects
 
@@ -219,7 +219,7 @@ CheckForUpdatesWindow::~CheckForUpdatesWindow()
 
 //==============================================================================
 
-void CheckForUpdatesWindow::loadSettings(QSettings *pSettings)
+void CheckForUpdatesDialog::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set some properties
 
@@ -229,7 +229,7 @@ void CheckForUpdatesWindow::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CheckForUpdatesWindow::saveSettings(QSettings *pSettings) const
+void CheckForUpdatesDialog::saveSettings(QSettings *pSettings) const
 {
     // Keep track of some properties
 
@@ -241,7 +241,7 @@ void CheckForUpdatesWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CheckForUpdatesWindow::updateGui()
+void CheckForUpdatesDialog::updateGui()
 {
     // Determine the status of our check
 
@@ -300,7 +300,7 @@ void CheckForUpdatesWindow::updateGui()
 
 //==============================================================================
 
-void CheckForUpdatesWindow::on_buttonBox_accepted()
+void CheckForUpdatesDialog::on_buttonBox_accepted()
 {
     // Simply close ourselves
 
@@ -309,7 +309,7 @@ void CheckForUpdatesWindow::on_buttonBox_accepted()
 
 //==============================================================================
 
-void CheckForUpdatesWindow::on_statusLabel_linkActivated(const QString &pLink)
+void CheckForUpdatesDialog::on_statusLabel_linkActivated(const QString &pLink)
 {
     // Open the link in the user's browser
 
@@ -318,7 +318,7 @@ void CheckForUpdatesWindow::on_statusLabel_linkActivated(const QString &pLink)
 
 //==============================================================================
 
-void CheckForUpdatesWindow::on_recheckButton_clicked()
+void CheckForUpdatesDialog::on_recheckButton_clicked()
 {
     // Recheck for updates and then update our GUI accordingly
 
@@ -329,7 +329,7 @@ void CheckForUpdatesWindow::on_recheckButton_clicked()
 
 //==============================================================================
 
-void CheckForUpdatesWindow::on_includeSnapshotsCheckBox_toggled(bool pChecked)
+void CheckForUpdatesDialog::on_includeSnapshotsCheckBox_toggled(bool pChecked)
 {
     Q_UNUSED(pChecked);
 
