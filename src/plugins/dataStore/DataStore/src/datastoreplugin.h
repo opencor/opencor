@@ -17,22 +17,43 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR support global
+// Data store plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef PMRSupport_PLUGIN
-        #define PMRSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define PMRSUPPORT_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define PMRSUPPORT_EXPORT
-#endif
+#include "i18ninterface.h"
+#include "plugininfo.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace DataStore {
+
+//==============================================================================
+
+PLUGININFO_FUNC DataStorePluginInfo();
+
+//==============================================================================
+
+class DataStorePlugin : public QObject, public I18nInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.DataStorePlugin" FILE "datastoreplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "i18ninterface.inl"
+};
+
+//==============================================================================
+
+}   // namespace DataStore
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -330,6 +330,8 @@ SET(PLUGINS
 
     # Plugins that provide some generic features
 
+    dataStore/DataStore
+
     editing/EditingView
 
     # Plugins that have dependencies on others

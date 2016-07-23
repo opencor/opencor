@@ -24,6 +24,11 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 #include "csvdatastoreplugin.h"
+#include "datastoredialog.h"
+
+//==============================================================================
+
+#include <QMainWindow>
 
 //==============================================================================
 
@@ -40,7 +45,7 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à CSV."));
 
     return new PluginInfo("Data Store", true, false,
-                          QStringList() << "Core",
+                          QStringList() << "DataStore",
                           descriptions);
 }
 
@@ -74,7 +79,9 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
 {
     Q_UNUSED(pDataStore);
 
-    // Retrieve the name of the CSV file where our data is to be exported
+    // Retrieve the name of the CSV file where our data is to be exported and,
+    // if a file name has been provided, determine and return which data should
+    // be exported
 
     QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
     QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
@@ -82,10 +89,16 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                              QStringList() << csvFilter,
                                              &csvFilter);
 
-    if (fileName.isEmpty())
+    if (!fileName.isEmpty()) {
+        DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
+
+        if (dataStoreDialog.exec())
+            return new DataStore::DataStoreData(fileName, dataStoreDialog.selectedData());
+        else
+            return 0;
+    } else {
         return 0;
-    else
-        return new DataStore::DataStoreData(fileName);
+    }
 }
 
 //==============================================================================

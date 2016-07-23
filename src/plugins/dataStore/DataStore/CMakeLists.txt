@@ -1,22 +1,24 @@
-PROJECT(CSVDataStorePlugin)
+PROJECT(DataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CSVDataStore
+ADD_PLUGIN(DataStore
     SOURCES
         ../../datastoreinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/csvdatastoreexporter.cpp
-        src/csvdatastoreplugin.cpp
+        src/datastoredialog.cpp
+        src/datastoreplugin.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
 
-        src/csvdatastoreplugin.h
+        src/datastoredialog.h
+        src/datastoreplugin.h
+    UIS
+        src/datastoredialog.ui
     INCLUDE_DIRS
         src
     PLUGINS
         Core
-        DataStore
 )

@@ -32,6 +32,7 @@ var jsonData = { "versions": [
                        { "name": "Data store",
                          "entries": [
                            { "type": "Added", "description": "BioSignalML data store (work in progress)." },
+                           { "type": "Added", "description": "Selection of model parameters prior to CSV export." },
                            { "type": "Improved", "description": "Data export (now done in its own thread)." },
                            { "type": "Improved", "description": "Interface." }
                          ]

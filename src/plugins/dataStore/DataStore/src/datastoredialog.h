@@ -17,81 +17,92 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// BioSignalML data store data
+// Data store dialog
 //==============================================================================
 
-#include "biosignalmldatastoredata.h"
+#pragma once
+
+//==============================================================================
+
+#include "datastoreglobal.h"
+#include "datastoreinterface.h"
+
+//==============================================================================
+
+#include <Qt>
+
+//==============================================================================
+
+#include <QDialog>
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
+namespace Ui {
+    class DataStoreDialog;
+}
+
+//==============================================================================
+
+class QStandardItem;
+class QStandardItemModel;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace BioSignalMLDataStore {
+namespace DataStore {
 
 //==============================================================================
 
-BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
-                                                   const QString &pShortName,
-                                                   const QString &pAuthor,
-                                                   const QString &pDescription,
-                                                   const QVector<bool> &pSelectedVariables,
-                                                   const QString &pComment) :
-    DataStore::DataStoreData(pFileName, DataStore::DataStoreVariables()),
-    mShortName(pShortName),
-    mAuthor(pAuthor),
-    mDescription(pDescription),
-    mSelectedVariables(pSelectedVariables),
-    mComment(pComment)
+class DataStore;
+
+//==============================================================================
+
+class DataItemDelegate : public QStyledItemDelegate
 {
-}
+public:
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+};
 
 //==============================================================================
 
-QString BiosignalmlDataStoreData::shortName() const
+class DATASTORE_EXPORT DataStoreDialog : public QDialog
 {
-    // Return our short name
+    Q_OBJECT
 
-    return mShortName;
-}
+public:
+    explicit DataStoreDialog(DataStore *pDataStore, QWidget *pParent);
+    ~DataStoreDialog();
 
-//==============================================================================
+    DataStoreVariables selectedData() const;
 
-QString BiosignalmlDataStoreData::author() const
-{
-    // Return our author
+private:
+    Ui::DataStoreDialog *mGui;
 
-    return mAuthor;
-}
+    QStandardItemModel *mModel;
 
-//==============================================================================
+    QMap<QStandardItem *, DataStoreVariable*> mData;
+    int mNbOfData;
+    int mNbOfSelectedData;
 
-QString BiosignalmlDataStoreData::description() const
-{
-    // Return our description
+    DataStoreVariables doSelectedData(QStandardItem *pItem) const;
 
-    return mDescription;
-}
+    void updateDataSelectedState(QStandardItem *pItem,
+                                 const Qt::CheckState &pCheckState);
+    void checkDataSelectedState(QStandardItem *pItem);
 
-//==============================================================================
+private slots:
+    void updateDataSelectedState(QStandardItem *pItem = 0);
 
-QVector<bool> BiosignalmlDataStoreData::selectedVariables() const
-{
-    // Return our selected variables
-
-    return mSelectedVariables;
-}
-
-//==============================================================================
-
-QString BiosignalmlDataStoreData::comment() const
-{
-    // Return our comment
-
-    return mComment;
-}
+    void on_allDataCheckBox_clicked();
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
+};
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================

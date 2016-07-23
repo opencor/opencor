@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR support global
+// Data store global
 //==============================================================================
 
 #pragma once
@@ -25,13 +25,13 @@ limitations under the License.
 //==============================================================================
 
 #ifdef _WIN32
-    #ifdef PMRSupport_PLUGIN
-        #define PMRSUPPORT_EXPORT __declspec(dllexport)
+    #ifdef DataStore_PLUGIN
+        #define DATASTORE_EXPORT __declspec(dllexport)
     #else
-        #define PMRSUPPORT_EXPORT __declspec(dllimport)
+        #define DATASTORE_EXPORT __declspec(dllimport)
     #endif
 #else
-    #define PMRSUPPORT_EXPORT
+    #define DATASTORE_EXPORT
 #endif
 
 //==============================================================================

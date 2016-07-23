@@ -23,6 +23,7 @@ limitations under the License.
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
 
 //==============================================================================
 
@@ -697,16 +698,19 @@ bool SingleCellViewSimulationResults::createDataStore()
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
 
-    mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
-                        mRuntime->variableOfIntegration()->name()));
-    mPoints->setLabel(mRuntime->variableOfIntegration()->name());
-    mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
-
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
         DataStore::DataStoreVariable *variable = 0;
 
         switch (parameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+            mPoints->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
+            mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
+                                mRuntime->variableOfIntegration()->name()));
+            mPoints->setLabel(mRuntime->variableOfIntegration()->name());
+            mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
+
+            break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
         case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
             variable = mConstants[parameter->index()];
@@ -731,6 +735,7 @@ bool SingleCellViewSimulationResults::createDataStore()
         }
 
         if (variable) {
+            variable->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(),
                                  parameter->formattedName()));
             variable->setLabel(parameter->formattedName());

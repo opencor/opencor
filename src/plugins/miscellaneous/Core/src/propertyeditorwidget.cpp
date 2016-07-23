@@ -1216,7 +1216,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
 
     if (pItem->hasChildren()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
-            QStandardItem *childItem = pItem->child(i, 0);
+            QStandardItem *childItem = pItem->child(i);
             int childIndexHeight = rowHeight(childItem->index());
 
             if (childIndexHeight)
@@ -1245,7 +1245,7 @@ QSize PropertyEditorWidget::sizeHint() const
             hintWidth += columnWidth(i);
 
         for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
-            QStandardItem *rowItem = mModel->item(i, 0);
+            QStandardItem *rowItem = mModel->item(i);
             int rowItemHeight = rowHeight(rowItem->index());
 
             if (rowItemHeight) {
