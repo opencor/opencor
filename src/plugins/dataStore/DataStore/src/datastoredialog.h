@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "datastoreglobal.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -66,7 +67,7 @@ public:
 
 //==============================================================================
 
-class DataStoreDialog : public QDialog
+class DATASTORE_EXPORT DataStoreDialog : public QDialog
 {
     Q_OBJECT
 
