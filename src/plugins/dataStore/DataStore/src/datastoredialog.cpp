@@ -63,7 +63,9 @@ void DataItemDelegate::paint(QPainter *pPainter,
 DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::DataStoreDialog),
-    mData(QMap<QStandardItem *, DataStoreVariable*>())
+    mData(QMap<QStandardItem *, DataStoreVariable*>()),
+    mNbOfData(0),
+    mNbOfSelectedData(0)
 {
     // Set up the GUI
 
@@ -140,6 +142,9 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
             hierarchyItem->appendRow(dataItem);
 
             mData.insert(dataItem, variable);
+
+            ++mNbOfData;
+            ++mNbOfSelectedData;
         }
     }
 
@@ -249,25 +254,24 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
                this, SLOT(updateDataSelectedState(QStandardItem *)));
 
     // In case we un/select a hierarchy, then go through its data and un/select
-    // it accordingly
+    // it accordingly, or keep track of the number of selected data, if we
+    // un/select some data
 
     if (pItem && pItem->isAutoTristate())
         updateDataSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
+    else if (pItem)
+        mNbOfSelectedData += (pItem->checkState() == Qt::Checked)?1:-1;
 
     // Update the selected state of all our hierarchies
-
-    int nbOfTopLevelHierarchiesCheckedOrPartiallyChecked = 0;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *childItem = mModel->invisibleRootItem()->child(i);
 
         checkDataSelectedState(childItem);
-
-        nbOfTopLevelHierarchiesCheckedOrPartiallyChecked += childItem->checkState() != Qt::Unchecked;
     }
 
-    mGui->allDataCheckBox->setCheckState(nbOfTopLevelHierarchiesCheckedOrPartiallyChecked?
-                                             (nbOfTopLevelHierarchiesCheckedOrPartiallyChecked == mModel->invisibleRootItem()->rowCount())?
+    mGui->allDataCheckBox->setCheckState(mNbOfSelectedData?
+                                             (mNbOfSelectedData == mNbOfData)?
                                                  Qt::Checked:
                                                  Qt::PartiallyChecked:
                                              Qt::Unchecked);
@@ -282,6 +286,12 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 
 void DataStoreDialog::on_allDataCheckBox_clicked()
 {
+    // If our checked state is partially checked, then we want to make it fully
+    // so
+
+    if (mGui->allDataCheckBox->checkState() == Qt::PartiallyChecked)
+        mGui->allDataCheckBox->setCheckState(Qt::Checked);
+
     // Un/select all the data
     // Note: we temporally disable the handling of the itemChanged() signal
     //       since we 'manually' set everything ourselves...
@@ -291,6 +301,8 @@ void DataStoreDialog::on_allDataCheckBox_clicked()
 
     updateDataSelectedState(mModel->invisibleRootItem(),
                             mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
+
+    mNbOfSelectedData = mGui->allDataCheckBox->isChecked()?mNbOfData:0;
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updateDataSelectedState(QStandardItem *)));
@@ -303,7 +315,7 @@ void DataStoreDialog::on_buttonBox_accepted()
     // Confirm that we accepted the data selection, but only if we have at least
     // one selected data
 
-    if (mGui->allDataCheckBox->checkState() == Qt::Unchecked) {
+    if (!mNbOfSelectedData) {
         QMessageBox::warning(this, tr("Data Selector"),
                              tr("Some data must be selected."));
     } else {

@@ -83,6 +83,8 @@ private:
     QStandardItemModel *mModel;
 
     QMap<QStandardItem *, DataStoreVariable*> mData;
+    int mNbOfData;
+    int mNbOfSelectedData;
 
     DataStoreVariables doSelectedData(QStandardItem *pItem) const;
 
@@ -91,11 +93,11 @@ private:
     void checkDataSelectedState(QStandardItem *pItem);
 
 private slots:
+    void updateDataSelectedState(QStandardItem *pItem = 0);
+
     void on_allDataCheckBox_clicked();
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
-
-    void updateDataSelectedState(QStandardItem *pItem = 0);
 };
 
 //==============================================================================
