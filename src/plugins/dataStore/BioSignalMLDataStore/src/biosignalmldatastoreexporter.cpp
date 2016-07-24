@@ -108,7 +108,9 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         // Create and populate a signal array
 
-        static const int BufferRows = 50000;
+        enum {
+            BufferRows = 50000
+        };
 
         bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
         nbOfVariables = signalArray->size();
