@@ -39,32 +39,6 @@ void GeneralTests::initTestCase()
 
 //==============================================================================
 
-void GeneralTests::qSameStringListsTests()
-{
-    // Compare two identical string lists
-
-    QVERIFY(qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                             QStringList() << "QWE" << "ASD" << "XZC"));
-
-    // Compare two string lists of different sizes
-
-    QVERIFY(!qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                              QStringList() << "QWE"));
-
-    // Compare two string lists of the same size, but different contents
-
-    QVERIFY(!qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                              QStringList() << "ZXC" << "ASD" << "QWE"));
-
-    // Compare two string lists of the same size and partially identical
-    // contents
-
-    QVERIFY(!qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                              QStringList() << "QWE" << "asd" << "XZC"));
-}
-
-//==============================================================================
-
 void GeneralTests::sizeAsStringTests()
 {
     // Test the sizeAsString() method

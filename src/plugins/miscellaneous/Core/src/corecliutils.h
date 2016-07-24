@@ -58,9 +58,6 @@ typedef QList<int> QIntList;
 
 //==============================================================================
 
-bool CORE_EXPORT qSameStringLists(const QStringList &pStringList1,
-                                  const QStringList &pStringList2);
-
 QBoolList CORE_EXPORT qVariantListToBoolList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qBoolListToVariantList(const QBoolList &pBoolList);
 

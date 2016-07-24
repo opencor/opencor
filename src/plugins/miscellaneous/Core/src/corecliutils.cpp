@@ -82,39 +82,6 @@ namespace Core {
 
 //==============================================================================
 
-bool qSameStringLists(const QStringList &pStringList1,
-                      const QStringList &pStringList2)
-{
-    // Note: normally, we would use QStringList::operator==(), but it can result
-    //       in a C4996 warning on Windows (because of our use of std::equal();
-    //       see https://bugreports.qt.io/browse/QTBUG-47948 and
-    //       https://codereview.qt-project.org/#/c/153440/ for more
-    //       information), so instead we do the comparison ourselves in case we
-    //       are on Windows...
-
-#ifdef Q_OS_WIN
-    // Check whether the two lists have the same size
-
-    int stringList1Count = pStringList1.count();
-
-    if (stringList1Count != pStringList2.count())
-        return false;
-
-    // Check whether the contents of the two lists is exactly the same
-
-    for (int i = 0; i < stringList1Count; ++i) {
-        if (pStringList1[i].compare(pStringList2[i]))
-            return false;
-    }
-
-    return true;
-#else
-    return pStringList1 == pStringList2;
-#endif
-}
-
-//==============================================================================
-
 QBoolList qVariantListToBoolList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of booleans

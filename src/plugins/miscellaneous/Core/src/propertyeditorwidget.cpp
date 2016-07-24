@@ -823,7 +823,7 @@ void Property::setListValues(const QStringList &pListValues,
 
     // Set our list values, if appropriate
 
-    if (!qSameStringLists(listValues, mListValues)) {
+    if (listValues != mListValues) {
         mListValues = listValues;
 
         // Update our value using the requested item from our new list, if it

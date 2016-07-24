@@ -122,8 +122,6 @@ File::Status File::check()
     foreach (const QString &dependency, mDependencies)
         newDependenciesSha1 << sha1(dependency);
 
-    bool dependenciesChanged = !qSameStringLists(newDependenciesSha1, mDependenciesSha1);
-
     if (newSha1.isEmpty()) {
         // Our SHA-1 value is now empty, which means that either we have been
         // deleted or that we are unreadable (which, in effect, means that we
@@ -136,8 +134,8 @@ File::Status File::check()
         // several of our dependencies has changed
 
         return newSha1.compare(mSha1)?
-                   dependenciesChanged?AllChanged:Changed:
-                   dependenciesChanged?DependenciesChanged:Unchanged;
+                   (newDependenciesSha1 != mDependenciesSha1)?AllChanged:Changed:
+                   (newDependenciesSha1 != mDependenciesSha1)?DependenciesChanged:Unchanged;
     }
 }
 
@@ -372,7 +370,7 @@ bool File::setDependencies(const QStringList &pDependencies)
 {
     // Set our dependencies
 
-    if (!qSameStringLists(pDependencies, mDependencies)) {
+    if (pDependencies != mDependencies) {
         mDependencies = pDependencies;
 
         mDependenciesSha1.clear();
