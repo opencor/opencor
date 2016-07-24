@@ -102,9 +102,10 @@ bool qSameStringLists(const QStringList &pStringList1,
 
     // Check whether the contents of the two lists is exactly the same
 
-    for (int i = 0; i < stringList1Count; ++i)
+    for (int i = 0; i < stringList1Count; ++i) {
         if (pStringList1[i].compare(pStringList2[i]))
             return false;
+    }
 
     return true;
 #else

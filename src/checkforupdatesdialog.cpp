@@ -152,9 +152,10 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 {
     // Return whether we have a newer official version
 
-    foreach (const QString &newerVersion, mNewerVersions)
+    foreach (const QString &newerVersion, mNewerVersions) {
         if (!newerVersion.contains("-"))
             return true;
+    }
 
     return false;
 }
@@ -259,12 +260,13 @@ void CheckForUpdatesDialog::updateGui()
 
                 QString version = QString();
 
-                foreach (const QString &newerVersion, mEngine->newerVersions())
+                foreach (const QString &newerVersion, mEngine->newerVersions()) {
                     if (newerVersion.contains("-")) {
                         version = newerVersion;
 
                         break;
                     }
+                }
 
                 if (version.isEmpty())
                     version = mEngine->newerVersions().first();
@@ -282,12 +284,13 @@ void CheckForUpdatesDialog::updateGui()
 
             QString version = QString();
 
-            foreach (const QString &newerVersion, mEngine->newerVersions())
+            foreach (const QString &newerVersion, mEngine->newerVersions()) {
                 if (!newerVersion.contains("-")) {
                     version = newerVersion;
 
                     break;
                 }
+            }
 
             mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
         } else {

@@ -326,12 +326,13 @@ void EditorWidgetFindReplaceWidget::setActive(const bool &pActive)
 
     mActive = pActive;
 
-    if (pActive)
+    if (pActive) {
         connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
                 this, SIGNAL(findTextChanged(const QString &)));
-    else
+    } else {
         disconnect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
                    this, SIGNAL(findTextChanged(const QString &)));
+    }
 }
 
 //==============================================================================
@@ -415,14 +416,15 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 
     // Carry on as normal, if the event wasn't handled
 
-    if (handled)
+    if (handled) {
         // Accept the event
 
         pEvent->accept();
-    else
+    } else {
         // Default handling of the event
 
         Core::Widget::keyPressEvent(pEvent);
+    }
 }
 
 //==============================================================================
@@ -494,15 +496,18 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
     static const QIcon CaseSensitiveIcon     = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
     static const QIcon WholeWordsOnlyIcon    = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
     static const QIcon RegularExpressionIcon = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
-    static const int IconSize                = 16;
-    static const int MagnifierIconWidth      = 17;
-    static const int MagnifierIconHeight     = 11;
-    static const int CaseSensitiveIconShift  =  6;
-    static const int WholeWordsOnlyIconShift =  6;
-    static const int RegularExpressionShift  =  7;
-    static const int CaseSensitiveIconWidth  =  5;
-    static const int WholeWordsOnlyIconWidth =  5;
-    static const int RegularExpressionWidth  =  4;
+
+    enum {
+        IconSize                = 16,
+        MagnifierIconWidth      = 17,
+        MagnifierIconHeight     = 11,
+        CaseSensitiveIconShift  =  6,
+        WholeWordsOnlyIconShift =  6,
+        RegularExpressionShift  =  7,
+        CaseSensitiveIconWidth  =  5,
+        WholeWordsOnlyIconWidth =  5,
+        RegularExpressionWidth  =  4
+    };
 
     int nbOfOptions =  mCaseSensitiveAction->isChecked()
                       +mWholeWordsOnlyAction->isChecked()

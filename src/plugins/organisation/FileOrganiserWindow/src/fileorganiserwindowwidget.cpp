@@ -930,11 +930,12 @@ void FileOrganiserWindowWidget::moveItem(QStandardItem *pItem,
 
     bool fileAlreadyOwned = false;
 
-    if (!pItem->data(Item::Folder).toBool())
+    if (!pItem->data(Item::Folder).toBool()) {
         // The current item is a file item, so retrieve its file name and check
         // whether it's already owned by newParentItem
 
         fileAlreadyOwned = ownedBy(pItem->data(Item::Path).toString(), newParentItem);
+    }
 
     // Third, move pItem to newParentItem and this to the right place, depending
     // on the value of pDropPosition and only if the destination doesn't already

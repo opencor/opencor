@@ -91,8 +91,11 @@ static const auto IntegrationMethodDefaultValue = BdfMethod;
 static const auto IterationTypeDefaultValue = NewtonIteration;
 static const auto LinearSolverDefaultValue = DenseLinearSolver;
 static const auto PreconditionerDefaultValue = BandedPreconditioner;
-static const int UpperHalfBandwidthDefaultValue = 0;
-static const int LowerHalfBandwidthDefaultValue = 0;
+
+enum {
+    UpperHalfBandwidthDefaultValue = 0,
+    LowerHalfBandwidthDefaultValue = 0
+};
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;

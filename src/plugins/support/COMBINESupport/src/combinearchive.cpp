@@ -184,7 +184,9 @@ bool CombineArchive::load()
     // Make sure that our file starts with 0x04034b50, which is the signature of
     // a ZIP file and should therefore be that of our file
 
-    static const int SignatureSize = 4;
+    enum {
+        SignatureSize = 4
+    };
 
     OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
     uchar signatureData[SignatureSize];

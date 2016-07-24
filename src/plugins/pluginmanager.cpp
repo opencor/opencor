@@ -56,12 +56,13 @@ PluginManager::PluginManager(const bool &pGuiMode) :
 
     QStringList fileNames = QStringList();
 
-    foreach (const QFileInfo &fileInfo, fileInfoList)
+    foreach (const QFileInfo &fileInfo, fileInfoList) {
 #ifndef OpenCOR_MAIN
         fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
 #else
         fileNames << nativeCanonicalFileName(fileInfo.canonicalFilePath());
 #endif
+    }
 
     // Retrieve and initialise some information about the plugins
 

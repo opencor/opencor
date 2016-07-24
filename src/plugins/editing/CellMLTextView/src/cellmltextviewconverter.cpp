@@ -864,9 +864,10 @@ int CellMLTextViewConverter::childNodesCount(const QDomNode &pDomNode) const
     int res = 0;
     QDomNodeList childNodes = pDomNode.childNodes();
 
-    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i)
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         if (!childNodes.item(i).isComment())
             ++res;
+    }
 
     return res;
 }

@@ -80,10 +80,11 @@ void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
 
         QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);
 
-        if (treeViewItem)
+        if (treeViewItem) {
             // The requested item exists, so select it...
 
             setCurrentIndex(treeViewItem->index());
+        }
     }
 }
 
@@ -135,10 +136,11 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
             QModelIndex crtIndex = currentIndex();
 
-            if (crtIndex.column())
+            if (crtIndex.column()) {
                 // We are not dealing with the (row, 0) item, so make sure we do
 
                 crtIndex = crtIndex.sibling(crtIndex.row(), 0);
+            }
 
             if (model()->hasChildren(crtIndex) && isExpanded(crtIndex)) {
                 // The current item has children and it is expanded, so collapse
@@ -171,10 +173,11 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
             QModelIndex crtIndex = currentIndex();
 
-            if (crtIndex.column())
+            if (crtIndex.column()) {
                 // We are not dealing with the (row, 0) item, so make sure we do
 
                 crtIndex = crtIndex.sibling(crtIndex.row(), 0);
+            }
 
             if (model()->hasChildren(crtIndex)) {
                 if (!isExpanded(crtIndex)) {
@@ -248,7 +251,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
     QModelIndexList selectedDraggableIndexes = selectedIndexes();
 
-    for (int i = selectedDraggableIndexes.count()-1; i >= 0; --i)
+    for (int i = selectedDraggableIndexes.count()-1; i >= 0; --i) {
         if (   !(model()->flags(selectedDraggableIndexes[i]) & Qt::ItemIsDragEnabled)
             || selectedDraggableIndexes[i].column()) {
             // The current selected item is not draggable or is not in the first
@@ -263,6 +266,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
             selectedDraggableIndexes.removeAt(i);
         }
+    }
 
     // Start the dragging action is there is at least one selected draggable
     // item

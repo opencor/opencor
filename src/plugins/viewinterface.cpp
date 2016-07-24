@@ -80,8 +80,8 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
         return SimulationMode;
     else if (!pMode.compare(ViewModeAnalysis))
         return AnalysisMode;
-    else
-        return UnknownMode;
+
+    return UnknownMode;
 }
 
 //==============================================================================

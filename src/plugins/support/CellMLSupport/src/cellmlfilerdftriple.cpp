@@ -108,7 +108,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     static const QRegularExpression ModelRegEx = QRegularExpression("^model:");
     static const QRegularExpression BioRegEx = QRegularExpression("^bio:");
 
-    for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i)
+    for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i) {
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(ModelRegEx)))) {
             // It looks like we might be dealing with a model qualifier
 
@@ -118,9 +118,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
             break;
         }
+    }
 
-    if (mType == Unknown)
-        for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i)
+    if (mType == Unknown) {
+        for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i) {
             if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))) {
                 // It looks like we might be dealing with a model qualifier
 
@@ -130,6 +131,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
                 break;
             }
+        }
+    }
 
     if (mType == BioModelsDotNetQualifier) {
         // We seem to be dealing with either a model or a bio(logy) qualifier,
@@ -363,9 +366,10 @@ CellmlFileRdfTriple::BioQualifier CellmlFileRdfTriple::bioQualifier(const QStrin
 {
     // Return the given RDF triple's bio(logy) qualifier
 
-    for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i)
+    for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i) {
         if (!pBioQualifier.compare(bioQualifierAsString(BioQualifier(i))))
             return BioQualifier(i);
+    }
 
     return BioUnknown;
 }
@@ -496,7 +500,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
         // Go through the RDF triples and make sure that their type is
         // consistent with that of the first RDF triple
 
-        foreach (CellmlFileRdfTriple *rdfTriple, *this)
+        foreach (CellmlFileRdfTriple *rdfTriple, *this) {
             if (   rdfTriple->subject()->asString().compare(subject)
                 || (rdfTriple->type() != res)) {
                 // The subject and/or the type of the current RDF triple is
@@ -505,6 +509,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 
                 return CellmlFileRdfTriple::Unknown;
             }
+        }
 
         return res;
     }
@@ -573,9 +578,10 @@ void CellmlFileRdfTriples::recursiveAssociatedWith(CellmlFileRdfTriples &pRdfTri
 
     QString rdfTripleObject = pRdfTriple->object()->asString();
 
-    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+    foreach (CellmlFileRdfTriple *rdfTriple, *this) {
         if (!rdfTriple->subject()->asString().compare(rdfTripleObject))
             recursiveAssociatedWith(pRdfTriples, rdfTriple);
+    }
 }
 
 //==============================================================================
@@ -588,14 +594,16 @@ CellmlFileRdfTriples CellmlFileRdfTriples::associatedWith(iface::cellml_api::Cel
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
     QString cmetaId = QString::fromStdWString(pElement->cmetaId());
 
-    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+    foreach (CellmlFileRdfTriple *rdfTriple, *this) {
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
 
-        if (!cmetaId.compare(rdfTriple->metadataId()))
+        if (!cmetaId.compare(rdfTriple->metadataId())) {
             // It's the correct metadata id, so add it to our list
 
             recursiveAssociatedWith(res, rdfTriple);
+        }
+    }
 
     return res;
 }
@@ -707,10 +715,11 @@ QStringList CellmlFileRdfTriples::asStringList() const
 
     QStringList res = QStringList();
 
-    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+    foreach (CellmlFileRdfTriple *rdfTriple, *this) {
         res << QString("%1|%2|%3").arg(rdfTriple->subject()->asString(),
                                        rdfTriple->predicate()->asString(),
                                        rdfTriple->object()->asString());
+    }
 
     res.sort();
 

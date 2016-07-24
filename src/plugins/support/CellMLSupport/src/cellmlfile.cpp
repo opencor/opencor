@@ -817,11 +817,12 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
     // Return the RDF triple, associated with the given CellML element, which
     // qualifier, resource and id match those given
 
-    if (QString::fromStdWString(pElement->cmetaId()).isEmpty())
+    if (QString::fromStdWString(pElement->cmetaId()).isEmpty()) {
         // The given CellML element doesn't have a 'proper' cmeta:id, so it
         // cannot have RDF triples associated with it
 
         return 0;
+    }
 
     // Go through the RDF triples associated with the given CellML element and
     // check whether it is the one we are after

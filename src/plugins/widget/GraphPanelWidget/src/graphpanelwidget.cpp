@@ -206,9 +206,10 @@ void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
 
     GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
-    foreach (GraphPanelPlotGraph *graph, pGraphs)
+    foreach (GraphPanelPlotGraph *graph, pGraphs) {
         if (mPlot->removeGraph(graph))
             graphs << graph;
+    }
 
     emit graphsRemoved(this, graphs);
 }

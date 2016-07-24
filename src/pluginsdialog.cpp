@@ -725,7 +725,7 @@ void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 
     // Show/hide our categories, based on whether they contain visible plugins
 
-    foreach (QStandardItem *categoryItem, mPluginCategories)
+    foreach (QStandardItem *categoryItem, mPluginCategories) {
         if (categoryItem->hasChildren()) {
             // The category contains plugins, but the question is whether they
             // are visible
@@ -747,6 +747,7 @@ void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
                                                 mModel->invisibleRootItem()->index(),
                                                 hideCategory);
         }
+    }
 
     // Select the first category item
 

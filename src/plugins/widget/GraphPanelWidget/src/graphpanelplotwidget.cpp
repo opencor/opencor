@@ -428,12 +428,13 @@ void GraphPanelPlotScaleDraw::retranslateUi()
 
 QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
-    if (qFuzzyCompare(pValue, 0.0))
+    if (qFuzzyCompare(pValue, 0.0)) {
         // Due to the limited precision of floating point numbers, pValue isn't
         // exactly equal to zero while it really oughht to be, so set it
         // properly
 
         pValue = 0.0;
+    }
 
     return QLocale().toString(pValue, 'g', 15);
 }

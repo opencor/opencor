@@ -130,9 +130,9 @@ void KinsolSolver::reset()
 void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
                               double *pParameters, int pSize, void *pUserData)
 {
-    if (mSolver)
-        // The solver has already been initialised, so reset things...
+    // Reset things, if the solver has already been initialised
 
+    if (mSolver)
         reset();
 
     // Initialise the ODE solver itself

@@ -284,8 +284,9 @@ QString QScintillaWidget::textInRange(const int &pStartRange,
 
     if (   (pStartRange < 0) || (pStartRange >= maxRange)
         || (pEndRange < 0) || (pEndRange >= maxRange)
-        || (pStartRange >= pEndRange))
+        || (pStartRange >= pEndRange)) {
         return QString();
+    }
 
     char *text = new char[pEndRange-pStartRange+1];
 
@@ -355,11 +356,12 @@ void QScintillaWidget::selectWordAt(const int &pLine, const int &pColumn)
     int startPosition = SendScintilla(SCI_WORDSTARTPOSITION, position, true);
     int endPosition = SendScintilla(SCI_WORDENDPOSITION, position, true);
 
-    if (endPosition-startPosition > 0)
+    if (endPosition-startPosition > 0) {
         setSelection(SendScintilla(SCI_LINEFROMPOSITION, startPosition),
                      SendScintilla(SCI_GETCOLUMN, startPosition),
                      SendScintilla(SCI_LINEFROMPOSITION, endPosition),
                      SendScintilla(SCI_GETCOLUMN, endPosition));
+    }
 }
 
 //==============================================================================
@@ -683,17 +685,17 @@ void QScintillaWidget::updateColors()
 
     QColor caretLineBackgroundColor = Core::highlightColor();
 
-    qreal r = caretLineBackgroundColor.redF();
-    qreal g = caretLineBackgroundColor.greenF();
-    qreal b = caretLineBackgroundColor.blueF();
+    qreal red = caretLineBackgroundColor.redF();
+    qreal green = caretLineBackgroundColor.greenF();
+    qreal blue = caretLineBackgroundColor.blueF();
 
-    while ((r < Threshold) || (g < Threshold) || (b < Threshold)) {
-        r = 0.5*(r+1.0);
-        g = 0.5*(g+1.0);
-        b = 0.5*(b+1.0);
+    while ((red < Threshold) || (green < Threshold) || (blue < Threshold)) {
+        red = 0.5*(red+1.0);
+        green = 0.5*(green+1.0);
+        blue = 0.5*(blue+1.0);
     }
 
-    setCaretLineBackgroundColor(qRgba(r*255, g*255, b*255, caretLineBackgroundColor.alpha()));
+    setCaretLineBackgroundColor(qRgba(red*255, green*255, blue*255, caretLineBackgroundColor.alpha()));
 }
 
 //==============================================================================

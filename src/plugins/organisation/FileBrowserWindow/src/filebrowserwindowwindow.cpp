@@ -208,10 +208,11 @@ void FileBrowserWindowWindow::itemDoubleClicked()
     QString fileName = mFileBrowserWidget->currentPath();
     QFileInfo fileInfo = fileName;
 
-    if (fileInfo.isFile())
+    if (fileInfo.isFile()) {
         // We are dealing with a file (as opposed to a folder), so just open it
 
         openFile(fileName);
+    }
 }
 
 //==============================================================================

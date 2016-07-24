@@ -215,10 +215,11 @@ iface::cellml_api::CellMLComponent * CellmlFileCellml10Exporter::findRealCompone
 
         component = components->getComponent(importComponent->componentRef());
 
-        if (!component)
+        if (!component) {
             // No 'real' component exists
 
             break;
+        }
     }
 
     if (component)
@@ -278,10 +279,11 @@ void CellmlFileCellml10Exporter::ensureComponentNameUniqueness(std::wstring &pCo
     QString suffix = QString();
     unsigned n = 0;
 
-    while (mComponentNames.contains(componentName+suffix))
+    while (mComponentNames.contains(componentName+suffix)) {
         // The current component name is already used, so generate a new suffix
 
         suffix = QString("_%1").arg(++n);
+    }
 
     // We have got a valid suffix for our component name, so update the given
     // component name and keep track of it
@@ -413,10 +415,11 @@ void CellmlFileCellml10Exporter::copyComponent(iface::cellml_api::CellMLComponen
     std::wstring newComponentName = pComponent->name();
     std::wstring componentRenamedName = mAnnotationSet->getStringAnnotation(pComponent, L"renamed");
 
-    if (componentRenamedName.length())
+    if (componentRenamedName.length()) {
         // The component was imported, so it may have been renamed
 
         newComponentName = componentRenamedName;
+    }
 
     // Make sure that the name of our new component is unique within our
     // exported model
@@ -500,8 +503,9 @@ void CellmlFileCellml10Exporter::copyComponents(iface::cellml_services::CeVAS *p
     ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIter = pCevas->iterateRelevantComponents();
 
     for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIter->nextComponent();
-         component; component = componentsIter->nextComponent())
+         component; component = componentsIter->nextComponent()) {
         copyComponent(component);
+    }
 }
 
 //==============================================================================
@@ -668,8 +672,9 @@ void CellmlFileCellml10Exporter::copyConnections(iface::cellml_api::Model *pMode
     ObjRef<iface::cellml_api::ConnectionIterator> connectionsIter = connections->iterateConnections();
 
     for (ObjRef<iface::cellml_api::Connection> connection = connectionsIter->nextConnection();
-         connection; connection = connectionsIter->nextConnection())
+         connection; connection = connectionsIter->nextConnection()) {
         copyConnection(connection);
+    }
 
     // Recursively process imported models
 

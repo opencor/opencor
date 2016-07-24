@@ -107,10 +107,11 @@ QByteArray FileOrganiserWindowModel::encodeData(const QModelIndexList &pIndexes)
 
         // Hierarchy to reach the various items
 
-        foreach (const QModelIndex &index, pIndexes)
+        foreach (const QModelIndex &index, pIndexes) {
             // Hierarchy to reach the current item
 
             encodeHierarchyData(index, stream);
+        }
     }
 
     return res;

@@ -431,12 +431,13 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
         if (pImport) {
             OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
-            if (!converter.execute(fileContents))
+            if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
                                                                                        .arg(converter.errorColumn())
                                                                                        .arg(Core::formatMessage(converter.errorMessage(), false));
-            else
+            } else {
                 std::cout << converter.output().toUtf8().constData();
+            }
         } else {
             OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
@@ -444,10 +445,11 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 errorMessage = "The file could not be exported:";
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
-                    if (message.type() == CellmlTextViewParserMessage::Error)
+                    if (message.type() == CellmlTextViewParserMessage::Error) {
                         errorMessage += QString("\n [%1:%2] %3").arg(message.line())
                                                                 .arg(message.column())
                                                                 .arg(message.message());
+                    }
                 }
             } else {
                 std::cout << QString(Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
