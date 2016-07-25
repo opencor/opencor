@@ -35,7 +35,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store",
                              "entries": [
                                { "type": "Added", "description": "Selection of model parameters prior to data export." },
-                               { "type": "Improved", "description": "Data export (now done in its own thread)." }
+                               { "type": "Improved", "description": "Data export." }
                              ]
                            }
                          ]
