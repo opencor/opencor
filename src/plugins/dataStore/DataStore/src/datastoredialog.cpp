@@ -60,7 +60,8 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
+DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
+                                 QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
@@ -77,7 +78,13 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     //       our tree view widget...
 #endif
 
-    // Populate our tree view
+    // Populate our tree view with the data store's variables and, or not, the
+    // variable of integration
+    // Note: indeed, in some cases (e.g. CSV export), we want to list all the
+    //       variables including the variable of integration while in some other
+    //       cases (e.g. BioSignalML export), we don't want to list the variable
+    //       of integration (since, to respect the BioSignalML format, the
+    //       variable of integration must absolutely be exported)...
 
     mModel = new QStandardItemModel(mGui->treeView);
 
@@ -87,7 +94,8 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;
 
-    foreach (DataStoreVariable *variable, pDataStore->voiAndVariables()) {
+    foreach (DataStoreVariable *variable,
+             pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
         if (variable->isVisible()) {
             // Check whether the variable is in the same hierarchy as the
             // previous one

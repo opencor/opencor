@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "biosignalmldatastoredata.h"
+#include "biosignalmldatastoredialog.h"
 #include "biosignalmldatastoreexporter.h"
 #include "biosignalmldatastoreplugin.h"
 #include "corecliutils.h"
@@ -82,9 +83,9 @@ DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pF
 {
     // Ask which data should be exported, as well as some other information
 
-    DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
+    BiosignalmlDataStoreDialog biosignalmlDataStoreDialog(pDataStore, Core::mainWindow());
 
-    if (dataStoreDialog.exec()) {
+    if (biosignalmlDataStoreDialog.exec()) {
         // Now that we have the information we need, we can ask for the name of
         // the BioSignalML file where to do the export
 
@@ -95,7 +96,7 @@ DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pF
                                                  &biosignalmlFilter);
 
         if (!fileName.isEmpty())
-            return new BiosignalmlDataStoreData(fileName, dataStoreDialog.selectedData());
+            return new BiosignalmlDataStoreData(fileName, biosignalmlDataStoreDialog.selectedData());
     }
 
     return 0;

@@ -90,21 +90,22 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         clock->set_label(voi->label().toStdString());
 
+        // Determine what should be exported (minus the variable of integration
+        // which should always be exported in the case of a BioSignalML file)
+
+        DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
+
+        selectedVariables.removeOne(mDataStore->voi());
+
         // Retrieve some information about the different variables that are to
         // be exported
 
         std::vector<std::string> uris;
         std::vector<rdf::URI> units;
-        std::vector<int> indexes;
-        DataStore::DataStoreVariables variables = mDataStore->variables();
-        int nbOfVariables = variables.size();
 
-        for (int i = 0; i < nbOfVariables; ++i) {
-            if (dataStoreData->selectedVariables()[i]) {
-                uris.push_back(recordingUri+"/signal/"+variables[i]->uri().toStdString());
-                units.push_back(rdf::URI(baseUnits+variables[i]->unit().toStdString()));
-                indexes.push_back(i);
-            }
+        foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
+            uris.push_back(recordingUri+"/signal/"+selectedVariable->uri().toStdString());
+            units.push_back(rdf::URI(baseUnits+selectedVariable->unit().toStdString()));
         }
 
         // Create and populate a signal array
@@ -114,31 +115,31 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         };
 
         bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
-        nbOfVariables = signalArray->size();
+        int i = -1;
 
-        for (int i = 0; i < nbOfVariables; ++i)
-            (*signalArray)[i]->set_label(variables[indexes[i]]->label().toStdString());
+        foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables)
+            (*signalArray)[++i]->set_label(selectedVariable->label().toStdString());
 
-        double *data = new double[nbOfVariables*BufferRows];
+        double *data = new double[selectedVariables.count()*BufferRows];
         double *dataPointer = data;
-        int rowcount = 0;
+        int rowCount = 0;
 
-        for (qulonglong i = 0; i < mDataStore->size(); ++i) {
-            for (int j = 0; j < nbOfVariables; ++j)
-                *dataPointer++ = variables[indexes[j]]->value(i);
+        for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+            foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables)
+                *dataPointer++ = selectedVariable->value(i);
 
-            ++rowcount;
+            ++rowCount;
 
-            if (rowcount >= BufferRows) {
-                signalArray->extend(data, BufferRows*nbOfVariables);
+            if (rowCount >= BufferRows) {
+                signalArray->extend(data, selectedVariables.count()*BufferRows);
                 dataPointer = data;
-                rowcount = 0;
+                rowCount = 0;
             }
 
-            emit progress(double(i)/(mDataStore->size()-1));
+            emit progress(double(i)/(iMax-1));
         }
 
-        signalArray->extend(data, nbOfVariables*rowcount);
+        signalArray->extend(data, selectedVariables.count()*rowCount);
 
         delete[] data;
     } catch (bsml::data::Exception e) {

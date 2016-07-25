@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreDialog</name>
+    <message>
+        <source>Export Data</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>The simulation data could not be exported to BioSignalML (%1).</source>
