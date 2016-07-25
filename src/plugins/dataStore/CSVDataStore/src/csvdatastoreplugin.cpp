@@ -79,26 +79,25 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
 {
     Q_UNUSED(pDataStore);
 
-    // Retrieve the name of the CSV file where our data is to be exported and,
-    // if a file name has been provided, determine and return which data should
-    // be exported
+    // Ask which data should be exported
 
-    QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
-    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
-                                             Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
-                                             QStringList() << csvFilter,
-                                             &csvFilter);
+    DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
 
-    if (!fileName.isEmpty()) {
-        DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
+    if (dataStoreDialog.exec()) {
+        // Now that we know which data to export, we can ask for the name of the
+        // CSV file where it is to be exported
 
-        if (dataStoreDialog.exec())
+        QString csvFilter = QObject::tr("CSV File")+" (*.csv)";
+        QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV"),
+                                                 Core::newFileName(pFileName, QObject::tr("Data"), false, "csv"),
+                                                 QStringList() << csvFilter,
+                                                 &csvFilter);
+
+        if (!fileName.isEmpty())
             return new DataStore::DataStoreData(fileName, dataStoreDialog.selectedData());
-        else
-            return 0;
-    } else {
-        return 0;
     }
+
+    return 0;
 }
 
 //==============================================================================
