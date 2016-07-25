@@ -77,7 +77,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
     // Data itself
 
-    for (qulonglong i = 0; i < mDataStore->size(); ++i) {
+    for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
         QString rowData = QString();
 
         if (voi)
@@ -92,7 +92,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
         data += rowData+"\n";
 
-        emit progress(double(i)/(mDataStore->size()-1));
+        emit progress(double(i)/(iMax-1));
     }
 
     // The data is ready, so write it to the file

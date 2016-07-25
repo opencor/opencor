@@ -2152,10 +2152,10 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
         return false;
     }
 
-    pRelationshipRef += QString("%1%2%3%4").arg(pRelationshipRef.size()?" and ":QString())
+    pRelationshipRef += QString("%1%2%3%4").arg(pRelationshipRef.isEmpty()?QString():" and ")
                                            .arg(relationship)
                                            .arg(cmetaId(pDomNode))
-                                           .arg(name.size()?" "+name:QString());
+                                           .arg(name.isEmpty()?QString():" "+name);
 
     return true;
 }

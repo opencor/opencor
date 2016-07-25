@@ -1499,14 +1499,14 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
 
     static const QString Target = "/cellml:model/cellml:component[@name='%1']/cellml:variable[@name='%2']";
 
-    QString variable = pVariable;
-    int variableDegree = variable.size();
-
     // Determine the degree of our variable, if any
+
+    QString variable = pVariable;
+    int variableDegree = variable.length();
 
     variable.replace("'", QString());
 
-    variableDegree -= variable.size();
+    variableDegree -= variable.length();
 
     // Set the target itself, as well as its degree, if any
 
