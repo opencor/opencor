@@ -17,25 +17,19 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Save as BioSignalML widget
+// BioSignalML data store dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "datastoreinterface.h"
+#include "datastoredialog.h"
 
 //==============================================================================
 
-#include <QDialog>
-#include <QVector>
-
-//==============================================================================
-
-namespace Ui {
-    class BioSignalMLSaveDialog;
-}
+class QLabel;
+class QTextEdit;
 
 //==============================================================================
 
@@ -44,43 +38,24 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BiosignalmlSaveDialog : public QDialog
+class BiosignalmlDataStoreDialog : public DataStore::DataStoreDialog
 {
     Q_OBJECT
 
 public:
-    explicit BiosignalmlSaveDialog(QWidget *pParent);
-    ~BiosignalmlSaveDialog();
+    explicit BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
+                                        QWidget *pParent);
 
-    virtual void retranslateUi();
-
-    bool run();
-
-    void setDefaultFileName(const QString &pFileName);
-    QString fileName() const;
-    QString shortName() const;
-    QString description() const;
+    QString name() const;
     QString author() const;
-    void setComment(const QString &pComment);
-    void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
-    QVector<bool> selectedVariables() const;
-    bool selectedVariable(const size_t pIndex) const;
-
-private slots:
-    void accepted();
-    void setFileName(bool checked = false);
-    void selectVariables(bool checked = false);
+    QString description() const;
 
 private:
-    void setButtonStates() const;
+    QLineEdit *mNameValue;
+    QLineEdit *mAuthorValue;
+    QTextEdit *mDescriptionValue;
 
-    Ui::BioSignalMLSaveDialog *mGui;
-
-    QString mDefaultFileName;
-    QVector<QString> mVariableLabels;
-    QVector<bool> mSelectedVariables;
-    bool mGotSignals;
-    bool mAccepted;
+    QLabel * boldLabel(const QString &pText);
 };
 
 //==============================================================================

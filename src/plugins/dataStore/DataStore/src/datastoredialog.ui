@@ -15,7 +15,26 @@
   </property>
   <layout class="QVBoxLayout" name="layout">
    <item>
+    <widget class="QLabel" name="dataLabel">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Data:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QTreeView" name="treeView">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
      <attribute name="headerVisible">
       <bool>false</bool>
      </attribute>

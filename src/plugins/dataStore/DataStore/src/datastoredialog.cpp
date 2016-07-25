@@ -60,7 +60,8 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
+DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
+                                 QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
@@ -77,7 +78,15 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     //       our tree view widget...
 #endif
 
-    // Populate our tree view
+    mGui->dataLabel->setVisible(false);
+
+    // Populate our tree view with the data store's variables and, or not, the
+    // variable of integration
+    // Note: indeed, in some cases (e.g. CSV export), we want to list all the
+    //       variables including the variable of integration while in some other
+    //       cases (e.g. BioSignalML export), we don't want to list the variable
+    //       of integration (since, to respect the BioSignalML format, the
+    //       variable of integration must absolutely be exported)...
 
     mModel = new QStandardItemModel(mGui->treeView);
 
@@ -87,7 +96,8 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, QWidget *pParent) :
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;
 
-    foreach (DataStoreVariable *variable, pDataStore->voiAndVariables()) {
+    foreach (DataStoreVariable *variable,
+             pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
         if (variable->isVisible()) {
             // Check whether the variable is in the same hierarchy as the
             // previous one
@@ -160,6 +170,27 @@ DataStoreDialog::~DataStoreDialog()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void DataStoreDialog::addWidget(QWidget *pWidget)
+{
+    // Insert the given widget before our tree view, set our focus to it and
+    // show our data selector label
+
+    mGui->layout->insertWidget(0, pWidget);
+
+    setFocusProxy(pWidget);
+    setFocus();
+
+    mGui->dataLabel->setVisible(true);
+
+    // Resize ourselves to make sure that the new widget doesn't squash our
+    // original contents
+
+    resize(QSize(qMax(qMax(width(), pWidget->sizeHint().width()), mGui->dataLabel->sizeHint().width()),
+                 pWidget->sizeHint().height()+mGui->dataLabel->sizeHint().height()+height()));
 }
 
 //==============================================================================

@@ -35,13 +35,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QComboBox>
-#include <QIODevice>
-#include <QLineEdit>
-#include <QPushButton>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
