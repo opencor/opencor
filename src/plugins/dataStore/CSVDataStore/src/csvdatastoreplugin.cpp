@@ -77,8 +77,6 @@ QString CSVDataStorePlugin::dataStoreName() const
 DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                        DataStore::DataStore *pDataStore) const
 {
-    Q_UNUSED(pDataStore);
-
     // Ask which data should be exported
 
     DataStore::DataStoreDialog dataStoreDialog(pDataStore, Core::mainWindow());
