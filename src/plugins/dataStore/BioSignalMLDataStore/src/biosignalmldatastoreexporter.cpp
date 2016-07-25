@@ -58,8 +58,6 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
     BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
     QString fileName = dataStoreData->fileName();
-    std::string recordingUri = QUrl::fromLocalFile(fileName).toEncoded().toStdString();
-    std::string baseUnits = mDataStore->uri().toStdString()+"/units#";
     bsml::HDF5::Recording *recording = 0;
 
     try {
@@ -69,6 +67,9 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         //       by BioSignalML...
 
         DataStore::DataStoreVariable *voi = mDataStore->voi();
+        std::string recordingUri = QUrl::fromLocalFile(fileName).toEncoded().toStdString();
+        std::string baseUnits = mDataStore->uri().toStdString()+"/units#";
+
         recording = new bsml::HDF5::Recording(recordingUri, fileName.toStdString(), true);
 
         recording->add_prefix(rdf::Namespace("units", baseUnits));

@@ -37,23 +37,23 @@ class BiosignalmlDataStoreData : public DataStore::DataStoreData
 {
 public:
     explicit BiosignalmlDataStoreData(const QString &pFileName,
-                                      const QString &pShortName,
-                                      const QString &pAuthor,
-                                      const QString &pDescription,
-                                      const QVector<bool> &pSelectedVariables,
-                                      const QString &pComment);
+                                      const DataStore::DataStoreVariables &pSelectedVariables);
+//    explicit BiosignalmlDataStoreData(const QString &pFileName,
+//                                      const QString &pShortName,
+//                                      const QString &pAuthor,
+//                                      const QString &pDescription,
+//                                      const QVector<bool> &pSelectedVariables,
+//                                      const QString &pComment);
 
     QString shortName() const;
     QString author() const;
     QString description() const;
-    QVector<bool> selectedVariables() const;
     QString comment() const;
 
 private:
     QString mShortName;
     QString mAuthor;
     QString mDescription;
-    QVector<bool> mSelectedVariables;
     QString mComment;
 };
 
