@@ -5,7 +5,19 @@
     <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreDialog</name>
     <message>
         <source>Export Data</source>
-        <translation type="unfinished"></translation>
+        <translation>Données D&apos;Export</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>Author:</source>
+        <translation>Auteur :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
     </message>
 </context>
 <context>

@@ -28,6 +28,11 @@ limitations under the License.
 
 //==============================================================================
 
+class QLabel;
+class QTextEdit;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace BioSignalMLDataStore {
 
@@ -40,6 +45,13 @@ class BiosignalmlDataStoreDialog : public DataStore::DataStoreDialog
 public:
     explicit BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
                                         QWidget *pParent);
+
+private:
+    QLineEdit *mShortNameValue;
+    QLineEdit *mAuthorValue;
+    QTextEdit *mDescriptionValue;
+
+    QLabel * boldLabel(const QString &pText);
 };
 
 //==============================================================================

@@ -11,6 +11,10 @@
         <source>Select all the data</source>
         <translation>Sélectionner toutes les données</translation>
     </message>
+    <message>
+        <source>Data:</source>
+        <translation>Données :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::DataStore::DataStoreDialog</name>

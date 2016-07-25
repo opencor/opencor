@@ -78,6 +78,8 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     //       our tree view widget...
 #endif
 
+    mGui->dataLabel->setVisible(false);
+
     // Populate our tree view with the data store's variables and, or not, the
     // variable of integration
     // Note: indeed, in some cases (e.g. CSV export), we want to list all the
@@ -168,6 +170,27 @@ DataStoreDialog::~DataStoreDialog()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void DataStoreDialog::addWidget(QWidget *pWidget)
+{
+    // Insert the given widget before our tree view, set our focus to it and
+    // show our data selector label
+
+    mGui->layout->insertWidget(0, pWidget);
+
+    setFocusProxy(pWidget);
+    setFocus();
+
+    mGui->dataLabel->setVisible(true);
+
+    // Resize ourselves to make sure that the new widget doesn't squash our
+    // original contents
+
+    resize(QSize(qMax(qMax(width(), pWidget->sizeHint().width()), mGui->dataLabel->sizeHint().width()),
+                 pWidget->sizeHint().height()+mGui->dataLabel->sizeHint().height()+height()));
 }
 
 //==============================================================================

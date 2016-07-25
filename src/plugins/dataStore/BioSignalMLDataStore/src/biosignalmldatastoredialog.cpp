@@ -22,10 +22,14 @@ limitations under the License.
 
 #include "biosignalmldatastoredialog.h"
 #include "datastoreinterface.h"
+#include "widget.h"
 
 //==============================================================================
 
-#include <QMessageBox>
+#include <QFormLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QTextEdit>
 
 //==============================================================================
 
@@ -40,6 +44,64 @@ BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDa
     // Customise our GUI
 
     setWindowTitle(tr("Export Data"));
+
+    // Create a form-like widget
+
+    Core::Widget *widget = new Core::Widget(this);
+
+    widget->createLayout(Core::Widget::FormLayout);
+
+    QFormLayout *formLayout = qobject_cast<QFormLayout *>(widget->layout());
+
+    formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
+
+    // Add a label/field for our short name
+
+    mShortNameValue = new QLineEdit(this);
+
+#ifdef Q_OS_MAC
+    mShortNameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    formLayout->addRow(boldLabel(tr("Name:")), mShortNameValue);
+
+    // Add a label/field for our author
+
+    mAuthorValue = new QLineEdit(this);
+
+#ifdef Q_OS_MAC
+    mAuthorValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    formLayout->addRow(boldLabel(tr("Author:")), mAuthorValue);
+
+    // Add a label/field for our description
+
+    mDescriptionValue = new QTextEdit(this);
+
+    formLayout->addRow(boldLabel(tr("Description:")), mDescriptionValue);
+
+    // Make our short name value our focus proxy and add our widget to ourselves
+
+    widget->setFocusProxy(mShortNameValue);
+
+    addWidget(widget);
+}
+
+//==============================================================================
+
+QLabel * BiosignalmlDataStoreDialog::boldLabel(const QString &pText)
+{
+    // Create and return a label after having made it bold
+
+    QLabel *res = new QLabel(pText, this);
+    QFont font = res->font();
+
+    font.setBold(true);
+
+    res->setFont(font);
+
+    return res;
 }
 
 //==============================================================================

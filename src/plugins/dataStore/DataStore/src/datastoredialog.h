@@ -76,6 +76,8 @@ public:
                              QWidget *pParent);
     ~DataStoreDialog();
 
+    void addWidget(QWidget *pWidget);
+
     DataStoreVariables selectedData() const;
 
 private:
