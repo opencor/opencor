@@ -50,9 +50,9 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     // Determine what should be exported
 
     DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(mDataStore->voi())?mDataStore->voi():0;
-    DataStore::DataStoreVariables variables = mDataStoreData->selectedVariables();
+    DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
 
-    variables.removeOne(voi);
+    selectedVariables.removeOne(voi);
 
     // Header
 
@@ -65,12 +65,12 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                            voi->unit());
     }
 
-    foreach (DataStore::DataStoreVariable *variable, variables) {
+    foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
         if (!data.isEmpty())
             data += ",";
 
-        data += Header.arg(variable->uri().replace("/prime", "'").replace("/", " | "),
-                           variable->unit());
+        data += Header.arg(selectedVariable->uri().replace("/prime", "'").replace("/", " | "),
+                           selectedVariable->unit());
     }
 
     data += "\n";
@@ -83,11 +83,11 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         if (voi)
             rowData += QString::number(voi->value(i));
 
-        foreach (DataStore::DataStoreVariable *variable, variables) {
+        foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
             if (!rowData.isEmpty())
                 rowData += ",";
 
-            rowData += QString::number(variable->value(i));
+            rowData += QString::number(selectedVariable->value(i));
         }
 
         data += rowData+"\n";
