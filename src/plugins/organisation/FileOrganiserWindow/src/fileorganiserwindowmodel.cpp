@@ -160,7 +160,7 @@ QModelIndexList FileOrganiserWindowModel::decodeData(QByteArray &pData) const
 {
     QModelIndexList res;
 
-    if (pData.size()) {
+    if (!pData.isEmpty()) {
         // Decode the MIME data
 
         QDataStream stream(&pData, QIODevice::ReadOnly);

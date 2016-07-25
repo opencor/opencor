@@ -1049,18 +1049,20 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
         case Cellml_1_0: {
             CellmlFileCellml10Exporter exporter(mModel, pFileName);
 
-            if (exporter.errorMessage().size())
+            if (!exporter.errorMessage().isEmpty()) {
                 mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                            exporter.errorMessage());
+            }
 
             return exporter.result();
         }
         case Cellml_1_1: {
             CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
-            if (exporter.errorMessage().size())
+            if (!exporter.errorMessage().isEmpty()) {
                 mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                            exporter.errorMessage());
+            }
 
             return exporter.result();
         }

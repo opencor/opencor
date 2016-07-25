@@ -805,8 +805,8 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             QString connectionComponentMappingFirstComponentName = QString::fromStdWString(connectionComponentMapping->firstComponentName());
             QString connectionComponentMappingSecondComponentName = QString::fromStdWString(connectionComponentMapping->secondComponentName());
 
-            if (   connectionComponentMappingFirstComponentName.size()
-                && connectionComponentMappingSecondComponentName.size()) {
+            if (   !connectionComponentMappingFirstComponentName.isEmpty()
+                && !connectionComponentMappingSecondComponentName.isEmpty()) {
                 connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentMapping,
                                                                                     connectionComponentMapping));
             }

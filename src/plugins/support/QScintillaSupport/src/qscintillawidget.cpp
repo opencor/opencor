@@ -666,7 +666,7 @@ void QScintillaWidget::checkCanSelectAll()
 {
     // Check whether we can select all the text
 
-    bool newCanSelectAll = text().size() && selectedText().compare(text());
+    bool newCanSelectAll = !text().isEmpty() && selectedText().compare(text());
 
     if (newCanSelectAll != mCanSelectAll) {
         mCanSelectAll = newCanSelectAll;

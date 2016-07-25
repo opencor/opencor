@@ -143,7 +143,7 @@ bool CheckForUpdatesEngine::hasNewerVersion() const
 {
     // Return whether we have a newer version
 
-    return mNewerVersions.size();
+    return !mNewerVersions.isEmpty();
 }
 
 //==============================================================================

@@ -664,16 +664,17 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
         QStringList info = pParameterProperty->value().split(".");
         QStringList componentHierarchy = info;
-        QString parameterName = info.last();
-        int parameterDegree = parameterName.size();
 
         componentHierarchy.removeLast();
 
         // Determine the degree of our parameter, if any
 
+        QString parameterName = info.last();
+        int parameterDegree = parameterName.length();
+
         parameterName.replace("'", QString());
 
-        parameterDegree -= parameterName.size();
+        parameterDegree -= parameterName.length();
 
         // Check whether we can find our property among our runtime's parameters
 

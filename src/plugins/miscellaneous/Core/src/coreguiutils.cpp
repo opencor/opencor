@@ -330,7 +330,7 @@ QMenu * newMenu(const QString &pName, QWidget *pParent)
 
     QMenu *res = new QMenu(pParent);
 
-    res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.size()-1));
+    res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.length()-1));
 
     return res;
 }

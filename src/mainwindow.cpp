@@ -511,7 +511,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                 // Keep track of the new menu, but only if it has a name
 
-                if (newMenuName.size())
+                if (!newMenuName.isEmpty())
                     mMenus.insert(newMenuName, newMenu);
             }
         }

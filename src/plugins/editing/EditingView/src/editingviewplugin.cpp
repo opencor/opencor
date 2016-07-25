@@ -491,9 +491,9 @@ void EditingViewPlugin::clipboardDataChanged()
     // Enable our paste action if the clipboard contains some text
 
     if (mEditingViewInterface) {
-        mEditPasteAction->setEnabled(   mEditor
-                                     && Core::FileManager::instance()->isReadableAndWritable(mFileName)
-                                     && QApplication::clipboard()->text().size());
+        mEditPasteAction->setEnabled(    mEditor
+                                     &&  Core::FileManager::instance()->isReadableAndWritable(mFileName)
+                                     && !QApplication::clipboard()->text().isEmpty());
     }
 }
 
