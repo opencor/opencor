@@ -30,39 +30,26 @@ namespace BioSignalMLDataStore {
 //==============================================================================
 
 BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
+                                                   const QString &pName,
+                                                   const QString &pAuthor,
+                                                   const QString &pDescription,
+                                                   const QString &pComment,
                                                    const DataStore::DataStoreVariables &pSelectedVariables) :
     DataStore::DataStoreData(pFileName, pSelectedVariables),
-    mShortName(QString()),
-    mAuthor(QString()),
-    mDescription(QString()),
-    mComment(QString())
+    mName(pName),
+    mAuthor(pAuthor),
+    mDescription(pDescription),
+    mComment(pComment)
 {
 }
 
 //==============================================================================
 
-//BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
-//                                                   const QString &pShortName,
-//                                                   const QString &pAuthor,
-//                                                   const QString &pDescription,
-//                                                   const QVector<bool> &pSelectedVariables,
-//                                                   const QString &pComment) :
-//    DataStore::DataStoreData(pFileName, DataStore::DataStoreVariables()),
-//    mShortName(pShortName),
-//    mAuthor(pAuthor),
-//    mDescription(pDescription),
-//    mSelectedVariables(pSelectedVariables),
-//    mComment(pComment)
-//{
-//}
-
-//==============================================================================
-
-QString BiosignalmlDataStoreData::shortName() const
+QString BiosignalmlDataStoreData::name() const
 {
     // Return our short name
 
-    return mShortName;
+    return mName;
 }
 
 //==============================================================================

@@ -46,8 +46,12 @@ public:
     explicit BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
                                         QWidget *pParent);
 
+    QString name() const;
+    QString author() const;
+    QString description() const;
+
 private:
-    QLineEdit *mShortNameValue;
+    QLineEdit *mNameValue;
     QLineEdit *mAuthorValue;
     QTextEdit *mDescriptionValue;
 

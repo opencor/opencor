@@ -57,13 +57,13 @@ BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDa
 
     // Add a label/field for our short name
 
-    mShortNameValue = new QLineEdit(this);
+    mNameValue = new QLineEdit(this);
 
 #ifdef Q_OS_MAC
-    mShortNameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mNameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    formLayout->addRow(boldLabel(tr("Name:")), mShortNameValue);
+    formLayout->addRow(boldLabel(tr("Name:")), mNameValue);
 
     // Add a label/field for our author
 
@@ -83,9 +83,36 @@ BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDa
 
     // Make our short name value our focus proxy and add our widget to ourselves
 
-    widget->setFocusProxy(mShortNameValue);
+    widget->setFocusProxy(mNameValue);
 
     addWidget(widget);
+}
+
+//==============================================================================
+
+QString BiosignalmlDataStoreDialog::name() const
+{
+    // Return our name
+
+    return mNameValue->text();
+}
+
+//==============================================================================
+
+QString BiosignalmlDataStoreDialog::author() const
+{
+    // Return our author
+
+    return mAuthorValue->text();
+}
+
+//==============================================================================
+
+QString BiosignalmlDataStoreDialog::description() const
+{
+    // Return our description
+
+    return mDescriptionValue->toPlainText();
 }
 
 //==============================================================================

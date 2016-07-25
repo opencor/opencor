@@ -74,12 +74,12 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         recording->add_prefix(rdf::Namespace("units", baseUnits));
 
-        recording->set_comment(dataStoreData->comment().toStdString());
+        recording->set_label(dataStoreData->name().toStdString());
+        recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString()));
         recording->set_description(dataStoreData->description().toStdString());
+        recording->set_comment(dataStoreData->comment().toStdString());
         recording->set_duration(xsd::Duration(voi->value(voi->size()-1)-voi->value(0),
                                               voi->unit().toStdString()));
-        recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString()));
-        recording->set_label(dataStoreData->shortName().toStdString());
 
         // Create and populate a clock
 
