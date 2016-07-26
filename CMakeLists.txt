@@ -586,7 +586,8 @@ ENDIF()
 IF(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
-    IF(EXISTS $ENV{PROGRAMFILES}/NSIS/makensis.exe)
+    IF(   EXISTS "C:/Program\ Files/NSIS/makensis.exe"
+       OR EXISTS "C:/Program\ Files\ (x86)/NSIS/makensis.exe")
         SET(NSIS_FOUND TRUE)
         SET(NSIS_GENERATOR NSIS)
     ELSE()
