@@ -170,6 +170,11 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
 
     connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
             this, SLOT(mathmlConversionDone(const QString &, const QString &)));
+
+    // Keept rack of changes to files
+
+    connect(Core::FileManager::instance(), SIGNAL(fileModified(const QString &)),
+            this, SLOT(fileModified(const QString &)));
 }
 
 //==============================================================================
@@ -1157,6 +1162,18 @@ void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
         mEditingWidget->mathmlViewer()->setContents(pPresentationMathml);
 
     mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
+}
+
+//==============================================================================
+
+void CellmlTextViewWidget::fileModified(const QString &pFileName)
+{
+    // A file has been modified, so we need to reset its SHA-1 value, if any
+
+    CellmlTextViewWidgetData *data = mData.value(pFileName);
+
+    if (data)
+        data->setSha1(QString());
 }
 
 //==============================================================================

@@ -172,6 +172,8 @@ private slots:
 
     void mathmlConversionDone(const QString &pContentMathml,
                               const QString &pPresentationMathml);
+
+    void fileModified(const QString &pFileName);
 };
 
 //==============================================================================
