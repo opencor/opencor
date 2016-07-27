@@ -52,9 +52,14 @@ FileManager::FileManager() :
             this, SLOT(checkFiles()));
 
     // Keep track of when OpenCOR gets/loses the focus
+    // Note: the focusWindowChanged() signal comes from QGuiApplication, so we
+    //       need to check whether we are running the console version of OpenCOR
+    //       or its GUI version...
 
-    connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-            this, SLOT(focusWindowChanged()));
+    if (dynamic_cast<QGuiApplication *>(QCoreApplication::instance())) {
+        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+                this, SLOT(focusWindowChanged()));
+    }
 }
 
 //==============================================================================
@@ -92,11 +97,27 @@ void FileManager::startStopTimer()
 {
     // Start our timer if OpenCOR is active and we have files, or stop it if
     // either OpenCOR is not active or we don't have files anymore
+    // Note #1: if we are to start our timer, then we check files first since
+    //          waiting one second may seem long to a user (when some files have
+    //          changed and after having reactivated OpenCOR)...
+    // Note #2: checking files may result in a dialog box being shown and,
+    //          therefore, in a focusWindowChanged() signal being emitted. To
+    //          handle that signal would result in reentry, so we temporarily
+    //          disable our handling of it...
 
-    if (opencorActive() && !mFiles.isEmpty() && !mTimer->isActive())
+    if (opencorActive() && !mFiles.isEmpty() && !mTimer->isActive()) {
+        disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+                   this, SLOT(focusWindowChanged()));
+
+        checkFiles();
+
+        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+                this, SLOT(focusWindowChanged()));
+
         mTimer->start(1000);
-    else if ((!opencorActive() || mFiles.isEmpty()) && mTimer->isActive())
+    } else if ((!opencorActive() || mFiles.isEmpty()) && mTimer->isActive()) {
         mTimer->stop();
+    }
 }
 
 //==============================================================================
