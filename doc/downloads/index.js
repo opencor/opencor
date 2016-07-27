@@ -39,14 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed an issue with switching from one file to another with the mouse over a button-like widget and the status bar visible resulting in some bad flickering (see issue <a href=\"https://github.com/opencor/opencor/issues/1027\">#1027</a>). Qt WebKit now uses the same version of ICU as Qt itself on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1037\">#1037</a>)." },
-                       { "change": "<strong>Data stores:</strong> now allow the selection of model parameters (see issue <a href=\"https://github.com/opencor/opencor/issues/1008\">#1008</a>)." },
-                       { "change": "<strong>BioSignalML data store:</strong> made the code and GUI look more like the rest of OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/856\">#856</a>)." },
-                       { "change": "<strong>PMR window:</strong> file exposures now include SED-ML files, if any (see issue <a href=\"https://github.com/opencor/opencor/issues/1032\">#1032</a>)." },
-                       { "change": "<strong>Editor widget:</strong> fixed a problem with the icon for the search options / magnifier looking wrong (see issue <a href=\"https://github.com/opencor/opencor/issues/1026\">#1026</a>)." },
-                       { "change": "<strong>Text-based editing views:</strong> fixed a small problem with switching editing views for the same file resulting in file changes (and other things) not being tracked anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1040\">#1040</a>)." },
-                       { "change": "<strong>Single Cell view:</strong> the variable of integration isn't listed in the popup menu of the Parameters panel anymore, if it isn't defined in the main CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1030\">#1030</a>). Fixed a small problem with OpenCOR crashing upon closing (see issue <a href=\"https://github.com/opencor/opencor/issues/1044\">#1044</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1041\">#1041</a>) and <a href=\"http://www.llvm.org/\">LLVM</a> to version 3.8.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1036\">#1036</a>)." }
+                       { "change": "<strong>File manager:</strong> only check files when OpenCOR is really active (see issue <a href=\"https://github.com/opencor/opencor/issues/1048\">#1048</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,

@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -49,6 +50,11 @@ FileManager::FileManager() :
 
     connect(mTimer, SIGNAL(timeout()),
             this, SLOT(checkFiles()));
+
+    // Keep track of when OpenCOR gets/loses the focus
+
+    connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+            this, SLOT(focusWindowChanged()));
 }
 
 //==============================================================================
@@ -63,6 +69,34 @@ FileManager::~FileManager()
 
     foreach (File *file, mFiles)
         delete file;
+}
+
+//==============================================================================
+
+bool FileManager::opencorActive() const
+{
+    // Return whether OpenCOR is active
+    // Note: we only consider OpenCOR to be active if the main window or one of
+    //       its dockable windows is active. In other words, if a dialog box is
+    //       opened, then we don't consider OpenCOR active since it could
+    //       disturb our user's workflow...
+
+    return     qApp->activeWindow()
+           && !qApp->activeModalWidget()
+           && !qApp->activePopupWidget();
+}
+
+//==============================================================================
+
+void FileManager::startStopTimer()
+{
+    // Start our timer if OpenCOR is active and we have files, or stop it if
+    // either OpenCOR is not active or we don't have files anymore
+
+    if (opencorActive() && !mFiles.isEmpty() && !mTimer->isActive())
+        mTimer->start(1000);
+    else if ((!opencorActive() || mFiles.isEmpty()) && mTimer->isActive())
+        mTimer->stop();
 }
 
 //==============================================================================
@@ -96,8 +130,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
             mFiles.insert(nativeFileName, new File(nativeFileName, pType, pUrl));
 
-            if (!mTimer->isActive())
-                mTimer->start(1000);
+            startStopTimer();
 
             emit fileManaged(nativeFileName);
 
@@ -124,8 +157,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
         delete nativeFile;
 
-        if (mFiles.isEmpty())
-            mTimer->stop();
+        startStopTimer();
 
         emit fileUnmanaged(nativeFileName);
 
@@ -615,8 +647,27 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
+void FileManager::focusWindowChanged()
+{
+    // Start/stop our timer
+
+    startStopTimer();
+}
+
+//==============================================================================
+
 void FileManager::checkFiles()
 {
+    // Make sure that OpenCOR is active
+    // Note: indeed, although we try our best to enable/disable our timer as
+    //       needed, there are cases (e.g. a QFileDialog is opened) that don't
+    //       result in the focusWindowChanged() signal being emitted, which
+    //       means that we can't enable/disable our timer in those acses, hence
+    //       our checking that OpenCOR is really active indeed...
+
+    if (!opencorActive())
+        return;
+
     // Check our various files, as well as their locked status, but only if they
     // are not being ignored
 
