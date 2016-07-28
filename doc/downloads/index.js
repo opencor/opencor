@@ -39,8 +39,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>File manager:</strong> only check files when OpenCOR is really active (see issue <a href=\"https://github.com/opencor/opencor/issues/1048\">#1048</a>)." },
-                       { "change": "<strong>CellML Text view:</strong> fixed a small problem resulting in the incorrect tracking of the modified state of a file (see issue <a href=\"https://github.com/opencor/opencor/issues/1049\">#1049</a>)." }
+                       { "change": "<strong>File manager:</strong> only check files when OpenCOR is really active (see issue <a href=\"https://github.com/opencor/opencor/issues/1048\">#1048</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
