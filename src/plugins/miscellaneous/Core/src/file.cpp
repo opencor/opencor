@@ -179,7 +179,7 @@ void File::reset(const bool &pResetDependencies)
 bool File::isDifferent() const
 {
     // Return whether we are different from our corresponding physical version
-    // by comparing our SHA-1 values
+    // by comparing our respective SHA-1 values
 
     return mSha1.compare(sha1());
 }
@@ -189,7 +189,7 @@ bool File::isDifferent() const
 bool File::isDifferent(const QByteArray &pFileContents) const
 {
     // Return whether we are different from the given file contents by comparing
-    // our SHA-1 values
+    // our respective SHA-1 values
 
     return mSha1.compare(Core::sha1(pFileContents));
 }
