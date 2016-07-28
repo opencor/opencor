@@ -127,7 +127,7 @@ File::Status File::check()
         // deleted or that we are unreadable (which, in effect, means that we
         // have been changed)
 
-        return (QFile::exists(mFileName))?Changed:Deleted;
+        return QFile::exists(mFileName)?Changed:Deleted;
     } else {
         // Our SHA-1 value and/or that of one or several of our dependencies is
         // different from our stored value, which means that we and/or one or
