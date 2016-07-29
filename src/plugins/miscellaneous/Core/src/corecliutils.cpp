@@ -273,6 +273,15 @@ QString sha1(const QByteArray &pByteArray)
 
 //==============================================================================
 
+QString sha1(const QString &pString)
+{
+    // Return the SHA-1 value of the given string
+
+    return sha1(pString.toUtf8());
+}
+
+//==============================================================================
+
 void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
                                 const int &pPosition, int &pLine, int &pColumn)
 {
