@@ -1920,26 +1920,12 @@ void CentralWidget::fileChanged(const QString &pFileName,
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
                 if (!mFileNames[i].compare(pFileName)) {
-                    // We have found the file to reload
-
-                    ViewInterface *viewInterface = qobject_cast<ViewInterface *>(viewPlugin(i)->instance());
-                    QWidget *oldView = ((mFileTabs->currentIndex() == i) && viewInterface->hasViewWidget(pFileName))?viewInterface->viewWidget(pFileName):0;
+                    // We have found the file to reload, so reload it and update
+                    // our GUI
 
                     reloadFile(i, true);
 
-                    // Check whether the view for the file (if it is the current
-                    // one) has changed and, if so, update the GUI
-                    // Note: this could happen if we are using a CellML-based
-                    //       view and the current file is not initially
-                    //       recognised as being a CellML file, but then it gets
-                    //       updated outside of OpenCOR and gets recognised as
-                    //       being a CellML file...
-
-                    if (   (   (mFileTabs->currentIndex() == i)
-                            && (viewInterface->viewWidget(pFileName) != oldView))
-                        || (mFileTabs->currentIndex() != i)) {
-                        updateGui();
-                    }
+                    updateGui();
 
                     break;
                 }
