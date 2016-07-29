@@ -66,7 +66,9 @@ CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEdit
     mSha1(pSha1),
     mValid(pValid),
     mCellmlVersion(pCellmlVersion),
-    mRdfNodes(pRdfNodes)
+    mRdfNodes(pRdfNodes),
+    mFileContents(QByteArray()),
+    mConvertedFileContents(QString())
 {
 }
 
@@ -149,6 +151,42 @@ QDomDocument CellmlTextViewWidgetData::rdfNodes() const
     // Return our RDF nodes
 
     return mRdfNodes;
+}
+
+//==============================================================================
+
+QByteArray CellmlTextViewWidgetData::fileContents() const
+{
+    // Return our (physical) file contents
+
+    return mFileContents;
+}
+
+//==============================================================================
+
+void CellmlTextViewWidgetData::setFileContents(const QByteArray &pFileContents)
+{
+    // Set our (physical) file contents
+
+    mFileContents = pFileContents;
+}
+
+//==============================================================================
+
+QString CellmlTextViewWidgetData::convertedFileContents() const
+{
+    // Return our converted (physical) file contents
+
+    return mConvertedFileContents;
+}
+
+//==============================================================================
+
+void CellmlTextViewWidgetData::setConvertedFileContents(const QString &pConvertedFileContents)
+{
+    // Set our converted (physical) file contents
+
+    mConvertedFileContents = pConvertedFileContents;
 }
 
 //==============================================================================
@@ -478,25 +516,34 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
     if (data) {
-        // Check whether the given file is considered as modified
-
         if (Core::FileManager::instance()->isModified(pFileName)) {
-            // The given file is considered as modified, so retrieve the
-            // contents of its physical version
+            // The given file is considered as modified, so we need to retrieve
+            // the contents of its physical version
 
             QByteArray fileContents;
 
             Core::readFileContentsFromFile(pFileName, fileContents);
 
-            CellMLTextViewConverter converter;
-            bool fileIsEmpty = fileContents.trimmed().isEmpty();
-            bool successfulConversion = fileIsEmpty?true:converter.execute(fileContents);
+            // Check whether we already know about that file contents and, if
+            // not, determine its converted version (and keep track of it)
 
-            if (successfulConversion) {
-                return Core::sha1(data->editingWidget()->editorWidget()->contents().toUtf8()).compare(Core::sha1(fileIsEmpty?QString():converter.output().toUtf8()));
-            } else {
-                return true;
+            if (fileContents != data->fileContents()) {
+                CellMLTextViewConverter converter;
+                bool fileIsEmpty = fileContents.trimmed().isEmpty();
+                bool successfulConversion = fileIsEmpty?true:converter.execute(fileContents);
+
+                if (successfulConversion) {
+                    data->setFileContents(fileContents);
+                    data->setConvertedFileContents(fileIsEmpty?QString():converter.output());
+                } else {
+                    // We couldn't convert the physical version of the given
+                    // file, which means that we are definitely different
+
+                    return true;
+                }
             }
+
+            return Core::sha1(data->editingWidget()->editorWidget()->contents().toUtf8()).compare(Core::sha1(data->convertedFileContents().toUtf8()));
         } else {
             // The given file is not considered as modified, so simply compare
             // the SHA-1 value of our editor's contents with our internal one
