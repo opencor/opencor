@@ -477,7 +477,35 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
-    return data?Core::sha1(data->editingWidget()->editorWidget()->contents().toUtf8()).compare(data->sha1()):false;
+    if (data) {
+        // Check whether the given file is considered as modified
+
+        if (Core::FileManager::instance()->isModified(pFileName)) {
+            // The given file is considered as modified, so retrieve the
+            // contents of its physical version
+
+            QByteArray fileContents;
+
+            Core::readFileContentsFromFile(pFileName, fileContents);
+
+            CellMLTextViewConverter converter;
+            bool fileIsEmpty = fileContents.trimmed().isEmpty();
+            bool successfulConversion = fileIsEmpty?true:converter.execute(fileContents);
+
+            if (successfulConversion) {
+                return Core::sha1(data->editingWidget()->editorWidget()->contents().toUtf8()).compare(Core::sha1(fileIsEmpty?QString():converter.output().toUtf8()));
+            } else {
+                return true;
+            }
+        } else {
+            // The given file is not considered as modified, so simply compare
+            // the SHA-1 value of our editor's contents with our internal one
+
+            return Core::sha1(data->editingWidget()->editorWidget()->contents().toUtf8()).compare(data->sha1());
+        }
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

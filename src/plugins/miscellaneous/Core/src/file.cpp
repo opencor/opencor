@@ -190,8 +190,13 @@ bool File::isDifferent(const QByteArray &pFileContents) const
 {
     // Return whether we are different from the given file contents by comparing
     // our respective SHA-1 values
+    // Note: if we are considered as modified, then we want to compare the given
+    //       file contents against our corresponding physical version otherwise
+    //       our internal SHA-1 value...
 
-    return mSha1.compare(Core::sha1(pFileContents));
+    return mModified?
+               sha1().compare(Core::sha1(pFileContents)):
+               mSha1.compare(Core::sha1(pFileContents));
 }
 
 //==============================================================================
@@ -272,6 +277,18 @@ bool File::setModified(const bool &pModified)
 
     if (pModified != mModified) {
         mModified = pModified;
+
+        // Update our SHA-1 value, if we are considered as not modified anymore
+        // Note: indeed, say that you are editing a file in the Raw Text view
+        //       and that the file gets modified outside of OpenCOR and that you
+        //       decline reloading it. In that case, the file will be rightly
+        //       considered as modified. Then, if you modify it so that it now
+        //       corresponds to the physical version of the file, the Raw Text
+        //       view will update the modified state of the file, but the SHA-1
+        //       value will be out-of-date, hence we need to update it...
+
+        if (!pModified)
+            mSha1 = sha1();
 
         return true;
     } else {
