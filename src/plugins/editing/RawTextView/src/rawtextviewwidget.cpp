@@ -99,7 +99,7 @@ void RawTextViewWidget::initialize(const QString &pFileName,
     if (!newEditor) {
         // No editor exists for the given file, so create one
 
-        QByteArray fileContents;
+        QString fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 

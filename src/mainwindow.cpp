@@ -445,7 +445,7 @@ void MainWindow::registerOpencorUrlScheme()
                                         "Exec=%1 %u\n"
                                         "Icon=%1\n"
                                         "Terminal=false\n"
-                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())).toUtf8());
+                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())));
     }
 #elif defined(Q_OS_MAC)
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),

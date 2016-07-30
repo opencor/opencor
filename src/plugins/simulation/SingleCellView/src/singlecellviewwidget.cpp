@@ -1331,7 +1331,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
             // Retrieve the contents of our model source
 
-            QByteArray fileContents;
+            QString fileContents;
             QString errorMessage;
 
             if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {

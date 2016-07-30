@@ -146,7 +146,7 @@ QString File::sha1(const QString &pFileName) const
     // Compute the SHA-1 value for the given file or ourselves (if no file is
     // given), if it/we still exist/s and can be opened
 
-    QByteArray fileContents;
+    QString fileContents;
 
     if (readFileContentsFromFile(pFileName.isEmpty()?mFileName:pFileName, fileContents))
         return Core::sha1(fileContents);
@@ -186,7 +186,7 @@ bool File::isDifferent() const
 
 //==============================================================================
 
-bool File::isDifferent(const QByteArray &pFileContents) const
+bool File::isDifferent(const QString &pFileContents) const
 {
     // Return whether we are different from the given file contents by comparing
     // our respective SHA-1 values

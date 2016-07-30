@@ -882,7 +882,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
         showBusyWidget(this);
 
-        QByteArray fileContents;
+        QString fileContents;
         QString errorMessage;
 
         if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
@@ -992,7 +992,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     showBusyWidget(this);
 
                     QString url = fileManagerInstance->url(fileName);
-                    QByteArray fileContents;
+                    QString fileContents;
                     QString errorMessage;
 
                     bool res = readFileContentsFromUrl(url, fileContents, &errorMessage);

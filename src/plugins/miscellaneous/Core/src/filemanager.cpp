@@ -269,7 +269,7 @@ bool FileManager::isDifferent(const QString &pFileName) const
 //==============================================================================
 
 bool FileManager::isDifferent(const QString &pFileName,
-                              const QByteArray &pFileContents) const
+                              const QString &pFileContents) const
 {
     // Return whether the given file, if it is being managed, has the same
     // contents has the given one
@@ -520,7 +520,7 @@ void FileManager::reload(const QString &pFileName,
 
 //==============================================================================
 
-bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
+bool FileManager::newFile(QString &pFileName, const QString &pContents)
 {
     // Retrieve a temporary file name for our new file
 
@@ -542,7 +542,7 @@ bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
 //==============================================================================
 
 FileManager::Status FileManager::create(const QString &pUrl,
-                                        const QByteArray &pContents)
+                                        const QString &pContents)
 {
     // Create a new file
 
@@ -600,7 +600,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
     if (nativeFile) {
         // The file is managed, so retrieve its contents
 
-        QByteArray fileContents;
+        QString fileContents;
 
         if (readFileContentsFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our

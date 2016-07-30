@@ -67,7 +67,7 @@ CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEdit
     mValid(pValid),
     mCellmlVersion(pCellmlVersion),
     mRdfNodes(pRdfNodes),
-    mFileContents(QByteArray()),
+    mFileContents(QString()),
     mConvertedFileContents(QString())
 {
 }
@@ -155,7 +155,7 @@ QDomDocument CellmlTextViewWidgetData::rdfNodes() const
 
 //==============================================================================
 
-QByteArray CellmlTextViewWidgetData::fileContents() const
+QString CellmlTextViewWidgetData::fileContents() const
 {
     // Return our (physical) file contents
 
@@ -164,7 +164,7 @@ QByteArray CellmlTextViewWidgetData::fileContents() const
 
 //==============================================================================
 
-void CellmlTextViewWidgetData::setFileContents(const QByteArray &pFileContents)
+void CellmlTextViewWidgetData::setFileContents(const QString &pFileContents)
 {
     // Set our (physical) file contents
 
@@ -264,7 +264,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // text version of the given CellML file
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QByteArray fileContents;
+        QString fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
@@ -520,14 +520,14 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
             // The given file is considered as modified, so we need to retrieve
             // the contents of its physical version
 
-            QByteArray fileContents;
+            QString fileContents;
 
             Core::readFileContentsFromFile(pFileName, fileContents);
 
             // Check whether we already know about that file contents and, if
             // not, determine its converted version (and keep track of it)
 
-            if (fileContents != data->fileContents()) {
+            if (fileContents.compare(data->fileContents())) {
                 CellMLTextViewConverter converter;
                 bool fileIsEmpty = fileContents.trimmed().isEmpty();
                 bool successfulConversion = fileIsEmpty?true:converter.execute(fileContents);
@@ -626,7 +626,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
                                                          Core::newFileName(pNewFileName, "txt"));
 
                 if (!fileName.isEmpty())
-                    Core::writeFileContentsToFile(fileName, data->editingWidget()->editorWidget()->contents().toUtf8());
+                    Core::writeFileContentsToFile(fileName, data->editingWidget()->editorWidget()->contents());
             }
 
             pNeedFeedback = false;

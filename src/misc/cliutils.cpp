@@ -132,11 +132,11 @@ void initApplication(QString *pAppDate)
 
     // Retrieve and set the version of the application
 
-    QByteArray versionData;
+    QString versionData;
 
     readFileContentsFromFile(":app_versiondate", versionData);
 
-    QStringList versionDataList = QString(versionData).split(eolString());
+    QStringList versionDataList = versionData.split(eolString());
 
     qApp->setApplicationVersion(versionDataList.first());
 

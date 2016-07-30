@@ -152,7 +152,7 @@ QString CORE_EXPORT newFileName(const QString &pFileName,
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pFileExtension);
 
-bool CORE_EXPORT validXml(const QByteArray &pXml, const QByteArray &pSchema);
+bool CORE_EXPORT validXml(const QString &pXml, const QString &pSchema);
 bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
                               const QString &pSchemaFileName);
 

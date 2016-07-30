@@ -58,7 +58,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
     static const QString Header = "%1 (%2)";
 
-    QByteArray data = QByteArray();
+    QString data = QString();
 
     if (voi) {
         data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),

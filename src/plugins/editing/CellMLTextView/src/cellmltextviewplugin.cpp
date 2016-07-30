@@ -412,7 +412,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
 
-    QByteArray fileContents;
+    QString fileContents;
 
     if (isLocalFile) {
         if (!QFile::exists(fileNameOrUrl))
@@ -436,7 +436,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                                                                                        .arg(converter.errorColumn())
                                                                                        .arg(Core::formatMessage(converter.errorMessage(), false));
             } else {
-                std::cout << converter.output().toUtf8().constData();
+                QByteArray converterOutputByteArray = converter.output().toUtf8();
+
+                std::cout << converterOutputByteArray.constData();
             }
         } else {
             OpenCOR::CellMLTextView::CellmlTextViewParser parser;
@@ -452,7 +454,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                     }
                 }
             } else {
-                std::cout << QString(Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
+                std::cout << Core::serialiseDomDocument(parser.domDocument()).constData();
             }
         }
     }

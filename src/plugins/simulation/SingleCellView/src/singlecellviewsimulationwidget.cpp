@@ -1806,7 +1806,7 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
                 QString localImportedFileName = Core::temporaryFileName();
 
                 Core::writeFileContentsToFile(localImportedFileName,
-                                      mCellmlFile->importedFileContents(importedFileName).toUtf8());
+                                              mCellmlFile->importedFileContents(importedFileName));
 
                 remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }

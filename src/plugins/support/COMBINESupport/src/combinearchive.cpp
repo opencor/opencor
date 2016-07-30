@@ -329,8 +329,8 @@ bool CombineArchive::isValid()
 
     // Make sure that the manifest is a valid OMEX file
 
-    QByteArray manifestContents;
-    QByteArray schemaContents;
+    QString manifestContents;
+    QString schemaContents;
 
     Core::readFileContentsFromFile(manifestFileName, manifestContents);
     Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);

@@ -332,7 +332,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     if (!isLocalFile) {
         // We are dealing with a remote file, so try to get a local copy of it
 
-        QByteArray fileContents;
+        QString fileContents;
 
         if (Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save

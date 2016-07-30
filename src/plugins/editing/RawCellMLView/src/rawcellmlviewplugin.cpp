@@ -110,7 +110,7 @@ bool RawCellMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileNam
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
     return crtEditorWidget?
-               Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents().toUtf8()):
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents()):
                false;
 }
 
@@ -140,7 +140,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
     return crtEditorWidget?
-               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents().toUtf8()):
+               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
 

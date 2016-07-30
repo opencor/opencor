@@ -107,7 +107,7 @@ public:
 
     bool isDifferent(const QString &pFileName) const;
     bool isDifferent(const QString &pFileName,
-                     const QByteArray &pFileContents) const;
+                     const QString &pFileContents) const;
 
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
@@ -135,7 +135,7 @@ public:
                 const bool &pForceFileChanged = false);
 
     Status create(const QString &pUrl = QString(),
-                  const QByteArray &pContents = QByteArray());
+                  const QString &pContents = QString());
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -156,7 +156,7 @@ private:
     bool opencorActive() const;
     void startStopTimer();
 
-    bool newFile(QString &pFileName, const QByteArray &pContents = QByteArray());
+    bool newFile(QString &pFileName, const QString &pContents = QString());
 
 signals:
     void fileManaged(const QString &pFileName);

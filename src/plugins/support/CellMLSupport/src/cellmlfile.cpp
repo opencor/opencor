@@ -246,14 +246,14 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         // We haven't already loaded the import contents, so do
                         // so now
 
-                        QByteArray fileContents;
+                        QString fileContents;
 
                         if (   ( isLocalFile && Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
                             || (!isLocalFile && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
-                            import->instantiateFromText(QString(fileContents).toStdWString());
+                            import->instantiateFromText(fileContents.toStdWString());
 
                             // Keep track of the import contents
 
@@ -1093,7 +1093,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Note: you would normally expect CeLEDSExporter to check this, but all
         //       it does in case of an invalid XML file is crash...
 
-        QByteArray userDefinedFormatFileContents;
+        QString userDefinedFormatFileContents;
 
         if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -1133,7 +1133,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         if (pFileName.isEmpty()) {
             std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
-        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)).toUtf8())) {
+        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the output file could not be saved"));
 

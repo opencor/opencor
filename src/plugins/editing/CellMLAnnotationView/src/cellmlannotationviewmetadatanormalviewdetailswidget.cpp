@@ -108,11 +108,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     // Create our output for ontological terms
 
-    QByteArray fileContents;
-
-    Core::readFileContentsFromFile(":/CellMLAnnotationView/ontologicalTerms.html", fileContents);
-
-    mOutputOntologicalTermsTemplate = fileContents;
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
     mOutputOntologicalTerms = new WebViewerWidget::WebViewerWidget(mOutput);
 

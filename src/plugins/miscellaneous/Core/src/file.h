@@ -79,7 +79,7 @@ public:
     void reset(const bool &pResetDependencies = true);
 
     bool isDifferent() const;
-    bool isDifferent(const QByteArray &pFileContents) const;
+    bool isDifferent(const QString &pFileContents) const;
 
     bool isNew() const;
     bool makeNew(const QString &pFileName);

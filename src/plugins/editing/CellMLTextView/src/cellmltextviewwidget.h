@@ -87,8 +87,8 @@ public:
 
     QDomDocument rdfNodes() const;
 
-    QByteArray fileContents() const;
-    void setFileContents(const QByteArray &pFileContents);
+    QString fileContents() const;
+    void setFileContents(const QString &pFileContents);
 
     QString convertedFileContents() const;
     void setConvertedFileContents(const QString &pConvertedFileContents);
@@ -99,7 +99,7 @@ private:
     bool mValid;
     CellMLSupport::CellmlFile::Version mCellmlVersion;
     QDomDocument mRdfNodes;
-    QByteArray mFileContents;
+    QString mFileContents;
     QString mConvertedFileContents;
 };
 
