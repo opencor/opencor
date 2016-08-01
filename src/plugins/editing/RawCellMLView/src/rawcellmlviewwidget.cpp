@@ -550,7 +550,8 @@ void RawCellmlViewWidget::updateViewer()
 
                 mContentMathmlEquation = QString();
 
-                mEditingWidget->mathmlViewer()->setContents(QString());
+                if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
+                    mEditingWidget->mathmlViewer()->setContents(QString());
             }
         }
     } else {
@@ -558,7 +559,8 @@ void RawCellmlViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->mathmlViewer()->setContents(QString());
+        if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
+            mEditingWidget->mathmlViewer()->setContents(QString());
     }
 }
 

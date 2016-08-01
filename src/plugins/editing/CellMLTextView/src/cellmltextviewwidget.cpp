@@ -1140,7 +1140,8 @@ void CellmlTextViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->mathmlViewer()->setContents(QString());
+        if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
+            mEditingWidget->mathmlViewer()->setContents(QString());
     } else {
         // There is a statement, so try to parse it
 
