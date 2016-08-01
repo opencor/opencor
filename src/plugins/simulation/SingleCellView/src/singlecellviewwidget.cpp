@@ -529,7 +529,7 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &
 
 //==============================================================================
 
-QWidget * SingleCellViewWidget::widget(const QString &pFileName) const
+QWidget * SingleCellViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (simulation) widget
 

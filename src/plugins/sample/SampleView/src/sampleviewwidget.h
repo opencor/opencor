@@ -49,6 +49,8 @@ public:
 
     virtual void retranslateUi();
 
+    virtual QWidget * widget(const QString &pFileName);
+
     void update(const QString &pFileName);
 
 private:

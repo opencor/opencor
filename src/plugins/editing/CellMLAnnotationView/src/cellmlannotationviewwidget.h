@@ -67,7 +67,7 @@ public:
 
     CellmlAnnotationViewEditingWidget * editingWidget(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName) const;
+    virtual QWidget * widget(const QString &pFileName);
 
     static QString resourceUrl(const QString &pResource);
     static QString idUrl(const QString &pResource, const QString &pId);

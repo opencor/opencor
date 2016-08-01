@@ -272,7 +272,7 @@ CellMLEditingView::CellmlEditingViewWidget * RawCellmlViewWidget::editingWidget(
 
 //==============================================================================
 
-QWidget * RawCellmlViewWidget::widget(const QString &pFileName) const
+QWidget * RawCellmlViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (editing) widget
 

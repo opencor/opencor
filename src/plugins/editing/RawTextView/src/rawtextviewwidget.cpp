@@ -227,7 +227,7 @@ EditorWidget::EditorWidget * RawTextViewWidget::editorWidget(const QString &pFil
 
 //==============================================================================
 
-QWidget * RawTextViewWidget::widget(const QString &pFileName) const
+QWidget * RawTextViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (editor) widget
 

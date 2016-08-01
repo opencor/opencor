@@ -68,7 +68,7 @@ public:
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName) const;
+    virtual QWidget * widget(const QString &pFileName);
 
     virtual QList<QWidget *> statusBarWidgets() const;
 

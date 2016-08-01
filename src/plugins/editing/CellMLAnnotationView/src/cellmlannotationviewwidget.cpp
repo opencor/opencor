@@ -226,7 +226,7 @@ CellmlAnnotationViewEditingWidget * CellmlAnnotationViewWidget::editingWidget(co
 
 //==============================================================================
 
-QWidget * CellmlAnnotationViewWidget::widget(const QString &pFileName) const
+QWidget * CellmlAnnotationViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (editing) widget
 

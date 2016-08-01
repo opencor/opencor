@@ -92,7 +92,7 @@ public:
     SingleCellViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName) const;
+    virtual QWidget * widget(const QString &pFileName);
 
     qulonglong simulationResultsSize(const QString &pFileName) const;
 
