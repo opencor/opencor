@@ -494,7 +494,7 @@ QStringList SingleCellViewWidget::fileNames() const
 
 SingleCellViewSimulationWidget * SingleCellViewWidget::simulationWidget(const QString &pFileName) const
 {
-    // Return the simulation widget for the given file name
+    // Return the requested simulation widget
 
     return mSimulationWidgets.value(pFileName);
 }
@@ -525,6 +525,15 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &
         return simulationWidget->simulation()->runtime();
     else
         return 0;
+}
+
+//==============================================================================
+
+QWidget * SingleCellViewWidget::widget(const QString &pFileName) const
+{
+    // Return the requested (simulation) widget
+
+    return simulationWidget(pFileName);
 }
 
 //==============================================================================

@@ -1783,6 +1783,8 @@ void CentralWidget::updateGui()
                 Qt::UniqueConnection);
 
         updateStatusBarWidgets(newViewWidget->statusBarWidgets());
+
+        newView = newViewWidget->widget(fileName);
     } else {
         updateStatusBarWidgets(QList<QWidget *>());
     }

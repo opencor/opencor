@@ -497,6 +497,15 @@ CellMLEditingView::CellmlEditingViewWidget * CellmlTextViewWidget::editingWidget
 
 //==============================================================================
 
+QWidget * CellmlTextViewWidget::widget(const QString &pFileName) const
+{
+    // Return the requested (editing) widget
+
+    return editingWidget(pFileName);
+}
+
+//==============================================================================
+
 bool CellmlTextViewWidget::isEditorWidgetUseable(const QString &pFileName) const
 {
     // Return whether the requested editor widget is useable

@@ -92,6 +92,8 @@ public:
     SingleCellViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
+    virtual QWidget * widget(const QString &pFileName) const;
+
     qulonglong simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,

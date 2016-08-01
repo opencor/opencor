@@ -227,6 +227,15 @@ EditorWidget::EditorWidget * RawTextViewWidget::editorWidget(const QString &pFil
 
 //==============================================================================
 
+QWidget * RawTextViewWidget::widget(const QString &pFileName) const
+{
+    // Return the requested (editor) widget
+
+    return editorWidget(pFileName);
+}
+
+//==============================================================================
+
 QList<QWidget *> RawTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets

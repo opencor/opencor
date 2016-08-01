@@ -243,6 +243,15 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
 
 //==============================================================================
 
+QWidget * RawSedmlViewWidget::widget(const QString &pFileName) const
+{
+    // Return the requested (editor) widget
+
+    return editorWidget(pFileName);
+}
+
+//==============================================================================
+
 QList<QWidget *> RawSedmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets

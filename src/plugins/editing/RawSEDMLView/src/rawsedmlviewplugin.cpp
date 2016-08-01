@@ -330,7 +330,7 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editorWidget(pFileName);
+    return mViewWidget;
 }
 
 //==============================================================================
