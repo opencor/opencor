@@ -236,7 +236,7 @@ QString digitGroupNumber(const QString &pNumber)
     double number = res.toDouble(&validNumber);
 
     if (validNumber)
-        res = QLocale().toString(number);
+        res = QLocale().toString(number, 'g', 15);
 
     return res;
 }
