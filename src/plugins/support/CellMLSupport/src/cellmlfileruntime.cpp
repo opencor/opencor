@@ -604,20 +604,22 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
                "    int *pret = &ret;\n"
                "\n";
 
-        if (pHasDefines)
+        if (pHasDefines) {
             res += "#define VOI 0.0\n"
                    "#define ALGEBRAIC 0\n"
                    "\n";
+        }
 
         res += pFunctionBody;
 
         if (!pFunctionBody.endsWith("\n"))
             res += "\n";
 
-        if (pHasDefines)
+        if (pHasDefines) {
             res += "\n"
                    "#undef ALGEBRAIC\n"
                    "#undef VOI\n";
+        }
 
         res += "\n"
                "    return ret;\n";

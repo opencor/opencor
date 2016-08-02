@@ -268,11 +268,12 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                 // Set the solver's property's 'unit', if needed
 
-                if (solverInterfaceProperty.hasVoiUnit())
+                if (solverInterfaceProperty.hasVoiUnit()) {
                     property->setUnit("???");
                     // Note: to assign a non-empty string to our unit item is
                     //       just a way for us to make sure that the property's
                     //       will get initialised (see setPropertiesUnit())...
+                }
 
                 // Keep track of the solver's property
 
@@ -324,10 +325,12 @@ void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInf
 
     // Go through the solvers' properties and set the unit of the relevant ones
 
-    foreach (const Core::Properties &properties, pSolverData->solversProperties())
-        foreach (Core::Property *property, properties)
+    foreach (const Core::Properties &properties, pSolverData->solversProperties()) {
+        foreach (Core::Property *property, properties) {
             if (!property->unit().isEmpty())
                 property->setUnit(pVoiUnit);
+        }
+    }
 }
 
 //==============================================================================

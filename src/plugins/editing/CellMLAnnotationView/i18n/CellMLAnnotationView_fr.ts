@@ -11,46 +11,6 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlListWidget</name>
     <message>
-        <source>Imports</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Units</source>
-        <translation>Unités</translation>
-    </message>
-    <message>
-        <source>Components</source>
-        <translation>Composants</translation>
-    </message>
-    <message>
-        <source>Variables</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Groupes</translation>
-    </message>
-    <message>
-        <source>Relationship References</source>
-        <translation>Références de Relation</translation>
-    </message>
-    <message>
-        <source>Component References</source>
-        <translation>Références de Composant</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Connexions</translation>
-    </message>
-    <message>
-        <source>Group #%1</source>
-        <translation>Groupe n° %1</translation>
-    </message>
-    <message>
-        <source>Connection #%1</source>
-        <translation>Connexion n° %1</translation>
-    </message>
-    <message>
         <source>Expand All</source>
         <translation>Tout Étendre</translation>
     </message>
@@ -89,6 +49,46 @@
     <message>
         <source>Open the imported file</source>
         <translation>Ouvrir le fichier importé</translation>
+    </message>
+    <message>
+        <source>Imports</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Units</source>
+        <translation>Unités</translation>
+    </message>
+    <message>
+        <source>Components</source>
+        <translation>Composants</translation>
+    </message>
+    <message>
+        <source>Variables</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Groupes</translation>
+    </message>
+    <message>
+        <source>Relationship References</source>
+        <translation>Références De Relation</translation>
+    </message>
+    <message>
+        <source>Component References</source>
+        <translation>Références De Composant</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
+    </message>
+    <message>
+        <source>Group #%1</source>
+        <translation>Groupe n° %1</translation>
+    </message>
+    <message>
+        <source>Connection #%1</source>
+        <translation>Connexion n° %1</translation>
     </message>
 </context>
 <context>
@@ -241,6 +241,10 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
     <message>
+        <source>Select a CellML element...</source>
+        <translation>Sélectionnez un élément CellML...</translation>
+    </message>
+    <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of metadata...</source>
         <translation>La vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnée...</translation>
     </message>
@@ -248,20 +252,16 @@
         <source>Click &lt;a href=&quot;here&quot;&gt;here&lt;/a&gt; if you want to remove the existing metadata.</source>
         <translation>Cliquez &lt;a href=&quot;ici&quot;&gt;ici&lt;/a&gt; si vous voulez supprimer la ou les métadonnées actuelles.</translation>
     </message>
-    <message>
-        <source>Select a CellML element...</source>
-        <translation>Sélectionnez un élément CellML...</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataEditDetailsWidget</name>
     <message>
-        <source>Look up the qualifier</source>
-        <translation>Vérifier le qualificatif</translation>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
     <message>
-        <source>Look Up</source>
-        <translation>Vérifier</translation>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
     <message>
         <source>Qualifier:</source>
@@ -272,16 +272,12 @@
         <translation>Terme :</translation>
     </message>
     <message>
-        <source>Name</source>
-        <translation>Nom</translation>
+        <source>Look up the qualifier</source>
+        <translation>Vérifier le qualificatif</translation>
     </message>
     <message>
-        <source>Resource</source>
-        <translation>Ressource</translation>
-    </message>
-    <message>
-        <source>Id</source>
-        <translation></translation>
+        <source>Look Up</source>
+        <translation>Vérifier</translation>
     </message>
     <message>
         <source>Add the term</source>
@@ -296,16 +292,32 @@
         <translation>Entrez un terme plus haut...</translation>
     </message>
     <message>
-        <source>No terms were found for &lt;strong&gt;%1&lt;/strong&gt;...</source>
-        <translation>Aucuns termes n&apos;ont été trouvés pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
-    </message>
-    <message>
         <source>You can directly add the term &lt;strong&gt;%1&lt;/strong&gt;...</source>
         <translation>Vous pouvez directement ajouter le terme &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
+        <source>The term &lt;strong&gt;%1&lt;/strong&gt; cannot be added using the above qualifier...</source>
+        <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; ne peut pas être ajouté avec le qualificatif ci-dessus...</translation>
+    </message>
+    <message>
         <source>The term &lt;strong&gt;%1&lt;/strong&gt; has already been added using the above qualifier...</source>
         <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; a déjà été ajouté avec le qualificatif ci-dessus...</translation>
+    </message>
+    <message>
+        <source>No terms were found for &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>Aucuns termes n&apos;ont été trouvés pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <source>Resource</source>
+        <translation>Ressource</translation>
+    </message>
+    <message>
+        <source>Id</source>
+        <translation></translation>
     </message>
     <message>
         <source>(1 term)</source>
@@ -316,6 +328,10 @@
         <translation>(%1 termes)</translation>
     </message>
     <message>
+        <source>Add Term</source>
+        <translation>Ajouter Terme</translation>
+    </message>
+    <message>
         <source>Look Up Resource</source>
         <translation>Vérifier Ressource</translation>
     </message>
@@ -323,14 +339,9 @@
         <source>Look Up Id</source>
         <translation>Vérifier Id</translation>
     </message>
-    <message>
-        <source>Add Term</source>
-        <translation>Ajouter Terme</translation>
-    </message>
-    <message>
-        <source>The term &lt;strong&gt;%1&lt;/strong&gt; cannot be added using the above qualifier...</source>
-        <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; ne peut pas être ajouté avec le qualificatif ci-dessus...</translation>
-    </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
     <message>
         <source>Copy</source>
         <translation>Copier</translation>
@@ -339,9 +350,10 @@
         <source>Copy the URL to the clipboard</source>
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
+    <message>
+        <source>There is no metadata associated with the current CellML element...</source>
+        <translation>Il n&apos;y a pas de métadonnées associées à l&apos;élément CellML actuel...</translation>
+    </message>
     <message>
         <source>Qualifier</source>
         <translation>Qualificatif</translation>
@@ -363,8 +375,8 @@
         <translation>(%1 termes)</translation>
     </message>
     <message>
-        <source>There is no metadata associated with the current CellML element...</source>
-        <translation>Il n&apos;y a pas de métadonnées associées à l&apos;élément CellML actuel...</translation>
+        <source>Remove Term</source>
+        <translation>Supprimer Terme</translation>
     </message>
     <message>
         <source>Look Up Qualifier</source>
@@ -377,18 +389,6 @@
     <message>
         <source>Look Up Id</source>
         <translation>Vérifier Id</translation>
-    </message>
-    <message>
-        <source>Remove Term</source>
-        <translation>Supprimer Terme</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-    <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
 </context>
 <context>

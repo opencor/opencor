@@ -73,7 +73,9 @@ void PmrRepositoryResponse::processResponse(void)
         memset(&stream, 0, sizeof(z_stream));
 
         if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
-            static const int BufferSize = 32768;
+            enum {
+                BufferSize = 32768
+            };
 
             Bytef buffer[BufferSize];
 

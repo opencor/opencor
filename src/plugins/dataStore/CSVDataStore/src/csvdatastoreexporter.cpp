@@ -47,43 +47,52 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 {
     Q_UNUSED(pErrorMessage);
 
+    // Determine what should be exported
+
+    DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(mDataStore->voi())?mDataStore->voi():0;
+    DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
+
+    selectedVariables.removeOne(voi);
+
     // Header
 
     static const QString Header = "%1 (%2)";
 
-    DataStore::DataStoreVariable *voi = mDataStore->voi();
-    DataStore::DataStoreVariables variables = mDataStore->variables();
+    QString data = QString();
 
-    QByteArray data = QByteArray();
+    if (voi) {
+        data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+                           voi->unit());
+    }
 
-    data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
-                       voi->unit());
+    foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
+        if (!data.isEmpty())
+            data += ",";
 
-    auto variableBegin = variables.constBegin();
-    auto variableEnd = variables.constEnd();
-
-    for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-        if ((*variable)->isValid()) {
-            data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
-                                   (*variable)->unit());
-        }
+        data += Header.arg(selectedVariable->uri().replace("/prime", "'").replace("/", " | "),
+                           selectedVariable->unit());
     }
 
     data += "\n";
 
     // Data itself
 
-    for (qulonglong i = 0; i < mDataStore->size(); ++i) {
-        data += QString::number(voi->value(i));
+    for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+        QString rowData = QString();
 
-        for (auto variable = variableBegin; variable != variableEnd; ++variable) {
-            if ((*variable)->isValid())
-                data += ","+QString::number((*variable)->value(i));
+        if (voi)
+            rowData += QString::number(voi->value(i));
+
+        foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
+            if (!rowData.isEmpty())
+                rowData += ",";
+
+            rowData += QString::number(selectedVariable->value(i));
         }
 
-        data += "\n";
+        data += rowData+"\n";
 
-        emit progress(double(i)/(mDataStore->size()-1));
+        emit progress(double(i)/(iMax-1));
     }
 
     // The data is ready, so write it to the file

@@ -120,7 +120,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        QByteArray fileContents;
+        QString fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
@@ -268,6 +268,15 @@ CellMLEditingView::CellmlEditingViewWidget * RawCellmlViewWidget::editingWidget(
     // Return the requested editing widget
 
     return mEditingWidgets.value(pFileName);
+}
+
+//==============================================================================
+
+QWidget * RawCellmlViewWidget::widget(const QString &pFileName)
+{
+    // Return the requested (editing) widget
+
+    return editingWidget(pFileName);
 }
 
 //==============================================================================
@@ -550,7 +559,8 @@ void RawCellmlViewWidget::updateViewer()
 
                 mContentMathmlEquation = QString();
 
-                mEditingWidget->mathmlViewer()->setContents(QString());
+                if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
+                    mEditingWidget->mathmlViewer()->setContents(QString());
             }
         }
     } else {
@@ -558,7 +568,8 @@ void RawCellmlViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->mathmlViewer()->setContents(QString());
+        if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
+            mEditingWidget->mathmlViewer()->setContents(QString());
     }
 }
 

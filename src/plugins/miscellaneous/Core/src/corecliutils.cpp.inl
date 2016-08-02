@@ -370,6 +370,20 @@ bool readFileContentsFromFile(const QString &pFileName,
 
 //==============================================================================
 
+bool readFileContentsFromFile(const QString &pFileName, QString &pFileContents)
+{
+    // Read the contents of the file, which file name is given
+
+    QByteArray fileContents = QByteArray();
+    bool res = readFileContentsFromFile(pFileName, fileContents);
+
+    pFileContents = fileContents;
+
+    return res;
+}
+
+//==============================================================================
+
 bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
                              QString *pErrorMessage)
 {
@@ -378,6 +392,21 @@ bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
     static SynchronousFileDownloader synchronousFileDownloader;
 
     return synchronousFileDownloader.download(pUrl, pFileContents, pErrorMessage);
+}
+
+//==============================================================================
+
+bool readFileContentsFromUrl(const QString &pUrl, QString &pFileContents,
+                             QString *pErrorMessage)
+{
+    // Read the contents of the file, which URL is given
+
+    QByteArray fileContents = QByteArray();
+    bool res = readFileContentsFromUrl(pUrl, fileContents, pErrorMessage);
+
+    pFileContents = fileContents;
+
+    return res;
 }
 
 //==============================================================================
@@ -415,6 +444,16 @@ bool writeFileContentsToFile(const QString &pFileName,
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool writeFileContentsToFile(const QString &pFileName,
+                             const QString &pFileContents)
+{
+    // Write the given file contents to the given file name
+
+    return writeFileContentsToFile(pFileName, pFileContents.toUtf8());
 }
 
 //==============================================================================

@@ -4,6 +4,14 @@
 <context>
     <name>OpenCOR::SEDMLEditingView::SEDMLEditingViewPlugin</name>
     <message>
+        <source>Reformat</source>
+        <translation>Reformatter</translation>
+    </message>
+    <message>
+        <source>Reformat the contents of the editor</source>
+        <translation>Reformatter le contenu de l&apos;éditeur</translation>
+    </message>
+    <message>
         <source>SED-ML Validation</source>
         <translation>Validation SED-ML</translation>
     </message>
@@ -14,14 +22,6 @@
     <message>
         <source>The SED-ML file is valid.</source>
         <translation>Le fichier SED-ML est valide.</translation>
-    </message>
-    <message>
-        <source>Reformat</source>
-        <translation>Reformatter</translation>
-    </message>
-    <message>
-        <source>Reformat the contents of the editor</source>
-        <translation>Reformatter le contenu de l&apos;éditeur</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Note:&lt;/strong&gt; %1.</source>

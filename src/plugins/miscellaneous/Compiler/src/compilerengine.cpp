@@ -84,7 +84,7 @@ bool CompilerEngine::hasError() const
 {
     // Return whether an error occurred
 
-    return mError.size();
+    return !mError.isEmpty();
 }
 
 //==============================================================================

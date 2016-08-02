@@ -17,51 +17,42 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Save as BioSignalML widget
+// Data store plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QDialog>
-
-//==============================================================================
-
-namespace Ui {
-    class BioSignalMLSelectVariables;
-}
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace BioSignalMLDataStore {
+namespace DataStore {
 
 //==============================================================================
 
-class BioSignalMLSelectVariables : public QDialog
+PLUGININFO_FUNC DataStorePluginInfo();
+
+//==============================================================================
+
+class DataStorePlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.DataStorePlugin" FILE "datastoreplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
 public:
-    explicit BioSignalMLSelectVariables(const QVector<QString> &pLabels,
-                                        const QVector<bool> &pChecked,
-                                        QWidget *pParent);
-    ~BioSignalMLSelectVariables();
-
-    virtual void retranslateUi();
-    bool checked(size_t pIndex);
-
-private slots:
-    void selectAllVariables(bool checked = false);
-
-private:
-    Ui::BioSignalMLSelectVariables *mGui;
+#include "i18ninterface.inl"
 };
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================

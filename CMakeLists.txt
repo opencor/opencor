@@ -75,11 +75,11 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
-    src/checkforupdateswindow.cpp
+    src/checkforupdatesdialog.cpp
     src/main.cpp
     src/mainwindow.cpp
-    src/pluginswindow.cpp
-    src/preferenceswindow.cpp
+    src/pluginsdialog.cpp
+    src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
@@ -96,10 +96,10 @@ SET(SOURCES
 )
 
 SET(HEADERS_MOC
-    src/checkforupdateswindow.h
+    src/checkforupdatesdialog.h
     src/mainwindow.h
-    src/pluginswindow.h
-    src/preferenceswindow.h
+    src/pluginsdialog.h
+    src/preferencesdialog.h
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
@@ -112,10 +112,10 @@ SET(HEADERS_MOC
 )
 
 SET(UIS
-    src/checkforupdateswindow.ui
+    src/checkforupdatesdialog.ui
     src/mainwindow.ui
-    src/pluginswindow.ui
-    src/preferenceswindow.ui
+    src/pluginsdialog.ui
+    src/preferencesdialog.ui
     src/splashscreenwindow.ui
 )
 
@@ -330,6 +330,8 @@ SET(PLUGINS
     widget/WebViewerWidget
 
     # Plugins that provide some generic features
+
+    dataStore/DataStore
 
     editing/EditingView
 
@@ -586,7 +588,8 @@ ENDIF()
 IF(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
-    IF(EXISTS $ENV{PROGRAMFILES}/NSIS/makensis.exe)
+    IF(   EXISTS "C:/Program\ Files/NSIS/makensis.exe"
+       OR EXISTS "C:/Program\ Files\ (x86)/NSIS/makensis.exe")
         SET(NSIS_FOUND TRUE)
         SET(NSIS_GENERATOR NSIS)
     ELSE()

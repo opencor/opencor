@@ -21,7 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "checkforupdateswindow.h"
+#include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "coreinterface.h"
 #include "guiapplication.h"
@@ -31,8 +31,8 @@ limitations under the License.
 #include "mainwindow.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
-#include "pluginswindow.h"
-#include "preferenceswindow.h"
+#include "pluginsdialog.h"
+#include "preferencesdialog.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -107,6 +107,11 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
+    // Keep track of when we are about to quit
+
+    QObject::connect(qApp, SIGNAL(aboutToQuit()),
+                     this, SLOT(aboutToQuit()));
+
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
     // itself
@@ -440,7 +445,7 @@ void MainWindow::registerOpencorUrlScheme()
                                         "Exec=%1 %u\n"
                                         "Icon=%1\n"
                                         "Terminal=false\n"
-                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())).toUtf8());
+                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())));
     }
 #elif defined(Q_OS_MAC)
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
@@ -506,7 +511,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                 // Keep track of the new menu, but only if it has a name
 
-                if (newMenuName.size())
+                if (!newMenuName.isEmpty())
                     mMenus.insert(newMenuName, newMenu);
             }
         }
@@ -1037,6 +1042,15 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
+void MainWindow::aboutToQuit()
+{
+    // Keep track of the fact that we are about to quit
+
+    qApp->setProperty("OpenCOR::aboutToQuit()", true);
+}
+
+//==============================================================================
+
 void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl)
 {
     // Handle the given file name or OpenCOR URL as if it was an argument
@@ -1156,27 +1170,27 @@ void MainWindow::on_actionFrench_triggered()
 void MainWindow::on_actionPlugins_triggered()
 {
     if (mPluginManager->plugins().count()) {
-        // There are some plugins, so we can show the plugins window
+        // There are some plugins, so we can show the plugins dialog
 
-        PluginsWindow pluginsWindow(mPluginManager, this);
+        PluginsDialog pluginsDialog(mPluginManager, this);
 
-        mSettings->beginGroup(pluginsWindow.objectName());
-            pluginsWindow.loadSettings(mSettings);
+        mSettings->beginGroup(pluginsDialog.objectName());
+            pluginsDialog.loadSettings(mSettings);
         mSettings->endGroup();
 
-        pluginsWindow.exec();
-        // Note: the execution of the plugins window may result in the saving of
+        pluginsDialog.exec();
+        // Note: the execution of the plugins dialog may result in the saving of
         //       the application's settings, so for this to work we must ensure
         //       that any opened settings group has first been closed...
 
-        mSettings->beginGroup(pluginsWindow.objectName());
-            pluginsWindow.saveSettings(mSettings);
+        mSettings->beginGroup(pluginsDialog.objectName());
+            pluginsDialog.saveSettings(mSettings);
         mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
 
-        if (pluginsWindow.result() == QMessageBox::Apply)
+        if (pluginsDialog.result() == QMessageBox::Apply)
             restart(true);
     } else {
         QMessageBox::warning(this, tr("Plugins"),
@@ -1188,11 +1202,11 @@ void MainWindow::on_actionPlugins_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    // Show the preferences window
+    // Show the preferences dialog
 
-    PreferencesWindow preferencesWindow(this);
+    PreferencesDialog preferencesDialog(this);
 
-    preferencesWindow.exec();
+    preferencesDialog.exec();
 }
 
 //==============================================================================
@@ -1208,18 +1222,18 @@ void MainWindow::on_actionHomePage_triggered()
 
 void MainWindow::on_actionCheckForUpdates_triggered()
 {
-    // Show the check for updates window
+    // Show the check for updates dialog
 
-    CheckForUpdatesWindow checkForUpdatesWindow(mApplicationDate, this);
+    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-    mSettings->beginGroup(checkForUpdatesWindow.objectName());
-        checkForUpdatesWindow.loadSettings(mSettings);
+    mSettings->beginGroup(checkForUpdatesDialog.objectName());
+        checkForUpdatesDialog.loadSettings(mSettings);
     mSettings->endGroup();
 
-    checkForUpdatesWindow.exec();
+    checkForUpdatesDialog.exec();
 
-    mSettings->beginGroup(checkForUpdatesWindow.objectName());
-        checkForUpdatesWindow.saveSettings(mSettings);
+    mSettings->beginGroup(checkForUpdatesDialog.objectName());
+        checkForUpdatesDialog.saveSettings(mSettings);
     mSettings->endGroup();
 }
 

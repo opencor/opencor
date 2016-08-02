@@ -87,12 +87,20 @@ public:
 
     QDomDocument rdfNodes() const;
 
+    QString fileContents() const;
+    void setFileContents(const QString &pFileContents);
+
+    QString convertedFileContents() const;
+    void setConvertedFileContents(const QString &pConvertedFileContents);
+
 private:
     CellMLEditingView::CellmlEditingViewWidget *mEditingWidget;
     QString mSha1;
     bool mValid;
     CellMLSupport::CellmlFile::Version mCellmlVersion;
     QDomDocument mRdfNodes;
+    QString mFileContents;
+    QString mConvertedFileContents;
 };
 
 //==============================================================================
@@ -119,6 +127,8 @@ public:
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
     CellMLEditingView::CellmlEditingViewWidget * editingWidget(const QString &pFileName) const;
+
+    virtual QWidget * widget(const QString &pFileName);
 
     bool isEditorWidgetUseable(const QString &pFileName) const;
     bool isEditorWidgetContentsModified(const QString &pFileName) const;

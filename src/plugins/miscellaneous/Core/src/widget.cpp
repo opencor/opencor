@@ -24,8 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QBoxLayout>
+#include <QFormLayout>
 #include <QResizeEvent>
-#include <QVBoxLayout>
+#include <QStackedLayout>
 
 //==============================================================================
 
@@ -52,14 +54,39 @@ Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
 
 //==============================================================================
 
-void Widget::createLayout()
+void Widget::createLayout(const LayoutType &pLayoutType)
 {
     // Create and set a vertical layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QLayout *layout = 0;
+
+    switch (pLayoutType) {
+    case VerticalLayout:
+        layout = new QVBoxLayout(this);
+
+        break;
+    case HorizontalLayout:
+        layout = new QHBoxLayout(this);
+
+        break;
+    case FormLayout:
+        layout = new QFormLayout(this);
+
+        break;
+    case GridLayout:
+        layout = new QGridLayout(this);
+
+        break;
+    case StackedLayout:
+        layout = new QStackedLayout(this);
+
+        break;
+    }
 
     layout->setMargin(0);
-    layout->setSpacing(0);
+
+    if ((pLayoutType == VerticalLayout) || (pLayoutType == HorizontalLayout))
+        layout->setSpacing(0);
 
     setLayout(layout);
 }

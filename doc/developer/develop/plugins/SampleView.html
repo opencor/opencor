@@ -518,6 +518,8 @@ public:
 
     virtual void retranslateUi();
 
+    virtual QWidget * widget(const QString &pFileName);
+
     void update(const QString &pFileName);
 
 private:
@@ -532,7 +534,7 @@ private:
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QWidget</code> (line 41). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file (line 51).
+            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QWidget</code> (line 41). It requires implementing the <code>widget()</code> method, which purpose is to return the exact widget that is to be shown in the view (line 51). In the present case, it is <code>SampleViewWidget</code> itself. Otherwise, <code>SampleViewWidget</code> also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file (line 53).
         </p>
 
         <p>
@@ -601,6 +603,17 @@ void SampleViewWidget::retranslateUi()
 
 //==============================================================================
 
+QWidget * SampleViewWidget::widget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // Return the requested (self) widget
+
+    return this;
+}
+
+//==============================================================================
+
 void SampleViewWidget::update(const QString &pFileName)
 {
     // Keep track of the given file name
@@ -627,7 +640,7 @@ void SampleViewWidget::update(const QString &pFileName)
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>retranslateUi()</code> (lines 66-76) retranslates our view, as well as update its contents using <code>update()</code> (lines 80-98).
+            <code>retranslateUi()</code> (lines 66-76) retranslates our view, as well as return its exact widget (lines 80-87) and update its contents using <code>update()</code> (lines 91-109).
         </p>
 
         <script type="text/javascript">

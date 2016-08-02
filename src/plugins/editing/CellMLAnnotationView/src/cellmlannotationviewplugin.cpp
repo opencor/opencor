@@ -269,7 +269,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editingWidget(pFileName);
+    return mViewWidget;
 }
 
 //==============================================================================

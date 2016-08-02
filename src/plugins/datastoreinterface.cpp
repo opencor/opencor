@@ -33,22 +33,6 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName) :
-    mFileName(pFileName)
-{
-}
-
-//==============================================================================
-
-QString DataStoreData::fileName() const
-{
-    // Return our file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
 DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
     mUri(QString()),
     mName(QString()),
@@ -72,15 +56,33 @@ DataStoreVariable::~DataStoreVariable()
 
 //==============================================================================
 
-bool DataStoreVariable::isValid() const
+bool DataStoreVariable::isVisible() const
 {
-    // Return whether we are valid, i.e. we have a non-empty URI
+    // Return whether we are visible, i.e. we have a non-empty URI
     // Note: this applies to CellML 1.1 file where we keep track of all the
     //       model parameters (including imported ones), but should only export
     //       those that the user can see in the GUI (e.g. in the Single Cell
     //       view). See issues #568 and #808 for some background on this...
 
     return !mUri.isEmpty();
+}
+
+//==============================================================================
+
+QIcon DataStoreVariable::icon() const
+{
+    // Return our icon
+
+    return mIcon;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setIcon(const QIcon &pIcon)
+{
+    // Set our icon
+
+    mIcon = pIcon;
 }
 
 //==============================================================================
@@ -192,12 +194,39 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
+DataStoreData::DataStoreData(const QString &pFileName,
+                             const DataStoreVariables &pSelectedVariables) :
+    mFileName(pFileName),
+    mSelectedVariables(pSelectedVariables)
+{
+}
+
+//==============================================================================
+
+QString DataStoreData::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStoreData::selectedVariables() const
+{
+    // Return our selected variables
+
+    return mSelectedVariables;
+}
+
+//==============================================================================
+
 DataStore::DataStore(const QString &pUri,
                      const qulonglong &pSize) :
     mlUri(pUri),
     mSize(pSize),
     mVoi(0),
-    mVariables(0)
+    mVariables(DataStoreVariables())
 {
 }
 
@@ -235,6 +264,31 @@ qulonglong DataStore::size() const
 
 //==============================================================================
 
+bool sortVariables(DataStoreVariable *pVariable1, DataStoreVariable *pVariable2)
+{
+    // Determine which of the two variables should be first based on their URI
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a variable...
+
+    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStore::voiAndVariables()
+{
+    // Return our variable of integration, if any, and all our variables, after
+    // making sure that they are sorted
+
+    DataStoreVariables res = DataStoreVariables() << mVoi << mVariables;
+
+    std::sort(res.begin(), res.end(), sortVariables);
+
+    return res;
+}
+
+//==============================================================================
+
 DataStoreVariable * DataStore::voi() const
 {
     // Return our variable of integration
@@ -253,17 +307,6 @@ DataStoreVariable * DataStore::addVoi()
     mVoi = new DataStoreVariable(mSize);
 
     return mVoi;
-}
-
-//==============================================================================
-
-bool sortVariables(DataStoreVariable *pVariable1, DataStoreVariable *pVariable2)
-{
-    // Determine which of the two variables should be first based on their URI
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a variable...
-
-    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -297,13 +340,12 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 {
     // Add some variables to our data store
 
-    DataStoreVariables variables(pCount);
+    DataStoreVariables variables = DataStoreVariables();
 
-    for (int i = 0; i < pCount; ++i, ++pValues) {
-        variables[i] = new DataStoreVariable(mSize, pValues);
+    for (int i = 0; i < pCount; ++i, ++pValues)
+        variables << new DataStoreVariable(mSize, pValues);
 
-        mVariables << variables[i];
-    }
+    mVariables << variables;
 
     return variables;
 }

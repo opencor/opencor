@@ -32,7 +32,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unknown exposore: </source>
+        <source>Workspace %1 is already cloned in %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -74,6 +74,30 @@
     </message>
     <message>
         <source>An error occurred while trying to get the status of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Empty Directory</source>
+        <translation>Sélectionner Répertoire Vide</translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to open the workspace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to push the workspace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to commit to the workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to get the remote status of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to stage %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

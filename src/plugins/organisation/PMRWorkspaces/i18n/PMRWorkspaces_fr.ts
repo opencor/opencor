@@ -13,32 +13,73 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRWorkspaces::PmrWorkspacesNewWorkspace</name>
-    <message>
-        <source>Select Empty Directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::PMRWorkspaces::PmrWorkspacesWidget</name>
-    <message>
-        <source>Open File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clone the Workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clone the workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>About the workspace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Select Empty Directory</source>
+        <source>Stage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unstage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull updates from PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commit staged changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Push committed changes to PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Push commits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show in Explorer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show in Finder...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer is not in PATH</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Owner: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Url: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -49,7 +90,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Log off the Physiome Model Repository</source>
+        <source>Log off the Physiome Model Repository?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PmrWorkspacesCommit</name>
+    <message>
+        <source>Commit staged files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter the commit message for your changes. Lines starting with &apos;;&apos; will be ignored, and an empty message aborts the commit.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

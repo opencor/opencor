@@ -882,7 +882,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
         showBusyWidget(this);
 
-        QByteArray fileContents;
+        QString fileContents;
         QString errorMessage;
 
         if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
@@ -992,7 +992,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     showBusyWidget(this);
 
                     QString url = fileManagerInstance->url(fileName);
-                    QByteArray fileContents;
+                    QString fileContents;
                     QString errorMessage;
 
                     bool res = readFileContentsFromUrl(url, fileContents, &errorMessage);
@@ -1783,6 +1783,8 @@ void CentralWidget::updateGui()
                 Qt::UniqueConnection);
 
         updateStatusBarWidgets(newViewWidget->statusBarWidgets());
+
+        newView = newViewWidget->widget(fileName);
     } else {
         updateStatusBarWidgets(QList<QWidget *>());
     }
@@ -1900,16 +1902,16 @@ void CentralWidget::fileChanged(const QString &pFileName,
     // physical version
 
     FileManager *fileManagerInstance = FileManager::instance();
+    bool fileChanged =     pFileChanged
+                       && !fileManagerInstance->isModified(pFileName)
+                       &&  fileManagerInstance->isDifferent(pFileName);
 
-    if (    (    pFileChanged
-             && !fileManagerInstance->isModified(pFileName)
-             &&  fileManagerInstance->isDifferent(pFileName))
-        || pDependenciesChanged) {
+    if (fileChanged || pDependenciesChanged) {
         // The given file and/or one or several of its dependencies has changed,
         // so ask the user whether to reload the given file
 
         if (QMessageBox::question(mainWindow(), tr("File Modified"),
-                                  pFileChanged?
+                                  fileChanged?
                                       pDependenciesChanged?
                                           tr("<strong>%1</strong> and one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName):
                                           tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
@@ -1920,41 +1922,26 @@ void CentralWidget::fileChanged(const QString &pFileName,
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
                 if (!mFileNames[i].compare(pFileName)) {
-                    // We have found the file to reload
-
-                    ViewInterface *viewInterface = qobject_cast<ViewInterface *>(viewPlugin(i)->instance());
-                    QWidget *oldView = ((mFileTabs->currentIndex() == i) && viewInterface->hasViewWidget(pFileName))?viewInterface->viewWidget(pFileName):0;
+                    // We have found the file to reload, so reload it and update
+                    // our GUI
 
                     reloadFile(i, true);
 
-                    // Check whether the view for the file (if it is the current
-                    // one) has changed and, if so, update the GUI
-                    // Note: this could happen if we are using a CellML-based
-                    //       view and the current file is not initially
-                    //       recognised as being a CellML file, but then it gets
-                    //       updated outside of OpenCOR and gets recognised as
-                    //       being a CellML file...
-
-                    if (   (   (mFileTabs->currentIndex() == i)
-                            && (viewInterface->viewWidget(pFileName) != oldView))
-                        || (mFileTabs->currentIndex() != i)) {
-                        updateGui();
-                    }
+                    updateGui();
 
                     break;
                 }
             }
-        } else if (pFileChanged) {
-            // The user doesn't want to reload the file, so consider it as
-            // modified
-
-            fileManagerInstance->setModified(pFileName, true);
         } else {
-            // The user doesn't want to reload the file (after one or several of
-            // its dependencies has changed) , so consider its dependencies as
-            // modified
+            // The user doesn't want to reload the file, so check whether the
+            // file and/or one or several of its dependencies has changed and,
+            // if so, keep track of that/those fact/s
 
-            fileManagerInstance->setDependenciesModified(pFileName, true);
+            if (fileChanged)
+                fileManagerInstance->setModified(pFileName, true);
+
+            if (pDependenciesChanged)
+                fileManagerInstance->setDependenciesModified(pFileName, true);
         }
     }
 }

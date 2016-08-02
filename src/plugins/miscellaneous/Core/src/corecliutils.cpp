@@ -82,38 +82,6 @@ namespace Core {
 
 //==============================================================================
 
-bool qSameStringLists(const QStringList &pStringList1,
-                      const QStringList &pStringList2)
-{
-    // Note: normally, we would use QStringList::operator==(), but it can result
-    //       in a C4996 warning on Windows (because of our use of std::equal();
-    //       see https://bugreports.qt.io/browse/QTBUG-47948 and
-    //       https://codereview.qt-project.org/#/c/153440/ for more
-    //       information), so instead we do the comparison ourselves in case we
-    //       are on Windows...
-
-#ifdef Q_OS_WIN
-    // Check whether the two lists have the same size
-
-    int stringList1Count = pStringList1.count();
-
-    if (stringList1Count != pStringList2.count())
-        return false;
-
-    // Check whether the contents of the two lists is exactly the same
-
-    for (int i = 0; i < stringList1Count; ++i)
-        if (pStringList1[i].compare(pStringList2[i]))
-            return false;
-
-    return true;
-#else
-    return pStringList1 == pStringList2;
-#endif
-}
-
-//==============================================================================
-
 QBoolList qVariantListToBoolList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of booleans
@@ -268,7 +236,7 @@ QString digitGroupNumber(const QString &pNumber)
     double number = res.toDouble(&validNumber);
 
     if (validNumber)
-        res = QLocale().toString(number);
+        res = QLocale().toString(number, 'g', 15);
 
     return res;
 }
@@ -301,6 +269,15 @@ QString sha1(const QByteArray &pByteArray)
 
     return QCryptographicHash::hash(pByteArray,
                                     QCryptographicHash::Sha1).toHex();
+}
+
+//==============================================================================
+
+QString sha1(const QString &pString)
+{
+    // Return the SHA-1 value of the given string
+
+    return sha1(pString.toUtf8());
 }
 
 //==============================================================================
@@ -715,7 +692,7 @@ QString newFileName(const QString &pFileName, const QString &pFileExtension)
 
 //==============================================================================
 
-bool validXml(const QByteArray &pXml, const QByteArray &pSchema)
+bool validXml(const QString &pXml, const QString &pSchema)
 {
     // Validate the given XML against the given schema
 
@@ -724,11 +701,11 @@ bool validXml(const QByteArray &pXml, const QByteArray &pSchema)
 
     schema.setMessageHandler(&dummyMessageHandler);
 
-    schema.load(pSchema);
+    schema.load(pSchema.toUtf8());
 
     QXmlSchemaValidator validator(schema);
 
-    return validator.validate(pXml);
+    return validator.validate(pXml.toUtf8());
 }
 
 //==============================================================================
@@ -737,8 +714,8 @@ bool validXmlFile(const QString &pXmlFileName, const QString &pSchemaFileName)
 {
     // Validate the given XML file against the given schema file
 
-    QByteArray xmlContents;
-    QByteArray schemaContents;
+    QString xmlContents;
+    QString schemaContents;
 
     readFileContentsFromFile(pXmlFileName, xmlContents);
     readFileContentsFromFile(pSchemaFileName, schemaContents);

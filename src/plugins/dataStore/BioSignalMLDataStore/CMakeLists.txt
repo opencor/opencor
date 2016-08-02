@@ -9,24 +9,20 @@ ADD_PLUGIN(BioSignalMLDataStore
         ../../plugininfo.cpp
 
         src/biosignalmldatastoredata.cpp
+        src/biosignalmldatastoredialog.cpp
         src/biosignalmldatastoreexporter.cpp
         src/biosignalmldatastoreplugin.cpp
-        src/biosignalmldatastoresavedialog.cpp
-        src/biosignalmldatastoreselectvars.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
 
+        src/biosignalmldatastoredialog.h
         src/biosignalmldatastoreplugin.h
-        src/biosignalmldatastoresavedialog.h
-        src/biosignalmldatastoreselectvars.h
-    UIS
-        src/biosignalmldatastoresavedialog.ui
-        src/biosignalmldatastoreselectvars.ui
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
         BioSignalMLAPI
+        Core
+        DataStore
     QT_MODULES
         Widgets
 )

@@ -111,7 +111,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        QByteArray fileContents;
+        QString fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
@@ -239,6 +239,15 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     return editingWidget?editingWidget->editor():0;
+}
+
+//==============================================================================
+
+QWidget * RawSedmlViewWidget::widget(const QString &pFileName)
+{
+    // Return the requested (editor) widget
+
+    return editorWidget(pFileName);
 }
 
 //==============================================================================

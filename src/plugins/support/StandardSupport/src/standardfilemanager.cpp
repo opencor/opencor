@@ -78,7 +78,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
     // The given file is not managed, so consider it of the right type if it is
     // an empty file (after having been trimmed) or it can be loaded
 
-    QByteArray fileContents;
+    QString fileContents;
 
     if (Core::readFileContentsFromFile(nativeFileName, fileContents)) {
         if (fileContents.trimmed().isEmpty())

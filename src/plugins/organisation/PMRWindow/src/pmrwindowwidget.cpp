@@ -90,13 +90,13 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Retrieve the HTML template
 
-    QByteArray fileContents;
+    QString fileContents;
 
     Core::readFileContentsFromFile(":/PMRWindow/output.html", fileContents);
 
-    mTemplate = QString(fileContents).arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                          Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
-                                          "%1", "%2");
+    mTemplate = fileContents.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
+                                 Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
+                                 "%1", "%2");
 }
 
 //==============================================================================

@@ -58,9 +58,6 @@ typedef QList<int> QIntList;
 
 //==============================================================================
 
-bool CORE_EXPORT qSameStringLists(const QStringList &pStringList1,
-                                  const QStringList &pStringList2);
-
 QBoolList CORE_EXPORT qVariantListToBoolList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qBoolListToVariantList(const QBoolList &pBoolList);
 
@@ -117,6 +114,7 @@ QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
 QString CORE_EXPORT sha1(const QByteArray &pByteArray);
+QString CORE_EXPORT sha1(const QString &pString);
 
 void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,
                                             const QString &pEol,
@@ -154,7 +152,7 @@ QString CORE_EXPORT newFileName(const QString &pFileName,
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pFileExtension);
 
-bool CORE_EXPORT validXml(const QByteArray &pXml, const QByteArray &pSchema);
+bool CORE_EXPORT validXml(const QString &pXml, const QString &pSchema);
 bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
                               const QString &pSchemaFileName);
 

@@ -42,6 +42,8 @@ class CORE_EXPORT ViewWidget : public Widget, public BusySupportWidget
 public:
     explicit ViewWidget(QWidget *pParent);
 
+    virtual QWidget * widget(const QString &pFileName) = 0;
+
     virtual QList<QWidget *> statusBarWidgets() const;
 
 protected:

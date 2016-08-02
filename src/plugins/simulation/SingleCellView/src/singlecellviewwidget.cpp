@@ -494,7 +494,7 @@ QStringList SingleCellViewWidget::fileNames() const
 
 SingleCellViewSimulationWidget * SingleCellViewWidget::simulationWidget(const QString &pFileName) const
 {
-    // Return the simulation widget for the given file name
+    // Return the requested simulation widget
 
     return mSimulationWidgets.value(pFileName);
 }
@@ -525,6 +525,15 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &
         return simulationWidget->simulation()->runtime();
     else
         return 0;
+}
+
+//==============================================================================
+
+QWidget * SingleCellViewWidget::widget(const QString &pFileName)
+{
+    // Return the requested (simulation) widget
+
+    return simulationWidget(pFileName);
 }
 
 //==============================================================================
@@ -1331,7 +1340,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
             // Retrieve the contents of our model source
 
-            QByteArray fileContents;
+            QString fileContents;
             QString errorMessage;
 
             if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {

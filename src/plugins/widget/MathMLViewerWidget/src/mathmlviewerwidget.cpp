@@ -277,7 +277,7 @@ void MathmlViewerWidget::setContents(const QString &pContents)
         // An error occurred, but consider it only as an actual error if our
         // contents is not empty
 
-        mError = pContents.size();
+        mError = !pContents.isEmpty();
     } else {
         // Everything went fine, so determine (the inverse of) the size of our
         // contents when rendered using a font size of 100 points

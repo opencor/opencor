@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences window
+// Preferences dialog
 //==============================================================================
 
 #pragma once
@@ -29,7 +29,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PreferencesWindow;
+    class PreferencesDialog;
 }
 
 //==============================================================================
@@ -38,16 +38,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class PreferencesWindow : public QDialog
+class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesWindow(QWidget *pParent);
-    ~PreferencesWindow();
+    explicit PreferencesDialog(QWidget *pParent);
+    ~PreferencesDialog();
 
 private:
-    Ui::PreferencesWindow *mGui;
+    Ui::PreferencesDialog *mGui;
 };
 
 //==============================================================================

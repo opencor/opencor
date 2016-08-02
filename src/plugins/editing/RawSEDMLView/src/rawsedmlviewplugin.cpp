@@ -107,7 +107,7 @@ bool RawSEDMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileName
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
     return crtEditorWidget?
-               Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents().toUtf8()):
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents()):
                false;
 }
 
@@ -137,7 +137,7 @@ bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
     return crtEditorWidget?
-               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents().toUtf8()):
+               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
 
@@ -330,7 +330,7 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editorWidget(pFileName);
+    return mViewWidget;
 }
 
 //==============================================================================

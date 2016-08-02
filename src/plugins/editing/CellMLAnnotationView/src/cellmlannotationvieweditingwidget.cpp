@@ -35,13 +35,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QComboBox>
-#include <QIODevice>
-#include <QLineEdit>
-#include <QPushButton>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -56,21 +49,12 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 {
     // Retrieve some SVG diagrams
 
-    QByteArray fileContents;
-
-    Core::readFileContentsFromFile(":/CellMLAnnotationView/modelQualifier.svg", fileContents);
-
-    mModelQualifierSvg = fileContents;
-
-    Core::readFileContentsFromFile(":/CellMLAnnotationView/biologyQualifier.svg", fileContents);
-
-    mBiologyQualifierSvg = fileContents;
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/modelQualifier.svg", mModelQualifierSvg);
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/biologyQualifier.svg", mBiologyQualifierSvg);
 
     // Retrieve our output template
 
-    Core::readFileContentsFromFile(":/CellMLAnnotationView/qualifierInformation.html", fileContents);
-
-    mQualifierInformationTemplate = fileContents;
+    Core::readFileContentsFromFile(":/CellMLAnnotationView/qualifierInformation.html", mQualifierInformationTemplate);
 
     // Retrieve and load, in case it's necessary, the requested CellML file
 

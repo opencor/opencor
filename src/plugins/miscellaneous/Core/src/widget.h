@@ -43,10 +43,18 @@ class CORE_EXPORT Widget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
+    enum LayoutType {
+        VerticalLayout,
+        HorizontalLayout,
+        FormLayout,
+        GridLayout,
+        StackedLayout
+    };
+
     explicit Widget(QWidget *pParent);
     explicit Widget(const QSize &pSizeHint, QWidget *pParent);
 
-    void createLayout();
+    void createLayout(const LayoutType &pLayoutType = VerticalLayout);
 
 protected:
     virtual QSize sizeHint() const;

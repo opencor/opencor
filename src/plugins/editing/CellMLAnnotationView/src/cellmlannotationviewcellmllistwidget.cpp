@@ -347,10 +347,9 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mTreeViewWidget = new Core::TreeViewWidget(this);
     mTreeViewModel = new QStandardItemModel(mTreeViewWidget);
-    mTreeViewItemDelegate = new CellmlAnnotationViewCellmlElementItemDelegate();
 
     mTreeViewWidget->setModel(mTreeViewModel);
-    mTreeViewWidget->setItemDelegate(mTreeViewItemDelegate);
+    mTreeViewWidget->setItemDelegate(new CellmlAnnotationViewCellmlElementItemDelegate());
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
@@ -806,8 +805,8 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             QString connectionComponentMappingFirstComponentName = QString::fromStdWString(connectionComponentMapping->firstComponentName());
             QString connectionComponentMappingSecondComponentName = QString::fromStdWString(connectionComponentMapping->secondComponentName());
 
-            if (   connectionComponentMappingFirstComponentName.size()
-                && connectionComponentMappingSecondComponentName.size()) {
+            if (   !connectionComponentMappingFirstComponentName.isEmpty()
+                && !connectionComponentMappingSecondComponentName.isEmpty()) {
                 connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentMapping,
                                                                                     connectionComponentMapping));
             }

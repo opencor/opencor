@@ -246,14 +246,14 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         // We haven't already loaded the import contents, so do
                         // so now
 
-                        QByteArray fileContents;
+                        QString fileContents;
 
                         if (   ( isLocalFile && Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
                             || (!isLocalFile && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
-                            import->instantiateFromText(QString(fileContents).toStdWString());
+                            import->instantiateFromText(fileContents.toStdWString());
 
                             // Keep track of the import contents
 
@@ -817,11 +817,12 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
     // Return the RDF triple, associated with the given CellML element, which
     // qualifier, resource and id match those given
 
-    if (QString::fromStdWString(pElement->cmetaId()).isEmpty())
+    if (QString::fromStdWString(pElement->cmetaId()).isEmpty()) {
         // The given CellML element doesn't have a 'proper' cmeta:id, so it
         // cannot have RDF triples associated with it
 
         return 0;
+    }
 
     // Go through the RDF triples associated with the given CellML element and
     // check whether it is the one we are after
@@ -1048,18 +1049,20 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
         case Cellml_1_0: {
             CellmlFileCellml10Exporter exporter(mModel, pFileName);
 
-            if (exporter.errorMessage().size())
+            if (!exporter.errorMessage().isEmpty()) {
                 mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                            exporter.errorMessage());
+            }
 
             return exporter.result();
         }
         case Cellml_1_1: {
             CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
-            if (exporter.errorMessage().size())
+            if (!exporter.errorMessage().isEmpty()) {
                 mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                            exporter.errorMessage());
+            }
 
             return exporter.result();
         }
@@ -1090,7 +1093,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Note: you would normally expect CeLEDSExporter to check this, but all
         //       it does in case of an invalid XML file is crash...
 
-        QByteArray userDefinedFormatFileContents;
+        QString userDefinedFormatFileContents;
 
         if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -1130,7 +1133,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         if (pFileName.isEmpty()) {
             std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
-        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)).toUtf8())) {
+        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the output file could not be saved"));
 

@@ -272,13 +272,14 @@ void FileBrowserWindowWidget::deselectFolders() const
         for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
             QFileInfo fileInfo = pathOf(selectedIndexes[i]);
 
-            if (fileInfo.isDir() || !fileInfo.exists())
+            if (fileInfo.isDir() || !fileInfo.exists()) {
                 // Either we are dealing with a directory or an entry that
                 // doesn't actually exist (e.g. on Windows, it could be a drive
                 // for a removable device with the device not being present)
 
                 selectionModel()->select(selectedIndexes[i],
                                          QItemSelectionModel::Deselect);
+            }
         }
     }
 }

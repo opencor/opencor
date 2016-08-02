@@ -17,15 +17,19 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Plugins window
+// Data store dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "coreinterface.h"
-#include "plugininfo.h"
+#include "datastoreglobal.h"
+#include "datastoreinterface.h"
+
+//==============================================================================
+
+#include <Qt>
 
 //==============================================================================
 
@@ -34,27 +38,27 @@ limitations under the License.
 
 //==============================================================================
 
-class QSettings;
+namespace Ui {
+    class DataStoreDialog;
+}
+
+//==============================================================================
+
 class QStandardItem;
 class QStandardItemModel;
 
 //==============================================================================
 
-namespace Ui {
-    class PluginsWindow;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
+namespace DataStore {
 
 //==============================================================================
 
-class PluginManager;
+class DataStore;
 
 //==============================================================================
 
-class PluginItemDelegate : public QStyledItemDelegate
+class DataItemDelegate : public QStyledItemDelegate
 {
 public:
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
@@ -63,58 +67,45 @@ public:
 
 //==============================================================================
 
-class PluginsWindow : public QDialog
+class DATASTORE_EXPORT DataStoreDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PluginsWindow(PluginManager *pPluginManager, QWidget *pParent);
-    ~PluginsWindow();
+    explicit DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
+                             QWidget *pParent);
+    ~DataStoreDialog();
 
-    void loadSettings(QSettings *pSettings);
-    void saveSettings(QSettings *pSettings) const;
+    void addWidget(QWidget *pWidget);
+
+    DataStoreVariables selectedData() const;
 
 private:
-    Ui::PluginsWindow *mGui;
-
-    PluginManager *mPluginManager;
+    Ui::DataStoreDialog *mGui;
 
     QStandardItemModel *mModel;
-    PluginItemDelegate *mItemDelegate;
 
-    QMap<QString, QString> mMappedCategories;
+    QMap<QStandardItem *, DataStoreVariable*> mData;
+    int mNbOfData;
+    int mNbOfSelectedData;
 
-    QList<QStandardItem *> mSelectablePluginItems;
-    QList<QStandardItem *> mUnselectablePluginItems;
+    DataStoreVariables doSelectedData(QStandardItem *pItem) const;
 
-    QMap<QString, bool> mInitialLoadingStates;
-
-    QMap<QString, QStandardItem *> mPluginCategories;
-
-    void newPluginCategory(const QString &pCategory, const QString &pName);
-
-    QString statusDescription(Plugin *pPlugin) const;
-
-    void selectFirstVisibleCategory();
+    void updateDataSelectedState(QStandardItem *pItem,
+                                 const Qt::CheckState &pCheckState);
+    void checkDataSelectedState(QStandardItem *pItem);
 
 private slots:
-    void on_selectablePluginsCheckBox_toggled(bool pChecked);
+    void updateDataSelectedState(QStandardItem *pItem = 0);
 
+    void on_allDataCheckBox_clicked();
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
-
-    void updateInformation(const QModelIndex &pNewIndex,
-                           const QModelIndex &pOldIndex);
-    void updatePluginsSelectedState(QStandardItem *pItem = 0,
-                                    const bool &pInitializing = false);
-
-    void openLink(const QString &pLink) const;
-
-    void apply();
 };
 
 //==============================================================================
 
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================

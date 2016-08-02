@@ -632,8 +632,9 @@ void EditorWidget::replace()
         if (QRegularExpression(mFindReplace->findText(),
                                mFindReplace->isCaseSensitive()?
                                    QRegularExpression::NoPatternOption:
-                                   QRegularExpression::CaseInsensitiveOption).match(mEditor->selectedText()).hasMatch())
+                                   QRegularExpression::CaseInsensitiveOption).match(mEditor->selectedText()).hasMatch()) {
             mEditor->replace(mFindReplace->replaceText());
+        }
     } else {
         // The find/replace is done using a simple match, which may be case
         // sensitive and/or may require whole words
@@ -648,16 +649,18 @@ void EditorWidget::replace()
         mEditor->getCursorPosition(&crtLine, &crtColumn);
 
         if (   mFindReplace->searchWholeWordsOnly()
-            && crtSelectedText.compare(mEditor->wordAt(crtLine, crtColumn)))
+            && crtSelectedText.compare(mEditor->wordAt(crtLine, crtColumn))) {
             return;
+        }
 
         // Replace the currently selected text if we have a match
 
         if (!crtSelectedText.compare(mFindReplace->findText(),
                                          mFindReplace->isCaseSensitive()?
                                              Qt::CaseSensitive:
-                                             Qt::CaseInsensitive))
+                                             Qt::CaseInsensitive)) {
             mEditor->replace(mFindReplace->replaceText());
+        }
     }
 }
 
@@ -709,8 +712,9 @@ void EditorWidget::replaceAll()
         // Make sure that our new position is not 'before' our old one
 
         if (   (newLine < oldLine)
-            || ((newLine == oldLine) && (newColumn < oldColumn)))
+            || ((newLine == oldLine) && (newColumn < oldColumn))) {
             break;
+        }
 
         // Our new position is fine, so replace the occurrence
 

@@ -1499,14 +1499,14 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
 
     static const QString Target = "/cellml:model/cellml:component[@name='%1']/cellml:variable[@name='%2']";
 
-    QString variable = pVariable;
-    int variableDegree = variable.size();
-
     // Determine the degree of our variable, if any
+
+    QString variable = pVariable;
+    int variableDegree = variable.length();
 
     variable.replace("'", QString());
 
-    variableDegree -= variable.size();
+    variableDegree -= variable.length();
 
     // Set the target itself, as well as its degree, if any
 
@@ -1806,7 +1806,7 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
                 QString localImportedFileName = Core::temporaryFileName();
 
                 Core::writeFileContentsToFile(localImportedFileName,
-                                      mCellmlFile->importedFileContents(importedFileName).toUtf8());
+                                              mCellmlFile->importedFileContents(importedFileName));
 
                 remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }
@@ -3220,10 +3220,10 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
 
-    Core::FileManager *fileManager = Core::FileManager::instance();
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManager->isRemote(mCellmlFile->fileName())?
-                                                                       fileManager->url(mCellmlFile->fileName()):
+    QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManagerInstance->isRemote(mCellmlFile->fileName())?
+                                                                       fileManagerInstance->url(mCellmlFile->fileName()):
                                                                        mCellmlFile->fileName()));
 
     // Ask OpenCOR to switch to the requested CellML editing view

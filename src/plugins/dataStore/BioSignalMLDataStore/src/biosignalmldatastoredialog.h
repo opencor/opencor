@@ -17,41 +17,50 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences window
+// BioSignalML data store dialog
 //==============================================================================
 
-#include "preferenceswindow.h"
+#pragma once
 
 //==============================================================================
 
-#include "ui_preferenceswindow.h"
+#include "datastoredialog.h"
+
+//==============================================================================
+
+class QLabel;
+class QTextEdit;
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-PreferencesWindow::PreferencesWindow(QWidget *pParent) :
-    QDialog(pParent),
-    mGui(new Ui::PreferencesWindow)
+class BiosignalmlDataStoreDialog : public DataStore::DataStoreDialog
 {
-    // Set up the GUI
+    Q_OBJECT
 
-    mGui->setupUi(this);
-}
+public:
+    explicit BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
+                                        QWidget *pParent);
+
+    QString name() const;
+    QString author() const;
+    QString description() const;
+
+private:
+    QLineEdit *mNameValue;
+    QLineEdit *mAuthorValue;
+    QTextEdit *mDescriptionValue;
+
+    QLabel * boldLabel(const QString &pText);
+};
 
 //==============================================================================
 
-PreferencesWindow::~PreferencesWindow()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
+}   // namespace BioSignalMLDataStore
 }   // namespace OpenCOR
 
 //==============================================================================

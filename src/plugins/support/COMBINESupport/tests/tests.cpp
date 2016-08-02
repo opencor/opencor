@@ -154,8 +154,8 @@ void Tests::basicTests()
     while (dirIterator.hasNext()) {
         QString otherFileName = dirIterator.next();
         QString yetAnotherFileName = otherFileName.replace(otherDir, yetAnotherDir);
-        QByteArray otherFileContents;
-        QByteArray yetAnotherFileContents;
+        QString otherFileContents;
+        QString yetAnotherFileContents;
 
         QVERIFY(OpenCOR::Core::readFileContentsFromFile(otherFileName, otherFileContents));
         QVERIFY(OpenCOR::Core::readFileContentsFromFile(yetAnotherFileName, yetAnotherFileContents));

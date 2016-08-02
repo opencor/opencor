@@ -107,7 +107,7 @@ public:
 
     bool isDifferent(const QString &pFileName) const;
     bool isDifferent(const QString &pFileName,
-                     const QByteArray &pFileContents) const;
+                     const QString &pFileContents) const;
 
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
@@ -135,7 +135,7 @@ public:
                 const bool &pForceFileChanged = false);
 
     Status create(const QString &pUrl = QString(),
-                  const QByteArray &pContents = QByteArray());
+                  const QString &pContents = QString());
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -146,8 +146,6 @@ public:
     void emitFilePermissionsChanged(const QString &pFileName);
 
 private:
-    bool mCanCheckFiles;
-
     QTimer *mTimer;
 
     QMap<QString, File *> mFiles;
@@ -155,7 +153,10 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool newFile(QString &pFileName, const QByteArray &pContents = QByteArray());
+    bool opencorActive() const;
+    void startStopTimer();
+
+    bool newFile(QString &pFileName, const QString &pContents = QString());
 
 signals:
     void fileManaged(const QString &pFileName);
@@ -177,6 +178,8 @@ signals:
     void fileSaved(const QString &pFileName);
 
 private slots:
+    void focusWindowChanged();
+
     void checkFiles();
 };
 

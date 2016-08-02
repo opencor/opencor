@@ -122,22 +122,20 @@ File::Status File::check()
     foreach (const QString &dependency, mDependencies)
         newDependenciesSha1 << sha1(dependency);
 
-    bool dependenciesChanged = !qSameStringLists(newDependenciesSha1, mDependenciesSha1);
-
     if (newSha1.isEmpty()) {
         // Our SHA-1 value is now empty, which means that either we have been
         // deleted or that we are unreadable (which, in effect, means that we
         // have been changed)
 
-        return (QFile::exists(mFileName))?Changed:Deleted;
+        return QFile::exists(mFileName)?Changed:Deleted;
     } else {
         // Our SHA-1 value and/or that of one or several of our dependencies is
         // different from our stored value, which means that we and/or one or
         // several of our dependencies has changed
 
         return newSha1.compare(mSha1)?
-                   dependenciesChanged?AllChanged:Changed:
-                   dependenciesChanged?DependenciesChanged:Unchanged;
+                   (newDependenciesSha1 != mDependenciesSha1)?AllChanged:Changed:
+                   (newDependenciesSha1 != mDependenciesSha1)?DependenciesChanged:Unchanged;
     }
 }
 
@@ -148,7 +146,7 @@ QString File::sha1(const QString &pFileName) const
     // Compute the SHA-1 value for the given file or ourselves (if no file is
     // given), if it/we still exist/s and can be opened
 
-    QByteArray fileContents;
+    QString fileContents;
 
     if (readFileContentsFromFile(pFileName.isEmpty()?mFileName:pFileName, fileContents))
         return Core::sha1(fileContents);
@@ -181,19 +179,24 @@ void File::reset(const bool &pResetDependencies)
 bool File::isDifferent() const
 {
     // Return whether we are different from our corresponding physical version
-    // by comparing our SHA-1 values
+    // by comparing our respective SHA-1 values
 
     return mSha1.compare(sha1());
 }
 
 //==============================================================================
 
-bool File::isDifferent(const QByteArray &pFileContents) const
+bool File::isDifferent(const QString &pFileContents) const
 {
     // Return whether we are different from the given file contents by comparing
-    // our SHA-1 values
+    // our respective SHA-1 values
+    // Note: if we are considered as modified, then we want to compare the given
+    //       file contents against our corresponding physical version otherwise
+    //       our internal SHA-1 value...
 
-    return mSha1.compare(Core::sha1(pFileContents));
+    return mModified?
+               sha1().compare(Core::sha1(pFileContents)):
+               mSha1.compare(Core::sha1(pFileContents));
 }
 
 //==============================================================================
@@ -274,6 +277,18 @@ bool File::setModified(const bool &pModified)
 
     if (pModified != mModified) {
         mModified = pModified;
+
+        // Update our SHA-1 value, if we are considered as not modified anymore
+        // Note: indeed, say that you are editing a file in the Raw Text view
+        //       and that the file gets modified outside of OpenCOR and that you
+        //       decline reloading it. In that case, the file will be rightly
+        //       considered as modified. Then, if you modify it so that it now
+        //       corresponds to the physical version of the file, the Raw Text
+        //       view will update the modified state of the file, but the SHA-1
+        //       value will be out-of-date, hence we need to update it...
+
+        if (!pModified)
+            mSha1 = sha1();
 
         return true;
     } else {
@@ -372,7 +387,7 @@ bool File::setDependencies(const QStringList &pDependencies)
 {
     // Set our dependencies
 
-    if (!qSameStringLists(pDependencies, mDependencies)) {
+    if (pDependencies != mDependencies) {
         mDependencies = pDependencies;
 
         mDependenciesSha1.clear();

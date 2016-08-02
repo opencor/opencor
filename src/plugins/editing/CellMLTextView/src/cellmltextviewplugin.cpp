@@ -354,7 +354,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->editingWidget(pFileName);
+    return mViewWidget;
 }
 
 //==============================================================================
@@ -412,7 +412,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
 
-    QByteArray fileContents;
+    QString fileContents;
 
     if (isLocalFile) {
         if (!QFile::exists(fileNameOrUrl))
@@ -431,12 +431,15 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
         if (pImport) {
             OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
-            if (!converter.execute(fileContents))
+            if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
                                                                                        .arg(converter.errorColumn())
                                                                                        .arg(Core::formatMessage(converter.errorMessage(), false));
-            else
-                std::cout << converter.output().toUtf8().constData();
+            } else {
+                QByteArray converterOutputByteArray = converter.output().toUtf8();
+
+                std::cout << converterOutputByteArray.constData();
+            }
         } else {
             OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
@@ -444,13 +447,14 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 errorMessage = "The file could not be exported:";
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
-                    if (message.type() == CellmlTextViewParserMessage::Error)
+                    if (message.type() == CellmlTextViewParserMessage::Error) {
                         errorMessage += QString("\n [%1:%2] %3").arg(message.line())
                                                                 .arg(message.column())
                                                                 .arg(message.message());
+                    }
                 }
             } else {
-                std::cout << QString(Core::serialiseDomDocument(parser.domDocument())).toUtf8().constData();
+                std::cout << Core::serialiseDomDocument(parser.domDocument()).constData();
             }
         }
     }

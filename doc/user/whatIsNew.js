@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 1, "month": 7, "year": 2016,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 26, "month": 7, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -31,9 +31,13 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
-                           { "type": "Added", "description": "BioSignalML data store (work in progress)." },
-                           { "type": "Improved", "description": "Data export (now done in its own thread)." },
-                           { "type": "Improved", "description": "Interface." }
+                           { "type": "Added", "description": "BioSignalML data store." },
+                           { "type": "subCategory", "name": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store",
+                             "entries": [
+                               { "type": "Added", "description": "Selection of model parameters prior to data export." },
+                               { "type": "Improved", "description": "Data export." }
+                             ]
+                           }
                          ]
                        },
                        { "name": "Editing",

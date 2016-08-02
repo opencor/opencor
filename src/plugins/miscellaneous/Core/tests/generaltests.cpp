@@ -39,32 +39,6 @@ void GeneralTests::initTestCase()
 
 //==============================================================================
 
-void GeneralTests::qSameStringListsTests()
-{
-    // Compare two identical string lists
-
-    QVERIFY(qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                             QStringList() << "QWE" << "ASD" << "XZC"));
-
-    // Compare two string lists of different sizes
-
-    QVERIFY(!qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                              QStringList() << "QWE"));
-
-    // Compare two string lists of the same size, but different contents
-
-    QVERIFY(!qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                              QStringList() << "ZXC" << "ASD" << "QWE"));
-
-    // Compare two string lists of the same size and partially identical
-    // contents
-
-    QVERIFY(!qSameStringLists(QStringList() << "QWE" << "ASD" << "XZC",
-                              QStringList() << "QWE" << "asd" << "XZC"));
-}
-
-//==============================================================================
-
 void GeneralTests::sizeAsStringTests()
 {
     // Test the sizeAsString() method
@@ -89,11 +63,11 @@ void GeneralTests::sha1Tests()
 {
     // Test the sha1() method
 
-    QCOMPARE(OpenCOR::Core::sha1("This is just for testing..."),
+    QCOMPARE(OpenCOR::Core::sha1(QString("This is just for testing...")),
              QString("5f1f59774939bacbd8da99fa2c68ff1b78d4cd01"));
-    QCOMPARE(OpenCOR::Core::sha1("5f1f59774939bacbd8da99fa2c68ff1b78d4cd01"),
+    QCOMPARE(OpenCOR::Core::sha1(QString("5f1f59774939bacbd8da99fa2c68ff1b78d4cd01")),
              QString("3b673e33930f46151cbc58c04226eb3d66571cc1"));
-    QCOMPARE(OpenCOR::Core::sha1("3b673e33930f46151cbc58c04226eb3d66571cc1"),
+    QCOMPARE(OpenCOR::Core::sha1(QString("3b673e33930f46151cbc58c04226eb3d66571cc1")),
              QString("0ca7a40ecd1bae83526e70b40b5614986b7a0b61"));
 }
 

@@ -30,27 +30,26 @@ namespace BioSignalMLDataStore {
 //==============================================================================
 
 BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
-                                                   const QString &pShortName,
+                                                   const QString &pName,
                                                    const QString &pAuthor,
                                                    const QString &pDescription,
-                                                   const QVector<bool> &pSelectedVariables,
-                                                   const QString &pComment) :
-    DataStore::DataStoreData(pFileName),
-    mShortName(pShortName),
+                                                   const QString &pComment,
+                                                   const DataStore::DataStoreVariables &pSelectedVariables) :
+    DataStore::DataStoreData(pFileName, pSelectedVariables),
+    mName(pName),
     mAuthor(pAuthor),
     mDescription(pDescription),
-    mSelectedVariables(pSelectedVariables),
     mComment(pComment)
 {
 }
 
 //==============================================================================
 
-QString BiosignalmlDataStoreData::shortName() const
+QString BiosignalmlDataStoreData::name() const
 {
     // Return our short name
 
-    return mShortName;
+    return mName;
 }
 
 //==============================================================================
@@ -69,15 +68,6 @@ QString BiosignalmlDataStoreData::description() const
     // Return our description
 
     return mDescription;
-}
-
-//==============================================================================
-
-QVector<bool> BiosignalmlDataStoreData::selectedVariables() const
-{
-    // Return our selected variables
-
-    return mSelectedVariables;
 }
 
 //==============================================================================

@@ -256,12 +256,12 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
                 mStatementType = PiecewiseEndSel;
 
                 return true;
-            } else {
-                return parseMathematicalExpression(mDomDocument, pFullParsing);
             }
-        } else {
-            return false;
+
+            return parseMathematicalExpression(mDomDocument, pFullParsing);
         }
+
+        return false;
     }
 }
 
@@ -1636,9 +1636,10 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 
             mScanner.getNextToken();
 
-            if (unitToken(componentElement))
-                if (!parseUnitsDefinition(componentElement))
-                    return false;
+            if (    unitToken(componentElement)
+                && !parseUnitsDefinition(componentElement)) {
+                return false;
+            }
 
             hasMathElement = false;
         } else if (mScanner.tokenType() == CellmlTextViewScanner::VarToken) {

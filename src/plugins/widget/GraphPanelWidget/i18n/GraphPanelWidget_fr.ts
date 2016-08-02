@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>GraphPanelWidgetCustomAxesWindow</name>
+    <name>GraphPanelWidgetCustomAxesDialog</name>
     <message>
         <source>Custom Axes</source>
         <translation>Axes Personnalisés</translation>
@@ -68,7 +68,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::GraphPanelWidget::GraphPanelWidgetCustomAxesWindow</name>
+    <name>OpenCOR::GraphPanelWidget::GraphPanelWidgetCustomAxesDialog</name>
     <message>
         <source>Custom Axes</source>
         <translation>Axes Personnalisés</translation>

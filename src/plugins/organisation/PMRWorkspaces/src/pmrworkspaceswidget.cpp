@@ -102,20 +102,19 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     // Retrieve the HTML template
 
-    QByteArray fileContents;
+    QString fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
-    mTemplate = QString(fileContents).arg( // clone, folder, open, star, pull, stage, unstage, commit, push
-                                          Core::iconDataUri(ICON_CLONE, 16, 16),
-                                          Core::iconDataUri(ICON_FOLDER, 16, 16),
-                                          Core::iconDataUri(ICON_FOLDER_OPEN, 16, 16),
-                                          Core::iconDataUri(ICON_OWNED, 16, 16),
-                                          Core::iconDataUri(ICON_PULL, 16, 16),
-                                          Core::iconDataUri(ICON_STAGE, 16, 16),
-                                          Core::iconDataUri(ICON_UNSTAGE, 16, 16),
-                                          Core::iconDataUri(ICON_COMMIT, 16, 16),
-                                          Core::iconDataUri(ICON_PUSH, 16, 16))
-                                          .arg("%1");
-// TODO Use constants for icon names -- CloneIcon etc
+    mTemplate = fileContents.arg( // clone, folder, open, star, pull, stage, unstage, commit, push
+                                 Core::iconDataUri(ICON_CLONE, 16, 16),
+                                 Core::iconDataUri(ICON_FOLDER, 16, 16),
+                                 Core::iconDataUri(ICON_FOLDER_OPEN, 16, 16),
+                                 Core::iconDataUri(ICON_OWNED, 16, 16),
+                                 Core::iconDataUri(ICON_PULL, 16, 16),
+                                 Core::iconDataUri(ICON_STAGE, 16, 16),
+                                 Core::iconDataUri(ICON_UNSTAGE, 16, 16),
+                                 Core::iconDataUri(ICON_COMMIT, 16, 16),
+                                 Core::iconDataUri(ICON_PUSH, 16, 16))
+                                 .arg("%1");
 }
 
 //==============================================================================

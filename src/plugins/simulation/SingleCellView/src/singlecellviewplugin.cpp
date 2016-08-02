@@ -330,7 +330,7 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 
     mViewWidget->initialize(pFileName);
 
-    return mViewWidget->simulationWidget(pFileName);
+    return mViewWidget;
 }
 
 //==============================================================================

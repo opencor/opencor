@@ -28,25 +28,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QVector>
+#include <QIcon>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace DataStore {
-
-//==============================================================================
-
-class DataStoreData
-{
-public:
-    explicit DataStoreData(const QString &pFileName);
-
-    QString fileName() const;
-
-private:
-    QString mFileName;
-};
 
 //==============================================================================
 
@@ -56,7 +43,10 @@ public:
     explicit DataStoreVariable(const qulonglong &pSize, double *pValue = 0);
     virtual ~DataStoreVariable();
 
-    bool isValid() const;
+    bool isVisible() const;
+
+    QIcon icon() const;
+    void setIcon(const QIcon &pIcon);
 
     QString uri() const;
     void setUri(const QString &pUri);
@@ -76,6 +66,7 @@ public:
     double * values() const;
 
 private:
+    QIcon mIcon;
     QString mUri;
     QString mName;
     QString mUnit;
@@ -88,7 +79,23 @@ private:
 
 //==============================================================================
 
-typedef QVector<DataStoreVariable *> DataStoreVariables;
+typedef QList<DataStoreVariable *> DataStoreVariables;
+
+//==============================================================================
+
+class DataStoreData
+{
+public:
+    explicit DataStoreData(const QString &pFileName,
+                           const DataStoreVariables &pSelectedVariables);
+
+    QString fileName() const;
+    DataStoreVariables selectedVariables() const;
+
+private:
+    QString mFileName;
+    DataStoreVariables mSelectedVariables;
+};
 
 //==============================================================================
 
@@ -101,6 +108,8 @@ public:
     QString uri() const;
 
     qulonglong size() const;
+
+    DataStoreVariables voiAndVariables();
 
     DataStoreVariable * voi() const;
     DataStoreVariable * addVoi();

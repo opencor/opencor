@@ -122,7 +122,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
 GraphPanelWidget::~GraphPanelWidget()
 {
-    // Let our plot's neighbours that our plot is not going to be their
+    // Let our plot's neighbours know that our plot is not going to be their
     // neighbour anymore
 
     foreach (GraphPanelPlotWidget *plot, mPlot->neighbors()) {
@@ -206,9 +206,10 @@ void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
 
     GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
-    foreach (GraphPanelPlotGraph *graph, pGraphs)
+    foreach (GraphPanelPlotGraph *graph, pGraphs) {
         if (mPlot->removeGraph(graph))
             graphs << graph;
+    }
 
     emit graphsRemoved(this, graphs);
 }

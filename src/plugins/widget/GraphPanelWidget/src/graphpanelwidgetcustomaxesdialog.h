@@ -17,75 +17,67 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Save as BioSignalML widget
+// Graph Panel widget custom axes dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "datastoreinterface.h"
-
-//==============================================================================
-
 #include <QDialog>
-#include <QVector>
 
 //==============================================================================
 
 namespace Ui {
-    class BioSignalMLSaveDialog;
+    class GraphPanelWidgetCustomAxesDialog;
 }
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace BioSignalMLDataStore {
+class QLineEdit;
 
 //==============================================================================
 
-class BiosignalmlSaveDialog : public QDialog
+namespace OpenCOR {
+namespace GraphPanelWidget {
+
+//==============================================================================
+
+class GraphPanelWidgetCustomAxesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BiosignalmlSaveDialog(QWidget *pParent);
-    ~BiosignalmlSaveDialog();
+    explicit GraphPanelWidgetCustomAxesDialog(const double &pMinX,
+                                              const double &pMaxX,
+                                              const double &pMinY,
+                                              const double &pMaxY,
+                                              QWidget *pParent);
+    ~GraphPanelWidgetCustomAxesDialog();
 
-    virtual void retranslateUi();
-
-    bool run();
-
-    void setDefaultFileName(const QString &pFileName);
-    QString fileName() const;
-    QString shortName() const;
-    QString description() const;
-    QString author() const;
-    void setComment(const QString &pComment);
-    void setSelectedVariables(const DataStore::DataStoreVariables &pVariables);
-    QVector<bool> selectedVariables() const;
-    bool selectedVariable(const size_t pIndex) const;
-
-private slots:
-    void accepted();
-    void setFileName(bool checked = false);
-    void selectVariables(bool checked = false);
+    double minX() const;
+    double maxX() const;
+    double minY() const;
+    double maxY() const;
 
 private:
-    void setButtonStates() const;
+    Ui::GraphPanelWidgetCustomAxesDialog *mGui;
 
-    Ui::BioSignalMLSaveDialog *mGui;
+    void checkValue(QLineEdit *pValue);
 
-    QString mDefaultFileName;
-    QVector<QString> mVariableLabels;
-    QVector<bool> mSelectedVariables;
-    bool mGotSignals;
-    bool mAccepted;
+private slots:
+    void on_xMinValue_textEdited(const QString &pValue);
+    void on_xMaxValue_textEdited(const QString &pValue);
+    void on_yMinValue_textEdited(const QString &pValue);
+    void on_yMaxValue_textEdited(const QString &pValue);
+
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
 };
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
+}   // namespace GraphPanelWidget
 }   // namespace OpenCOR
 
 //==============================================================================

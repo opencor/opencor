@@ -179,10 +179,11 @@ void FileOrganiserWindowWindow::itemDoubleClicked(const QModelIndex &pItemIndex)
 
     QString fileName = mFileOrganiserWidget->filePath(pItemIndex);
 
-    if (!fileName.isEmpty())
+    if (!fileName.isEmpty()) {
         // We are dealing with a file (as opposed to a folder), so just open it
 
         openFile(fileName);
+    }
 }
 
 //==============================================================================
