@@ -20,6 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #pragma once
+//==============================================================================
+
+#include "pmrsupportglobal.h"
 
 //==============================================================================
 
@@ -35,7 +38,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWorkspaceFileNode : public QObject
+class PMRSUPPORT_EXPORT PmrWorkspaceFileNode : public QObject
 {
     Q_OBJECT
 
