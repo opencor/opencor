@@ -46,6 +46,7 @@ namespace PMRSupport {
 //==============================================================================
 
 class PmrRepository;
+class PmrWorkspaceFileNode;
 
 //==============================================================================
 
@@ -85,12 +86,15 @@ public:
     const QString &path(void) const;
     const QString &url(void) const;
 
+    const PmrWorkspaceFileNode *rootFileNode(void) const;
+
     void clone(const QString &pDirName);
     void close(void);
     bool commit(const QString &pMessage);
     bool open(void);
     bool opened(void) const;
     void push(void);
+    bool refreshStatus(void);
 
     enum RemoteStatus {
         StatusUnknown  = 0,
@@ -119,7 +123,9 @@ private:
     git_repository *mGitRepository;
     QString mPath;
 
-    QMap<QString, QPair<QChar, QChar> > mRepositoryStatusMap;
+    QMap<QString, PmrWorkspaceFileNode *> mRepositoryStatusMap;
+    PmrWorkspaceFileNode *mRootFileNode;
+
     int mStagedCount;
     int mUnstagedCount;
 

@@ -102,14 +102,17 @@ private:
                           const QString &pId, const QString &pName,
                           const QString &pStatus,
                           const QList<QPair<QString, QString> > &pActionList);
-    QString contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath,
-                         const bool &pHidden);
+    QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode, const bool &pHidden);
     QString emptyContentsHtml(void);
 
+    static const QStringList fileStatusActionHtml(const QString &pPath,
+                                                  const QPair<QChar, QChar> &pGitStatus);
     static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
                                                   const QString &pPath);
-    QString fileHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pId, const QString &pFileName);
-    QStringList folderHtml(const PMRSupport::PmrWorkspace *pWorkspace, const QString &pPath);
+    static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
+
+    QString fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 
     void cloneWorkspace(const QString &pUrl);

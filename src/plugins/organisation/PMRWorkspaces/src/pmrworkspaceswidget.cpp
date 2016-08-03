@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "pmrrepository.h"
 #include "pmrworkspace.h"
+#include "pmrworkspacefilenode.h"
 #include "pmrworkspacescommit.h"
 #include "pmrworkspacesmanager.h"
 #include "pmrworkspaceswidget.h"
@@ -287,46 +288,59 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                                            const QString &pPath)
+const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const QString &pPath,
+                                                            const QPair<QChar, QChar> &pGitStatus)
 {
     static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
 
-    auto gitStatus = pWorkspace->gitFileStatus(pPath);
-
     auto actionList = QList<QPair<QString, QString> >();
-    if      (gitStatus.second != ' ')
+    if      (pGitStatus.second != ' ')
         actionList << QPair<QString, QString>("stage", pPath);
-    else if (gitStatus.first != ' ')
+    else if (pGitStatus.first != ' ')
         actionList << QPair<QString, QString>("unstage", pPath);
-//qDebug() << "S: " << gitStatus << " " << actionList;
 
-    return QStringList() << statusHtml.arg(gitStatus.first).arg(gitStatus.second)
+    return QStringList() << statusHtml.arg(pGitStatus.first).arg(pGitStatus.second)
                          << actionHtml(actionList);
 }
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                      const QString &pPath, const QString &pFileName)
+const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                                                            const QString &pPath)
+{
+    return fileStatusActionHtml(pPath, pWorkspace->gitFileStatus(pPath));
+}
+
+//==============================================================================
+
+const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+{
+    return fileStatusActionHtml(pFileNode->fullName(), pFileNode->status());
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
                                 "  <td colspan=\"2\" class=\"name\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
                                 "  <td class=\"status\">%4</td>\n"
                                 "  <td class=\"action\">%5</td>\n"
                                 "</tr>\n";
+    auto path = pFileNode->fullName();
+
     mRow += 1;
     QString rowClass = (mRow % 2) ? "" : " even";
-    if (pPath == mSelectedItem) rowClass += " selected";
+    if (path == mSelectedItem) rowClass += " selected";
 
-    auto statusActionHtml = fileStatusActionHtml(pWorkspace, pPath);
+    auto statusActionHtml = fileStatusActionHtml(pFileNode);
 
     // Use an anchor element to allow us to set the scroll position at a row
 
     mRowAnchor += 1;
-    mAnchors.insert(pPath, mRowAnchor);
+    mAnchors.insert(path, mRowAnchor);
 
-    return html.arg(rowClass, pPath, pFileName, statusActionHtml[0], statusActionHtml[1]).arg(mRowAnchor);
+    return html.arg(rowClass, path, pFileNode->shortName(), statusActionHtml[0], statusActionHtml[1]).arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -340,8 +354,8 @@ QString PmrWorkspacesWidget::emptyContentsHtml(void)
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                          const QString &pPath, const bool &pHidden)
+QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                          const bool &pHidden)
 {
     static const QString html = "<tr class=\"contents%1\">\n"
                                 "  <td></td>\n"
@@ -359,14 +373,9 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspace *pWorks
                                 "</tr>\n";
     QStringList itemHtml;
 
-    QDir directory = QDir(pPath);
-    if (directory.exists()) {
-        foreach(QFileInfo info,
-                directory.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
-            if (info.isDir()) itemHtml << folderHtml(pWorkspace, info.absoluteFilePath());
-            else              itemHtml << fileHtml(pWorkspace,
-                                                   info.absoluteFilePath(), info.fileName());
-        }
+    foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
+        if (fileNode->hasChildren() ) itemHtml << folderHtml(fileNode);
+        else                          itemHtml << fileHtml(fileNode);
     }
 
     return html.arg(pHidden ? " hidden" : "", itemHtml.join("\n"));
@@ -397,6 +406,8 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
         if (remoteStatus & PMRSupport::PmrWorkspace::StatusCommit) {
             actionList << QPair<QString, QString>("commit", url);
         }
+        // TODO We need to show that a cloned workspace has changes even if can't be pushed
+        //      because we don't own it
         if (remoteStatus & PMRSupport::PmrWorkspace::StatusAhead && pWorkspace->isOwned()) {
             actionList << QPair<QString, QString>("push", url);
         }
@@ -408,7 +419,8 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
     mRow = 0;
     QStringList html = QStringList(containerHtml("workspace", icon, url, name, status, actionList));
 
-    if (!path.isEmpty()) html << contentsHtml(pWorkspace, path, !mExpandedItems.contains(url));
+    if (!path.isEmpty()) html << contentsHtml(pWorkspace->rootFileNode(),
+                                             !mExpandedItems.contains(url));
     else                 html << emptyContentsHtml();
 
     return html;
@@ -416,20 +428,17 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
 
 //==============================================================================
 
-QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                            const QString &pPath)
+QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
-    QFileInfo info = QFileInfo(pPath);
-    QString fullname = info.absoluteFilePath();
+    QString fullname = pFileNode->fullName();
 
     const QString icon = mExpandedItems.contains(fullname) ? "open" : "folder";
 
     mRow += 1;
     QStringList html = QStringList(containerHtml((mRow % 2) ? "folder" : "folder even",
-                                                 icon, fullname, info.fileName(), "",
-                                                 QList<QPair<QString, QString> >())); // status, actions
-
-    html << contentsHtml(pWorkspace, pPath, !mExpandedItems.contains(fullname));
+                                                 icon, fullname, pFileNode->shortName(), "",
+                                                 QList<QPair<QString, QString> >()));
+    html << contentsHtml(pFileNode, !mExpandedItems.contains(fullname));
 
     return html;
 }
@@ -647,6 +656,7 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
             }
         }
         else if (trElement.hasClass("workspace") || trElement.hasClass("folder")) {
+            // TODO: Refresh if workspace being opened...
             expandHtmlTree(rowLink);
         }
     }
@@ -788,7 +798,7 @@ void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
     QProcess::startDetached("osascript", parameters);
 #else
     Q_UNUSED(pPath)
-/*  TODO
+/*  TODO Open folder in a Linux file browser...
     // we cannot select a file here, because no file browser really supports it...
     const QFileInfo fileInfo(pPath);
     const QString folder = fileInfo.isDir() ? fileInfo.absoluteFilePath() : fileInfo.filePath();
@@ -799,6 +809,9 @@ void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
     QProcess browserProc;
     bool success = browserProc.startDetached(browserArgs);
     const QString error = QString::fromLocal8Bit(browserProc.readAllStandardError());
+
+    `gnome-open .` ??
+
     success = success && error.isEmpty();
     if (!success)
         showGraphicalShellError(parent, app, error);
@@ -926,8 +939,9 @@ void PmrWorkspacesWidget::pullWorkspace(const QString &pUrl)
 
     if (workspace && !workspace->isNull() && workspace->isLocal()) {
         mPmrRepository->getWorkspaceCredentials(workspace);
-// TODO
-//      mPmrRepository->requestWorkspacePull(workspace);
+// TODO  Pull workspace from remote... (what about clashes ??)
+//       mPmrRepository->requestWorkspacePull(workspace);
+//       See: http://stackoverflow.com/questions/27759674/libgit2-fetch-merge-commit
     }
 }
 
@@ -1023,6 +1037,22 @@ void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
         }
     }
 }
+
+//==============================================================================
+
+/* TODO: Periodically refresh opened workspaces by using a QTimer.
+
+         * Refresh whenever a workspace is expanded.
+           ==> `refreshWorkspace()` needn't do anything if workspace is not expanded.
+         * Only have one workspace at a time open? Then have `expandWorkspace(true)`
+           that goes through mExpandedItems and collapses all workspaces...
+         * Better to keep `mCurrentWorkspace`.
+         * To avoid redraing on every poll refresh we could have check if
+           `workspace->modified()` (or `refreshStatus()` that return's true)
+           where the `PmrWorkspace` class compares (via SHA?) currrent and new
+           status.
+
+*/
 
 //==============================================================================
 

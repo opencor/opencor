@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "pmrrepository.h"
 #include "pmrworkspace.h"
+#include "pmrworkspacefilenode.h"
 #include "pmrworkspacesmanager.h"
 
 //==============================================================================
@@ -44,8 +45,7 @@ namespace PMRSupport {
 PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(false),
     mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
-    mRepositoryStatusMap(QMap<QString, QPair<QChar, QChar> >())
-
+    mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
 {
 }
 
@@ -55,7 +55,7 @@ PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, PmrReposit
     QObject(parent), mOwned(false),
     mDescription(QString()), mName(pName), mOwner(QString()), mUrl(pUrl),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
-    mRepositoryStatusMap(QMap<QString, QPair<QChar, QChar> >())
+    mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
 {
     // Name, description and owner are set from PMR workspace info
     connect(this, SIGNAL(progress(double)), parent, SIGNAL(progress(double)));
@@ -212,6 +212,13 @@ const QString &PmrWorkspace::url() const
 
 //==============================================================================
 
+const PmrWorkspaceFileNode *PmrWorkspace::rootFileNode(void) const
+{
+    return mRootFileNode;
+}
+
+//==============================================================================
+
 void PmrWorkspace::emitProgress(const double &pProgress) const
 {
     emit progress(pProgress);
@@ -230,10 +237,44 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 }
 
 //==============================================================================
+//==============================================================================
+
+//==============================================================================
 
 bool PmrWorkspace::open(void)
 {
     close();
+    return refreshStatus();
+}
+
+//==============================================================================
+
+bool PmrWorkspace::opened(void) const
+{
+    return (mGitRepository != nullptr);
+}
+
+//==============================================================================
+
+void PmrWorkspace::close(void)
+{
+    if (mGitRepository != nullptr) {
+        git_repository_free(mGitRepository);
+        mGitRepository = nullptr;
+    }
+}
+
+//==============================================================================
+
+bool PmrWorkspace::refreshStatus(void)
+{
+    mStagedCount = 0;
+    mUnstagedCount = 0;
+    mRepositoryStatusMap.clear();
+
+    if (mRootFileNode) delete mRootFileNode;  // ???
+    mRootFileNode = new PmrWorkspaceFileNode("", mPath);
+
     if (!mPath.isEmpty()) {
         if (git_repository_open(&mGitRepository, mPath.toUtf8().constData()) == 0) {
 
@@ -254,6 +295,11 @@ bool PmrWorkspace::open(void)
 
                     size_t entries = git_status_list_entrycount(statusList);
                     auto lastComponents = QStringList();
+
+                    auto fileNodeStack = QList<PmrWorkspaceFileNode *>();
+                    auto currentFileNode = mRootFileNode;
+                    fileNodeStack.append(currentFileNode);
+
                     for (size_t i = 0; i < entries; ++i) {
                         auto status = git_status_byindex(statusList, i);
                         const char *filePath = (status->head_to_index)    ? status->head_to_index->old_file.path
@@ -266,7 +312,27 @@ bool PmrWorkspace::open(void)
                             if (statusChars.first != ' ') mStagedCount += 1;
                             if (statusChars.second != ' ') mUnstagedCount += 1;
 
-                            mRepositoryStatusMap.insert(QString(filePath), statusChars);
+                            // Find correct place in tree to add file
+                            int i = 0;
+                            int n = std::min(pathComponents.size(), fileNodeStack.size()) - 1;
+                            while (i < n
+                                && pathComponents[i].compare(fileNodeStack[i+1]->shortName(), Qt::CaseInsensitive)) {
+                                i += 1;
+                            }
+                            // Cut back stack to matching path component
+                            while ((i + 1) < fileNodeStack.size())
+                                fileNodeStack.removeLast();
+                            currentFileNode = fileNodeStack[i];
+
+                            // Add directory nodes as required
+                            while (i < (pathComponents.size() - 1)) {
+                                currentFileNode = currentFileNode->addChild(pathComponents[i]);
+                                fileNodeStack.append(currentFileNode);
+                                i += 1;
+                            }
+
+                            mRepositoryStatusMap.insert(QString(filePath),
+                                                        currentFileNode->addChild(pathComponents[i], statusChars));
                         }
                     }
                     git_status_list_free(statusList);
@@ -278,30 +344,7 @@ bool PmrWorkspace::open(void)
         emitGitError(tr("An error occurred while trying to open the workspace."));
     }
 
-// TODO Keep a map with the status of all workspace files (and folders).
-//      Update it wheh getFileStatus(pPath) is called -- unknown file ==> Add etc
-
     return false;
-}
-
-//==============================================================================
-
-bool PmrWorkspace::opened(void) const
-{
-    return (mGitRepository != nullptr);
-}
-
-//==============================================================================
-
-void PmrWorkspace::close(void)
-{
-    mStagedCount = 0;
-    mUnstagedCount = 0;
-    mRepositoryStatusMap.clear();
-    if (mGitRepository != nullptr) {
-        git_repository_free(mGitRepository);
-        mGitRepository = nullptr;
-    }
 }
 
 //==============================================================================
@@ -649,9 +692,6 @@ const QPair<QChar, QChar> PmrWorkspace::gitStatusChars(const int &flags)
 
 const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
-    // Get the status of a file
-// TODO from statusmap
-
     auto status = QPair<QChar, QChar>(' ', ' ');
 
     if (this->opened()) {
@@ -659,8 +699,12 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
         auto relativePath = repoDir.relativeFilePath(pPath);
 
         unsigned int statusFlags = 0;
-        if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0)
+        if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0) {
             status = gitStatusChars(statusFlags);
+            // Also update status in file tree
+            if (mRepositoryStatusMap.contains(pPath))
+                mRepositoryStatusMap.value(pPath)->setStatus(status);
+        }
         else
             emitGitError(tr("An error occurred while trying to get the status of %1").arg(pPath));
     }
@@ -680,12 +724,18 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
         if (git_repository_index(&index, mGitRepository) == 0) {
 
             if (pStage) {
-                success = (git_index_add_bypath(index, relativePath.constData()) == 0);
+                unsigned int statusFlags = 0;
+                git_status_file(&statusFlags, mGitRepository, relativePath.constData());
+                if (statusFlags & GIT_STATUS_WT_DELETED) {
+                    success = (git_index_remove_bypath(index, relativePath.constData()) == 0);
+                }
+                else {
+                    success = (git_index_add_bypath(index, relativePath.constData()) == 0);
+                }
             }
 
             else if (git_repository_head_unborn(mGitRepository) == 1) {
-                if (git_index_remove_bypath(index, relativePath.constData()) == 0)
-                    success = true;
+                success = (git_index_remove_bypath(index, relativePath.constData()) == 0);
             }
 
             else {
@@ -706,8 +756,8 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
                             git_tree_entry_free(headEntry);
                             success = true;
                         }
-                        else if (git_index_remove_bypath(index, relativePath.constData()) == 0) {
-                            success = true;
+                        else {
+                            success = (git_index_remove_bypath(index, relativePath.constData()) == 0);
                         }
                         git_tree_free(headTree);
                     }
