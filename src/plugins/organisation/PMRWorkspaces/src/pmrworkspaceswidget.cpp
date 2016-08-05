@@ -371,14 +371,18 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode
                                 "    </table>\n"
                                 "  </td>\n"
                                 "</tr>\n";
-    QStringList itemHtml;
 
-    foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
-        if (fileNode->hasChildren() ) itemHtml << folderHtml(fileNode);
-        else                          itemHtml << fileHtml(fileNode);
+    if (pFileNode) {
+        QStringList itemHtml;
+        foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
+            if (fileNode->hasChildren() ) itemHtml << folderHtml(fileNode);
+            else                          itemHtml << fileHtml(fileNode);
+        }
+        return html.arg(pHidden ? " hidden" : "", itemHtml.join("\n"));
     }
-
-    return html.arg(pHidden ? " hidden" : "", itemHtml.join("\n"));
+    else {
+        return emptyContentsHtml();
+    }
 }
 
 //==============================================================================
@@ -1086,6 +1090,7 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 
         // Redisplay with workspace expanded and selected
 
+        pWorkspace->open();
         mExpandedItems.insert(url);
         setSelected(url);
         displayWorkspaces();
