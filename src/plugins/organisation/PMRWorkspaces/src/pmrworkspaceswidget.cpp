@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QContextMenuEvent>
+#include <QDesktopServices>
 #include <QDialog>
 #include <QDir>
 #include <QFile>
@@ -728,13 +729,7 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
         auto workspace = mWorkspacesManager->workspace(elementId);
         if (workspace && workspace->isLocal()) {
-#if defined(Q_OS_WIN)
-            auto action = new QAction(tr("Show in Explorer..."), this);
-#elif defined(Q_OS_MAC)
-            auto action = new QAction(tr("Show in Finder..."), this);
-#else
-// TODO auto showAction = new QAction(tr("Show containing folder..."), this);
-#endif
+            auto action = new QAction(tr("Show containing folder..."), this);
             action->setData(QString("show|%1").arg(workspace->path()));
             menu->addAction(action);
         }
@@ -778,49 +773,9 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
 //==============================================================================
 
-// Based on https://gitlab.com/pteam/pteam-qt-creator/blob/master/src/plugins/coreplugin/fileutils.cpp#L76
-
 void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
 {
-#if defined(Q_OS_WIN)
-    const QString explorer = QStandardPaths::findExecutable("explorer.exe");
-    if (explorer.isEmpty()) {
-        emit warning(tr("Windows Explorer is not in PATH"));
-        return;
-    }
-    auto parameters = QStringList();
-    if (!QFileInfo(pPath).isDir())
-        parameters << QString("/select,");
-    parameters << QDir::toNativeSeparators(pPath);
-    QProcess::startDetached(explorer, parameters);
-#elif defined(Q_OS_MAC)
-    auto parameters = QStringList();
-    parameters << "-e" << "tell application \"Finder\"";
-    parameters << "-e" << "activate";
-    parameters << "-e" << QString("open POSIX file \"%1\"").arg(pPath);
-    parameters << "-e" << "end tell";
-    QProcess::startDetached("osascript", parameters);
-#else
-    Q_UNUSED(pPath)
-/*  TODO Open folder in a Linux file browser...
-    // we cannot select a file here, because no file browser really supports it...
-    const QFileInfo fileInfo(pPath);
-    const QString folder = fileInfo.isDir() ? fileInfo.absoluteFilePath() : fileInfo.filePath();
-    // https://gitlab.com/pteam/pteam-qt-creator/blob/master/src/libs/utils/unixutils.cpp#L44
-    const QString app = UnixUtils::fileBrowser(ICore::settings());
-    // https://gitlab.com/pteam/pteam-qt-creator/blob/master/src/libs/utils/unixutils.cpp#L71
-    const QString browserArgs = UnixUtils::substituteFileBrowserParameters(app, folder);
-    QProcess browserProc;
-    bool success = browserProc.startDetached(browserArgs);
-    const QString error = QString::fromLocal8Bit(browserProc.readAllStandardError());
-
-    `gnome-open .` ??
-
-    success = success && error.isEmpty();
-    if (!success)
-        showGraphicalShellError(parent, app, error);
-*/
-#endif
+    QDesktopServices::openUrl(QUrl::fromLocalFile(pPath));
 }
 
 //==============================================================================
