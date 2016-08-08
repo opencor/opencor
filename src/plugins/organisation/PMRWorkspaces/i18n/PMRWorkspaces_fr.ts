@@ -59,18 +59,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show in Explorer...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show in Finder...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Windows Explorer is not in PATH</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Owner: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -80,6 +68,10 @@
     </message>
     <message>
         <source>Path: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show containing folder...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
