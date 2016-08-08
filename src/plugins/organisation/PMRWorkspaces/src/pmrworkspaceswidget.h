@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 class QContextMenuEvent ;
+class QTimer;
 
 //==============================================================================
 
@@ -71,7 +72,7 @@ public:
 
     void aboutWorkspace(const QString &pUrl);
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
-    void addWorkspaceFolder(const QString &pFolder);
+    const QString addWorkspaceFolder(const QString &pFolder);
     void clearWorkspaces(void);
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
@@ -88,6 +89,7 @@ private:
     QMap<QString, QString> mWorkspaceFolders;                 // Folder name --> Url
     QMap<QString, QPair<QString, bool> > mWorkspaceUrls;      // Url --> (Folder name, mine)
 
+    QString mCurrentWorkspaceUrl;
     QSet<QString> mExpandedItems;
     QString mSelectedItem;
 
@@ -97,6 +99,8 @@ private:
     int mRowAnchor;
     QMap<QString, int> mAnchors;                               // Item id --> Anchor
 
+    QTimer *mTimer;
+
     void scanDefaultWorkspaceDirectory(void);
 
     void displayWorkspaces(void);
@@ -104,6 +108,9 @@ private:
 
     void scrollToSelected(void);
     void setSelected(QWebElement pNewSelectedRow);
+
+    void setCurrentWorkspaceUrl(const QString &pUrl);
+
     static const QString actionHtml(const QList<QPair<QString, QString> > &pActions);
     QString containerHtml(const QString &pClass, const QString &pIcon,
                           const QString &pId, const QString &pName,
@@ -134,13 +141,19 @@ private:
 
     void showInGraphicalShell(const QString &pPath);
 
+    bool opencorActive() const;
+    void startStopTimer();
+
 signals:
     void openFileRequested(const QString &pFile);
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-public slots:
+private slots:
+    void focusWindowChanged();
+    void refreshCurrentWorkspace();
 
+public slots:
     void initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaceList &pWorkspaces);
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);

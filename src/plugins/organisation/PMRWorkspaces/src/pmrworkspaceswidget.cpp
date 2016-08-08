@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QDialog>
@@ -42,6 +43,7 @@ specific language governing permissions and limitations under the License.
 #include <QProcess>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTimer>
 #include <QToolTip>
 #include <QUrl>
 #include <QWebElement>
@@ -75,6 +77,7 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
     mWorkspacesManager(OpenCOR::PMRSupport::PmrWorkspacesManager::instance()),
     mWorkspaceFolders(QMap<QString, QString>()),
     mWorkspaceUrls(QMap<QString, QPair<QString, bool> >()),
+    mCurrentWorkspaceUrl(QString()),
     mExpandedItems(QSet<QString>()),
     mSelectedItem(QString()),
     mRowAnchor(0),
@@ -117,12 +120,34 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
                                  Core::iconDataUri(ICON_COMMIT, 16, 16),
                                  Core::iconDataUri(ICON_PUSH, 16, 16))
                                  .arg("%1");
+
+    // Create our timer for refreshing the current workspace
+
+    mTimer = new QTimer(this);
+
+    // A connection to handle the timing out of our timer
+
+    connect(mTimer, SIGNAL(timeout()),
+            this, SLOT(refreshCurrentWorkspace()));
+
+    // Keep track of when OpenCOR gets/loses the focus
+    // Note: the focusWindowChanged() signal comes from QGuiApplication, so we
+    //       need to check whether we are running the console version of OpenCOR
+    //       or its GUI version...
+
+    if (dynamic_cast<QGuiApplication *>(QCoreApplication::instance())) {
+        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+                this, SLOT(focusWindowChanged()));
+    }
 }
 
 //==============================================================================
 
 PmrWorkspacesWidget::~PmrWorkspacesWidget()
 {
+    // Delete some internal objects
+
+    delete mTimer;
 }
 
 //==============================================================================
@@ -142,6 +167,7 @@ static const auto SettingsWorkspaces    = QStringLiteral("Workspaces");
 static const auto SettingsFolders       = QStringLiteral("Folders");
 static const auto SettingsExpandedItems = QStringLiteral("ExpandedItems");
 static const auto SettingsSelectedItem  = QStringLiteral("SelectedItem");
+static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
 
 //==============================================================================
 
@@ -149,11 +175,23 @@ void PmrWorkspacesWidget::loadSettings(QSettings *pSettings)
 {
     pSettings->beginGroup(SettingsWorkspaces);
 
+        // Retrieve the current workspace url, if any
+
+        mCurrentWorkspaceUrl = pSettings->value(SettingsCurrentWorkspace).toString();
+
         // Retrieve the names of folders containing cloned workspaces
 
         QStringList folders = pSettings->value(SettingsFolders).toStringList();
         foreach (QString folder, folders) {
-            if (!folder.isEmpty()) addWorkspaceFolder(folder);
+            if (!folder.isEmpty()) {
+                auto url = addWorkspaceFolder(folder);
+
+                // Ensure only the current workspace is expanded
+                if (url == mCurrentWorkspaceUrl)
+                    mExpandedItems.insert(mCurrentWorkspaceUrl);
+                else if (mExpandedItems.contains(url))
+                    mExpandedItems.remove(url);
+            }
         }
 
         // Retrieve the names of expanded workspaces and folders
@@ -185,6 +223,10 @@ void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
         // Keep track of the currently selected item
 
         pSettings->setValue(SettingsSelectedItem, mSelectedItem);
+
+        // Keep track of the current workspace url
+
+        pSettings->setValue(SettingsCurrentWorkspace, mCurrentWorkspaceUrl);
 
     pSettings->endGroup();
 }
@@ -220,7 +262,7 @@ void PmrWorkspacesWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
+const QString PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
 {
     if (!mWorkspaceFolders.contains(pFolder)) {
         // Get the workspace url (= remote.origin.url)
@@ -235,6 +277,10 @@ void PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
                 mWorkspaceUrls.insert(url, QPair<QString, bool>(pFolder, false));
             }
         }
+        return url;
+    }
+    else {
+        return mWorkspaceFolders.value(pFolder);
     }
 }
 
@@ -276,7 +322,7 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
                                 "</tr>\n";
 
     const QString iconHtml = QString("<img class=\"%1\" />").arg(pIcon);
-    const QString rowClass = pClass + ((pId == mSelectedItem) ? " selected" : "");
+    const QString rowClass = pClass + ((pId == mSelectedItem || pId == mCurrentWorkspaceUrl) ? " selected" : "");
 
     // Use an anchor element to allow us to set the scroll position at a row
 
@@ -449,10 +495,8 @@ QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNo
 
 //==============================================================================
 
-void PmrWorkspacesWidget::setSelected(const QString &pId)
 const QWebElement PmrWorkspacesWidget::parentWorkspaceElement(const QWebElement &pRowElement)
 {
-    if (pId != mSelectedItem) {
     auto workspaceElement = pRowElement;
 
     // Find parent workspace
@@ -469,15 +513,105 @@ const QWebElement PmrWorkspacesWidget::parentWorkspaceElement(const QWebElement 
 
 //==============================================================================
 
+void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
+{
+    if (pUrl != mCurrentWorkspaceUrl) {
+
+        // Close the current workspace if we are selecting a different one
+
+        if (!mCurrentWorkspaceUrl.isEmpty() && mExpandedItems.contains(mCurrentWorkspaceUrl)) {
+            auto workspaceContents = page()->mainFrame()->documentElement().findFirst(
+                                        QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
+
+            if (!workspaceContents.isNull()) {
+                workspaceContents.previousSibling().removeClass("selected");
+                workspaceContents.addClass("hidden");
+                mExpandedItems.remove(mCurrentWorkspaceUrl);
+            }
+        }
+
+        // Set the new current workspace and ensure it is expanded when displayed
+
+        mCurrentWorkspaceUrl = pUrl;
+        mExpandedItems.insert(mCurrentWorkspaceUrl);
+        }
+
+}
+
+//==============================================================================
+
+bool PmrWorkspacesWidget::opencorActive() const
+{
+    // Return whether OpenCOR is active
+    // Note: we only consider OpenCOR to be active if the main window or one of
+    //       its dockable windows is active. In other words, if a dialog box is
+    //       opened, then we don't consider OpenCOR active since it could
+    //       disturb our user's workflow...
+
+    return     qApp->activeWindow()
+           && !qApp->activeModalWidget()
+           && !qApp->activePopupWidget();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::startStopTimer()
+{
+    // Start our timer if OpenCOR is active and we have a current workspace, or stop
+    // it if either OpenCOR is not active or we no longer have have a current workspace.
+    // Note: If we are to start our timer, then we refresh the workspace first since
+    //       waiting one second may seem long to a user.
+
+    if (opencorActive() && !mCurrentWorkspaceUrl.isEmpty() && !mTimer->isActive()) {
+        disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+                   this, SLOT(focusWindowChanged()));
+
+        /* TODO: To avoid redrawing on every timed refresh we could check if
+           `workspace->modified()` (or have `refreshStatus()` return true if
+           modifications) where the `PmrWorkspace` class compares (via SHA?)
+           current and new status.
+        */
+        refreshCurrentWorkspace();
+
+        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
+                this, SLOT(focusWindowChanged()));
+
+        mTimer->start(1000);
+    } else if ((!opencorActive() || mCurrentWorkspaceUrl.isEmpty()) && mTimer->isActive()) {
+        mTimer->stop();
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::focusWindowChanged()
+{
+    // Start/stop our timer
+
+    startStopTimer();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::refreshCurrentWorkspace()
+{
+    refreshWorkspace(mCurrentWorkspaceUrl);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWidget::setSelected(QWebElement pNewSelectedRow)
+{
+    QString id = pNewSelectedRow.attribute("id");
+
+    if (!id.isEmpty() && id != mSelectedItem) {
+
         QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
                                     QString("tr.selected[id=\"%1\"]").arg(mSelectedItem));
         if (!trElement.isNull()) trElement.removeClass("selected");
 
-        trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=\"%1\"]")
-                                                                             .arg(pId));
-        if (!trElement.isNull()) trElement.addClass("selected");
-
-        mSelectedItem = pId;
+        pNewSelectedRow.addClass("selected");
+        mSelectedItem = id;
     }
 }
 
@@ -517,7 +651,6 @@ void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
 void PmrWorkspacesWidget::clearWorkspaces(void)
 {
     setHtml(mTemplate.arg(QString()));
-    setSelected("");
 }
 
 //==============================================================================
@@ -610,9 +743,9 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
 
         // Select the row that's been clicked in before doing anything else
 
-        QString rowLink = trElement.attribute("id");
-        if (!rowLink.isEmpty())
-            setSelected(rowLink);
+        auto rowLink = trElement.attribute("id");
+        if (!trElement.hasClass("workspace"))
+            setSelected(trElement);
 
         auto aElement = page()->mainFrame()->hitTestContent(event->pos()).element();
         while (!aElement.isNull() && aElement.tagName() != "A" && aElement.tagName() != "TR")
@@ -669,8 +802,11 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                 emit openFileRequested(aLink);
             }
         }
-        else if (trElement.hasClass("workspace") || trElement.hasClass("folder")) {
-            // TODO: Refresh if workspace being opened...
+        else if (trElement.hasClass("workspace")) {
+            setCurrentWorkspaceUrl(rowLink);
+            refreshWorkspace(rowLink);
+        }
+        else if (trElement.hasClass("folder")) {
             expandHtmlTree(rowLink);
         }
     }
@@ -999,25 +1135,11 @@ void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
 
 //==============================================================================
 
-/* TODO: Periodically refresh opened workspaces by using a QTimer.
-
-         * Refresh whenever a workspace is expanded.
-           ==> `refreshWorkspace()` needn't do anything if workspace is not expanded.
-         * Only have one workspace at a time open? Then have `expandWorkspace(true)`
-           that goes through mExpandedItems and collapses all workspaces...
-         * Better to keep `mCurrentWorkspace`.
-         * To avoid redraing on every poll refresh we could have check if
-           `workspace->modified()` (or `refreshStatus()` that return's true)
-           where the `PmrWorkspace` class compares (via SHA?) currrent and new
-           status.
-
-*/
-
-//==============================================================================
-
 void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
 {
     if (pScanFolders) scanDefaultWorkspaceDirectory();
+
+    // `initialiseWorkspaceWidget()` will be called when list received.
 
     mPmrRepository->requestWorkspacesList();
 }
@@ -1043,11 +1165,13 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
         if (!mWorkspaceUrls.contains(url))
             addWorkspace(pWorkspace);
 
+        // Close display of current workspace and set the cloned one current
+
+        setCurrentWorkspaceUrl(url);
+
         // Redisplay with workspace expanded and selected
 
         pWorkspace->open();
-        mExpandedItems.insert(url);
-        setSelected(url);
         displayWorkspaces();
         scrollToSelected();
     }
