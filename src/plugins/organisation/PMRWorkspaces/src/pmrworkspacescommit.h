@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDialog>
+#include <QStringList>
 
 //==============================================================================
 
@@ -43,7 +44,7 @@ class PmrWorkspacesCommit : public QDialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesCommit(QWidget * pParent=0);
+    explicit PmrWorkspacesCommit(const QStringList &pStagedFiles, QWidget * pParent=0);
     ~PmrWorkspacesCommit();
 
     virtual void retranslateUi();

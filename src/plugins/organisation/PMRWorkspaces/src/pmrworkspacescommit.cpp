@@ -39,13 +39,24 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-PmrWorkspacesCommit::PmrWorkspacesCommit(QWidget *pParent) :
+PmrWorkspacesCommit::PmrWorkspacesCommit(const QStringList &pStagedFiles, QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::PmrWorkspacesCommit)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    /*
+    ; Changes to be committed:
+    ;       new file:   untitled.html
+    ;       modified:   untitled.html
+    ;       deleted:    untitled.html
+    ;       renamed:    untitled.html
+    */
+    mGui->message->setTabStopWidth(40);
+    mGui->message->setPlainText("\n; Changes to be committed:\n;\t"
+                                + pStagedFiles.join("\n;\t"));
 
     connect(mGui->cancel_save, SIGNAL(accepted()), this, SLOT(accept()));
     connect(mGui->cancel_save, SIGNAL(rejected()), this, SLOT(reject()));

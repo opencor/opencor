@@ -1057,7 +1057,7 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
 
     if (workspace && !workspace->isNull() && workspace->isLocal()) {
 
-        auto commitDialog = new PmrWorkspacesCommit();
+        auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFilesList());
 
 // TODO  Set list of files to be committed (the index?) and get commit message
 //      commitDialog->setMessage(workspace->defaultCommitMessage());

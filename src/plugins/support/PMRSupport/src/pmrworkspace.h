@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <QObject>
 #include <QSet>
 #include <QString>
+#include <QStringList>
 #include <QVector>
 
 //==============================================================================
@@ -108,6 +109,7 @@ public:
     const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
 
     void stageFile(const QString &pPath, const bool &pStage);
+    QStringList stagedFilesList(void);
 
 private:
     bool mOwned;

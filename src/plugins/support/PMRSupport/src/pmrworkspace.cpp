@@ -344,6 +344,45 @@ void PmrWorkspace::refreshStatus(void)
     }
 }
 
+//==============================================================================
+
+QStringList PmrWorkspace::stagedFilesList(void)
+{
+    auto fileList = QStringList();
+
+    git_index *index;
+    if (git_repository_index(&index, mGitRepository) == 0) {
+
+        git_status_options statusOptions;
+        git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
+        statusOptions.show  = GIT_STATUS_SHOW_INDEX_ONLY;
+        statusOptions.flags = GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
+                            | GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY;
+
+        git_status_list *statusList;
+        if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == 0) {
+            size_t entries = git_status_list_entrycount(statusList);
+            for (size_t i = 0; i < entries; ++i) {
+                auto status = git_status_byindex(statusList, i);
+                const char *filePath = (status->head_to_index)    ? status->head_to_index->old_file.path
+                                     : (status->index_to_workdir) ? status->index_to_workdir->old_file.path
+                                     :                              nullptr;
+                if (filePath) {
+                    auto flags = status->status;
+                    auto description = QString();
+                    if (flags & GIT_STATUS_INDEX_NEW) description        = "new file";
+                    if (flags & GIT_STATUS_INDEX_MODIFIED) description   = "modified";
+                    if (flags & GIT_STATUS_INDEX_DELETED) description    = "deleted";
+                    if (flags & GIT_STATUS_INDEX_RENAMED) description    = "renamed";
+                    if (flags & GIT_STATUS_INDEX_TYPECHANGE) description = "typechange";
+                    fileList << description + ":\t" + filePath;
+                }
+            }
+            git_status_list_free(statusList);
+        }
+        git_index_free(index);
+    }
+    return fileList;
 }
 
 //==============================================================================

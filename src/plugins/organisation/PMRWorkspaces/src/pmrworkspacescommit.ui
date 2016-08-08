@@ -31,7 +31,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="message"/>
+    <widget class="QTextEdit" name="message"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="cancel_save">
