@@ -69,8 +69,13 @@ public:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
 
-    void scrollToSelected(void);
-    void setSelected(const QString &pId);
+    void aboutWorkspace(const QString &pUrl);
+    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
+    void addWorkspaceFolder(const QString &pFolder);
+    void clearWorkspaces(void);
+    void refreshWorkspace(const QString &pUrl);
+    void refreshWorkspaceFile(const QString &pPath);
+    void refreshWorkspaces(const bool &pScanFolders);
 
 protected:
     virtual QSize sizeHint() const;
@@ -97,6 +102,8 @@ private:
     void displayWorkspaces(void);
     void expandHtmlTree(const QString &pId);
 
+    void scrollToSelected(void);
+    void setSelected(QWebElement pNewSelectedRow);
     static const QString actionHtml(const QList<QPair<QString, QString> > &pActions);
     QString containerHtml(const QString &pClass, const QString &pIcon,
                           const QString &pId, const QString &pName,
@@ -115,6 +122,8 @@ private:
     QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 
+    static const QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
+
     void cloneWorkspace(const QString &pUrl);
     void duplicateCloneMessage(const QString &pUrl,
                                const QString &pPath1, const QString &pPath2);
@@ -131,17 +140,8 @@ signals:
     void warning(const QString &pMessage);
 
 public slots:
-    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
-    void addWorkspaceFolder(const QString &pFolder);
-    void clearWorkspaces(void);
-    void initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaces);
 
-    void aboutWorkspace(const QString &pUrl);
-
-    void refreshWorkspace(const QString &pUrl);
-    void refreshWorkspaceFile(const QString &pPath);
-    void refreshWorkspaces(const bool &pScanFolders);
-
+    void initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaceList &pWorkspaces);
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
     void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);

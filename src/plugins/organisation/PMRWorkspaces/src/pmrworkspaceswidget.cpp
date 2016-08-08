@@ -208,7 +208,6 @@ void PmrWorkspacesWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
             mWorkspacesManager->addWorkspace(pWorkspace);
         }
     }
-
 }
 
 //==============================================================================
@@ -451,11 +450,27 @@ QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNo
 //==============================================================================
 
 void PmrWorkspacesWidget::setSelected(const QString &pId)
+const QWebElement PmrWorkspacesWidget::parentWorkspaceElement(const QWebElement &pRowElement)
 {
     if (pId != mSelectedItem) {
+    auto workspaceElement = pRowElement;
+
+    // Find parent workspace
+
+    while (!workspaceElement.isNull()
+        && !(workspaceElement.tagName() == "TR"
+          && workspaceElement.hasClass("workspace"))) {
+        workspaceElement = workspaceElement.parent();
+        if (workspaceElement.hasClass("contents"))
+            workspaceElement = workspaceElement.previousSibling();
+    }
+    return workspaceElement;
+}
+
+//==============================================================================
+
         QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
-                                                       QString("tr.selected[id=\"%1\"]")
-                                                               .arg(mSelectedItem));
+                                    QString("tr.selected[id=\"%1\"]").arg(mSelectedItem));
         if (!trElement.isNull()) trElement.removeClass("selected");
 
         trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=\"%1\"]")
@@ -484,7 +499,7 @@ void PmrWorkspacesWidget::scrollToSelected(void)
 void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
 {
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
-                                                   QString("tr[id=\"%1\"] + tr").arg(pId));
+                                QString("tr[id=\"%1\"] + tr").arg(pId));
     if (!trElement.isNull()) {
         if (mExpandedItems.contains(pId)) {
             trElement.addClass("hidden");
@@ -624,14 +639,8 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                     pushWorkspace(linkUrl);
                 }
                 else if (action == "stage" || action == "unstage") {
-                    auto workspaceElement = trElement;
-                    while (!workspaceElement.isNull()
-                        && !(workspaceElement.tagName() == "TR"
-                          && workspaceElement.hasClass("workspace"))) {
-                        workspaceElement = workspaceElement.parent();
-                        if (workspaceElement.hasClass("contents"))
-                            workspaceElement = workspaceElement.previousSibling();
-                    }
+                    auto workspaceElement = parentWorkspaceElement(trElement);
+
                     if (!workspaceElement.isNull()) {
                         // Stage/unstage the file
 
@@ -780,7 +789,7 @@ void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::initialiseWorkspaces(const PMRSupport::PmrWorkspaceList &pWorkspaceList)
+void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaceList &pWorkspaceList)
 {
     // First clear existing workspaces from the manager
 
@@ -942,11 +951,11 @@ void PmrWorkspacesWidget::pushWorkspace(const QString &pUrl)
 void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
 {
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
-                                                          QString("tr.workspace[id=\"%1\"]").arg(pUrl));
+                                       QString("tr.workspace[id=\"%1\"]").arg(pUrl));
     if (!workspaceElement.isNull()) {
         auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
         if (workspace) {
-            // We have a valid workplace so reopen it
+            // We have a valid workspace so reopen it
 
             workspace->open();
 
@@ -970,16 +979,7 @@ void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
 {
     auto fileElement = page()->mainFrame()->documentElement().findFirst(
                                                      QString("tr.file[id=\"%1\"]").arg(pPath));
-    // Find parent workspace
-
-    auto workspaceElement = fileElement;
-    while (!workspaceElement.isNull()
-        && !(workspaceElement.tagName() == "TR"
-          && workspaceElement.hasClass("workspace"))) {
-        workspaceElement = workspaceElement.parent();
-        if (workspaceElement.hasClass("contents"))
-            workspaceElement = workspaceElement.previousSibling();
-    }
+    auto workspaceElement = parentWorkspaceElement(fileElement);
 
     if (!workspaceElement.isNull()) {
         auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));

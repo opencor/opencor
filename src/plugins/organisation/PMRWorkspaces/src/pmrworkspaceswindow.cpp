@@ -142,7 +142,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     connect(mPmrRepository, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
     connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
-            mWorkspacesWidget, SLOT(initialiseWorkspaces(PMRSupport::PmrWorkspaceList)));
+            mWorkspacesWidget, SLOT(initialiseWorkspaceWidget(PMRSupport::PmrWorkspaceList)));
 
     // Connections to process requests from our widget
 
@@ -401,7 +401,6 @@ void PmrWorkspacesWindow::fileCreated(const QString &pFileName, const QString &p
 {
     Q_UNUSED(pFileName)
     Q_UNUSED(pUrl)
-//qDebug() << "Created: " << pFileName << "  Url: " << pUrl;
 }
 
 //==============================================================================
@@ -409,7 +408,6 @@ void PmrWorkspacesWindow::fileCreated(const QString &pFileName, const QString &p
 void PmrWorkspacesWindow::fileDeleted(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
-//qDebug() << "Deleted: " << pFileName;
 }
 
 //==============================================================================
@@ -417,14 +415,12 @@ void PmrWorkspacesWindow::fileDeleted(const QString &pFileName)
 void PmrWorkspacesWindow::fileDuplicated(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
-//qDebug() << "Duplicated: " << pFileName;
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindow::fileReloaded(const QString &pFileName)
 {
-//qDebug() << "Reloaded: " << pFileName;
     mWorkspacesWidget->refreshWorkspaceFile(pFileName);
 }
 
@@ -432,7 +428,6 @@ void PmrWorkspacesWindow::fileReloaded(const QString &pFileName)
 
 void PmrWorkspacesWindow::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
 {
-//qDebug() << "Renamed: " << pOldFileName << "  to: " << pNewFileName;
     mWorkspacesWidget->refreshWorkspaceFile(pOldFileName);
     mWorkspacesWidget->refreshWorkspaceFile(pNewFileName);
 }
