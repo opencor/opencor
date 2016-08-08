@@ -1091,11 +1091,11 @@ void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
     if (!workspaceElement.isNull()) {
         auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
         if (workspace) {
-            // We have a valid workspace so reopen it
+            // We have a valid workspace so refresh its status
 
-            workspace->open();
+            workspace->refreshStatus();
 
-            // And replace its header and content row
+            // And replace the header and content rows
 
             auto htmlRows = workspaceHtml(workspace);
 

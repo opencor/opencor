@@ -94,7 +94,7 @@ public:
     bool open(void);
     bool opened(void) const;
     void push(void);
-    bool refreshStatus(void);
+    void refreshStatus(void);
 
     enum RemoteStatus {
         StatusUnknown  = 0,
@@ -139,7 +139,7 @@ private:
     void emitGitError(const QString &pMessage) const;
     void emitProgress(const double &pProgress) const;
 
-    static const QPair<QChar, QChar> gitStatusChars(const int &flags);
+    static const QPair<QChar, QChar> gitStatusChars(const int &pFlags);
 
 signals:
     void progress(const double &pProgress) const;
