@@ -51,13 +51,19 @@ PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(fals
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName, PmrRepository *parent) :
+PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
+                           const QString &pDescription, const QString &pOwner,
+ PmrRepository *parent) :
     QObject(parent), mOwned(false),
-    mDescription(QString()), mName(pName), mOwner(QString()), mUrl(pUrl),
+    mDescription(pDescription), mName(pName), mOwner(pOwner), mUrl(pUrl),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
     mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
 {
-    // Name, description and owner are set from PMR workspace info
+    // Description and owner are set when workspace information is received from PMR
+
+    // Our messages are directly emitted by our parent PmrRepository
+
+    connect(this, SIGNAL(information(QString)), parent, SIGNAL(information(QString)));
     connect(this, SIGNAL(progress(double)), parent, SIGNAL(progress(double)));
     connect(this, SIGNAL(warning(QString)), parent, SIGNAL(warning(QString)));
 }
@@ -144,7 +150,7 @@ void PmrWorkspace::setCredentials(const QString &pUsername, const QString &pPass
 }
 
 //==============================================================================
-
+/*
 void PmrWorkspace::setDescription(const QString &pDescription)
 {
     mDescription = pDescription;
@@ -163,7 +169,7 @@ void PmrWorkspace::setOwner(const QString &pOwner)
 {
     mOwner = pOwner;
 }
-
+*/
 //==============================================================================
 
 void PmrWorkspace::setPath(const QString &pPath)
@@ -230,10 +236,13 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
     const git_error *gitError = giterr_last();
 
-    emit warning(pMessage + (gitError ? (QString("<br></br><br></br>")
-                                         + tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                                   Core::formatMessage(gitError->message)))
-                                      : ""));
+    QString gitErrorMessage = gitError ? (tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                                  Core::formatMessage(gitError->message)))
+                                       : QString();
+    if (gitError)
+        qDebug() << gitErrorMessage;
+
+    emit warning(pMessage + (gitError ? (QString("<br></br><br></br>") + gitErrorMessage) : ""));
 }
 
 //==============================================================================
@@ -278,7 +287,6 @@ void PmrWorkspace::refreshStatus(void)
     mUnstagedCount = 0;
     mRepositoryStatusMap.clear();
 
-    if (mRootFileNode) delete mRootFileNode;  // ???
     mRootFileNode = new PmrWorkspaceFileNode("", mPath);
 
     git_index *index;
@@ -1084,7 +1092,7 @@ void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, PmrReposit
 {
     // Add a new workspace to the list
 
-    QList::append(new PmrWorkspace(pUrl, pName, parent));
+    QList::append(new PmrWorkspace(pUrl, pName, "", "", parent));
 }
 
 //==============================================================================

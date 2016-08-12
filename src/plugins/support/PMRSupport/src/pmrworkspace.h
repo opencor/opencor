@@ -57,7 +57,9 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
 
 public:
     explicit PmrWorkspace(PmrRepository *parent=0);
-    PmrWorkspace(const QString &pUrl, const QString &pName, PmrRepository *parent);
+    PmrWorkspace(const QString &pUrl, const QString &pName,
+                           const QString &pDescription, const QString &pOwner,
+     PmrRepository *parent);
     virtual ~PmrWorkspace();
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
@@ -73,9 +75,6 @@ public:
     bool isNull(void) const;
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
-    void setDescription(const QString &pDescription);
-    void setName(const QString &pName);
-    void setOwner(const QString &pOwner);
     void setPath(const QString &pPath);
 
     bool isOwned(void) const;
@@ -134,6 +133,10 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
+//    void setDescription(const QString &pDescription);
+//    void setName(const QString &pName);
+//    void setOwner(const QString &pOwner);
+
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
@@ -157,6 +160,7 @@ private:
     void push(void);
 
 signals:
+    void information(const QString &pMessage) const;
     void progress(const double &pProgress) const;
     void warning(const QString &pMessage) const;
 

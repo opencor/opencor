@@ -84,7 +84,6 @@ PmrRepository::PmrRepository(QObject *parent) : QObject(parent),
 
 PmrRepository::~PmrRepository()
 {
-    delete mPmrRepositoryManager;
 }
 
 //==============================================================================
@@ -481,11 +480,8 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storageValue.compare("git")) {
-                emit workspaceInformation(workspaceUrl, workspaceName,
-                                          workspaceDescription, workspaceOwner);
-
-                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, this);
-
+                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, workspaceDescription,
+                                                  workspaceOwner, this);
                 auto dirName = QString();
 
                 if (exposure) {         // Cloning a workspace from an exposure
@@ -690,10 +686,8 @@ void PmrRepository::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 
         if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
 
-            auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, this);
-
-            workspace->setDescription(workspaceDescription);
-            workspace->setOwner(workspaceOwner);
+            auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, workspaceDescription,
+                                              workspaceOwner, this);
 
             // Return result to requestor
 

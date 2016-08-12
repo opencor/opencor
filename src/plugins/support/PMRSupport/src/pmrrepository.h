@@ -115,8 +115,6 @@ signals:
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-    void workspaceInformation(const QString &pUrl, const QString &pName,
-                              const QString &pDescription, const QString &pOwner);
     void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
     void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 

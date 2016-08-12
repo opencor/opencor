@@ -68,7 +68,6 @@ PmrRepositoryManager::PmrRepositoryManager(PmrRepository *pPmrRepository) :
 
 PmrRepositoryManager::~PmrRepositoryManager()
 {
-    delete mPmrOAuthClient;
 }
 
 //==============================================================================
