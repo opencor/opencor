@@ -56,17 +56,20 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
+#define ICON_ABOUT        ":/oxygen/actions/help-about.png"
 #define ICON_CLONE        ":/oxygen/places/folder-downloads.png"
+#define ICON_COMMIT       ":/oxygen/actions/view-task.png"
 #define ICON_FOLDER       ":/oxygen/places/folder.png"
 #define ICON_FOLDER_OPEN  ":/oxygen/places/folder-open.png"
 #define ICON_OWNED        ":/oxygen/places/folder-favorites.png"
-#define ICON_PULL         ":/oxygen/actions/arrow-down-double.png"
-#define ICON_STAGE        ":/oxygen/actions/dialog-ok-apply.png"
-#define ICON_UNSTAGE      ":/oxygen/actions/dialog-cancel.png"
-#define ICON_COMMIT       ":/oxygen/actions/view-task.png"
-#define ICON_PUSH         ":/oxygen/actions/arrow-up-double.png"
+//#define ICON_PULL         ":/oxygen/actions/arrow-down-double.png"
+//#define ICON_PUSH         ":/oxygen/actions/arrow-up-double.png"
 #define ICON_REFRESH      ":/oxygen/actions/view-refresh.png"
-#define ICON_ABOUT        ":/oxygen/actions/help-about.png"
+#define ICON_STAGE        ":/oxygen/actions/dialog-ok-apply.png"
+#define ICON_SYNC_PULL    ":/PMRWorkspaces/icons/sync-pull.png"
+#define ICON_SYNC_PUSH    ":/PMRWorkspaces/icons/sync-push.png"
+#define ICON_SYNCHRONISE  ":/PMRWorkspaces/icons/synchronise.png"
+#define ICON_UNSTAGE      ":/oxygen/actions/dialog-cancel.png"
 
 //==============================================================================
 
@@ -93,12 +96,12 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     // Connections to handle responses from PMR
 
-    connect(mPmrRepository, SIGNAL(workspaceCreated(QString)),
-            this, SLOT(workspaceCreated(QString)));
     connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(mPmrRepository, SIGNAL(workspacePushed(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspacePushed(PMRSupport::PmrWorkspace *)));
+    connect(mPmrRepository, SIGNAL(workspaceCreated(QString)),
+            this, SLOT(workspaceCreated(QString)));
+    connect(mPmrRepository, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
 
     // Handle workspace cloned signals from other plugins
 
@@ -109,17 +112,17 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     QString fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
-    mTemplate = fileContents.arg( // clone, folder, open, star, pull, stage, unstage, commit, push
+    mTemplate = fileContents.arg( // clone, commit, folder, open, star, stage, pull, push, sync, unstage
                                  Core::iconDataUri(ICON_CLONE, 16, 16),
+                                 Core::iconDataUri(ICON_COMMIT, 16, 16),
                                  Core::iconDataUri(ICON_FOLDER, 16, 16),
                                  Core::iconDataUri(ICON_FOLDER_OPEN, 16, 16),
                                  Core::iconDataUri(ICON_OWNED, 16, 16),
-                                 Core::iconDataUri(ICON_PULL, 16, 16),
                                  Core::iconDataUri(ICON_STAGE, 16, 16),
-                                 Core::iconDataUri(ICON_UNSTAGE, 16, 16),
-                                 Core::iconDataUri(ICON_COMMIT, 16, 16),
-                                 Core::iconDataUri(ICON_PUSH, 16, 16))
-                                 .arg("%1");
+                                 Core::iconDataUri(ICON_SYNC_PULL, 16, 16),
+                                 Core::iconDataUri(ICON_SYNC_PUSH, 16, 16),
+                                 Core::iconDataUri(ICON_SYNCHRONISE, 16, 16))
+                                 .arg(Core::iconDataUri(ICON_UNSTAGE, 16, 16), "%1");
 
     // Create our timer for refreshing the current workspace
 
@@ -449,21 +452,30 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
     if (path.isEmpty()) {
         actionList << QPair<QString, QString>("clone", url);
     }
-    else if (remoteStatus & PMRSupport::PmrWorkspace::StatusBehind) {
-        actionList << QPair<QString, QString>("pull", url);
-    }
     else {
-        if (remoteStatus & PMRSupport::PmrWorkspace::StatusCommit) {
+
+        // Indicate whether there are unstaged files
+
+        if (remoteStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
+            status = "?";   // Have an icon (but without an action)??
+
+        // Indicate whether files are staged for commit
+
+        if (remoteStatus & PMRSupport::PmrWorkspace::StatusCommit)
             actionList << QPair<QString, QString>("commit", url);
+
+        // Show synchronisation button, with different styles to
+        // indicate exactly what it will do
+
+        if (pWorkspace->isOwned()) {
+            if (remoteStatus & PMRSupport::PmrWorkspace::StatusAhead)
+                actionList << QPair<QString, QString>("push", url);
+            else
+                actionList << QPair<QString, QString>("sync", url);
         }
-        // TODO We need to show that a cloned workspace has changes even if can't be pushed
-        //      because we don't own it
-        if (remoteStatus & PMRSupport::PmrWorkspace::StatusAhead && pWorkspace->isOwned()) {
-            actionList << QPair<QString, QString>("push", url);
+        else {
+            actionList << QPair<QString, QString>("pull", url);
         }
-    }
-    if (remoteStatus & PMRSupport::PmrWorkspace::StatusUnstaged) {
-        status = "?";
     }
 
     mRow = 0;
@@ -534,8 +546,7 @@ void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
         mCurrentWorkspaceUrl = pUrl;
         mExpandedItems.insert(mCurrentWorkspaceUrl);
-        }
-
+    }
 }
 
 //==============================================================================
@@ -706,14 +717,14 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
             else if      (action == "clone") {
                 toolTip = tr("Clone workspace");
             }
-            else if (action == "pull") {
-                toolTip = tr("Pull updates from PMR");
+            else if (action == "sync" || action == "pull") {
+                toolTip = tr("Synchronise with PMR");
+            }
+            else if (action == "push") {
+                toolTip = tr("Synchronise and upload to PMR");
             }
             else if (action == "commit") {
                 toolTip = tr("Commit staged changes");
-            }
-            else if (action == "push") {
-                toolTip = tr("Push committed changes to PMR");
             }
         }
         else {
@@ -762,14 +773,14 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
                 if      (action == "clone") {
                     cloneWorkspace(linkUrl);
                 }
-                else if (action == "pull") {
-                    pullWorkspace(linkUrl);
-                }
                 else if (action == "commit") {
                     commitWorkspace(linkUrl);
                 }
+                else if (action == "pull" || action == "sync") {
+                    synchroniseWorkspace(linkUrl, true);
+                }
                 else if (action == "push") {
-                    pushWorkspace(linkUrl);
+                    synchroniseWorkspace(linkUrl, false);
                 }
                 else if (action == "stage" || action == "unstage") {
                     auto workspaceElement = parentWorkspaceElement(trElement);
@@ -839,35 +850,37 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
     if (!trElement.isNull() && trElement.hasClass("workspace")) {
         QString elementId = trElement.attribute("id");
-        bool separator = false ;
 
         if (!trElement.findFirst("img.clone").isNull()) {
             auto action = new QAction(QIcon(ICON_CLONE), tr("Clone workspace"), this);
             action->setData(QString("clone|%1").arg(elementId));
             menu->addAction(action);
-            separator = true;
-        }
-        else if (!trElement.findFirst("img.pull").isNull()) {
-            auto action = new QAction(QIcon(ICON_PULL), tr("Pull updates"), this);
-            action->setData(QString("pull|%1").arg(elementId));
-            menu->addAction(action);
-            separator = true;
         }
         else {
             if (!trElement.findFirst("img.commit").isNull()) {
                 auto action = new QAction(QIcon(ICON_COMMIT), tr("Commit staged changes"), this);
                 action->setData(QString("commit|%1").arg(elementId));
                 menu->addAction(action);
-                separator = true;
             }
-            if (!trElement.findFirst("img.push").isNull()) {
-                auto action = new QAction(QIcon(ICON_PUSH), tr("Push commits"), this);
+
+            if (!trElement.findFirst("img.pull").isNull()) {
+                auto action = new QAction(QIcon(ICON_SYNC_PULL), tr("Synchronise with PMR"), this);
+                action->setData(QString("pull|%1").arg(elementId));
+                menu->addAction(action);
+            }
+            if (!trElement.findFirst("img.sync").isNull()) {
+                auto action = new QAction(QIcon(ICON_SYNCHRONISE), tr("Synchronise with PMR"), this);
+                action->setData(QString("sync|%1").arg(elementId));
+                menu->addAction(action);
+            }
+            else if (!trElement.findFirst("img.push").isNull()) {
+                auto action = new QAction(QIcon(ICON_SYNC_PUSH), tr("Synchronise and upload to PMR"), this);
                 action->setData(QString("push|%1").arg(elementId));
                 menu->addAction(action);
-                separator = true;
             }
+
         }
-        if (separator) menu->addSeparator();
+        menu->addSeparator();
 
         auto refreshAction = new QAction(QIcon(ICON_REFRESH), tr("Refresh display"), this);
         refreshAction->setData(QString("refresh|%1").arg(elementId));
@@ -901,14 +914,14 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
             else if (action == "refresh") {
                 refreshWorkspace(linkId);
             }
-            else if (action == "pull") {
-                pullWorkspace(linkId);
+            else if (action == "pull" || action == "sync") {
+                synchroniseWorkspace(linkId, true);
             }
             else if (action == "commit") {
                 commitWorkspace(linkId);
             }
             else if (action == "push") {
-                pushWorkspace(linkId);
+                synchroniseWorkspace(linkId, false);
             }
             else if (action == "show") {
                 showInGraphicalShell(linkId);
@@ -1026,27 +1039,11 @@ void PmrWorkspacesWidget::cloneWorkspace(const QString &pUrl)
             // Create the folder for the new workspace
 
             auto workspaceFolder = QDir(dirName);
-            if (!workspaceFolder.exists()) {
+            if (!workspaceFolder.exists())
                 workspaceFolder.mkpath(".");
-            }
 
-            mPmrRepository->getWorkspaceCredentials(workspace);
             mPmrRepository->requestWorkspaceClone(workspace, dirName);
         }
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWidget::pullWorkspace(const QString &pUrl)
-{
-    auto workspace = mWorkspacesManager->workspace(pUrl);
-
-    if (workspace && !workspace->isNull() && workspace->isLocal()) {
-        mPmrRepository->getWorkspaceCredentials(workspace);
-// TODO  Pull workspace from remote... (what about clashes ??)
-//       mPmrRepository->requestWorkspacePull(workspace);
-//       See: http://stackoverflow.com/questions/27759674/libgit2-fetch-merge-commit
     }
 }
 
@@ -1068,18 +1065,6 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
                 refreshWorkspace(workspace->url());
 
         }
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWidget::pushWorkspace(const QString &pUrl)
-{
-    auto workspace = mWorkspacesManager->workspace(pUrl);
-
-    if (workspace && !workspace->isNull() && workspace->isLocal()) {
-        mPmrRepository->getWorkspaceCredentials(workspace);
-        mPmrRepository->requestWorkspacePush(workspace);
     }
 }
 
@@ -1147,6 +1132,16 @@ void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
 
 //==============================================================================
 
+void PmrWorkspacesWidget::synchroniseWorkspace(const QString &pUrl, const bool pOnlyPull)
+{
+    auto workspace = mWorkspacesManager->workspace(pUrl);
+
+    if (workspace && !workspace->isNull() && workspace->isLocal())
+        mPmrRepository->requestWorkspaceSynchronise(workspace, pOnlyPull);
+}
+
+//==============================================================================
+
 void PmrWorkspacesWidget::workspaceCreated(const QString &pUrl)
 {
     Q_UNUSED(pUrl)
@@ -1180,7 +1175,7 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::workspacePushed(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWidget::workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace)
 {
     if (pWorkspace) {
         refreshWorkspace(pWorkspace->url());

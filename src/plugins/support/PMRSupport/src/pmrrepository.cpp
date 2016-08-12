@@ -340,6 +340,7 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
 {
     emit busy(true);
+    getWorkspaceCredentials(pWorkspace);
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
@@ -403,21 +404,22 @@ void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
 
 //==============================================================================
 
-void PmrRepository::requestWorkspacePush(PmrWorkspace *pWorkspace)
+void PmrRepository::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull)
 {
     emit busy(true);
-    connect(pWorkspace, SIGNAL(workspacePushed(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspacePushFinished(PMRSupport::PmrWorkspace *)));
+    getWorkspaceCredentials(pWorkspace);
+    connect(pWorkspace, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *)));
 
-    QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::push);
+    QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronise, pOnlyPull);
 }
 
 //==============================================================================
 
-void PmrRepository::workspacePushFinished(PmrWorkspace *pWorkspace)
+void PmrRepository::workspaceSynchroniseFinished(PmrWorkspace *pWorkspace)
 {
     emit busy(false);
-    emit workspacePushed(pWorkspace);
+    emit workspaceSynchronised(pWorkspace);
 }
 
 //==============================================================================
@@ -503,7 +505,6 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     }
                 }
                 else {                  // Cloning after creating a new workspace
-                    getWorkspaceCredentials(workspace);
                     dirName = sender()->property(DirNameProperty).toString();
                 }
 

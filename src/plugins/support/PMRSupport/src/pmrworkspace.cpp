@@ -528,9 +528,271 @@ void PmrWorkspace::clone(const QString &pDirName)
 
 //==============================================================================
 
+bool PmrWorkspace::fetch(void)
+{
+    // Fetch any updates for a workspace
+
+    if (!this->open()) return false;
+
+    bool fetched = true;
+
+    git_fetch_options fetchOptions;
+    git_fetch_init_options(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
+
+    // We trust PMR's SSL certificate
+
+    fetchOptions.callbacks.certificate_check = certificate_check_cb;
+
+    // Track push progress
+
+    fetchOptions.callbacks.transfer_progress = transfer_progress_cb ;
+    fetchOptions.callbacks.payload = (void *)this;
+
+    // Set up Basic authorization
+
+    git_strarray authorisationStrArray = { nullptr, 0 };
+    setGitAuthorisation(&authorisationStrArray);
+    fetchOptions.custom_headers = authorisationStrArray;
+
+    git_remote_callbacks remoteCallbacks;
+    git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+    remoteCallbacks.certificate_check = certificate_check_cb;
+
+    // Get the remote, connect to it, add a refspec, and do the push
+
+    git_remote *gitRemote = nullptr;
+
+    const char *masterReference = "refs/heads/master";
+    git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
+
+    if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
+     || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, nullptr)) {
+        emitGitError(tr("An error occurred while trying to fetch the remote workspace."));
+        fetched = false;
+    }
+    if (gitRemote) git_remote_free(gitRemote);
+
+    git_strarray_free(&authorisationStrArray);
+
+    return fetched;
+}
+
+//==============================================================================
+
+int PmrWorkspace::checkout_notify_cb(git_checkout_notify_t why, const char *path, const git_diff_file *baseline,
+                                     const git_diff_file *target, const git_diff_file *workdir, void *payload)
+{
+    Q_UNUSED(baseline)
+    Q_UNUSED(target)
+    Q_UNUSED(workdir)
+
+    auto workspace = (PmrWorkspace *)payload;
+
+    if (why == GIT_CHECKOUT_NOTIFY_CONFLICT)
+        workspace->mConflictedFiles << QString(path);
+    else if (why == GIT_CHECKOUT_NOTIFY_UPDATED)
+        workspace->mUpdatedFiles << QString(path);
+
+    return 0;
+}
+
+//==============================================================================
+
+typedef struct {
+    size_t size;
+    git_repository *repository;
+    git_commit **parents;
+} MergeHeadCallbackData;
+
+//==============================================================================
+
+int PmrWorkspace::mergehead_foreach_cb(const git_oid *oid, void *payload)
+{
+    int error = 0;
+    MergeHeadCallbackData *mergeCallbackData = (MergeHeadCallbackData *)payload;
+
+    if (mergeCallbackData->parents)
+        error = git_commit_lookup(&(mergeCallbackData->parents[mergeCallbackData->size]), mergeCallbackData->repository, oid);
+
+    if (!error) mergeCallbackData->size += 1;
+
+    return error;
+}
+
+//==============================================================================
+
+int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_url, const git_oid *oid,
+                                       unsigned int is_merge, void *payload)
+{
+    Q_UNUSED(ref_name)
+
+    bool successful = true;
+
+    auto workspace = (PmrWorkspace *)payload;
+    auto repository = workspace->mGitRepository;
+
+    if (is_merge) {
+        git_annotated_commit *remoteCommitHead = nullptr;
+        if (git_annotated_commit_from_fetchhead(&remoteCommitHead, repository,
+                                                "origin/master", remote_url, oid) != 0) {
+            successful = false;
+        }
+        else {
+            // Initialise common checkout options
+
+            git_checkout_options checkoutOptions;
+            git_checkout_init_options(&checkoutOptions, GIT_CHECKOUT_OPTIONS_VERSION);
+            checkoutOptions.checkout_strategy = GIT_CHECKOUT_SAFE
+                                              | GIT_CHECKOUT_RECREATE_MISSING;
+            checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_UPDATED
+                                         | GIT_CHECKOUT_NOTIFY_CONFLICT;
+            checkoutOptions.notify_cb = checkout_notify_cb;
+            checkoutOptions.notify_payload = (void *)workspace;
+
+            // Find the type of merge we can do
+
+            git_merge_analysis_t analysis = GIT_MERGE_ANALYSIS_NONE;
+            git_merge_preference_t preference = GIT_MERGE_PREFERENCE_NONE;
+            git_merge_analysis(&analysis, &preference, repository, (const git_annotated_commit**)(&remoteCommitHead), 1);
+
+            if (analysis & GIT_MERGE_ANALYSIS_UNBORN) {
+                // We can simply set HEAD to the target commit.
+
+                git_reference *newMaster = nullptr;
+                successful = git_reference_create(&newMaster, repository, "refs/heads/master",
+                                                  git_annotated_commit_id(remoteCommitHead),
+                                                  true, "initial pull") == 0
+                          && git_repository_set_head(repository, "refs/heads/master") == 0
+                          && git_checkout_head(repository, &checkoutOptions) == 0;
+
+                if (newMaster != nullptr) git_reference_free(newMaster);
+            }
+            else if (analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) {
+                // We can check out the newly fetched head without merging
+
+                git_reference *newMaster = nullptr;
+                successful = git_reference_create(&newMaster, repository, "refs/heads/master",
+                                                  git_annotated_commit_id(remoteCommitHead),
+                                                  true,  "pull: Fast-forward") == 0
+                          && git_repository_set_head(repository, "refs/heads/master") == 0
+                          && git_checkout_head(repository, &checkoutOptions) == 0;
+
+                if (newMaster != nullptr) git_reference_free(newMaster);
+            }
+
+            else if (analysis & GIT_MERGE_ANALYSIS_NORMAL) {
+                // A "normal" merge; both HEAD and the given merge input have diverged from
+                // their common ancestor. The divergent commits must be merged.
+
+                git_merge_options mergeOptions;
+                git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
+                mergeOptions.file_favor = GIT_MERGE_FILE_FAVOR_THEIRS;
+
+                workspace->mConflictedFiles = QStringList();
+                workspace->mUpdatedFiles = QStringList();
+
+                if (git_merge(repository, (const git_annotated_commit**)(&remoteCommitHead), 1,
+                              &mergeOptions, &checkoutOptions) == 0
+                 && git_repository_state(repository) == GIT_REPOSITORY_STATE_MERGE // Only commit if merge succeeded
+                 && workspace->mConflictedFiles.size() == 0) {                     // and there are no conflicts
+
+                    // Get the number of merge heads so we can allocate an array for parents
+
+                    MergeHeadCallbackData mergeCallbackData = {0, nullptr, nullptr};
+                    git_repository_mergehead_foreach(repository, mergehead_foreach_cb, &mergeCallbackData);
+                    size_t nParents = mergeCallbackData.size + 1;
+                    auto parents = new git_commit *[nParents]();
+
+                    // HEAD is always a parent
+                    git_oid parentId;
+                    if (git_reference_name_to_id(&parentId, repository, "HEAD") == 0
+                     && git_commit_lookup(parents, repository, &parentId) == 0) {
+
+                        // Now populate the list of commit parents
+
+                        if (nParents > 1) {
+                            mergeCallbackData.size = 0;
+                            mergeCallbackData.repository = repository;
+                            mergeCallbackData.parents = &(parents[1]);
+                            if (git_repository_mergehead_foreach(repository, mergehead_foreach_cb, &mergeCallbackData))
+                                successful = false;
+                        }
+                        // TODO: Name comes from fetch head??
+                        // Also to have in reflog: "pull: Merge made by the 'recursive' strategy." ??
+                        auto message = std::string("Merge branch 'master' of ") + remote_url;
+                        successful = successful
+                                  && workspace->doCommit(message.c_str(), nParents, (const git_commit **)parents);
+                    }
+                    if (successful)
+                        git_repository_state_cleanup(repository);
+                    for (size_t n = 0; n < nParents; ++n)
+                        git_commit_free(parents[n]);
+                    delete[] parents;
+                }
+            }
+        }
+
+    if (remoteCommitHead != nullptr)
+        git_annotated_commit_free(remoteCommitHead);
+    }
+
+    return successful ? 0 : 1;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::merge(void)
+{
+    // Merge and commit fetched updates
+
+    if (!this->open()) return false;
+
+    bool successful = true;
+
+    if (git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this) == 0) {
+        // emit information(tr("Merge succeeded..."));
+
+        // List of updated files:
+        //    mUpdatedFiles.join("\n")
+        // Just emit the list... ???
+    }
+    else {
+        auto errorMessage = tr("An error occurred while trying to merge the workspace.");
+        if (mConflictedFiles.size())
+            errorMessage.append("\n\n" + tr("The following files have conflicts:")
+                              + "\n\t" + mConflictedFiles.join("\n\t"));
+        emitGitError(errorMessage);
+        successful = false;
+    }
+
+    return successful;
+}
+
+//==============================================================================
+
+void PmrWorkspace::synchronise(const bool pOnlyPull)
+{
+    // Synchronise our local workspace with PMR
+
+    if (this->fetch()
+      && this->merge()
+      && !pOnlyPull) {
+        // We've successfully fetched and merged
+        // so push if we are allowed to.
+
+        this->push();
+    }
+
+    emit workspaceSynchronised(this);
+    }
+
+//==============================================================================
+
 void PmrWorkspace::push(void)
 {
     // Push a workspace
+
+    if (!this->open()) return;
 
     git_push_options pushOptions;
     git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
@@ -550,105 +812,101 @@ void PmrWorkspace::push(void)
     setGitAuthorisation(&authorisationStrArray);
     pushOptions.custom_headers = authorisationStrArray;
 
-    if (this->open()) {
+    git_remote_callbacks remoteCallbacks;
+    git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+    remoteCallbacks.certificate_check = certificate_check_cb;
 
-        git_remote_callbacks remoteCallbacks;
-        git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
-        remoteCallbacks.certificate_check = certificate_check_cb;
+    // Get the remote, connect to it, add a refspec, and do the push
 
-        // Get the remote, connect to it, add a refspec, and do the push
+    git_remote *gitRemote = nullptr;
 
-        git_remote *gitRemote = nullptr;
+    const char *masterReference = "refs/heads/master";
+    git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
 
-        const char *masterReference = "refs/heads/master";
-        git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
-
-        if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
-         || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
-            emitGitError(tr("An error occurred while trying to push the workspace."));
-        }
-        if (gitRemote) git_remote_free(gitRemote);
+    if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
+     || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
+        emitGitError(tr("An error occurred while trying to push the workspace."));
     }
+    if (gitRemote) git_remote_free(gitRemote);
 
     git_strarray_free(&authorisationStrArray);
+}
 
-    emit workspacePushed(this);
+//==============================================================================
+
+bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git_commit **pParents)
+{
+    git_signature *author = nullptr;
+    git_index *index = nullptr;
+    git_tree *tree = nullptr;
+    git_oid commitId;
+    git_oid treeId;
+
+// TODO: Get user's name and email... From preferences?? Git configuration settings??
+//                                    Should OpenCOR set git's global configuration settings?? NO.
+// `git_remote_push()` also obtains a signature to use in the reflog
+//  so it would make sense to store the name/email with the local repository's .git configuration...
+
+// `git config --local user.name "name"
+// `git config --local user.email "email"
+
+    bool error = git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org") != 0
+              || git_repository_index(&index, mGitRepository) != 0
+              || git_index_write_tree(&treeId, index) != 0
+              || git_tree_lookup(&tree, mGitRepository, &treeId) != 0
+              || git_commit_create(&commitId, mGitRepository, "HEAD", author, author,
+                                   nullptr, pMessage, tree, pParentCount, pParents) != 0;
+    if (tree != nullptr) git_tree_free(tree);
+    if (index != nullptr) git_index_free(index);
+    if (author != nullptr) git_signature_free(author);
+
+    if (error) emitGitError(tr("An error occurred while trying to commit to the workspace"));
+
+    return !error;
 }
 
 //==============================================================================
 
 bool PmrWorkspace::commit(const QString &pMessage)
 {
-    bool success = false;
+    if (!this->open()) return false;
 
-    if (this->open()) {
-        // Get an empty buffer to hold the cleaned message
+    // Get an empty buffer to hold the cleaned message
+    git_buf message;
+    message.ptr = nullptr;
+    git_buf_set(&message, nullptr, 0);
 
-        git_buf msg;
-        msg.ptr = nullptr;
-        git_buf_set(&msg, nullptr, 0);
+    // Clean up message and remove `;` comments
 
-        // Clean up message and remove `;` comments
+    git_message_prettify(&message, pMessage.toUtf8().constData(), true, ';');
 
-        git_message_prettify(&msg, pMessage.toUtf8().constData(), true, ';');
+    bool committed = true;
+    if (message.size > 0) {
+        int nParents = -1;
+        git_commit *parent = nullptr;
 
-        if (msg.size > 0) {
-// TODO Get user's name and email... From preferences?? Git configuration settings??
-//                                   Should OpenCOR set git's global configuration settings?? NO.
-            git_signature *author;
-            if (git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org") == 0) {
-
-                git_index *index;
-                if (git_repository_index(&index, mGitRepository) == 0) {
-
-                    git_oid treeId;
-                    if (git_index_write_tree(&treeId, index) == 0) {
-
-                        git_tree *tree;
-                        if (git_tree_lookup(&tree, mGitRepository, &treeId) == 0) {
-
-                            git_oid commitId;
-
-                            if (git_repository_head_unborn(mGitRepository) == 1) {
-// The initial commit will have no parent, so ...create_v(...., tree, 0, NULL)
-                                if (git_commit_create_v(&commitId, mGitRepository, "HEAD",
-                                                        author, author, NULL, msg.ptr,
-                                                        tree, 0, nullptr) == 0) {
-                                    success = true;
-                                }
-                            }
-                            else {
-                                // Get HEAD as a commit object to use as the parent of the commit
-                                git_oid parentId;
-                                if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0) {
-
-                                    git_commit *parent;
-                                    if (git_commit_lookup(&parent, mGitRepository, &parentId) == 0) {
-                                        // Do the commit
-
-                                        if (git_commit_create_v(&commitId, mGitRepository, "HEAD",
-                                                                author, author, NULL, msg.ptr,
-                                                                tree, 1, parent) == 0) {
-                                            success = true;
-                                        }
-                                        git_commit_free(parent);
-                                    }
-                                }
-                            }
-                        }
-                        git_tree_free(tree);
-                    }
-                }
-                git_index_free(index);
-            }
-            git_signature_free(author);
-
-            if (!success)
-                emitGitError(tr("An error occurred while trying to commit to the workspace"));
+        if (git_repository_head_unborn(mGitRepository) == 1) {
+            // Committing to an empty repository
+            nParents = 0;
         }
-        git_buf_free(&msg);
+        else {
+            // Get HEAD as the commit object to use as the parent of the commit
+            git_oid parentId;
+            if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0
+             && git_commit_lookup(&parent, mGitRepository, &parentId) == 0) {
+                nParents = 1;
+            }
+        }
+
+        if (nParents >= 0)
+            committed = doCommit(message.ptr, nParents, (const git_commit **)(&parent));
+
+        if (parent != nullptr) git_commit_free(parent);
     }
-    return success;
+
+    git_buf_free(&message);
+
+    return committed;
 }
 
 //==============================================================================

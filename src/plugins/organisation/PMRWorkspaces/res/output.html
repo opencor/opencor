@@ -202,18 +202,26 @@
             img.clone {
                 content: url("%1");
             }
-            img.folder {
+            img.commit {
                 content: url("%2");
             }
-            img.open {
+            img.folder {
                 content: url("%3");
             }
-            img.star {
+            img.open {
                 content: url("%4");
             }
-            img.pull {
+            img.star {
                 content: url("%5");
             }
+/*
+            img.pull {
+                content: url("%xx");
+            }
+            img.push {
+                content: url("%xx");
+            }
+*/
             img.stage {
                 content: url("%6");
                 /* Overide button class */
@@ -223,8 +231,17 @@
                 margin: 0;
                 margin-right: 2px;
             }
-            img.unstage {
+            img.pull {
                 content: url("%7");
+            }
+            img.push {
+                content: url("%8");
+            }
+            img.sync {
+                content: url("%9");
+            }
+            img.unstage {
+                content: url("%10");
                 /* Overide button class */
                 border: 0;
                 border-radius: 0;
@@ -232,18 +249,12 @@
                 margin: 0;
                 margin-right: 2px;
             }
-            img.commit {
-                content: url("%8");
-            }
-            img.push {
-                content: url("%9");
-            }
         </style>
     </head>
     <body ondragstart="return false;" ondrop="return false;">
         <table class="fullWidth">
             <tbody id="workspaces">
-                %10
+                %11
             </tbody>
         </table>
     </body>

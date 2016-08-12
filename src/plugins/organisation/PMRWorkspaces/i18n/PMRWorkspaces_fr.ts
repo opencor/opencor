@@ -35,23 +35,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull updates from PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Commit staged changes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Push committed changes to PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Push commits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -72,6 +56,14 @@
     </message>
     <message>
         <source>Show containing folder...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise with PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise and upload to PMR</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

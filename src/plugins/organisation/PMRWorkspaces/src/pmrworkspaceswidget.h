@@ -136,8 +136,7 @@ private:
                                const QString &pPath1, const QString &pPath2);
 
     void commitWorkspace(const QString &pUrl);
-    void pullWorkspace(const QString &pUrl);
-    void pushWorkspace(const QString &pUrl);
+    void synchroniseWorkspace(const QString &pUrl, const bool pOnlyPull);
 
     void showInGraphicalShell(const QString &pPath);
 
@@ -157,7 +156,7 @@ public slots:
     void initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaceList &pWorkspaces);
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-    void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

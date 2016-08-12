@@ -100,5 +100,17 @@
         <source>An error occurred while trying to stage %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>An error occurred while trying to fetch the remote workspace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to merge the workspace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following files have conflicts:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

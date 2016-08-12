@@ -68,12 +68,11 @@ public:
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
     PmrWorkspace *getWorkspace(const QString &pUrl);
-    void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
     void requestWorkspacesList(void);
-    void requestWorkspacePush(PmrWorkspace *pWorkspace);
+    void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pDirName);
@@ -93,6 +92,7 @@ private:
     void emitInformation(const QString &pMessage);
     QString informationNoteMessage() const;
 
+    void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
     void requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl);
     void requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction);
 
@@ -118,7 +118,7 @@ signals:
     void workspaceInformation(const QString &pUrl, const QString &pName,
                               const QString &pDescription, const QString &pOwner);
     void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
-    void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
     void authenticate(const bool &pLink = true);
@@ -139,7 +139,7 @@ private slots:
     void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreatedResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
-    void workspacePushFinished(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

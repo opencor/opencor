@@ -94,8 +94,8 @@ public:
     bool commit(const QString &pMessage);
     bool open(void);
     bool opened(void) const;
-    void push(void);
     void refreshStatus(void);
+    void synchronise(const bool pOnlyPull);
 
     enum RemoteStatus {
         StatusUnknown  = 0,
@@ -128,14 +128,22 @@ private:
     QMap<QString, PmrWorkspaceFileNode *> mRepositoryStatusMap;
     PmrWorkspaceFileNode *mRootFileNode;
 
+    QStringList mConflictedFiles;
+    QStringList mUpdatedFiles;
+
     int mStagedCount;
     int mUnstagedCount;
 
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
+    static int checkout_notify_cb(git_checkout_notify_t why, const char *path, const git_diff_file *baseline,
+                                  const git_diff_file *target, const git_diff_file *workdir, void *payload);
     static void checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
                                      void *payload);
+    static int fetchhead_foreach_cb(const char *ref_name, const char *remote_url, const git_oid *oid,
+                                    unsigned int is_merge, void *payload);
+    static int mergehead_foreach_cb(const git_oid *oid, void *payload);
     static int transfer_progress_cb(const git_transfer_progress *stats, void *payload);
 
     void emitGitError(const QString &pMessage) const;
@@ -143,13 +151,17 @@ private:
 
     static const QPair<QChar, QChar> gitStatusChars(const int &pFlags);
 
+    bool doCommit(const char *pMessage, size_t pParentCount, const git_commit **pParents);
+    bool fetch(void);
+    bool merge(void);
+    void push(void);
+
 signals:
     void progress(const double &pProgress) const;
     void warning(const QString &pMessage) const;
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspacePulled(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspacePushed(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
