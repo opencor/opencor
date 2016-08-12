@@ -290,7 +290,7 @@ void PmrWorkspace::refreshStatus(void)
     mRootFileNode = new PmrWorkspaceFileNode("", mPath);
 
     git_index *index;
-    if (git_repository_index(&index, mGitRepository) == 0) {
+    if (opened() && git_repository_index(&index, mGitRepository) == 0) {
 
         git_status_options statusOptions;
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
