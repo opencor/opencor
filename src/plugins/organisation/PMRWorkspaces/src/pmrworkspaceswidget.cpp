@@ -519,7 +519,7 @@ void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
         // Close the current workspace if we are selecting a different one
 
-        if (!mCurrentWorkspaceUrl.isEmpty() && mExpandedItems.contains(mCurrentWorkspaceUrl)) {
+        if (!mCurrentWorkspaceUrl.isEmpty()) {
             auto workspaceContents = page()->mainFrame()->documentElement().findFirst(
                                         QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
 
@@ -803,8 +803,9 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
             }
         }
         else if (trElement.hasClass("workspace")) {
-            setCurrentWorkspaceUrl(rowLink);
-            refreshWorkspace(rowLink);
+            if (rowLink == mCurrentWorkspaceUrl) expandHtmlTree(rowLink);
+            else                                 setCurrentWorkspaceUrl(rowLink);
+            if (mExpandedItems.contains(rowLink)) refreshWorkspace(rowLink);
         }
         else if (trElement.hasClass("folder")) {
             expandHtmlTree(rowLink);
