@@ -1057,14 +1057,9 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
 
         auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFilesList());
 
-// TODO  Set list of files to be committed (the index?) and get commit message
-//      commitDialog->setMessage(workspace->defaultCommitMessage());
-        if (commitDialog->exec() == QDialog::Accepted) {
-
-            if (workspace->commit(commitDialog->message()))
-                refreshWorkspace(workspace->url());
-
-        }
+        if (commitDialog->exec() == QDialog::Accepted
+         && workspace->commit(commitDialog->message()))
+            refreshWorkspace(workspace->url());
     }
 }
 
