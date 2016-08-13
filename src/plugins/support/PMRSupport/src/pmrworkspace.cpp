@@ -242,7 +242,7 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
     if (gitError)
         qDebug() << gitErrorMessage;
 
-    emit warning(pMessage + (gitError ? (QString("<br></br><br></br>") + gitErrorMessage) : ""));
+    emit warning(pMessage + (gitError ? (QString("\n\n") + gitErrorMessage) : ""));
 }
 
 //==============================================================================
@@ -288,6 +288,7 @@ void PmrWorkspace::refreshStatus(void)
     mRepositoryStatusMap.clear();
 
     mRootFileNode = new PmrWorkspaceFileNode("", mPath);
+// TODO: Need to check that we aren't in the middle of a (failed) merge.
 
     git_index *index;
     if (opened() && git_repository_index(&index, mGitRepository) == 0) {
@@ -596,10 +597,18 @@ int PmrWorkspace::checkout_notify_cb(git_checkout_notify_t why, const char *path
 
     auto workspace = (PmrWorkspace *)payload;
 
-    if (why == GIT_CHECKOUT_NOTIFY_CONFLICT)
+    if (why == GIT_CHECKOUT_NOTIFY_CONFLICT) {
         workspace->mConflictedFiles << QString(path);
-    else if (why == GIT_CHECKOUT_NOTIFY_UPDATED)
+// qDebug() << "Conflict: " << path;
+    }
+    else if (why == GIT_CHECKOUT_NOTIFY_DIRTY) {
+        // TODO: We may want to report dirty files...
+// qDebug() << "Dirty: " << path;
+    }
+    else if (why == GIT_CHECKOUT_NOTIFY_UPDATED) {
         workspace->mUpdatedFiles << QString(path);
+// qDebug() << "Update: " << path;
+    }
 
     return 0;
 }
@@ -634,16 +643,19 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
 {
     Q_UNUSED(ref_name)
 
-    bool successful = true;
+    bool success = true;
 
     auto workspace = (PmrWorkspace *)payload;
     auto repository = workspace->mGitRepository;
+
+    workspace->mConflictedFiles = QStringList();
+    workspace->mUpdatedFiles = QStringList();
 
     if (is_merge) {
         git_annotated_commit *remoteCommitHead = nullptr;
         if (git_annotated_commit_from_fetchhead(&remoteCommitHead, repository,
                                                 "origin/master", remote_url, oid) != 0) {
-            successful = false;
+            success = false;
         }
         else {
             // Initialise common checkout options
@@ -652,8 +664,7 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
             git_checkout_init_options(&checkoutOptions, GIT_CHECKOUT_OPTIONS_VERSION);
             checkoutOptions.checkout_strategy = GIT_CHECKOUT_SAFE
                                               | GIT_CHECKOUT_RECREATE_MISSING;
-            checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_UPDATED
-                                         | GIT_CHECKOUT_NOTIFY_CONFLICT;
+            checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
             checkoutOptions.notify_cb = checkout_notify_cb;
             checkoutOptions.notify_payload = (void *)workspace;
 
@@ -667,7 +678,7 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
                 // We can simply set HEAD to the target commit.
 
                 git_reference *newMaster = nullptr;
-                successful = git_reference_create(&newMaster, repository, "refs/heads/master",
+                success = git_reference_create(&newMaster, repository, "refs/heads/master",
                                                   git_annotated_commit_id(remoteCommitHead),
                                                   true, "initial pull") == 0
                           && git_repository_set_head(repository, "refs/heads/master") == 0
@@ -696,8 +707,6 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
                 git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
                 mergeOptions.file_favor = GIT_MERGE_FILE_FAVOR_THEIRS;
 
-                workspace->mConflictedFiles = QStringList();
-                workspace->mUpdatedFiles = QStringList();
 
                 if (git_merge(repository, (const git_annotated_commit**)(&remoteCommitHead), 1,
                               &mergeOptions, &checkoutOptions) == 0
@@ -715,7 +724,6 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
                     git_oid parentId;
                     if (git_reference_name_to_id(&parentId, repository, "HEAD") == 0
                      && git_commit_lookup(parents, repository, &parentId) == 0) {
-
                         // Now populate the list of commit parents
 
                         if (nParents > 1) {
@@ -723,16 +731,20 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
                             mergeCallbackData.repository = repository;
                             mergeCallbackData.parents = &(parents[1]);
                             if (git_repository_mergehead_foreach(repository, mergehead_foreach_cb, &mergeCallbackData))
-                                successful = false;
+                                success = false;
                         }
                         // TODO: Name comes from fetch head??
                         // Also to have in reflog: "pull: Merge made by the 'recursive' strategy." ??
                         auto message = std::string("Merge branch 'master' of ") + remote_url;
-                        successful = successful
-                                  && workspace->doCommit(message.c_str(), nParents, (const git_commit **)parents);
+                        success = success
+                               && workspace->doCommit(message.c_str(), nParents, (const git_commit **)parents);
                     }
-                    if (successful)
+                    if (success) {
                         git_repository_state_cleanup(repository);
+                    }
+                    else {
+                        //Error 10: cannot create a tree from a not fully merged index.
+                    }
                     for (size_t n = 0; n < nParents; ++n)
                         git_commit_free(parents[n]);
                     delete[] parents;
@@ -744,7 +756,7 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
         git_annotated_commit_free(remoteCommitHead);
     }
 
-    return successful ? 0 : 1;
+    return success ? 0 : 1;
 }
 
 //==============================================================================
@@ -755,7 +767,7 @@ bool PmrWorkspace::merge(void)
 
     if (!this->opened()) return false;
 
-    bool successful = true;
+    bool success = true;
 
     if (git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this) == 0) {
         // emit information(tr("Merge succeeded..."));
@@ -769,11 +781,11 @@ bool PmrWorkspace::merge(void)
         if (mConflictedFiles.size())
             errorMessage.append("\n\n" + tr("The following files have conflicts:")
                               + "\n\t" + mConflictedFiles.join("\n\t"));
-        emitGitError(errorMessage);
-        successful = false;
+        emit warning(errorMessage);
+        success = false;
     }
 
-    return successful;
+    return success;
 }
 
 //==============================================================================
@@ -827,6 +839,9 @@ void PmrWorkspace::push(void)
     // Get the remote, connect to it, add a refspec, and do the push
 
     git_remote *gitRemote = nullptr;
+
+// TODO: Does first push need to create a master ??
+//       it needs to create refs/remotes/origin/master
 
     const char *masterReference = "refs/heads/master";
     git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
@@ -895,6 +910,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
         if (git_repository_head_unborn(mGitRepository) == 1) {
             // Committing to an empty repository
+            // TODO: create a master branch...
             nParents = 0;
         }
         else {
