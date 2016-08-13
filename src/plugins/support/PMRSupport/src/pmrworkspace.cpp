@@ -663,7 +663,8 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
             git_checkout_options checkoutOptions;
             git_checkout_init_options(&checkoutOptions, GIT_CHECKOUT_OPTIONS_VERSION);
             checkoutOptions.checkout_strategy = GIT_CHECKOUT_SAFE
-                                              | GIT_CHECKOUT_RECREATE_MISSING;
+                                              | GIT_CHECKOUT_RECREATE_MISSING
+                                              | GIT_CHECKOUT_CONFLICT_STYLE_MERGE;  // DIFF3 ??
             checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
             checkoutOptions.notify_cb = checkout_notify_cb;
             checkoutOptions.notify_payload = (void *)workspace;
@@ -722,14 +723,15 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
 
                 git_merge_options mergeOptions;
                 git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
-                mergeOptions.file_favor = GIT_MERGE_FILE_FAVOR_THEIRS;
 
+// Setting this means we don't update file with conflict lines...
+//              mergeOptions.flags = GIT_MERGE_FAIL_ON_CONFLICT;
 
                 if (git_merge(repository, (const git_annotated_commit**)(&remoteCommitHead), 1,
-                              &mergeOptions, &checkoutOptions) == 0
-                 && git_repository_state(repository) == GIT_REPOSITORY_STATE_MERGE // Only commit if merge succeeded
-                 && workspace->mConflictedFiles.size() == 0) {                     // and there are no conflicts
-
+                                    &mergeOptions, &checkoutOptions) != 0) {
+                    success = false;
+                }
+                else {
                     // Get the number of merge heads so we can allocate an array for parents
 
                     MergeHeadCallbackData mergeCallbackData = {0, nullptr, nullptr};
