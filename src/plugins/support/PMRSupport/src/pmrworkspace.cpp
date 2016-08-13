@@ -689,14 +689,31 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
             else if (analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) {
                 // We can check out the newly fetched head without merging
 
-                git_reference *newMaster = nullptr;
-                successful = git_reference_create(&newMaster, repository, "refs/heads/master",
-                                                  git_annotated_commit_id(remoteCommitHead),
-                                                  true,  "pull: Fast-forward") == 0
-                          && git_repository_set_head(repository, "refs/heads/master") == 0
-                          && git_checkout_head(repository, &checkoutOptions) == 0;
+                const git_oid *AnnotatedCommitId = git_annotated_commit_id(remoteCommitHead);
 
-                if (newMaster != nullptr) git_reference_free(newMaster);
+                git_commit *commit = nullptr;
+                git_reference *headReference = nullptr;
+                git_reference *newHeadReference = nullptr;
+
+                success = git_commit_lookup(&commit, repository, AnnotatedCommitId) == 0
+                       && git_checkout_tree(repository, (const git_object *)commit, &checkoutOptions) == 0
+                       && git_reference_lookup(&headReference, repository, "refs/heads/master") == 0;
+                if (success) {
+                    const git_oid *commitId = git_commit_id(commit);
+                    const char *msg = "pull: Fast-forward";
+
+                    if (git_reference_type(headReference) == GIT_REF_OID) {
+                        success = git_reference_set_target(&newHeadReference, headReference, commitId, msg) == 0;
+                    }
+                    else {
+                        success = git_reference_create(&newHeadReference, repository,
+                                                       "refs/heads/master", commitId, false,  msg) == 0;
+                    }
+                }
+
+                if (commit != nullptr) git_commit_free(commit);
+                if (headReference != nullptr) git_reference_free(headReference);
+                if (newHeadReference != nullptr) git_reference_free(newHeadReference);
             }
 
             else if (analysis & GIT_MERGE_ANALYSIS_NORMAL) {
