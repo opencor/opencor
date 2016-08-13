@@ -540,7 +540,7 @@ bool PmrWorkspace::fetch(void)
 {
     // Fetch any updates for a workspace
 
-    if (!this->open()) return false;
+    if (!this->opened()) return false;
 
     bool fetched = true;
 
@@ -753,7 +753,7 @@ bool PmrWorkspace::merge(void)
 {
     // Merge and commit fetched updates
 
-    if (!this->open()) return false;
+    if (!this->opened()) return false;
 
     bool successful = true;
 
@@ -800,7 +800,7 @@ void PmrWorkspace::push(void)
 {
     // Push a workspace
 
-    if (!this->open()) return;
+    if (!this->opened()) return;
 
     git_push_options pushOptions;
     git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
@@ -877,7 +877,7 @@ bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git
 
 bool PmrWorkspace::commit(const QString &pMessage)
 {
-    if (!this->open()) return false;
+    if (!this->opened()) return false;
 
     // Get an empty buffer to hold the cleaned message
     git_buf message;
@@ -1019,7 +1019,7 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 
 void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
-    if (this->open()) {
+    if (this->opened()) {
         auto repoDir = QDir(mPath);
         auto relativePath = repoDir.relativeFilePath(pPath).toUtf8();
         bool success = false;
