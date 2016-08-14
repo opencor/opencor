@@ -788,19 +788,24 @@ bool PmrWorkspace::merge(void)
 
     bool success = true;
 
-    if (git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this) == 0) {
+    int error = git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this);
+    if (error == 0) {
         // emit information(tr("Merge succeeded..."));
 
         // List of updated files:
         //    mUpdatedFiles.join("\n")
         // Just emit the list... ???
     }
-    else {
+    else if (error != GIT_ENOTFOUND) {
         auto errorMessage = tr("An error occurred while trying to merge the workspace.");
-        if (mConflictedFiles.size())
+        if (mConflictedFiles.size()) {
             errorMessage.append("\n\n" + tr("The following files have conflicts:")
                               + "\n\t" + mConflictedFiles.join("\n\t"));
-        emit warning(errorMessage);
+            emit warning(errorMessage);
+        }
+        else {
+            emitGitError(errorMessage);
+        }
         success = false;
     }
 
