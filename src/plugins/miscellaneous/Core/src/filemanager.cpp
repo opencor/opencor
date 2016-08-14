@@ -78,21 +78,6 @@ FileManager::~FileManager()
 
 //==============================================================================
 
-bool FileManager::opencorActive() const
-{
-    // Return whether OpenCOR is active
-    // Note: we only consider OpenCOR to be active if the main window or one of
-    //       its dockable windows is active. In other words, if a dialog box is
-    //       opened, then we don't consider OpenCOR active since it could
-    //       disturb our user's workflow...
-
-    return     qApp->activeWindow()
-           && !qApp->activeModalWidget()
-           && !qApp->activePopupWidget();
-}
-
-//==============================================================================
-
 void FileManager::startStopTimer()
 {
     // Start our timer if OpenCOR is active and we have files, or stop it if
@@ -105,7 +90,7 @@ void FileManager::startStopTimer()
     //          handle that signal would result in reentry, so we temporarily
     //          disable our handling of it...
 
-    if (opencorActive() && !mFiles.isEmpty() && !mTimer->isActive()) {
+    if (Core::opencorActive() && !mFiles.isEmpty() && !mTimer->isActive()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(focusWindowChanged()));
 
@@ -115,7 +100,7 @@ void FileManager::startStopTimer()
                 this, SLOT(focusWindowChanged()));
 
         mTimer->start(1000);
-    } else if ((!opencorActive() || mFiles.isEmpty()) && mTimer->isActive()) {
+    } else if ((!Core::opencorActive() || mFiles.isEmpty()) && mTimer->isActive()) {
         mTimer->stop();
     }
 }
@@ -686,7 +671,7 @@ void FileManager::checkFiles()
     //       means that we can't enable/disable our timer in those acses, hence
     //       our checking that OpenCOR is really active indeed...
 
-    if (!opencorActive())
+    if (!Core::opencorActive())
         return;
 
     // Check our various files, as well as their locked status, but only if they

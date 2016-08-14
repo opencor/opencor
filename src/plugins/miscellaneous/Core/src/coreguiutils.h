@@ -121,6 +121,8 @@ QStringList CORE_EXPORT filters(const FileTypes &pFileTypes);
 QStringList CORE_EXPORT filters(const FileTypes &pFileTypes,
                                 const QStringList &pMimeTypes);
 
+bool CORE_EXPORT opencorActive();
+
 //==============================================================================
 
 }   // namespace Core

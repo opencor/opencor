@@ -639,6 +639,21 @@ QStringList filters(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
 
 //==============================================================================
 
+bool opencorActive()
+{
+    // Return whether OpenCOR is active
+    // Note: we only consider OpenCOR to be active if the main window or one of
+    //       its dockable windows is active. In other words, if a dialog box is
+    //       opened, then we don't consider OpenCOR active since it could
+    //       disturb our user's workflow...
+
+    return     qApp->activeWindow()
+           && !qApp->activeModalWidget()
+           && !qApp->activePopupWidget();
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
