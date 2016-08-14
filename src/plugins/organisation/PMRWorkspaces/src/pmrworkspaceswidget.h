@@ -140,7 +140,6 @@ private:
 
     void showInGraphicalShell(const QString &pPath);
 
-    bool opencorActive() const;
     void startStopTimer();
 
 signals:

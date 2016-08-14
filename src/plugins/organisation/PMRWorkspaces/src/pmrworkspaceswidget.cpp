@@ -556,21 +556,6 @@ void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
 //==============================================================================
 
-bool PmrWorkspacesWidget::opencorActive() const
-{
-    // Return whether OpenCOR is active
-    // Note: we only consider OpenCOR to be active if the main window or one of
-    //       its dockable windows is active. In other words, if a dialog box is
-    //       opened, then we don't consider OpenCOR active since it could
-    //       disturb our user's workflow...
-
-    return     qApp->activeWindow()
-           && !qApp->activeModalWidget()
-           && !qApp->activePopupWidget();
-}
-
-//==============================================================================
-
 void PmrWorkspacesWidget::startStopTimer()
 {
     // Start our timer if OpenCOR is active and we have a current workspace, or stop
@@ -578,7 +563,7 @@ void PmrWorkspacesWidget::startStopTimer()
     // Note: If we are to start our timer, then we refresh the workspace first since
     //       waiting one second may seem long to a user.
 
-    if (opencorActive() && !mCurrentWorkspaceUrl.isEmpty() && !mTimer->isActive()) {
+    if (Core::opencorActive() && !mCurrentWorkspaceUrl.isEmpty() && !mTimer->isActive()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(focusWindowChanged()));
 
@@ -593,7 +578,7 @@ void PmrWorkspacesWidget::startStopTimer()
                 this, SLOT(focusWindowChanged()));
 
         mTimer->start(1000);
-    } else if ((!opencorActive() || mCurrentWorkspaceUrl.isEmpty()) && mTimer->isActive()) {
+    } else if ((!Core::opencorActive() || mCurrentWorkspaceUrl.isEmpty()) && mTimer->isActive()) {
         mTimer->stop();
     }
 }
