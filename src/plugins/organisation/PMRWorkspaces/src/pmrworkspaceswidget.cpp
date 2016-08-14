@@ -546,6 +546,11 @@ void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
         mCurrentWorkspaceUrl = pUrl;
         mExpandedItems.insert(mCurrentWorkspaceUrl);
+
+        // Set the active directory to the workspace
+
+        auto workspace = mWorkspacesManager->workspace(pUrl);
+        if (workspace->isLocal()) Core::setActiveDirectory(workspace->path());
     }
 }
 
