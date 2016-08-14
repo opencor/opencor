@@ -153,7 +153,6 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool opencorActive() const;
     void startStopTimer();
 
     bool newFile(QString &pFileName, const QString &pContents = QString());
