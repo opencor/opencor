@@ -23,11 +23,14 @@ install:
       && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt561-trusty
       && sudo apt-get -qq update
-      && sudo apt-get -qq install gcc-4.9 g++-4.9 lib64stdc++-4.9-dev
+      && sudo apt-get -qq install gcc-4.9 g++-4.9
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
       && gcc --version
+      && wget http://www.opencor.ws/binaries/src/plugins/thirdParty/QScintilla/linux/libQScintilla.so.tar.gz
+      && tar xvf libQScintilla.so.tar.gz
+      && ldd libQScintilla.so
       ;
     else
          brew update
