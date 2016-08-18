@@ -16,6 +16,7 @@ branches:
     - master
     - /^\d+\.\d+(\.\d+)?$/
     - qtwebengine
+    - travis-ci
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
