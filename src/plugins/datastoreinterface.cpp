@@ -33,16 +33,17 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pValue) :
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
-    mSize(pSize),
+    mCapacity(pCapacity),
+    mSize(0),
     mValue(pValue)
 {
     // Create our array of values
 
-    mValues = new double[pSize];
+    mValues = new double[pCapacity];
 }
 
 //==============================================================================
@@ -150,26 +151,29 @@ qulonglong DataStoreVariable::size() const
 
 //==============================================================================
 
-void DataStoreVariable::setValue(const qulonglong &pPosition)
+void DataStoreVariable::setValue()
 {
     // Set the value of the variable at the given position
 
-    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mSize < mCapacity);
     Q_ASSERT(mValue);
 
-    mValues[pPosition] = *mValue;
+    mValues[mSize] = *mValue;
+
+    ++mSize;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setValue(const qulonglong &pPosition,
-                                 const double &pValue)
+void DataStoreVariable::setValue(const double &pValue)
 {
     // Set the value of the variable at the given position using the given value
 
-    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mSize < mCapacity);
 
-    mValues[pPosition] = pValue;
+    mValues[mSize] = pValue;
+
+    ++mSize;
 }
 
 //==============================================================================
@@ -361,11 +365,11 @@ void DataStore::setValues(const double &pValue)
     Q_ASSERT(mSize < mCapacity);
 
     if (mVoi)
-        mVoi->setValue(mSize, pValue);
+        mVoi->setValue(pValue);
 
     for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
-        (*variable)->setValue(mSize);
+        (*variable)->setValue();
     }
 
     ++mSize;
