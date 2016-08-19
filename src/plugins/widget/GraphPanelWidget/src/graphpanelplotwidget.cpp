@@ -472,6 +472,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
     mCanDirectPaint(true),
+    mCanReplot(true),
     mCanZoomInX(true),
     mCanZoomOutX(true),
     mCanZoomInY(true),
@@ -1319,6 +1320,21 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+void GraphPanelPlotWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Default handling of the event
+
+    QwtPlot::paintEvent(pEvent);
+
+    // We have just (re)painted ourselves, which means that we can (re)allow
+    // direct painting and replotting
+
+    mCanDirectPaint = true;
+    mCanReplot = true;
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
@@ -1412,9 +1428,11 @@ bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
 
         return false;
     } else {
-        replot();
+        if (mCanReplot) {
+            replot();
 
-        mCanDirectPaint = true;
+            mCanReplot = false;
+        }
 
         return true;
     }
