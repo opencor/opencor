@@ -796,7 +796,7 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
     mDataStore->addValues(pPoint);
 
     ++mSize;
-    // Note: we want to do this after the call to DataStore::setValues() since
+    // Note: we want to do this after the call to DataStore::addValues() since
     //       it may otherwise mess up our plotting of simulation data (see issue
     //       #636)...
 }
