@@ -222,9 +222,10 @@ DataStoreVariables DataStoreData::selectedVariables() const
 //==============================================================================
 
 DataStore::DataStore(const QString &pUri,
-                     const qulonglong &pSize) :
+                     const qulonglong &pCapacity) :
     mlUri(pUri),
-    mSize(pSize),
+    mCapacity(pCapacity),
+    mSize(0),
     mVoi(0),
     mVariables(DataStoreVariables())
 {
@@ -304,7 +305,7 @@ DataStoreVariable * DataStore::addVoi()
 
     delete mVoi;
 
-    mVoi = new DataStoreVariable(mSize);
+    mVoi = new DataStoreVariable(mCapacity);
 
     return mVoi;
 }
@@ -326,7 +327,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 {
     // Add a variable to our data store
 
-    DataStoreVariable *variable = new DataStoreVariable(mSize, pValue);
+    DataStoreVariable *variable = new DataStoreVariable(mCapacity, pValue);
 
     mVariables << variable;
 
@@ -343,7 +344,7 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
     DataStoreVariables variables = DataStoreVariables();
 
     for (int i = 0; i < pCount; ++i, ++pValues)
-        variables << new DataStoreVariable(mSize, pValues);
+        variables << new DataStoreVariable(mCapacity, pValues);
 
     mVariables << variables;
 
@@ -352,18 +353,22 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 
 //==============================================================================
 
-void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
+void DataStore::setValues(const double &pValue)
 {
-    // Set the value at the given position of all our variables including our
+    // Set the value at the mSize position of all our variables including our
     // variable of integration, which value is directly given to us
 
+    Q_ASSERT(mSize < mCapacity);
+
     if (mVoi)
-        mVoi->setValue(pPosition, pValue);
+        mVoi->setValue(mSize, pValue);
 
     for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
-        (*variable)->setValue(pPosition);
+        (*variable)->setValue(mSize);
     }
+
+    ++mSize;
 }
 
 //==============================================================================

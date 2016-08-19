@@ -102,7 +102,7 @@ private:
 class DataStore
 {
 public:
-    explicit DataStore(const QString &pUri, const qulonglong &pSize);
+    explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
     virtual ~DataStore();
 
     QString uri() const;
@@ -118,12 +118,13 @@ public:
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(const int &pCount, double *pValues);
 
-    void setValues(const qulonglong &pPosition, const double &pValue);
+    void setValues(const double &pValue);
 
 private:
     QString mlUri;
 
-    const qulonglong mSize;
+    const qulonglong mCapacity;
+    qulonglong mSize;
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
