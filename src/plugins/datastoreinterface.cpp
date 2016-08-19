@@ -357,7 +357,7 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 
 //==============================================================================
 
-void DataStore::setValues(const double &pValue)
+void DataStore::addData(const double &pVoiValue)
 {
     // Set the value at the mSize position of all our variables including our
     // variable of integration, which value is directly given to us
@@ -365,7 +365,7 @@ void DataStore::setValues(const double &pValue)
     Q_ASSERT(mSize < mCapacity);
 
     if (mVoi)
-        mVoi->setValue(pValue);
+        mVoi->setValue(pVoiValue);
 
     for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {

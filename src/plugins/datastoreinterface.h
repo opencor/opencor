@@ -119,7 +119,7 @@ public:
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(const int &pCount, double *pValues);
 
-    void setValues(const double &pValue);
+    void addData(const double &pVoiValue);
 
 private:
     QString mlUri;
