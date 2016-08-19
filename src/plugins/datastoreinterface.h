@@ -59,8 +59,8 @@ public:
 
     qulonglong size() const;
 
-    void setValue();
-    void setValue(const double &pValue);
+    void addValue();
+    void addValue(const double &pValue);
 
     double value(const qulonglong &pPosition) const;
     double * values() const;
@@ -119,7 +119,7 @@ public:
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(const int &pCount, double *pValues);
 
-    void addData(const double &pVoiValue);
+    void addValues(const double &pVoiValue);
 
 private:
     QString mlUri;

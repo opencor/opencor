@@ -151,7 +151,7 @@ qulonglong DataStoreVariable::size() const
 
 //==============================================================================
 
-void DataStoreVariable::setValue()
+void DataStoreVariable::addValue()
 {
     // Set the value of the variable at the given position
 
@@ -165,7 +165,7 @@ void DataStoreVariable::setValue()
 
 //==============================================================================
 
-void DataStoreVariable::setValue(const double &pValue)
+void DataStoreVariable::addValue(const double &pValue)
 {
     // Set the value of the variable at the given position using the given value
 
@@ -357,7 +357,7 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 
 //==============================================================================
 
-void DataStore::addData(const double &pVoiValue)
+void DataStore::addValues(const double &pVoiValue)
 {
     // Set the value at the mSize position of all our variables including our
     // variable of integration, which value is directly given to us
@@ -365,11 +365,11 @@ void DataStore::addData(const double &pVoiValue)
     Q_ASSERT(mSize < mCapacity);
 
     if (mVoi)
-        mVoi->setValue(pVoiValue);
+        mVoi->addValue(pVoiValue);
 
     for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
-        (*variable)->setValue();
+        (*variable)->addValue();
     }
 
     ++mSize;
