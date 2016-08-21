@@ -143,7 +143,6 @@ public:
 
     int count() const;
 
-    void emitFilePermissionsChanged(const QString &pFileName);
 
 private:
     QTimer *mTimer;
@@ -156,6 +155,8 @@ private:
     void startStopTimer();
 
     bool newFile(QString &pFileName, const QString &pContents = QString());
+
+    void emitFilePermissionsChanged(const QString &pFileName);
 
 signals:
     void fileManaged(const QString &pFileName);
