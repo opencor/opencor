@@ -143,6 +143,7 @@ public:
 
     int count() const;
 
+    void setCheckFilesEnabled(const bool &pCheckFilesEnabled);
 
 private:
     QTimer *mTimer;
@@ -151,6 +152,8 @@ private:
 
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
+
+    bool mCheckFilesEnabled;
 
     void startStopTimer();
 

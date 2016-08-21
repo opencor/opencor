@@ -40,7 +40,8 @@ namespace Core {
 FileManager::FileManager() :
     mFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
-    mFilesWritable(QMap<QString, bool>())
+    mFilesWritable(QMap<QString, bool>()),
+    mCheckFilesEnabled(true)
 {
     // Create our timer
 
@@ -653,6 +654,15 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
+void FileManager::setCheckFilesEnabled(const bool &pCheckFilesEnabled)
+{
+    // Specify whether we can check files
+
+    mCheckFilesEnabled = pCheckFilesEnabled;
+}
+
+//==============================================================================
+
 void FileManager::focusWindowChanged()
 {
     // Start/stop our timer
@@ -671,7 +681,7 @@ void FileManager::checkFiles()
     //       means that we can't enable/disable our timer in those acses, hence
     //       our checking that OpenCOR is really active indeed...
 
-    if (!Core::opencorActive())
+    if (!Core::opencorActive() || !mCheckFilesEnabled)
         return;
 
     // Check our various files, as well as their locked status, but only if they
