@@ -29,6 +29,7 @@ limitations under the License.
 #include <QDialogButtonBox>
 #include <QMainWindow>
 #include <QPointer>
+#include <QPushButton>
 
 //==============================================================================
 

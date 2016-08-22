@@ -119,6 +119,116 @@ QColor windowColor()
 
 //==============================================================================
 
+static QMessageBox::StandardButton showMessageBox(QWidget *pParent,
+                                                  const QMessageBox::Icon &pIcon,
+                                                  const Qt::TextInteractionFlags &pFlags,
+                                                  const QString &pTitle,
+                                                  const QString &pText,
+                                                  const QMessageBox::StandardButtons &pButtons,
+                                                  const QMessageBox::StandardButton &pDefaultButton)
+{
+    // Create, show and return the result of a message box with the given
+    // properties
+
+    QMessageBox messageBox(pIcon, pTitle, pText, QMessageBox::NoButton, pParent);
+
+    messageBox.setTextInteractionFlags(pFlags);
+
+    QDialogButtonBox *buttonBox = messageBox.findChild<QDialogButtonBox*>();
+
+    Q_ASSERT(buttonBox);
+
+    uint mask = QMessageBox::FirstButton;
+
+    while (mask <= QMessageBox::LastButton) {
+        uint sb = pButtons & mask;
+
+        mask <<= 1;
+
+        if (!sb)
+            continue;
+
+        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton)sb);
+
+        if (messageBox.defaultButton())
+            continue;
+
+        if (   (   (pDefaultButton == QMessageBox::NoButton)
+                && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
+            || (   (pDefaultButton != QMessageBox::NoButton) &&
+                   (sb == uint(pDefaultButton)))) {
+            messageBox.setDefaultButton(button);
+        }
+    }
+
+    if (messageBox.exec() == -1)
+        return QMessageBox::Cancel;
+
+    return messageBox.standardButton(messageBox.clickedButton());
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton MessageBox::information(QWidget *pParent,
+                                                    const Qt::TextInteractionFlags &pFlags,
+                                                    const QString &pTitle,
+                                                    const QString &pText,
+                                                    const StandardButtons &pButtons,
+                                                    const StandardButton &pDefaultButton)
+{
+    // Return the result of an information message box
+
+    return showMessageBox(pParent, QMessageBox::Information, pFlags, pTitle,
+                          pText, pButtons, pDefaultButton);
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton MessageBox::question(QWidget *pParent,
+                                                 const Qt::TextInteractionFlags &pFlags,
+                                                 const QString &pTitle,
+                                                 const QString &pText,
+                                                 const StandardButtons &pButtons,
+                                                 const StandardButton &pDefaultButton)
+{
+    // Return the result of a question message box
+
+    return showMessageBox(pParent, QMessageBox::Question, pFlags, pTitle, pText,
+                          pButtons, pDefaultButton);
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton MessageBox::warning(QWidget *pParent,
+                                                const Qt::TextInteractionFlags &pFlags,
+                                                const QString &pTitle,
+                                                const QString &pText,
+                                                const StandardButtons &pButtons,
+                                                const StandardButton &pDefaultButton)
+{
+    // Return the result of a warning message box
+
+    return showMessageBox(pParent, QMessageBox::Warning, pFlags, pTitle, pText,
+                          pButtons, pDefaultButton);
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton MessageBox::critical(QWidget *pParent,
+                                                 const Qt::TextInteractionFlags &pFlags,
+                                                 const QString &pTitle,
+                                                 const QString &pText,
+                                                 const StandardButtons &pButtons,
+                                                 const StandardButton &pDefaultButton)
+{
+    // Return the result of a critical message box
+
+    return showMessageBox(pParent, QMessageBox::Critical, pFlags, pTitle, pText,
+                          pButtons, pDefaultButton);
+}
+
+//==============================================================================
+
 void MessageBox::about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
                        const QString &pTitle, const QString &pText)
 {

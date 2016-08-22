@@ -48,6 +48,7 @@ limitations under the License.
 #include <QMenu>
 #include <QMessageBox>
 #include <QPalette>
+#include <QPushButton>
 #include <QSizePolicy>
 
 //==============================================================================
