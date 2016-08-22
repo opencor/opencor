@@ -104,6 +104,7 @@ SET(HEADERS_MOC
 
     src/misc/cliutils.h
     src/misc/guiapplication.h
+    src/misc/guiutils.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h

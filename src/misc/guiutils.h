@@ -29,6 +29,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QColor>
+#include <QMessageBox>
 
 //==============================================================================
 
@@ -42,6 +43,20 @@ namespace OpenCOR {
 //==============================================================================
 
 #include "coreguiutils.h.inl"
+
+//==============================================================================
+// Note: both guiutils.h and coreguiutils.h must specifically define MessageBox.
+//       To have it in guiutils.h.inl is NOT good enough since the MOC won't
+//       pick it up...
+
+class CORE_EXPORT MessageBox : public QMessageBox
+{
+    Q_OBJECT
+
+public:
+    static void about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
+                      const QString &pTitle, const QString &pText);
+};
 
 //==============================================================================
 

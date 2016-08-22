@@ -118,5 +118,47 @@ QColor windowColor()
 }
 
 //==============================================================================
+
+void MessageBox::about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
+                       const QString &pTitle, const QString &pText)
+{
+#ifdef Q_OS_MAC
+    static QPointer<QMessageBox> oldMsgBox;
+
+    if (oldMsgBox && !oldMsgBox->text().compare(pText)) {
+        oldMsgBox->show();
+        oldMsgBox->raise();
+        oldMsgBox->activateWindow();
+
+        return;
+    }
+#endif
+
+    QMessageBox *msgBox = new QMessageBox(  pTitle, pText, Information, 0, 0, 0, pParent
+#ifdef Q_OS_MAC
+                                          , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
+#endif
+                                         );
+
+    msgBox->setTextInteractionFlags(pFlags);
+    msgBox->setAttribute(Qt::WA_DeleteOnClose);
+
+    QIcon icon = msgBox->windowIcon();
+    QSize size = icon.actualSize(QSize(64, 64));
+
+    msgBox->setIconPixmap(icon.pixmap(size));
+
+#ifdef Q_OS_MAC
+    oldMsgBox = msgBox;
+
+    msgBox->findChild<QDialogButtonBox *>("qt_msgbox_buttonbox")->setCenterButtons(true);
+
+    msgBox->show();
+#else
+    msgBox->exec();
+#endif
+}
+
+//==============================================================================
 // End of file
 //==============================================================================

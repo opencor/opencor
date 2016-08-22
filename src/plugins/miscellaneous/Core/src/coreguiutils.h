@@ -32,6 +32,7 @@ limitations under the License.
 #include <QColor>
 #include <QIcon>
 #include <QKeySequence>
+#include <QMessageBox>
 #include <QString>
 
 //==============================================================================
@@ -122,6 +123,20 @@ QStringList CORE_EXPORT filters(const FileTypes &pFileTypes,
                                 const QStringList &pMimeTypes);
 
 bool CORE_EXPORT opencorActive();
+
+//==============================================================================
+// Note: both guiutils.h and coreguiutils.h must specifically define MessageBox.
+//       To have it in guiutils.h.inl is NOT good enough since the MOC won't
+//       pick it up...
+
+class CORE_EXPORT MessageBox : public QMessageBox
+{
+    Q_OBJECT
+
+public:
+    static void about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
+                      const QString &pTitle, const QString &pText);
+};
 
 //==============================================================================
 

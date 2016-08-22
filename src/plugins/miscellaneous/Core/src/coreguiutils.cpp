@@ -37,6 +37,7 @@ limitations under the License.
 #include <QBuffer>
 #include <QColor>
 #include <QDate>
+#include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFont>

@@ -287,14 +287,6 @@ showEnableAction(mGui->actionPreferences, false);
                 this, SLOT(updateDockWidgetsVisibility()));
     }
 
-    // Allow links, in message boxes, to be clickable using the mouse, but not
-    // using the keyboard since it would allow messages to be selected, which we
-    // don't want to allow at all
-
-    qApp->setStyleSheet("QMessageBox {"
-                        "    messagebox-text-interaction-flags: 4;"
-                        "}");
-
     // Show/hide and enable/disable the windows action depending on whether
     // there are window widgets
 
@@ -1243,12 +1235,12 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    QMessageBox::about(this, tr("About"),
-                       "<h1 align=center><strong>"+version()+"</strong></h1>"
-                       "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
-                       "<p align=center><em>"+copyright()+"</em></p>"
-                       "<p>"+applicationDescription()+"</p>"
-                       "<p>"+applicationBuildInformation()+"</p>");
+    MessageBox::about(this, Qt::LinksAccessibleByMouse, tr("About"),
+                      "<h1 align=center><strong>"+version()+"</strong></h1>"
+                      "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
+                      "<p align=center><em>"+copyright()+"</em></p>"
+                      "<p>"+applicationDescription()+"</p>"
+                      "<p>"+applicationBuildInformation()+"</p>");
 }
 
 //==============================================================================

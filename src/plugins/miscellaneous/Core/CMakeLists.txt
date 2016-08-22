@@ -50,6 +50,7 @@ ADD_PLUGIN(Core
         src/centralwidget.h
         src/collapsiblewidget.h
         src/corecliutils.h
+        src/coreguiutils.h
         src/coreplugin.h
         src/filemanager.h
         src/mathmlconverter.h
