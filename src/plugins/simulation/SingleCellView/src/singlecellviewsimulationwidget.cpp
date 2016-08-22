@@ -2350,7 +2350,10 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     // initialise our simulation, if we still have a valid simulation
     // environment
 
-    mPlugin->viewWidget()->showGlobalBusyWidget(this);
+    bool visible = isVisible();
+
+    if (visible)
+        mPlugin->viewWidget()->showGlobalBusyWidget(this);
 
     bool validSimulationEnvironment = doFurtherInitialize();
 
@@ -2359,7 +2362,8 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     if (validSimulationEnvironment)
         initializeSimulation();
 
-    mPlugin->viewWidget()->hideBusyWidget();
+    if (visible)
+        mPlugin->viewWidget()->hideBusyWidget();
 }
 
 //==============================================================================

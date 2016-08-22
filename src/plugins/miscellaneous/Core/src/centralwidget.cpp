@@ -1909,6 +1909,16 @@ void CentralWidget::fileChanged(const QString &pFileName,
     if (fileChanged || pDependenciesChanged) {
         // The given file and/or one or several of its dependencies has changed,
         // so ask the user whether to reload the given file
+        // Note: we temporarily disable the fact that our file manager can check
+        //       its fiels. Indeed, we are going to show a dialog box and this
+        //       would normally result in our file manager stopping its timer
+        //       and then restarting it straightaway once our dialog box
+        //       disappears (see FileManager::focusWindowChanged()). So, if we
+        //       were not to do this, the fileChanged() signal would be handled
+        //       a second time before we get a chance to reload the changed
+        //       file/dependency...
+
+        fileManagerInstance->setCheckFilesEnabled(false);
 
         if (QMessageBox::question(mainWindow(), tr("File Modified"),
                                   fileChanged?
@@ -1943,6 +1953,8 @@ void CentralWidget::fileChanged(const QString &pFileName,
             if (pDependenciesChanged)
                 fileManagerInstance->setDependenciesModified(pFileName, true);
         }
+
+        fileManagerInstance->setCheckFilesEnabled(true);
     }
 }
 

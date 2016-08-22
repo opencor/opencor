@@ -33,16 +33,17 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pValue) :
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
-    mSize(pSize),
+    mCapacity(pCapacity),
+    mSize(0),
     mValue(pValue)
 {
     // Create our array of values
 
-    mValues = new double[pSize];
+    mValues = new double[pCapacity];
 }
 
 //==============================================================================
@@ -150,26 +151,29 @@ qulonglong DataStoreVariable::size() const
 
 //==============================================================================
 
-void DataStoreVariable::setValue(const qulonglong &pPosition)
+void DataStoreVariable::addValue()
 {
     // Set the value of the variable at the given position
 
-    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mSize < mCapacity);
     Q_ASSERT(mValue);
 
-    mValues[pPosition] = *mValue;
+    mValues[mSize] = *mValue;
+
+    ++mSize;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setValue(const qulonglong &pPosition,
-                                 const double &pValue)
+void DataStoreVariable::addValue(const double &pValue)
 {
     // Set the value of the variable at the given position using the given value
 
-    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mSize < mCapacity);
 
-    mValues[pPosition] = pValue;
+    mValues[mSize] = pValue;
+
+    ++mSize;
 }
 
 //==============================================================================
@@ -222,9 +226,10 @@ DataStoreVariables DataStoreData::selectedVariables() const
 //==============================================================================
 
 DataStore::DataStore(const QString &pUri,
-                     const qulonglong &pSize) :
+                     const qulonglong &pCapacity) :
     mlUri(pUri),
-    mSize(pSize),
+    mCapacity(pCapacity),
+    mSize(0),
     mVoi(0),
     mVariables(DataStoreVariables())
 {
@@ -304,7 +309,7 @@ DataStoreVariable * DataStore::addVoi()
 
     delete mVoi;
 
-    mVoi = new DataStoreVariable(mSize);
+    mVoi = new DataStoreVariable(mCapacity);
 
     return mVoi;
 }
@@ -326,7 +331,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 {
     // Add a variable to our data store
 
-    DataStoreVariable *variable = new DataStoreVariable(mSize, pValue);
+    DataStoreVariable *variable = new DataStoreVariable(mCapacity, pValue);
 
     mVariables << variable;
 
@@ -343,7 +348,7 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
     DataStoreVariables variables = DataStoreVariables();
 
     for (int i = 0; i < pCount; ++i, ++pValues)
-        variables << new DataStoreVariable(mSize, pValues);
+        variables << new DataStoreVariable(mCapacity, pValues);
 
     mVariables << variables;
 
@@ -352,18 +357,22 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 
 //==============================================================================
 
-void DataStore::setValues(const qulonglong &pPosition, const double &pValue)
+void DataStore::addValues(const double &pVoiValue)
 {
-    // Set the value at the given position of all our variables including our
+    // Set the value at the mSize position of all our variables including our
     // variable of integration, which value is directly given to us
 
+    Q_ASSERT(mSize < mCapacity);
+
     if (mVoi)
-        mVoi->setValue(pPosition, pValue);
+        mVoi->addValue(pVoiValue);
 
     for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
-        (*variable)->setValue(pPosition);
+        (*variable)->addValue();
     }
+
+    ++mSize;
 }
 
 //==============================================================================

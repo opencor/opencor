@@ -193,8 +193,6 @@ private:
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
-    qulonglong mSize;
-
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
