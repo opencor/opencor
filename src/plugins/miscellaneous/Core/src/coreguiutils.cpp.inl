@@ -122,40 +122,46 @@ QColor windowColor()
 void MessageBox::about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
                        const QString &pTitle, const QString &pText)
 {
-#ifdef Q_OS_MAC
-    static QPointer<QMessageBox> oldMsgBox;
+    // Show an about message box
 
-    if (oldMsgBox && !oldMsgBox->text().compare(pText)) {
-        oldMsgBox->show();
-        oldMsgBox->raise();
-        oldMsgBox->activateWindow();
+#ifdef Q_OS_MAC
+    static QPointer<QMessageBox> oldMessageBox;
+
+    if (oldMessageBox && !oldMessageBox->text().compare(pText)) {
+        oldMessageBox->show();
+        oldMessageBox->raise();
+        oldMessageBox->activateWindow();
 
         return;
     }
 #endif
 
-    QMessageBox *msgBox = new QMessageBox(  pTitle, pText, Information, 0, 0, 0, pParent
+    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, Information, 0, 0, 0, pParent
 #ifdef Q_OS_MAC
-                                          , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
+                                              , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
 #endif
-                                         );
+                                             );
 
-    msgBox->setTextInteractionFlags(pFlags);
-    msgBox->setAttribute(Qt::WA_DeleteOnClose);
+    messageBox->setTextInteractionFlags(pFlags);
+    messageBox->setAttribute(Qt::WA_DeleteOnClose);
 
-    QIcon icon = msgBox->windowIcon();
+    QIcon icon = messageBox->windowIcon();
     QSize size = icon.actualSize(QSize(64, 64));
 
-    msgBox->setIconPixmap(icon.pixmap(size));
+    messageBox->setIconPixmap(icon.pixmap(size));
 
 #ifdef Q_OS_MAC
-    oldMsgBox = msgBox;
+    oldMessageBox = messageBox;
 
-    msgBox->findChild<QDialogButtonBox *>("qt_msgbox_buttonbox")->setCenterButtons(true);
+    QDialogButtonBox *buttonBox = messageBox->findChild<QDialogButtonBox*>();
 
-    msgBox->show();
+    Q_ASSERT(buttonBox);
+
+    buttonBox->setCenterButtons(true);
+
+    messageBox->show();
 #else
-    msgBox->exec();
+    messageBox->exec();
 #endif
 }
 
