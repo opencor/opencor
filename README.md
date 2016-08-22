@@ -2,7 +2,7 @@
 
 #######
 
-  * [Download OpenCOR](http://www.opencor.ws/downloads/index.php)
+  * [Download OpenCOR](http://www.opencor.ws/downloads/index.html)
 
 #######
 
