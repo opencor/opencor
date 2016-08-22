@@ -155,6 +155,7 @@ public:
                                    const QString &pTitle, const QString &pText,
                                    const StandardButtons &pButtons = Ok,
                                    const StandardButton &pDefaultButton = NoButton);
+
     static void about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
                       const QString &pTitle, const QString &pText);
 };
