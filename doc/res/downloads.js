@@ -77,6 +77,8 @@ function versions(downloads) {
                 versionFolder  += "."+versionPatch;
                 versionVersion += "-"+versionPatch;
             }
+
+            versionAnchor = versionFolder;
         } else {
             if (downloads)
                 versionTitle = "Latest snapshot";
@@ -85,6 +87,7 @@ function versions(downloads) {
 
             versionFolder = "snapshots/"+versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
             versionVersion = versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
+            versionAnchor = "latest";
         }
 
         // Output some general information about the version
@@ -97,7 +100,7 @@ function versions(downloads) {
         document.write("                    "+versionTitle+"\n");
 
         if (downloads)
-            document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionFolder+"\">What is new?</a></span>\n");
+            document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
 
         document.write("                </td>\n");
         document.write("                <td class=\"date\">\n");
