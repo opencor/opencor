@@ -119,13 +119,13 @@ QColor windowColor()
 
 //==============================================================================
 
-static QMessageBox::StandardButton showMessageBox(QWidget *pParent,
-                                                  const QMessageBox::Icon &pIcon,
-                                                  const Qt::TextInteractionFlags &pFlags,
-                                                  const QString &pTitle,
-                                                  const QString &pText,
-                                                  const QMessageBox::StandardButtons &pButtons,
-                                                  const QMessageBox::StandardButton &pDefaultButton)
+QMessageBox::StandardButton showMessageBox(QWidget *pParent,
+                                           const QMessageBox::Icon &pIcon,
+                                           const Qt::TextInteractionFlags &pFlags,
+                                           const QString &pTitle,
+                                           const QString &pText,
+                                           const QMessageBox::StandardButtons &pButtons,
+                                           const QMessageBox::StandardButton &pDefaultButton)
 {
     // Create, show and return the result of a message box with the given
     // properties
@@ -169,12 +169,12 @@ static QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
 //==============================================================================
 
-QMessageBox::StandardButton MessageBox::information(QWidget *pParent,
-                                                    const Qt::TextInteractionFlags &pFlags,
-                                                    const QString &pTitle,
-                                                    const QString &pText,
-                                                    const StandardButtons &pButtons,
-                                                    const StandardButton &pDefaultButton)
+QMessageBox::StandardButton informationMessageBox(QWidget *pParent,
+                                                  const Qt::TextInteractionFlags &pFlags,
+                                                  const QString &pTitle,
+                                                  const QString &pText,
+                                                  const QMessageBox::StandardButtons &pButtons,
+                                                  const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of an information message box
 
@@ -184,12 +184,12 @@ QMessageBox::StandardButton MessageBox::information(QWidget *pParent,
 
 //==============================================================================
 
-QMessageBox::StandardButton MessageBox::question(QWidget *pParent,
-                                                 const Qt::TextInteractionFlags &pFlags,
-                                                 const QString &pTitle,
-                                                 const QString &pText,
-                                                 const StandardButtons &pButtons,
-                                                 const StandardButton &pDefaultButton)
+QMessageBox::StandardButton questionMessageBox(QWidget *pParent,
+                                               const Qt::TextInteractionFlags &pFlags,
+                                               const QString &pTitle,
+                                               const QString &pText,
+                                               const QMessageBox::StandardButtons &pButtons,
+                                               const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a question message box
 
@@ -199,12 +199,12 @@ QMessageBox::StandardButton MessageBox::question(QWidget *pParent,
 
 //==============================================================================
 
-QMessageBox::StandardButton MessageBox::warning(QWidget *pParent,
-                                                const Qt::TextInteractionFlags &pFlags,
-                                                const QString &pTitle,
-                                                const QString &pText,
-                                                const StandardButtons &pButtons,
-                                                const StandardButton &pDefaultButton)
+QMessageBox::StandardButton warningMessageBox(QWidget *pParent,
+                                              const Qt::TextInteractionFlags &pFlags,
+                                              const QString &pTitle,
+                                              const QString &pText,
+                                              const QMessageBox::StandardButtons &pButtons,
+                                              const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a warning message box
 
@@ -214,12 +214,12 @@ QMessageBox::StandardButton MessageBox::warning(QWidget *pParent,
 
 //==============================================================================
 
-QMessageBox::StandardButton MessageBox::critical(QWidget *pParent,
-                                                 const Qt::TextInteractionFlags &pFlags,
-                                                 const QString &pTitle,
-                                                 const QString &pText,
-                                                 const StandardButtons &pButtons,
-                                                 const StandardButton &pDefaultButton)
+QMessageBox::StandardButton criticalMessageBox(QWidget *pParent,
+                                               const Qt::TextInteractionFlags &pFlags,
+                                               const QString &pTitle,
+                                               const QString &pText,
+                                               const QMessageBox::StandardButtons &pButtons,
+                                               const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a critical message box
 
@@ -229,8 +229,8 @@ QMessageBox::StandardButton MessageBox::critical(QWidget *pParent,
 
 //==============================================================================
 
-void MessageBox::about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
-                       const QString &pTitle, const QString &pText)
+void aboutMessageBox(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
+                     const QString &pTitle, const QString &pText)
 {
     // Show an about message box
 
@@ -246,7 +246,7 @@ void MessageBox::about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
     }
 #endif
 
-    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, Information, 0, 0, 0, pParent
+    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, pParent
 #ifdef Q_OS_MAC
                                               , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
 #endif

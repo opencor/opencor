@@ -125,42 +125,6 @@ QStringList CORE_EXPORT filters(const FileTypes &pFileTypes,
 bool CORE_EXPORT opencorActive();
 
 //==============================================================================
-// Note: both guiutils.h and coreguiutils.h must specifically define MessageBox.
-//       To have it in guiutils.h.inl is NOT good enough since the MOC won't
-//       pick it up...
-
-class CORE_EXPORT MessageBox : public QMessageBox
-{
-    Q_OBJECT
-
-public:
-    static StandardButton information(QWidget *pParent,
-                                      const Qt::TextInteractionFlags &pFlags,
-                                      const QString &pTitle,
-                                      const QString &pText,
-                                      const StandardButtons &pButtons = Ok,
-                                      const StandardButton &pDefaultButton = NoButton);
-    static StandardButton question(QWidget *pParent,
-                                   const Qt::TextInteractionFlags &pFlags,
-                                   const QString &pTitle, const QString &pText,
-                                   const StandardButtons &pButtons = StandardButtons(Yes|No),
-                                   const StandardButton &pDefaultButton = NoButton);
-    static StandardButton warning(QWidget *pParent,
-                                  const Qt::TextInteractionFlags &pFlags,
-                                  const QString &pTitle, const QString &pText,
-                                  const StandardButtons &pButtons = Ok,
-                                  const StandardButton &pDefaultButton = NoButton);
-    static StandardButton critical(QWidget *pParent,
-                                   const Qt::TextInteractionFlags &pFlags,
-                                   const QString &pTitle, const QString &pText,
-                                   const StandardButtons &pButtons = Ok,
-                                   const StandardButton &pDefaultButton = NoButton);
-
-    static void about(QWidget *pParent, const Qt::TextInteractionFlags &pFlags,
-                      const QString &pTitle, const QString &pText);
-};
-
-//==============================================================================
 
 }   // namespace Core
 }   // namespace OpenCOR
