@@ -43,18 +43,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Owner: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Url: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Path: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Show containing folder...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -64,6 +52,10 @@
     </message>
     <message>
         <source>Synchronise and upload to PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View in PMR...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -109,6 +101,21 @@
     </message>
     <message>
         <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PmrWorkspacesWidget</name>
+    <message>
+        <source>Owner: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Url: &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path: &lt;a href=&quot;file://%1/&quot;&gt;%1&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

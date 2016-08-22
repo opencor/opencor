@@ -877,10 +877,15 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
         menu->addAction(refreshAction);
 
         auto workspace = mWorkspacesManager->workspace(elementId);
-        if (workspace && workspace->isLocal()) {
-            auto action = new QAction(tr("Show containing folder..."), this);
-            action->setData(QString("show|%1").arg(workspace->path()));
+        if (workspace) {
+            auto action = new QAction(tr("View in PMR..."), this);
+            action->setData(QString("pmr|%1").arg(workspace->url()));
             menu->addAction(action);
+            if (workspace->isLocal()) {
+                action = new QAction(tr("Show containing folder..."), this);
+                action->setData(QString("show|%1").arg(workspace->path()));
+                menu->addAction(action);
+            }
         }
 
         menu->addSeparator();
@@ -912,6 +917,9 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
             }
             else if (action == "push") {
                 synchroniseWorkspace(linkId, false);
+            }
+            else if (action == "pmr") {
+                QDesktopServices::openUrl(linkId);
             }
             else if (action == "show") {
                 showInGraphicalShell(linkId);
@@ -1009,8 +1017,8 @@ void PmrWorkspacesWidget::aboutWorkspace(const QString &pUrl)
             QStringList workspaceInformation = QStringList() << workspace->name();
             if (!workspace->description().isEmpty()) workspaceInformation << workspace->description();
             if (!workspace->owner().isEmpty()) workspaceInformation << tr("Owner: %1").arg(workspace->owner());
-            workspaceInformation << tr("Url: %1").arg(workspace->url());
-            if (workspace->isLocal()) workspaceInformation << tr("Path: %1").arg(workspace->path());
+            workspaceInformation << tr("PMR: <a href=\"%1\">%1</a>").arg(workspace->url());
+            if (workspace->isLocal()) workspaceInformation << tr("Path: <a href=\"file://%1/\">%1</a>").arg(workspace->path());
             emit information(workspaceInformation.join("<br></br><br></br>"));
         }
     }
