@@ -292,8 +292,8 @@ showEnableAction(mGui->actionPreferences, false);
     // don't want to allow at all
 
     qApp->setStyleSheet("QMessageBox {"
-                        "    messagebox-text-interaction-flags: 4;"
-                        "}");
+                        "    messagebox-text-interaction-flags: 5;" // Mouse clickable links, mouse selectable text
+                        "}");                                       // Or 13 to also allow keyboard clickable links
 
     // Show/hide and enable/disable the windows action depending on whether
     // there are window widgets
