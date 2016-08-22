@@ -4,10 +4,6 @@ a {
     color: rgb(49, 133, 155);
 }
 
-a:visited {
-    color: rgb(49, 133, 155);
-}
-
 a:hover {
     border: 1px solid rgba(49, 133, 155, 0.13);
     background: rgba(49, 133, 155, 0.05);
