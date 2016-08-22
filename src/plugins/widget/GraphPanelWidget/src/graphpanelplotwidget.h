@@ -200,6 +200,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
+    virtual void paintEvent(QPaintEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 
@@ -224,6 +225,7 @@ private:
     GraphPanelPlotOverlayWidget *mOverlayWidget;
 
     bool mCanDirectPaint;
+    bool mCanReplot;
 
     bool mCanZoomInX;
     bool mCanZoomOutX;

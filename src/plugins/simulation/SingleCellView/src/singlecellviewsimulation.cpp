@@ -621,7 +621,6 @@ void SingleCellViewSimulationData::deleteArrays()
 SingleCellViewSimulationResults::SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
-    mSize(0),
     mDataStore(0),
     mPoints(0),
     mConstants(DataStore::DataStoreVariables()),
@@ -772,10 +771,6 @@ void SingleCellViewSimulationResults::update()
 
 bool SingleCellViewSimulationResults::reset(const bool &pCreateDataStore)
 {
-    // Reset our size
-
-    mSize = 0;
-
     // Reset our data store
 
     if (pCreateDataStore) {
@@ -793,12 +788,7 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 {
     // Add the data to our data store
 
-    mDataStore->setValues(mSize, pPoint);
-
-    ++mSize;
-    // Note: we want to do this after the call to DataStore::setValues() since
-    //       it may otherwise mess up our plotting of simulation data (see issue
-    //       #636)...
+    mDataStore->addValues(pPoint);
 }
 
 //==============================================================================
@@ -807,7 +797,7 @@ qulonglong SingleCellViewSimulationResults::size() const
 {
     // Return our size
 
-    return mSize;
+    return mDataStore?mDataStore->size():0;
 }
 
 //==============================================================================
