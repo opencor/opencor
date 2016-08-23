@@ -57,24 +57,24 @@ function versions(downloads) {
 
         // Retrieve some information about the version
 
-        var versionMajor       = version.major;
-        var versionMinor       = version.minor;
-        var versionPatch       = version.patch;
-        var versionDay         = version.day;
-        var versionMonth       = version.month;
-        var versionYear        = version.year;
-        var versionType        = version.type;
-        var versionPlatforms   = version.platforms;
-        var versionChanges     = version.changes;
+        var versionMajor = version.major;
+        var versionMinor = version.minor;
+        var versionPatch = version.patch;
+        var versionDay = version.day;
+        var versionMonth = version.month;
+        var versionYear = version.year;
+        var versionType = version.type;
+        var versionPlatforms = version.platforms;
+        var versionChanges = version.changes;
 
         if (versionMajor || versionMinor || versionPatch) {
-            versionTitle   = "Version "+versionMajor+"."+versionMinor;
-            versionFolder  = versionMajor+"."+versionMinor;
+            versionTitle = "Version "+versionMajor+"."+versionMinor;
+            versionFolder = versionMajor+"."+versionMinor;
             versionVersion = versionMajor+"-"+versionMinor;
 
             if (versionPatch) {
-                versionTitle   += "."+versionPatch;
-                versionFolder  += "."+versionPatch;
+                versionTitle += "."+versionPatch;
+                versionFolder += "."+versionPatch;
                 versionVersion += "-"+versionPatch;
             }
 
@@ -92,7 +92,16 @@ function versions(downloads) {
 
         // Output some general information about the version
 
-        document.write("<div class=\"section\">\n");
+        var sectionClass = "section";
+
+        if (versionType === 1)
+            sectionClass += " officialSection";
+        else if ((versionType === 2) && downloads)
+            sectionClass += " latestSection";
+        else
+            sectionClass += " oldSection";
+
+        document.write("<div class=\""+sectionClass+"\">\n");
         document.write("    <table>\n");
         document.write("        <tbody>\n");
         document.write("            <tr>\n");
@@ -120,12 +129,12 @@ function versions(downloads) {
 
         // Output some information about the version files
 
-        var versionClass = "";
+        var versionClass;
 
         if (versionType === 1)
             versionClass = "official withoutInfo";
         else if ((versionType === 2) && downloads)
-            versionClass = "latest withInfo";
+            versionClass = "latest";
         else
             versionClass = "old withoutInfo";
 
@@ -191,9 +200,9 @@ function versions(downloads) {
             var platform = versionPlatforms[platformIndex];
 
             if (typeof platform !== "undefined") {
-                var platformName      = platform.name;
+                var platformName = platform.name;
                 var platformSupported = platform.supported;
-                var platformFiles     = platform.files;
+                var platformFiles = platform.files;
 
                 document.write("            <table>\n");
                 document.write("                <tbody>\n");
@@ -218,7 +227,7 @@ function versions(downloads) {
                     // Retrieve some information about the file
 
                     var fileExtension = file.extension;
-                    var fileBitness   = file.bitness;
+                    var fileBitness = file.bitness;
 
                     // Determine the file name, type and extra info, if any
 
