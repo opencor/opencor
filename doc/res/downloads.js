@@ -126,6 +126,8 @@ function versions(downloads) {
             versionClass = "official withoutInfo";
         else if ((versionType === 2) && downloads)
             versionClass = "latest withInfo";
+        else
+            versionClass = "old withoutInfo";
 
         document.write("<div class=\""+versionClass+"\">\n");
         document.write("    <table class=\"version\">\n");

@@ -16,6 +16,12 @@ div.latest {
     background: rgba(227, 108, 9, 0.13);
 }
 
+div.old {
+    margin: -1px;
+    border: 1px solid rgba(103, 103, 103, 0.13);
+    background: rgba(103, 103, 103, 0.05);
+}
+
 div.latestInfo {
     margin: -1px;
     border-bottom: 1px solid rgba(227, 108, 9, 0.39);
@@ -41,20 +47,19 @@ div.withoutInfo {
 }
 
 img.downloads {
-    margin: 0px;
-    border: 0px;
+    margin: -1px;
+    border: 1px solid rgba(103, 103, 103, 0.13);
+    border-radius: 13px;
     padding: 3px 7px 3px 7px;
     position: fixed;
     top: 3px;
     right: 3px;
-    background: none;
+    background: rgba(103, 103, 103, 0.05);
 }
 
 img.downloads:hover {
-    margin: -1px;
-    border: 1px solid rgba(103, 103, 103, 0.13);
-    border-radius: 13px;
-    background: rgba(103, 103, 103, 0.05);
+    border: 1px solid rgba(103, 103, 103, 0.39);
+    background: rgba(103, 103, 103, 0.13);
 }
 
 div.main {
