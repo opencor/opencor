@@ -279,7 +279,7 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem)
 void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 {
     // Disable the handling of the itemChanged() signal (otherwise what we are
-    // doing here is going to be completely uneffective)
+    // doing here is going to be completely ineffective)
 
     disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                this, SLOT(updateDataSelectedState(QStandardItem *)));
