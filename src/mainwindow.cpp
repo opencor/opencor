@@ -60,7 +60,6 @@ limitations under the License.
 #include <QLocale>
 #include <QMenu>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QRect>
 #include <QSettings>
 #include <QShortcut>
@@ -1185,8 +1184,8 @@ void MainWindow::on_actionPlugins_triggered()
         if (pluginsDialog.result() == QMessageBox::Apply)
             restart(true);
     } else {
-        QMessageBox::warning(this, tr("Plugins"),
-                             tr("No plugins could be found."));
+        warningMessageBox(this, tr("Plugins"),
+                          tr("No plugins could be found."));
     }
 }
 
@@ -1383,10 +1382,10 @@ void MainWindow::updateDockWidgetsVisibility()
 
 void MainWindow::resetAll()
 {
-    if (QMessageBox::question(this, qAppName(),
-                              tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
-                              QMessageBox::Yes|QMessageBox::No,
-                              QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(this, qAppName(),
+                           tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
+                           QMessageBox::Yes|QMessageBox::No,
+                           QMessageBox::Yes) == QMessageBox::Yes ) {
         // Restart OpenCOR without first saving its settings
 
         restart(false);

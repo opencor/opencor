@@ -31,7 +31,6 @@ limitations under the License.
 #include <QAction>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMessageBox>
 
 //==============================================================================
 
@@ -327,12 +326,12 @@ void CellMLEditingViewPlugin::cellmlValidation()
         if (mCellmlEditingViewInterface->validCellml(mFileName, extra)) {
             // There are no CellML issues, so the CellML file is valid
 
-            QMessageBox::information( Core::mainWindow(),
-                                      tr("CellML Validation"),
-                                      tr("The CellML file is valid.")
-                                     +(extra.isEmpty()?
-                                          QString():
-                                          "<br/><br/>"+tr("<strong>Note:</strong> %1.").arg(Core::formatMessage(extra))));
+            Core::informationMessageBox( Core::mainWindow(),
+                                         tr("CellML Validation"),
+                                         tr("The CellML file is valid.")
+                                        +(extra.isEmpty()?
+                                             QString():
+                                             "<br/><br/>"+tr("<strong>Note:</strong> %1.").arg(Core::formatMessage(extra))));
         }
     }
 }

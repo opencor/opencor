@@ -29,7 +29,6 @@ limitations under the License.
 #include <QAction>
 #include <QInputDialog>
 #include <QMainWindow>
-#include <QMessageBox>
 
 //==============================================================================
 
@@ -250,8 +249,10 @@ void SampleToolsPlugin::addTwoNumbers()
         nb2 = QInputDialog::getDouble(Core::mainWindow(), tr("Add Two Numbers"), tr("Second number:"),
                                       0, -2147483647, 2147483647, 1, &ok);
 
-        if (ok)
-            QMessageBox::information(Core::mainWindow(), tr("Add Two Numbers"), QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
+        if (ok) {
+            Core::informationMessageBox(Core::mainWindow(), tr("Add Two Numbers"),
+                                        QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
+        }
     }
 }
 

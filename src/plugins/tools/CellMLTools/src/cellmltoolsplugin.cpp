@@ -32,7 +32,6 @@ limitations under the License.
 #include <QFile>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMessageBox>
 
 //==============================================================================
 
@@ -283,9 +282,8 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
             //       following a CellML export...
         }
 
-        QMessageBox::warning(Core::mainWindow(),
-                             tr("Export CellML File To %1").arg(format),
-                             tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
+        Core::warningMessageBox(Core::mainWindow(), tr("Export CellML File To %1").arg(format),
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
     }
 }
 
@@ -495,9 +493,8 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             //       following a CellML export...
         }
 
-        QMessageBox::warning(Core::mainWindow(),
-                             tr("Export CellML File To User-Defined Format"),
-                             tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
+        Core::warningMessageBox(Core::mainWindow(), tr("Export CellML File To User-Defined Format"),
+                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
     }
 }
 

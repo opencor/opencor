@@ -46,7 +46,6 @@ limitations under the License.
 #include <QLabel>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMessageBox>
 #include <QPalette>
 #include <QPushButton>
 #include <QSizePolicy>
@@ -235,8 +234,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // Check whether the save file already exists and is opened
 
             if (Core::FileManager::instance()->file(res)) {
-                QMessageBox::warning(qApp->activeWindow(), pCaption,
-                                     QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
+                warningMessageBox(qApp->activeWindow(), pCaption,
+                                  QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
 
                 continue;
             }
@@ -244,10 +243,10 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // Check whether the save file already exists
 
             if (   resInfo.exists()
-                && QMessageBox::question(qApp->activeWindow(), pCaption,
-                                         QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
-                                         QMessageBox::Yes|QMessageBox::No,
-                                         QMessageBox::Yes) == QMessageBox::No) {
+                && questionMessageBox(qApp->activeWindow(), pCaption,
+                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
+                                      QMessageBox::Yes|QMessageBox::No,
+                                      QMessageBox::Yes) == QMessageBox::No) {
                 continue;
             }
         }
@@ -287,8 +286,8 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
 
             if (   pEmptyDir
                 && QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
-                QMessageBox::warning(qApp->activeWindow(), pCaption,
-                                     QObject::tr("Please choose an empty directory."));
+                warningMessageBox(qApp->activeWindow(), pCaption,
+                                  QObject::tr("Please choose an empty directory."));
 
                 return QString();
             }
