@@ -42,7 +42,6 @@ limitations under the License.
 #include <QLabel>
 #include <QLayout>
 #include <QMainWindow>
-#include <QMessageBox>
 #include <QSettings>
 #include <QTimer>
 
@@ -586,12 +585,12 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
-                && (QMessageBox::question(Core::mainWindow(), tr("Save File"),
-                                          tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
-                                                                                                                                                                                         CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
-                                                                                                                                                                                         CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion())),
-                                          QMessageBox::Yes|QMessageBox::No,
-                                          QMessageBox::Yes) == QMessageBox::No)) {
+                && (Core::questionMessageBox(Core::mainWindow(), tr("Save File"),
+                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
+                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
+                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion())),
+                                             QMessageBox::Yes|QMessageBox::No,
+                                             QMessageBox::Yes) == QMessageBox::No)) {
                 pNeedFeedback = false;
 
                 return false;
@@ -627,10 +626,10 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // The parsing was unsuccessful, so ask the user whether s/he wants
             // to save the contents of the view to a text file
 
-            if (QMessageBox::question(Core::mainWindow(), tr("Save File"),
-                                      tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName),
-                                      QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::Yes) {
+            if (Core::questionMessageBox(Core::mainWindow(), tr("Save File"),
+                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName),
+                                         QMessageBox::Yes|QMessageBox::No,
+                                         QMessageBox::Yes) == QMessageBox::Yes) {
                 QString fileName = Core::getSaveFileName(tr("Save File"),
                                                          Core::newFileName(pNewFileName, "txt"));
 

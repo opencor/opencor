@@ -118,5 +118,163 @@ QColor windowColor()
 }
 
 //==============================================================================
+
+QMessageBox::StandardButton showMessageBox(QWidget *pParent,
+                                           const QMessageBox::Icon &pIcon,
+                                           const Qt::TextInteractionFlags &pFlags,
+                                           const QString &pTitle,
+                                           const QString &pText,
+                                           const QMessageBox::StandardButtons &pButtons,
+                                           const QMessageBox::StandardButton &pDefaultButton)
+{
+    // Create, show and return the result of a message box with the given
+    // properties
+
+    QMessageBox messageBox(pIcon, pTitle, pText, QMessageBox::NoButton, pParent);
+
+    messageBox.setTextInteractionFlags(pFlags);
+
+    QDialogButtonBox *buttonBox = messageBox.findChild<QDialogButtonBox*>();
+
+    Q_ASSERT(buttonBox);
+
+    uint mask = QMessageBox::FirstButton;
+
+    while (mask <= QMessageBox::LastButton) {
+        uint sb = pButtons & mask;
+
+        mask <<= 1;
+
+        if (!sb)
+            continue;
+
+        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton)sb);
+
+        if (messageBox.defaultButton())
+            continue;
+
+        if (   (   (pDefaultButton == QMessageBox::NoButton)
+                && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
+            || (   (pDefaultButton != QMessageBox::NoButton) &&
+                   (sb == uint(pDefaultButton)))) {
+            messageBox.setDefaultButton(button);
+        }
+    }
+
+    if (messageBox.exec() == -1)
+        return QMessageBox::Cancel;
+
+    return messageBox.standardButton(messageBox.clickedButton());
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton informationMessageBox(QWidget *pParent,
+                                                  const QString &pTitle,
+                                                  const QString &pText,
+                                                  const QMessageBox::StandardButtons &pButtons,
+                                                  const QMessageBox::StandardButton &pDefaultButton)
+{
+    // Return the result of an information message box
+
+    return showMessageBox(pParent, QMessageBox::Information,
+                          Qt::LinksAccessibleByMouse, pTitle, pText, pButtons,
+                          pDefaultButton);
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton questionMessageBox(QWidget *pParent,
+                                               const QString &pTitle,
+                                               const QString &pText,
+                                               const QMessageBox::StandardButtons &pButtons,
+                                               const QMessageBox::StandardButton &pDefaultButton)
+{
+    // Return the result of a question message box
+
+    return showMessageBox(pParent, QMessageBox::Question,
+                          Qt::LinksAccessibleByMouse, pTitle, pText, pButtons,
+                          pDefaultButton);
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton warningMessageBox(QWidget *pParent,
+                                              const QString &pTitle,
+                                              const QString &pText,
+                                              const QMessageBox::StandardButtons &pButtons,
+                                              const QMessageBox::StandardButton &pDefaultButton)
+{
+    // Return the result of a warning message box
+
+    return showMessageBox(pParent, QMessageBox::Warning,
+                          Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse,
+                          pTitle, pText, pButtons, pDefaultButton);
+}
+
+//==============================================================================
+
+QMessageBox::StandardButton criticalMessageBox(QWidget *pParent,
+                                               const QString &pTitle,
+                                               const QString &pText,
+                                               const QMessageBox::StandardButtons &pButtons,
+                                               const QMessageBox::StandardButton &pDefaultButton)
+{
+    // Return the result of a critical message box
+
+    return showMessageBox(pParent, QMessageBox::Critical,
+                          Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse,
+                          pTitle, pText, pButtons, pDefaultButton);
+}
+
+//==============================================================================
+
+void aboutMessageBox(QWidget *pParent, const QString &pTitle,
+                     const QString &pText)
+{
+    // Show an about message box
+
+#ifdef Q_OS_MAC
+    static QPointer<QMessageBox> oldMessageBox;
+
+    if (oldMessageBox && !oldMessageBox->text().compare(pText)) {
+        oldMessageBox->show();
+        oldMessageBox->raise();
+        oldMessageBox->activateWindow();
+
+        return;
+    }
+#endif
+
+    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, pParent
+#ifdef Q_OS_MAC
+                                              , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
+#endif
+                                             );
+
+    messageBox->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+    messageBox->setAttribute(Qt::WA_DeleteOnClose);
+
+    QIcon icon = messageBox->windowIcon();
+    QSize size = icon.actualSize(QSize(64, 64));
+
+    messageBox->setIconPixmap(icon.pixmap(size));
+
+#ifdef Q_OS_MAC
+    oldMessageBox = messageBox;
+
+    QDialogButtonBox *buttonBox = messageBox->findChild<QDialogButtonBox*>();
+
+    Q_ASSERT(buttonBox);
+
+    buttonBox->setCenterButtons(true);
+
+    messageBox->show();
+#else
+    messageBox->exec();
+#endif
+}
+
+//==============================================================================
 // End of file
 //==============================================================================

@@ -31,7 +31,6 @@ limitations under the License.
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QMenu>
-#include <QMessageBox>
 #include <QPaintEvent>
 
 //==============================================================================

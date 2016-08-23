@@ -39,7 +39,6 @@ limitations under the License.
 
 #include <QDesktopServices>
 #include <QDialogButtonBox>
-#include <QMessageBox>
 #include <QModelIndex>
 #include <QPushButton>
 #include <QSettings>
@@ -679,10 +678,10 @@ void PluginsDialog::on_buttonBox_rejected()
 
 void PluginsDialog::apply()
 {
-    if (QMessageBox::question(mainWindow(), qAppName(),
-                              tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
-                              QMessageBox::Yes|QMessageBox::No,
-                              QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(mainWindow(), qAppName(),
+                           tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
+                           QMessageBox::Yes|QMessageBox::No,
+                           QMessageBox::Yes) == QMessageBox::Yes ) {
         // Do what is done when clicking on the OK button
 
         on_buttonBox_accepted();

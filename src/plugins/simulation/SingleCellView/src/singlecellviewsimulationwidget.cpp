@@ -49,7 +49,6 @@ limitations under the License.
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMessageBox>
 #include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
@@ -1096,9 +1095,8 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
                             mCombineArchive->fileName();
 
         if (!importedParameters.isEmpty()) {
-            QMessageBox::information(Core::mainWindow(),
-                                     tr("Save File"),
-                                     tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
+            Core::informationMessageBox(Core::mainWindow(), tr("Save File"),
+                                        tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
         }
     }
 
@@ -1283,8 +1281,8 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
             double requiredMemory = mSimulation->requiredMemory();
 
             if (requiredMemory > freeMemory) {
-                QMessageBox::warning(Core::mainWindow(), tr("Run Simulation"),
-                                     tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
+                Core::warningMessageBox(Core::mainWindow(), tr("Run Simulation"),
+                                        tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
             } else {
                 // Theoretically speaking, we have enough memory to run the
                 // simulation, so try to allocate all the memory we need for the
@@ -1301,8 +1299,8 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
                 if (runSimulation) {
                     mSimulation->run();
                 } else {
-                    QMessageBox::warning(Core::mainWindow(), tr("Run Simulation"),
-                                         tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+                    Core::warningMessageBox(Core::mainWindow(), tr("Run Simulation"),
+                                            tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
                 }
             }
 
@@ -1735,8 +1733,8 @@ void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
         }
 
         if (!createSedmlFile(sedmlFileName, modelSource)) {
-            QMessageBox::warning(Core::mainWindow(), tr("Export To SED-ML File"),
-                                 tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
+            Core::warningMessageBox(Core::mainWindow(), tr("Export To SED-ML File"),
+                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
         }
     }
 }
@@ -1884,8 +1882,8 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
         // Let the user know about any error that may have occurred
 
         if (!errorMessage.isEmpty()) {
-            QMessageBox::warning(Core::mainWindow(), tr("Export To COMBINE Archive"),
-                                 errorMessage);
+            Core::warningMessageBox(Core::mainWindow(), tr("Export To COMBINE Archive"),
+                                    errorMessage);
         }
     }
 }
@@ -3258,8 +3256,8 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
     // Display the given error message, if any
 
     if (!pErrorMessage.isEmpty()) {
-        QMessageBox::warning(Core::mainWindow(), tr("Simulation Data Export"),
-                             pErrorMessage);
+        Core::warningMessageBox(Core::mainWindow(), tr("Simulation Data Export"),
+                                pErrorMessage);
     }
 }
 

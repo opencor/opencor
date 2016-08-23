@@ -112,7 +112,7 @@ ADD_PLUGIN(SampleWindow
             Our <a href="index.html#Plugin information">plugin information</a> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.cpp"><code>samplewindowplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.h"><code>samplewindowplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.json"><code>samplewindowplugin.json</code></a>. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.h"><code>samplewindowplugin.h</code></a>, its contents is:
         </p>
 
-        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
+        <pre class="prettyprint linenums:27">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h"><code>plugininterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.h"><code>windowinterface.h</code></a>"
@@ -160,14 +160,14 @@ private:
 }   // namespace OpenCOR</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 26, 28 and 29). It also means that our plugin class inherits from those interfaces (lines 46-47), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 53-55). Finally, we include the inline files (lines 58-60) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27, 29 and 30). It also means that our plugin class inherits from those interfaces (lines 47-48), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 54-56). Finally, we include the inline files (lines 59-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
         </p>
 
         <p>
             The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic information">basic information</a> about our plugin can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.cpp"><code>samplewindowplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:37">PLUGININFO_FUNC SampleWindowPluginInfo()
+        <pre class="prettyprint linenums:38">PLUGININFO_FUNC SampleWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -180,7 +180,7 @@ private:
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 44). It also has a direct dependency on both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 45).
+            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 45). It also has a direct dependency on both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 46).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -197,7 +197,7 @@ private:
             We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:49">//==============================================================================
+        <pre class="prettyprint linenums:50">//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -220,7 +220,7 @@ void SampleWindowPlugin::retranslateUi()
             Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:62">//==============================================================================
+        <pre class="prettyprint linenums:63">//==============================================================================
 // Plugin interface
 //==============================================================================
 
@@ -281,14 +281,14 @@ void SampleWindowPlugin::handleUrl(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 66-75), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 67-76), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
         </p>
 
         <p>
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">window</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:120">//==============================================================================
+        <pre class="prettyprint linenums:121">//==============================================================================
 // Window interface
 //==============================================================================
 
@@ -320,7 +320,7 @@ QDockWidget * SampleWindowPlugin::windowWidget() const
 //==============================================================================</pre>
 
         <p>
-            All three methods are implemented since they tell OpenCOR the default dock area for our plugin window (see <code>windowDefaultDockArea()</code>; lines 124-129), as well as provide the pointer to our action (see <code>windowAction()</code>; lines 133-138) and window (see <code>windowWidget()</code>; lines 142-147).
+            All three methods are implemented since they tell OpenCOR the default dock area for our plugin window (see <code>windowDefaultDockArea()</code>; lines 125-130), as well as provide the pointer to our action (see <code>windowAction()</code>; lines 134-139) and window (see <code>windowWidget()</code>; lines 143-148).
         </p>
 
         <span class="anchor" id="Plugin specific"></span>
@@ -333,7 +333,7 @@ QDockWidget * SampleWindowPlugin::windowWidget() const
             Some extra work is needed to get our plugin to do what it is supposed to be doing, and this is done via the <code>SampleWindowWindow</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.h"><code>samplewindowwindow.h</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:26">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/windowwidget.h"><code>windowwidget.h</code></a>"
+        <pre class="prettyprint linenums:27">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/windowwidget.h"><code>windowwidget.h</code></a>"
 
 //==============================================================================
 
@@ -369,18 +369,14 @@ private slots:
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QDockWidget</code> (line 41). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
+            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
         </p>
 
         <p>
             The implementation of <code>SampleWindowWindow</code> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.cpp"><code>samplewindowwindow.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:18">//==============================================================================
-// Sample window
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.h"><code>sampleutilities.h</code></a>"
+        <pre class="prettyprint linenums:23">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutilities.h"><code>sampleutilities.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.h"><code>samplewindowwindow.h</code></a>"
 
 //==============================================================================
@@ -439,7 +435,7 @@ void SampleWindowWindow::updateSum()
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleWindowWindow()</code> (lines 36-55) initialises the <code>SampleWindowWindow</code> object, as well as creates a couple of connections (lines 47-50) and initialises our sum by calling <code>updateSum()</code> (line 54). As can be seen, <code>updateSum()</code> calls the <code>add()</code> method from the <a href="Sample.html"><strong>Sample</strong></a> plugin (lines 68-73).
+            <code>SampleWindowWindow()</code> (lines 37-56) initialises the <code>SampleWindowWindow</code> object, as well as creates a couple of connections (lines 48-51) and initialises our sum by calling <code>updateSum()</code> (line 55). As can be seen, <code>updateSum()</code> calls the <code>add()</code> method from the <a href="Sample.html"><strong>Sample</strong></a> plugin (lines 69-74).
         </p>
 
         <script type="text/javascript">
