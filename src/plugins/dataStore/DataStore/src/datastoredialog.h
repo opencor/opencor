@@ -87,13 +87,12 @@ private:
 
     QMap<QStandardItem *, DataStoreVariable*> mData;
     int mNbOfData;
-    int mNbOfSelectedData;
 
     DataStoreVariables doSelectedData(QStandardItem *pItem) const;
 
     void updateDataSelectedState(QStandardItem *pItem,
                                  const Qt::CheckState &pCheckState);
-    void checkDataSelectedState(QStandardItem *pItem);
+    void checkDataSelectedState(QStandardItem *pItem, int &pNbOfselectedData);
 
 private slots:
     void updateDataSelectedState(QStandardItem *pItem = 0);
