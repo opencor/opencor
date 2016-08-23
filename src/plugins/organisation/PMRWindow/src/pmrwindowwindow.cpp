@@ -38,7 +38,6 @@ limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
-#include <QMessageBox>
 #include <QTimer>
 
 //==============================================================================
@@ -188,7 +187,7 @@ void PmrWindowWindow::showError(const QString &pMessage)
 {
     // Show the given message as an error
 
-    QMessageBox::critical(Core::mainWindow(), windowTitle(), pMessage);
+    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -197,7 +196,7 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 {
     // Show the given message as informative text
 
-    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
+    Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -206,7 +205,7 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 {
     // Show the given message as a warning
 
-    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
+    Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================

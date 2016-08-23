@@ -31,7 +31,6 @@ limitations under the License.
 #include <QAction>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMessageBox>
 
 //==============================================================================
 
@@ -327,12 +326,12 @@ void SEDMLEditingViewPlugin::sedmlValidation()
         if (mSedmlEditingViewInterface->validSedml(mFileName, extra)) {
             // There are no SED-ML issues, so the SED-ML file is valid
 
-            QMessageBox::information( Core::mainWindow(),
-                                      tr("SED-ML Validation"),
-                                      tr("The SED-ML file is valid.")
-                                     +(extra.isEmpty()?
-                                          QString():
-                                          "<br/><br/>"+tr("<strong>Note:</strong> %1.").arg(Core::formatMessage(extra))));
+            Core::informationMessageBox( Core::mainWindow(),
+                                         tr("SED-ML Validation"),
+                                         tr("The SED-ML file is valid.")
+                                        +(extra.isEmpty()?
+                                             QString():
+                                             "<br/><br/>"+tr("<strong>Note:</strong> %1.").arg(Core::formatMessage(extra))));
         }
     }
 }

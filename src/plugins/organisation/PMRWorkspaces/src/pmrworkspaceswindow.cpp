@@ -40,7 +40,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QDir>
 #include <QMainWindow>
-#include <QMessageBox>
 #include <QMenu>
 #include <QPoint>
 #include <QSettings>
@@ -237,7 +236,7 @@ void PmrWorkspacesWindow::showError(const QString &pMessage)
 {
     // Show the given message as an error
 
-    QMessageBox::critical(Core::mainWindow(), windowTitle(), pMessage);
+    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -246,7 +245,7 @@ void PmrWorkspacesWindow::showInformation(const QString &pMessage)
 {
     // Show the given message as informative text
 
-    QMessageBox::information(Core::mainWindow(), windowTitle(), pMessage);
+    Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -255,7 +254,7 @@ void PmrWorkspacesWindow::showWarning(const QString &pMessage)
 {
     // Show the given message as a warning
 
-    QMessageBox::warning(Core::mainWindow(), windowTitle(), pMessage);
+    Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================

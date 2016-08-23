@@ -60,7 +60,6 @@ limitations under the License.
 #include <QLocale>
 #include <QMenu>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QRect>
 #include <QSettings>
 #include <QShortcut>
@@ -286,14 +285,6 @@ showEnableAction(mGui->actionPreferences, false);
         connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), SIGNAL(visibilityChanged(bool)),
                 this, SLOT(updateDockWidgetsVisibility()));
     }
-
-    // Allow links, in message boxes, to be clickable using the mouse, but not
-    // using the keyboard since it would allow messages to be selected, which we
-    // don't want to allow at all
-
-    qApp->setStyleSheet("QMessageBox {"
-                        "    messagebox-text-interaction-flags: 5;" // Mouse clickable links, mouse selectable text
-                        "}");                                       // Or 13 to also allow keyboard clickable links
 
     // Show/hide and enable/disable the windows action depending on whether
     // there are window widgets
@@ -1193,8 +1184,8 @@ void MainWindow::on_actionPlugins_triggered()
         if (pluginsDialog.result() == QMessageBox::Apply)
             restart(true);
     } else {
-        QMessageBox::warning(this, tr("Plugins"),
-                             tr("No plugins could be found."));
+        warningMessageBox(this, tr("Plugins"),
+                          tr("No plugins could be found."));
     }
 }
 
@@ -1243,12 +1234,12 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    QMessageBox::about(this, tr("About"),
-                       "<h1 align=center><strong>"+version()+"</strong></h1>"
-                       "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
-                       "<p align=center><em>"+copyright()+"</em></p>"
-                       "<p>"+applicationDescription()+"</p>"
-                       "<p>"+applicationBuildInformation()+"</p>");
+    aboutMessageBox(this, tr("About"),
+                    "<h1 align=center><strong>"+version()+"</strong></h1>"
+                    "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
+                    "<p align=center><em>"+copyright()+"</em></p>"
+                    "<p>"+applicationDescription()+"</p>"
+                    "<p>"+applicationBuildInformation()+"</p>");
 }
 
 //==============================================================================
@@ -1391,10 +1382,10 @@ void MainWindow::updateDockWidgetsVisibility()
 
 void MainWindow::resetAll()
 {
-    if (QMessageBox::question(this, qAppName(),
-                              tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
-                              QMessageBox::Yes|QMessageBox::No,
-                              QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(this, qAppName(),
+                           tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
+                           QMessageBox::Yes|QMessageBox::No,
+                           QMessageBox::Yes) == QMessageBox::Yes ) {
         // Restart OpenCOR without first saving its settings
 
         restart(false);

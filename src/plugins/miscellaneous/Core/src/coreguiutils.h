@@ -32,6 +32,7 @@ limitations under the License.
 #include <QColor>
 #include <QIcon>
 #include <QKeySequence>
+#include <QMessageBox>
 #include <QString>
 
 //==============================================================================
