@@ -10,9 +10,7 @@ div.official {
 }
 
 div.officialSection {
-    border-top: 1px solid rgb(170, 187, 133);
-    border-left: 1px solid rgb(170, 187, 133);
-    border-right: 1px solid rgb(170, 187, 133);
+    border-bottom: none;
     background: rgba(118, 146, 60, 0.39);
 }
 
@@ -22,9 +20,7 @@ div.latest {
 }
 
 div.latestInfo {
-    border-bottom: 1px solid rgb(237, 163, 100);
-    border-left: 1px solid rgb(237, 163, 100);
-    border-right: 1px solid rgb(237, 163, 100);
+    border-top: none;
     border-radius: 0px 0px 13px 13px;
     padding: 3px 7px 3px 7px;
     background: rgba(227, 108, 9, 0.39);
@@ -32,9 +28,7 @@ div.latestInfo {
 }
 
 div.latestSection {
-    border-top: 1px solid rgb(237, 163, 100);
-    border-left: 1px solid rgb(237, 163, 100);
-    border-right: 1px solid rgb(237, 163, 100);
+    border-bottom: none;
     background: rgba(227, 108, 9, 0.39);
 }
 
@@ -44,9 +38,7 @@ div.old {
 }
 
 div.oldSection {
-    border-top: 1px solid rgb(212, 212, 212);
-    border-left: 1px solid rgb(212, 212, 212);
-    border-right: 1px solid rgb(212, 212, 212);
+    border-bottom: none;
     background: rgba(103, 103, 103, 0.15);
 }
 

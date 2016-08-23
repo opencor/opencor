@@ -95,11 +95,11 @@ function versions(downloads) {
         var sectionClass = "section";
 
         if (versionType === 1)
-            sectionClass += " officialSection";
+            sectionClass += " official officialSection";
         else if ((versionType === 2) && downloads)
-            sectionClass += " latestSection";
+            sectionClass += " latest latestSection";
         else
-            sectionClass += " oldSection";
+            sectionClass += " old oldSection";
 
         document.write("<div class=\""+sectionClass+"\">\n");
         document.write("    <table>\n");
@@ -296,7 +296,7 @@ function versions(downloads) {
         // Add some information, if any
 
         if ((versionType === 2) && downloads) {
-            document.write("<div class=\"latestInfo\">\n");
+            document.write("<div class=\"latest latestInfo\">\n");
             document.write("    <strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable.\n");
             document.write("</div>\n");
         }
