@@ -1235,7 +1235,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    aboutMessageBox(this, Qt::LinksAccessibleByMouse, tr("About"),
+    aboutMessageBox(this, tr("About"),
                     "<h1 align=center><strong>"+version()+"</strong></h1>"
                     "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
