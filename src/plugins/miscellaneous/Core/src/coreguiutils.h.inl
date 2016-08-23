@@ -33,6 +33,27 @@ QColor CORE_EXPORT highlightColor();
 QColor CORE_EXPORT shadowColor();
 QColor CORE_EXPORT windowColor();
 
+QMessageBox::StandardButton CORE_EXPORT informationMessageBox(QWidget *pParent,
+                                                              const QString &pTitle,
+                                                              const QString &pText,
+                                                              const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,
+                                                              const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
+QMessageBox::StandardButton CORE_EXPORT questionMessageBox(QWidget *pParent,
+                                                           const QString &pTitle, const QString &pText,
+                                                           const QMessageBox::StandardButtons &pButtons = QMessageBox::StandardButtons(QMessageBox::Yes|QMessageBox::No),
+                                                           const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
+QMessageBox::StandardButton CORE_EXPORT warningMessageBox(QWidget *pParent,
+                                                          const QString &pTitle, const QString &pText,
+                                                          const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,
+                                                          const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
+QMessageBox::StandardButton CORE_EXPORT criticalMessageBox(QWidget *pParent,
+                                                           const QString &pTitle, const QString &pText,
+                                                           const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,
+                                                           const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
+
+void CORE_EXPORT aboutMessageBox(QWidget *pParent, const QString &pTitle,
+                                 const QString &pText);
+
 //==============================================================================
 // End of file
 //==============================================================================

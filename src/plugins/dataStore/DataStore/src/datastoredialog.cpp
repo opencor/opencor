@@ -20,12 +20,12 @@ limitations under the License.
 // Data store dialog
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "datastoreinterface.h"
 #include "datastoredialog.h"
 
 //==============================================================================
 
-#include <QMessageBox>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -347,8 +347,8 @@ void DataStoreDialog::on_buttonBox_accepted()
     // one selected data
 
     if (!mNbOfSelectedData) {
-        QMessageBox::warning(this, tr("Data Selector"),
-                             tr("Some data must be selected."));
+        Core::warningMessageBox(this, tr("Data Selector"),
+                                tr("Some data must be selected."));
     } else {
         accept();
     }

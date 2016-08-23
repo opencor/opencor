@@ -36,7 +36,6 @@ limitations under the License.
 #include <QFile>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMessageBox>
 #include <QPalette>
 #include <QSettings>
 
@@ -741,8 +740,8 @@ void CorePlugin::reopenFile(const QString &pFileName)
         } else {
             // The file doesn't exist anymore, so let the user know about it
 
-            QMessageBox::warning(mainWindow(), tr("Reopen File"),
-                                 tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+            warningMessageBox(mainWindow(), tr("Reopen File"),
+                              tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
         }
     } else {
         // Open the recent remote file
