@@ -239,6 +239,8 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
 
         childItem->setCheckState(pCheckState);
 
+        mNbOfSelectedData += (pCheckState == Qt::Checked)?1:-1;
+
         if (childItem->rowCount())
             updateDataSelectedState(childItem, pCheckState);
     }
