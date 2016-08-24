@@ -92,7 +92,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
-    mShuttingDown(false),
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -106,11 +105,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
-    // Keep track of when we are about to quit
-
-    QObject::connect(qApp, SIGNAL(aboutToQuit()),
-                     this, SLOT(aboutToQuit()));
-
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
     // itself
@@ -387,7 +381,9 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
-        mShuttingDown = true;
+        // Keep track of the fact that we are about to quit
+
+        qApp->setProperty("OpenCOR::aboutToQuit()", true);
 
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
@@ -929,15 +925,6 @@ void MainWindow::updateViewWindowsMenu(QAction *pAction)
 
 //==============================================================================
 
-bool MainWindow::shuttingDown() const
-{
-    // Return whether we are shutting down
-
-    return mShuttingDown;
-}
-
-//==============================================================================
-
 void MainWindow::showSelf()
 {
     // Note: to show ourselves, one would normally use activateWindow() (and
@@ -1029,15 +1016,6 @@ void MainWindow::handleArguments(const QStringList &pArguments)
     //       make sure that the status bar is shown/hidden, as needed...
 
     mGui->statusBar->setVisible(mGui->actionStatusBar->isChecked());
-}
-
-//==============================================================================
-
-void MainWindow::aboutToQuit()
-{
-    // Keep track of the fact that we are about to quit
-
-    qApp->setProperty("OpenCOR::aboutToQuit()", true);
 }
 
 //==============================================================================

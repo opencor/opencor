@@ -262,7 +262,7 @@ int main(int pArgC, char *pArgV[])
     // Note: indeed, on Linux, to show our splash screen may result in our main
     //       window being shown in the background...
 
-    if (!win->shuttingDown())
+    if (!OpenCOR::aboutToQuit())
         win->showSelf();
     else
         canExecuteAplication = false;
