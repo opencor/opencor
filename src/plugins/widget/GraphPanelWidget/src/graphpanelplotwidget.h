@@ -147,7 +147,8 @@ typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
 
 //==============================================================================
 
-class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot, public Core::CommonWidget
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot,
+                                                     public Core::CommonWidget
 {
     Q_OBJECT
 
