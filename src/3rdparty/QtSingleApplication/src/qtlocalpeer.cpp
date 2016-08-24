@@ -45,6 +45,9 @@
 #include <QTime>
 
 #if defined(Q_OS_WIN)
+//---OPENCOR--- BEGIN
+#define UNICODE
+//---OPENCOR--- END
 #include <QLibrary>
 #include <qt_windows.h>
 typedef BOOL(WINAPI*PProcessIdToSessionId)(DWORD,DWORD*);
