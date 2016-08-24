@@ -70,7 +70,7 @@ MACRO(INITIALISE_PROJECT)
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
     ENDFOREACH()
 
-    # Some initialisations related to our copy of Qt WebKit
+    # Some initialisations related to our copy of QtWebKit
 
     IF(WIN32)
         SET(PLATFORM_DIR windows)
