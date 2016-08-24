@@ -1407,12 +1407,12 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
 
     pFileType = pCellmlFile?CellmlFile:pSedmlFile?SedmlFile:CombineArchive;
 
-    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
-    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
-
     // In the case of a COMBINE archive, we need to retrieve the corresponding
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
+
+    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
+    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
 
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
