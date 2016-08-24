@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <sedML level="1" version="2" xmlns="http://sed-ml.org/sed-ml/level1/version2" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <listOfSimulations>
-        <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="10000" outputEndTime="10" outputStartTime="0">
+        <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="10000" outputEndTime="10000" outputStartTime="0">
             <algorithm kisaoID="KISAO:0000019">
                 <listOfAlgorithmParameters>
-                    <algorithmParameter kisaoID="KISAO:0000211" value="9.9999999999999995e-08"/>
+                    <algorithmParameter kisaoID="KISAO:0000211" value="9.9999999999999995e-05"/>
                     <algorithmParameter kisaoID="KISAO:0000475" value="BDF"/>
                     <algorithmParameter kisaoID="KISAO:0000481" value="true"/>
                     <algorithmParameter kisaoID="KISAO:0000476" value="Newton"/>
@@ -13,7 +13,7 @@
                     <algorithmParameter kisaoID="KISAO:0000415" value="500"/>
                     <algorithmParameter kisaoID="KISAO:0000467" value="0"/>
                     <algorithmParameter kisaoID="KISAO:0000478" value="Banded"/>
-                    <algorithmParameter kisaoID="KISAO:0000209" value="9.9999999999999995e-08"/>
+                    <algorithmParameter kisaoID="KISAO:0000209" value="9.9999999999999995e-05"/>
                     <algorithmParameter kisaoID="KISAO:0000479" value="0"/>
                 </listOfAlgorithmParameters>
             </algorithm>
