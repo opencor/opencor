@@ -36,9 +36,6 @@
   #ifndef NOMINMAX
     #define NOMINMAX
   #endif
-//---OPENCOR--- BEGIN
-#undef UNICODE
-//---OPENCOR--- END
   #include <windows.h>
 #endif
 

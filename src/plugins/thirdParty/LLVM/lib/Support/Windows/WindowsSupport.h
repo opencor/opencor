@@ -41,9 +41,6 @@
 #include "llvm/Config/config.h" // Get build system configuration settings
 #include "llvm/Support/Compiler.h"
 #include <system_error>
-//---OPENCOR--- BEGIN
-#undef UNICODE
-//---OPENCOR--- END
 #include <windows.h>
 #include <wincrypt.h>
 #include <cassert>
