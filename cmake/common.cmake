@@ -257,14 +257,6 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
     ENDIF()
 
-    # Ask for Unicode to be used
-
-    ADD_DEFINITIONS(-DUNICODE)
-
-    IF(WIN32)
-        ADD_DEFINITIONS(-D_UNICODE)
-    ENDIF()
-
     # Ask for Qt deprecated uses to be reported
 
     ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
