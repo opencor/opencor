@@ -21,7 +21,7 @@
         </script>
 
         <p>
-            OpenCOR (and its corresponding <a href="develop/tests.html">tests</a>) can be built, tested and run either from the command line or using <a href="https://www.qt.io/ide/">Qt Creator</a>. By default, <a href="https://ninja-build.org/">Ninja</a> is used to build OpenCOR, but if it is not available on your system, then JOM (on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>) or <a href="https://www.gnu.org/software/make/">Make</a> (on <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> / <a href="https://en.wikipedia.org/wiki/OS_X">OS X</a>) will be used instead.
+            OpenCOR (and its corresponding <a href="develop/tests.html">tests</a>) can be built, tested and run either from the command line or using <a href="https://www.qt.io/ide/">Qt Creator</a>. By default, <a href="https://ninja-build.org/">Ninja</a> is used to build OpenCOR, but if it is not available on your system, then <a href="https://wiki.qt.io/Jom">JOM</a> (on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>) or <a href="https://www.gnu.org/software/make/">Make</a> (on <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> / <a href="https://en.wikipedia.org/wiki/OS_X">OS X</a>) will be used instead.
         </p>
 
         <div class="section">
@@ -29,7 +29,7 @@
         </div>
 
         <p>
-            Various batch (<code>.bat</code>) and VBScript (<code>.vbs</code>) files and shell scripts are available on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> and on <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> / <a href="https://en.wikipedia.org/wiki/OS_X">OS X</a>, respectively:
+            Various batch / VBScript files (<code>.bat</code> | <code>.vbs</code>) and shell scripts are available on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> and <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> / <a href="https://en.wikipedia.org/wiki/OS_X">OS X</a>, respectively:
         </p>
         <ul>
             <li><a href="https://github.com/opencor/opencor/blob/master/clean"><code>[OpenCOR]/clean</code></a>[<a href="https://github.com/opencor/opencor/blob/master/clean.bat"><code>.bat</code></a>]: cleans the OpenCOR environment;</li>
@@ -37,7 +37,7 @@
                 <a href="https://github.com/opencor/opencor/blob/master/make"><code>[OpenCOR]/make</code></a>[<a href="https://github.com/opencor/opencor/blob/master/make.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR;
 
                 <p class="nomargins note">
-                    if you use <code>make</code> and don't have <a href="https://ninja-build.org/">Ninja</a> installed on your system, then OpenCOR will by default be compiled sequentially. You can, however, specify a maximum number of jobs (<code>n</code>) to be run simultaneously by calling <code>make</code> with <code>-j [n]</code>. If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
+                    if you use <code>make</code> and don't have <a href="https://ninja-build.org/">Ninja</a> installed on your system, then OpenCOR will, by default, be compiled sequentially. You can, however, specify a maximum number of jobs (<code>n</code>) to be run simultaneously by calling <code>make</code> with <code>-j [n]</code>. If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
                 </p>
             </li>
             <li><a href="https://github.com/opencor/opencor/blob/master/maketests"><code>[OpenCOR]/maketests</code></a>[<a href="https://github.com/opencor/opencor/blob/master/maketests.bat"><code>.bat</code></a>]: builds a release version of OpenCOR and its tests;</li>
@@ -57,11 +57,9 @@
 
         <ul>
             <li>Start <a href="https://www.qt.io/ide/">Qt Creator</a>;</li>
-            <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu, by pressing <code>Ctrl</code>+<code>O</code> or by dragging and dropping the file onto Qt Creator);</li>
+            <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu or by pressing <code>Ctrl</code>+<code>O</code>;</li>
             <li>Configure the project as you see fit and click on the <code>Configure Project</code> button;</li>
-            <li>Configure CMake, if needed, by going to the <code>Projects</code> page (e.g. set <code>ENABLE_TESTS</code> to <code>ON</code>);</li>
-            <li>Click on the <code>Run CMake</code> button;</li>
-            <li>Click on the <code>Done</code> button; and</li>
+            <li>Configure CMake, if needed, by going to the <code>Projects</code> page and setting, for example, <code>ENABLE_TESTS</code> to <code>ON</code>, and click on the <code>Apply Configuration Changes</code> button; and</li>
             <li>Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl</code>+<code>R</code>).</li>
         </ul>
 
