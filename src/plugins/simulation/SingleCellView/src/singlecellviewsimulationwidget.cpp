@@ -236,6 +236,18 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
     simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
+    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
+        QString dataStoreName = dataStoreInterface->dataStoreName();
+        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
+
+        mDataStoreInterfaces.insert(action, dataStoreInterface);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(simulationDataExport()));
+    }
+
+    updateDataStoreActions();
+
     // Add the various actions, wheel and tool buttons to our tool bar
 
     mToolBarWidget->addAction(mRunPauseResumeSimulationAction);
@@ -265,23 +277,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     layout()->addWidget(mToolBarWidget);
     layout()->addWidget(mTopSeparator);
-
-    // Populate our simulation data export drop-down menu with the given data
-    // store interfaces
-
-    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
-        QString dataStoreName = dataStoreInterface->dataStoreName();
-        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
-
-        mDataStoreInterfaces.insert(action, dataStoreInterface);
-
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(simulationDataExport()));
-    }
-
-    // Update our data store actions
-
-    updateDataStoreActions();
 
     // Create and add our invalid simulation message widget
 
