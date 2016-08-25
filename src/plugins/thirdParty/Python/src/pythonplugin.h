@@ -38,10 +38,6 @@ PLUGININFO_FUNC PythonPluginInfo();
 
 //==============================================================================
 
-class PythonWindow;
-
-//==============================================================================
-
 class PythonPlugin : public QObject, public PluginInterface
 {
     Q_OBJECT

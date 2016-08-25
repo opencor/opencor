@@ -20,7 +20,7 @@ set(BUILD_EXTENSIONS_AS_BUILTIN ON)
 remove_definitions(-DUNICODE)
 
 # Only if we need to actually build the library...
-add_subdirectory(python-cmake-buildsystem Python)
+add_subdirectory(cmake Python)
 
 #SET(PYTHON_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/Python-${PYTHON_VERSION}/Include)
 #SET(PYTHON_LIBRARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/Python/lib)
@@ -39,7 +39,6 @@ message("LIB: ${PYTHON_LIBRARIES}")
 
 ADD_PLUGIN(Python
     SOURCES
-        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/pythonplugin.cpp
