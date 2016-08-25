@@ -39,7 +39,8 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-class GRAPHPANELWIDGET_EXPORT GraphPanelsWidget : public QSplitter, public Core::CommonWidget
+class GRAPHPANELWIDGET_EXPORT GraphPanelsWidget : public QSplitter,
+                                                  public Core::CommonWidget
 {
     Q_OBJECT
 

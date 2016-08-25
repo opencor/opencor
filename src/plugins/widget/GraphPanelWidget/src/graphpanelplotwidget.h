@@ -147,7 +147,8 @@ typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
 
 //==============================================================================
 
-class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot, public Core::CommonWidget
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot,
+                                                     public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -235,6 +236,8 @@ private:
     bool mNeedContextMenu;
     QMenu *mContextMenu;
 
+    bool mCanUpdateActions;
+
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
@@ -288,6 +291,8 @@ signals:
                      const double &pMinY, const double &pMaxY);
 
 private slots:
+    void cannotUpdateActions();
+
     void copyToClipboard();
     void customAxes();
     void zoomIn();
