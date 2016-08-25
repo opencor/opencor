@@ -372,7 +372,7 @@ void EditorWidgetFindReplaceWidget::updateStyleSheet()
     QColor shadowColor = Core::shadowColor();
 
     setStyleSheet(QString("QToolButton {"
-                          "    border: 0px;"
+                          "    border: none;"
                           "    border-radius: 3px;"
                           "    padding: 1px;"
                           "}"

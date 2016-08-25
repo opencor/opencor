@@ -72,8 +72,6 @@ public:
 
     void handleArguments(const QStringList &pArguments);
 
-    bool shuttingDown() const;
-
     void showSelf();
 
 protected:
@@ -84,8 +82,6 @@ private:
     Ui::MainWindow *mGui;
 
     QString mApplicationDate;
-
-    bool mShuttingDown;
 
     QSettings *mSettings;
 
@@ -133,8 +129,6 @@ private:
     void showEnableActions(const QList<QAction *> &pActions);
 
 private slots:
-    void aboutToQuit();
-
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
     void handleMessage(const QString &pMessage);
 

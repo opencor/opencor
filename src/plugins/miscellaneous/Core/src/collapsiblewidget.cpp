@@ -108,7 +108,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
     mButton->setStyleSheet("QToolButton {"
-                           "    border: 0px;"
+                           "    border: none;"
                            "}"
                            ""
                            "QToolButton:pressed {"

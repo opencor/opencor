@@ -103,34 +103,40 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
-    // Create our layout and actions
+    // Create our layout
 
     createLayout();
 
+    // Create a tool bar
+
+    mToolBarWidget = new Core::ToolBarWidget(this);
+
+    // Create and handle various actions
+
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
-                                                      Qt::Key_F9, this);
+                                                      Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
-                                            QKeySequence(Qt::CTRL|Qt::Key_F2), this);
+                                            QKeySequence(Qt::CTRL|Qt::Key_F2), mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
-                                             this);
+                                             mToolBarWidget);
     mAddGraphPanelAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
-                                           this);
+                                           mToolBarWidget);
     mRemoveGraphPanelAction = Core::newAction(QIcon(":/oxygen/actions/list-remove.png"),
-                                              this);
-    mRemoveCurrentGraphPanelAction = Core::newAction(this);
-    mRemoveAllGraphPanelsAction = Core::newAction(this);
+                                              mToolBarWidget);
+    mRemoveCurrentGraphPanelAction = Core::newAction(mToolBarWidget);
+    mRemoveAllGraphPanelsAction = Core::newAction(mToolBarWidget);
     mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                                  this);
+                                                  mToolBarWidget);
     mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
-                                                 this);
+                                                 mToolBarWidget);
     mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
-                                                  this);
+                                                  mToolBarWidget);
     mSedmlExportAction = Core::newAction(QIcon(":/SEDMLSupport/logo.png"),
-                                         this);
-    mSedmlExportSedmlFileAction = Core::newAction(this);
-    mSedmlExportCombineArchiveAction = Core::newAction(this);
+                                         mToolBarWidget);
+    mSedmlExportSedmlFileAction = Core::newAction(mToolBarWidget);
+    mSedmlExportCombineArchiveAction = Core::newAction(mToolBarWidget);
     mCellmlOpenAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"),
-                                        this);
+                                        mToolBarWidget);
 
     connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(runPauseResumeSimulation()));
@@ -160,11 +166,11 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
 
-    mDelayWidget = new QwtWheel(this);
+    mDelayWidget = new QwtWheel(mToolBarWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    QWidget *delaySpaceWidget = new QWidget(this);
+    QWidget *delaySpaceWidget = new QWidget(mToolBarWidget);
 #endif
-    mDelayValueWidget = new QLabel(this);
+    mDelayValueWidget = new QLabel(mToolBarWidget);
 
     mDelayWidget->setBorderWidth(0);
     mDelayWidget->setFixedSize(0.07*qApp->desktop()->screenGeometry().width(),
@@ -182,13 +188,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     mDelayWidget->setValue(0.0);
 
-    // Create a tool bar widget with different buttons
-    // Note: not sure why, but if we create a tool bar widget with ourselves as
-    //       a parent then the first time round it will be properly styled, but
-    //       not the subsequent times while it works as expected if we use our
-    //       own parent as a parent...
-
-    mToolBarWidget = new Core::ToolBarWidget(pParent);
+    // Create various tool buttons
 
     QToolButton *removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
     QMenu *removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
@@ -236,6 +236,20 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
     simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
+    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
+        QString dataStoreName = dataStoreInterface->dataStoreName();
+        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
+
+        mDataStoreInterfaces.insert(action, dataStoreInterface);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(simulationDataExport()));
+    }
+
+    updateDataStoreActions();
+
+    // Add the various actions, wheel and tool buttons to our tool bar
+
     mToolBarWidget->addAction(mRunPauseResumeSimulationAction);
     mToolBarWidget->addAction(mStopSimulationAction);
     mToolBarWidget->addSeparator();
@@ -263,23 +277,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     layout()->addWidget(mToolBarWidget);
     layout()->addWidget(mTopSeparator);
-
-    // Populate our simulation data export drop-down menu with the given data
-    // store interfaces
-
-    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
-        QString dataStoreName = dataStoreInterface->dataStoreName();
-        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
-
-        mDataStoreInterfaces.insert(action, dataStoreInterface);
-
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(simulationDataExport()));
-    }
-
-    // Update our data store actions
-
-    updateDataStoreActions();
 
     // Create and add our invalid simulation message widget
 
@@ -1387,7 +1384,7 @@ void SingleCellViewSimulationWidget::removeCurrentGraphPanel()
 
     if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel()) {
         QCoreApplication::processEvents();
-        // Note: this ensures that our remaining graph panels get realisnged at
+        // Note: this ensures that our remaining graph panels get realigned at
         //       once...
     }
 }
