@@ -1,3 +1,7 @@
 [submodule "src/plugins/thirdParty/Python/cmake"]
 	path = src/plugins/thirdParty/Python/cmake
 	url = git@github.com:python-cmake-buildsystem/python-cmake-buildsystem.git
+[submodule "src/plugins/thirdParty/PythonQt/PythonQt"]
+	path = src/plugins/thirdParty/PythonQt/PythonQt
+	url = https://github.com/commontk/PythonQt
+	branch = patched-6
