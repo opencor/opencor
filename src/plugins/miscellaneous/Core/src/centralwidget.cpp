@@ -1842,13 +1842,6 @@ void CentralWidget::updateGui()
     emit atLeastTwoFiles(mFileTabs->count() > 1);
 
     mState = Idling;
-
-    // Our call to QCoreApplication::processEvents() may result in our file tab
-    // not being in sync with the contents of our view, in which case we need to
-    // update the latter by (re)updating our GUI
-
-    if (fileName.compare(currentFileName()))
-        updateGui();
 }
 
 //==============================================================================
