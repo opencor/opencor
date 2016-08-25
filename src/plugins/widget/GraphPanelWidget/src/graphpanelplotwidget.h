@@ -236,6 +236,8 @@ private:
     bool mNeedContextMenu;
     QMenu *mContextMenu;
 
+    bool mCanUpdateActions;
+
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
@@ -289,6 +291,8 @@ signals:
                      const double &pMinY, const double &pMaxY);
 
 private slots:
+    void cannotUpdateActions();
+
     void copyToClipboard();
     void customAxes();
     void zoomIn();

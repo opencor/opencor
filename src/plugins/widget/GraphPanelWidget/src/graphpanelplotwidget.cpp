@@ -477,10 +477,23 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanZoomInY(true),
     mCanZoomOutY(true),
     mNeedContextMenu(false),
+    mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
     mNeighbors(pNeighbors)
 {
+    // Keep track of when our grand parent (i.e. a GraphPanelsWidget object)
+    // gets destroyed
+    // Note: indeed, when that happens, all of its children (i.e.
+    //       GraphPanelWidget objects) will tell their plot's neighbours (i.e.
+    //       objects like this one) that they are not going to be their
+    //       neighbour anymore (see removeNeighbor()). This will, in turn,
+    //       involve updating our actions (see updateActions()), something that
+    //       we cannot do when our grand parent gets destroyed...
+
+    connect(pParent->parent(), SIGNAL(destroyed(QObject *)),
+            this, SLOT(cannotUpdateActions()));
+
     // Get ourselves a direct painter
 
     mDirectPainter = new QwtPlotDirectPainter(this);
@@ -639,11 +652,9 @@ void GraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void GraphPanelPlotWidget::updateActions()
 {
-    // Leave straightaway if we are about to quit
-    // Note: indeed, to update our actions when we are about to quit can cause
-    //       problems such as the one described in issue #1044...
+    // Leave straightaway if we cannot update our actions anymore
 
-    if (Core::aboutToQuit())
+    if (!mCanUpdateActions)
         return;
 
     // Update our actions
@@ -1519,6 +1530,15 @@ void GraphPanelPlotWidget::forceAlignWithNeighbors()
     // Force the re-alignment with our neighbours
 
     alignWithNeighbors(true, true);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::cannotUpdateActions()
+{
+    // Keep track of the fact that we cannot update our actions anymore
+
+    mCanUpdateActions = false;
 }
 
 //==============================================================================
