@@ -46,9 +46,9 @@ BusySupportWidget::BusySupportWidget() :
 
 bool BusySupportWidget::isBusyWidgetVisible() const
 {
-    // Return whether our busy widget is visible
+    // Return whether our busy widget is visible, i.e. whether it exists
 
-    return mBusyWidget?mBusyWidget->isVisible():false;
+    return mBusyWidget;
 }
 
 //==============================================================================
