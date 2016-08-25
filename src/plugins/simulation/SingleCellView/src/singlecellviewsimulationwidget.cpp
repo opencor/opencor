@@ -108,12 +108,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     createLayout();
 
     // Create a tool bar
-    // Note: not sure why, but if we create a tool bar widget with ourselves as
-    //       a parent then the first time round it will be properly styled, but
-    //       not the subsequent times while it works as expected if we use our
-    //       own parent as a parent...
 
-    mToolBarWidget = new Core::ToolBarWidget(pParent);
+    mToolBarWidget = new Core::ToolBarWidget(this);
 
     // Create and handle various actions
 
@@ -265,7 +261,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(simulationDataExportToolButton);
 
-    mTopSeparator = Core::newLineWidget(pParent);
+    mTopSeparator = Core::newLineWidget(this);
 
     layout()->addWidget(mToolBarWidget);
     layout()->addWidget(mTopSeparator);
@@ -289,7 +285,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create and add our invalid simulation message widget
 
-    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", pParent);
+    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
 
     layout()->addWidget(mInvalidModelMessageWidget);
 
@@ -298,7 +294,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     //       work fine even when mContentsWidget is not visible (which happens
     //       when a CellML file cannot be run for some reason or another)...
 
-    mSplitterWidget = new QSplitter(Qt::Vertical, pParent);
+    mSplitterWidget = new QSplitter(Qt::Vertical, this);
 
     connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
             this, SLOT(emitSplitterMoved()));
@@ -416,8 +412,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our (thin) simulation progress widget
 
-    mBottomSeparator = Core::newLineWidget(pParent);
-    mProgressBarWidget = new Core::ProgressBarWidget(pParent);
+    mBottomSeparator = Core::newLineWidget(this);
+    mProgressBarWidget = new Core::ProgressBarWidget(this);
 
     mProgressBarWidget->setFixedHeight(3);
     mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
