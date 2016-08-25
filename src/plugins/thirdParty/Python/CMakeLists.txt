@@ -16,9 +16,6 @@ set(BUILD_EXTENSIONS_AS_BUILTIN ON)
 #SET(ZLIB_INCLUDE_DIR...)
 
 
-# Remove when common.cmake is fixed...
-remove_definitions(-DUNICODE)
-
 # Only if we need to actually build the library...
 add_subdirectory(cmake Python)
 
