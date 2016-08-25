@@ -131,6 +131,11 @@ void BusySupportWidget::showGlobalProgressBusyWidget(QWidget *pParent)
 
 void BusySupportWidget::hideBusyWidget()
 {
+    // Make sure that we have a busy widget
+
+    if (!mBusyWidget)
+        return;
+
     // Determine our parent widget, if any, and enable it (or OpenCOR itself in
     // case our parent is the central widget)
 
