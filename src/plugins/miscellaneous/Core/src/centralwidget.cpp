@@ -1757,14 +1757,14 @@ void CentralWidget::updateGui()
         }
 
         hideBusyWidget();
-        // Note: normally, we would check for the file to be a remote one and
-        //       our busy widget to be visible before hiding it, but on starting
-        //       up OpenCOR, our busy widget will be shown, but it won't have
-        //       time to become visible by the time we need to hide it, which
-        //       means that it wouldn't get hidden and that it would become
+        // Note: normally, we would check that the same conditions (as the ones
+        //       needed to show our busy widget above) are met before hiding it,
+        //       but on starting OpenCOR, our busy widget will be shown, but it
+        //       won't have time to become visible by the time we need to hide
+        //       it, which means that it won't get hidden and that it will be
         //       visible by the time OpenCOR is fully initialised, which is
-        //       clearly not what we want, so we hide our busy widget in all
-        //       cases...
+        //       clearly not what we want, so we (try to) hide our busy widget
+        //       no matter what...
     }
 
     // Create a connection to update the tab icon for the current file and
@@ -1842,13 +1842,6 @@ void CentralWidget::updateGui()
     emit atLeastTwoFiles(mFileTabs->count() > 1);
 
     mState = Idling;
-
-    // Our call to QCoreApplication::processEvents() may result in our file tab
-    // not being in sync with the contents of our view, in which case we need to
-    // update the latter by (re)updating our GUI
-
-    if (fileName.compare(currentFileName()))
-        updateGui();
 }
 
 //==============================================================================

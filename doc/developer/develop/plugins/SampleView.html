@@ -423,18 +423,6 @@ QString SampleViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we have a view widget for the given file, which is always
-    // going to be the case since all we do is update some fields
-
-    Q_UNUSED(pFileName);
-
-    return true;
-}
-
-//==============================================================================
-
 QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our sample view widget using the given file
@@ -480,7 +468,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 292-297), its type (see <code>viewMode()</code>; lines 227-232), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 236-243), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 247-252) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 301-308). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 268-277). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. We also have a means to check whether a view already exists for a given file (see <code>hasViewWidget()</code>; lines 256-264). Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 281-288), which happens whenever a file gets closed.
+            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 280-285), its type (see <code>viewMode()</code>; lines 227-232), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 236-243), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 247-252) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 289-296). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 256-265). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 269-276), which happens whenever a file gets closed.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>

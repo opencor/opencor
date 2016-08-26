@@ -305,20 +305,6 @@ QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-bool RawSEDMLViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a SED-ML file
-
-    if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given SED-ML file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
 QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a SED-ML file

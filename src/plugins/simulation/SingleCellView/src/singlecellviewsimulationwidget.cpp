@@ -1384,7 +1384,7 @@ void SingleCellViewSimulationWidget::removeCurrentGraphPanel()
 
     if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel()) {
         QCoreApplication::processEvents();
-        // Note: this ensures that our remaining graph panels get realisnged at
+        // Note: this ensures that our remaining graph panels get realigned at
         //       once...
     }
 }
