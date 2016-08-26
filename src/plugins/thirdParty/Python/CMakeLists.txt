@@ -26,6 +26,9 @@ else()
     endif()
 endif()
 
+set(DEFINITIONS QT_NO_KEYWORDS)
+set(PYTHON_DEFINITIONS ${DEFINITIONS} PARENT_SCOPE)
+
 set(PYTHON_USE_STATIC_LIB ON)
 find_package(Python EXACT 3.5.2 REQUIRED
                     NO_DEFAULT_PATH
@@ -57,4 +60,6 @@ ADD_PLUGIN(Python
     PLUGIN_BINARIES
         ${ZLIB_PLUGIN_BINARY}
         ${PYTHON_LIBRARY}
+    DEFINITIONS
+        ${DEFINITIONS}
 )
