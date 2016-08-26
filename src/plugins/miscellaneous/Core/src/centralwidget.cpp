@@ -1716,7 +1716,6 @@ void CentralWidget::updateGui()
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
     Plugin *viewPlugin = mode?mode->viewPlugins()[mode->viewTabs()->currentIndex()]:0;
-    FileHandlingInterface *fileHandlingInterface = viewPlugin?qobject_cast<FileHandlingInterface *>(viewPlugin->instance()):0;
     ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
     QWidget *newView;
 
@@ -1728,24 +1727,13 @@ void CentralWidget::updateGui()
         // it
 
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
-        bool hasView = mViews.value(fileViewKey);
-
-        if (   (   FileManager::instance()->isRemote(fileName)
-                || (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false))
-            && !isBusyWidgetVisible() && !hasView) {
-            // Note: we check whether the busy widget is visible since we may be
-            //       coming here as a result of the user opening a remote file,
-            //       as opposed to just switching files/modes/views...
-
-            showBusyWidget(this);
-        }
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
         if (newView) {
             // We could get a view for the current file, so keep track of it
 
-            if (!hasView)
+            if (!mViews.value(fileViewKey))
                 mViews.insert(fileViewKey, newView);
         } else {
             // The interface doesn't have a view for the current file, so use
@@ -1755,16 +1743,6 @@ void CentralWidget::updateGui()
 
             updateNoViewMsg();
         }
-
-        hideBusyWidget();
-        // Note: normally, we would check that the same conditions (as the ones
-        //       needed to show our busy widget above) are met before hiding it,
-        //       but on starting OpenCOR, our busy widget will be shown, but it
-        //       won't have time to become visible by the time we need to hide
-        //       it, which means that it won't get hidden and that it will be
-        //       visible by the time OpenCOR is fully initialised, which is
-        //       clearly not what we want, so we (try to) hide our busy widget
-        //       no matter what...
     }
 
     // Create a connection to update the tab icon for the current file and
