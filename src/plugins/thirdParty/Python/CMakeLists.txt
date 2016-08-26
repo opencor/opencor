@@ -1,36 +1,43 @@
 PROJECT(PythonPlugin)
 
-# Build Python
-set(PYTHON_VERSION 3.5.2)
+## Build Python
+set(USE_PREBUILT_PYTHON ON)
 
-set(INSTALL_MANUAL OFF)
-set(INSTALL_TEST OFF)
-set(BUILD_LIBPYTHON_SHARED OFF)
-set(BUILD_EXTENSIONS_AS_BUILTIN ON)
+set(PYTHON_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Python)
 
+if(USE_PREBUILT_PYTHON)
+    # Download and untar into PYTHON_ROOT_DIR
+else()
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build)
+    execute_process(COMMAND cmake -DCMAKE_INSTALL_PREFIX=${PYTHON_ROOT_DIR}
+                                  -G Ninja ${CMAKE_CURRENT_SOURCE_DIR}/build
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build
+                    RESULT_VARIABLE PYTHON_CONFIGURE
+                    )
+    if(PYTHON_CONFIGURE)
+        message(FATAL_ERROR "Unable to configure Python: ${PYTHON_CONFIGURE}")
+    endif()
+    execute_process(COMMAND ninja install
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build
+                    RESULT_VARIABLE PYTHON_BUILD
+                    )
+    if(PYTHON_BUILD)
+        message(FATAL_ERROR "Unable to build and install Python: ${PYTHON_BUILD}")
+    endif()
+endif()
 
-#USE_LIB64
+set(PYTHON_USE_STATIC_LIB ON)
+find_package(Python EXACT 3.5.2 REQUIRED
+                    NO_DEFAULT_PATH
+                    PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Python
+           )
+get_property(PYTHON_LIBRARY TARGET ${PYTHON_LIBRARIES}
+                            PROPERTY IMPORTED_LOCATION_RELEASE
+            )
+set(PYTHON_PLUGIN_BINARY ${PYTHON_LIBRARY} PARENT_SCOPE)
 
-#option(USE_SYSTEM_LIBRARIES "Use system libraries" ON)
-#SET(USE_SYSTEM_ZLIB OFF)
-#SET(ZLIB_INCLUDE_DIR...)
-
-
-# Only if we need to actually build the library...
-add_subdirectory(cmake Python)
-
-#SET(PYTHON_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/Python-${PYTHON_VERSION}/Include)
-#SET(PYTHON_LIBRARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/Python/lib)
-##libpython3.5m.a)
-
-SET(CMAKE_FIND_ROOT_PATH ${CMAKE_CURRENT_BINARY_DIR}/Python)
-SET(PYTHON_USE_STATIC_LIB ON)
-SET(PYTHON_TARGETS_IMPORTED ON)
-FIND_PACKAGE(Python ${PYTHON_VERSION} EXACT REQUIRED)
-
-message("INC: ${PYTHON_INCLUDE_DIRS}")
-message("LIB: ${PYTHON_LIBRARIES}")
-
+message("PYTHON LIBRARY: ${PYTHON_LIBRARY}")
+message("PYTHON INCLUDES: ${PYTHON_INCLUDE_DIRS}")
 
 # Add the plugin
 
@@ -49,4 +56,5 @@ ADD_PLUGIN(Python
         ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
         ${ZLIB_PLUGIN_BINARY}
+        ${PYTHON_LIBRARY}
 )
