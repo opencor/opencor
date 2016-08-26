@@ -1,7 +1,7 @@
 PROJECT(PythonPlugin)
 
 ## Build Python
-set(USE_PREBUILT_PYTHON ON)
+set(USE_PREBUILT_PYTHON OFF)
 
 SET(PYTHON_VERSION 3.5.2)
 
