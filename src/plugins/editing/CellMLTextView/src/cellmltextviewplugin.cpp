@@ -415,7 +415,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (errorMessage.isEmpty()) {
         if (pImport) {
-            OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
+            CellMLTextView::CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
@@ -427,9 +427,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 std::cout << converterOutputByteArray.constData();
             }
         } else {
-            OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+            CellMLTextView::CellmlTextViewParser parser;
 
-            if (!parser.execute(fileContents, OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1)) {
+            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
