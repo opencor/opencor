@@ -57,22 +57,22 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
     connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
 
-    // Create our editor and editor list
+    // Create our editor and editor list widgets
 
-    mEditor = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
-    mEditorList = new EditorWidget::EditorListWidget(this);
+    mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
+    mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
-    connect(mEditorList, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
+    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
             this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
 
-    // Add the bordered editor and editor list to ourselves
+    // Add the bordered editor and editor list widgets to ourselves
 
-    addWidget(new Core::BorderedWidget(mEditor, false, false, true, false));
-    addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
+    addWidget(new Core::BorderedWidget(mEditorWidget, false, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditorListWidget, true, false, false, false));
 
     // Set our focus proxy to our editor
 
-    setFocusProxy(mEditor);
+    setFocusProxy(mEditorWidget);
 }
 
 //==============================================================================
@@ -84,13 +84,12 @@ static const auto SettingsSedmlEditingViewWidgetSizes = QStringLiteral("SedmlEdi
 void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set our sizes
-    // Note #1: the editor list's default height is 13% of the desktop's height
-    //          while that of the editor
-    //          is as big as it can be...
-    // Note #2: because the editor's default height is much bigger than that of
-    //          our widget, the editor list's default height will effectively be
-    //          less than 13% of the desktop's height, but that doesn't matter
-    //          at all...
+    // Note #1: the editor list widget's default height is 13% of the desktop's
+    //          height while that of the editor widget is as big as it can be...
+    // Note #2: because the editor widget's default height is much bigger than
+    //          that of our widget, the editor list widget's default height will
+    //          effectively be less than 13% of the desktop's height, but that
+    //          doesn't matter at all...
 
     QVariantList defaultSedmlEditingViewWidgetSizes = QVariantList() << qApp->desktop()->screenGeometry().height()
                                                                      << 0.13*qApp->desktop()->screenGeometry().height();
@@ -99,9 +98,9 @@ void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
 
     setSizes(mEditingWidgetSizes);
 
-    // Retrieve our editor's settings
+    // Retrieve our editor widget's settings
 
-    mEditor->loadSettings(pSettings);
+    mEditorWidget->loadSettings(pSettings);
 }
 
 //==============================================================================
@@ -112,19 +111,19 @@ void SedmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsSedmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
-    // Keep track of our editor's settings
+    // Keep track of our editor widget's settings
 
-    mEditor->saveSettings(pSettings);
+    mEditorWidget->saveSettings(pSettings);
 }
 
 //==============================================================================
 
 void SedmlEditingViewWidget::retranslateUi()
 {
-    // Retranslate our editor and editor list
+    // Retranslate our editor and editor list widgets
 
-    mEditor->retranslateUi();
-    mEditorList->retranslateUi();
+    mEditorWidget->retranslateUi();
+    mEditorListWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -136,31 +135,31 @@ void SedmlEditingViewWidget::updateSettings(SedmlEditingViewWidget *pSedmlEditin
     if (!pSedmlEditingViewWidget || (pSedmlEditingViewWidget == this))
         return;
 
-    // Update our sizes and editor settings
+    // Update our sizes and editor widget's settings
 
     mEditingWidgetSizes = pSedmlEditingViewWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mEditor->updateSettings(pSedmlEditingViewWidget->editor());
+    mEditorWidget->updateSettings(pSedmlEditingViewWidget->editorWidget());
 }
 
 //==============================================================================
 
-EditorWidget::EditorWidget * SedmlEditingViewWidget::editor() const
+EditorWidget::EditorWidget * SedmlEditingViewWidget::editorWidget() const
 {
-    // Return our editor
+    // Return our editor widget
 
-    return mEditor;
+    return mEditorWidget;
 }
 
 //==============================================================================
 
-EditorWidget::EditorListWidget * SedmlEditingViewWidget::editorList() const
+EditorWidget::EditorListWidget * SedmlEditingViewWidget::editorListWidget() const
 {
-    // Return our editor list
+    // Return our editor list widget
 
-    return mEditorList;
+    return mEditorListWidget;
 }
 
 //==============================================================================
@@ -185,13 +184,13 @@ void SedmlEditingViewWidget::splitterMoved()
 
 void SedmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
 {
-    // Set our editor's cursor position to the line/column of the given item and
-    // give our editor the focus so that we can see the exact location of the
-    // item (otherwise it will be mEditorList that will have the focus since we
-    // just double-clicked on it)
+    // Set our editor widget's cursor position to the line/column of the given
+    // item and give our editor widget the focus so that we can see the exact
+    // location of the item (otherwise it will be mEditorListWidget that will
+    // have the focus since we just double-clicked on it)
 
-    mEditor->setCursorPosition(pItem->line()-1, pItem->column()-1);
-    mEditor->setFocus();
+    mEditorWidget->setCursorPosition(pItem->line()-1, pItem->column()-1);
+    mEditorWidget->setFocus();
 }
 
 //==============================================================================

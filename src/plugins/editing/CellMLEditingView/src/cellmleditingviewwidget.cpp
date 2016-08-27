@@ -58,20 +58,21 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
 
-    // Create our viewer, editor and editor list widgets
+    // Create our MathML viewer, editor and editor list widgets
 
     mMathmlViewerWidget = new MathMLViewerWidget::MathmlViewerWidget(this);
     mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
-    mEditorWidgetList = new EditorWidget::EditorListWidget(this);
+    mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
-    connect(mEditorWidgetList, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
+    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
             this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
 
-    // Add the bordered viewer, editor and editor list widgets to ourselves
+    // Add the bordered MathML viewer, editor and editor list widgets to
+    // ourselves
 
     addWidget(new Core::BorderedWidget(mMathmlViewerWidget, false, false, true, false));
     addWidget(new Core::BorderedWidget(mEditorWidget, true, false, true, false));
-    addWidget(new Core::BorderedWidget(mEditorWidgetList, true, false, false, false));
+    addWidget(new Core::BorderedWidget(mEditorListWidget, true, false, false, false));
 
     // Set our focus proxy to our editor
 
@@ -87,13 +88,14 @@ static const auto SettingsCellmlEditingViewWidgetSizes = QStringLiteral("CellmlE
 void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set our sizes
-    // Note #1: the viewer's and editor list's default height is 19% and 13%,
-    //          respectively, of the desktop's height while that of the editor
-    //          is as big as it can be...
-    // Note #2: because the editor's default height is much bigger than that of
-    //          our widget, the viewer's and editor list's default height will
-    //          effectively be less than 19% and 13%, respectively, of the
-    //          desktop's height, but that doesn't matter at all...
+    // Note #1: the MathML viewer and editor list widgets' default height is 19%
+    //          and 13%, respectively, of the desktop's height while that of the
+    //          editor widget is as big as it can be...
+    // Note #2: because the editor widget's default height is much bigger than
+    //          that of our widget, the MathML viewer and editor list widgets'
+    //          default height will effectively be less than 19% and 13%,
+    //          respectively, of the desktop's height, but that doesn't matter
+    //          at all...
 
     QVariantList defaultCellmlEditingViewWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
                                                                       << qApp->desktop()->screenGeometry().height()
@@ -103,7 +105,7 @@ void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
 
     setSizes(mEditingWidgetSizes);
 
-    // Retrieve our viewer widget's and editor widget's settings
+    // Retrieve our MathML viewer and editor widgets' settings
 
     mMathmlViewerWidget->loadSettings(pSettings);
     mEditorWidget->loadSettings(pSettings);
@@ -117,7 +119,7 @@ void CellmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsCellmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
-    // Keep track of our viewer widget's and editor widget's settings
+    // Keep track of our MathML viewer and editor widgets' settings
 
     mMathmlViewerWidget->saveSettings(pSettings);
     mEditorWidget->saveSettings(pSettings);
@@ -127,11 +129,11 @@ void CellmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
 void CellmlEditingViewWidget::retranslateUi()
 {
-    // Retranslate our viewer, editor and editor list widget
+    // Retranslate our MathML viewer, editor and editor list widgets
 
     mMathmlViewerWidget->retranslateUi();
     mEditorWidget->retranslateUi();
-    mEditorWidgetList->retranslateUi();
+    mEditorListWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -143,7 +145,7 @@ void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pCellmlEdi
     if (!pCellmlEditingViewWidget || (pCellmlEditingViewWidget == this))
         return;
 
-    // Update our sizes, viewer widget settings and editor widget settings
+    // Update our sizes, MathML viewer and editor widgets' settings
 
     mEditingWidgetSizes = pCellmlEditingViewWidget->editingWidgetSizes();
 
@@ -173,11 +175,11 @@ EditorWidget::EditorWidget * CellmlEditingViewWidget::editorWidget() const
 
 //==============================================================================
 
-EditorWidget::EditorListWidget * CellmlEditingViewWidget::editorList() const
+EditorWidget::EditorListWidget * CellmlEditingViewWidget::editorListWidget() const
 {
     // Return our editor list widget
 
-    return mEditorWidgetList;
+    return mEditorListWidget;
 }
 
 //==============================================================================
@@ -202,10 +204,10 @@ void CellmlEditingViewWidget::splitterMoved()
 
 void CellmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
 {
-    // Set our editor's cursor position to the line/column of the given item and
-    // give our editor the focus so that we can see the exact location of the
-    // item (otherwise it will be mEditorList that will have the focus since we
-    // just double-clicked on it)
+    // Set our editor widget's cursor position to the line/column of the given
+    // item and give our editor widget the focus so that we can see the exact
+    // location of the item (otherwise it will be mEditorListWidget that will
+    // have the focus since we just double-clicked on it)
 
     mEditorWidget->setCursorPosition(pItem->line()-1, pItem->column()-1);
     mEditorWidget->setFocus();

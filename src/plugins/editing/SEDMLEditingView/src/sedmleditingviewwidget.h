@@ -72,14 +72,14 @@ public:
 
     void updateSettings(SedmlEditingViewWidget *pSedmlEditingViewWidget);
 
-    EditorWidget::EditorWidget * editor() const;
-    EditorWidget::EditorListWidget * editorList() const;
+    EditorWidget::EditorWidget * editorWidget() const;
+    EditorWidget::EditorListWidget * editorListWidget() const;
 
     QIntList editingWidgetSizes() const;
 
 private:
-    EditorWidget::EditorWidget *mEditor;
-    EditorWidget::EditorListWidget *mEditorList;
+    EditorWidget::EditorWidget *mEditorWidget;
+    EditorWidget::EditorListWidget *mEditorListWidget;
 
     QIntList mEditingWidgetSizes;
 
