@@ -280,7 +280,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             foreach (const CellMLTextViewConverterWarning &warning, mConverter.warnings()) {
-                editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Warning,
+                editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
                                                         successfulConversion?-1:warning.line(),
                                                         successfulConversion?
                                                             QString("[%1] ").arg(warning.line())+warning.message().arg(" "+tr("in the original CellML file")):
@@ -313,12 +313,12 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             //       same as above, but this will take a wee bit of time while
             //       we want it done straightaway...
 
-            editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Error,
+            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Error,
                                                     mConverter.errorLine(),
                                                     mConverter.errorColumn(),
                                                     Core::formatMessage(mConverter.errorMessage(), false)+".");
 
-            editingWidget->editorList()->addItem(EditorWidget::EditorListItem::Hint,
+            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Hint,
                                                     tr("You might want to use the Raw (CellML) view to edit the file."));
 
             // Apply an XML lexer to our editor
@@ -380,7 +380,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             // Note: we use a single shot to give time to the setting up of the
             //       editing widget to complete...
 
-            mEditorLists << newEditingWidget->editorList();
+            mEditorLists << newEditingWidget->editorListWidget();
 
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
         }
@@ -758,7 +758,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
     if (data) {
         CellMLEditingView::CellmlEditingViewWidget *editingWidget = data->editingWidget();
 
-        editingWidget->editorList()->clear();
+        editingWidget->editorListWidget()->clear();
 
         bool res = mParser.execute(editingWidget->editorWidget()->contents(),
                                    data->cellmlVersion());
@@ -769,7 +769,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
         foreach (const CellmlTextViewParserMessage &message, mParser.messages()) {
             if (   !pOnlyErrors
                 || (message.type() == CellmlTextViewParserMessage::Error)) {
-                editingWidget->editorList()->addItem((message.type() == CellmlTextViewParserMessage::Error)?
+                editingWidget->editorListWidget()->addItem((message.type() == CellmlTextViewParserMessage::Error)?
                                                          EditorWidget::EditorListItem::Error:
                                                          EditorWidget::EditorListItem::Warning,
                                                      message.line(), message.column(),
@@ -777,7 +777,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
             }
         }
 
-        selectFirstItemInEditorList(editingWidget->editorList());
+        selectFirstItemInEditorList(editingWidget->editorListWidget());
 
         return res;
     } else {
@@ -1206,7 +1206,7 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorWidget::EditorListW
         mEditorLists.removeFirst();
 
         foreach (CellmlTextViewWidgetData *data, mData.values()) {
-            if (data->editingWidget()->editorList() == editorList) {
+            if (data->editingWidget()->editorListWidget() == editorList) {
                 editorList->selectFirstItem();
 
                 break;

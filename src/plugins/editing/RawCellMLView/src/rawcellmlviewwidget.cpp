@@ -328,7 +328,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
     if (editingWidget) {
         // Clear the list of CellML issues
 
-        EditorWidget::EditorListWidget *editorList = editingWidget->editorList();
+        EditorWidget::EditorListWidget *editorList = editingWidget->editorListWidget();
 
         editorList->clear();
 
