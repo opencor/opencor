@@ -185,7 +185,7 @@ enum {
 
 HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                                    const QUrl &pHomePage, QWidget *pParent) :
-    OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
+    WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(),
     mHelpEngine(pHelpEngine),
     mHomePage(pHomePage),
@@ -374,7 +374,7 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     } else {
         // Something else, so use the default handling of the event
 
-        OpenCOR::WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
+        WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
     }
 }
 
@@ -398,7 +398,7 @@ void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
         // Not the modifier we were expecting, so call the default handling of
         // the event
 
-        OpenCOR::WebViewerWidget::WebViewerWidget::wheelEvent(pEvent);
+        WebViewerWidget::WebViewerWidget::wheelEvent(pEvent);
     }
 }
 

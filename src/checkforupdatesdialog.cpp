@@ -65,7 +65,7 @@ void CheckForUpdatesEngine::check()
 
     mNewerVersions.clear();
 
-    if (OpenCOR::readFileContentsFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
+    if (readFileContentsFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
         QJsonParseError jsonParseError;
         QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
