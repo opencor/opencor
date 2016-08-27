@@ -652,7 +652,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     // Hide our busy widget (just to be on the safe side)
 
-    mViewWidget->hideBusyWidget();
+    mOutput->hideBusyWidget();
 
     // Show/hide our output message and output for ontological terms
 
@@ -662,7 +662,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     // Show our busy widget instead, if needed
 
     if (showBusyWidget)
-        mViewWidget->showBusyWidget(mOutput);
+        mOutput->showBusyWidget();
 }
 
 //==============================================================================
@@ -1138,7 +1138,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
 {
     // Resize our busy widget
 
-    mViewWidget->resizeBusyWidget();
+    mOutput->resizeBusyWidget();
 }
 
 //==============================================================================

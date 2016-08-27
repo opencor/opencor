@@ -879,7 +879,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         //       to do about it here. On the other hand, if the opening fails,
         //       we have to hide our busy widget...
 
-        showBusyWidget(this);
+        showBusyWidget();
 
         QString fileContents;
         QString errorMessage;
@@ -988,7 +988,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                 // Note: our busy widget will get hidden in fileReloaded()...
 
                 if (fileManagerInstance->isRemote(fileName)) {
-                    showBusyWidget(this);
+                    showBusyWidget();
 
                     QString url = fileManagerInstance->url(fileName);
                     QString fileContents;
@@ -1725,6 +1725,8 @@ void CentralWidget::updateGui()
         // There is a current file, so retrieve its view, showing our busy
         // widget, if we are dealing with a remote file or if the view requires
         // it
+//---ISSUE1082--- FIND A WAY TO SHOW OUR BUSY WIDGET WITHOUT AFFECTING THE
+//                CREATION OF THE VIEW WIDGET...
 
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
 
@@ -1743,6 +1745,11 @@ void CentralWidget::updateGui()
 
             updateNoViewMsg();
         }
+
+        hideBusyWidget();
+        // Note: our busy widget may have been shown (e.g. as a result of
+        //       opening a (new) remote file), so we need to make sure that it's
+        //       not visible anymore...
     }
 
     // Create a connection to update the tab icon for the current file and
@@ -2057,7 +2064,7 @@ void CentralWidget::fileReloaded(const QString &pFileName,
 
     if (   (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(pFileName):false)
         && !isBusyWidgetVisible()) {
-        showBusyWidget(this);
+        showBusyWidget();
     }
 
     // Let all our plugins, but the current one (if requested), know about the

@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "busysupportwidget.h"
 #include "commonwidget.h"
 #include "coreglobal.h"
 
@@ -39,8 +38,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT WindowWidget : public QDockWidget, public CommonWidget,
-                                 public BusySupportWidget
+class CORE_EXPORT WindowWidget : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 

@@ -45,7 +45,7 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
                                                QsciLexer *pLexer,
                                                QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mEditingWidgetSizes(QIntList())
 {
     // Set our orientation

@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "busysupportwidget.h"
 #include "coreglobal.h"
 #include "widget.h"
 
@@ -35,7 +34,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT ViewWidget : public Widget, public BusySupportWidget
+class CORE_EXPORT ViewWidget : public Widget
 {
     Q_OBJECT
 

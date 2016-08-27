@@ -93,33 +93,11 @@ BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
 
 //==============================================================================
 
-QWidget * BusyWidget::effectiveParentWidget() const
+bool BusyWidget::isGlobal() const
 {
-    // Return our effective parent widget, which if we are global means
-    // returning the central widget, if possible
+    // Return whether we are global
 
-    if (mGlobal) {
-        QWidget *currentParentWidget = parentWidget();
-
-        if (currentParentWidget) {
-            forever {
-                if (currentParentWidget) {
-                    CentralWidget *centralWidget = qobject_cast<CentralWidget *>(currentParentWidget);
-
-                    if (centralWidget)
-                        return centralWidget;
-                    else
-                        currentParentWidget = currentParentWidget->parentWidget();
-                } else {
-                    return parentWidget();
-                }
-            }
-        } else {
-            return 0;
-        }
-    } else {
-        return parentWidget();
-    }
+    return mGlobal;
 }
 
 //==============================================================================

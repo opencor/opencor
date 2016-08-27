@@ -2348,7 +2348,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     bool visible = isVisible();
 
     if (visible)
-        mPlugin->viewWidget()->showGlobalBusyWidget(this);
+        showGlobalBusyWidget();
 
     bool validSimulationEnvironment = doFurtherInitialize();
 
@@ -2358,7 +2358,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
         initializeSimulation();
 
     if (visible)
-        mPlugin->viewWidget()->hideBusyWidget();
+        hideBusyWidget();
 }
 
 //==============================================================================
@@ -2402,7 +2402,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
-        mPlugin->viewWidget()->showGlobalProgressBusyWidget(this);
+        showGlobalProgressBusyWidget();
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
 
@@ -3248,7 +3248,7 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
 {
     // We are done with the export, so hide our busy widget
 
-    mPlugin->viewWidget()->hideBusyWidget();
+    hideBusyWidget();
 
     // Display the given error message, if any
 
@@ -3264,7 +3264,7 @@ void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProg
 {
     // There has been some progress with our export, so update our busy widget
 
-    mPlugin->viewWidget()->setBusyWidgetProgress(pProgress);
+    setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

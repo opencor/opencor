@@ -46,7 +46,7 @@ public:
     explicit BusyWidget(QWidget *pParent, const bool &pGlobal,
                         const double &pProgress);
 
-    QWidget * effectiveParentWidget() const;
+    bool isGlobal() const;
 
     int fps() const;
     void setFps(const int &pFps);

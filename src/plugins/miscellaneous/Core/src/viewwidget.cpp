@@ -30,8 +30,7 @@ namespace Core {
 //==============================================================================
 
 ViewWidget::ViewWidget(QWidget *pParent) :
-    Widget(pParent),
-    BusySupportWidget()
+    Widget(pParent)
 {
 }
 
