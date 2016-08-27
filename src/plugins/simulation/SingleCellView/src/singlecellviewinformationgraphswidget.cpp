@@ -236,8 +236,8 @@ void SingleCellViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                     GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SingleCellViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // Make sure that we have a property editor
 
