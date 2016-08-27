@@ -154,9 +154,9 @@ void RawSedmlViewWidget::initialize(const QString &pFileName,
         //       our 'old' editing widget (see CentralWidget::updateGui()),
         //       which is clearly not what we want...
 
-        setFocusProxy(newEditingWidget->editor());
+        setFocusProxy(newEditingWidget->editorWidget());
 
-        newEditingWidget->editor()->setFocus();
+        newEditingWidget->editorWidget()->setFocus();
     } else {
         // Hide our 'new' editing widget
 
@@ -238,7 +238,7 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editor():0;
+    return editingWidget?editingWidget->editorWidget():0;
 }
 
 //==============================================================================
@@ -257,8 +257,8 @@ QList<QWidget *> RawSedmlViewWidget::statusBarWidgets() const
     // Return our status bar widgets
 
     if (mEditingWidget) {
-        return QList<QWidget *>() << mEditingWidget->editor()->cursorPositionWidget()
-                                  << mEditingWidget->editor()->editingModeWidget();
+        return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
+                                  << mEditingWidget->editorWidget()->editingModeWidget();
     } else {
         return QList<QWidget *>();
     }
@@ -276,14 +276,14 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
         int cursorLine;
         int cursorColumn;
 
-        editingWidget->editor()->cursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->cursorPosition(cursorLine, cursorColumn);
 
         QDomDocument domDocument;
 
-        domDocument.setContent(editingWidget->editor()->contents());
+        domDocument.setContent(editingWidget->editorWidget()->contents());
 
-        editingWidget->editor()->setContents(Core::serialiseDomDocument(domDocument), true);
-        editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
+        editingWidget->editorWidget()->setCursorPosition(cursorLine, cursorColumn);
     }
 }
 
@@ -299,7 +299,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
     if (editingWidget) {
         // Clear the list of SED-ML issues
 
-        EditorWidget::EditorListWidget *editorList = editingWidget->editorList();
+        EditorWidget::EditorListWidget *editorList = editingWidget->editorListWidget();
 
         editorList->clear();
 
@@ -308,7 +308,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
         SEDMLSupport::SedmlFile *sedmlFile = SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
         SEDMLSupport::SedmlFileIssues sedmlFileIssues;
 
-        bool res = sedmlFile->isValid(editingWidget->editor()->contents(), sedmlFileIssues);
+        bool res = sedmlFile->isValid(editingWidget->editorWidget()->contents(), sedmlFileIssues);
 
         // Add whatever issue there may be to our list and select the first one
         // of them

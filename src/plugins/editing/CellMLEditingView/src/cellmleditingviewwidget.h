@@ -80,14 +80,14 @@ public:
 
     MathMLViewerWidget::MathmlViewerWidget * mathmlViewer() const;
     EditorWidget::EditorWidget * editorWidget() const;
-    EditorWidget::EditorListWidget * editorList() const;
+    EditorWidget::EditorListWidget * editorListWidget() const;
 
     QIntList editingWidgetSizes() const;
 
 private:
     MathMLViewerWidget::MathmlViewerWidget *mMathmlViewerWidget;
     EditorWidget::EditorWidget *mEditorWidget;
-    EditorWidget::EditorListWidget *mEditorWidgetList;
+    EditorWidget::EditorListWidget *mEditorListWidget;
 
     QIntList mEditingWidgetSizes;
 
