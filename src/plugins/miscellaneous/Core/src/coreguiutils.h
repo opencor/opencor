@@ -61,6 +61,13 @@ class CentralWidget;
 
 CentralWidget CORE_EXPORT * centralWidget();
 
+bool CORE_EXPORT readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
+                                                       QByteArray &pFileContents,
+                                                       QString *pErrorMessage = 0);
+bool CORE_EXPORT readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
+                                                       QString &pFileContents,
+                                                       QString *pErrorMessage = 0);
+
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = 0);
