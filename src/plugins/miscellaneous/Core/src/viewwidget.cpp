@@ -36,19 +36,6 @@ ViewWidget::ViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void ViewWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::resizeEvent(pEvent);
-
-    // (Re)size our busy widget
-
-    resizeBusyWidget();
-}
-
-//==============================================================================
-
 QList<QWidget *> ViewWidget::statusBarWidgets() const
 {
     // No status bar widgets by default

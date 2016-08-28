@@ -224,8 +224,6 @@ private slots:
     void addTerm();
 
     void showCustomContextMenu();
-
-    void recenterBusyWidget();
 };
 
 //==============================================================================

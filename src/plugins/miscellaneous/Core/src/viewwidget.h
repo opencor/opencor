@@ -45,9 +45,6 @@ public:
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
-protected:
-    void resizeEvent(QResizeEvent *pEvent);
-
 signals:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);

@@ -111,9 +111,9 @@ void Widget::resizeEvent(QResizeEvent *pEvent)
 
     QWidget::resizeEvent(pEvent);
 
-    // Let people know that we have been resized
+    // Resize our busy widget
 
-    emit resized(pEvent->size(), pEvent->oldSize());
+    resizeBusyWidget();
 }
 
 //==============================================================================

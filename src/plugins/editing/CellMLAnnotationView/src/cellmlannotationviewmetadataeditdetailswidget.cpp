@@ -321,9 +321,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutput->createLayout();
 
-    connect(mOutput, SIGNAL(resized(const QSize &, const QSize &)),
-            this, SLOT(recenterBusyWidget()));
-
     // Create our output message (within a scroll area, in case the label is too
     // wide)
 
@@ -1130,15 +1127,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::copy()
         QApplication::clipboard()->setText(mUrls.value(mTextContent));
     else
         QApplication::clipboard()->setText(mUrls.value(mLink));
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
-{
-    // Resize our busy widget
-
-    mOutput->resizeBusyWidget();
 }
 
 //==============================================================================

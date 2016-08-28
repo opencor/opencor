@@ -1564,19 +1564,6 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-void CentralWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::resizeEvent(pEvent);
-
-    // (Re)size our busy widget
-
-    resizeBusyWidget();
-}
-
-//==============================================================================
-
 Plugin * CentralWidget::viewPlugin(const int &pIndex) const
 {
     // Return the view plugin associated with the file, which index is given

@@ -128,7 +128,6 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     enum State {
