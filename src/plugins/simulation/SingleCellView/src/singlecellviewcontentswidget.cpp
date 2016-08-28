@@ -40,7 +40,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
                                                            SingleCellViewSimulationWidget *pSimulationWidget,
                                                            QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget()
+    Core::CommonWidget(this)
 {
     // Keep track of our movement
 

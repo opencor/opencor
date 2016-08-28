@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "busysupportwidget.h"
 #include "file.h"
 #include "filetypeinterface.h"
 #include "guiinterface.h"
@@ -88,7 +87,7 @@ private:
 
 //==============================================================================
 
-class CentralWidget : public Widget, public BusySupportWidget
+class CentralWidget : public Widget
 {
     Q_OBJECT
 
@@ -129,7 +128,6 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     enum State {

@@ -55,11 +55,9 @@ enum {
 
 //==============================================================================
 
-BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
-                       const double &pProgress) :
+BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
     QWidget(pParent),
     mParent(pParent),
-    mGlobal(pGlobal),
     mFps(0),
     mForegroundColor(Qt::white),
     mBackgroundColor(QColor(54, 96, 146)),
@@ -89,37 +87,6 @@ BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
 
     if (pProgress == -1.0)
         mTimer->start();
-}
-
-//==============================================================================
-
-QWidget * BusyWidget::effectiveParentWidget() const
-{
-    // Return our effective parent widget, which if we are global means
-    // returning the central widget, if possible
-
-    if (mGlobal) {
-        QWidget *currentParentWidget = parentWidget();
-
-        if (currentParentWidget) {
-            forever {
-                if (currentParentWidget) {
-                    CentralWidget *centralWidget = qobject_cast<CentralWidget *>(currentParentWidget);
-
-                    if (centralWidget)
-                        return centralWidget;
-                    else
-                        currentParentWidget = currentParentWidget->parentWidget();
-                } else {
-                    return parentWidget();
-                }
-            }
-        } else {
-            return 0;
-        }
-    } else {
-        return parentWidget();
-    }
 }
 
 //==============================================================================

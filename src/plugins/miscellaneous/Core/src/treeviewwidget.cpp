@@ -43,7 +43,7 @@ namespace Core {
 
 TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
-    CommonWidget()
+    CommonWidget(this)
 {
     // Set some properties
 

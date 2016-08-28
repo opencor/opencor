@@ -49,7 +49,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
                                                                              SingleCellViewSimulationWidget *pSimulationWidget,
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mPlugin(pPlugin),
     mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
