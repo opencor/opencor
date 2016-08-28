@@ -24,10 +24,11 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
+#include "PythonQt.h"
 
 //==============================================================================
 
+#include <Qt>
 #include <QSettings>
 
 //==============================================================================
@@ -45,7 +46,7 @@ PLUGININFO_FUNC PythonQtPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension ..."));
 
     return new PluginInfo("Third-party", false, true,
-                          QStringList(),
+                          QStringList() << "Python",
                           descriptions);
 }
 
@@ -55,14 +56,18 @@ PLUGININFO_FUNC PythonQtPluginInfo()
 
 void PythonQtPlugin::initializePlugin()
 {
-    // TODO: Initialise Python
+    // Initialise PythonQt
+
+//    ::PythonQt::init();
 }
 
 //==============================================================================
 
 void PythonQtPlugin::finalizePlugin()
 {
-    // We don't handle this interface...
+    // Clean up PythonQt
+
+//     ::PythonQt::cleanup();
 }
 
 //==============================================================================

@@ -1,16 +1,25 @@
 PROJECT(PythonPlugin)
 
 ## Build Python
-set(USE_PREBUILT_PYTHON OFF)
+set(USE_PREBUILT_PYTHON ON)
 
-SET(PYTHON_VERSION 3.5.2)
+set(PYTHON_VERSION 3.5.2)
 
-set(PYTHON_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Python)
+set(PYTHON_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Python/${REMOTE_EXTERNAL_BINARIES_DIR})
 
-if(USE_PREBUILT_PYTHON)
-    # Download and untar into PYTHON_ROOT_DIR
+message(STATUS "Using Python from ${PYTHON_ROOT_DIR}")
 
-else()
+set(PYTHON_USE_STATIC_LIB ON)
+
+find_package(Python EXACT ${PYTHON_VERSION}
+                    NO_DEFAULT_PATH PATHS ${PYTHON_ROOT_DIR}
+                    QUIET
+           )
+
+if(NOT Python_FOUND)
+
+    # Build Python
+
     message(STATUS "Configuring Python...")
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build)
     execute_process(COMMAND ${CMAKE_COMMAND}
@@ -39,21 +48,25 @@ else()
     if(PYTHON_BUILD)
         message(FATAL_ERROR "Unable to build and install Python: ${PYTHON_BUILD}")
     endif()
+
+    # We should now be able to find the package...
+
+    find_package(Python EXACT ${PYTHON_VERSION} REQUIRED
+                        NO_DEFAULT_PATH PATHS ${PYTHON_ROOT_DIR}
+               )
 endif()
 
-set(DEFINITIONS QT_NO_KEYWORDS)
-set(PYTHON_DEFINITIONS ${DEFINITIONS} PARENT_SCOPE)
+# Get the full path to the library
 
-set(PYTHON_USE_STATIC_LIB ON)
-find_package(Python EXACT ${PYTHON_VERSION}
-                    REQUIRED
-                    NO_DEFAULT_PATH
-                    PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Python
-           )
 get_property(PYTHON_LIBRARY TARGET ${PYTHON_LIBRARIES}
                             PROPERTY IMPORTED_LOCATION_RELEASE
             )
+
+# Export some locations for other plugins to use
+
 set(PYTHON_PLUGIN_BINARY ${PYTHON_LIBRARY} PARENT_SCOPE)
+set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} PARENT_SCOPE)
+
 
 # Add the plugin
 
@@ -69,10 +82,8 @@ ADD_PLUGIN(Python
         ${PYTHON_INCLUDE_DIRS}
     PLUGINS
         Core
-        ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
-        ${ZLIB_PLUGIN_BINARY}
         ${PYTHON_LIBRARY}
     DEFINITIONS
-        ${DEFINITIONS}
+        QT_NO_KEYWORDS
 )

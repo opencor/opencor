@@ -24,10 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Python.h>
-
-//==============================================================================
-
 #include <Qt>
 #include <QSettings>
 
@@ -56,18 +52,14 @@ PLUGININFO_FUNC PythonPluginInfo()
 
 void PythonPlugin::initializePlugin()
 {
-    // Initialise Python
-
-    Py_Initialize();
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
 void PythonPlugin::finalizePlugin()
 {
-    // Finalise Python
-
-    Py_Finalize();
+    // We don't handle this interface...
 }
 
 //==============================================================================

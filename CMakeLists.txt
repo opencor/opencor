@@ -300,6 +300,7 @@ SET(PLUGINS
     thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/Python
+    thirdParty/PythonQt
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
