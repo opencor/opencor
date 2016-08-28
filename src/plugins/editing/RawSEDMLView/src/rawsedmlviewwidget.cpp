@@ -245,9 +245,9 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
 
 QWidget * RawSedmlViewWidget::widget(const QString &pFileName)
 {
-    // Return the requested (editor) widget
+    // Return the requested (editing) widget
 
-    return editorWidget(pFileName);
+    return mEditingWidgets.value(pFileName);
 }
 
 //==============================================================================
