@@ -2346,20 +2346,12 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     // initialise our simulation, if we still have a valid simulation
     // environment
 
-    bool visible = isVisible();
-
-    if (visible)
-        Core::centralWidget()->showBusyWidget();
-
     bool validSimulationEnvironment = doFurtherInitialize();
 
     initializeGui(validSimulationEnvironment);
 
     if (validSimulationEnvironment)
         initializeSimulation();
-
-    if (visible)
-        Core::centralWidget()->hideBusyWidget();
 }
 
 //==============================================================================
@@ -2403,7 +2395,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
-        Core::centralWidget()->showBusyWidget();
+        Core::centralWidget()->showProgressBusyWidget();
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
 
@@ -3265,7 +3257,7 @@ void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProg
 {
     // There has been some progress with our export, so update our busy widget
 
-    setBusyWidgetProgress(pProgress);
+    Core::centralWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
