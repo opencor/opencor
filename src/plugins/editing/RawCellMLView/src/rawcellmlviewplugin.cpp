@@ -20,7 +20,6 @@ limitations under the License.
 // Raw CellML view plugin
 //==============================================================================
 
-#include "cellmleditingviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"

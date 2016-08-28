@@ -72,11 +72,9 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 {
     Q_UNUSED(pNeedFeedback);
 
-    // Ask our CellML annotation view widget to save the given file
+    // Save the given file
 
-    CellmlAnnotationViewEditingWidget *editingWidget = mViewWidget->editingWidget(pOldFileName);
-
-    return editingWidget?editingWidget->cellmlFile()->save(pNewFileName):false;
+    return mViewWidget->saveFile(pOldFileName, pNewFileName);
 }
 
 //==============================================================================

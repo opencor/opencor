@@ -65,9 +65,9 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    CellmlAnnotationViewEditingWidget * editingWidget(const QString &pFileName) const;
-
     virtual QWidget * widget(const QString &pFileName);
+
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
     static QString resourceUrl(const QString &pResource);
     static QString idUrl(const QString &pResource, const QString &pId);
