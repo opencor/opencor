@@ -38,7 +38,7 @@ namespace Core {
 
 Widget::Widget(QWidget *pParent) :
     QWidget(pParent),
-    CommonWidget(),
+    CommonWidget(this),
     mSizeHint(defaultSize(0.15))
 {
 }
@@ -47,7 +47,7 @@ Widget::Widget(QWidget *pParent) :
 
 Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
     QWidget(pParent),
-    CommonWidget(),
+    CommonWidget(this),
     mSizeHint(pSizeHint)
 {
 }
@@ -111,9 +111,9 @@ void Widget::resizeEvent(QResizeEvent *pEvent)
 
     QWidget::resizeEvent(pEvent);
 
-    // Let people know that we have been resized
+    // Resize our busy widget
 
-    emit resized(pEvent->size(), pEvent->oldSize());
+    resizeBusyWidget();
 }
 
 //==============================================================================

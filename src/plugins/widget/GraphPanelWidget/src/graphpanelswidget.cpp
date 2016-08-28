@@ -44,7 +44,7 @@ namespace GraphPanelWidget {
 
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mSplitterSizes(QIntList()),
     mGraphPanels(GraphPanelWidgets()),
     mActiveGraphPanel(0)

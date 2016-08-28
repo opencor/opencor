@@ -44,7 +44,7 @@ namespace PMRWindow {
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
