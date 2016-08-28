@@ -20,6 +20,7 @@ limitations under the License.
 // Single Cell view simulation widget
 //==============================================================================
 
+#include "centralwidget.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
@@ -2348,7 +2349,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     bool visible = isVisible();
 
     if (visible)
-        showGlobalBusyWidget();
+        Core::centralWidget()->showBusyWidget();
 
     bool validSimulationEnvironment = doFurtherInitialize();
 
@@ -2358,7 +2359,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
         initializeSimulation();
 
     if (visible)
-        hideBusyWidget();
+        Core::centralWidget()->hideBusyWidget();
 }
 
 //==============================================================================
@@ -2402,7 +2403,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
-        showGlobalProgressBusyWidget();
+        Core::centralWidget()->showBusyWidget();
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
 
@@ -3248,7 +3249,7 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
 {
     // We are done with the export, so hide our busy widget
 
-    hideBusyWidget();
+    Core::centralWidget()->hideBusyWidget();
 
     // Display the given error message, if any
 

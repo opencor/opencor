@@ -67,9 +67,6 @@ public:
     void showBusyWidget();
     void showProgressBusyWidget();
 
-    void showGlobalBusyWidget();
-    void showGlobalProgressBusyWidget();
-
     void hideBusyWidget();
 
     void resizeBusyWidget();
@@ -84,8 +81,7 @@ private:
 
     BusyWidget *mBusyWidget;
 
-    void doShowBusyWidget(const bool &pGlobal = false,
-                          const double &pProgress = -1.0);
+    void doShowBusyWidget(const double &pProgress = -1.0);
 };
 
 //==============================================================================

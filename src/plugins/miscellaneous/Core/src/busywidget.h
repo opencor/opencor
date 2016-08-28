@@ -43,10 +43,7 @@ class BusyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BusyWidget(QWidget *pParent, const bool &pGlobal,
-                        const double &pProgress);
-
-    bool isGlobal() const;
+    explicit BusyWidget(QWidget *pParent, const double &pProgress);
 
     int fps() const;
     void setFps(const int &pFps);
@@ -93,8 +90,6 @@ private:
     QWidget *mParent;
 
     QTimer *mTimer;
-
-    bool mGlobal;
 
     int mFps;
 

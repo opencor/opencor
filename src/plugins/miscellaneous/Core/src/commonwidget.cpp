@@ -97,8 +97,7 @@ bool CommonWidget::isBusyWidgetVisible() const
 
 //==============================================================================
 
-void CommonWidget::doShowBusyWidget(const bool &pGlobal,
-                                    const double &pProgress)
+void CommonWidget::doShowBusyWidget(const double &pProgress)
 {
     // Make sure that our previous busy widget, if any, is hidden (and deleted)
 
@@ -106,11 +105,11 @@ void CommonWidget::doShowBusyWidget(const bool &pGlobal,
 
     // Create and show our new busy widget resized, and then disable our parent
 
-    mBusyWidget = new BusyWidget(mParent, pGlobal, pProgress);
+    mBusyWidget = new BusyWidget(mParent, pProgress);
 
     resizeBusyWidget();
 
-    if (pGlobal)
+    if (mParent == centralWidget())
         mainWindow()->setEnabled(false);
     else
         mParent->setEnabled(false);
@@ -139,25 +138,7 @@ void CommonWidget::showProgressBusyWidget()
 {
     // Show a progress busy widget
 
-    doShowBusyWidget(false, 0.0);
-}
-
-//==============================================================================
-
-void CommonWidget::showGlobalBusyWidget()
-{
-    // Show a global 'normal' busy widget
-
-    doShowBusyWidget(true);
-}
-
-//==============================================================================
-
-void CommonWidget::showGlobalProgressBusyWidget()
-{
-    // Show a global progress busy widget
-
-    doShowBusyWidget(true, 0.0);
+    doShowBusyWidget(0.0);
 }
 
 //==============================================================================
@@ -172,7 +153,7 @@ void CommonWidget::hideBusyWidget()
     // Enable ourselves (or OpenCOR itself in case we are the central widget)
     // and hide our busy widget by deleting it
 
-    if (mBusyWidget->isGlobal())
+    if (mParent == centralWidget())
         mainWindow()->setEnabled(true);
     else
         mParent->setEnabled(true);

@@ -55,11 +55,9 @@ enum {
 
 //==============================================================================
 
-BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
-                       const double &pProgress) :
+BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
     QWidget(pParent),
     mParent(pParent),
-    mGlobal(pGlobal),
     mFps(0),
     mForegroundColor(Qt::white),
     mBackgroundColor(QColor(54, 96, 146)),
@@ -89,15 +87,6 @@ BusyWidget::BusyWidget(QWidget *pParent, const bool &pGlobal,
 
     if (pProgress == -1.0)
         mTimer->start();
-}
-
-//==============================================================================
-
-bool BusyWidget::isGlobal() const
-{
-    // Return whether we are global
-
-    return mGlobal;
 }
 
 //==============================================================================

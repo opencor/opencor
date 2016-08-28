@@ -94,7 +94,7 @@ bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
     // Read the contents of the file, which URL is given
 
 
-    centralWidget()->showGlobalBusyWidget();
+    centralWidget()->showBusyWidget();
 
     bool res = readFileContentsFromUrl(pUrl, pFileContents, pErrorMessage);
 
