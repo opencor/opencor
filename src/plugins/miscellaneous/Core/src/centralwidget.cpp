@@ -1905,16 +1905,11 @@ void CentralWidget::fileChanged(const QString &pFileName,
                                    tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName),
                                QMessageBox::Yes|QMessageBox::No,
                                QMessageBox::Yes) == QMessageBox::Yes) {
-            // The user wants to reload the file
+            // The user wants to reload the file, so find it and reload it
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
                 if (!mFileNames[i].compare(pFileName)) {
-                    // We have found the file to reload, so reload it and update
-                    // our GUI
-
                     reloadFile(i, true);
-
-                    updateGui();
 
                     break;
                 }
@@ -2092,6 +2087,10 @@ void CentralWidget::fileReloaded(const QString &pFileName,
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
         }
     }
+
+    // Similarly, we need to update our GUI
+
+    updateGui();
 
     // Make sure that our busy widget is hidden
     // Note: our busy widget may have been shown in reloadFile() (in case of a
