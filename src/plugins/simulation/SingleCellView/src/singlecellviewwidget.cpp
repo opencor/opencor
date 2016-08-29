@@ -375,7 +375,7 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
     // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -426,7 +426,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
         // Make sure that the GUI of our simulation widgets is up to date
 
         foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-            simulationWidget->updateGui();
+            simulationWidget->updateGui(true);
     }
 }
 
@@ -455,7 +455,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
     // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -469,7 +469,7 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
     // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
