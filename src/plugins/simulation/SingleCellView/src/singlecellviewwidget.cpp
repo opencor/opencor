@@ -205,15 +205,6 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
 
 //==============================================================================
 
-bool SingleCellViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mSimulationWidgets.contains(pFileName);
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
     // Stop tracking changes in our 'old' simulation widget's property editors'
