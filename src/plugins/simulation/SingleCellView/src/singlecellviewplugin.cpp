@@ -127,8 +127,7 @@ void SingleCellViewPlugin::fileReloaded(const QString &pFileName,
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
-    if (mViewWidget->contains(pFileName))
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================

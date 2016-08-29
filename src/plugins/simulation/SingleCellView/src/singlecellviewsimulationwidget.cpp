@@ -2959,8 +2959,13 @@ void SingleCellViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPane
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateGui()
+void SingleCellViewSimulationWidget::updateGui(const bool &pCheckVisibility)
 {
+    // Make sure that we are visible, if requested
+
+    if (pCheckVisibility && !isVisible())
+        return;
+
     // Make sure that our graphs widget's GUI is up to date
 
     mContentsWidget->informationWidget()->graphsWidget()->updateGui();

@@ -205,15 +205,6 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
 
 //==============================================================================
 
-bool SingleCellViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mSimulationWidgets.contains(pFileName);
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
     // Stop tracking changes in our 'old' simulation widget's property editors'
@@ -381,10 +372,10 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
     mFileNames << pFileName;
 
-    // Make sure that GUI of our simulation widgets is up to date
+    // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -434,8 +425,8 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        foreach (SingleCellViewSimulationWidget *otherSimulationWidget, mSimulationWidgets.values())
-            otherSimulationWidget->updateGui();
+        foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+            simulationWidget->updateGui(true);
     }
 }
 
@@ -464,7 +455,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
     // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -475,10 +466,10 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
     mFileNames.removeOne(pFileName);
 
-    // Make sure that GUI of our simulation widgets is up to date
+    // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================

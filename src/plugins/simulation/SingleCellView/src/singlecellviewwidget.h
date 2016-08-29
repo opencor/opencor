@@ -70,8 +70,6 @@ public:
 
     bool isIndirectRemoteFile(const QString &pFileName);
 
-    bool contains(const QString &pFileName) const;
-
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
