@@ -19,4 +19,4 @@ Please [contact us](http://www.opencor.ws/user/contactUs.html) if you have any q
 
 #######
 
-[![Build Status](https://travis-ci.org/opencor/opencor.png?branch=master)](https://travis-ci.org/opencor/opencor)
+[![Build Status](https://travis-ci.org/opencor/opencor.svg?branch=master)](https://travis-ci.org/opencor/opencor)
