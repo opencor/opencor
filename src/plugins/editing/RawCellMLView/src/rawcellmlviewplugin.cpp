@@ -53,7 +53,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 }
 
 //==============================================================================
-// CellML editing interface
+// CellML editing view interface
 //==============================================================================
 
 void RawCellMLViewPlugin::reformat(const QString &pFileName) const
