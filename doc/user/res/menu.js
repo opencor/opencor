@@ -13,6 +13,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "separator": true },
                                 { "level": 0, "label": "Plugins", "link": "user/plugins/index.html" },
                                 { "level": 1, "label": "Data Store", "subMenuHeader": true },
+                                { "level": 2, "label": "BioSignalMLDataStore", "link": "user/plugins/dataStore/BioSignalMLDataStore.html", "subMenuItem": true },
                                 { "level": 2, "label": "CSVDataStore", "link": "user/plugins/dataStore/CSVDataStore.html", "subMenuItem": true },
                                 { "level": 1, "label": "Editing", "subMenuHeader": true },
                                 { "level": 2, "label": "CellMLAnnotationView", "link": "user/plugins/editing/CellMLAnnotationView.html", "subMenuItem": true },
