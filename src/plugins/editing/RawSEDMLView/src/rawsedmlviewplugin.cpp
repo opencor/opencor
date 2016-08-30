@@ -53,29 +53,6 @@ PLUGININFO_FUNC RawSEDMLViewPluginInfo()
 }
 
 //==============================================================================
-// SED-ML editing interface
-//==============================================================================
-
-void RawSEDMLViewPlugin::reformat(const QString &pFileName) const
-{
-    // Reformat the contents of the given file's editor
-
-    mViewWidget->reformat(pFileName);
-}
-
-//==============================================================================
-
-bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
-                                    QString &pExtra) const
-{
-    Q_UNUSED(pExtra);
-
-    // Validate the given file
-
-    return mViewWidget->validate(pFileName);
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -270,6 +247,29 @@ void RawSEDMLViewPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// SED-ML editing view interface
+//==============================================================================
+
+void RawSEDMLViewPlugin::reformat(const QString &pFileName) const
+{
+    // Reformat the contents of the given file's editor
+
+    mViewWidget->reformat(pFileName);
+}
+
+//==============================================================================
+
+bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
+                                    QString &pExtra) const
+{
+    Q_UNUSED(pExtra);
+
+    // Validate the given file
+
+    return mViewWidget->validate(pFileName);
 }
 
 //==============================================================================

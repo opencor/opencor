@@ -54,7 +54,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
 }
 
 //==============================================================================
-// CellML editing interface
+// CellML editing view interface
 //==============================================================================
 
 void CellMLTextViewPlugin::reformat(const QString &pFileName) const
