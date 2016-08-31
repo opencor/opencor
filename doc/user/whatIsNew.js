@@ -16,7 +16,7 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                            { "type": "Improved", "description": "Text-based editing." },
                            { "type": "Improved", "description": "Equation rendering." },
-                           { "type": "Improved", "description": "Retrieval of a save file name." },
+                           { "type": "Improved", "description": "Retrieval of a Save File name." },
                            { "type": "Improved", "description": "Reopening of the most recent file." },
                            { "type": "Fixed", "description": "Equation rendering." },
                            { "type": "Fixed", "description": "Copying of a rendered equation to the clipboard (on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>)." },
@@ -60,11 +60,11 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "Added", "description": "Support for the <code>min()</code> and <code>max()</code> functions." },
-                               { "type": "Added", "description": "Support for the <code>gcd()</code> and <code>lcm()</code> functions." },
-                               { "type": "Added", "description": "Save the contents of the view to a text file if it cannot be saved as a <a href=\"https://www.cellml.org/\">CellML</a> file." },
+                               { "type": "Added", "description": "Import/export of the <a href=\"http://www.opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> from/to <a href=\"https://www.cellml.org/\">CellML</a>." },
+                               { "type": "Added", "description": "Support for the <code>min()</code>/<code>max()</code> and <code>gcd()</code>/<code>lcm()</code> functions." },
+                               { "type": "Added", "description": "Offer to save the contents of the view to a text file if it cannot be saved as a <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "Improved", "description": "Syntax highlighting." },
-                               { "type": "Improved", "description": "cmeta:id's support by allowing hyphens and periods." },
+                               { "type": "Improved", "description": "<code>cmeta:id</code>'s support by allowing hyphens and periods." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." },
                                { "type": "Fixed", "description": "Serialisation of numbers that have an exponent." },
@@ -89,7 +89,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (either through a SED-ML file or a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
+                               { "type": "Added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (both through a SED-ML file and a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "Added", "description": "Create a new or update an existing <a href=\"https://www.cellml.org/\">CellML</a> file based on the results of a simulation." },
                                { "type": "Added", "description": "Specify the minimum/maximum values of the axes of a graph panel." },
                                { "type": "Added", "description": "Synchronise the X and/or Y axes of all the graph panels." },
