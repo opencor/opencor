@@ -1315,7 +1315,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                 if (pFileType == SedmlFile) {
                     Core::FileManager::instance()->setDependencies(pFileName,
                                                                    QStringList() << pCellmlFile->fileName()
-                                                                                 << pCellmlFile->dependencies());
+                                                                                 << pCellmlFile->dependencies(true));
                 }
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
