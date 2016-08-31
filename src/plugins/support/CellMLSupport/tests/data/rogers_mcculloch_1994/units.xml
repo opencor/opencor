@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<model
+    name="units"
+    cmeta:id="units"
+    xmlns="http://www.cellml.org/cellml/1.0#"
+    xmlns:cellml="http://www.cellml.org/cellml/1.0#"
+    xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+  <rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+      xmlns:bqs="http://www.cellml.org/bqs/1.0#"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dcterms="http://purl.org/dc/terms/"
+      xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+    <rdf:Description rdf:about="">
+      <dc:creator rdf:parseType="Resource">
+        <vCard:N rdf:parseType="Resource">
+          <vCard:Family>Nickerson</vCard:Family>
+          <vCard:Given>David</vCard:Given>
+        </vCard:N>
+        <vCard:EMAIL rdf:parseType="Resource">
+          <rdf:value>d.nickerson@auckland.ac.nz</rdf:value>
+          <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet" />
+        </vCard:EMAIL>
+        <vCard:ORG rdf:parseType="Resource">
+          <vCard:Orgname>The University of Auckland</vCard:Orgname>
+          <vCard:Orgunit>Bioengineering Institute</vCard:Orgunit>
+        </vCard:ORG>
+      </dc:creator>
+      <dcterms:created rdf:parseType="Resource">
+        <dcterms:W3CDTF>2004-12-27</dcterms:W3CDTF>
+      </dcterms:created>
+      <dc:publisher>
+        Bioengineering Institute, The University of Auckland
+      </dc:publisher>
+    </rdf:Description>
+    <rdf:Description rdf:about="#units">
+      <dc:title>
+        Some useful units.
+      </dc:title>
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          A CellML description of some of the common units used in whole cell
+          models.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>David Nickerson</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+    </rdf:Description>
+  </rdf:RDF>
+
+  <units name="mm">
+    <unit units="metre" prefix="milli"/>
+  </units>
+  <units name="ng">
+    <unit units="gram" prefix="nano"/>
+  </units>
+  <units name="ms">
+    <unit units="second" prefix="milli"/>
+  </units>
+  <units name="uA">
+    <unit units="ampere" prefix="micro"/>
+  </units>
+  <units name="K">
+    <unit units="kelvin"/>
+  </units>
+  <units name="nmol">
+    <unit units="mole" prefix="nano"/>
+  </units>
+
+  <units name="mmsq">
+    <unit units="mm" exponent="2"/>
+  </units>
+  <units name="mmcu">
+    <unit units="mm" exponent="3"/>
+  </units>
+  <units name="mssq">
+    <unit units="ms" exponent="2"/>
+  </units>
+  <units name="mscu">
+    <unit units="ms" exponent="3"/>
+  </units>
+  <units name="mV">
+    <unit units="volt" prefix="milli"/>
+  </units>
+  <units name="mVsq">
+    <unit units="mV" exponent="2"/>
+  </units>
+  <units name="mV_per_ms">
+    <unit units="mV"/>
+    <unit units="ms" exponent="-1"/>
+  </units>
+  <units name="mS">
+    <unit units="siemens" prefix="milli"/>
+  </units>
+  <units name="mS_per_mmsq">
+    <unit units="mS"/>
+    <unit units="mm" exponent="-2"/>
+  </units>
+  <units name="mS_per_mm">
+    <unit units="mS"/>
+    <unit units="mm" exponent="-1"/>
+  </units>
+  <units name="uA_per_mmsq">
+    <unit units="uA"/>
+    <unit units="mm" exponent="-2"/>
+  </units>
+  <units name="uA_per_mmcu">
+    <unit units="uA"/>
+    <unit units="mm" exponent="-3"/>
+  </units>
+  <units name="nC">
+    <unit units="coulomb" prefix="nano"/>
+  </units>
+  <units name="uF">
+    <unit units="farad" prefix="micro"/>
+  </units>
+  <units name="uF_per_mmsq">
+    <unit units="uF"/>
+    <unit units="mm" exponent="-2"/>
+  </units>
+  <units name="mM">
+    <unit units="nmol"/>
+    <unit units="mm" exponent="-3"/>
+  </units>
+  <units name="mM_per_ms">
+    <unit units="mM"/>
+    <unit units="ms" exponent="-1"/>
+  </units>
+  <units name="nN">
+    <unit units="newton" prefix="nano"/>
+  </units>
+  <units name="mPa">
+    <unit units="pascal" prefix="milli"/>
+  </units>
+  <units name="pJ">
+    <unit units="joule" prefix="pico"/>
+  </units>
+  <units name="nW">
+    <unit units="watt" prefix="nano"/>
+  </units>
+
+  <units name="per_ms">
+    <unit units="ms" exponent="-1"/>
+  </units>
+  <units name="per_mm">
+    <unit units="mm" exponent="-1"/>
+  </units>
+  <units name="per_mV">
+    <unit units="mV" exponent="-1"/>
+  </units>
+  <units name="per_mV_per_ms">
+    <unit units="mV" exponent="-1"/>
+    <unit units="per_ms"/>
+  </units>
+  <units name="per_mM_per_ms">
+    <unit units="mM" exponent="-1"/>
+    <unit units="per_ms"/>
+  </units>
+  <units name="uA_per_mmsq_per_mM">
+    <unit units="uA"/>
+    <unit units="mm" exponent="-2"/>
+    <unit units="mM" exponent="-1"/>
+  </units>
+  <units name="mm_per_ms">
+    <units name="mm"/>
+    <units name="per_ms"/>
+  </units>
+
+  <units name="gas_constant">
+    <unit units="pJ"/>
+    <unit units="nmol" exponent="-1"/>
+    <unit units="K" exponent="-1"/>
+  </units>
+  <units name="faradays_constant">
+    <unit units="nC"/>
+    <unit units="nmol" exponent="-1"/>
+  </units>
+
+  <!-- These are some dodgy units from the ten Tusscher model -->
+  <units name="pA_per_pF">
+    <unit units="ampere" prefix="pico"/>
+    <unit units="farad" prefix="pico" exponent="-1"/>
+  </units>
+  <units name="nS_per_pF">
+    <unit units="siemens" prefix="nano"/>
+    <unit units="farad" prefix="pico" exponent="-1"/>
+  </units>
+  <units name="uF_per_cmsq">
+    <unit units="farad" prefix="micro"/>
+    <unit units="metre" prefix="centi" exponent="-2"/>
+  </units>
+  <units name="um">
+    <unit units="metre" prefix="micro"/>
+  </units>
+  <units name="umsq">
+    <unit units="metre" prefix="micro" exponent="2"/>
+  </units>
+  <units name="umcu">
+    <unit units="metre" prefix="micro" exponent="3"/>
+  </units>
+  <units name="cmcu_per_uF_per_s">
+    <unit units="metre" prefix="centi" exponent="3"/>
+    <unit units="farad" prefix="micro" exponent="-1"/>
+    <unit units="second" exponent="-1"/>
+  </units>
+  <units name="mM_per_s">
+    <unit units="mM"/>
+    <unit units="second" exponent="-1"/>
+  </units>
+</model>

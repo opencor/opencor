@@ -1,0 +1,7 @@
+interface.time (ms)
+interface.Vm (mV)
+interface.Vm' (mV/ms)
+interface.stimulus_parameters.Am (per_mm)
+interface.stimulus_parameters.stimCurrent (uA_per_mmcu)
+interface.stimulus_parameters.stimDuration (ms)
+interface.stimulus_parameters.stimPeriod (ms)

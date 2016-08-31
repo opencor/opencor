@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<model
+    name="single_stimulus"
+    cmeta:id="single_stimulus"
+    xmlns="http://www.cellml.org/cellml/1.1#"
+    xmlns:cellml="http://www.cellml.org/cellml/1.1#"
+    xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+      xmlns:bqs="http://www.cellml.org/bqs/1.0#"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dcterms="http://purl.org/dc/terms/"
+      xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#"
+      xmlns:cs="http://www.cellml.org/metadata/simulation/1.0#">
+    <rdf:Description rdf:about="">
+      <dc:creator rdf:parseType="Resource">
+        <vCard:N rdf:parseType="Resource">
+          <vCard:Family>Nickerson</vCard:Family>
+          <vCard:Given>David</vCard:Given>
+        </vCard:N>
+        <vCard:EMAIL rdf:parseType="Resource">
+          <rdf:value>d.nickerson@auckland.ac.nz</rdf:value>
+          <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
+        </vCard:EMAIL>
+        <vCard:ORG rdf:parseType="Resource">
+          <vCard:Orgname>The University of Auckland</vCard:Orgname>
+          <vCard:Orgunit>Bioengineering Institute</vCard:Orgunit>
+        </vCard:ORG>
+      </dc:creator>
+      <dcterms:created rdf:parseType="Resource">
+        <dcterms:W3CDTF>2009-06-17</dcterms:W3CDTF>
+      </dcterms:created>
+      <dc:publisher>
+        Bioengineering Institute, The University of Auckland
+      </dc:publisher>
+    </rdf:Description>
+    <rdf:Description rdf:about="#single_stimulus">
+      <dc:title>
+        Action potential simulation with single stimulus.
+      </dc:title>
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          This is the CellML description of a action potential simulation
+          with a single stimulus current applied to the default FHN model.
+        </rdf:value>
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>David Nickerson</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+      <cs:simulation>
+        <rdf:Description rdf:ID="simulation">
+          <cs:multistepMethod>bdf</cs:multistepMethod>
+          <cs:iterationMethod>functional</cs:iterationMethod>
+          <cs:boundIntervals rdf:parseType="Collection">
+            <rdf:Description>
+              <cs:boundVariable>
+                <rdf:Description rdf:about="#time"/>
+              </cs:boundVariable>
+              <cs:maximumStepSize rdf:datatype="http://www.w3.org/2001/XMLSchema#double">
+                0.1
+              </cs:maximumStepSize>
+              <cs:tabulationStepSize rdf:datatype="http://www.w3.org/2001/XMLSchema#double">
+                1.0
+              </cs:tabulationStepSize>
+              <cs:startingValue rdf:datatype="http://www.w3.org/2001/XMLSchema#double">
+                0
+              </cs:startingValue>
+              <cs:endingValue rdf:datatype="http://www.w3.org/2001/XMLSchema#double">
+                800
+              </cs:endingValue>
+            </rdf:Description>
+          </cs:boundIntervals>
+        </rdf:Description>
+      </cs:simulation>
+    </rdf:Description>
+  </rdf:RDF>
+
+   <group>
+      <relationship_ref relationship="encapsulation"/>
+       <component_ref component="interface">
+         <component_ref component="stimulus_parameters"/>
+         <component_ref component="model"/>
+         <component_ref component="stimulus_protocol"/>
+      </component_ref>
+   </group>
+
+   <component name="interface">
+	  <variable units="ms" public_interface="in"
+		  private_interface="out" name="time" />
+      <variable units="mV" cmeta:id="Vm" public_interface="out" private_interface="in" name="Vm"/>
+      <variable units="ms" public_interface="out"
+		  private_interface="in" name="stimTime" />
+   </component>
+
+  <import xlink:href="../units.xml">
+    <units name="ms" units_ref="ms"/>
+    <units name="per_mm" units_ref="per_mm"/>
+    <units name="uA_per_mmcu" units_ref="uA_per_mmcu"/>
+  </import>
+
+  <import xlink:href="../model.xml">
+    <component name="model" component_ref="interface"/>
+  </import>
+
+  <connection>
+    <map_components component_1="model" component_2="interface"/>
+    <map_variables variable_1="t" variable_2="time"/>
+    <map_variables variable_1="Vm" variable_2="Vm"/>
+  </connection>
+
+  <import xlink:href="../single-pulse-IStim.xml">
+    <component name="stimulus_protocol" component_ref="stimulus_protocol"/>
+  </import>
+
+  <component name="stimulus_parameters" cmeta:id="stimulus_parameters">
+    <rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+      <rdf:Description rdf:about="#stimulus_parameters">
+        <cmeta:comment rdf:parseType="Resource">
+          <rdf:value>
+            Here we define the parameters for the standard stimulus protocol we import for this experiment.
+          </rdf:value>
+        </cmeta:comment>
+      </rdf:Description>
+    </rdf:RDF>
+    <variable name="stimTime" initial_value="333" public_interface="out" units="ms"/> <!-- original value is 100-->
+    <variable name="stimDuration" initial_value="0.5" public_interface="out" units="ms"/>
+    <variable name="stimCurrent" initial_value="150" public_interface="out" units="uA_per_mmcu"/>
+    <variable name="Am" initial_value="100" public_interface="out" units="per_mm"/>
+  </component>
+  <connection>
+    <map_components component_1="model" component_2="stimulus_protocol"/>
+    <map_variables variable_1="Istim" variable_2="IStim"/>
+  </connection>
+  <connection>
+    <map_components component_1="interface" component_2="stimulus_protocol"/>
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+  <connection>
+    <map_components component_1="interface" component_2="stimulus_parameters"/>
+    <map_variables variable_1="stimTime" variable_2="stimTime"/>
+  </connection>
+  <connection>
+    <map_components component_1="stimulus_parameters" component_2="stimulus_protocol"/>
+    <map_variables variable_1="stimTime" variable_2="stimTime"/>
+    <map_variables variable_1="stimDuration" variable_2="stimDuration"/>
+    <map_variables variable_1="stimCurrent" variable_2="stimCurrent"/>
+    <map_variables variable_1="Am" variable_2="Am"/>
+  </connection>
+</model>
+
+<!-- going from single AP to periodic AP you need to change stimPeriod to stimTime and you also need to import single-pulse-IStim.xml instead of periodic-IStim.xml-->
