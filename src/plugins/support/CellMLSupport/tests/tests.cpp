@@ -94,8 +94,6 @@ void Tests::runtimeTests()
     // Finally, we do the same for some proper CellML 1.1 models:
     //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
     //    imports, etc.;
-    //  - Rogers-McCulloch model, which is another somewhat 'complex' model in
-    //    terms of imports, etc.;
     //  - An 'old' version of a bond graph model implementation where the
     //    variable of integration is not visible in the main CellML file (so the
     //    idea is to ensure that the model is still considered valid even though
@@ -109,8 +107,6 @@ void Tests::runtimeTests()
 
     doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/rogers_mcculloch_1994/experiments/multiple-stimulus.xml"),
-                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/rogers_mcculloch_1994.out")));
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
