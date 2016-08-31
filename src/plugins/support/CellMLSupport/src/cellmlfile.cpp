@@ -25,6 +25,7 @@ limitations under the License.
 #include "cellmlfilecellml11exporter.h"
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -177,7 +178,8 @@ void CellmlFile::retrieveImports(const QString &pXmlBase,
 //==============================================================================
 
 bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
-                                         CellmlFileIssues &pIssues)
+                                         CellmlFileIssues &pIssues,
+                                         const bool &pWithBusyWidget)
 {
     // Fully instantiate all the imports, but only if we are not directly
     // dealing with our model or if we are dealing with a non CellML 1.0 model,
@@ -248,8 +250,9 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                         QString fileContents;
 
-                        if (   ( isLocalFile && Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-                            || (!isLocalFile && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
+                        if (   ( isLocalFile &&  Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
+                            || (!isLocalFile &&  pWithBusyWidget && Core::readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents))
+                            || (!isLocalFile && !pWithBusyWidget && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
@@ -683,7 +686,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 //==============================================================================
 
 bool CellmlFile::isValid(const QString &pFileContents,
-                         CellmlFileIssues &pIssues)
+                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
 {
     // Check whether the given file contents is CellML valid, so first create a
     // model
@@ -694,7 +697,7 @@ bool CellmlFile::isValid(const QString &pFileContents,
         // The file contents was properly loaded, so make sure that its imports,
         // if any, are fully instantiated
 
-        if (fullyInstantiateImports(model, pIssues)) {
+        if (fullyInstantiateImports(model, pIssues, pWithBusyWidget)) {
             // Now, we can check whether the file contents is CellML valid
 
             return doIsValid(model, pIssues);
@@ -735,7 +738,7 @@ CellmlFileIssues CellmlFile::issues() const
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFile::runtime()
+CellmlFileRuntime * CellmlFile::runtime(const bool &pWithBusyWidget)
 {
     // Check whether the runtime needs to be updated
 
@@ -747,7 +750,7 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (load()) {
         // Make sure that our imports, if any, are fully instantiated
 
-        if (fullyInstantiateImports(mModel, mIssues)) {
+        if (fullyInstantiateImports(mModel, mIssues, pWithBusyWidget)) {
             // Now, we can return an updated version of our runtime
 
             mRuntime->update();
@@ -765,7 +768,7 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-QStringList CellmlFile::dependencies()
+QStringList CellmlFile::dependencies(const bool &pWithBusyWidget)
 {
     // Check whether the dependencies need to be retrieved
 
@@ -777,7 +780,7 @@ QStringList CellmlFile::dependencies()
     if (load()) {
         // Make sure that our imports, if any, are fully instantiated
 
-        if (fullyInstantiateImports(mModel, mIssues)) {
+        if (fullyInstantiateImports(mModel, mIssues, pWithBusyWidget)) {
             // Now, we can return our dependencies
 
             return Core::FileManager::instance()->dependencies(mFileName);
@@ -1004,7 +1007,8 @@ QString CellmlFile::xmlBase()
 
 //==============================================================================
 
-bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
+bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
+                          const bool &pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
 
@@ -1036,7 +1040,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 
         // Fully instantiate all the imports
 
-        if (!fullyInstantiateImports(mModel, mIssues))
+        if (!fullyInstantiateImports(mModel, mIssues, pWithBusyWidget))
             return false;
 
         // Do the actual export
@@ -1075,7 +1079,8 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 //==============================================================================
 
 bool CellmlFile::exportTo(const QString &pFileName,
-                          const QString &pUserDefinedFormatFileName)
+                          const QString &pUserDefinedFormatFileName,
+                          const bool &pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
 
@@ -1113,7 +1118,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         // Fully instantiate all the imports
 
-        if (!fullyInstantiateImports(mModel, mIssues))
+        if (!fullyInstantiateImports(mModel, mIssues, pWithBusyWidget))
             return false;
 
         // Do the actual export

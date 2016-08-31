@@ -429,7 +429,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                                mSedmlFileIssues,
                                                mCombineArchiveIssues);
 
-    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
+    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
@@ -683,7 +683,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                                                    mCombineArchiveIssues);
     }
 
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime(pReloadingView):0;
 
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
