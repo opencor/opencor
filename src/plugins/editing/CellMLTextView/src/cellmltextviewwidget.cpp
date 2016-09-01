@@ -843,8 +843,8 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                     QString line;
                     int iMax = columnTo?lineTo:lineTo-1;
 
-                    // Determine whether we should be commenting or uncommenting the
-                    // lines
+                    // Determine whether we should be commenting or uncommenting
+                    // the lines
 
                     for (int i = lineFrom; i <= iMax; ++i) {
                         line = editor->text(i).trimmed();
@@ -1139,8 +1139,7 @@ void CellmlTextViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
-            mEditingWidget->mathmlViewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents(QString());
     } else {
         // There is a statement, so try to parse it
 
