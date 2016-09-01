@@ -253,6 +253,13 @@ QString MathmlViewerWidget::contents() const
 
 void MathmlViewerWidget::setContents(const QString &pContents)
 {
+    // Make sure that we are not trying to set the same contents
+
+    if (   !pContents.compare(mContents)
+        &&  ((pContents.isEmpty() && !mError) || !pContents.isEmpty())) {
+        return;
+    }
+
     // Try to set our contents to our MathML document
     // Note: we don't check whether pContents has the same value as mContents
     //       since we would also need to check the value of mError and we don't
