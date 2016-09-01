@@ -494,6 +494,7 @@ void RawCellmlViewWidget::updateViewer()
     int crtEndMathTagPos = editor->findTextInRange(crtPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag, false, true, false);
 
     bool foundMathmlBlock = true;
+    bool hasContentMathmlEquation = true;
 
     if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
         && (crtStartMathTagPos <= crtPosition)
@@ -546,17 +547,12 @@ void RawCellmlViewWidget::updateViewer()
                         mMathmlConverter.convert(contentMathmlEquation);
                 }
             } else {
-                // Our current position is not within a Content MathML equation
-
-                mContentMathmlEquation = QString();
-
-                if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
-                    mEditingWidget->mathmlViewer()->setContents(QString());
+                hasContentMathmlEquation = false;
             }
         }
-    } else {
-        // We couldn't find any Content MathML block
+    }
 
+    if (!foundMathmlBlock || !hasContentMathmlEquation) {
         mContentMathmlEquation = QString();
 
         if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
