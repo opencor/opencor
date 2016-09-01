@@ -276,6 +276,8 @@ void MathmlViewerWidget::setContents(const QString &pContents)
 
         if (domDocument.setContent(pContents))
             mError = !mMathmlDocument.setContent(domDocument.toString(-1));
+        else if (pContents.isEmpty())
+            mError = !mMathmlDocument.setContent(QString());
         else
             mError = true;
     }
