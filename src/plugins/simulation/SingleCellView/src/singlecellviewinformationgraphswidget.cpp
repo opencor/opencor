@@ -520,8 +520,8 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     foreach (Core::Property *property, mGraphProperties) {
         bool graphSelected = property->isChecked();
 
-        canSelectAllGraphs   = canSelectAllGraphs   || !graphSelected;
-        canUnselectAllGraphs = canUnselectAllGraphs ||  graphSelected;
+        canSelectAllGraphs = canSelectAllGraphs || !graphSelected;
+        canUnselectAllGraphs = canUnselectAllGraphs || graphSelected;
     }
 
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);

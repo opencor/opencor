@@ -679,7 +679,7 @@ void MainWindow::loadSettings()
 
         QRect desktopGeometry = qApp->desktop()->availableGeometry();
         int horizSpace = desktopGeometry.width()/13;
-        int vertSpace  = desktopGeometry.height()/13;
+        int vertSpace = desktopGeometry.height()/13;
 
         setGeometry(desktopGeometry.left()+horizSpace,
                     desktopGeometry.top()+vertSpace,

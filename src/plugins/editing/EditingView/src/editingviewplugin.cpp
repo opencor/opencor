@@ -322,18 +322,18 @@ void EditingViewPlugin::initializePlugin()
     mEditRedoAction = Core::newAction(QIcon(":/oxygen/actions/edit-redo.png"),
                                       QKeySequence::Redo, Core::mainWindow());
 
-    mEditCutAction    = Core::newAction(QIcon(":/oxygen/actions/edit-cut.png"),
-                                        QKeySequence::Cut, Core::mainWindow());
-    mEditCopyAction   = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                        QKeySequence::Copy, Core::mainWindow());
-    mEditPasteAction  = Core::newAction(QIcon(":/oxygen/actions/edit-paste.png"),
-                                        QKeySequence::Paste, Core::mainWindow());
+    mEditCutAction = Core::newAction(QIcon(":/oxygen/actions/edit-cut.png"),
+                                     QKeySequence::Cut, Core::mainWindow());
+    mEditCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                      QKeySequence::Copy, Core::mainWindow());
+    mEditPasteAction = Core::newAction(QIcon(":/oxygen/actions/edit-paste.png"),
+                                       QKeySequence::Paste, Core::mainWindow());
     mEditDeleteAction = Core::newAction(QIcon(":/oxygen/actions/edit-delete.png"),
                                         QKeySequence::Delete, Core::mainWindow());
 
-    mEditFindReplaceAction  = Core::newAction(QIcon(":/oxygen/actions/edit-find.png"),
-                                              QKeySequence::Find, Core::mainWindow());
-    mEditFindNextAction     = Core::newAction(QKeySequence::FindNext, Core::mainWindow());
+    mEditFindReplaceAction = Core::newAction(QIcon(":/oxygen/actions/edit-find.png"),
+                                             QKeySequence::Find, Core::mainWindow());
+    mEditFindNextAction = Core::newAction(QKeySequence::FindNext, Core::mainWindow());
     mEditFindPreviousAction = Core::newAction(QKeySequence::FindPrevious, Core::mainWindow());
 
     mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, Core::mainWindow());

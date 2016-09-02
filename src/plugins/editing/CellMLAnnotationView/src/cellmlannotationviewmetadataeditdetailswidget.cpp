@@ -128,9 +128,9 @@ bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotati
 {
     // Return whether the current item is lower than the given one
 
-    int nameComparison     = mName.compare(pItem.name());
+    int nameComparison = mName.compare(pItem.name());
     int resourceComparison = mResource.compare(pItem.resource());
-    int idComparison       = mId.compare(pItem.id());
+    int idComparison = mId.compare(pItem.id());
 
     return (nameComparison < 0)?
                true:

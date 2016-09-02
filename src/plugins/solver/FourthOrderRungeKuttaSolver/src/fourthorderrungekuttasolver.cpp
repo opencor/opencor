@@ -85,8 +85,8 @@ void FourthOrderRungeKuttaSolver::initialize(const double &pVoiStart,
     delete[] mK23;
     delete[] mYk123;
 
-    mK1    = new double[pRatesStatesCount];
-    mK23   = new double[pRatesStatesCount];
+    mK1 = new double[pRatesStatesCount];
+    mK23 = new double[pRatesStatesCount];
     mYk123 = new double[pRatesStatesCount];
 }
 
@@ -128,7 +128,7 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi,
         // Compute k1 and Yk1
 
         for (int i = 0; i < mRatesStatesCount; ++i) {
-            mK1[i]    = mRates[i];
+            mK1[i] = mRates[i];
             mYk123[i] = mStates[i]+realHalfStep*mK1[i];
         }
 
@@ -139,7 +139,7 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi,
         // Compute k2 and Yk2
 
         for (int i = 0; i < mRatesStatesCount; ++i) {
-            mK23[i]   = mRates[i];
+            mK23[i] = mRates[i];
             mYk123[i] = mStates[i]+realHalfStep*mK23[i];
         }
 
@@ -150,8 +150,8 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi,
         // Compute k3 and Yk3
 
         for (int i = 0; i < mRatesStatesCount; ++i) {
-            mK23[i]   += mRates[i];
-            mYk123[i]  = mStates[i]+realStep*mK23[i];
+            mK23[i] += mRates[i];
+            mYk123[i] = mStates[i]+realStep*mK23[i];
         }
 
         // Compute f(t_n + h, Y_n + k3)

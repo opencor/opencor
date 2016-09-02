@@ -40,7 +40,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 {
     // Create our different metadata views
 
-    mRawView    = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pCellmlFile, this);
+    mRawView = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pCellmlFile, this);
     mNormalView = new CellmlAnnotationViewMetadataNormalViewDetailsWidget(pCellmlFile, this);
 
     // Make our raw view the default widget

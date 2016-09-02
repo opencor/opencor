@@ -281,7 +281,7 @@ int main(int pArgC, char *pArgV[])
     // to restart OpenCOR)
 
     QString appFilePath = guiApp->applicationFilePath();
-    QString appDirPath  = guiApp->applicationDirPath();
+    QString appDirPath = guiApp->applicationDirPath();
 
     // Delete our main window
 

@@ -244,7 +244,7 @@ void SingleCellViewSimulationWorker::started()
     // Retrieve our simulation properties
 
     double startingPoint = mSimulation->data()->startingPoint();
-    double endingPoint   = mSimulation->data()->endingPoint();
+    double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
 
     bool increasingPoints = endingPoint > startingPoint;

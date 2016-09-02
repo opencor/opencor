@@ -622,8 +622,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     bool buttonsEnabled = false;
 
     foreach (QStandardItem *plugin, mSelectablePluginItems+mUnselectablePluginItems) {
-        if (   mInitialLoadingStates.value(plugin->text())
-            != (plugin->checkState() == Qt::Checked)) {
+        if (mInitialLoadingStates.value(plugin->text()) != (plugin->checkState() == Qt::Checked)) {
             buttonsEnabled = true;
 
             break;
