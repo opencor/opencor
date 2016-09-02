@@ -30,22 +30,8 @@ namespace Core {
 //==============================================================================
 
 ViewWidget::ViewWidget(QWidget *pParent) :
-    Widget(pParent),
-    BusySupportWidget()
+    Widget(pParent)
 {
-}
-
-//==============================================================================
-
-void ViewWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::resizeEvent(pEvent);
-
-    // (Re)size our busy widget
-
-    resizeBusyWidget();
 }
 
 //==============================================================================

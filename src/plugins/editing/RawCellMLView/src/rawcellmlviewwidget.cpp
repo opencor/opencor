@@ -263,20 +263,11 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pF
 
 //==============================================================================
 
-CellMLEditingView::CellmlEditingViewWidget * RawCellmlViewWidget::editingWidget(const QString &pFileName) const
-{
-    // Return the requested editing widget
-
-    return mEditingWidgets.value(pFileName);
-}
-
-//==============================================================================
-
 QWidget * RawCellmlViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (editing) widget
 
-    return editingWidget(pFileName);
+    return mEditingWidgets.value(pFileName);
 }
 
 //==============================================================================
@@ -328,7 +319,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
     if (editingWidget) {
         // Clear the list of CellML issues
 
-        EditorWidget::EditorListWidget *editorList = editingWidget->editorList();
+        EditorWidget::EditorListWidget *editorList = editingWidget->editorListWidget();
 
         editorList->clear();
 
@@ -337,7 +328,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-        bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues);
+        bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues, true);
 
         // Warn the user about the CellML issues being maybe for a (in)direclty
         // imported CellML file, should we be dealing with a CellML 1.1 file
@@ -503,6 +494,7 @@ void RawCellmlViewWidget::updateViewer()
     int crtEndMathTagPos = editor->findTextInRange(crtPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag, false, true, false);
 
     bool foundMathmlBlock = true;
+    bool hasContentMathmlEquation = true;
 
     if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
         && (crtStartMathTagPos <= crtPosition)
@@ -555,21 +547,15 @@ void RawCellmlViewWidget::updateViewer()
                         mMathmlConverter.convert(contentMathmlEquation);
                 }
             } else {
-                // Our current position is not within a Content MathML equation
-
-                mContentMathmlEquation = QString();
-
-                if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
-                    mEditingWidget->mathmlViewer()->setContents(QString());
+                hasContentMathmlEquation = false;
             }
         }
-    } else {
-        // We couldn't find any Content MathML block
+    }
 
+    if (!foundMathmlBlock || !hasContentMathmlEquation) {
         mContentMathmlEquation = QString();
 
-        if (!mEditingWidget->mathmlViewer()->contents().isEmpty())
-            mEditingWidget->mathmlViewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents(QString());
     }
 }
 

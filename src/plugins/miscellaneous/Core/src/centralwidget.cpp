@@ -387,14 +387,6 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             openFile(fileNameOrUrl);
     }
 
-    // Make sure that our busy widget is hidden
-    // Note: indeed, if we opened some remote files, then it will have been
-    //       shown, but not hidden since this would normally be done by
-    //       updateGui() who can't do it since mState is set to Starting at this
-    //       stage...
-
-    hideBusyWidget();
-
     // Retrieve the selected modes and views of our different files
 
     foreach (const QString &fileName, mFileNames) {
@@ -872,19 +864,12 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
     QString fileName = mRemoteLocalFileNames.value(fileNameOrUrl);
 
     if (fileName.isEmpty()) {
-        // The remote file isn't already opened, so download its contents and
-        // show our busy widget during that process
-        // Note: if the opening is successful, our busy widget will be hidden
-        //       either by loadSettings() or by updateGui(), so we have nothing
-        //       to do about it here. On the other hand, if the opening fails,
-        //       we have to hide our busy widget...
-
-        showBusyWidget(this);
+        // The remote file isn't already opened, so download its contents
 
         QString fileContents;
         QString errorMessage;
 
-        if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -909,8 +894,6 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
                 warningMessageBox(mainWindow(), tr("Open Remote File"),
                                   tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage)));
             }
-
-            hideBusyWidget();
         }
     } else {
         openFile(fileName, File::Remote, fileNameOrUrl);
@@ -985,16 +968,15 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                 // Actually redownload the file, if it is a remote one, making
                 // sure that our busy widget is show during that process (since
                 // it may take some time)
-                // Note: our busy widget will get hidden in fileReloaded()...
+                // Note: our busy widget will get hidden in updateGui() (which
+                //       will be called from fileReloaded())...
 
                 if (fileManagerInstance->isRemote(fileName)) {
-                    showBusyWidget(this);
-
                     QString url = fileManagerInstance->url(fileName);
                     QString fileContents;
                     QString errorMessage;
 
-                    bool res = readFileContentsFromUrl(url, fileContents, &errorMessage);
+                    bool res = readFileContentsFromUrlWithBusyWidget(url, fileContents, &errorMessage);
 
                     if (res) {
                         writeFileContentsToFile(fileName, fileContents);
@@ -1564,19 +1546,6 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-void CentralWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::resizeEvent(pEvent);
-
-    // (Re)size our busy widget
-
-    resizeBusyWidget();
-}
-
-//==============================================================================
-
 Plugin * CentralWidget::viewPlugin(const int &pIndex) const
 {
     // Return the view plugin associated with the file, which index is given
@@ -1716,7 +1685,6 @@ void CentralWidget::updateGui()
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
     Plugin *viewPlugin = mode?mode->viewPlugins()[mode->viewTabs()->currentIndex()]:0;
-    FileHandlingInterface *fileHandlingInterface = viewPlugin?qobject_cast<FileHandlingInterface *>(viewPlugin->instance()):0;
     ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
     QWidget *newView;
 
@@ -1728,24 +1696,13 @@ void CentralWidget::updateGui()
         // it
 
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
-        bool hasView = mViews.value(fileViewKey);
-
-        if (   (   FileManager::instance()->isRemote(fileName)
-                || (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(fileName):false))
-            && !isBusyWidgetVisible() && !hasView) {
-            // Note: we check whether the busy widget is visible since we may be
-            //       coming here as a result of the user opening a remote file,
-            //       as opposed to just switching files/modes/views...
-
-            showBusyWidget(this);
-        }
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
         if (newView) {
             // We could get a view for the current file, so keep track of it
 
-            if (!hasView)
+            if (!mViews.value(fileViewKey))
                 mViews.insert(fileViewKey, newView);
         } else {
             // The interface doesn't have a view for the current file, so use
@@ -1755,16 +1712,6 @@ void CentralWidget::updateGui()
 
             updateNoViewMsg();
         }
-
-        hideBusyWidget();
-        // Note: normally, we would check for the file to be a remote one and
-        //       our busy widget to be visible before hiding it, but on starting
-        //       up OpenCOR, our busy widget will be shown, but it won't have
-        //       time to become visible by the time we need to hide it, which
-        //       means that it wouldn't get hidden and that it would become
-        //       visible by the time OpenCOR is fully initialised, which is
-        //       clearly not what we want, so we hide our busy widget in all
-        //       cases...
     }
 
     // Create a connection to update the tab icon for the current file and
@@ -1920,16 +1867,11 @@ void CentralWidget::fileChanged(const QString &pFileName,
                                    tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName),
                                QMessageBox::Yes|QMessageBox::No,
                                QMessageBox::Yes) == QMessageBox::Yes) {
-            // The user wants to reload the file
+            // The user wants to reload the file, so find it and reload it
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
                 if (!mFileNames[i].compare(pFileName)) {
-                    // We have found the file to reload, so reload it and update
-                    // our GUI
-
                     reloadFile(i, true);
-
-                    updateGui();
 
                     break;
                 }
@@ -2070,18 +2012,6 @@ void CentralWidget::fileReloaded(const QString &pFileName,
                                  const bool &pFileChanged,
                                  const bool &pExcludeFileViewPlugin)
 {
-    // Check whether we should show our busy widget
-    // Note: this only needs to be done in case of an indirect remote file since
-    //       for a direct one, it will have already been done in reloadFile()...
-
-    Plugin *fileViewPlugin = viewPlugin(pFileName);
-    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(fileViewPlugin->instance());
-
-    if (   (fileHandlingInterface?fileHandlingInterface->isIndirectRemoteFile(pFileName):false)
-        && !isBusyWidgetVisible()) {
-        showBusyWidget(this);
-    }
-
     // Let all our plugins, but the current one (if requested), know about the
     // file having been reloaded
     // Note: in the case of the current plugin, we don't need and don't want
@@ -2089,6 +2019,8 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     //       fileSaved(); indeed, it may mess up our current view; e.g. the
     //       caret of a QScintilla-based view will get moved back to its
     //       original position)...
+
+    Plugin *fileViewPlugin = viewPlugin(pFileName);
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (   !pExcludeFileViewPlugin
@@ -2108,14 +2040,9 @@ void CentralWidget::fileReloaded(const QString &pFileName,
         }
     }
 
-    // Make sure that our busy widget is hidden
-    // Note: our busy widget may have been shown in reloadFile() (in case of a
-    //       direct remote file since we had to reload the remote file) or at
-    //       the beginning of this procedure (in case of an indirect remote
-    //       file since it's only after the file has been reloaded that we can
-    //       whether it's an indirect remote one)...
+    // Similarly, we need to update our GUI
 
-    hideBusyWidget();
+    updateGui();
 
     // Update our modified settings
 

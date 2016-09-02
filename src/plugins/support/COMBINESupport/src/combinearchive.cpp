@@ -188,7 +188,7 @@ bool CombineArchive::load()
         SignatureSize = 4
     };
 
-    OpenCOR::ZIPSupport::QZipReader zipReader(mFileName);
+    ZIPSupport::QZipReader zipReader(mFileName);
     uchar signatureData[SignatureSize];
 
     if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize) {
@@ -275,7 +275,7 @@ bool CombineArchive::save(const QString &pFileName)
     // Save ourselves to either the given file, which name is given, or to our
     // current file
 
-    OpenCOR::ZIPSupport::QZipWriter zipWriter(pFileName.isEmpty()?mFileName:pFileName);
+    ZIPSupport::QZipWriter zipWriter(pFileName.isEmpty()?mFileName:pFileName);
 
     zipWriter.addFile(ManifestFileName,
                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"

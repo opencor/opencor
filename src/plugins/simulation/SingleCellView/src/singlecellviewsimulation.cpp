@@ -582,17 +582,17 @@ void SingleCellViewSimulationData::createArrays()
     if (mRuntime) {
         // Create our various arrays to compute our model
 
-        mConstants   = new double[mRuntime->constantsCount()];
-        mRates       = new double[mRuntime->ratesCount()];
-        mStates      = new double[mRuntime->statesCount()];
+        mConstants = new double[mRuntime->constantsCount()];
+        mRates = new double[mRuntime->ratesCount()];
+        mStates = new double[mRuntime->statesCount()];
         mDummyStates = new double[mRuntime->statesCount()];
-        mAlgebraic   = new double[mRuntime->algebraicCount()];
-        mCondVar     = new double[mRuntime->condVarCount()];
+        mAlgebraic = new double[mRuntime->algebraicCount()];
+        mCondVar = new double[mRuntime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
         mInitialConstants = new double[mRuntime->constantsCount()];
-        mInitialStates    = new double[mRuntime->statesCount()];
+        mInitialStates = new double[mRuntime->statesCount()];
     } else {
         mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;

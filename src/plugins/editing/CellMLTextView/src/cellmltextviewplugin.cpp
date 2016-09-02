@@ -54,7 +54,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
 }
 
 //==============================================================================
-// CellML editing interface
+// CellML editing view interface
 //==============================================================================
 
 void CellMLTextViewPlugin::reformat(const QString &pFileName) const
@@ -328,20 +328,6 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given CellML file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
 QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
@@ -429,7 +415,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (errorMessage.isEmpty()) {
         if (pImport) {
-            OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
+            CellMLTextView::CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
@@ -441,9 +427,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 std::cout << converterOutputByteArray.constData();
             }
         } else {
-            OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+            CellMLTextView::CellmlTextViewParser parser;
 
-            if (!parser.execute(fileContents, OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1)) {
+            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {

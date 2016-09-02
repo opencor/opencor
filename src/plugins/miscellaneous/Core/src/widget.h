@@ -63,9 +63,6 @@ protected:
 
 private:
     QSize mSizeHint;
-
-signals:
-    void resized(const QSize &pSize, const QSize &pOldSize);
 };
 
 //==============================================================================

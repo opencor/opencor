@@ -70,8 +70,6 @@ public:
 
     bool isIndirectRemoteFile(const QString &pFileName);
 
-    bool contains(const QString &pFileName) const;
-
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
@@ -100,9 +98,9 @@ public:
                                 const bool &pClearGraphs = false);
 
     void retrieveFileDetails(const QString &pFileName,
-                             OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
-                             OpenCOR::SEDMLSupport::SedmlFile *&pSedmlFile,
-                             OpenCOR::COMBINESupport::CombineArchive *&pCombineArchive,
+                             CellMLSupport::CellmlFile *&pCellmlFile,
+                             SEDMLSupport::SedmlFile *&pSedmlFile,
+                             COMBINESupport::CombineArchive *&pCombineArchive,
                              FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                              COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
@@ -145,7 +143,7 @@ private:
                                  COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
 
     void retrieveCellmlFile(const QString &pFileName,
-                            OpenCOR::CellMLSupport::CellmlFile *&pCellmlFile,
+                            CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
                             const FileType &pFileType,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,

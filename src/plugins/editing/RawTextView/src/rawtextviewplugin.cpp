@@ -280,15 +280,6 @@ QString RawTextViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-bool RawTextViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we have a view widget for the given file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
 QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a text file

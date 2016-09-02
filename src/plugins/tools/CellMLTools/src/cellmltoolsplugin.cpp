@@ -272,7 +272,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, pVersion)) {
+    if (!cellmlFile->exportTo(fileName, pVersion, true)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 
@@ -393,8 +393,8 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                         // Everything seems to be fine, so attempt the export
                         // itself
 
-                        if (   ( wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), predefinedFormatOrUserDefinedFormatFileName))
-                            || (!wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0))) {
+                        if (   ( wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), predefinedFormatOrUserDefinedFormatFileName, true))
+                            || (!wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0, true))) {
                             errorMessage = "The file could not be exported";
 
                             CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
@@ -483,7 +483,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
+    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName, true)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 

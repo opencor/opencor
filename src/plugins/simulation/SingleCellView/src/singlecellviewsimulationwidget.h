@@ -137,7 +137,7 @@ public:
 
     SingleCellViewSimulation *simulation() const;
 
-    void updateGui();
+    void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
                                  const qulonglong &pSimulationResultsSize,
                                  const bool &pClearGraphs);
