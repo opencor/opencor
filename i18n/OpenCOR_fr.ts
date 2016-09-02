@@ -429,9 +429,5 @@
         <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
         <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
     </message>
-    <message>
-        <source>This version of %1 was built using &lt;a href=&quot;http://www.qt.io/&quot;&gt;Qt&lt;/a&gt; %2.</source>
-        <translation>Cette version d&apos;%1 a été compilée avec &lt;a href=&quot;http://www.qt.io/&quot;&gt;Qt&lt;/a&gt; %2.</translation>
-    </message>
 </context>
 </TS>

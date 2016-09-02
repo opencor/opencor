@@ -101,8 +101,6 @@ void CliApplication::about() const
     std::cout << copyright().toStdString() << std::endl;
     std::cout << std::endl;
     std::cout << applicationDescription(false).toStdString() << std::endl;
-    std::cout << std::endl;
-    std::cout << applicationBuildInformation(false).toStdString() << std::endl;
 }
 
 //==============================================================================
