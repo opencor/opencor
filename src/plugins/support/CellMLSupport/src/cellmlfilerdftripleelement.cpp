@@ -69,7 +69,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
             mType = PlainLiteral;
 
             mLexicalForm = QString::fromStdWString(plainLiteral->lexicalForm()).trimmed();
-            mLanguage    = QString::fromStdWString(plainLiteral->language()).trimmed();
+            mLanguage = QString::fromStdWString(plainLiteral->language()).trimmed();
         } else {
             ObjRef<iface::rdf_api::TypedLiteral> typedLiteral = QueryInterface(pRdfNode);
 

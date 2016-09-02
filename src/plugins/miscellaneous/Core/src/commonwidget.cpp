@@ -20,6 +20,8 @@ limitations under the License.
 // Common widget
 //==============================================================================
 
+#include "busywidget.h"
+#include "centralwidget.h"
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -29,6 +31,7 @@ limitations under the License.
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDockWidget>
+#include <QMainWindow>
 #include <QPainter>
 #include <QPen>
 #include <QSettings>
@@ -37,6 +40,14 @@ limitations under the License.
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+CommonWidget::CommonWidget(QWidget *pParent) :
+    mParent(pParent),
+    mBusyWidget(0)
+{
+}
 
 //==============================================================================
 
@@ -73,6 +84,111 @@ void CommonWidget::saveSettings(QSettings *pSettings) const
 void CommonWidget::retranslateUi()
 {
     // Nothing to do by default...
+}
+
+//==============================================================================
+
+bool CommonWidget::isBusyWidgetVisible() const
+{
+    // Return whether our busy widget is visible, i.e. whether it exists
+
+    return mBusyWidget;
+}
+
+//==============================================================================
+
+void CommonWidget::doShowBusyWidget(const double &pProgress)
+{
+    // Make sure that our previous busy widget, if any, is hidden (and deleted)
+
+    hideBusyWidget();
+
+    // Create and show our new busy widget resized, and then disable our parent
+
+    mBusyWidget = new BusyWidget(mParent, pProgress);
+
+    resizeBusyWidget();
+
+    if (mParent == centralWidget())
+        mainWindow()->setEnabled(false);
+    else
+        mParent->setEnabled(false);
+
+    // Make sure that our busy widget is shown straightaway
+    // Note: indeed, depending on the operating system (e.g. OS X) and on what
+    //       we do next (e.g. retrieving a remote file), our busy widget may or
+    //       not show straightaway...
+
+    QCoreApplication::sendPostedEvents();
+    QCoreApplication::processEvents();
+}
+
+//==============================================================================
+
+void CommonWidget::showBusyWidget()
+{
+    // Show a 'normal' busy widget
+
+    doShowBusyWidget();
+}
+
+//==============================================================================
+
+void CommonWidget::showProgressBusyWidget()
+{
+    // Show a progress busy widget
+
+    doShowBusyWidget(0.0);
+}
+
+//==============================================================================
+
+void CommonWidget::hideBusyWidget()
+{
+    // Make sure that we have a busy widget
+
+    if (!mBusyWidget)
+        return;
+
+    // Enable ourselves (or OpenCOR itself in case we are the central widget)
+    // and hide our busy widget by deleting it
+
+    if (mParent == centralWidget())
+        mainWindow()->setEnabled(true);
+    else
+        mParent->setEnabled(true);
+
+    delete mBusyWidget;
+
+    mBusyWidget = 0;
+}
+
+//==============================================================================
+
+void CommonWidget::resizeBusyWidget()
+{
+    // Make sure that we have a busy widget
+
+    if (!mBusyWidget)
+        return;
+
+    // Resize our busy widget
+
+    mBusyWidget->resize();
+}
+
+//==============================================================================
+
+void CommonWidget::setBusyWidgetProgress(const double &pProgress)
+{
+    // Make sure that we have a busy widget
+
+    if (!mBusyWidget)
+        return;
+
+    // Set the progress of our busy widget
+
+    mBusyWidget->setProgress(pProgress);
 }
 
 //==============================================================================

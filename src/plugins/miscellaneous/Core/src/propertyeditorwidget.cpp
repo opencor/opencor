@@ -560,10 +560,10 @@ bool Property::hasIndex(const QModelIndex &pIndex) const
 {
     // Return whether the given is that our name, value or unit item
 
-    bool res = (mName->index()  == pIndex) || (mValue->index() == pIndex);
+    bool res = (mName->index() == pIndex) || (mValue->index() == pIndex);
 
     if (mHasUnit)
-        res = res || (mUnit->index()  == pIndex);
+        res = res || (mUnit->index() == pIndex);
 
     return res;
 }
@@ -1238,7 +1238,7 @@ QSize PropertyEditorWidget::sizeHint() const
         // is based on the width of our different columns, and the height of our
         // header and our different rows
 
-        int hintWidth  = 0;
+        int hintWidth = 0;
         int hintHeight = header()->height();
 
         for (int i = 0, iMax = header()->count(); i < iMax; ++i)

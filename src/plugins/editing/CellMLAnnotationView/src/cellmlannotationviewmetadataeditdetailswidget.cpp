@@ -128,9 +128,9 @@ bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotati
 {
     // Return whether the current item is lower than the given one
 
-    int nameComparison     = mName.compare(pItem.name());
+    int nameComparison = mName.compare(pItem.name());
     int resourceComparison = mResource.compare(pItem.resource());
-    int idComparison       = mId.compare(pItem.id());
+    int idComparison = mId.compare(pItem.id());
 
     return (nameComparison < 0)?
                true:
@@ -320,9 +320,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mOutput = new Core::Widget(this);
 
     mOutput->createLayout();
-
-    connect(mOutput, SIGNAL(resized(const QSize &, const QSize &)),
-            this, SLOT(recenterBusyWidget()));
 
     // Create our output message (within a scroll area, in case the label is too
     // wide)
@@ -652,7 +649,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     // Hide our busy widget (just to be on the safe side)
 
-    mViewWidget->hideBusyWidget();
+    mOutput->hideBusyWidget();
 
     // Show/hide our output message and output for ontological terms
 
@@ -662,7 +659,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     // Show our busy widget instead, if needed
 
     if (showBusyWidget)
-        mViewWidget->showBusyWidget(mOutput);
+        mOutput->showBusyWidget();
 }
 
 //==============================================================================
@@ -1130,15 +1127,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::copy()
         QApplication::clipboard()->setText(mUrls.value(mTextContent));
     else
         QApplication::clipboard()->setText(mUrls.value(mLink));
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
-{
-    // Resize our busy widget
-
-    mViewWidget->resizeBusyWidget();
 }
 
 //==============================================================================

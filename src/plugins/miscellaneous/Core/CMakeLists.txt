@@ -19,7 +19,6 @@ ADD_PLUGIN(Core
         ../../viewinterface.cpp
 
         src/borderedwidget.cpp
-        src/busysupportwidget.cpp
         src/busywidget.cpp
         src/centralwidget.cpp
         src/collapsiblewidget.cpp

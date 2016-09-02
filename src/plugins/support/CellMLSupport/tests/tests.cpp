@@ -60,8 +60,8 @@ void Tests::doRuntimeTest(const QString &pFileName,
     OpenCOR::CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->parameters();
 
     foreach (OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
-        modelParameters  << QString("%1 (%2)").arg(parameter->fullyFormattedName())
-                                              .arg(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
+        modelParameters << QString("%1 (%2)").arg(parameter->fullyFormattedName())
+                                             .arg(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
     }
 
     QCOMPARE(modelParameters << QString(), pModelParameters);

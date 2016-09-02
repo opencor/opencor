@@ -53,29 +53,6 @@ PLUGININFO_FUNC RawSEDMLViewPluginInfo()
 }
 
 //==============================================================================
-// SED-ML editing interface
-//==============================================================================
-
-void RawSEDMLViewPlugin::reformat(const QString &pFileName) const
-{
-    // Reformat the contents of the given file's editor
-
-    mViewWidget->reformat(pFileName);
-}
-
-//==============================================================================
-
-bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
-                                    QString &pExtra) const
-{
-    Q_UNUSED(pExtra);
-
-    // Validate the given file
-
-    return mViewWidget->validate(pFileName);
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -273,6 +250,29 @@ void RawSEDMLViewPlugin::handleUrl(const QUrl &pUrl)
 }
 
 //==============================================================================
+// SED-ML editing view interface
+//==============================================================================
+
+void RawSEDMLViewPlugin::reformat(const QString &pFileName) const
+{
+    // Reformat the contents of the given file's editor
+
+    mViewWidget->reformat(pFileName);
+}
+
+//==============================================================================
+
+bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
+                                    QString &pExtra) const
+{
+    Q_UNUSED(pExtra);
+
+    // Validate the given file
+
+    return mViewWidget->validate(pFileName);
+}
+
+//==============================================================================
 // View interface
 //==============================================================================
 
@@ -301,20 +301,6 @@ QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return SEDMLSupport::SedmlFileExtension;
-}
-
-//==============================================================================
-
-bool RawSEDMLViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a SED-ML file
-
-    if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given SED-ML file
-
-    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================

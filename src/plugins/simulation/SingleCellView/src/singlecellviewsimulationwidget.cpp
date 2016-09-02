@@ -20,6 +20,7 @@ limitations under the License.
 // Single Cell view simulation widget
 //==============================================================================
 
+#include "centralwidget.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
@@ -428,7 +429,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                                mSedmlFileIssues,
                                                mCombineArchiveIssues);
 
-    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime():0,
+    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
                                                pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
@@ -682,7 +683,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                                                    mCombineArchiveIssues);
     }
 
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime():0;
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime(pReloadingView):0;
 
     if (pReloadingView)
         mSimulation->update(cellmlFileRuntime);
@@ -2345,20 +2346,12 @@ void SingleCellViewSimulationWidget::furtherInitialize()
     // initialise our simulation, if we still have a valid simulation
     // environment
 
-    bool visible = isVisible();
-
-    if (visible)
-        mPlugin->viewWidget()->showGlobalBusyWidget(this);
-
     bool validSimulationEnvironment = doFurtherInitialize();
 
     initializeGui(validSimulationEnvironment);
 
     if (validSimulationEnvironment)
         initializeSimulation();
-
-    if (visible)
-        mPlugin->viewWidget()->hideBusyWidget();
 }
 
 //==============================================================================
@@ -2402,7 +2395,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
-        mPlugin->viewWidget()->showGlobalProgressBusyWidget(this);
+        Core::centralWidget()->showProgressBusyWidget();
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
 
@@ -2966,8 +2959,13 @@ void SingleCellViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPane
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateGui()
+void SingleCellViewSimulationWidget::updateGui(const bool &pCheckVisibility)
 {
+    // Make sure that we are visible, if requested
+
+    if (pCheckVisibility && !isVisible())
+        return;
+
     // Make sure that our graphs widget's GUI is up to date
 
     mContentsWidget->informationWidget()->graphsWidget()->updateGui();
@@ -3248,7 +3246,7 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
 {
     // We are done with the export, so hide our busy widget
 
-    mPlugin->viewWidget()->hideBusyWidget();
+    Core::centralWidget()->hideBusyWidget();
 
     // Display the given error message, if any
 
@@ -3264,7 +3262,7 @@ void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProg
 {
     // There has been some progress with our export, so update our busy widget
 
-    mPlugin->viewWidget()->setBusyWidgetProgress(pProgress);
+    Core::centralWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

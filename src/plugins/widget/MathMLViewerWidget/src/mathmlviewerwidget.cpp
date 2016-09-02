@@ -253,6 +253,13 @@ QString MathmlViewerWidget::contents() const
 
 void MathmlViewerWidget::setContents(const QString &pContents)
 {
+    // Make sure that we are not trying to set the same contents
+
+    if (   !pContents.compare(mContents)
+        &&  ((pContents.isEmpty() && !mError) || !pContents.isEmpty())) {
+        return;
+    }
+
     // Try to set our contents to our MathML document
     // Note: we don't check whether pContents has the same value as mContents
     //       since we would also need to check the value of mError and we don't
@@ -269,6 +276,8 @@ void MathmlViewerWidget::setContents(const QString &pContents)
 
         if (domDocument.setContent(pContents))
             mError = !mMathmlDocument.setContent(domDocument.toString(-1));
+        else if (pContents.isEmpty())
+            mError = !mMathmlDocument.setContent(QString());
         else
             mError = true;
     }
@@ -291,7 +300,7 @@ void MathmlViewerWidget::setContents(const QString &pContents)
 
         QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
-        mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
+        mOneOverMathmlDocumentWidth = 1.0/mathmlDocumentSize.width();
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
     }
 

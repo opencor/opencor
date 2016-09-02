@@ -89,7 +89,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, this);
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
-    mWebViewer           = new WebViewerWidget::WebViewerWidget(this);
+    mWebViewer = new WebViewerWidget::WebViewerWidget(this);
 
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
 

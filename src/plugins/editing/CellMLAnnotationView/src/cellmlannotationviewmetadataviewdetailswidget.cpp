@@ -35,12 +35,12 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mCellmlFile(pCellmlFile)
 {
     // Create our different metadata views
 
-    mRawView    = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pCellmlFile, this);
+    mRawView = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pCellmlFile, this);
     mNormalView = new CellmlAnnotationViewMetadataNormalViewDetailsWidget(pCellmlFile, this);
 
     // Make our raw view the default widget

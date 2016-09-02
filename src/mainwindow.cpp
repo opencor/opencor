@@ -679,7 +679,7 @@ void MainWindow::loadSettings()
 
         QRect desktopGeometry = qApp->desktop()->availableGeometry();
         int horizSpace = desktopGeometry.width()/13;
-        int vertSpace  = desktopGeometry.height()/13;
+        int vertSpace = desktopGeometry.height()/13;
 
         setGeometry(desktopGeometry.left()+horizSpace,
                     desktopGeometry.top()+vertSpace,
@@ -735,7 +735,7 @@ void MainWindow::loadSettings()
     //          widgets that need translating (e.g. graph panels get created in
     //          the SingleCellView plugin)...
 
-    setLocale(OpenCOR::rawLocale(), true);
+    setLocale(rawLocale(), true);
 }
 
 //==============================================================================
@@ -788,7 +788,7 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         // Also keep a copy of the new raw locale in our settings (so that the
         // new locale can be retrieved from plugins)
 
-        OpenCOR::setRawLocale(mRawLocale);
+        setRawLocale(mRawLocale);
     }
 
     // Check whether the new locale is different from the old one and if so,

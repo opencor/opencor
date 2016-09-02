@@ -49,7 +49,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
                                                                              SingleCellViewSimulationWidget *pSimulationWidget,
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mPlugin(pPlugin),
     mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
@@ -236,8 +236,8 @@ void SingleCellViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                     GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SingleCellViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // Make sure that we have a property editor
 
@@ -520,8 +520,8 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     foreach (Core::Property *property, mGraphProperties) {
         bool graphSelected = property->isChecked();
 
-        canSelectAllGraphs   = canSelectAllGraphs   || !graphSelected;
-        canUnselectAllGraphs = canUnselectAllGraphs ||  graphSelected;
+        canSelectAllGraphs = canSelectAllGraphs || !graphSelected;
+        canUnselectAllGraphs = canUnselectAllGraphs || graphSelected;
     }
 
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);

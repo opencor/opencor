@@ -48,16 +48,40 @@ namespace Core {
 
 //==============================================================================
 
+class BusyWidget;
+
+//==============================================================================
+
 class CORE_EXPORT CommonWidget
 {
 public:
+    explicit CommonWidget(QWidget *pParent);
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual void retranslateUi();
 
+    bool isBusyWidgetVisible() const;
+
+    void showBusyWidget();
+    void showProgressBusyWidget();
+
+    void hideBusyWidget();
+
+    void resizeBusyWidget();
+
+    void setBusyWidgetProgress(const double &pProgress);
+
 protected:
     QSize defaultSize(const double &pRatio) const;
+
+private:
+    QWidget *mParent;
+
+    BusyWidget *mBusyWidget;
+
+    void doShowBusyWidget(const double &pProgress = -1.0);
 };
 
 //==============================================================================
