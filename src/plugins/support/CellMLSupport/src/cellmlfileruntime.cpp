@@ -766,15 +766,15 @@ void CellmlFileRuntime::update()
     //       SingleCellViewSimulationResults::addPoint())...
 
     if (mModelType == CellmlFileRuntime::Ode) {
-        mConstantsCount   = mOdeCodeInformation->constantIndexCount();
+        mConstantsCount = mOdeCodeInformation->constantIndexCount();
         mStatesRatesCount = mOdeCodeInformation->rateIndexCount();
-        mAlgebraicCount   = mOdeCodeInformation->algebraicIndexCount();
-        mCondVarCount     = 0;
+        mAlgebraicCount = mOdeCodeInformation->algebraicIndexCount();
+        mCondVarCount = 0;
     } else {
-        mConstantsCount   = mDaeCodeInformation->constantIndexCount();
+        mConstantsCount = mDaeCodeInformation->constantIndexCount();
         mStatesRatesCount = mDaeCodeInformation->rateIndexCount();
-        mAlgebraicCount   = mDaeCodeInformation->algebraicIndexCount();
-        mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
+        mAlgebraicCount = mDaeCodeInformation->algebraicIndexCount();
+        mCondVarCount = mDaeCodeInformation->conditionVariableCount();
     }
 
     // Go through the variables defined or referenced in our main CellML file
@@ -1040,14 +1040,14 @@ void CellmlFileRuntime::update()
         mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
 
         if (mModelType == CellmlFileRuntime::Ode) {
-            mComputeOdeRates     = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeRates");
+            mComputeOdeRates = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeRates");
             mComputeOdeVariables = (ComputeOdeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeVariables");
         } else {
             mComputeDaeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeEssentialVariables");
-            mComputeDaeResiduals          = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeResiduals");
-            mComputeDaeRootInformation    = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRootInformation");
-            mComputeDaeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeStateInformation");
-            mComputeDaeVariables          = (ComputeDaeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeVariables");
+            mComputeDaeResiduals = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeResiduals");
+            mComputeDaeRootInformation = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRootInformation");
+            mComputeDaeStateInformation = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeStateInformation");
+            mComputeDaeVariables = (ComputeDaeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeVariables");
         }
 
         // Make sure that we managed to retrieve all the ODE/DAE functions

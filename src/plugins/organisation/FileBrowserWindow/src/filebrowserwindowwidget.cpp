@@ -126,7 +126,7 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
         // The initial path doesn't exist, so just revert to the home path
 
         mInitPathDir = QDir::homePath();
-        mInitPath    = "";
+        mInitPath = "";
     } else {
         // The initial path exists, so retrieve some information about the
         // folder and/or file (depending on whether the initial path refers to a
@@ -142,12 +142,12 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
             // We are dealing with a folder
 
             mInitPathDir = initPathFileInfo.canonicalFilePath();
-            mInitPath    = "";
+            mInitPath = "";
         } else {
             // We are dealing with a file
 
             mInitPathDir = initPathFileInfo.canonicalPath();
-            mInitPath    = initPathFileInfo.canonicalFilePath();
+            mInitPath = initPathFileInfo.canonicalFilePath();
         }
     }
 

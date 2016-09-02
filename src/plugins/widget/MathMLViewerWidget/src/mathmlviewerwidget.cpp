@@ -300,7 +300,7 @@ void MathmlViewerWidget::setContents(const QString &pContents)
 
         QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
-        mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
+        mOneOverMathmlDocumentWidth = 1.0/mathmlDocumentSize.width();
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
     }
 

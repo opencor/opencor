@@ -58,10 +58,10 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     // Add some real line widgets to the top, left, bottom and/or right of
     // ourselves, if required
 
-    mTopBorder    = newLineWidget(this);
-    mLeftBorder   = newLineWidget(false, this);
+    mTopBorder = newLineWidget(this);
+    mLeftBorder = newLineWidget(false, this);
     mBottomBorder = newLineWidget(this);
-    mRightBorder  = newLineWidget(false, this);
+    mRightBorder = newLineWidget(false, this);
 
     gridLayout->addWidget(mTopBorder, 0, 0, 1, 3);
     gridLayout->addWidget(mLeftBorder, 1, 0);

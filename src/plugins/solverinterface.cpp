@@ -134,8 +134,8 @@ void OdeSolver::initialize(const double &pVoiStart,
     mRatesStatesCount = pRatesStatesCount;
 
     mConstants = pConstants;
-    mRates     = pRates;
-    mStates    = pStates;
+    mRates = pRates;
+    mStates = pStates;
     mAlgebraic = pAlgebraic;
 
     mComputeRates = pComputeRates;
@@ -184,18 +184,18 @@ void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
     // Initialise the DAE solver
 
     mRatesStatesCount = pRatesStatesCount;
-    mCondVarCount     = pCondVarCount;
+    mCondVarCount = pCondVarCount;
 
     mConstants = pConstants;
-    mRates     = pRates;
-    mStates    = pStates;
+    mRates = pRates;
+    mStates = pStates;
     mAlgebraic = pAlgebraic;
-    mCondVar   = pCondVar;
+    mCondVar = pCondVar;
 
     delete[] mOldRates;
     delete[] mOldStates;
 
-    mOldRates  = new double[pRatesStatesCount];
+    mOldRates = new double[pRatesStatesCount];
     mOldStates = new double[pRatesStatesCount];
 
     memcpy(mOldRates, pRates, pRatesStatesCount*SizeOfDouble);

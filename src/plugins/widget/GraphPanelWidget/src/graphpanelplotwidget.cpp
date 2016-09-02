@@ -667,10 +667,10 @@ void GraphPanelPlotWidget::updateActions()
     double crtRangeX = crtMaxX-crtMinX;
     double crtRangeY = crtMaxY-crtMinY;
 
-    mCanZoomInX  = crtRangeX > MinAxisRange;
+    mCanZoomInX = crtRangeX > MinAxisRange;
     mCanZoomOutX = crtRangeX < MaxAxisRange;
 
-    mCanZoomInY  = crtRangeY > MinAxisRange;
+    mCanZoomInY = crtRangeY > MinAxisRange;
     mCanZoomOutY = crtRangeY < MaxAxisRange;
 
     // Update the enabled status of our actions

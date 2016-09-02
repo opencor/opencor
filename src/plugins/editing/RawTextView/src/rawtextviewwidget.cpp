@@ -157,7 +157,7 @@ void RawTextViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editor, should there be one for the given file
 
-    EditorWidget::EditorWidget *editor  = mEditors.value(pFileName);
+    EditorWidget::EditorWidget *editor = mEditors.value(pFileName);
 
     if (editor) {
         // There is an editor for the given file name, so save our settings and

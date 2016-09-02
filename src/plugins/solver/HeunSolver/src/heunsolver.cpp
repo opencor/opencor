@@ -80,7 +80,7 @@ void HeunSolver::initialize(const double &pVoiStart,
     delete[] mK;
     delete[] mYk;
 
-    mK  = new double[pRatesStatesCount];
+    mK = new double[pRatesStatesCount];
     mYk = new double[pRatesStatesCount];
 }
 
@@ -112,7 +112,7 @@ void HeunSolver::solve(double &pVoi, const double &pVoiEnd) const
         // Compute k and Yk
 
         for (int i = 0; i < mRatesStatesCount; ++i) {
-            mK[i]  = mRates[i];
+            mK[i] = mRates[i];
             mYk[i] = mStates[i]+realStep*mRates[i];
         }
 

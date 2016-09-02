@@ -364,10 +364,10 @@ void CorePlugin::initializePlugin()
     mFileLockedAction = newAction(true, QKeySequence(Qt::CTRL|Qt::Key_L),
                                   Core::mainWindow());
 
-    mFileSaveAction    = newAction(QIcon(":/oxygen/actions/document-save.png"),
-                                   QKeySequence::Save, Core::mainWindow());
-    mFileSaveAsAction  = newAction(QIcon(":/oxygen/actions/document-save-as.png"),
-                                   QKeySequence::SaveAs, Core::mainWindow());
+    mFileSaveAction = newAction(QIcon(":/oxygen/actions/document-save.png"),
+                                QKeySequence::Save, Core::mainWindow());
+    mFileSaveAsAction = newAction(QIcon(":/oxygen/actions/document-save-as.png"),
+                                  QKeySequence::SaveAs, Core::mainWindow());
     mFileSaveAllAction = newAction(QIcon(":/oxygen/actions/document-save-all.png"),
                                    Core::mainWindow());
 
@@ -394,25 +394,25 @@ void CorePlugin::initializePlugin()
     #error Unsupported platform
 #endif
                                     Core::mainWindow());
-    mFileNextAction     = newAction(QIcon(":/oxygen/actions/go-next.png"),
+    mFileNextAction = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-                                    QKeySequence(Qt::CTRL|Qt::Key_Tab),
+                                QKeySequence(Qt::CTRL|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
-                                    QKeySequence(Qt::META|Qt::Key_Tab),
+                                QKeySequence(Qt::META|Qt::Key_Tab),
 #else
     #error Unsupported platform
 #endif
                                     Core::mainWindow());
 
-    mFileCloseAction    = newAction(QIcon(":/oxygen/actions/document-close.png"),
+    mFileCloseAction = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
-                                    QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::CTRL|Qt::Key_W),
+                                 QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::CTRL|Qt::Key_W),
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-                                    QKeySequence::Close,
+                                 QKeySequence::Close,
 #else
     #error Unsupported platform
 #endif
-                                    Core::mainWindow());
+                                 Core::mainWindow());
     mFileCloseAllAction = Core::newAction(Core::mainWindow());
 
     // Create the separator before which we will insert our Reopen sub-menu
