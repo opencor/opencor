@@ -231,8 +231,10 @@ void TreeViewWidget::mousePressEvent(QMouseEvent *pEvent)
     //       be shown if we are not over at least one selected item...
 
     if (pEvent->button() == Qt::RightButton) {
-        if (!selectedIndexes().contains(indexAt(pEvent->pos())))
-            setCurrentIndex(indexAt(pEvent->pos()));
+        QModelIndex indexAtPosition = indexAt(pEvent->pos());
+
+        if (!selectedIndexes().contains(indexAtPosition))
+            setCurrentIndex(indexAtPosition);
     }
 }
 
