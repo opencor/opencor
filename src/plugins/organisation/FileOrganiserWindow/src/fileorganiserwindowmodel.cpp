@@ -185,7 +185,7 @@ QModelIndexList FileOrganiserWindowModel::decodeData(QByteArray &pData) const
 QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) const
 {
     QMimeData *res = new QMimeData();
-    QList<QUrl> urls;
+    QList<QUrl> urls = QList<QUrl>();
 
     // Retrieve the URL of the different file (not folder) items
     // Note: this list of URLs is useful with regards to the FileSystemMimeType
