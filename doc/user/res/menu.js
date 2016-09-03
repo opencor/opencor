@@ -40,7 +40,6 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 1, "label": "Tools", "subMenuHeader": true },
                                 { "level": 2, "label": "CellMLTools", "link": "user/plugins/tools/CellMLTools.html", "subMenuItem": true },
                                 { "separator": true },
-                                { "level": 0, "label": "Known issues", "link": "user/knownIssues.html" },
                                 { "level": 0, "label": "Known limitations", "link": "user/knownLimitations.html" },
                                 { "separator": true },
                                 { "level": 0, "label": "Supported platforms", "link": "user/supportedPlatforms.html" },
