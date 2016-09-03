@@ -107,12 +107,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver",
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
@@ -365,12 +365,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver",
                              "entries": [
                                { "type": "Added", "description": "Choice to interpolate the solution." }
                              ]
