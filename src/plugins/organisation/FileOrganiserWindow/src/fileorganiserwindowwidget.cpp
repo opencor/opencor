@@ -503,9 +503,9 @@ bool FileOrganiserWindowWidget::viewportEvent(QEvent *pEvent)
         QStandardItem *crtItem = mModel->itemFromIndex(indexAt(helpEvent->pos()));
 
         if (crtItem) {
-            setToolTip(Core::nativeCanonicalDirName(crtItem->data(Item::Folder).toBool()?
-                                                         QString():
-                                                         crtItem->data(Item::Path).toString()));
+            setToolTip(crtItem->data(Item::Folder).toBool()?
+                           QString():
+                           Core::nativeCanonicalDirName(crtItem->data(Item::Path).toString()));
         }
     }
 

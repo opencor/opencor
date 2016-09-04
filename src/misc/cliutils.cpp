@@ -155,15 +155,6 @@ QString applicationDescription(const bool &pGuiMode)
 
 //==============================================================================
 
-QString applicationBuildInformation(const bool &pGuiMode)
-{
-    QString res = QObject::tr("This version of %1 was built using <a href=\"http://www.qt.io/\">Qt</a> %2.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>", qVersion());
-
-    return pGuiMode?res:plainString(res);
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================

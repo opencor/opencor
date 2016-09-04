@@ -393,8 +393,8 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                         // Everything seems to be fine, so attempt the export
                         // itself
 
-                        if (   ( wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), predefinedFormatOrUserDefinedFormatFileName, true))
-                            || (!wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0, true))) {
+                        if (   ( wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), predefinedFormatOrUserDefinedFormatFileName))
+                            || (!wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0))) {
                             errorMessage = "The file could not be exported";
 
                             CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
