@@ -91,8 +91,8 @@ bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
                                            QByteArray &pFileContents,
                                            QString *pErrorMessage)
 {
-    // Read the contents of the file, which URL is given
-
+    // Read the contents of the file, which URL is given, showing our busy
+    // widget
 
     centralWidget()->showBusyWidget();
 

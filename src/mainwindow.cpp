@@ -1216,8 +1216,7 @@ void MainWindow::on_actionAbout_triggered()
                     "<h1 align=center><strong>"+version()+"</strong></h1>"
                     "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
-                    "<p>"+applicationDescription()+"</p>"
-                    "<p>"+applicationBuildInformation()+"</p>");
+                    "<p>"+applicationDescription()+"</p>");
 }
 
 //==============================================================================
