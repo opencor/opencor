@@ -159,7 +159,7 @@ private:
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
-    QMap<QAction *, Plugin *> mCellmlEditingViewPlugins;
+    QMap<QAction *, Plugin *> mCellmlBasedViewPlugins;
 
     SingleCellViewSimulation *mSimulation;
 

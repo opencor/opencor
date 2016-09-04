@@ -93,7 +93,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlugin(pPlugin),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
-    mCellmlEditingViewPlugins(QMap<QAction *, Plugin *>()),
+    mCellmlBasedViewPlugins(QMap<QAction *, Plugin *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
@@ -157,6 +157,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
             this, SLOT(removeCurrentGraphPanel()));
     connect(mRemoveAllGraphPanelsAction, SIGNAL(triggered(bool)),
             this, SLOT(removeAllGraphPanels()));
+    connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
+            this, SLOT(openCellmlFile()));
     connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
@@ -204,14 +206,27 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     cellmlOpenToolButton->setDefaultAction(mCellmlOpenAction);
     cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
-    cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
+    cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     foreach (Plugin *cellmlEditingViewPlugin, pPlugin->cellmlEditingViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
 
-        mCellmlEditingViewPlugins.insert(action, cellmlEditingViewPlugin);
+        mCellmlBasedViewPlugins.insert(action, cellmlEditingViewPlugin);
+
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(openCellmlFile()));
+    }
+
+    cellmlOpenDropDownMenu->addSeparator();
+
+    foreach (Plugin *cellmlSimulationViewPlugin, pPlugin->cellmlSimulationViewPlugins()) {
+        QAction *action = Core::newAction(Core::mainWindow());
+
+        cellmlOpenDropDownMenu->addAction(action);
+
+        mCellmlBasedViewPlugins.insert(action, cellmlSimulationViewPlugin);
 
         connect(action, SIGNAL(triggered(bool)),
                 this, SLOT(openCellmlFile()));
@@ -527,8 +542,8 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
     // Retranslate our CellML editing view actions
 
-    foreach (QAction *cellmlEditingViewAction, mCellmlEditingViewPlugins.keys()) {
-        Plugin *plugin = mCellmlEditingViewPlugins.value(cellmlEditingViewAction);
+    foreach (QAction *cellmlEditingViewAction, mCellmlBasedViewPlugins.keys()) {
+        Plugin *plugin = mCellmlBasedViewPlugins.value(cellmlEditingViewAction);
         QString viewName = qobject_cast<ViewInterface *>(plugin->instance())->viewName();
 
         I18nInterface::retranslateAction(cellmlEditingViewAction,
@@ -3229,7 +3244,10 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 
     // Ask OpenCOR to switch to the requested CellML editing view
 
-    QDesktopServices::openUrl("opencor://Core.selectView/"+mCellmlEditingViewPlugins.value(qobject_cast<QAction *>(sender()))->name());
+    Plugin *plugin = mCellmlBasedViewPlugins.value(qobject_cast<QAction *>(sender()));
+
+    if (plugin)
+        QDesktopServices::openUrl("opencor://Core.selectView/"+plugin->name());
 }
 
 //==============================================================================
