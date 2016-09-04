@@ -5,3 +5,7 @@
 	path = src/plugins/thirdParty/PythonQt/PythonQt
 	url = https://github.com/commontk/PythonQt
 	branch = patched-6
+[submodule "src/plugins/thirdParty/OpenSSL/OpenSSL"]
+	path = src/plugins/thirdParty/OpenSSL/OpenSSL
+	url = git@github.com:openssl/openssl.git
+	branch = OpenSSL_1_1_0-stable
