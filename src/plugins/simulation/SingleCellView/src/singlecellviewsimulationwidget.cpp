@@ -159,6 +159,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
             this, SLOT(removeAllGraphPanels()));
     connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
             this, SLOT(openCellmlFile()));
+    connect(mSedmlExportAction, SIGNAL(triggered(bool)),
+            this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
@@ -237,7 +239,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     sedmlExportToolButton->setDefaultAction(mSedmlExportAction);
     sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
-    sedmlExportToolButton->setPopupMode(QToolButton::InstantPopup);
+    sedmlExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
     sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
