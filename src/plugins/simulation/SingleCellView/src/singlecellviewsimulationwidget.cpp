@@ -162,8 +162,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportCombineArchive()));
 
-    mDevelopmentModeAction->setEnabled(Core::FileManager::instance()->isReadableAndWritable(pFileName));
-
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
 
@@ -444,6 +442,12 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     connect(mSimulation->data(), SIGNAL(modified(const bool &)),
             this, SLOT(simulationDataModified(const bool &)));
+
+    // Enable/disable our development mode action depending on whether our file
+    // is readable/writable and of CellML type
+
+    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
+                                       && (mFileType == SingleCellViewWidget::CellmlFile));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
