@@ -118,6 +118,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
                                             QKeySequence(Qt::CTRL|Qt::Key_F2), mToolBarWidget);
+    mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
+                                                  mToolBarWidget);
+    mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
+                                                 mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
                                              mToolBarWidget);
     mAddGraphPanelAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
@@ -126,23 +130,23 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                               mToolBarWidget);
     mRemoveCurrentGraphPanelAction = Core::newAction(mToolBarWidget);
     mRemoveAllGraphPanelsAction = Core::newAction(mToolBarWidget);
-    mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                                  mToolBarWidget);
-    mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
-                                                 mToolBarWidget);
-    mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
-                                                  mToolBarWidget);
+    mCellmlOpenAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"),
+                                        mToolBarWidget);
     mSedmlExportAction = Core::newAction(QIcon(":/SEDMLSupport/logo.png"),
                                          mToolBarWidget);
     mSedmlExportSedmlFileAction = Core::newAction(mToolBarWidget);
     mSedmlExportCombineArchiveAction = Core::newAction(mToolBarWidget);
-    mCellmlOpenAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"),
-                                        mToolBarWidget);
+    mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
+                                                  mToolBarWidget);
 
     connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(runPauseResumeSimulation()));
     connect(mStopSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(stopSimulation()));
+    connect(mResetModelParametersAction, SIGNAL(triggered(bool)),
+            this, SLOT(resetModelParameters()));
+    connect(mClearSimulationDataAction, SIGNAL(triggered(bool)),
+            this, SLOT(clearSimulationData()));
     connect(mDevelopmentModeAction, SIGNAL(triggered(bool)),
             this, SLOT(developmentMode()));
     connect(mAddGraphPanelAction, SIGNAL(triggered(bool)),
@@ -153,10 +157,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
             this, SLOT(removeCurrentGraphPanel()));
     connect(mRemoveAllGraphPanelsAction, SIGNAL(triggered(bool)),
             this, SLOT(removeAllGraphPanels()));
-    connect(mResetModelParametersAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetModelParameters()));
-    connect(mClearSimulationDataAction, SIGNAL(triggered(bool)),
-            this, SLOT(clearSimulationData()));
     connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
@@ -480,6 +480,10 @@ void SingleCellViewSimulationWidget::retranslateUi()
                                      tr("Run the simulation"));
     I18nInterface::retranslateAction(mStopSimulationAction, tr("Stop Simulation"),
                                      tr("Stop the simulation"));
+    I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
+                                     tr("Reset all the model parameters"));
+    I18nInterface::retranslateAction(mClearSimulationDataAction, tr("Clear Simulation Data"),
+                                     tr("Clear the simulation data"));
     I18nInterface::retranslateAction(mDevelopmentModeAction, tr("Development Mode"),
                                      tr("Enable/disable the development mode"));
     I18nInterface::retranslateAction(mAddGraphPanelAction, tr("Add Graph Panel"),
@@ -490,20 +494,16 @@ void SingleCellViewSimulationWidget::retranslateUi()
                                      tr("Remove the current graph panel"));
     I18nInterface::retranslateAction(mRemoveAllGraphPanelsAction, tr("All"),
                                      tr("Remove all the graph panels"));
-    I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
-                                     tr("Reset all the model parameters"));
-    I18nInterface::retranslateAction(mClearSimulationDataAction, tr("Clear Simulation Data"),
-                                     tr("Clear the simulation data"));
-    I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
-                                     tr("Export the simulation data"));
+    I18nInterface::retranslateAction(mCellmlOpenAction, tr("CellML Open"),
+                                     tr("Open the referenced CellML file"));
     I18nInterface::retranslateAction(mSedmlExportAction, tr("SED-ML Export"),
                                      tr("Export the simulation to SED-ML"));
     I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),
                                      tr("Export the simulation to SED-ML using a SED-ML file"));
     I18nInterface::retranslateAction(mSedmlExportCombineArchiveAction, tr("COMBINE Archive..."),
                                      tr("Export the simulation to SED-ML using a COMBINE archive"));
-    I18nInterface::retranslateAction(mCellmlOpenAction, tr("CellML Open"),
-                                     tr("Open the referenced CellML file"));
+    I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
+                                     tr("Export the simulation data"));
 
     // Retranslate our delay and delay value widgets
 

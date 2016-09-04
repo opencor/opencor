@@ -177,18 +177,18 @@ private:
 
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
+    QAction *mResetModelParametersAction;
+    QAction *mClearSimulationDataAction;
     QAction *mDevelopmentModeAction;
     QAction *mAddGraphPanelAction;
     QAction *mRemoveGraphPanelAction;
     QAction *mRemoveCurrentGraphPanelAction;
     QAction *mRemoveAllGraphPanelsAction;
-    QAction *mResetModelParametersAction;
-    QAction *mClearSimulationDataAction;
-    QAction *mSimulationDataExportAction;
+    QAction *mCellmlOpenAction;
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
-    QAction *mCellmlOpenAction;
+    QAction *mSimulationDataExportAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
