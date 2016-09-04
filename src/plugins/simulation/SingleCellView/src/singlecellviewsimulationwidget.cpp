@@ -509,7 +509,7 @@ void SingleCellViewSimulationWidget::retranslateUi()
                                      tr("Remove the current graph panel"));
     I18nInterface::retranslateAction(mRemoveAllGraphPanelsAction, tr("All"),
                                      tr("Remove all the graph panels"));
-    I18nInterface::retranslateAction(mCellmlOpenAction, tr("CellML Open"),
+    I18nInterface::retranslateAction(mCellmlOpenAction, tr("Referenced CellML File"),
                                      tr("Open the referenced CellML file"));
     I18nInterface::retranslateAction(mSedmlExportAction, tr("SED-ML Export"),
                                      tr("Export the simulation to SED-ML"));
