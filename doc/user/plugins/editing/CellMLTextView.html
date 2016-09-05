@@ -914,6 +914,51 @@
     <span class="keyword">enddef</span>;
 <span class="keyword">enddef</span>;</pre>
 
+        <div class="section">
+            CLI support
+        </div>
+
+        <p>
+            The CellMLTextView plugin relies on the <a href="#CellML Text format">CellML Text format</a>. CLI support has therefore been added to it so that a <a href="https://www.cellml.org/">CellML</a> file can, from the command line, be imported to the <a href="#CellML Text format">CellML Text format</a>, and back.
+        </p>
+
+        <p>
+            For example, to import <code>models/van_der_pol_model_1928.cellml</code> to the CellML Text format, we would do the following:
+        </p>
+
+        <pre>$ ./OpenCOR -c CellMLTextView::import models/van_der_pol_model_1928.cellml
+def model van_der_pol_model_1928 as
+    def comp main as
+        def unit per_second as
+            unit second {expo: -1};
+        enddef;
+
+        var time: second;
+        var x: dimensionless {init: -2};
+        var y: dimensionless {init: 0};
+        var epsilon: dimensionless {init: 1};
+
+        ode(x, time) = y*1{per_second};
+        ode(y, time) = (epsilon*(1{dimensionless}-sqr(x))*y-x)*1{per_second};
+    enddef;
+enddef;</pre>
+
+        <p>
+            Similarly, and assuming the above import has been saved to a file named <code>van_der_pol_model_1928.txt</code>, we could get our original CellML file by doing the following:
+        </p>
+
+        <pre>$ ./OpenCOR -c CellMLTextView::export van_der_pol_model_1928.txt > van_der_pol_model_1928.cellml</pre>
+
+        <p>
+            For precaution, the new CellML file relies on CellML 1.1, as confirmed by <code>diff</code>:
+        </p>
+
+        <pre>$ diff models/van_der_pol_model_1928.cellml van_der_pol_model_1928.cellml
+2c2
+&lt; &lt;model name="van_der_pol_model_1928" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#"&gt;
+---
+&gt; &lt;model name="van_der_pol_model_1928" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#"&gt;</pre>
+
         <br/>
 
         <script type="text/javascript">
