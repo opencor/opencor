@@ -73,7 +73,9 @@ public:
 
     SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
+
     Plugins cellmlEditingViewPlugins() const;
+    Plugins cellmlSimulationViewPlugins() const;
 
     FileTypes sedmlFileTypes() const;
     FileTypes combineFileTypes() const;
@@ -84,6 +86,7 @@ private:
     SolverInterfaces mSolverInterfaces;
     DataStoreInterfaces mDataStoreInterfaces;
     Plugins mCellmlEditingViewPlugins;
+    Plugins mCellmlSimulationViewPlugins;
 
     FileTypes mSedmlFileTypes;
     FileTypes mCombineFileTypes;

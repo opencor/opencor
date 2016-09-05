@@ -57,26 +57,28 @@ function versions(downloads) {
 
         // Retrieve some information about the version
 
-        var versionMajor       = version.major;
-        var versionMinor       = version.minor;
-        var versionPatch       = version.patch;
-        var versionDay         = version.day;
-        var versionMonth       = version.month;
-        var versionYear        = version.year;
-        var versionType        = version.type;
-        var versionPlatforms   = version.platforms;
-        var versionChanges     = version.changes;
+        var versionMajor = version.major;
+        var versionMinor = version.minor;
+        var versionPatch = version.patch;
+        var versionDay = version.day;
+        var versionMonth = version.month;
+        var versionYear = version.year;
+        var versionType = version.type;
+        var versionPlatforms = version.platforms;
+        var versionChanges = version.changes;
 
         if (versionMajor || versionMinor || versionPatch) {
-            versionTitle   = "Version "+versionMajor+"."+versionMinor;
-            versionFolder  = versionMajor+"."+versionMinor;
+            versionTitle = "Version "+versionMajor+"."+versionMinor;
+            versionFolder = versionMajor+"."+versionMinor;
             versionVersion = versionMajor+"-"+versionMinor;
 
             if (versionPatch) {
-                versionTitle   += "."+versionPatch;
-                versionFolder  += "."+versionPatch;
+                versionTitle += "."+versionPatch;
+                versionFolder += "."+versionPatch;
                 versionVersion += "-"+versionPatch;
             }
+
+            versionAnchor = versionFolder;
         } else {
             if (downloads)
                 versionTitle = "Latest snapshot";
@@ -85,11 +87,21 @@ function versions(downloads) {
 
             versionFolder = "snapshots/"+versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
             versionVersion = versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
+            versionAnchor = "latest";
         }
 
         // Output some general information about the version
 
-        document.write("<div class=\"section\">\n");
+        var sectionClass = "section";
+
+        if (versionType === 1)
+            sectionClass += " official officialSection";
+        else if ((versionType === 2) && downloads)
+            sectionClass += " latest latestSection";
+        else
+            sectionClass += " old oldSection";
+
+        document.write("<div class=\""+sectionClass+"\">\n");
         document.write("    <table>\n");
         document.write("        <tbody>\n");
         document.write("            <tr>\n");
@@ -97,7 +109,7 @@ function versions(downloads) {
         document.write("                    "+versionTitle+"\n");
 
         if (downloads)
-            document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionFolder+"\">What is new?</a></span>\n");
+            document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
 
         document.write("                </td>\n");
         document.write("                <td class=\"date\">\n");
@@ -117,12 +129,14 @@ function versions(downloads) {
 
         // Output some information about the version files
 
-        var versionClass = "";
+        var versionClass;
 
         if (versionType === 1)
             versionClass = "official withoutInfo";
         else if ((versionType === 2) && downloads)
-            versionClass = "latest withInfo";
+            versionClass = "latest";
+        else
+            versionClass = "old withoutInfo";
 
         document.write("<div class=\""+versionClass+"\">\n");
         document.write("    <table class=\"version\">\n");
@@ -186,9 +200,9 @@ function versions(downloads) {
             var platform = versionPlatforms[platformIndex];
 
             if (typeof platform !== "undefined") {
-                var platformName      = platform.name;
+                var platformName = platform.name;
                 var platformSupported = platform.supported;
-                var platformFiles     = platform.files;
+                var platformFiles = platform.files;
 
                 document.write("            <table>\n");
                 document.write("                <tbody>\n");
@@ -213,7 +227,7 @@ function versions(downloads) {
                     // Retrieve some information about the file
 
                     var fileExtension = file.extension;
-                    var fileBitness   = file.bitness;
+                    var fileBitness = file.bitness;
 
                     // Determine the file name, type and extra info, if any
 
@@ -282,7 +296,7 @@ function versions(downloads) {
         // Add some information, if any
 
         if ((versionType === 2) && downloads) {
-            document.write("<div class=\"latestInfo\">\n");
+            document.write("<div class=\"latest latestInfo\">\n");
             document.write("    <strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable.\n");
             document.write("</div>\n");
         }

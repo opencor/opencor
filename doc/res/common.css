@@ -12,10 +12,6 @@ a {
     text-decoration: none;
 }
 
-a:visited {
-    color: rgb(103, 103, 103);
-}
-
 a:hover {
     margin: -1px;
     border: 1px solid rgba(103, 103, 103, 0.13);

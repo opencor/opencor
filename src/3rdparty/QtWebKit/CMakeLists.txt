@@ -1,11 +1,11 @@
-# Make sure that Qt WebKit's CMake files can be found
+# Make sure that QtWebKit's CMake files can be found
 
 SET(QT_WEBKIT_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
 
 LIST(APPEND CMAKE_PREFIX_PATH ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKit)
 LIST(APPEND CMAKE_PREFIX_PATH ${QT_WEBKIT_DIR}/cmake/${PLATFORM_DIR}/Qt5WebKitWidgets)
 
-# Make sure that our copy of the Qt WebKit libraries, if they exist, have the
+# Make sure that our copy of the QtWebKit libraries, if they exist, have the
 # expected SHA-1 values
 
 SET(QT_WEBKIT_BINARIES_DIR ${QT_WEBKIT_DIR}/bin)
@@ -38,22 +38,22 @@ IF(    EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
 
     IF(   NOT "${REAL_QT_WEBKIT_LIBRARY_SHA1_VALUE}" STREQUAL "${QT_WEBKIT_LIBRARY_SHA1_VALUE}"
        OR NOT "${REAL_QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE}" STREQUAL "${QT_WEBKITWIDGETS_LIBRARY_SHA1_VALUE}")
-        # Our copy of the Qt WebKit libraries don't have the expected SHA-1
-        # value, so remove the Qt WebKit binaries and libraries folders
+        # Our copy of the QtWebKit libraries don't have the expected SHA-1
+        # value, so remove the QtWebKit binaries and libraries folders
 
         FILE(REMOVE_RECURSE ${QT_WEBKIT_BINARIES_DIR})
         FILE(REMOVE_RECURSE ${QT_WEBKIT_LIBRARIES_DIR})
     ENDIF()
 ENDIF()
 
-# Retrieve our copy of the Qt WebKit libraries from the OpenCOR website, if
+# Retrieve our copy of the QtWebKit libraries from the OpenCOR website, if
 # needed
 
 IF(   NOT EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
    OR NOT EXISTS ${QT_WEBKITWIDGETS_LIBRARY_FILENAME})
-    # Retrieve the compressed version of our copy of the Qt WebKit libraries
+    # Retrieve the compressed version of our copy of the QtWebKit libraries
 
-    MESSAGE("Retrieving Qt WebKit...")
+    MESSAGE("Retrieving QtWebKit...")
 
     SET(COMPRESSED_FILENAME QtWebKit.tar.gz)
     SET(REAL_COMPRESSED_FILENAME ${QT_WEBKIT_DIR}/${COMPRESSED_FILENAME})
@@ -61,7 +61,7 @@ IF(   NOT EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
     FILE(DOWNLOAD "http://www.opencor.ws/binaries/src/3rdparty/QtWebKit/${PLATFORM_DIR}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
          SHOW_PROGRESS STATUS STATUS)
 
-    # Uncompress the compressed version of our copy of the Qt WebKit libraries,
+    # Uncompress the compressed version of our copy of the QtWebKit libraries,
     # should we have managed to retrieve it
 
     LIST(GET STATUS 0 STATUS_CODE)
@@ -76,10 +76,10 @@ IF(   NOT EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
         # Note: this is in case we had an HTTP error of sorts, in which case we
         #       would end up with an empty file...
 
-        MESSAGE(FATAL_ERROR "The compressed version of Qt WebKit could not be retrieved...")
+        MESSAGE(FATAL_ERROR "The compressed version of QtWebKit could not be retrieved...")
     ENDIF()
 
-    # Check that our copy of the Qt WebKit libraries, if we managed to retrieve
+    # Check that our copy of the QtWebKit libraries, if we managed to retrieve
     # it, has the expected SHA-1 values
 
     IF(    EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
@@ -92,11 +92,11 @@ IF(   NOT EXISTS ${QT_WEBKIT_LIBRARY_FILENAME}
             FILE(REMOVE_RECURSE ${QT_WEBKIT_BINARIES_DIR})
             FILE(REMOVE_RECURSE ${QT_WEBKIT_LIBRARIES_DIR})
 
-            MESSAGE(FATAL_ERROR "Qt WebKit does not have the expected SHA-1 values...")
+            MESSAGE(FATAL_ERROR "QtWebKit does not have the expected SHA-1 values...")
         ENDIF()
     ELSE()
         FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
 
-        MESSAGE(FATAL_ERROR "Qt WebKit could not be uncompressed...")
+        MESSAGE(FATAL_ERROR "QtWebKit could not be uncompressed...")
     ENDIF()
 ENDIF()

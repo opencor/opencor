@@ -297,8 +297,8 @@
         <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
     </message>
     <message>
-        <source>CellML Open</source>
-        <translation>Ouvrir CellML</translation>
+        <source>Referenced CellML File</source>
+        <translation>Fichier CellML Référencé</translation>
     </message>
     <message>
         <source>Open the referenced CellML file</source>

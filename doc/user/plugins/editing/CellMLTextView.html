@@ -24,7 +24,7 @@
         </script>
 
         <p>
-            The CellMLTextView plugin can be used to edit <a href="https://www.cellml.org/">CellML</a> files using a text editor that supports the <a href="#CellML Text format">CellML Text format</a>. If you open a file, it will look something like:
+            The CellMLTextView plugin can be used to edit <a href="https://www.cellml.org/">CellML</a> files using a text editor that supports the <a href="#CellML Text format">CellML Text format</a>. If you open a CellML file, then it will look something like:
         </p>
 
         <p class="center">
@@ -32,7 +32,7 @@
         </p>
 
         <p>
-            Apart from using a specific format, the view has the same features as the <a href="RawCellMLView.html">RawCellML</a> view with one exception: currently, <em>CellML Validation</em> only validates against the <a href="#CellML Text format">CellML Text format</a>.
+            Apart from using a specific format, the view has the same features as the <a href="RawCellMLView.html">RawCellML</a> view with one exception: currently, <code>CellML Validation</code> only validates against the <a href="#CellML Text format">CellML Text format</a>.
         </p>
 
         <div class="section">
@@ -45,7 +45,7 @@
 
         <ul>
             <li><a href="#Comments">Comments</a>;</li>
-            <li>The <code>import</code> element (i.e. support for CellML 1.1);</li>
+            <li>The <code>import</code> element (i.e. support for <a href="https://www.cellml.org/specifications/cellml_1.1">CellML 1.1</a>);</li>
             <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. support for CellML annotation);</li>
             <li>The <code>degree</code> qualifier for the <code>diff</code> element (i.e. support for higher-order derivatives);</li>
             <li>The <code>notanumber</code> and <code>infinity</code> constants; and</li>
@@ -53,12 +53,12 @@
         </ul>
 
         <p>
-            The <a href="https://web.archive.org/web/20151013113657/http://cor.physiol.ox.ac.uk/">COR</a> format has some limitations that are also present in the <a href="#CellML Text format">CellML Text format</a>:
+            Note, however, that the <a href="https://web.archive.org/web/20151013113657/http://cor.physiol.ox.ac.uk/">COR</a> format has some limitations that are also present in the <a href="#CellML Text format">CellML Text format</a>:
         </p>
 
         <ul>
             <li>The <code>reaction</code> element is not supported (its use is not only discouraged, but it has also been proposed that it be removed from the next CellML specifications);</li>
-            <li>A <code>piecewise</code> statement can only be used as part of a top-level <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed (the latter is not a limitation per se since an equation can always be rewritten without the need for nested <code>piecewise</code> statements; more importantly, it is easier to read and maintain an equation that uses only one top-level <code>piecewise</code> statement); and</li>
+            <li>A <code>piecewise</code> statement can only be used as part of a top-level <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed (the latter is not a limitation <em>per se</em> since an equation can always be rewritten without the need for nested <code>piecewise</code> statements; more importantly, it is easier to read and maintain an equation that uses only one top-level <code>piecewise</code> statement); and</li>
             <li>A <code>component</code> element may contain a set of <code>math</code> elements, but its rendering is such that when serialised back, only one <code>math</code> element will remain, with all the equations in that one and unique <code>math</code> element.</li>
         </ul>
 
@@ -69,7 +69,7 @@
         </div>
 
         <p>
-            You can (un)comment a piece of code by pressing <code>Ctrl</code>+<code>/</code>. If no text is selected or if the selected text consists of one or several full lines, then the comment will be rendered as <code>// XXX</code>, e.g.
+            You can (un)comment a piece of code by pressing <code>Ctrl</code>+<code>/</code>. If no text is selected or if it consists of one or several full lines, then the comment will be rendered as <code>// XXX</code>, e.g.
         </p>
 
         <pre><span class="keyword">def model</span> my_model <span class="keyword">as</span>
@@ -78,7 +78,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            Alternatively, if some text is selected and it does not consist of one or several full lines, then the comment will be rendered as <code>/* XXX */</code>, e.g.
+            Alternatively, if one or several lines are partially selected, then the comment will be rendered as <code>/* XXX */</code>, e.g.
         </p>
 
         <pre><span class="keyword">def model</span> my_<span class="comment">/*super_duper_*/</span>model <span class="keyword">as</span>
@@ -122,7 +122,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            The model definition itself sits between <code>as</code> and <code>enddef;</code>, and can consist of <a href="#Imports">imports</a>, <a href="#Unit definitions">unit definitions</a>, <a href="#Component definitions">component definitions</a>, <a href="#Group definitions">group definitions</a> and <a href="#Mapping definitions">mapping definitions</a>.
+            The model definition sits between <code>as</code> and <code>enddef;</code>, and can consist of <a href="#Imports">imports</a>, <a href="#Unit definitions">unit definitions</a>, <a href="#Component definitions">component definitions</a>, <a href="#Group definitions">group definitions</a> and <a href="#Mapping definitions">mapping definitions</a>.
         </p>
 
         <span class="anchor" id="Imports"></span>
@@ -152,7 +152,7 @@
         <pre><span class="keyword">comp</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;</pre>
 
         <p>
-            Putting everything together, we would get:
+            Putting everything together, we would have:
         </p>
 
         <pre><span class="keyword">def import</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
@@ -185,7 +185,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            <code>my_other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="https://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit, <code>litre</code> a convenience unit and <code>volt</code> an <a href="https://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit . The following <a href="https://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base (in bold) and derived units, as well as convenience units (in italics), can be used:
+            <code>my_other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="https://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit, <code>litre</code> a convenience unit and <code>volt</code> an <a href="https://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit . The following SI base (in bold) and derived units, as well as convenience units (in italics), can be used:
         </p>
 
         <table>
@@ -339,7 +339,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            The component definition itself sits between <code>as</code> and <code>enddef;</code>, and can consist of <a href="#Unit definitions">unit definitions</a>, <a href="#Variable definitions">variable definitions</a> and <a href="#Mathematical equations">mathematical equations</a>.
+            The component definition sits between <code>as</code> and <code>enddef;</code>, and can consist of <a href="#Unit definitions">unit definitions</a>, <a href="#Variable definitions">variable definitions</a> and <a href="#Mathematical equations">mathematical equations</a>.
         </p>
 
         <span class="anchor" id="Variable definitions"></span>
@@ -880,6 +880,7 @@
         <pre><span class="keyword">def model</span><span class="cmetaId">{my_model_cmeta_id}</span> my_model <span class="keyword">as</span>
     <span class="keyword">def import</span><span class="cmetaId">{my_import_cmeta_id}</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
         <span class="keyword">unit</span><span class="cmetaId">{my_imported_unit_cmeta_id}</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
+
         <span class="keyword">comp</span><span class="cmetaId">{my_imported_component_cmeta_id}</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
     <span class="keyword">enddef</span>;
 
