@@ -32,7 +32,7 @@ var jsonData = { "versions": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
+                       { "name": "OS X", "supported": "OS X 10.8 (Mountain Lion) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
