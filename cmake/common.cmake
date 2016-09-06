@@ -1161,6 +1161,183 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME VERSION)
+
+    SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+
+    # What we are going to create
+
+    SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${VERSION}.tar.gz)
+    SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
+    SET(PACKAGE_CMAKE_FILE "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
+
+    # Clean up any historical packaging
+
+    FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+    FILE(REMOVE ${PACKAGE_CMAKE_FILE})
+
+    # Calculate SHA1 values for specified files
+
+    INCLUDE(CMakeParseArguments)
+    CMAKE_PARSE_ARGUMENTS(PACKAGE "" "" "PACKAGED_FILES;CHECKED_FILES" ${ARGN})
+
+    IF(NOT PACKAGE_FILES)
+        SET(PACKAGE_FILES ".")
+    ENDIF()
+
+    SET(SHA1_FILES)
+    SET(SHA1_VALUES)
+    FOREACH(FILENAME IN LISTS PACKAGE_CHECKED_FILES)
+        SET(REAL_FILENAME ${FULL_DIRNAME}/${FILENAME})
+        IF(NOT EXISTS ${REAL_FILENAME})
+            MESSAGE(FATAL_ERROR "The file '${REAL_FILENAME}` is missing from '${PACKAGE_NAME}'...")
+        ENDIF()
+        FILE(SHA1 ${REAL_FILENAME} SHA1_VALUE)
+        LIST(APPEND CHECKED_FILES ${FILENAME})
+        LIST(APPEND SHA1_VALUES ${SHA1_VALUE})
+    ENDFOREACH()
+
+    MESSAGE("Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'...")
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} ${PACKAGE_PACKAGED_FILES}
+                    WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+
+    IF(EXISTS ${REAL_COMPRESSED_FILENAME})
+        FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
+        IF(CHECKED_FILES)
+            STRING(REPLACE ";" "\n          " CHECKED_FILES "${CHECKED_FILES}")
+            STRING(REPLACE ";" "\n          " SHA1_VALUES "${SHA1_VALUES}")
+        ENDIF()
+
+        STRING(TOUPPER ${PACKAGE_NAME} UC_NAME)
+
+        FILE(WRITE ${PACKAGE_CMAKE_FILE} "# Retrieve ${REAL_COMPRESSED_FILENAME}
+
+RETRIEVE_PACKAGE_FILE(\$\{RELATIVE_ROOT_DIR\}
+    ${PACKAGE_NAME} \$\{${UC_NAME}_VERSION\} ${SHA1_VALUE}
+    CHECKED_FILES ${CHECKED_FILES}
+    SHA1_VALUES ${SHA1_VALUES}
+    )")
+        MESSAGE("Use '${PACKAGE_CMAKE_FILE}' to load '${PACKAGE_NAME}'...")
+    ELSE()
+        MESSAGE(FATAL_ERROR "Unable to build a package for '${PACKAGE_NAME}'...")
+    ENDIF()
+
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(CHECK_FILES DIRECTORY FILE_LIST SHA1_LIST)
+
+    SET(CHECK_FILES_FAILED FALSE)
+
+    # This enables CMake to see the parameters as lists
+
+    set(_LIST ${FILE_LIST})
+    set(_SHA1 ${SHA1_LIST})
+
+    LIST(LENGTH _LIST COUNT)
+    IF(COUNT)
+        MATH(EXPR RANGE "${COUNT} - 1")
+        FOREACH(i RANGE ${RANGE})
+            LIST(GET _LIST ${i} FILENAME)
+            LIST(GET _SHA1 ${i} SHA1_VALUE)
+
+            # Make sure that the file, if it exists,
+            # has the expected SHA-1 value
+
+            SET(REAL_FILENAME ${DIRECTORY}/${FILENAME})
+
+            IF(EXISTS ${REAL_FILENAME})
+                FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
+
+                IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
+                    # The file doesn't have the expected SHA-1 value
+                    # so remove it and fail the checks
+
+                    FILE(REMOVE ${REAL_FILENAME})
+                    SET(CHECK_FILES_FAILED TRUE)
+                ENDIF()
+            ELSEIF(NOT CHECK_FILES_FAILED)
+                # The file is missing so fail the checks
+
+                SET(CHECK_FILES_FAILED TRUE)
+            ENDIF()
+        ENDFOREACH()
+    ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME VERSION SHA1_VALUE)
+
+    SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+
+    # Create the destination folder, if needed
+
+    IF(NOT EXISTS ${FULL_DIRNAME})
+        FILE(MAKE_DIRECTORY ${FULL_DIRNAME})
+    ENDIF()
+
+    INCLUDE(CMakeParseArguments)
+    CMAKE_PARSE_ARGUMENTS(PACKAGE "" "" "CHECKED_FILES;SHA1_VALUES" ${ARGN})
+
+    CHECK_FILES("${FULL_DIRNAME}" "${PACKAGE_CHECKED_FILES}" "${PACKAGE_SHA1_VALUES}")
+
+    IF(CHECK_FILES_FAILED)
+
+        MESSAGE("Retrieving '${PACKAGE_NAME}' into '${FULL_DIRNAME}'...")
+
+        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${VERSION}.tar.gz)
+        SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
+
+        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+             SHOW_PROGRESS STATUS STATUS)
+
+        # Uncompress the compressed version of the file, should we have managed
+        # to retrieve it
+
+        LIST(GET STATUS 0 STATUS_CODE)
+
+        IF(${STATUS_CODE} EQUAL 0)
+            CHECK_FILES("${FULL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
+            IF(CHECK_FILES_FAILED)
+                MESSAGE(FATAL_ERROR "${COMPRESSED_FILENAME} does not have the expected SHA-1 value...")
+            ENDIF()
+
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
+                            WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+
+            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+        ELSE()
+            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            # Note: this is in case we had an HTTP error of sorts, in which case
+            #       we would end up with an empty file...
+
+            MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved...")
+        ENDIF()
+
+        # Check that the files, if we managed to retrieve them, have the expected
+        # SHA-1 values
+
+        CHECK_FILES("${FULL_DIRNAME}" "${PACKAGE_CHECKED_FILES}" "${PACKAGE_SHA1_VALUES}")
+        IF(CHECK_FILES_FAILED)
+            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            MESSAGE(FATAL_ERROR "The files in ${REAL_COMPRESSED_FILENAME} do not have the expected SHA-1 values...")
+        ENDIF()
+
+    ENDIF()
+
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(RETRIEVE_PACKAGE_FILE DIRNAME PACKAGE_NAME VERSION SHA1_VALUE)
+    RETRIEVE_PACKAGE_FILE_FROM("http://biosignalml.org/binaries"
+        ${DIRNAME} ${PACKAGE_NAME} ${VERSION} ${SHA1_VALUE} ${ARGN})
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
     # Create the destination folder, if needed
 
@@ -1175,15 +1352,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
 
     SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
 
-    IF(EXISTS ${REAL_FILENAME})
-        FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
-
-        IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-            # The file doesn't have the expected SHA-1 value, so remove it
-
-            FILE(REMOVE ${REAL_FILENAME})
-        ENDIF()
-    ENDIF()
+    CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
     # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
@@ -1226,10 +1395,9 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         # SHA-1 value
 
         IF(EXISTS ${REAL_FILENAME})
-            FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
+            CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
-            IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-                FILE(REMOVE ${REAL_FILENAME})
+            IF(CHECK_FILES_FAILED)
 
                 MESSAGE(FATAL_ERROR "${FILENAME} does not have the expected SHA-1 value...")
             ENDIF()
