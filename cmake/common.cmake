@@ -1352,15 +1352,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
 
     SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
 
-    IF(EXISTS ${REAL_FILENAME})
-        FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
-
-        IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-            # The file doesn't have the expected SHA-1 value, so remove it
-
-            FILE(REMOVE ${REAL_FILENAME})
-        ENDIF()
-    ENDIF()
+    CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
     # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
@@ -1403,10 +1395,9 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         # SHA-1 value
 
         IF(EXISTS ${REAL_FILENAME})
-            FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
+            CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
-            IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-                FILE(REMOVE ${REAL_FILENAME})
+            IF(CHECK_FILES_FAILED)
 
                 MESSAGE(FATAL_ERROR "${FILENAME} does not have the expected SHA-1 value...")
             ENDIF()
