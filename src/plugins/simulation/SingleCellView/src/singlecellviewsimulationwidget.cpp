@@ -93,7 +93,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mPlugin(pPlugin),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
-    mCellmlEditingViewPlugins(QMap<QAction *, Plugin *>()),
+    mCellmlBasedViewPlugins(QMap<QAction *, Plugin *>()),
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
@@ -118,6 +118,10 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
                                             QKeySequence(Qt::CTRL|Qt::Key_F2), mToolBarWidget);
+    mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
+                                                  mToolBarWidget);
+    mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
+                                                 mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
                                              mToolBarWidget);
     mAddGraphPanelAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
@@ -126,23 +130,23 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                               mToolBarWidget);
     mRemoveCurrentGraphPanelAction = Core::newAction(mToolBarWidget);
     mRemoveAllGraphPanelsAction = Core::newAction(mToolBarWidget);
-    mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                                  mToolBarWidget);
-    mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
-                                                 mToolBarWidget);
-    mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
-                                                  mToolBarWidget);
+    mCellmlOpenAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"),
+                                        mToolBarWidget);
     mSedmlExportAction = Core::newAction(QIcon(":/SEDMLSupport/logo.png"),
                                          mToolBarWidget);
     mSedmlExportSedmlFileAction = Core::newAction(mToolBarWidget);
     mSedmlExportCombineArchiveAction = Core::newAction(mToolBarWidget);
-    mCellmlOpenAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"),
-                                        mToolBarWidget);
+    mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
+                                                  mToolBarWidget);
 
     connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(runPauseResumeSimulation()));
     connect(mStopSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(stopSimulation()));
+    connect(mResetModelParametersAction, SIGNAL(triggered(bool)),
+            this, SLOT(resetModelParameters()));
+    connect(mClearSimulationDataAction, SIGNAL(triggered(bool)),
+            this, SLOT(clearSimulationData()));
     connect(mDevelopmentModeAction, SIGNAL(triggered(bool)),
             this, SLOT(developmentMode()));
     connect(mAddGraphPanelAction, SIGNAL(triggered(bool)),
@@ -153,16 +157,14 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
             this, SLOT(removeCurrentGraphPanel()));
     connect(mRemoveAllGraphPanelsAction, SIGNAL(triggered(bool)),
             this, SLOT(removeAllGraphPanels()));
-    connect(mResetModelParametersAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetModelParameters()));
-    connect(mClearSimulationDataAction, SIGNAL(triggered(bool)),
-            this, SLOT(clearSimulationData()));
+    connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
+            this, SLOT(openCellmlFile()));
+    connect(mSedmlExportAction, SIGNAL(triggered(bool)),
+            this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportCombineArchive()));
-
-    mDevelopmentModeAction->setEnabled(Core::FileManager::instance()->isReadableAndWritable(pFileName));
 
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
@@ -206,14 +208,27 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     cellmlOpenToolButton->setDefaultAction(mCellmlOpenAction);
     cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
-    cellmlOpenToolButton->setPopupMode(QToolButton::InstantPopup);
+    cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     foreach (Plugin *cellmlEditingViewPlugin, pPlugin->cellmlEditingViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
 
-        mCellmlEditingViewPlugins.insert(action, cellmlEditingViewPlugin);
+        mCellmlBasedViewPlugins.insert(action, cellmlEditingViewPlugin);
+
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(openCellmlFile()));
+    }
+
+    cellmlOpenDropDownMenu->addSeparator();
+
+    foreach (Plugin *cellmlSimulationViewPlugin, pPlugin->cellmlSimulationViewPlugins()) {
+        QAction *action = Core::newAction(Core::mainWindow());
+
+        cellmlOpenDropDownMenu->addAction(action);
+
+        mCellmlBasedViewPlugins.insert(action, cellmlSimulationViewPlugin);
 
         connect(action, SIGNAL(triggered(bool)),
                 this, SLOT(openCellmlFile()));
@@ -224,7 +239,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     sedmlExportToolButton->setDefaultAction(mSedmlExportAction);
     sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
-    sedmlExportToolButton->setPopupMode(QToolButton::InstantPopup);
+    sedmlExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
     sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
@@ -445,6 +460,12 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     connect(mSimulation->data(), SIGNAL(modified(const bool &)),
             this, SLOT(simulationDataModified(const bool &)));
 
+    // Enable/disable our development mode action depending on whether our file
+    // is readable/writable and of CellML type
+
+    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
+                                       && (mFileType == SingleCellViewWidget::CellmlFile));
+
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -476,6 +497,10 @@ void SingleCellViewSimulationWidget::retranslateUi()
                                      tr("Run the simulation"));
     I18nInterface::retranslateAction(mStopSimulationAction, tr("Stop Simulation"),
                                      tr("Stop the simulation"));
+    I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
+                                     tr("Reset all the model parameters"));
+    I18nInterface::retranslateAction(mClearSimulationDataAction, tr("Clear Simulation Data"),
+                                     tr("Clear the simulation data"));
     I18nInterface::retranslateAction(mDevelopmentModeAction, tr("Development Mode"),
                                      tr("Enable/disable the development mode"));
     I18nInterface::retranslateAction(mAddGraphPanelAction, tr("Add Graph Panel"),
@@ -486,20 +511,16 @@ void SingleCellViewSimulationWidget::retranslateUi()
                                      tr("Remove the current graph panel"));
     I18nInterface::retranslateAction(mRemoveAllGraphPanelsAction, tr("All"),
                                      tr("Remove all the graph panels"));
-    I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
-                                     tr("Reset all the model parameters"));
-    I18nInterface::retranslateAction(mClearSimulationDataAction, tr("Clear Simulation Data"),
-                                     tr("Clear the simulation data"));
-    I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
-                                     tr("Export the simulation data"));
+    I18nInterface::retranslateAction(mCellmlOpenAction, tr("Referenced CellML File"),
+                                     tr("Open the referenced CellML file"));
     I18nInterface::retranslateAction(mSedmlExportAction, tr("SED-ML Export"),
                                      tr("Export the simulation to SED-ML"));
     I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),
                                      tr("Export the simulation to SED-ML using a SED-ML file"));
     I18nInterface::retranslateAction(mSedmlExportCombineArchiveAction, tr("COMBINE Archive..."),
                                      tr("Export the simulation to SED-ML using a COMBINE archive"));
-    I18nInterface::retranslateAction(mCellmlOpenAction, tr("CellML Open"),
-                                     tr("Open the referenced CellML file"));
+    I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
+                                     tr("Export the simulation data"));
 
     // Retranslate our delay and delay value widgets
 
@@ -523,8 +544,8 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
     // Retranslate our CellML editing view actions
 
-    foreach (QAction *cellmlEditingViewAction, mCellmlEditingViewPlugins.keys()) {
-        Plugin *plugin = mCellmlEditingViewPlugins.value(cellmlEditingViewAction);
+    foreach (QAction *cellmlEditingViewAction, mCellmlBasedViewPlugins.keys()) {
+        Plugin *plugin = mCellmlBasedViewPlugins.value(cellmlEditingViewAction);
         QString viewName = qobject_cast<ViewInterface *>(plugin->instance())->viewName();
 
         I18nInterface::retranslateAction(cellmlEditingViewAction,
@@ -3225,7 +3246,10 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 
     // Ask OpenCOR to switch to the requested CellML editing view
 
-    QDesktopServices::openUrl("opencor://Core.selectView/"+mCellmlEditingViewPlugins.value(qobject_cast<QAction *>(sender()))->name());
+    Plugin *plugin = mCellmlBasedViewPlugins.value(qobject_cast<QAction *>(sender()));
+
+    if (plugin)
+        QDesktopServices::openUrl("opencor://Core.selectView/"+plugin->name());
 }
 
 //==============================================================================

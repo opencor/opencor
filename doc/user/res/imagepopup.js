@@ -1,4 +1,4 @@
-$(window).load(function() {
+$(window).on('load', function() {
     jQuery(document).ready(function($) {
         // Create a div for our popup image
 

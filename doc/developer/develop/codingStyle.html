@@ -316,7 +316,6 @@ else {
             <li>Do not use exceptions, unless you know what you are doing.</li>
             <li>Do not use RTTI (Run-Time Type Information, i.e. the <code>typeinfo struct</code>, the <code>dynamic_cast</code> or the <code>typeid</code> operators, including throwing exceptions), unless you know what you are doing.</li>
             <li>Use templates wisely, not just because you can.</li>
-            <li>
             <li>Every <code>QObject</code> subclass must have a <code>Q_OBJECT</code> macro, even if it does not have signals or slots, if it is intended to be used with <code>qobject_cast&lt;&gt;</code>.</li>
             <li>If you create a new set of <code>.cpp</code>/<code>.h</code> files, then top of those files should include a comment common to both files.</li>
             <li>
