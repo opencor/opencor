@@ -312,12 +312,10 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
     ENDIF()
 
-    # Try to build PatchELF, if on Linux
+    # Try to build PatchELF, if we are on Linux, and get our Shell script ready
 
     IF(NOT WIN32 AND NOT APPLE)
-        SET(PATCHELF_FILENAME ${PROJECT_BUILD_DIR}/patchelf)
-
-        EXECUTE_PROCESS(COMMAND ${CMAKE_CXX_COMPILER} -DPACKAGE_STRING=\"patchelf\" -DPAGESIZE=4096 -o ${PATCHELF_FILENAME} patchelf.cc
+        EXECUTE_PROCESS(COMMAND ${CMAKE_CXX_COMPILER} -DPACKAGE_STRING=\"patchelf\" -DPAGESIZE=4096 -o ${PROJECT_BUILD_DIR}/patchelf patchelf.cc
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/patchelf
                         ERROR_QUIET
                         RESULT_VARIABLE RESULT)
@@ -325,6 +323,10 @@ MACRO(INITIALISE_PROJECT)
         IF(NOT RESULT EQUAL 0)
             MESSAGE(FATAL_ERROR "PatchELF could not be built...")
         ENDIF()
+
+        SET(SETRPATH_FILENAME ${PROJECT_BUILD_DIR}/setrpath.sh)
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PROJECT_SOURCE_DIR}/cmake . setrpath.sh)
     ENDIF()
 
     # Show the build information, if allowed
@@ -1048,6 +1050,16 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(SET_RPATH FILENAME RPATH)
+    # Remove any existing RPATH/RUNPATH value and force the RPATH setting to the
+    # given RPATH value
+
+    ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+                       COMMAND ${SETRPATH_FILENAME} ${FILENAME} ${RPATH})
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
@@ -1055,17 +1067,16 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     #       versions of Qt...
 
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
-
-    # Remove the RPATH value from the Qt library
-
-    EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME})
-
     # Strip the Qt library of all its local symbols
 
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                            COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
+
+    # Set the RPATH value of the Qt library
+
+    SET_RPATH(${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME} "ORIGIN")
 
     # Deploy the Qt library
 
@@ -1084,17 +1095,16 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
-
-        # Remove the RPATH value from the Qt plugin
-
-        EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
-
         # Strip the Qt plugin of all its local symbols
 
         IF(RELEASE_MODE)
             ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                                COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
+
+        # Set the RPATH value of the Qt plugin
+
+        SET_RPATH(${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME} "ORIGIN/../../lib")
 
         # Deploy the Qt plugin
 
