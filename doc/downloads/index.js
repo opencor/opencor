@@ -20,7 +20,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 26, "month": 7, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 9, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -32,14 +32,14 @@ var jsonData = { "versions": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "OS X", "supported": "Mac OS X 10.7 (Lion) and later",
+                       { "name": "OS X", "supported": "OS X 10.8 (Mountain Lion) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed a small problem with the reloading of a modified file potentially resulting in an empty view (see issue <a href=\"https://github.com/opencor/opencor/issues/1052\">#1052</a>). Fixed a small problem with a changed file/dependency resulting in OpenCOR asking to reload it / its owner twice in a row (see issue <a href=\"https://github.com/opencor/opencor/issues/1073\">#1073</a>). Now use specific text interaction flags for a/n information/question/warning/critical/about message box (see issue <a href=\"https://github.com/opencor/opencor/issues/1077\">#1077</a>). Don't define (_)UNICODE globally anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1080\">#1080</a>). Remove the reference to the version of Qt and of the plugins that we use <a href=\"https://github.com/opencor/opencor/issues/1098\">#1098</a>)." },
+                       { "change": "<strong>General:</strong> fixed a small problem with the reloading of a modified file potentially resulting in an empty view (see issue <a href=\"https://github.com/opencor/opencor/issues/1052\">#1052</a>). Fixed a small problem with a changed file/dependency resulting in OpenCOR asking to reload it / its owner twice in a row (see issue <a href=\"https://github.com/opencor/opencor/issues/1073\">#1073</a>). Now use specific text interaction flags for a/n information/question/warning/critical/about message box (see issue <a href=\"https://github.com/opencor/opencor/issues/1077\">#1077</a>). Don't define (_)UNICODE globally anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1080\">#1080</a>). Remove the reference to the version of Qt and of the plugins that we use <a href=\"https://github.com/opencor/opencor/issues/1098\">#1098</a>). Updated the documentation in preparation for the 0.5 release <a href=\"https://github.com/opencor/opencor/issues/1047\">#1047</a>)" },
                        { "change": "<strong>File manager:</strong> only check files when OpenCOR is really active (see issue <a href=\"https://github.com/opencor/opencor/issues/1048\">#1048</a>)." },
                        { "change": "<strong>MathML viewer:</strong> fixed a small problem with some numbers being rendered with fewer decimal digits than they actually have (see issue <a href=\"https://github.com/opencor/opencor/issues/1054\">#1054</a>)." },
                        { "change": "<strong>SUNDIALS-related plugins:</strong> now use their new URL (see issue <a href=\"https://github.com/opencor/opencor/issues/1102\">#1102</a>)." },

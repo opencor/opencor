@@ -20,7 +20,7 @@
         </script>
 
         <p>
-            The CellMLAnnotationView plugin can be used to annotate <a href="https://www.cellml.org/">CellML</a> files. If you open a CellML file that does not contain any annotation, then it will look something like this:
+            The CellMLAnnotationView plugin can be used to annotate <a href="https://www.cellml.org/">CellML</a> files. To open a CellML file that does not contain any annotations gives:
         </p>
 
         <p class="center">
@@ -28,7 +28,7 @@
         </p>
 
         <p>
-            All the CellML elements that can be annotated are listed to the left of the view. If you right click on any of them, you will get a popup menu, which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or the whole CellML file:
+            All the CellML elements that can be annotated are listed to the left of the view. Right click on any of them to get a popup menu, which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or the whole CellML file:
         </p>
 
         <p class="center">
@@ -40,7 +40,7 @@
         </div>
 
         <p>
-            Say that you want to annotate the <code>sodium_channel</code> component. First, you need to select it:
+            To annotate, say, the <code>sodium_channel</code> component, you first need to select it:
         </p>
 
         <p class="center">
@@ -56,7 +56,7 @@
         </p>
 
         <p>
-            From there, go through the list of BioModels.net qualifiers until you find the one that suits your needs best. Here, we will say that you want to use <code>bio:isVersionOf</code>:
+            From there, go through the list of BioModels.net qualifiers until you find the one that suits your needs best, e.g. <code>bio:isVersionOf</code>:
         </p>
 
         <p class="center">
@@ -64,7 +64,7 @@
         </p>
 
         <p>
-            Now, you need to retrieve some possible ontological terms to describe the <code>sodium_channel</code> component. For this, you must enter a search term, which in our case is going to be <code>sodium channel</code> (note: <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expressions</a> are supported). As can be seen, OpenCOR returns 12 possible ontological terms:
+            Now, you need to retrieve some possible ontological terms to describe the <code>sodium_channel</code> component. For this, you need to enter a search term, e.g. <code>sodium channel</code> (note: <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expressions</a> are supported). As can be seen, OpenCOR returns 12 possible ontological terms:
         </p>
 
         <p class="center">
@@ -88,7 +88,7 @@
         </p>
 
         <p>
-            Now, assuming that you are happy with your choice of ontological term, you can associate it with the <code>sodium_channel</code> component by clicking on its corresponding <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button:
+            Now, assuming that you are happy with your choice, you can associate the ontological term with the <code>sodium_channel</code> component by clicking on its corresponding <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button:
         </p>
 
         <p class="center">
@@ -100,7 +100,7 @@
         </p>
 
         <p>
-            Now, say that you also want to add another ontological term. You can obviously do so by clicking on its corresponding <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button, but you can also enter its resource-id duple, e.g. <code>go/GO:0005248</code> (i.e. <code>&lt;resource&gt;/&lt;id&gt;</code>) in the term field. Indeed, OpenCOR will recognise this 'term' as being a a resource-id duple and will offer you to add its corresponding ontological term directly:
+            Now, say that you also want to add another ontological term. You can obviously do so by clicking on its corresponding <img src="../../../res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button, but you can also enter its resource-id duple, e.g. <code>go/GO:0005248</code> (i.e. <code>&lt;resource&gt;/&lt;id&gt;</code>) in the term field. OpenCOR will recognise this 'term' as being a resource-id duple and will offer you to add its corresponding ontological term directly:
         </p>
 
         <p class="center">

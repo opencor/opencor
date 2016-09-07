@@ -47,26 +47,26 @@
 
         <ul>
             <li><strong>Analysis:</strong> plugins to analyse files.</li>
-            <li><strong>API:</strong> plugins to access various APIs.</li>
-            <li><strong>Data Store:</strong> plugins to store and manipulate data.</li>
-            <li><strong>Editing:</strong> plugins to edit files.</li>
-            <li><strong>Miscellaneous:</strong> plugins that do not fit in any other category.</li>
-            <li><strong>Organisation:</strong> plugins to organise files.</li>
-            <li><strong>Sample:</strong> plugins that illustrate various plugin-related aspects.</li>
-            <li><strong>Simulation:</strong> plugins to simulate files.</li>
-            <li><strong>Solver:</strong> plugins to access various solvers.</li>
-            <li><strong>Support:</strong> plugins to support various third-party libraries and APIs.</li>
-            <li><strong>Third-party:</strong> plugins to access various third-party libraries.</li>
-            <li><strong>Tool:</strong> plugins to access various tools.</li>
-            <li><strong>Widget:</strong> plugins to access various <em>ad hoc</em> widgets.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/api/">API</a>:</strong> plugins to access various APIs.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/dataStore/">Data Store</a>:</strong> plugins to store and manipulate data.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/editing/">Editing</a>:</strong> plugins to edit files.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/">Miscellaneous</a>:</strong> plugins that do not fit in any other category.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/organisation/">Organisation</a>:</strong> plugins to organise files.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/">Sample</a>:</strong> plugins that illustrate various plugin-related aspects.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/simulation/">Simulation</a>:</strong> plugins to simulate files.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/solver/">Solver</a>:</strong> plugins to access various solvers.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/support/">Support</a>:</strong> plugins to support various third-party libraries and APIs.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/">Third-party</a>:</strong> plugins to access various third-party libraries.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/tools/">Tools</a>:</strong> plugins to access various tools.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/tree/master/src/plugins/widget/">Widget</a>:</strong> plugins to access various <em>ad hoc</em> widgets.</li>
         </ul>
 
         <p>
-            A category is used by OpenCOR to group plugins together to improve user experience. From a developer's perspective, a category determines where a plugin's code should be located. Thus, the different folders under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> are for our different categories. For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/"><code>[OpenCOR]/src/plugins/miscellaneous/</code></a> contains the code of our different <strong>Miscellaneous</strong> plugins and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/"><code>[OpenCOR]/src/plugins/miscellaneous/Core/</code></a> that of the <strong>Core</strong> plugin in particular.
+            A category is used by OpenCOR to group plugins together to improve user experience. From a developer's perspective, a category determines where a plugin's code should be located. Thus, the different folders under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> are for our different categories. For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/"><code>[OpenCOR]/src/plugins/miscellaneous/</code></a> contains the code of our different <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/">Miscellaneous</a> plugins and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/"><code>[OpenCOR]/src/plugins/miscellaneous/Core/</code></a> that of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin in particular.
         </p>
 
         <p class="note">
-            the <strong>Sample</strong> category is a special category in that it is only available when building OpenCOR with the <a href="https://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option set to <code>ON</code>. It should therefore only be used for plugins that are aimed at helping people who want to learn how to write plugins for OpenCOR.
+            the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/">Sample</a> category is a special category in that it is only available when building OpenCOR with the <a href="https://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option set to <code>ON</code>. It should therefore only be used for plugins that are aimed at helping people who want to learn how to write plugins for OpenCOR.
         </p>
 
         <span class="anchor" id="Interfaces"></span>
@@ -94,11 +94,11 @@
         </ul>
 
         <p>
-            Some plugins do not implement any interface (e.g. the <strong>LLVM</strong> plugin) while others may implement one or several interfaces (e.g. the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces).
+            Some plugins do not implement any interface (e.g. the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/LLVM/">LLVM</a> plugin) while others may implement one or several interfaces (e.g. the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interfaces).
         </p>
 
         <p class="note">
-            the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a> interface will be reported by OpenCOR as being invalid.
+            the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a> interface is a special interface in that it is only, and can only be, implemented by the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin. Any plugin, besides the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin, that tries to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a> interface will be reported by OpenCOR as being invalid.
         </p>
 
         <span class="anchor" id="CMake project"></span>
@@ -112,21 +112,21 @@
         </p>
 
         <ul>
-            <li><code>SOURCES</code>: implementation files.</li>
-            <li><code>HEADERS_MOC</code>: header files, which define at least one <code>QObject</code>-based class.</li>
-            <li><code>UIS</code>: user interface files.</li>
-            <li><code>INCLUDE_DIRS</code>: various locations where header files can be found.</li>
-            <li><code>DEFINITIONS</code>: definitions needed to build the plugin.</li>
-            <li><code>PLUGINS</code>: plugins needed by the plugin.</li>
-            <li><code>PLUGIN_BINARIES</code>: the binary version of plugins needed by the plugin.</li>
-            <li><code>QT_MODULES</code>: <a href="https://www.qt.io/">Qt</a> modules needed by the plugin.</li>
-            <li><code>EXTERNAL_BINARIES_DIR</code>: location where external binaries needed by the plugin can be found.</li>
-            <li><code>EXTERNAL_BINARIES</code>: external binaries needed by the plugin.</li>
-            <li><code>TESTS</code>: <a href="../tests.html">tests</a> for the plugin.</li>
+            <li><strong><code>SOURCES</code></strong>: implementation files.</li>
+            <li><strong><code>HEADERS_MOC</code></strong>: header files, which define at least one <code>QObject</code>-based class.</li>
+            <li><strong><code>UIS</code></strong>: user interface files.</li>
+            <li><strong><code>INCLUDE_DIRS</code></strong>: various locations where header files can be found.</li>
+            <li><strong><code>DEFINITIONS</code></strong>: definitions needed to build the plugin.</li>
+            <li><strong><code>PLUGINS</code></strong>: plugins needed by the plugin.</li>
+            <li><strong><code>PLUGIN_BINARIES</code></strong>: the binary version of plugins needed by the plugin.</li>
+            <li><strong><code>QT_MODULES</code></strong>: <a href="https://www.qt.io/">Qt</a> modules needed by the plugin.</li>
+            <li><strong><code>EXTERNAL_BINARIES_DIR</code></strong>: location where external binaries needed by the plugin can be found.</li>
+            <li><strong><code>EXTERNAL_BINARIES</code></strong>: external binaries needed by the plugin.</li>
+            <li><strong><code>TESTS</code></strong>: <a href="../tests.html">tests</a> for the plugin.</li>
         </ul>
 
         <p>
-            Following those keywords are the parameters themselves, as can be seen in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/CMakeLists.txt"><code>[OpenCOR]/src/plugins/miscellaneous/Core/CMakeLists.txt</code></a> for the <strong>Core</strong> plugin.
+            Following those keywords are the parameters themselves, as can be seen in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/CMakeLists.txt"><code>[OpenCOR]/src/plugins/miscellaneous/Core/CMakeLists.txt</code></a> for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin.
         </p>
 
         <span class="anchor" id="Plugin information"></span>
@@ -136,7 +136,7 @@
         </div>
 
         <p>
-            For a plugin to be recognisable by OpenCOR, it must provide some <a href="#Basic information">basic information</a> about itself, as well as define a <a href="#Plugin class">plugin class</a>. For this, we need a <code>.cpp</code>, a <code>.h</code> and <code>.json</code> file, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.json"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.json</code></a> for the <strong>Core</strong> plugin.
+            For a plugin to be recognisable by OpenCOR, it must provide some <a href="#Basic information">basic information</a> about itself, as well as define a <a href="#Plugin class">plugin class</a>. For this, we need a <code>.cpp</code>, a <code>.h</code> and <code>.json</code> file, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.json"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.json</code></a> for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin.
         </p>
 
         <span class="anchor" id=".json file"></span>
@@ -146,7 +146,7 @@
         </div>
 
         <p>
-            The <code>.json</code> file is a simple <a href="http://www.json.org/">JSON</a> file, which sole purpose is to reference the name of the plugin class. In the case of the <strong>Core</strong> plugin, the contents of that file is:
+            The <code>.json</code> file is a simple <a href="http://www.json.org/">JSON</a> file, which sole purpose is to reference the name of the plugin class. In the case of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin, the contents of that file is:
         </p>
 
         <pre class="prettyprint">{
@@ -159,7 +159,7 @@
         </div>
 
         <p>
-            The code for the <a href="#Basic information">basic information</a> and <a href="#Plugin class">plugin class</a> must be in the plugin's own namespace within the <code>OpenCOR</code> namespace. More generally, any plugin-related code should be within those two namespaces, this to ensure the integrity of the plugin's code. Thus, in the case of the <strong>Core</strong> plugin, we must have:
+            The code for the <a href="#Basic information">basic information</a> and <a href="#Plugin class">plugin class</a> must be in the plugin's own namespace within the <code>OpenCOR</code> namespace. More generally, any plugin-related code should be within those two namespaces, this to ensure the integrity of the plugin's code. Thus, in the case of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin, we must have:
         </p>
 
         <pre class="prettyprint">...
@@ -189,7 +189,7 @@ namespace Core {
         </ul>
 
         <p>
-            This information is made available to OpenCOR through a function, which in the case of the <strong>Core</strong> plugin has the following declaration:
+            This information is made available to OpenCOR through a function, which in the case of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin has the following declaration:
         </p>
 
         <pre class="prettyprint">PLUGININFO_FUNC CorePluginInfo();</pre>
@@ -199,7 +199,7 @@ namespace Core {
         </p>
 
         <p>
-            In the case of the <strong>Core</strong> plugin, the body of its function is:
+            In the case of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin, the body of its function is:
         </p>
 
         <pre class="prettyprint">PLUGININFO_FUNC CorePluginInfo()
@@ -225,7 +225,7 @@ namespace Core {
         </div>
 
         <p>
-            We rely on <a href="https://www.qt.io/">Qt</a>'s support for plugins, which means that plugins must define a specific class. The class must inherit from <code>QObject</code>, as well as from any interface the plugin implements. For example, the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces, so its class definition is:
+            We rely on <a href="https://www.qt.io/">Qt</a>'s support for plugins, which means that plugins must define a specific class. The class must inherit from <code>QObject</code>, as well as from any interface the plugin implements. For example, the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interfaces, so its class definition is:
         </p>
 
         <pre class="prettyprint">...
@@ -254,7 +254,7 @@ public:
 ...</pre>
 
         <p>
-            On the other hand, the <strong>LLVM</strong> plugin does not need to implement any interface since its sole purpose is to provide other plugins with access to <a href="http://www.llvm.org/">LLVM</a> (incl. <a href="http://clang.llvm.org/">Clang</a>). Hence, its much simpler class definition:
+            On the other hand, the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/LLVM/">LLVM</a> plugin does not need to implement any interface since its sole purpose is to provide other plugins with access to <a href="http://www.llvm.org/">LLVM</a> (incl. <a href="http://clang.llvm.org/">Clang</a>). Hence, its much simpler class definition:
         </p>
 
         <pre class="prettyprint">...
@@ -287,7 +287,7 @@ class __declspec(dllexport) myClass;</pre>
 class __declspec(dllimport) myClass;</pre>
 
         <p>
-            Each plugin that exports functions and/or classes therefore defines a macro that refers either to <code>__declspec(dllexport)</code> or to <code>__declspec(dllimport)</code>, depending on how the plugin's code is to be compiled. Thus, in the case of the <strong>Compiler</strong> plugin, we have:
+            Each plugin that exports functions and/or classes therefore defines a macro that refers either to <code>__declspec(dllexport)</code> or to <code>__declspec(dllimport)</code>, depending on how the plugin's code is to be compiled. Thus, in the case of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Compiler/">Compiler</a> plugin, we have:
         </p>
 
         <pre class="prettyprint">...

@@ -61,6 +61,7 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(DataStoreInterfaces()),
     mCellmlEditingViewPlugins(Plugins()),
+    mCellmlSimulationViewPlugins(Plugins()),
     mSedmlFileTypes(FileTypes()),
     mCombineFileTypes(FileTypes())
 {
@@ -205,16 +206,21 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (dataStoreInterface)
             mDataStoreInterfaces << dataStoreInterface;
 
-        // Look for a CellML capable editing view
+        // Look for a CellML capable editing or simulation view
 
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (viewInterface && (viewInterface->viewMode() == EditingMode)) {
+        if (   viewInterface
+            && (   (viewInterface->viewMode() == EditingMode)
+                || (viewInterface->viewMode() == SimulationMode))) {
             QStringList viewMimeTypes = viewInterface->viewMimeTypes(OpenMimeTypeMode);
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
-                mCellmlEditingViewPlugins << plugin;
+                if (viewInterface->viewMode() == EditingMode)
+                    mCellmlEditingViewPlugins << plugin;
+                else
+                    mCellmlSimulationViewPlugins << plugin;
             }
         }
 
@@ -381,6 +387,15 @@ Plugins SingleCellViewPlugin::cellmlEditingViewPlugins() const
     // Return our CellML editing view plugins
 
     return mCellmlEditingViewPlugins;
+}
+
+//==============================================================================
+
+Plugins SingleCellViewPlugin::cellmlSimulationViewPlugins() const
+{
+    // Return our CellML simulation view plugins
+
+    return mCellmlSimulationViewPlugins;
 }
 
 //==============================================================================
