@@ -309,7 +309,22 @@ MACRO(INITIALISE_PROJECT)
 
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
     ELSEIF(NOT WIN32)
-        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}")
+        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+    ENDIF()
+
+    # Try to build PatchELF, if on Linux
+
+    IF(NOT WIN32 AND NOT APPLE)
+        SET(PATCHELF_FILENAME ${PROJECT_BUILD_DIR}/patchelf)
+
+        EXECUTE_PROCESS(COMMAND ${CMAKE_CXX_COMPILER} -DPACKAGE_STRING=\"patchelf\" -DPAGESIZE=4096 -o ${PATCHELF_FILENAME} patchelf.cc
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/patchelf
+                        ERROR_QUIET
+                        RESULT_VARIABLE RESULT)
+
+        IF(NOT RESULT EQUAL 0)
+            MESSAGE(FATAL_ERROR "PatchELF could not be built...")
+        ENDIF()
     ENDIF()
 
     # Show the build information, if allowed
@@ -1048,6 +1063,10 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
                            COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
 
+    # Remove the RPATH value from the Qt library
+
+    EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME})
+
     # Deploy the Qt library
 
     INSTALL(FILES ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME}
@@ -1072,6 +1091,10 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
             ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                                COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
+
+        # Remove the RPATH value from the Qt plugin
+
+    EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
