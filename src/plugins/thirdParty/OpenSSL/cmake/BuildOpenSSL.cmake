@@ -52,16 +52,16 @@ macro(Build_OpenSSL INSTALL_DIR)
         message(FATAL_ERROR "Unable to configure OpenSSL: ${OPTIONS}")
     endif()
 
-    # 64-bit Windows needs another configuration stage
+    # 64-bit Windows needs patching and has another configuration stage
 
     if(WIN32)
-        execute_process(COMMAND ms/do_win64a
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL
-                        RESULT_VARIABLE EXECUTE_RESULT
-                        )
-        if(EXECUTE_RESULT)
-            message(FATAL_ERROR "Unable to build OpenSSL dependencies.")
-        endif()
+        # See https://github.com/openssl/openssl/issues/1545 for patch details
+
+        execute_process(COMMAND git apply --check --apply ../patches/windows/OpenSSL.patch
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL)
+
+        execute_process(COMMAND ms/do_win64a.bat
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL)
     endif()
 
     # Ensure we start from a clean build

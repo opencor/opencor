@@ -46,15 +46,15 @@ if(USE_PREBUILT_OPENSSL_PLUGIN)
     if(WIN32)
         if(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR}
-                OpenSSL ${OPENSSL_VERSION} b6e5f1227af3b980cd6f71d300b39500eaac0663
+                OpenSSL ${OPENSSL_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
                 CHECKED_FILES lib/libeay32.lib
                     lib/libeay32.dll
                     lib/ssleay32.lib
                     lib/ssleay32.dll
-                SHA1_VALUES 05066757cb6492ad5f9ed3ae2dfbff50dda721b1
-                    657e1e9851902d0e09c9ab7d39369f63260ab759
-                    ddc836230f27e69f77d541baf6d43415a09a06da
-                    985581869b2cda18eaa346ae2a2b3cc15612b2ec
+                SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
+                    b9895617dc6c321eaaa7d5eef7e4a922f6fb226a
+                    2efcf11e3e8a2a92280c2e267fc1ff3049cb577d
+                    a18cbb0332fcef7ce3f3a73fbeb9b463a69632f7
                 )
         else()
             RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR} Sample sha...)
