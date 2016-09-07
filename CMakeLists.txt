@@ -15,6 +15,7 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
+OPTION(USE_PREBUILT_OPENSSL_PLUGIN "Use the pre-built version of the OpenSSL plugin" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
@@ -300,6 +301,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LLVM
+    thirdParty/OpenSSL
     thirdParty/Python
     thirdParty/QScintilla
     thirdParty/Qwt
