@@ -598,10 +598,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${EXTERNAL_BINARY})
+                COPY_FILE_TO_BUILD_DIR(DIRECT ${EXTERNAL_BINARIES_DIR} . ${EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(DIRECT ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
 
             # Strip the library of all its local symbols, if possible
 
@@ -932,15 +932,15 @@ ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the file (renaming it, if needed) to the destination folder
-    # Note: DIRECT_COPY is used to copy a file that doesn't first need to be
-    #       built. This means that we can then use EXECUTE_PROCESS() rather than
+    # Note: DIRECT is used to copy a file that doesn't first need to be built.
+    #       This means that we can then use EXECUTE_PROCESS() rather than
     #       ADD_CUSTOM_COMMAND(), and thus reduce the length of the
     #       PROJECT_TARGET command, something that can be useful on Windows
     #       since the command might otherwise end up being too long for Windows
     #       to handle...
 
     IF("${ARGN}" STREQUAL "")
-        IF("${PROJECT_TARGET}" STREQUAL "DIRECT_COPY")
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                              ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
         ELSE()
@@ -952,7 +952,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
         # An argument was passed so use it to rename the file, which is to be
         # copied
 
-        IF("${PROJECT_TARGET}" STREQUAL "DIRECT_COPY")
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                              ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
         ELSE()
@@ -996,8 +996,8 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
         SET(LIBRARY_FILENAME ${LIBRARY_DEBUG_FILENAME})
     ENDIF()
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${REAL_QT_BINARY_DIR} . ${LIBRARY_FILENAME})
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${REAL_QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT ${REAL_QT_BINARY_DIR} . ${LIBRARY_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT ${REAL_QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
 
     # Deploy the Qt library
 
@@ -1022,7 +1022,7 @@ MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
             SET(PLUGIN_FILENAME ${PLUGIN_DEBUG_FILENAME})
         ENDIF()
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
@@ -1039,7 +1039,7 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
 
     # Strip the Qt library of all its local symbols
 
@@ -1064,7 +1064,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         SET(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
         SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
