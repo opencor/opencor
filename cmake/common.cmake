@@ -324,7 +324,7 @@ MACRO(INITIALISE_PROJECT)
             MESSAGE(FATAL_ERROR "PatchELF could not be built...")
         ENDIF()
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PROJECT_SOURCE_DIR}/cmake . setrpath.sh)
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${PROJECT_SOURCE_DIR}/cmake . setrpath.sh)
     ENDIF()
 
     # Show the build information, if allowed
