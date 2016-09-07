@@ -115,7 +115,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Add support for Specials (Unicode block)
     // Note #1: see issue #709 for more information...
-    // Note #2: make sure that we checkString() supports the below
+    // Note #2: make sure that checkString() supports the below
     //          representations...
 
     SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xb9", "IAA");

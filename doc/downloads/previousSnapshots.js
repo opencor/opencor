@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed an issue with switching from one file to another with the mouse over a button-like widget and the status bar visible resulting in some bad flickering (see issue <a href=\"https://github.com/opencor/opencor/issues/1027\">#1027</a>). Qt WebKit now uses the same version of ICU as Qt itself on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1037\">#1037</a>)." },
+                       { "change": "<strong>General:</strong> fixed an issue with switching from one file to another with the mouse over a button-like widget and the status bar visible resulting in some bad flickering (see issue <a href=\"https://github.com/opencor/opencor/issues/1027\">#1027</a>). QtWebKit now uses the same version of ICU as Qt itself on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1037\">#1037</a>)." },
                        { "change": "<strong>Data stores:</strong> now allow the selection of model parameters (see issue <a href=\"https://github.com/opencor/opencor/issues/1008\">#1008</a>)." },
                        { "change": "<strong>BioSignalML data store:</strong> made the code and GUI look more like the rest of OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/856\">#856</a>)." },
                        { "change": "<strong>PMR window:</strong> file exposures now include SED-ML files, if any (see issue <a href=\"https://github.com/opencor/opencor/issues/1032\">#1032</a>)." },
@@ -47,7 +47,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> merged and renamed some of our plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1004\">#1004</a>). Upgraded to Qt 5.6.1 LTS + Qt WebKit (see issue <a href=\"https://github.com/opencor/opencor/issues/1015\">#1015</a>). A new file is not automatically considered as modified anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1020\">#1020</a>)." },
+                       { "change": "<strong>General:</strong> merged and renamed some of our plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1004\">#1004</a>). Upgraded to Qt 5.6.1 LTS + QtWebKit (see issue <a href=\"https://github.com/opencor/opencor/issues/1015\">#1015</a>). A new file is not automatically considered as modified anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1020\">#1020</a>)." },
                        { "change": "<strong>CellML support:</strong> can now detect a variable of integration no matter where it is defined in a model (see issue <a href=\"https://github.com/opencor/opencor/issues/995\">#995</a>)." },
                        { "change": "<strong>Data stores:</strong> data export is now done in its own thread (ee issue <a href=\"https://github.com/opencor/opencor/issues/849\">#849</a>)." },
                        { "change": "<strong>Text-based editing views:</strong> fixed a small problem with losing the focus and not being able to track changes to a file after having reloaded another file that depends on it (see issue <a href=\"https://github.com/opencor/opencor/issues/996\">#996</a>)." },

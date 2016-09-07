@@ -32,6 +32,8 @@
             <file>user/plugins/simulation/*.*</file>
             <file>user/plugins/simulation/res/pics/*.*</file>
             <file>user/plugins/solver/*.*</file>
+            <file>user/plugins/support/CellMLSupport/res/pics/*.*</file>
+            <file>user/plugins/support/SEDMLSupport/res/pics/*.*</file>
             <file>user/plugins/tools/*.*</file>
             <file>user/res/*.*</file>
             <file>user/res/pics/*.*</file>
