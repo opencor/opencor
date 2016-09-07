@@ -9,8 +9,13 @@ macro(Build_OpenSSL INSTALL_DIR)
     endif()
 
     ## set(CONFIG_OPTIONS "--no-asm") ???
+    set(CONFIG_OPTIONS "--prefix=${INSTALL_DIR}")
+    if(NOT WIN32)
+        list(APPEND CONFIG_OPTIONS "shared")
+    endif()
 
-    set(CONFIG_OPTIONS "shared" "--prefix=${INSTALL_DIR}")
+## Note Windows requirements -- Activestate Perl and VC 2014 assembler
+## Also need to patch crypto/x86_64cpuid.pl
 
 ## Not for OPENSSL_VERSION < 1.1
 #    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -21,24 +26,23 @@ macro(Build_OpenSSL INSTALL_DIR)
 
     if(WIN32)
         set(PLATFORM "VC-WIN64A")
-## Needs  > ms\do_win64a
-##        > nmake -f ms\ntdll.mak
-## See INSTALL.W64
         set(MAKE_EXECUTABLE nmake)
+        set(MAKEFILE ms/ntdll.mak)
+        set(INSTALL_TARGET install)
     elseif(APPLE)
         set(PLATFORM "darwin64-x86_64-cc")
         set(MAKE_EXECUTABLE make)
+        set(MAKEFILE Makefile)
+        set(INSTALL_TARGET install_sw)
     else()
         set(PLATFORM "linux-x86_64")
         list(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         set(MAKE_EXECUTABLE make)
+        set(MAKEFILE Makefile)
+        set(INSTALL_TARGET install_sw)
     endif()
 
     # Run configuration script
-
-
-#    set(CONFIG_OPTIONS ${PLATFORM} ${CONFIG_OPTIONS})
-#    string(REPLACE ";" " " OPTIONS "${CONFIG_OPTIONS}")
 
     execute_process(COMMAND ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
                     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL
@@ -48,9 +52,21 @@ macro(Build_OpenSSL INSTALL_DIR)
         message(FATAL_ERROR "Unable to configure OpenSSL: ${OPTIONS}")
     endif()
 
+    # 64-bit Windows needs another configuration stage
+
+    if(WIN32)
+        execute_process(COMMAND ms/do_win64a
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL
+                        RESULT_VARIABLE EXECUTE_RESULT
+                        )
+        if(EXECUTE_RESULT)
+            message(FATAL_ERROR "Unable to build OpenSSL dependencies.")
+        endif()
+    endif()
+
     # Ensure we start from a clean build
 
-    execute_process(COMMAND ${MAKE_EXECUTABLE} clean
+    execute_process(COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} clean
                     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL
                     RESULT_VARIABLE EXECUTE_RESULT
                     )
@@ -60,7 +76,7 @@ macro(Build_OpenSSL INSTALL_DIR)
 
     # Compile sources
 
-    execute_process(COMMAND ${MAKE_EXECUTABLE}
+    execute_process(COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE}
                     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL
                     RESULT_VARIABLE EXECUTE_RESULT
                     )
@@ -70,7 +86,7 @@ macro(Build_OpenSSL INSTALL_DIR)
 
     # Install (into REMOTE_EXTERNAL_BINARIES_DIR)
 
-    execute_process(COMMAND ${MAKE_EXECUTABLE} install_sw
+    execute_process(COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${INSTALL_TARGET}
                     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/OpenSSL
                     RESULT_VARIABLE EXECUTE_RESULT
                     )

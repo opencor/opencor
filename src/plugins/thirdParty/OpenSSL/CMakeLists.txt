@@ -1,12 +1,15 @@
 PROJECT(OpenSSLPlugin)
 
+## Override main CMakeLists.txt
+##set(USE_PREBUILT_OPENSSL_PLUGIN OFF)
+
 # libgit2 doesn't like OpenSSL 1.1 so use 1.0 until git is fixed...
 
 set(OPENSSL_VERSION "1.0")
-set(OPENSSL_LIBRARY_VERSION "1.0.0")
 
-## Override main CMakeLists.txt
-##set(USE_PREBUILT_OPENSSL_PLUGIN OFF)
+# TODO: Used for changing names in dylibs. Should this be "1.0.2"??
+
+set(OPENSSL_LIBRARY_VERSION "1.0.0")
 
 # Reset OpenSSL variables in FIND_PACKAGE() cache...
 
@@ -21,23 +24,47 @@ unset(OPENSSL_VERSION CACHE)
 set(OPENSSL_ROOT_DIR "${PROJECT_SOURCE_DIR}/packages/${REMOTE_EXTERNAL_BINARIES_DIR}")
 string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" RELATIVE_ROOT_DIR ${OPENSSL_ROOT_DIR})
 
+set(PACKAGED_FILES include lib)
+if(WIN32)
+    set(CHECKED_FILES
+        lib/libeay32.lib lib/libeay32.dll
+        lib/ssleay32.lib lib/ssleay32.dll)
+elseif(APPLE)
+    set(CHECKED_FILES
+        lib/libcrypto.${OPENSSL_LIBRARY_VERSION}.dylib
+        lib/libssl.${OPENSSL_LIBRARY_VERSION}.dylib)
+else()
+    set(CHECKED_FILES
+        lib/libcrypto.${OPENSSL_LIBRARY_VERSION}.so
+        lib/libssl.${OPENSSL_LIBRARY_VERSION}.so)
+endif()
+
 if(USE_PREBUILT_OPENSSL_PLUGIN)
 
     # Retrieve the plugin's file(s)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR} Sample sha...)
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR}
+                OpenSSL ${OPENSSL_VERSION} b6e5f1227af3b980cd6f71d300b39500eaac0663
+                CHECKED_FILES lib/libeay32.lib
+                    lib/libeay32.dll
+                    lib/ssleay32.lib
+                    lib/ssleay32.dll
+                SHA1_VALUES 05066757cb6492ad5f9ed3ae2dfbff50dda721b1
+                    657e1e9851902d0e09c9ab7d39369f63260ab759
+                    ddc836230f27e69f77d541baf6d43415a09a06da
+                    985581869b2cda18eaa346ae2a2b3cc15612b2ec
+                )
         else()
             RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR} Sample sha...)
         endif()
     elseif(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR}
             OpenSSL ${OPENSSL_VERSION} 0e7337e56ed9d6580c1437ce0fdd3963641d74e3
-            FILES lib/libcrypto.1.0.0.dylib
-                  lib/libssl.1.0.0.dylib
-            SHA1  e6db7d7e402091527ef72f7825a16a35566ebad5
-                  8fe62552e8ebd8e430ff8051e3e6e2ec3430aab1
+            CHECKED_FILES ${CHECKED_FILES}
+            SHA1_VALUES e6db7d7e402091527ef72f7825a16a35566ebad5
+                8fe62552e8ebd8e430ff8051e3e6e2ec3430aab1
             )
     else()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR} Sample sha...)
@@ -47,9 +74,18 @@ else()
     # Build and install OpenSSL as an external package
 
     include(cmake/BuildOpenSSL.cmake)
+
     Build_OpenSSL(${OPENSSL_ROOT_DIR})
 
-    if(APPLE)
+    if(WIN32)
+        # The install process puts DLLs and import libraries in separate
+        # directories. OpenCOR though (currently) expects them to all be
+        # in the same directory, so we move the DLLs.
+
+        file(RENAME ${OPENSSL_ROOT_DIR}/bin/libeay32.dll ${OPENSSL_ROOT_DIR}/lib/libeay32.dll)
+        file(RENAME ${OPENSSL_ROOT_DIR}/bin/ssleay32.dll ${OPENSSL_ROOT_DIR}/lib/ssleay32.dll)
+
+    elseif(APPLE)
         # The build process creates write-protected libraries
 
         EXECUTE_PROCESS(COMMAND chmod 755 libcrypto.${OPENSSL_LIBRARY_VERSION}.dylib
@@ -74,9 +110,8 @@ else()
 
     CREATE_PACKAGE_FILE(${RELATIVE_ROOT_DIR}
         OpenSSL ${OPENSSL_VERSION}
-        FILES lib include
-        SHA1 "lib/libcrypto.${OPENSSL_LIBRARY_VERSION}.dylib"
-             "lib/libssl.${OPENSSL_LIBRARY_VERSION}.dylib"
+        PACKAGED_FILES ${PACKAGED_FILES}
+        CHECKED_FILES ${CHECKED_FILES}
         )
 endif()
 
@@ -89,6 +124,26 @@ find_package(OpenSSL ${OPENSSL_VERSION} MODULE REQUIRED QUIET)
 
 if(NOT "${OPENSSL_INCLUDE_DIR}" STREQUAL "${OPENSSL_ROOT_DIR}/include")
     message(FATAL_ERROR "Couldn't find our OpenSSL package...")
+endif()
+
+set(EXTERNAL_BINARY_DIR ${OPENSSL_ROOT_DIR}/lib)
+
+if(WIN32)
+    set(EXTERNAL_BINARIES)
+    foreach(LIBRARY ${OPENSSL_LIBRARIES})
+        string(REPLACE "${EXTERNAL_BINARY_DIR}/" "" LIBNAME ${LIBRARY})
+        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+            EXTERNAL_BINARY ${LIBNAME})
+        list(APPEND EXTERNAL_BINARIES ${EXTERNAL_BINARY})
+    endforeach()
+elseif(APPLE)
+    set(EXTERNAL_BINARIES
+        libcrypto.${OPENSSL_LIBRARY_VERSION}.dylib
+        libssl.${OPENSSL_LIBRARY_VERSION}.dylib)
+else()
+    set(EXTERNAL_BINARIES
+        libcrypto.${OPENSSL_LIBRARY_VERSION}.so
+        libssl.${OPENSSL_LIBRARY_VERSION}.so)
 endif()
 
 # Ensure external packages build by other plugins can find us using CMake
@@ -111,8 +166,7 @@ ADD_PLUGIN(OpenSSL
     QT_MODULES
         Core
     EXTERNAL_BINARIES
-        libcrypto.${OPENSSL_LIBRARY_VERSION}.dylib
-        libssl.${OPENSSL_LIBRARY_VERSION}.dylib
+        ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR
-        ${OPENSSL_ROOT_DIR}/lib
+        ${EXTERNAL_BINARY_DIR}
     )
