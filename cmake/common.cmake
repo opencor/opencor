@@ -324,8 +324,6 @@ MACRO(INITIALISE_PROJECT)
             MESSAGE(FATAL_ERROR "PatchELF could not be built...")
         ENDIF()
 
-        SET(SETRPATH_FILENAME ${PROJECT_BUILD_DIR}/setrpath.sh)
-
         COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PROJECT_SOURCE_DIR}/cmake . setrpath.sh)
     ENDIF()
 
@@ -1050,12 +1048,13 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(SET_RPATH FILENAME RPATH)
+MACRO(SET_RPATH PROJECT_TARGET FILENAME RPATH)
     # Remove any existing RPATH/RUNPATH value and force the RPATH setting to the
     # given RPATH value
 
-    ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                       COMMAND ${SETRPATH_FILENAME} ${FILENAME} ${RPATH})
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                       COMMAND ${PROJECT_BUILD_DIR}/setrpath.sh ${FILENAME} ${RPATH}
+                       WORKING_DIRECTORY ${PROJECT_BUILD_DIR})
 ENDMACRO()
 
 #===============================================================================
@@ -1076,7 +1075,7 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
 
     # Set the RPATH value of the Qt library
 
-    SET_RPATH(${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME} "ORIGIN")
+    SET_RPATH(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME} "ORIGIN")
 
     # Deploy the Qt library
 
@@ -1104,7 +1103,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         # Set the RPATH value of the Qt plugin
 
-        SET_RPATH(${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME} "ORIGIN/../../lib")
+        SET_RPATH(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME} "ORIGIN/../../lib")
 
         # Deploy the Qt plugin
 
