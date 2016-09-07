@@ -1056,16 +1056,16 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
 
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
 
+    # Remove the RPATH value from the Qt library
+
+    EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME})
+
     # Strip the Qt library of all its local symbols
 
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                            COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
-
-    # Remove the RPATH value from the Qt library
-
-    EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME})
 
     # Deploy the Qt library
 
@@ -1085,16 +1085,16 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
+        # Remove the RPATH value from the Qt plugin
+
+        EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+
         # Strip the Qt plugin of all its local symbols
 
         IF(RELEASE_MODE)
             ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                                COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
-
-        # Remove the RPATH value from the Qt plugin
-
-        EXECUTE_PROCESS(COMMAND ${PATCHELF_FILENAME} --remove-rpath ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
