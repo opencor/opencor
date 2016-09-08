@@ -737,10 +737,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       the information of all the tests up to the one we want
                 #       build...
 
-                QT5_WRAP_CPP(TEST_SOURCES_MOC
-                    ${TEST_HEADER_MOC}
-                )
-
+                QT5_WRAP_CPP(TEST_SOURCES_MOC ${TEST_HEADER_MOC})
                 QT5_ADD_RESOURCES(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
                 ADD_EXECUTABLE(${TEST_NAME}
