@@ -303,7 +303,6 @@ SET(PLUGINS
     thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/OpenSSL
-    thirdParty/Python
     thirdParty/PythonQt
     thirdParty/QScintilla
     thirdParty/Qwt
