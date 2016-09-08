@@ -312,7 +312,7 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_SKIP_RPATH TRUE)
         SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
 
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} ${LINK_RPATH_FLAG}")
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
     # Show the build information, if allowed
