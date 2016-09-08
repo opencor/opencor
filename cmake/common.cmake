@@ -511,7 +511,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ADD_DEFINITIONS(-D${DEFINITION})
     ENDFOREACH()
 
-    # RPATH value to use on Linux
+    # On Linux, set the RPATH value to use by the plugin
 
     IF(NOT WIN32 AND NOT APPLE)
         STRING(REPLACE "${LINK_RPATH_FLAG}" "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'"
