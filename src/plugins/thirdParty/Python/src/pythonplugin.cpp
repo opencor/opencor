@@ -25,13 +25,13 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
+#include <QCoreApplication>
 #include <QSettings>
 
 //==============================================================================
 
-#include <locale.h>
-#include <stdio.h>
+#include <clocale>
+#include <unistd.h>
 
 #ifdef __FreeBSD__
 #include <fenv.h>
@@ -157,35 +157,23 @@ void PythonPlugin::runHelpCommand()
 
 //==============================================================================
 
-// Based on `Programs/python.c` from the Python sources.
-
-/** TODO: Do we need this for Windows ??
-#ifdef MS_WINDOWS
-int
-wmain(int argc, wchar_t **argv)
-{
-    return Py_Main(argc, argv);
-}
-**/
-
 int PythonPlugin::runPythonShell(const QStringList &pArguments)
 {
+    // We must set PYTHONHOME to where Python is 'installed' **before** calling
+    // any Python library code. Calling `Py_SetPythonHome()` doesn't work as
+    // the `Py_Initialise()` code first checks the environment and, if PYTHONHOME
+    // isn't set, uses the installation path compiled in at Python build time...
 
-// TODO: argv[0] = full_path_to_python_exe...
-// or argv[0] = "PythonPlugin" and set PYTHONHOME
-// Do this when starting CLI OpenCOR ???
+    auto applicationDirectories = QCoreApplication::applicationDirPath().split("/");
+    applicationDirectories.removeLast();
 
-//Py_SetProgramName(), Py_SetPythonHome() and Py_SetPath()
+    auto pythonHome = QString();
+#if __APPLE__
+    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+#endif
+    setenv("PYTHONHOME", pythonHome.toUtf8().data(), true);
 
-// PYTHONHOME sets <prefix>
-//    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python
-//    const wchar_t *home = L"/Users/dave/build/OpenCOR/src/plugins/thirdParty/Python/packages/osx";
-//    Py_SetPythonHome((wchar_t *)home);
-
-//    const wchar_t *stdlib = L"lib/python35.zip:lib/python3.5/lib-dynload";
-//    Py_SetPath(stdlib);
-
-
+    // The following has been adapted from `Programs/python.c` in the Python sources.
 
     const int argc = pArguments.size() + 1;
     wchar_t **argv_copy;
