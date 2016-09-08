@@ -309,7 +309,10 @@ MACRO(INITIALISE_PROJECT)
 
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
     ELSEIF(NOT WIN32)
-        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+        SET(CMAKE_SKIP_RPATH TRUE)
+        SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
+
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} ${LINK_RPATH_FLAG}")
     ENDIF()
 
     # Show the build information, if allowed
@@ -507,6 +510,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     FOREACH(DEFINITION ${DEFINITIONS})
         ADD_DEFINITIONS(-D${DEFINITION})
     ENDFOREACH()
+
+    # RPATH value to use on Linux
+
+    IF(NOT WIN32 AND NOT APPLE)
+        STRING(REPLACE "${LINK_RPATH_FLAG}" "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'"
+               LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
+    ENDIF()
 
     # Generate and add the different files needed by the plugin
 
