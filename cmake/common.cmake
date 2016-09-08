@@ -903,12 +903,6 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    # Set the RPATH value of our plugin, if we are on Linux
-
-    IF(NOT WIN32 AND NOT APPLE)
-        SET_RPATH(DIRECT ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} "ORIGIN:ORIGIN/../../lib")
-    ENDIF()
-
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package and deploy
@@ -1063,14 +1057,9 @@ MACRO(SET_RPATH PROJECT_TARGET FILENAME RPATH)
     # Remove any existing RPATH/RUNPATH value and force the RPATH setting to the
     # given RPATH value
 
-    IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        EXECUTE_PROCESS(COMMAND ${PROJECT_BUILD_DIR}/setrpath.sh ${FILENAME} ${RPATH}
-                        WORKING_DIRECTORY ${PROJECT_BUILD_DIR})
-    ELSE()
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND ${PROJECT_BUILD_DIR}/setrpath.sh ${FILENAME} ${RPATH}
-                           WORKING_DIRECTORY ${PROJECT_BUILD_DIR})
-    ENDIF()
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                       COMMAND ${PROJECT_BUILD_DIR}/setrpath.sh ${FILENAME} ${RPATH}
+                       WORKING_DIRECTORY ${PROJECT_BUILD_DIR})
 ENDMACRO()
 
 #===============================================================================
