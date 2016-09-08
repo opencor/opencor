@@ -302,7 +302,7 @@ MACRO(INITIALISE_PROJECT)
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
     ENDIF()
 
-    # Set the RPATH information on Linux and OS X
+    # Set the RPATH (and RPATH link, if needed) information on Linux and OS X
 
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -514,7 +514,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # On Linux, set the RPATH value to use by the plugin
 
     IF(NOT WIN32 AND NOT APPLE)
-        STRING(REPLACE "${LINK_RPATH_FLAG}" "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'"
+        SET(PLUGIN_LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'")
+
+        STRING(REPLACE "${LINK_RPATH_FLAG}" "${PLUGIN_LINK_RPATH_FLAG}"
                LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
     ENDIF()
 
@@ -728,7 +730,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE}
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
-                # The test exists, so build it
+                # The test exists, so build it, but first set the RPATH and
+                # RPATH link values to use by the test, if on Linux
+
+                IF(NOT WIN32 AND NOT APPLE)
+                    STRING(REPLACE "${PLUGIN_LINK_RPATH_FLAG}" "-Wl,-rpath-link,${PROJECT_BUILD_DIR}/lib ${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}'"
+                           LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
+                ENDIF()
+
 
                 SET(TEST_SOURCES_MOC)
                 # Note: we need to initialise TEST_SOURCES_MOC in case there is
