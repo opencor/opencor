@@ -59,8 +59,8 @@ int main(int pArgC, char *pArgV[])
         testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems[i+1]);
     }
 
-    // Go to the directory that contains our plugins, so that we can load them
-    // without any problem
+    // On Windows, go to the directory that contains our plugins, so that we can
+    // load them without any problem
 
     QString buildDir = OpenCOR::fileContents(":build_directory").first();
 
