@@ -21,11 +21,21 @@ limitations under the License.
 //==============================================================================
 
 #include "pythonplugin.h"
+#include "Python.h"
 
 //==============================================================================
 
 #include <Qt>
 #include <QSettings>
+
+//==============================================================================
+
+#include <locale.h>
+#include <stdio.h>
+
+#ifdef __FreeBSD__
+#include <fenv.h>
+#endif
 
 //==============================================================================
 
@@ -44,6 +54,35 @@ PLUGININFO_FUNC PythonPluginInfo()
     return new PluginInfo("Third-party", false, true,
                           QStringList(),
                           descriptions);
+}
+
+//==============================================================================
+// CLI interface
+//==============================================================================
+
+int PythonPlugin::executeCommand(const QString &pCommand,
+                                 const QStringList &pArguments)
+{
+    // Pass the given CLI command to the Python interpreter
+
+    if (!pCommand.compare("help")) {
+        // Display the commands that we support
+
+        runHelpCommand();
+
+        return 0;
+    } else if (!pCommand.compare("shell")) {
+        // Run the Python interpreter
+
+        return runPythonShell(pArguments);
+// TODO: pip install....
+    } else {
+        // Not a CLI command that we support
+
+        runHelpCommand();
+
+        return -1;
+    }
 }
 
 //==============================================================================
@@ -96,6 +135,113 @@ void PythonPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void PythonPlugin::runHelpCommand()
+{
+    // Output the commands we support
+/**
+    stdout << "Commands supported by the Python plugin:" << std::endl;
+    std::cout << " * Display the commands supported by the Python plugin:" << std::endl;
+    std::cout << "      help" << std::endl;
+    std::cout << " * Run a Python interpreter:" << std::endl;
+    std::cout << "      shell ..." << std::endl;
+    std::cout << " * Install ...:" << std::endl;
+    std::cout << "      pip ..." << std::endl;
+**/
+}
+
+//==============================================================================
+
+// Based on `Programs/python.c` from the Python sources.
+
+/** TODO: Do we need this for Windows ??
+#ifdef MS_WINDOWS
+int
+wmain(int argc, wchar_t **argv)
+{
+    return Py_Main(argc, argv);
+}
+**/
+
+int PythonPlugin::runPythonShell(const QStringList &pArguments)
+{
+
+// TODO: argv[0] = full_path_to_python_exe...
+// or argv[0] = "PythonPlugin" and set PYTHONHOME
+// Do this when starting CLI OpenCOR ???
+
+//Py_SetProgramName(), Py_SetPythonHome() and Py_SetPath()
+
+// PYTHONHOME sets <prefix>
+//    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python
+//    const wchar_t *home = L"/Users/dave/build/OpenCOR/src/plugins/thirdParty/Python/packages/osx";
+//    Py_SetPythonHome((wchar_t *)home);
+
+//    const wchar_t *stdlib = L"lib/python35.zip:lib/python3.5/lib-dynload";
+//    Py_SetPath(stdlib);
+
+
+
+    const int argc = pArguments.size() + 1;
+    wchar_t **argv_copy;
+    /* We need a second copy, as Python might modify the first one. */
+    wchar_t **argv_copy2;
+    int i, res;
+    char *oldloc;
+
+    argv_copy = (wchar_t **)PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1));
+    argv_copy2 = (wchar_t **)PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1));
+    if (!argv_copy || !argv_copy2) {
+        fprintf(stderr, "out of memory\n");
+        return 1;
+    }
+
+    /* 754 requires that FP exceptions run in "no stop" mode by default,
+     * and until C vendors implement C99's ways to control FP exceptions,
+     * Python requires non-stop mode.  Alas, some platforms enable FP
+     * exceptions by default.  Here we disable them.
+     */
+#ifdef __FreeBSD__
+    fedisableexcept(FE_OVERFLOW);
+#endif
+
+    oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, NULL));
+    if (!oldloc) {
+        fprintf(stderr, "out of memory\n");
+        return 1;
+    }
+
+    setlocale(LC_ALL, "");
+    argv_copy2[0] = argv_copy[0] = Py_DecodeLocale("python", NULL);
+    for (i = 1; i < argc; i++) {
+        argv_copy[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), NULL);
+        if (!argv_copy[i]) {
+            PyMem_RawFree(oldloc);
+            fprintf(stderr, "Fatal Python error: "
+                            "unable to decode the command line argument #%i\n",
+                            i + 1);
+            return 1;
+        }
+        argv_copy2[i] = argv_copy[i];
+    }
+    argv_copy2[argc] = argv_copy[argc] = NULL;
+
+    setlocale(LC_ALL, oldloc);
+    PyMem_RawFree(oldloc);
+
+    res = Py_Main(argc, argv_copy);
+
+    for (i = 0; i < argc; i++) {
+        PyMem_RawFree(argv_copy2[i]);
+    }
+    PyMem_RawFree(argv_copy);
+    PyMem_RawFree(argv_copy2);
+    return res;
 }
 
 //==============================================================================

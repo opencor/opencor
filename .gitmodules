@@ -1,5 +1,5 @@
-[submodule "src/plugins/thirdParty/Python/cmake"]
-	path = src/plugins/thirdParty/Python/build/cmake
+[submodule "src/plugins/thirdParty/Python/PythonCMakeBuild"]
+	path = src/plugins/thirdParty/Python/PythonCMakeBuild
 	url = git@github.com:python-cmake-buildsystem/python-cmake-buildsystem.git
 [submodule "src/plugins/thirdParty/PythonQt/PythonQt"]
 	path = src/plugins/thirdParty/PythonQt/PythonQt
