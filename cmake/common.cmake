@@ -302,29 +302,17 @@ MACRO(INITIALISE_PROJECT)
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
     ENDIF()
 
-    # Set the RPATH information on Linux and OS X
+    # Set the RPATH (and RPATH link, if needed) information on Linux and OS X
 
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
     ELSEIF(NOT WIN32)
-        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-    ENDIF()
+        SET(CMAKE_SKIP_RPATH TRUE)
+        SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
 
-    # Try to build PatchELF, if we are on Linux, and get our Shell script ready
-
-    IF(NOT WIN32 AND NOT APPLE)
-        EXECUTE_PROCESS(COMMAND ${CMAKE_CXX_COMPILER} -DPACKAGE_STRING=\"patchelf\" -DPAGESIZE=4096 -o ${PROJECT_BUILD_DIR}/patchelf patchelf.cc
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/patchelf
-                        ERROR_QUIET
-                        RESULT_VARIABLE RESULT)
-
-        IF(NOT RESULT EQUAL 0)
-            MESSAGE(FATAL_ERROR "PatchELF could not be built...")
-        ENDIF()
-
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${PROJECT_SOURCE_DIR}/cmake . setrpath.sh)
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
     # Show the build information, if allowed
@@ -523,6 +511,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ADD_DEFINITIONS(-D${DEFINITION})
     ENDFOREACH()
 
+    # On Linux, set the RPATH value to use by the plugin
+
+    IF(NOT WIN32 AND NOT APPLE)
+        SET(PLUGIN_LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'")
+
+        STRING(REPLACE "${LINK_RPATH_FLAG}" "${PLUGIN_LINK_RPATH_FLAG}"
+               LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
+    ENDIF()
+
     # Generate and add the different files needed by the plugin
 
     IF("${HEADERS_MOC}" STREQUAL "")
@@ -669,12 +666,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    # Set the RPATH value of our plugin, if we are on Linux
-
-    IF(NOT WIN32 AND NOT APPLE)
-        SET_RPATH(${PROJECT_NAME} ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} "ORIGIN:ORIGIN/../../lib")
-    ENDIF()
-
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package OpenCOR, as well
@@ -739,7 +730,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE}
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
-                # The test exists, so build it
+                # The test exists, so build it, but first set the RPATH and
+                # RPATH link values to use by the test, if on Linux
+
+                IF(NOT WIN32 AND NOT APPLE)
+                    STRING(REPLACE "${PLUGIN_LINK_RPATH_FLAG}" "-Wl,-rpath-link,${PROJECT_BUILD_DIR}/lib ${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}'"
+                           LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
+                ENDIF()
+
 
                 SET(TEST_SOURCES_MOC)
                 # Note: we need to initialise TEST_SOURCES_MOC in case there is
@@ -1050,17 +1048,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(SET_RPATH PROJECT_TARGET FILENAME RPATH)
-    # Remove any existing RPATH/RUNPATH value and force the RPATH setting to the
-    # given RPATH value
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                       COMMAND ${PROJECT_BUILD_DIR}/setrpath.sh ${FILENAME} ${RPATH}
-                       WORKING_DIRECTORY ${PROJECT_BUILD_DIR})
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
@@ -1075,10 +1062,6 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
         ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                            COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
-
-    # Set the RPATH value of the Qt library
-
-    SET_RPATH(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME} "ORIGIN")
 
     # Deploy the Qt library
 
@@ -1104,10 +1087,6 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
             ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
                                COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
-
-        # Set the RPATH value of the Qt plugin
-
-        SET_RPATH(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME} "ORIGIN/../../lib")
 
         # Deploy the Qt plugin
 
