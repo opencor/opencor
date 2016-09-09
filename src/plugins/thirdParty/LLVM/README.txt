@@ -2,7 +2,7 @@ We need to build LLVM (incl. Clang) ourselves so that it can be used as a 'prope
 
 To address this shortcoming, we must 'manually' expose the classes/methods that are needed by OpenCOR (grep for ---OPENCOR--- to find out which ones those are). Should OpenCOR ever need direct access to another class/method, then that class/method will obviously have to be exposed, and LLVM rebuilt. In addition to exposing some classes/methods, we also had to 'fix' a few things. Again, those are highlighted (just look for ---OPENCOR---).
 
-In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to OFF), then keep in mind that configuration files have to be up to date. So, if needed, they may have to regenerated using CMake (on Windows, this may require installing Python 2.7.x, which can be downloaded from http://www.python.org/download/):
+In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to OFF), then keep in mind that configuration files have to be up to date. So, if needed, they may have to be regenerated using CMake (on Windows, this may require installing Python 2.7.x, which can be downloaded from http://www.python.org/download/):
  - Download the LLVM and Clang source codes from http://llvm.org/releases/download.html
  - Uncompress their corresponding tar.xz file
  - Move the contents of [Clang] to [LLVM]/tools/clang
