@@ -15,6 +15,7 @@
 #include "clang/Driver/Util.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/Support/Path.h"
+#include <map>
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
 //---OPENCOR--- END
