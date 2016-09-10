@@ -101,6 +101,16 @@ ELSE()
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILATION_FLAGS}")
     ENDIF()
 
+    # On Windows, link to Version.dll
+
+    IF(WIN32)
+        SET(SYSTEM_LIBRARIES
+            Version
+        )
+    ELSE()
+        SET(SYSTEM_LIBRARIES)
+    ENDIF()
+
     # Add the plugin
 
     SET(LLVM_PLUGIN LLVM PARENT_SCOPE)
@@ -1479,5 +1489,7 @@ ELSE()
             ${DEFINITIONS}
         QT_MODULES
             Core
+        SYSTEM_LIBRARIES
+            ${SYSTEM_LIBRARIES}
     )
 ENDIF()
