@@ -388,6 +388,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        SYSTEM_BINARIES
         TESTS
     )
 
@@ -605,7 +606,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # System libraries
+    # System binaries
 
     FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
@@ -774,7 +775,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ENDFOREACH()
                 ENDIF()
 
-                # System libraries
+                # System binaries
 
                 FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
