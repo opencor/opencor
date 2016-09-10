@@ -919,11 +919,11 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # Qt libraries in that case (see the main CMakeLists.txt file)
 
     IF(APPLE AND ENABLE_TRAVIS_CI)
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+        FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
+            SET(OS_X_QT_LIBRARY_FILENAME ${OS_X_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${OS_X_QT_LIBRARY})
 
-            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${QT_LIBRARY_FILENAME}
-                                                              ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                                                              ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
                                                               ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -1118,12 +1118,12 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     # in that case; see the main CMakeLists.txt file)
 
     IF(NOT ENABLE_TRAVIS_CI)
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+        FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
+            SET(OS_X_QT_LIBRARY_FILENAME ${OS_X_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${OS_X_QT_LIBRARY})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
-                                                                 @rpath/${QT_LIBRARY_FILENAME}
+                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
+                                                                 @rpath/${OS_X_QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
         ENDFOREACH()
     ENDIF()
