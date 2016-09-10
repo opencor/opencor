@@ -104,11 +104,11 @@ ELSE()
     # On Windows, link to Version.dll
 
     IF(WIN32)
-        SET(SYSTEM_LIBRARIES
+        SET(SYSTEM_BINARIES
             Version
         )
     ELSE()
-        SET(SYSTEM_LIBRARIES)
+        SET(SYSTEM_BINARIES)
     ENDIF()
 
     # Add the plugin
@@ -1489,7 +1489,7 @@ ELSE()
             ${DEFINITIONS}
         QT_MODULES
             Core
-        SYSTEM_LIBRARIES
-            ${SYSTEM_LIBRARIES}
+        SYSTEM_BINARIES
+            ${SYSTEM_BINARIES}
     )
 ENDIF()
