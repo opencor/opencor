@@ -395,7 +395,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Check whether this is a third-party plugin
 
-    IF("${PARAMETER}" STREQUAL "THIRD_PARTY")
+    IF(ARG_THIRD_PARTY)
         # Disable all C/C++ warnings since building a third-party plugin may
         # generate some and this has nothing to do with us
         # Note: on Windows, we can't simply add /w since it will otherwise
