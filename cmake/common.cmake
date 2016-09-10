@@ -372,103 +372,29 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
-    SET(SOURCES)
-    SET(HEADERS_MOC)
-    SET(UIS)
-    SET(INCLUDE_DIRS)
-    SET(DEFINITIONS)
-    SET(PLUGINS)
-    SET(PLUGIN_BINARIES)
-    SET(QT_MODULES)
-    SET(EXTERNAL_BINARIES_DIR)
-    SET(EXTERNAL_BINARIES)
-    SET(TESTS)
+    SET(OPTIONS)
+    SET(ONE_VALUE_KEYWORDS)
+    SET(MULTI_VALUE_KEYWORDS
+        SOURCES
+        HEADERS_MOC
+        UIS
+        INCLUDE_DIRS
+        DEFINITIONS
+        PLUGINS
+        PLUGIN_BINARIES
+        QT_MODULES
+        EXTERNAL_BINARIES_DIR
+        EXTERNAL_BINARIES
+        TESTS
+    )
 
-    # Analyse the extra parameters
-
-    SET(TYPE_OF_PARAMETER 0)
-
-    FOREACH(PARAMETER ${ARGN})
-        IF("${PARAMETER}" STREQUAL "THIRD_PARTY")
-            # Disable all C/C++ warnings since building a third-party plugin may
-            # generate some and this has nothing to do with us
-            # Note: on Windows, we can't simply add /w since it will otherwise
-            #       result in MSVC complaining about /W3 having been overridden
-            #       by /w...
-
-            IF(WIN32)
-                STRING(REPLACE "/W3" "/w"
-                       CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-                STRING(REPLACE "/W3" "/w"
-                       CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-            ELSE()
-                SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
-            ENDIF()
-
-            # Add a definition in case of compilation from within Qt Creator
-            # using MSVC and JOM since the latter overrides some of our settings
-
-            IF(WIN32)
-                ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
-            ENDIF()
-        ELSEIF("${PARAMETER}" STREQUAL "SOURCES")
-            SET(TYPE_OF_PARAMETER 1)
-        ELSEIF("${PARAMETER}" STREQUAL "HEADERS_MOC")
-            SET(TYPE_OF_PARAMETER 2)
-        ELSEIF("${PARAMETER}" STREQUAL "UIS")
-            SET(TYPE_OF_PARAMETER 3)
-        ELSEIF("${PARAMETER}" STREQUAL "INCLUDE_DIRS")
-            SET(TYPE_OF_PARAMETER 4)
-        ELSEIF("${PARAMETER}" STREQUAL "DEFINITIONS")
-            SET(TYPE_OF_PARAMETER 5)
-        ELSEIF("${PARAMETER}" STREQUAL "PLUGINS")
-            SET(TYPE_OF_PARAMETER 6)
-        ELSEIF("${PARAMETER}" STREQUAL "PLUGIN_BINARIES")
-            SET(TYPE_OF_PARAMETER 7)
-        ELSEIF("${PARAMETER}" STREQUAL "QT_MODULES")
-            SET(TYPE_OF_PARAMETER 8)
-        ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES_DIR")
-            SET(TYPE_OF_PARAMETER 9)
-        ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES")
-            SET(TYPE_OF_PARAMETER 10)
-        ELSEIF("${PARAMETER}" STREQUAL "TESTS")
-            SET(TYPE_OF_PARAMETER 11)
-        ELSE()
-            # Not one of the headers, so add the parameter to the corresponding
-            # set
-
-            IF(${TYPE_OF_PARAMETER} EQUAL 1)
-                LIST(APPEND SOURCES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                LIST(APPEND HEADERS_MOC ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
-                LIST(APPEND UIS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
-                LIST(APPEND INCLUDE_DIRS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
-                LIST(APPEND DEFINITIONS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
-                LIST(APPEND PLUGINS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
-                LIST(APPEND PLUGIN_BINARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
-                LIST(APPEND QT_MODULES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                SET(EXTERNAL_BINARIES_DIR ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
-                LIST(APPEND EXTERNAL_BINARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
-                LIST(APPEND TESTS ${PARAMETER})
-            ENDIF()
-        ENDIF()
-    ENDFOREACH()
+    CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
     # Various include directories
 
-    SET(PLUGIN_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+    SET(PLUGIN_INCLUDE_DIRS ${ARG_INCLUDE_DIRS} PARENT_SCOPE)
 
-    INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
+    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Resource files, if any
     # Note: ideally, we would have our resource files named i18n.qrc.in and
@@ -494,7 +420,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # Update the translation (.ts) files and generate the language (.qm)
         # files, which will later on be embedded in the plugin
 
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_HEADERS_MOC} ${ARG_UIS})
     ENDIF()
 
     IF(EXISTS ${UI_QRC_FILENAME})
@@ -507,8 +433,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Some plugin-specific definitions
 
-    FOREACH(DEFINITION ${DEFINITIONS})
-        ADD_DEFINITIONS(-D${DEFINITION})
+    FOREACH(ARG_DEFINITION ${ARG_DEFINITIONS})
+        ADD_DEFINITIONS(-D${ARG_DEFINITION})
     ENDFOREACH()
 
     # On Linux, set the RPATH value to use by the plugin
@@ -522,16 +448,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    IF("${HEADERS_MOC}" STREQUAL "")
+    IF("${ARG_HEADERS_MOC}" STREQUAL "")
         SET(SOURCES_MOC)
     ELSE()
-        QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+        QT5_WRAP_CPP(SOURCES_MOC ${ARG_HEADERS_MOC})
     ENDIF()
 
-    IF("${UIS}" STREQUAL "")
+    IF("${ARG_UIS}" STREQUAL "")
         SET(SOURCES_UIS)
     ELSE()
-        QT5_WRAP_UI(SOURCES_UIS ${UIS})
+        QT5_WRAP_UI(SOURCES_UIS ${ARG_UIS})
     ENDIF()
 
     IF("${RESOURCES}" STREQUAL "")
@@ -541,7 +467,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 
     ADD_LIBRARY(${PROJECT_NAME} SHARED
-        ${SOURCES}
+        ${ARG_SOURCES}
         ${SOURCES_MOC}
         ${SOURCES_UIS}
         ${SOURCES_RCS}
@@ -554,27 +480,27 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # OpenCOR plugins
 
-    FOREACH(PLUGIN ${PLUGINS})
+    FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${PLUGIN}Plugin
+            ${ARG_PLUGIN}Plugin
         )
     ENDFOREACH()
 
     # OpenCOR binaries
 
-    FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
+    FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${PLUGIN_BINARY}
+            ${ARG_PLUGIN_BINARY}
         )
     ENDFOREACH()
 
     # Qt modules
 
-    FOREACH(QT_MODULE ${QT_MODULES})
-        FIND_PACKAGE(Qt5${QT_MODULE} REQUIRED)
+    FOREACH(ARG_QT_MODULE ${ARG_QT_MODULES})
+        FIND_PACKAGE(Qt5${ARG_QT_MODULE} REQUIRED)
 
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            Qt5::${QT_MODULE}
+            Qt5::${ARG_QT_MODULE}
         )
     ENDFOREACH()
 
@@ -594,11 +520,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
     ENDIF()
 
-    IF(NOT "${EXTERNAL_BINARIES_DIR}" STREQUAL "")
-        FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+    IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
+        FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
             # Make sure that the external binary exists
 
-            SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+            SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
             IF(NOT EXISTS ${FULL_EXTERNAL_BINARY})
                 MESSAGE(FATAL_ERROR "${FULL_EXTERNAL_BINARY} does not exist...")
@@ -610,40 +536,40 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                COPY_FILE_TO_BUILD_DIR(DIRECT ${EXTERNAL_BINARIES_DIR} . ${EXTERNAL_BINARY})
+                COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
             # Strip the library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY})
+                                   COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             ENDIF()
 
             # Link the plugin to the external library
 
             IF(WIN32)
                 STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-                       IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
+                       IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
 
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
+                    ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                 )
             ELSE()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
             ENDIF()
 
             # Package the external library, if needed
 
             IF(WIN32)
-                INSTALL(FILES ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                INSTALL(FILES ${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                         DESTINATION bin)
             ELSEIF(NOT APPLE)
-                INSTALL(FILES ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                INSTALL(FILES ${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                         DESTINATION lib)
             ENDIF()
         ENDFOREACH()
@@ -685,22 +611,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
 
-        FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
-            STRING(REGEX REPLACE "^.*/" "" PLUGIN_BINARY "${PLUGIN_BINARY}")
+        FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
+            STRING(REGEX REPLACE "^.*/" "" ARG_PLUGIN_BINARY "${ARG_PLUGIN_BINARY}")
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${PLUGIN_BINARY}
-                                                                 @rpath/${PLUGIN_BINARY}
+                               COMMAND install_name_tool -change ${ARG_PLUGIN_BINARY}
+                                                                 @rpath/${ARG_PLUGIN_BINARY}
                                                                  ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
         # external binaries on which it depends
 
-        FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+        FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_BINARY}
-                                                                 @rpath/${EXTERNAL_BINARY}
+                               COMMAND install_name_tool -change ${ARG_EXTERNAL_BINARY}
+                                                                 @rpath/${ARG_EXTERNAL_BINARY}
                                                                  ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -716,17 +642,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Create some tests, if any and if required
 
     IF(ENABLE_TESTS)
-        FOREACH(TEST ${TESTS})
+        FOREACH(ARG_TEST ${ARG_TESTS})
             # Keep track of the test (for later use by our main test program)
 
-            FILE(APPEND ${TESTS_LIST_FILENAME} "${PLUGIN_NAME}|${TEST}|")
+            FILE(APPEND ${TESTS_LIST_FILENAME} "${PLUGIN_NAME}|${ARG_TEST}|")
 
             # Build our test, if possible
 
-            SET(TEST_NAME ${PLUGIN_NAME}_${TEST})
+            SET(TEST_NAME ${PLUGIN_NAME}_${ARG_TEST})
 
-            SET(TEST_SOURCE tests/${TEST}.cpp)
-            SET(TEST_HEADER_MOC tests/${TEST}.h)
+            SET(TEST_SOURCE tests/${ARG_TEST}.cpp)
+            SET(TEST_HEADER_MOC tests/${ARG_TEST}.h)
 
             IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE}
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
@@ -752,7 +678,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
 
-                    ${SOURCES}
+                    ${ARG_SOURCES}
                     ${SOURCES_MOC}
                     ${SOURCES_UIS}
                     ${SOURCES_RCS}
@@ -769,42 +695,42 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Plugins
 
-                FOREACH(PLUGIN ${PLUGINS})
+                FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${PLUGIN}Plugin
+                        ${ARG_PLUGIN}Plugin
                     )
                 ENDFOREACH()
 
                 # OpenCOR binaries
 
-                FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
+                FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${PLUGIN_BINARY}
+                        ${ARG_PLUGIN_BINARY}
                     )
                 ENDFOREACH()
 
                 # Qt modules
 
-                FOREACH(QT_MODULE ${QT_MODULES} Test)
+                FOREACH(ARG_QT_MODULE ${ARG_QT_MODULES} Test)
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        Qt5::${QT_MODULE}
+                        Qt5::${ARG_QT_MODULE}
                     )
                 ENDFOREACH()
 
                 # External binaries
 
-                IF(NOT "${EXTERNAL_BINARIES_DIR}" STREQUAL "")
-                    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+                IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
+                    FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
                         IF(WIN32)
                             STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-                                   IMPORT_EXTERNAL_BINARY "${EXTERNAL_BINARY}")
+                                   IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
 
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
+                                ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                             )
                         ELSE()
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                             )
                         ENDIF()
                     ENDFOREACH()
@@ -835,27 +761,27 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     # Make sure that the plugin's tests refer to our embedded
                     # version of the binary plugins on which they depend
 
-                    FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
-                        STRING(REGEX REPLACE "^.*/" "" PLUGIN_BINARY "${PLUGIN_BINARY}")
+                    FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
+                        STRING(REGEX REPLACE "^.*/" "" ARG_PLUGIN_BINARY "${ARG_PLUGIN_BINARY}")
 
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${PLUGIN_BINARY}
-                                                                             @rpath/${PLUGIN_BINARY}
+                                           COMMAND install_name_tool -change ${ARG_PLUGIN_BINARY}
+                                                                             @rpath/${ARG_PLUGIN_BINARY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
 
                     # Make sure that the plugin's tests refer to our embedded
                     # version of the external binaries on which they depend
 
-                    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+                    FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_BINARY}
-                                                                             @rpath/${EXTERNAL_BINARY}
+                                           COMMAND install_name_tool -change ${ARG_EXTERNAL_BINARY}
+                                                                             @rpath/${ARG_EXTERNAL_BINARY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
                 ENDIF()
             ELSE()
-                MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin does not exist...")
+                MESSAGE(AUTHOR_WARNING "The '${ARG_TEST}' test for the '${PLUGIN_NAME}' plugin does not exist...")
             ENDIF()
         ENDFOREACH()
     ENDIF()
@@ -868,30 +794,17 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
-    SET(INCLUDE_DIRS)
+    SET(OPTIONS)
+    SET(ONE_VALUE_KEYWORDS)
+    SET(MULTI_VALUE_KEYWORDS INCLUDE_DIRS)
 
-    # Analyse the extra parameters
-
-    SET(TYPE_OF_PARAMETER 0)
-
-    FOREACH(PARAMETER ${ARGN})
-        IF("${PARAMETER}" STREQUAL "INCLUDE_DIRS")
-            SET(TYPE_OF_PARAMETER 1)
-        ELSE()
-            # Not one of the headers, so add the parameter to the corresponding
-            # set
-
-            IF(${TYPE_OF_PARAMETER} EQUAL 1)
-                LIST(APPEND INCLUDE_DIRS ${PARAMETER})
-            ENDIF()
-        ENDIF()
-    ENDFOREACH()
+    CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
     # Various include directories
 
-    SET(PLUGIN_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+    SET(PLUGIN_INCLUDE_DIRS ${ARG_INCLUDE_DIRS} PARENT_SCOPE)
 
-    INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
+    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Some settings
 
