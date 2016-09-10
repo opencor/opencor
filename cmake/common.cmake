@@ -372,7 +372,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
-    SET(OPTIONS)
+    SET(OPTIONS
+        THIRD_PARTY
+    )
     SET(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
     )
@@ -390,6 +392,33 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
+
+    # Check whether this is a third-party plugin
+
+    IF("${PARAMETER}" STREQUAL "THIRD_PARTY")
+        # Disable all C/C++ warnings since building a third-party plugin may
+        # generate some and this has nothing to do with us
+        # Note: on Windows, we can't simply add /w since it will otherwise
+        #       result in MSVC complaining about /W3 having been overridden by
+        #       /w...
+
+        IF(WIN32)
+            STRING(REPLACE "/W3" "/w"
+                   CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+            STRING(REPLACE "/W3" "/w"
+                   CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        ELSE()
+            SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+        ENDIF()
+
+        # Add a definition in case of compilation from within Qt Creator using
+        # MSVC and JOM since the latter overrides some of our settings
+
+        IF(WIN32)
+            ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+        ENDIF()
+    ENDIF()
 
     # Various include directories
 
