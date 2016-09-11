@@ -17,6 +17,9 @@
 
 #include "llvm-c/ErrorHandling.h"
 #include "llvm-c/Types.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 #ifdef __cplusplus
 extern "C" {
@@ -436,7 +439,12 @@ LLVMContextRef LLVMContextCreate(void);
 /**
  * Obtain the global context instance.
  */
+/*---OPENCOR---
 LLVMContextRef LLVMGetGlobalContext(void);
+*/
+//---OPENCOR--- BEGIN
+LLVMContextRef LLVM_EXPORT LLVMGetGlobalContext(void);
+//---OPENCOR--- END
 
 /**
  * Set the diagnostic handler for this context.
