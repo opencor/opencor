@@ -199,10 +199,10 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // The compilation object should have only one command, so if it doesn't
     // then something went wrong
 
-    const clang::driver::JobList &jobList = compilation->getJobs();
+    const clang::driver::JobList &jobs = compilation->getJobs();
 
-    if (    (jobList.size() != 1)
-        || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
+    if (    (jobs.size() != 1)
+        || !llvm::isa<clang::driver::Command>(*jobs.begin())) {
         mError = tr("the compilation object must contain only one command");
 
         return false;
@@ -210,7 +210,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the command job
 
-    const clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobList.begin());
+    const clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobs.begin());
     QString commandName = command.getCreator().getName();
 
     if (commandName.compare("clang")) {
@@ -257,8 +257,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");
-
-        mExecutionEngine.reset();
 
         return false;
     }
