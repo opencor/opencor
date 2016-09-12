@@ -257,8 +257,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");
 
-        mExecutionEngine.reset();
-
         return false;
     }
 
