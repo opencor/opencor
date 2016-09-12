@@ -183,7 +183,15 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
+//---ISSUE1099---(BEGIN)
+// There is a bug in LLVM 3.9 that crashes the debug version of OpenCOR when
+// using -O3 when, hence we only use -O3 when using a release versio of OpenCOR
+#ifndef QT_DEBUG
+//---ISSUE1099---(END)
     compilationArguments.push_back("-O3");
+//---ISSUE1099---(BEGIN)
+#endif
+//---ISSUE1099---(END)
     compilationArguments.push_back("-ffast-math");
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(dummyFileName.data());
