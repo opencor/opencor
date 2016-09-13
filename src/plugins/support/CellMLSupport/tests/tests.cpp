@@ -79,8 +79,9 @@ void Tests::runtimeTests()
                   modelParameters);
 
     // Do the same as above but using the CellML 1.1 namespace
-    // Note: the idea is to check that we are doing to retrieve the parameters
-    //       of a model is not dependent on the version of a CellML file...
+    // Note: the idea is to check that what we are doing to retrieve the
+    //       parameters of a model is not dependent on the version of a CellML
+    //       file...
 
     QString fileName = OpenCOR::Core::temporaryFileName();
     QString fileContents = OpenCOR::rawFileContents(OpenCOR::fileName("models/noble_model_1962.cellml"));
