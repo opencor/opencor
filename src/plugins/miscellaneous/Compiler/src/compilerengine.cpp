@@ -185,8 +185,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     compilationArguments.push_back("-fsyntax-only");
 //---ISSUE1099---(BEGIN)
 // There is a bug in LLVM 3.9 that crashes the debug version of OpenCOR on
-// Windows when using -O3, hence we only use -O3 when using the release version
-// of OpenCOR...
+// Windows when using -O3, hence we temporarily disable that piece of code...
 #if !defined(Q_OS_WIN) || !defined(QT_DEBUG)
 //---ISSUE1099---(END)
     compilationArguments.push_back("-O3");
