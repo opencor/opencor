@@ -501,9 +501,9 @@ ELSE()
             lib/DebugInfo/PDB/PDBSymbolUsingNamespace.cpp
 
 #            lib/DebugInfo/PDB/DIA/...
-# Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM. Indeed, the DIA SDK is only available on Windows,
-#       and it may or not be present on a build machine...
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM. Indeed, the DIA SDK is only available on Windows, and it
+#       may or not be present on a build machine...
 
             lib/DebugInfo/PDB/Raw/DbiStream.cpp
             lib/DebugInfo/PDB/Raw/DbiStreamBuilder.cpp
@@ -539,10 +539,10 @@ ELSE()
             lib/ExecutionEngine/TargetSelect.cpp
 
 #            lib/ExecutionEngine/IntelJITEvents/...
-# Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM. Indeed, Intel JIT API support is only available on
-#       Linux and Windows, and it requires additional features that may or not
-#       be present on a build machine...
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM. Indeed, Intel JIT API support is only available on Linux
+#       and Windows, and it requires additional features that may or not be
+#       present on a build machine...
 
             lib/ExecutionEngine/Interpreter/Execution.cpp
             lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
@@ -551,10 +551,10 @@ ELSE()
             lib/ExecutionEngine/MCJIT/MCJIT.cpp
 
 #            lib/ExecutionEngine/OProfileJIT/...
-# Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM. Indeed, OProfile support is only available on
-#       Linux, and it requires additional features that may or not be present
-#       on a build machine...
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM. Indeed, OProfile support is only available on Linux,
+#       and it requires additional features that may or not be present on a
+#       build machine...
 
             lib/ExecutionEngine/Orc/ExecutionUtils.cpp
             lib/ExecutionEngine/Orc/IndirectionUtils.cpp
@@ -573,10 +573,9 @@ ELSE()
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyldMachO.cpp
 
 #            lib/Fuzzer/...
-# Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM. Indeed, the Fuzzer library is to be moved to
-#       http://llvm.org/docs/LibFuzzer.html, so it's not part of LLVM as
-#       such...
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM. Indeed, the Fuzzer library is to be moved to
+#       http://llvm.org/docs/LibFuzzer.html, so it's not part of LLVM as such...
 
             lib/IR/AsmWriter.cpp
             lib/IR/Attributes.cpp
@@ -1123,8 +1122,8 @@ ELSE()
             tools/clang/lib/Analysis/UninitializedValues.cpp
 
 #            tools/clang/lib/ARCMigrate/...
-# Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM...
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM...
 
             tools/clang/lib/AST/APValue.cpp
             tools/clang/lib/AST/ASTConsumer.cpp
@@ -1469,8 +1468,8 @@ ELSE()
             tools/clang/lib/Serialization/ModuleManager.cpp
 
 #            tools/clang/lib/StaticAnalyzer/...
-# Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM...
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM...
 
             tools/clang/lib/Tooling/ArgumentsAdjusters.cpp
             tools/clang/lib/Tooling/CommonOptionsParser.cpp
