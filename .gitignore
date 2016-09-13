@@ -5,6 +5,3 @@
 /src/3rdparty/*/bin/
 /src/3rdparty/*/lib/
 /src/plugins/*/*/bin/
-#---ISSUE1099---(BEGIN)
-/src/plugins/*/*/*/bin/
-#---ISSUE1099---(END)
