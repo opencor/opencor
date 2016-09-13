@@ -187,7 +187,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 // There is a bug in LLVM 3.9 that crashes the debug version of OpenCOR on
 // Windows when using -O3, hence we only use -O3 when using the release version
 // of OpenCOR...
-#ifndef QT_DEBUG
+#if !defined(Q_OS_WIN) || !defined(QT_DEBUG)
 //---ISSUE1099---(END)
     compilationArguments.push_back("-O3");
 //---ISSUE1099---(BEGIN)
