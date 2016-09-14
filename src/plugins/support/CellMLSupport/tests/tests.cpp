@@ -115,9 +115,9 @@ qDebug("03");
 //---ISSUE1099---(BEGIN)
 // An indirect consequence of LLVM 3.9 (it would seem since it all works fine
 // using LLVM 3.8.1!) is that the CellML API crashes when trying to generate
-// some code for the following two models, this using the debug version of
-// OpenCOR on Linux, hence we temporarily disable those pieces of code...
-#if !defined(Q_OS_LINUX) || !defined(QT_DEBUG)
+// some code for the following two models, this on Linux, hence we temporarily
+// disable those two pieces of code...
+#if !defined(Q_OS_LINUX)
 //---ISSUE1099---(END)
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
