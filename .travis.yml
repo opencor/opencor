@@ -4,12 +4,12 @@ sudo: required
 dist: trusty
 
 os:
-  - linux
+#  - linux
   - osx
 
 env:
   - CONFIG=Release
-  - CONFIG=Debug
+#  - CONFIG=Debug
 
 branches:
   only:
