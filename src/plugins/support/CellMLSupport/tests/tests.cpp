@@ -138,6 +138,7 @@ qDebug("07");
     // Clean up after ourselves
 
     QFile::remove(fileName);
+qDebug("08");
 }
 
 //==============================================================================
