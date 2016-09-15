@@ -81,16 +81,17 @@ private:
 
     QStandardItemModel *mModel;
 
-    QMap<QString, QString> mMappedCategories;
+    QMap<QString, PluginInfo::Category> mMappedCategories;
 
     QList<QStandardItem *> mSelectablePluginItems;
     QList<QStandardItem *> mUnselectablePluginItems;
 
     QMap<QString, bool> mInitialLoadingStates;
 
-    QMap<QString, QStandardItem *> mPluginCategories;
+    QMap<PluginInfo::Category, QStandardItem *> mPluginCategories;
 
-    void newPluginCategory(const QString &pCategory, const QString &pName);
+    void newPluginCategory(const PluginInfo::Category &pCategory,
+                           const QString &pName);
 
     QString statusDescription(Plugin *pPlugin) const;
 

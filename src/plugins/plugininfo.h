@@ -51,24 +51,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto AnalysisCategory      = QStringLiteral("Analysis");
-static const auto ApiCategory           = QStringLiteral("API");
-static const auto DataStoreCategory     = QStringLiteral("Data Store");
-static const auto EditingCategory       = QStringLiteral("Editing");
-static const auto MiscellaneousCategory = QStringLiteral("Miscellaneous");
-static const auto OrganisationCategory  = QStringLiteral("Organisation");
-#ifdef ENABLE_SAMPLES
-static const auto SampleCategory        = QStringLiteral("Sample");
-#endif
-static const auto SimulationCategory    = QStringLiteral("Simulation");
-static const auto SolverCategory        = QStringLiteral("Solver");
-static const auto SupportCategory       = QStringLiteral("Support");
-static const auto ThirdPartyCategory    = QStringLiteral("Third-party");
-static const auto ToolsCategory         = QStringLiteral("Tools");
-static const auto WidgetCategory        = QStringLiteral("Widget");
-
-//==============================================================================
-
 typedef QMap<QString, QString> Descriptions;
 
 //==============================================================================
@@ -76,13 +58,31 @@ typedef QMap<QString, QString> Descriptions;
 class PluginInfo
 {
 public:
-    explicit PluginInfo(const QString &pCategory, const bool &pSelectable,
+    enum Category {
+        Analysis,
+        Api,
+        DataStore,
+        Editing,
+        Miscellaneous,
+        Organisation,
+#ifdef ENABLE_SAMPLES
+        Sample,
+#endif
+        Simulation,
+        Solver,
+        Support,
+        ThirdParty,
+        Tools,
+        Widget
+    };
+
+    explicit PluginInfo(const Category &pCategory, const bool &pSelectable,
                         const bool &pCliSupport,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions,
                         const QStringList &pLoadBefore = QStringList());
 
-    QString category() const;
+    Category category() const;
 
     bool isSelectable() const;
     bool hasCliSupport() const;
@@ -97,7 +97,7 @@ public:
     QStringList loadBefore() const;
 
 private:
-    QString mCategory;
+    Category mCategory;
 
     bool mSelectable;
     bool mCliSupport;

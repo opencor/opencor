@@ -36,7 +36,7 @@ PLUGININFO_FUNC CellMLAPIPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://cellml-api.sourceforge.net/\">CellML API</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder l'<a href=\"http://cellml-api.sourceforge.net/\">API CellML</a>."));
 
-    return new PluginInfo("API", false, false,
+    return new PluginInfo(PluginInfo::Api, false, false,
                           QStringList(),
                           descriptions);
 }
