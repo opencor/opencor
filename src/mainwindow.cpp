@@ -161,8 +161,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
-//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT USER PREFERENCES...
-showEnableAction(mGui->actionPreferences, false);
 
     // Set the role of some of our menu items, so that OS X can move them into
     // the application menu
