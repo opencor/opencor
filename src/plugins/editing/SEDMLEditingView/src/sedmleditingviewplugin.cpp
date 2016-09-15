@@ -46,7 +46,7 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core <a href=\"http://www.sed-ml.org/\">SED-ML</a> editing view facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
-    return new PluginInfo("Editing", false, false,
+    return new PluginInfo(PluginInfo::Editing, false, false,
                           QStringList() << "EditingView" << "SEDMLSupport",
                           descriptions);
 }
