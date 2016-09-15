@@ -36,7 +36,7 @@ PLUGININFO_FUNC DataStorePluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core data store facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'un magasin de données."));
 
-    return new PluginInfo("Data Store", false, false,
+    return new PluginInfo(PluginInfo::DataStore, false, false,
                           QStringList() << "Core",
                           descriptions);
 }

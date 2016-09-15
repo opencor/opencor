@@ -49,12 +49,6 @@ namespace Core {
 
 //==============================================================================
 
-enum {
-    Margin = 5
-};
-
-//==============================================================================
-
 BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
     QWidget(pParent),
     mParent(pParent),
@@ -402,6 +396,10 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     // Draw a background for ourselves
+
+    enum {
+        Margin = 5
+    };
 
     painter.translate(0.5*width(), 0.5*height());
 

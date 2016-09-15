@@ -36,7 +36,7 @@ PLUGININFO_FUNC LLVMPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.llvm.org/\">LLVM</a> (as well as <a href=\"http://clang.llvm.org/\">Clang</a>)."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.llvm.org/\">LLVM</a> (ainsi que <a href=\"http://clang.llvm.org/\">Clang</a>)."));
 
-    return new PluginInfo("Third-party", false, false,
+    return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
