@@ -80,17 +80,6 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
-{
-    // Determine which of the two plugins should be first based on their name
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a plugin...
-
-    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                              QWidget *pParent) :
     QDialog(pParent),
@@ -165,21 +154,12 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
         newPluginCategory(mMappedCategories.value(diacriticCategory), diacriticCategory);
     }
 
-    // Sort our different plugins by their name
-    // Note: indeed, they are currently sorted based on their depedencies with
-    //       one another while here it makes more sense to have them sorted by
-    //       name...
-
-    Plugins plugins = mPluginManager->plugins();
-
-    std::sort(plugins.begin(), plugins.end(), sortPlugins);
-
     // Populate the data model with our different plugins
 
     static const QIcon LoadedIcon    = QIcon(":/oxygen/actions/dialog-ok-apply.png");
     static const QIcon NotLoadedIcon = QIcon(":/oxygen/actions/edit-delete.png");
 
-    foreach (Plugin *plugin, plugins) {
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,
