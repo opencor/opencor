@@ -55,8 +55,8 @@ void PluginItemDelegate::paint(QPainter *pPainter,
                                const QStyleOptionViewItem &pOption,
                                const QModelIndex &pIndex) const
 {
-    // Paint the item as normal, except for the items which are not selectable
-    // in which case we paint them as if they were disabled
+    // Paint the item as normal, if it is selectable, as disabled, if it isn't
+    // selectable, or bold, if it is a category
 
     QStandardItem *pluginItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
@@ -64,16 +64,12 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    // If the item is a category, then make it bold
-
-    if (!pluginItem->parent())
+    if (pluginItem->parent()) {
+        if (!pluginItem->isCheckable())
+            option.state &= ~QStyle::State_Enabled;
+    } else {
         option.font.setBold(true);
-
-    // If the item is neither a category nor checkable, then render it as
-    // disabled
-
-    if (pluginItem->parent() && !pluginItem->isCheckable())
-        option.state &= ~QStyle::State_Enabled;
+    }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
