@@ -30,6 +30,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "preferencesinterface.h"
 #include "solverinterface.h"
 #include "viewinterface.h"
 
@@ -50,7 +51,7 @@ class SingleCellViewWidget;
 
 class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
                              public I18nInterface, public PluginInterface,
-                             public ViewInterface
+                             public PreferencesInterface, public ViewInterface
 {
     Q_OBJECT
 
@@ -59,6 +60,7 @@ class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::PreferencesInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
@@ -67,6 +69,7 @@ public:
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
+#include "preferencesinterface.inl"
 #include "viewinterface.inl"
 
     SingleCellViewWidget * viewWidget() const;
@@ -81,6 +84,7 @@ public:
     FileTypes combineFileTypes() const;
 
 private:
+    QWidget *mPreferencesWidget;
     SingleCellViewWidget *mViewWidget;
 
     SolverInterfaces mSolverInterfaces;

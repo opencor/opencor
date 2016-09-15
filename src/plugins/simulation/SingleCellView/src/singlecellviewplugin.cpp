@@ -167,13 +167,15 @@ void SingleCellViewPlugin::retranslateUi()
 
 void SingleCellViewPlugin::initializePlugin()
 {
-    // Create our single cell view widget
+    // Create both our preferences and single cell view widgets
 
+    mPreferencesWidget = new QWidget(Core::mainWindow());
     mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
-    // Hide our single cell view widget since it may not initially be shown in
-    // our central widget
+    // Hide both rour preferences and single cell view widgets (the latter since
+    // it may not initially be shown in our central widget)
 
+    mPreferencesWidget->setVisible(false);
     mViewWidget->setVisible(false);
 }
 
@@ -266,6 +268,17 @@ void SingleCellViewPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Preferences interface
+//==============================================================================
+
+QWidget * SingleCellViewPlugin::preferencesWidget()
+{
+    // Return our preferences widget
+
+    return mPreferencesWidget;
 }
 
 //==============================================================================
