@@ -167,12 +167,12 @@ void SingleCellViewPlugin::retranslateUi()
 
 void SingleCellViewPlugin::initializePlugin()
 {
-    // Create our single view widget
+    // Create our single cell view widget
 
     mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
-    // Hide our single view widget since it may not initially be shown in our
-    // central widget
+    // Hide our single cell view widget since it may not initially be shown in
+    // our central widget
 
     mViewWidget->setVisible(false);
 }
