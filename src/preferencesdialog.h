@@ -38,16 +38,22 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class PluginManager;
+
+//==============================================================================
+
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(QWidget *pParent);
+    explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PreferencesDialog();
 
 private:
     Ui::PreferencesDialog *mGui;
+
+    PluginManager *mPluginManager;
 };
 
 //==============================================================================

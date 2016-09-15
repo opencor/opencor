@@ -1171,7 +1171,7 @@ void MainWindow::on_actionPreferences_triggered()
 {
     // Show the preferences dialog
 
-    PreferencesDialog preferencesDialog(this);
+    PreferencesDialog preferencesDialog(mPluginManager, this);
 
     preferencesDialog.exec();
 }
