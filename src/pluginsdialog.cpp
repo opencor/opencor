@@ -87,7 +87,9 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     mPluginManager(pPluginManager),
     mMappedCategories(QMap<QString, QString>()),
     mSelectablePluginItems(QList<QStandardItem *>()),
-    mUnselectablePluginItems(QList<QStandardItem *>())
+    mUnselectablePluginItems(QList<QStandardItem *>()),
+    mInitialLoadingStates(QMap<QString, bool>()),
+    mPluginCategories(QMap<QString, QStandardItem *>())
 {
     // Set up the GUI
 
