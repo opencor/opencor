@@ -88,7 +88,7 @@ private:
 
     QMap<QString, bool> mInitialLoadingStates;
 
-    QMap<PluginInfo::Category, QStandardItem *> mPluginCategories;
+    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
 
     void newPluginCategory(const PluginInfo::Category &pCategory,
                            const QString &pName);

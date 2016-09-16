@@ -85,7 +85,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     mSelectablePluginItems(QList<QStandardItem *>()),
     mUnselectablePluginItems(QList<QStandardItem *>()),
     mInitialLoadingStates(QMap<QString, bool>()),
-    mPluginCategories(QMap<PluginInfo::Category, QStandardItem *>())
+    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>())
 {
     // Set up the GUI
 
@@ -191,21 +191,21 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
             // Add the plugin to its corresponding category
 
-            mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
+            mCategoryItems.value(pluginInfo->category())->appendRow(pluginItem);
         } else {
             // We are not actually dealing with a plugin, so add it to the
             // Miscellaneous category
 
             mUnselectablePluginItems << pluginItem;
 
-            mPluginCategories.value(PluginInfo::Miscellaneous)->appendRow(pluginItem);
+            mCategoryItems.value(PluginInfo::Miscellaneous)->appendRow(pluginItem);
         }
     }
 
     // Make a category checkable if it contains selectable plugins and hide it,
     // if it doesn't contain any plugin
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
                 categoryItem->setCheckable(true);
@@ -283,7 +283,7 @@ void PluginsDialog::selectFirstVisibleCategory()
 {
     // Select the first visible category
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
                                                 mModel->invisibleRootItem()->index())) {
             mGui->pluginsTreeView->setCurrentIndex(categoryItem->index());
@@ -571,7 +571,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // Update the selected state of all our categories which have at least one
     // selectable plugin
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins) {
@@ -701,7 +701,7 @@ void PluginsDialog::newPluginCategory(const PluginInfo::Category &pCategory,
 
     // Add the category item to our list of plugin categories
 
-    mPluginCategories.insert(pCategory, categoryItem);
+    mCategoryItems.insert(pCategory, categoryItem);
 }
 
 //==============================================================================
@@ -717,7 +717,7 @@ void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 
     // Show/hide our categories, based on whether they contain visible plugins
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         if (categoryItem->hasChildren()) {
             // The category contains plugins, but the question is whether they
             // are visible
