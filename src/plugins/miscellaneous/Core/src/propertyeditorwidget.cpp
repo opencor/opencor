@@ -428,9 +428,6 @@ PropertyItem::PropertyItem(Property *pOwner) :
     QStandardItem(),
     mOwner(pOwner)
 {
-    // By default, the property item is not editable
-
-    setEditable(false);
 }
 
 //==============================================================================
@@ -1425,7 +1422,6 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 
     Property *res = addProperty(Property::List, pParent);
 
-    res->setEditable(true);
     res->setListValues(pValues, pValue);
 
     return res;
@@ -1456,11 +1452,9 @@ Property * PropertyEditorWidget::addBooleanProperty(const bool &pValue,
                                                     Property *pParent)
 {
     // Add a boolean property and return its information
-    // Note: a boolean property is necessarily editable...
 
     Property *res = addProperty(Property::Boolean, pParent);
 
-    res->setEditable(true);
     res->setBooleanValue(pValue);
 
     return res;
