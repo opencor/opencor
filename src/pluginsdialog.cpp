@@ -410,6 +410,12 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
         mGui->fieldTwoLabel->setText(tr("Description:"));
 
         switch (mItemCategories.value(item)) {
+#ifdef ENABLE_SAMPLES
+        case PluginInfo::Sample:
+            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
+
+            break;
+#endif
         case PluginInfo::Analysis:
             mGui->fieldTwoValue->setText(tr("plugins to analyse files."));
 
@@ -434,12 +440,6 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldTwoValue->setText(tr("plugins to organise files."));
 
             break;
-#ifdef ENABLE_SAMPLES
-        case PluginInfo::Sample:
-            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
-
-            break;
-#endif
         case PluginInfo::Simulation:
             mGui->fieldTwoValue->setText(tr("plugins to simulate files."));
 

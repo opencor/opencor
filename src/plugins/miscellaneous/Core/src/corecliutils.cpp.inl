@@ -85,6 +85,10 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
     // Return the name of the given category
 
     switch (pCategory) {
+#ifdef ENABLE_SAMPLES
+    case PluginInfo::Sample:
+        return QObject::tr("Sample");
+#endif
     case PluginInfo::Analysis:
         return QObject::tr("Analysis");
     case PluginInfo::Api:
@@ -97,10 +101,6 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
         return QObject::tr("Miscellaneous");
     case PluginInfo::Organisation:
         return QObject::tr("Organisation");
-#ifdef ENABLE_SAMPLES
-    case PluginInfo::Sample:
-        return QObject::tr("Sample");
-#endif
     case PluginInfo::Simulation:
         return QObject::tr("Simulation");
     case PluginInfo::Solver:
