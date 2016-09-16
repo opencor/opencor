@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="layout">
    <item>
-    <widget class="QTextEdit" name="textEdit"/>
+    <widget class="QTreeView" name="treeView"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

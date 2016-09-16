@@ -24,7 +24,17 @@ limitations under the License.
 
 //==============================================================================
 
+#include "plugininfo.h"
+
+//==============================================================================
+
 #include <QDialog>
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
+class QStandardItem;
+class QStandardItemModel;
 
 //==============================================================================
 
@@ -42,6 +52,15 @@ class PluginManager;
 
 //==============================================================================
 
+class PreferencesItemDelegate : public QStyledItemDelegate
+{
+public:
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+};
+
+//==============================================================================
+
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
@@ -54,6 +73,12 @@ private:
     Ui::PreferencesDialog *mGui;
 
     PluginManager *mPluginManager;
+
+    QStandardItemModel *mModel;
+
+    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
+
+    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 };
 
 //==============================================================================

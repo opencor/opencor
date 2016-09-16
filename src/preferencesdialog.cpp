@@ -20,6 +20,8 @@ limitations under the License.
 // Preferences dialog
 //==============================================================================
 
+#include "cliutils.h"
+#include "pluginmanager.h"
 #include "preferencesdialog.h"
 
 //==============================================================================
@@ -28,7 +30,32 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QStandardItemModel>
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+void PreferencesItemDelegate::paint(QPainter *pPainter,
+                                    const QStyleOptionViewItem &pOption,
+                                    const QModelIndex &pIndex) const
+{
+    // Paint the item as normal, if it is selectable, or bold, if it is a
+    // category
+
+    QStandardItem *pluginItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+
+    QStyleOptionViewItemV4 option(pOption);
+
+    initStyleOption(&option, pIndex);
+
+    if (!pluginItem->parent())
+        option.font.setBold(true);
+
+    QStyledItemDelegate::paint(pPainter, option, pIndex);
+}
 
 //==============================================================================
 
@@ -36,11 +63,43 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
                                      QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::PreferencesDialog),
-    mPluginManager(pPluginManager)
+    mPluginManager(pPluginManager),
+    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Set up the tree view widget
+
+    mModel = new QStandardItemModel(mGui->treeView);
+
+#ifdef Q_OS_MAC
+    mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our plugins tree view widget...
+#endif
+    mGui->treeView->setModel(mModel);
+    mGui->treeView->setItemDelegate(new PreferencesItemDelegate());
+
+    // Populate the data model with our different plugins
+
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
+        // Create the item corresponding to the current plugin
+
+        QStandardItem *pluginItem = new QStandardItem(plugin->name());
+
+        // Only selectable plugins and plugins that are of the right type are
+        // checkable
+
+        PluginInfo *pluginInfo = plugin->info();
+
+        if (pluginInfo) {
+            // Add the plugin to its corresponding category
+
+            pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
+        }
+    }
 }
 
 //==============================================================================
@@ -50,6 +109,50 @@ PreferencesDialog::~PreferencesDialog()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
+{
+    // Return the given category item, after having created it, if it didn't
+    // already exist
+
+    QStandardItem *res = mCategoryItems.value(pCategory);
+
+    if (!res) {
+        // No category item exists for the given category, so create one and add
+        // it to our data model (and this in the right place)
+
+        bool inserted = false;
+        QStandardItem *rootItem = mModel->invisibleRootItem();
+        QString categoryName = pluginCategoryName(pCategory);
+        QString nonDiacriticCategoryName = nonDiacriticString(categoryName);
+
+        res = new QStandardItem(categoryName);
+
+        for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
+            QStandardItem *categoryItem = rootItem->child(i);
+            int comparison = nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text()));
+
+            if (comparison < 0) {
+                inserted = true;
+
+                mModel->invisibleRootItem()->insertRow(i, res);
+
+                break;
+            }
+        }
+
+        if (!inserted)
+            mModel->invisibleRootItem()->appendRow(res);
+
+        // Keep track of the relationship between our new item and its category
+
+        mCategoryItems.insert(pCategory, res);
+    }
+
+    return res;
 }
 
 //==============================================================================
