@@ -81,11 +81,11 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     QDialog(pParent),
     mGui(new Ui::PluginsDialog),
     mPluginManager(pPluginManager),
-    mMappedCategories(QMap<QString, PluginInfo::Category>()),
     mSelectablePluginItems(QList<QStandardItem *>()),
     mUnselectablePluginItems(QList<QStandardItem *>()),
     mInitialLoadingStates(QMap<QString, bool>()),
-    mPluginCategories(QMap<PluginInfo::Category, QStandardItem *>())
+    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
+    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>())
 {
     // Set up the GUI
 
@@ -117,40 +117,6 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 #endif
     mGui->pluginsTreeView->setModel(mModel);
     mGui->pluginsTreeView->setItemDelegate(new PluginItemDelegate());
-
-    // Populate the data model with our different categories of plugins, making
-    // sure that they are in alphabetical order, no matter the locale
-
-    mMappedCategories.insert(tr("Analysis"), PluginInfo::Analysis);
-    mMappedCategories.insert(tr("API"), PluginInfo::Api);
-    mMappedCategories.insert(tr("Data Store"), PluginInfo::DataStore);
-    mMappedCategories.insert(tr("Editing"), PluginInfo::Editing);
-    mMappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
-    mMappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
-#ifdef ENABLE_SAMPLES
-    mMappedCategories.insert(tr("Sample"), PluginInfo::Sample);
-#endif
-    mMappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);
-    mMappedCategories.insert(tr("Solver"), PluginInfo::Solver);
-    mMappedCategories.insert(tr("Support"), PluginInfo::Support);
-    mMappedCategories.insert(tr("Third-party"), PluginInfo::ThirdParty);
-    mMappedCategories.insert(tr("Tools"), PluginInfo::Tools);
-    mMappedCategories.insert(tr("Widget"), PluginInfo::Widget);
-
-    QMap<QString, QString> diacriticCategories = QMap<QString, QString>();
-
-    foreach (const QString &diacriticCategory, mMappedCategories.keys())
-        diacriticCategories.insert(nonDiacriticString(diacriticCategory), diacriticCategory);
-
-    QStringList nonDiacriticCategories = diacriticCategories.keys();
-
-    nonDiacriticCategories.sort(Qt::CaseInsensitive);
-
-    foreach (const QString &nonDiacriticCategory, nonDiacriticCategories) {
-        QString diacriticCategory = diacriticCategories.value(nonDiacriticCategory);
-
-        newPluginCategory(mMappedCategories.value(diacriticCategory), diacriticCategory);
-    }
 
     // Populate the data model with our different plugins
 
@@ -189,41 +155,28 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                 mUnselectablePluginItems << pluginItem;
             }
 
-            // Add the plugin to the right category or the Miscellaneous
-            // category, if we don't know about its category
+            // Add the plugin to its corresponding category
 
-            QStandardItem *category = mPluginCategories.value(pluginInfo->category());
-
-            if (!category)
-                category = mPluginCategories.value(PluginInfo::Miscellaneous);
-
-            category->appendRow(pluginItem);
+            pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
         } else {
             // We are not actually dealing with a plugin, so add it to the
             // Miscellaneous category
 
             mUnselectablePluginItems << pluginItem;
 
-            mPluginCategories.value(PluginInfo::Miscellaneous)->appendRow(pluginItem);
+            pluginCategoryItem(PluginInfo::Miscellaneous)->appendRow(pluginItem);
         }
     }
 
-    // Make a category checkable if it contains selectable plugins and hide it,
-    // if it doesn't contain any plugin
+    // Make a category checkable if it contains selectable plugins
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
                 categoryItem->setCheckable(true);
 
                 break;
             }
-        }
-
-        if (!categoryItem->hasChildren()) {
-            mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
-                                                mModel->invisibleRootItem()->index(),
-                                                true);
         }
     }
 
@@ -289,7 +242,7 @@ void PluginsDialog::selectFirstVisibleCategory()
 {
     // Select the first visible category
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
                                                 mModel->invisibleRootItem()->index())) {
             mGui->pluginsTreeView->setCurrentIndex(categoryItem->index());
@@ -456,7 +409,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
         mGui->fieldTwoLabel->setText(tr("Description:"));
 
-        switch (mMappedCategories.value(itemText)) {
+        switch (mItemCategories.value(item)) {
         case PluginInfo::Analysis:
             mGui->fieldTwoValue->setText(tr("plugins to analyse files."));
 
@@ -577,7 +530,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // Update the selected state of all our categories which have at least one
     // selectable plugin
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins) {
@@ -696,20 +649,47 @@ void PluginsDialog::apply()
 
 //==============================================================================
 
-void PluginsDialog::newPluginCategory(const PluginInfo::Category &pCategory,
-                                      const QString &pName)
+QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
 {
-    // Create and add a category item to our data model
+    // Return the given category item, after having created it, if it didn't
+    // already exist
 
-    QStandardItem *categoryItem = new QStandardItem(pName);
+    QStandardItem *res = mCategoryItems.value(pCategory);
 
-    categoryItem->setAutoTristate(true);
+    if (!res) {
+        // No category item exists for the given category, so create one and add
+        // it to our data model (and this in the right place)
 
-    mModel->invisibleRootItem()->appendRow(categoryItem);
+        bool inserted = false;
+        QStandardItem *rootItem = mModel->invisibleRootItem();
+        QString categoryName = pluginCategoryName(pCategory);
+        QString nonDiacriticCategoryName = nonDiacriticString(categoryName);
 
-    // Add the category item to our list of plugin categories
+        res = new QStandardItem(categoryName);
 
-    mPluginCategories.insert(pCategory, categoryItem);
+        for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
+            QStandardItem *categoryItem = rootItem->child(i);
+            int comparison = nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text()));
+
+            if (comparison < 0) {
+                inserted = true;
+
+                mModel->invisibleRootItem()->insertRow(i, res);
+
+                break;
+            }
+        }
+
+        if (!inserted)
+            mModel->invisibleRootItem()->appendRow(res);
+
+        // Keep track of the relationship between our new item and its category
+
+        mCategoryItems.insert(pCategory, res);
+        mItemCategories.insert(res, pCategory);
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -725,12 +705,10 @@ void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 
     // Show/hide our categories, based on whether they contain visible plugins
 
-    foreach (QStandardItem *categoryItem, mPluginCategories) {
+    foreach (QStandardItem *categoryItem, mCategoryItems) {
         if (categoryItem->hasChildren()) {
             // The category contains plugins, but the question is whether they
             // are visible
-            // Note: if the category doesn't contain any plugin, then we don't
-            //       need to worry about it since it is already hidden
 
             bool hideCategory = true;
 

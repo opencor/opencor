@@ -128,7 +128,6 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
                     if (!hierarchyItem) {
                         hierarchyItem = new QStandardItem(hierarchyPart);
 
-                        hierarchyItem->setAutoTristate(true);
                         hierarchyItem->setCheckable(true);
                         hierarchyItem->setEditable(false);
 
