@@ -192,12 +192,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
             // Add the plugin to the right category or the Miscellaneous
             // category, if we don't know about its category
 
-            QStandardItem *category = mPluginCategories.value(pluginInfo->category());
-
-            if (!category)
-                category = mPluginCategories.value(PluginInfo::Miscellaneous);
-
-            category->appendRow(pluginItem);
+            mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
         } else {
             // We are not actually dealing with a plugin, so add it to the
             // Miscellaneous category
