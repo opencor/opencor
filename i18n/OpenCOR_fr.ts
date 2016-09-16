@@ -5,19 +5,19 @@
     <name>CheckForUpdatesDialog</name>
     <message>
         <source>Check For Updates</source>
-        <translation>VÃ©rifier Pour Des Mises Ã€ Jour</translation>
+        <translation>Vérifier Pour Des Mises À Jour</translation>
     </message>
     <message>
         <source>Recheck</source>
-        <translation>RevÃ©rifier</translation>
+        <translation>Revérifier</translation>
     </message>
     <message>
         <source>Recheck for updates</source>
-        <translation>RevÃ©rifier pour des mises Ã  jour</translation>
+        <translation>Revérifier pour des mises à jour</translation>
     </message>
     <message>
         <source>Check for updates at startup</source>
-        <translation>VÃ©rifier pour des mises Ã  jour au dÃ©marrage</translation>
+        <translation>Vérifier pour des mises à jour au démarrage</translation>
     </message>
     <message>
         <source>Include snapshots</source>
@@ -64,15 +64,15 @@
     </message>
     <message>
         <source>Select English as the language to be used by OpenCOR</source>
-        <translation>SÃ©lectionner l&apos;anglais comme langue Ã  Ãªtre utilisÃ©e par OpenCOR</translation>
+        <translation>Sélectionner l&apos;anglais comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>&amp;French</source>
-        <translation>&amp;FranÃ§ais</translation>
+        <translation>&amp;Français</translation>
     </message>
     <message>
         <source>Select French as the language to be used by OpenCOR</source>
-        <translation>SÃ©lectionner le franÃ§ais comme langue Ã  Ãªtre utilisÃ©e par OpenCOR</translation>
+        <translation>Sélectionner le français comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>Home &amp;Page</source>
@@ -84,27 +84,27 @@
     </message>
     <message>
         <source>&amp;About...</source>
-        <translation>&amp;Ã€ Propos...</translation>
+        <translation>&amp;À Propos...</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
-        <translation>Quelques informations gÃ©nÃ©rales sur OpenCOR</translation>
+        <translation>Quelques informations générales sur OpenCOR</translation>
     </message>
     <message>
         <source>&amp;Reset All</source>
-        <translation>Tout &amp;RÃ©initialiser</translation>
+        <translation>Tout &amp;Réinitialiser</translation>
     </message>
     <message>
         <source>Reset all your settings</source>
-        <translation>RÃ©initialiser tous vos paramÃ¨tres</translation>
+        <translation>Réinitialiser tous vos paramètres</translation>
     </message>
     <message>
         <source>&amp;System</source>
-        <translation>&amp;SystÃ¨me</translation>
+        <translation>&amp;Système</translation>
     </message>
     <message>
         <source>Select your system&apos;s language as the language to be used by OpenCOR</source>
-        <translation>SÃ©lectionner la langue de votre systÃ¨me comme langue Ã  Ãªtre utilisÃ©e par OpenCOR</translation>
+        <translation>Sélectionner la langue de votre système comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>&amp;Full Screen</source>
@@ -112,15 +112,15 @@
     </message>
     <message>
         <source>Switch to / back from full screen mode</source>
-        <translation>Passer au / revenir du mode plein Ã©cran</translation>
+        <translation>Passer au / revenir du mode plein écran</translation>
     </message>
     <message>
         <source>Status &amp;Bar</source>
-        <translation>&amp;Barre D&apos;Ã‰tat</translation>
+        <translation>&amp;Barre D&apos;État</translation>
     </message>
     <message>
         <source>Show/hide the status bar</source>
-        <translation>Montrer/cacher la barre d&apos;Ã©tat</translation>
+        <translation>Montrer/cacher la barre d&apos;état</translation>
     </message>
     <message>
         <source>Plu&amp;gins...</source>
@@ -128,50 +128,50 @@
     </message>
     <message>
         <source>Un/select plugins</source>
-        <translation>DÃ©/sÃ©lectionner des extensions</translation>
+        <translation>Dé/sélectionner des extensions</translation>
     </message>
     <message>
         <source>&amp;Docked Windows</source>
-        <translation>&amp;FenÃªtres AncrÃ©es</translation>
+        <translation>&amp;Fenêtres Ancrées</translation>
     </message>
     <message>
         <source>Docked Windows</source>
-        <translation>FenÃªtres AncrÃ©es</translation>
+        <translation>Fenêtres Ancrées</translation>
     </message>
     <message>
         <source>Show/hide all the recent/current docked windows</source>
-        <translation>Montrer/cacher toutes les fenÃªtres ancrÃ©es rÃ©centes/actuelles</translation>
+        <translation>Montrer/cacher toutes les fenêtres ancrées récentes/actuelles</translation>
     </message>
     <message>
         <source>&amp;Preferences...</source>
-        <translation>&amp;PrÃ©fÃ©rences...</translation>
+        <translation>&amp;Préférences...</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>PrÃ©fÃ©rences</translation>
+        <translation>Préférences</translation>
     </message>
     <message>
         <source>Preferences for OpenCOR and its plugins</source>
-        <translation>PrÃ©fÃ©rences pour OpenCOR et ses extensions</translation>
+        <translation>Préférences pour OpenCOR et ses extensions</translation>
     </message>
     <message>
         <source>Check For Updates...</source>
-        <translation>VÃ©rifier Pour Des Mises Ã€ Jour...</translation>
+        <translation>Vérifier Pour Des Mises À Jour...</translation>
     </message>
     <message>
         <source>Check for updates</source>
-        <translation>VÃ©rifier pour des mises Ã  jour</translation>
+        <translation>Vérifier pour des mises à jour</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
     <message>
         <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prÃªt Ã  Ãªtre &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;tÃ©lÃ©chargÃ©&lt;/a&gt;.</translation>
+        <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; est prÃªt Ã  Ãªtre &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;tÃ©lÃ©chargÃ©&lt;/a&gt;.</translation>
+        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No newer version or snapshot of %1 is available.</source>
@@ -190,7 +190,7 @@
     </message>
     <message>
         <source>Windows</source>
-        <translation>FenÃªtres</translation>
+        <translation>Fenêtres</translation>
     </message>
     <message>
         <source>Plugins</source>
@@ -198,59 +198,63 @@
     </message>
     <message>
         <source>No plugins could be found.</source>
-        <translation>Aucunes extensions n&apos;ont pu Ãªtre trouvÃ©es.</translation>
+        <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>Ã€ Propos</translation>
+        <translation>À Propos</translation>
     </message>
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
-        <translation>Vous Ãªtes sur le point de rÃ©initialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramÃ¨tres. Voulez-vous continuer ?</translation>
+        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::PluginsDialog</name>
     <message>
         <source>the plugin is not wanted.</source>
-        <translation>l&apos;extension n&apos;est pas dÃ©sirÃ©e.</translation>
+        <translation>l&apos;extension n&apos;est pas désirée.</translation>
     </message>
     <message>
         <source>the plugin is not needed.</source>
-        <translation>l&apos;extension n&apos;est pas nÃ©cessaire.</translation>
+        <translation>l&apos;extension n&apos;est pas nécessaire.</translation>
     </message>
     <message>
         <source>the plugin is loaded and fully functional.</source>
-        <translation>l&apos;extension est installÃ©e et pleinement fonctionnelle.</translation>
+        <translation>l&apos;extension est installée et pleinement fonctionnelle.</translation>
     </message>
     <message>
         <source>the plugin could not be loaded due to the following problem: %1.</source>
-        <translation>l&apos;extension n&apos;a pas pu Ãªtre installÃ©e Ã  cause du problÃ¨me suivant : %1.</translation>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
+    </message>
+    <message>
+        <source>the plugin is not valid.</source>
+        <translation>l&apos;extension n&apos;est pas valide.</translation>
     </message>
     <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
-        <translation>l&apos;extension prÃ©tend Ãªtre l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
+        <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
     </message>
     <message>
         <source>the plugin should be the core plugin, but it does not support the core interface.</source>
-        <translation>l&apos;extension devrait Ãªtre l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
+        <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
     </message>
     <message>
         <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
-        <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prÃ©tend pas Ãªtre capable de CLI.</translation>
+        <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
     </message>
     <message>
         <source>the plugin claims to be CLI-capable, but it does not support the CLI interface.</source>
-        <translation>l&apos;extension prÃ©tend Ãªtre capable de CLI, mais elle ne supporte pas l&apos;interface CLI.</translation>
+        <translation>l&apos;extension prétend être capable de CLI, mais elle ne supporte pas l&apos;interface CLI.</translation>
     </message>
     <message>
         <source>the plugin could not be loaded due to the %1 plugin being missing or invalid.</source>
-        <translation>l&apos;extension n&apos;a pas pu Ãªtre installÃ©e Ã  cause de l&apos;extension %1 Ã©tant manquante ou invalide.</translation>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause de l&apos;extension %1 étant manquante ou invalide.</translation>
     </message>
     <message>
         <source>the plugin could not be loaded due to missing or invalid plugins:
 %1</source>
-        <translation>l&apos;extension n&apos;a pas pu Ãªtre installÃ©e Ã  cause d&apos;extensions manquantes ou invalides :\n%1</translation>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :\n%1</translation>
     </message>
     <message>
         <source>Plugin:</source>
@@ -258,7 +262,7 @@
     </message>
     <message>
         <source>Dependencies:</source>
-        <translation>DÃ©pendances :</translation>
+        <translation>Dépendances :</translation>
     </message>
     <message>
         <source>none</source>
@@ -278,7 +282,15 @@
     </message>
     <message>
         <source>Category:</source>
-        <translation>CatÃ©gorie :</translation>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>plugins that illustrate various plugin-related aspects.</source>
+        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
+    </message>
+    <message>
+        <source>plugins that are not valid.</source>
+        <translation>extensions qui ne sont pas valides.</translation>
     </message>
     <message>
         <source>plugins to analyse files.</source>
@@ -286,27 +298,23 @@
     </message>
     <message>
         <source>plugins to access various APIs.</source>
-        <translation>extensions pour accÃ©der diffÃ©rentes APIs.</translation>
+        <translation>extensions pour accéder différentes APIs.</translation>
     </message>
     <message>
         <source>plugins to store and manipulate data.</source>
-        <translation>extensions pour stocker et manipuler des donnÃ©es.</translation>
+        <translation>extensions pour stocker et manipuler des données.</translation>
     </message>
     <message>
         <source>plugins to edit files.</source>
-        <translation>extensions pour Ã©diter des fichiers.</translation>
+        <translation>extensions pour éditer des fichiers.</translation>
     </message>
     <message>
         <source>plugins that do not fit in any other category.</source>
-        <translation>extensions qui n&apos;entrent dans aucune autre catÃ©gorie.</translation>
+        <translation>extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
     </message>
     <message>
         <source>plugins to organise files.</source>
         <translation>extensions pour organiser des fichiers.</translation>
-    </message>
-    <message>
-        <source>plugins that illustrate various plugin-related aspects.</source>
-        <translation>extensions qui illustrent diverses fonctionalitÃ©s relatives Ã  une extension.</translation>
     </message>
     <message>
         <source>plugins to simulate files.</source>
@@ -314,35 +322,27 @@
     </message>
     <message>
         <source>plugins to access various solvers.</source>
-        <translation>extensions pour accÃ©der diffÃ©rents solveurs.</translation>
+        <translation>extensions pour accéder différents solveurs.</translation>
     </message>
     <message>
         <source>plugins to support various third-party libraries and APIs.</source>
-        <translation>extensions pour supporter diffÃ©rentes librairies externes et APIs.</translation>
+        <translation>extensions pour supporter différentes librairies externes et APIs.</translation>
     </message>
     <message>
         <source>plugins to access various third-party libraries.</source>
-        <translation>extensions pour accÃ©der diffÃ©rentes librairies externes.</translation>
+        <translation>extensions pour accéder différentes librairies externes.</translation>
     </message>
     <message>
         <source>plugins to access various tools.</source>
-        <translation>extensions pour accÃ©der diffÃ©rents outils.</translation>
+        <translation>extensions pour accéder différents outils.</translation>
     </message>
     <message>
         <source>plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
-        <translation>extensions pour accÃ©der diffÃ©rents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
+        <translation>extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancÃ© pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
-    </message>
-    <message>
-        <source>the plugin is not valid.</source>
-        <translation>l&apos;extension n&apos;est pas valide.</translation>
-    </message>
-    <message>
-        <source>plugins that are not valid.</source>
-        <translation>extensions qui ne sont pas valides.</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>
@@ -353,25 +353,25 @@
     </message>
     <message>
         <source>Show only selectable plugins</source>
-        <translation>Montrer seulement les extensions sÃ©lectionables</translation>
+        <translation>Montrer seulement les extensions sélectionables</translation>
     </message>
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
-        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra Ãªtre relancÃ© pour que vos changements puissent prendre effet.</translation>
+        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent prendre effet.</translation>
     </message>
 </context>
 <context>
     <name>PreferencesDialog</name>
     <message>
         <source>Preferences</source>
-        <translation>PrÃ©fÃ©rences</translation>
+        <translation>Préférences</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>The version information is mal-formatted.</source>
-        <translation>Les informations sur la version sont mal formatÃ©es.</translation>
+        <translation>Les informations sur la version sont mal formatées.</translation>
     </message>
     <message>
         <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
@@ -379,7 +379,7 @@
     </message>
     <message>
         <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
-        <translation>%1 est un environnement de modÃ©lisation multiplate-forme, qui peut Ãªtre utilisÃ© pour organiser, Ã©diter, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
+        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
     </message>
 </context>
 </TS>
