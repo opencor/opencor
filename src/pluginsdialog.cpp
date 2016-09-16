@@ -189,8 +189,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                 mUnselectablePluginItems << pluginItem;
             }
 
-            // Add the plugin to the right category or the Miscellaneous
-            // category, if we don't know about its category
+            // Add the plugin to its corresponding category
 
             mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
         } else {
