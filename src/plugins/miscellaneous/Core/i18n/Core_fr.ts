@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Editing</source>
-        <translation>Édition</translation>
+        <translation>Ã‰dition</translation>
     </message>
     <message>
         <source>Simulation</source>
@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Open Remote File</source>
-        <translation>Ouvrir Fichier À Distance</translation>
+        <translation>Ouvrir Fichier Ã€ Distance</translation>
     </message>
     <message>
         <source>URL:</source>
@@ -37,47 +37,47 @@
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu Ãªtre ouvert.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu Ãªtre ouvert (%2).</translation>
     </message>
     <message>
         <source>File Modified</source>
-        <translation>Fichier Modifié</translation>
+        <translation>Fichier ModifiÃ©</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you still want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous quand même le recharger ?</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a Ã©tÃ© modifiÃ©. Voulez-vous quand mÃªme le recharger ?</translation>
     </message>
     <message>
         <source>Reload Remote File</source>
-        <translation>Recharger Fichier À Distance</translation>
+        <translation>Recharger Fichier Ã€ Distance</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be reloaded (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être rechargé (%2).</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu Ãªtre rechargÃ© (%2).</translation>
     </message>
     <message>
         <source>Unlock File</source>
-        <translation>Dévérouiller Fichier</translation>
+        <translation>DÃ©vÃ©rouiller Fichier</translation>
     </message>
     <message>
         <source>Lock File</source>
-        <translation>Vérouiller Fichier</translation>
+        <translation>VÃ©rouiller Fichier</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be %2.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être %2.</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu Ãªtre %2.</translation>
     </message>
     <message>
         <source>unlocked</source>
-        <translation>dévérouillé</translation>
+        <translation>dÃ©vÃ©rouillÃ©</translation>
     </message>
     <message>
         <source>locked</source>
-        <translation>vérouillé</translation>
+        <translation>vÃ©rouillÃ©</translation>
     </message>
     <message>
         <source>Save File</source>
@@ -105,7 +105,7 @@
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu Ãªtre sauvegardÃ©.</translation>
     </message>
     <message>
         <source>New File</source>
@@ -117,7 +117,7 @@
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a Ã©tÃ© modifiÃ©. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
     <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
@@ -125,19 +125,19 @@
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; and one or several of its dependencies has been modified. Do you want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; et une ou plusieurs de ses dépendances a été modifié. Voulez-vous le recharger ?</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; et une ou plusieurs de ses dÃ©pendances a Ã©tÃ© modifiÃ©. Voulez-vous le recharger ?</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le recharger ?</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a Ã©tÃ© modifiÃ©. Voulez-vous le recharger ?</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has had one or several of its dependencies modified. Do you want to reload it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; a eu une ou plusieurs de ses dépendances modifiées. Voulez-vous le recharger ?</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a eu une ou plusieurs de ses dÃ©pendances modifiÃ©es. Voulez-vous le recharger ?</translation>
     </message>
     <message>
         <source>File Deleted</source>
-        <translation>Fichier Supprimé</translation>
+        <translation>Fichier SupprimÃ©</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore. Do you want to close it?</source>
@@ -145,11 +145,11 @@
     </message>
     <message>
         <source>The file is being edited, so switching modes is not possible for now</source>
-        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
+        <translation>Le fichier est en train d&apos;Ãªtre Ã©ditÃ©, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
     </message>
     <message>
         <source>The file is being edited, so switching views is not possible for now</source>
-        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
+        <translation>Le fichier est en train d&apos;Ãªtre Ã©ditÃ©, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
 </context>
 <context>
@@ -160,7 +160,7 @@
     </message>
     <message>
         <source>Create a new file</source>
-        <translation>Créer un nouveau fichier</translation>
+        <translation>CrÃ©er un nouveau fichier</translation>
     </message>
     <message>
         <source>Open...</source>
@@ -172,11 +172,11 @@
     </message>
     <message>
         <source>Open Remote...</source>
-        <translation>Ouvrir À Distance...</translation>
+        <translation>Ouvrir Ã€ Distance...</translation>
     </message>
     <message>
         <source>Open a remote file</source>
-        <translation>Ouvrir un fichier à distance</translation>
+        <translation>Ouvrir un fichier Ã  distance</translation>
     </message>
     <message>
         <source>Reload</source>
@@ -196,11 +196,11 @@
     </message>
     <message>
         <source>Locked</source>
-        <translation>Vérouillé</translation>
+        <translation>VÃ©rouillÃ©</translation>
     </message>
     <message>
         <source>Toggle the locked state of the current file</source>
-        <translation>Basculer l&apos;état vérouillé du fichier actuel</translation>
+        <translation>Basculer l&apos;Ã©tat vÃ©rouillÃ© du fichier actuel</translation>
     </message>
     <message>
         <source>Save</source>
@@ -216,7 +216,7 @@
     </message>
     <message>
         <source>Save the current file under a different name</source>
-        <translation>Sauvegarder le fichier actuel sous un nom différent</translation>
+        <translation>Sauvegarder le fichier actuel sous un nom diffÃ©rent</translation>
     </message>
     <message>
         <source>Save All</source>
@@ -228,11 +228,11 @@
     </message>
     <message>
         <source>Previous</source>
-        <translation>Précédent</translation>
+        <translation>PrÃ©cÃ©dent</translation>
     </message>
     <message>
         <source>Select the previous file</source>
-        <translation>Sélectionner le fichier précédent</translation>
+        <translation>SÃ©lectionner le fichier prÃ©cÃ©dent</translation>
     </message>
     <message>
         <source>Next</source>
@@ -240,7 +240,7 @@
     </message>
     <message>
         <source>Select the next file</source>
-        <translation>Sélectionner le fichier suivant</translation>
+        <translation>SÃ©lectionner le fichier suivant</translation>
     </message>
     <message>
         <source>Close</source>
@@ -260,15 +260,15 @@
     </message>
     <message>
         <source>Reopen</source>
-        <translation>Réouvrir</translation>
+        <translation>RÃ©ouvrir</translation>
     </message>
     <message>
         <source>Most Recent</source>
-        <translation>Plus Récent</translation>
+        <translation>Plus RÃ©cent</translation>
     </message>
     <message>
         <source>Reopen the most recently closed file</source>
-        <translation>Réouvrir le fichier qui a été le plus récemment fermé</translation>
+        <translation>RÃ©ouvrir le fichier qui a Ã©tÃ© le plus rÃ©cemment fermÃ©</translation>
     </message>
     <message>
         <source>Clear Menu</source>
@@ -280,7 +280,7 @@
     </message>
     <message>
         <source>Reopen File</source>
-        <translation>Réouvrir Fichier</translation>
+        <translation>RÃ©ouvrir Fichier</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
@@ -291,7 +291,7 @@
     <name>OpenCOR::Core::PropertyEditorWidget</name>
     <message>
         <source>Property</source>
-        <translation>Propriété</translation>
+        <translation>PropriÃ©tÃ©</translation>
     </message>
     <message>
         <source>Value</source>
@@ -299,7 +299,7 @@
     </message>
     <message>
         <source>Unit</source>
-        <translation>Unité</translation>
+        <translation>UnitÃ©</translation>
     </message>
 </context>
 <context>
@@ -322,11 +322,11 @@
     </message>
     <message>
         <source>Data Store</source>
-        <translation>Magasin de Données</translation>
+        <translation>Magasin de DonnÃ©es</translation>
     </message>
     <message>
         <source>Editing</source>
-        <translation>Édition</translation>
+        <translation>Ã‰dition</translation>
     </message>
     <message>
         <source>Miscellaneous</source>
@@ -366,7 +366,7 @@
     </message>
     <message>
         <source>Copyright</source>
-        <translation>Tous droits réservés</translation>
+        <translation>Tous droits rÃ©servÃ©s</translation>
     </message>
     <message>
         <source>B</source>
@@ -410,15 +410,15 @@
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe dÃ©jÃ  et est ouvert.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe dÃ©jÃ . Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <source>Please choose an empty directory.</source>
-        <translation>Veuillez choisir un répertoire vide.</translation>
+        <translation>Veuillez choisir un rÃ©pertoire vide.</translation>
     </message>
     <message>
         <source>: </source>
