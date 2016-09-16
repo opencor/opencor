@@ -60,8 +60,9 @@ class PluginInfo
 public:
     enum Category {
 #ifdef ENABLE_SAMPLES
-        Sample = -1,
+        Sample = -2,
 #endif
+        Invalid = -1,
         Analysis,
         Api,
         DataStore,

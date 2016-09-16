@@ -159,12 +159,10 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
             pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
         } else {
-            // We are not actually dealing with a plugin, so add it to the
-            // Miscellaneous category
+            // We are not actually dealing with a plugin, so simply add it to
+            // the Invalid category
 
-            mUnselectablePluginItems << pluginItem;
-
-            pluginCategoryItem(PluginInfo::Miscellaneous)->appendRow(pluginItem);
+            pluginCategoryItem(PluginInfo::Invalid)->appendRow(pluginItem);
         }
     }
 
@@ -240,11 +238,13 @@ PluginsDialog::~PluginsDialog()
 
 void PluginsDialog::selectFirstVisibleCategory()
 {
-    // Select the first visible category
+    // Select the first visible category (besides our special invalid and sample
+    // categories)
 
     foreach (QStandardItem *categoryItem, mCategoryItems) {
-        if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
-                                                mModel->invisibleRootItem()->index())) {
+        if (    (mItemCategories.value(categoryItem) >= PluginInfo::Category(0))
+            && !mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
+                                                   mModel->invisibleRootItem()->index())) {
             mGui->pluginsTreeView->setCurrentIndex(categoryItem->index());
 
             return;
@@ -298,8 +298,8 @@ QString PluginsDialog::statusDescription(Plugin *pPlugin) const
         return tr("the plugin is loaded and fully functional.");
     case Plugin::NotLoaded:
         return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(pPlugin->statusErrors()));
-    case Plugin::NotPlugin:
-        return tr("this is not a plugin.");
+    case Plugin::Invalid:
+        return tr("the plugin is not valid.");
     case Plugin::NotCorePlugin:
         return tr("the plugin claims to be the core plugin, but it is not.");
     case Plugin::InvalidCorePlugin:
@@ -410,6 +410,16 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
         mGui->fieldTwoLabel->setText(tr("Description:"));
 
         switch (mItemCategories.value(item)) {
+#ifdef ENABLE_SAMPLES
+        case PluginInfo::Sample:
+            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
+
+            break;
+#endif
+        case PluginInfo::Invalid:
+            mGui->fieldTwoValue->setText(tr("plugins that are not valid."));
+
+            break;
         case PluginInfo::Analysis:
             mGui->fieldTwoValue->setText(tr("plugins to analyse files."));
 
@@ -434,12 +444,6 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldTwoValue->setText(tr("plugins to organise files."));
 
             break;
-#ifdef ENABLE_SAMPLES
-        case PluginInfo::Sample:
-            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
-
-            break;
-#endif
         case PluginInfo::Simulation:
             mGui->fieldTwoValue->setText(tr("plugins to simulate files."));
 

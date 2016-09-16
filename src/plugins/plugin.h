@@ -78,7 +78,7 @@ public:
         NotNeeded,
         Loaded,
         NotLoaded,
-        NotPlugin,
+        Invalid,
         NotCorePlugin,
         InvalidCorePlugin,
         NotCliPluginNoCliSupport,
