@@ -270,18 +270,14 @@ void SingleCellViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::
                this, SLOT(graphChanged(Core::Property *)));
 
     propertyEditor->addListProperty(graphProperty);
-
-    Core::Property *xProperty = propertyEditor->addStringProperty(pGraph->parameterX()?
-                                                                      static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
-                                                                      Core::UnknownValue,
-                                                                  graphProperty);
-    Core::Property *yProperty = propertyEditor->addStringProperty(pGraph->parameterY()?
-                                                                      static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
-                                                                      Core::UnknownValue,
-                                                                  graphProperty);
-
-    xProperty->setEditable(true);
-    yProperty->setEditable(true);
+    propertyEditor->addStringProperty(pGraph->parameterX()?
+                                          static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
+                                          Core::UnknownValue,
+                                      graphProperty);
+    propertyEditor->addStringProperty(pGraph->parameterY()?
+                                          static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
+                                          Core::UnknownValue,
+                                      graphProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
