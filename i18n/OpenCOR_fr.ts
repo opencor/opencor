@@ -228,10 +228,6 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
     </message>
     <message>
-        <source>this is not a plugin.</source>
-        <translation>ce n&apos;est pas une extension.</translation>
-    </message>
-    <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
         <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
     </message>
@@ -339,6 +335,14 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
+    </message>
+    <message>
+        <source>the plugin is not valid.</source>
+        <translation>l&apos;extension n&apos;est pas valide.</translation>
+    </message>
+    <message>
+        <source>plugins that are not valid.</source>
+        <translation>extensions qui ne sont pas valides.</translation>
     </message>
 </context>
 <context>

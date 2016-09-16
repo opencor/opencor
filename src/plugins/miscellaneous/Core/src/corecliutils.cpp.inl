@@ -89,6 +89,8 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
     case PluginInfo::Sample:
         return QObject::tr("Sample");
 #endif
+    case PluginInfo::Invalid:
+        return QObject::tr("Invalid");
     case PluginInfo::Analysis:
         return QObject::tr("Analysis");
     case PluginInfo::Api:

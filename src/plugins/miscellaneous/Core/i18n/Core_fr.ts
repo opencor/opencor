@@ -420,5 +420,9 @@
         <source>Widget</source>
         <translation>Gadget</translation>
     </message>
+    <message>
+        <source>Invalid</source>
+        <translation>Invalide</translation>
+    </message>
 </context>
 </TS>
