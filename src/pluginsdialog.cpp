@@ -697,8 +697,6 @@ void PluginsDialog::newPluginCategory(const PluginInfo::Category &pCategory,
 
     QStandardItem *categoryItem = new QStandardItem(pName);
 
-    categoryItem->setAutoTristate(true);
-
     mModel->invisibleRootItem()->appendRow(categoryItem);
 
     // Add the category item to our list of plugin categories
