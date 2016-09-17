@@ -128,6 +128,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     // Make sure that the dialog has a reasonable starting size
 
     mGui->layout->setSizeConstraint(QLayout::SetMinimumSize);
+//---ISSUE193--- DO WE ACTUALLY NEED IT?...
 
     // Connection to handle the change of preferences widget
 
@@ -217,7 +218,15 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
                                                 const QModelIndex &pOldIndex)
 {
 //---ISSUE193---
-qDebug("[%p] ---> [%p]", pOldIndex.internalPointer(), pNewIndex.internalPointer());
+Q_UNUSED(pOldIndex);
+    // Switch to the widget corresponding to the selected item
+
+    if (pNewIndex == mGeneralItem->index())
+        mGui->stackedWidget->setCurrentWidget(mGui->generalPage);
+    else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
+        mGui->stackedWidget->setCurrentWidget(mGui->sectionPage);
+    else
+        mGui->stackedWidget->setCurrentWidget(0);
 }
 
 //==============================================================================
