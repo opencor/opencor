@@ -125,6 +125,15 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
     mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
 
+    // Make sure that the dialog has a reasonable starting size
+
+    mGui->layout->setSizeConstraint(QLayout::SetMinimumSize);
+
+    // Connection to handle the change of preferences widget
+
+    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updatePreferencesWidget(const QModelIndex &, const QModelIndex &)));
+
     // Select our general item
 
     mGui->treeView->setCurrentIndex(mGeneralItem->index());
@@ -158,8 +167,6 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
         QString nonDiacriticCategoryName = nonDiacriticString(categoryName);
 
         res = new QStandardItem(categoryName);
-
-        res->setSelectable(false);
 
         for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
             QStandardItem *categoryItem = rootItem->child(i);
@@ -202,6 +209,15 @@ void PreferencesDialog::on_buttonBox_rejected()
     // Simply cancel whatever was done here
 
     reject();
+}
+
+//==============================================================================
+
+void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
+                                                const QModelIndex &pOldIndex)
+{
+//---ISSUE193---
+qDebug("[%p] ---> [%p]", pOldIndex.internalPointer(), pNewIndex.internalPointer());
 }
 
 //==============================================================================
