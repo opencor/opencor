@@ -187,6 +187,25 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
 
 //==============================================================================
 
+void PreferencesDialog::on_buttonBox_accepted()
+{
+//---ISSUE193---
+    // Confirm that we accepted the changes
+
+    accept();
+}
+
+//==============================================================================
+
+void PreferencesDialog::on_buttonBox_rejected()
+{
+    // Simply cancel whatever was done here
+
+    reject();
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

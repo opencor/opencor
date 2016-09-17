@@ -79,6 +79,10 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
+
+private slots:
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
 };
 
 //==============================================================================
