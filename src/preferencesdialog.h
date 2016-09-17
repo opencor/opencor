@@ -76,6 +76,7 @@ private:
 
     QStandardItemModel *mModel;
 
+    QStandardItem *mGeneralItem;
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);

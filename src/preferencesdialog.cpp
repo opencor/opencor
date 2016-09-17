@@ -86,9 +86,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     // Populate the data model with our general category and our plugins that
     // support the Preferences interface
 
-    QStandardItem *generalItem = new QStandardItem(tr("General"));
+    mGeneralItem = new QStandardItem(tr("General"));
 
-    mModel->invisibleRootItem()->appendRow(generalItem);
+    mModel->invisibleRootItem()->appendRow(mGeneralItem);
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
@@ -127,7 +127,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Select our general item
 
-    mGui->treeView->setCurrentIndex(generalItem->index());
+    mGui->treeView->setCurrentIndex(mGeneralItem->index());
 }
 
 //==============================================================================
