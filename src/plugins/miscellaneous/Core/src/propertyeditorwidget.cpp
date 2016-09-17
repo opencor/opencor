@@ -375,10 +375,9 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 {
     // Ignore events resulting from a key being pressed
 
-    if (pEvent->type() == QEvent::KeyPress)
-        return false;
-    else
-        return QStyledItemDelegate::eventFilter(pObject, pEvent);
+    return (pEvent->type() == QEvent::KeyPress)?
+               false:
+               QStyledItemDelegate::eventFilter(pObject, pEvent);
 }
 
 //==============================================================================
@@ -564,7 +563,7 @@ QList<QStandardItem *> Property::items() const
 
 bool Property::hasIndex(const QModelIndex &pIndex) const
 {
-    // Return whether the given is that our name, value or unit item
+    // Return whether the given index is that of our name, value or unit item
 
     bool res = mName->index() == pIndex;
 
@@ -706,10 +705,7 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    if (mType == Integer)
-        return mValue->text().toInt();
-    else
-        return 0;
+    return (mType == Integer)?mValue->text().toInt():0;
 }
 
 //==============================================================================
@@ -728,10 +724,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    if (mType == Double)
-        return mValue->text().toDouble();
-    else
-        return 0.0;
+    return (mType == Double)?mValue->text().toDouble():0.0;
 }
 
 //==============================================================================
@@ -915,10 +908,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    if (mType == Boolean)
-        return !mValue->text().compare(TrueValue);
-    else
-        return false;
+    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
 }
 
 //==============================================================================
@@ -1189,7 +1179,7 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 
     if (    currentProperty
         && (currentProperty->type() == Property::List)
-        && currentProperty->listValues().isEmpty()) {
+        &&  currentProperty->listValues().isEmpty()) {
         currentProperty->setValue(currentProperty->emptyListValue());
     }
 
@@ -1997,9 +1987,10 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     // Return our information about the property at the given index
 
-    foreach (Property *property, mProperties)
+    foreach (Property *property, mProperties) {
         if (property->hasIndex(pIndex))
             return property;
+    }
 
     return 0;
 }
