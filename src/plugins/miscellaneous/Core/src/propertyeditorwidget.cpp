@@ -457,6 +457,13 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
+
+    // Make sure that our name and unit can't be edited
+
+    mName->setEditable(false);
+
+    if (mUnit)
+        mUnit->setEditable(false);
 }
 
 //==============================================================================
