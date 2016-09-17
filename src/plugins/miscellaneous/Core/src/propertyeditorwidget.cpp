@@ -391,7 +391,7 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
