@@ -60,7 +60,7 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
     QStandardItem *pluginItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -185,11 +185,11 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     // Expand the whole tree view widget and make sure that it only takes as
     // much width as necessary
-    // Note: for some reasons (maybe because we have check boxes?), the
-    //       retrieved column size gives us a width that is slightly too small
-    //       and therefore requires a horizontal scroll bar, hence we add 15% to
-    //       it (the extra 15% seems to be enough even to even account for a big
-    //       number of plugins which would then require a vertical scroll bar)
+    // Note: for some reasons, the retrieved column size gives us a width that
+    //       is slightly too small and therefore requires a horizontal scroll
+    //       bar, hence we add 15% to it (those extra 15% seems to be enough
+    //       to account even for a big number of plugins which would then
+    //       require a vertical scroll bar)
 
     mGui->treeView->expandAll();
     mGui->treeView->resizeColumnToContents(0);
