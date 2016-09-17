@@ -23,6 +23,7 @@ limitations under the License.
 #include "cliutils.h"
 #include "pluginmanager.h"
 #include "preferencesdialog.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -82,24 +83,43 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new PreferencesItemDelegate());
 
-    // Populate the data model with our different plugins
+    // Populate the data model with our different plugins, but only those that
+    // support the Preferences interface
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
-        // Create the item corresponding to the current plugin
+        PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-        QStandardItem *pluginItem = new QStandardItem(plugin->name());
+        if (preferencesInterface) {
+            // Create the item corresponding to the current plugin
 
-        // Only selectable plugins and plugins that are of the right type are
-        // checkable
+            QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
-        PluginInfo *pluginInfo = plugin->info();
+            // Only selectable plugins and plugins that are of the right type are
+            // checkable
 
-        if (pluginInfo) {
-            // Add the plugin to its corresponding category
+            PluginInfo *pluginInfo = plugin->info();
 
-            pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
+            if (pluginInfo) {
+                // Add the plugin to its corresponding category
+
+                pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
+            }
         }
     }
+
+    // Expand the whole tree view widget and make sure that it only takes as
+    // much width as necessary
+    // Note: for some reasons, the retrieved column size gives us a width that
+    //       is slightly too small and therefore requires a horizontal scroll
+    //       bar, hence we add 15% to it (those extra 15% seems to be enough
+    //       to account even for a big number of plugins which would then
+    //       require a vertical scroll bar)
+
+    mGui->treeView->expandAll();
+    mGui->treeView->resizeColumnToContents(0);
+
+    mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
+    mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
 }
 
 //==============================================================================
