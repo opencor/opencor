@@ -445,10 +445,9 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mOwner(pParent),
     mType(pType),
     mId(QString()),
-    mHasUnit(pParent->showUnits()),
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
-    mUnit(mHasUnit?new PropertyItem(this):0),
+    mUnit(pParent->showUnits()?new PropertyItem(this):0),
     mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
@@ -552,7 +551,7 @@ QList<QStandardItem *> Property::items() const
 
     QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
 
-    if (mHasUnit)
+    if (mUnit)
         res << mUnit;
 
     return res;
@@ -566,7 +565,7 @@ bool Property::hasIndex(const QModelIndex &pIndex) const
 
     bool res = (mName->index() == pIndex) || (mValue->index() == pIndex);
 
-    if (mHasUnit)
+    if (mUnit)
         res = res || (mUnit->index() == pIndex);
 
     return res;
@@ -931,7 +930,7 @@ QString Property::unit() const
 {
     // Return our unit
 
-    return mHasUnit?mUnit->text():QString();
+    return mUnit?mUnit->text():QString();
 }
 
 //==============================================================================
@@ -940,7 +939,7 @@ void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
-    if (mHasUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
+    if (mUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
         if (pUpdateToolTip)
@@ -1034,7 +1033,7 @@ void Property::updateToolTip()
         else
             toolTip += mValue->text();
 
-        if (mHasUnit && !mUnit->text().isEmpty())
+        if (mUnit && !mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
     }
 
@@ -1046,7 +1045,7 @@ void Property::updateToolTip()
     if (mType != Section) {
         mValue->setToolTip(toolTip);
 
-        if (mHasUnit)
+        if (mUnit)
             mUnit->setToolTip(toolTip);
     }
 }
