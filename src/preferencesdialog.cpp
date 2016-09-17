@@ -52,7 +52,7 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (!pluginItem->parent())
+    if (pluginItem->hasChildren())
         option.font.setBold(true);
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
@@ -83,8 +83,12 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new PreferencesItemDelegate());
 
-    // Populate the data model with our different plugins, but only those that
+    // Populate the data model with our general category and our plugins that
     // support the Preferences interface
+
+    QStandardItem *generalItem = new QStandardItem(tr("General"));
+
+    mModel->invisibleRootItem()->appendRow(generalItem);
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
@@ -120,6 +124,10 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
     mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
+
+    // Select our general item
+
+    mGui->treeView->setCurrentIndex(generalItem->index());
 }
 
 //==============================================================================
@@ -150,6 +158,8 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
         QString nonDiacriticCategoryName = nonDiacriticString(categoryName);
 
         res = new QStandardItem(categoryName);
+
+        res->setSelectable(false);
 
         for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
             QStandardItem *categoryItem = rootItem->child(i);
