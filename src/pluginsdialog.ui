@@ -17,7 +17,7 @@
    <item>
     <layout class="QHBoxLayout" name="pluginsLayout">
      <item>
-      <widget class="QTreeView" name="pluginsTreeView">
+      <widget class="QTreeView" name="treeView">
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
