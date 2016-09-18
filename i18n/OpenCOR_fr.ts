@@ -346,6 +346,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PreferencesDialog</name>
+    <message>
+        <source>General</source>
+        <translation>Général</translation>
+    </message>
+</context>
+<context>
     <name>PluginsDialog</name>
     <message>
         <source>Plugins</source>
