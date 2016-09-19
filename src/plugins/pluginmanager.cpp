@@ -196,14 +196,6 @@ PluginManager::PluginManager(const bool &pGuiMode) :
                 mCorePlugin = plugin;
         }
     }
-
-    // Sort our (loaded) plugins
-    // Note: indeed, they are currently ordered based on their depedencies with
-    //       one another while it makes more sense to have them sorted by
-    //       name...
-
-    std::sort(mPlugins.begin(), mPlugins.end(), sortPlugins);
-    std::sort(mLoadedPlugins.begin(), mLoadedPlugins.end(), sortPlugins);
 }
 
 //==============================================================================
@@ -227,11 +219,37 @@ Plugins PluginManager::plugins() const
 
 //==============================================================================
 
+Plugins PluginManager::sortedPlugins() const
+{
+    // Return a sorted version of mPlugins
+
+    Plugins res = mPlugins;
+
+    std::sort(res.begin(), res.end(), sortPlugins);
+
+    return res;
+}
+
+//==============================================================================
+
 Plugins PluginManager::loadedPlugins() const
 {
     // Return a list of our loaded plugins
 
     return mLoadedPlugins;
+}
+
+//==============================================================================
+
+Plugins PluginManager::sortedLoadedPlugins() const
+{
+    // Return a sorted version of mLoadedPlugins
+
+    Plugins res = mLoadedPlugins;
+
+    std::sort(res.begin(), res.end(), sortPlugins);
+
+    return res;
 }
 
 //==============================================================================

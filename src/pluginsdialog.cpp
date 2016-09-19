@@ -123,7 +123,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     static const QIcon LoadedIcon    = QIcon(":/oxygen/actions/dialog-ok-apply.png");
     static const QIcon NotLoadedIcon = QIcon(":/oxygen/actions/edit-delete.png");
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
+    foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,
