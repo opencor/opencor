@@ -87,7 +87,6 @@ SET(SOURCES
     src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
 
-    src/plugins/datastoreinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
@@ -107,8 +106,6 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
-
-    src/plugins/datastoreinterface.h
 )
 
 SET(UIS
