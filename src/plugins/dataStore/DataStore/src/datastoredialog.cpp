@@ -48,7 +48,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
     QStandardItem *dataItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -65,8 +65,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     QDialog(pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
-    mNbOfData(0),
-    mNbOfSelectedData(0)
+    mNbOfData(0)
 {
     // Set up the GUI
 
@@ -129,7 +128,6 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
                     if (!hierarchyItem) {
                         hierarchyItem = new QStandardItem(hierarchyPart);
 
-                        hierarchyItem->setAutoTristate(true);
                         hierarchyItem->setCheckable(true);
                         hierarchyItem->setEditable(false);
 
@@ -154,7 +152,6 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
             mData.insert(dataItem, variable);
 
             ++mNbOfData;
-            ++mNbOfSelectedData;
         }
     }
 
@@ -246,7 +243,8 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
 
 //==============================================================================
 
-void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem)
+void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem,
+                                             int &pNbOfselectedData)
 {
     // Update the selected state of the given item's children
 
@@ -257,9 +255,14 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem)
         QStandardItem *childItem = pItem->child(i);
 
         if (childItem->rowCount())
-            checkDataSelectedState(childItem);
+            checkDataSelectedState(childItem, pNbOfselectedData);
 
-        nbOfSelectedChildItems += childItem->checkState() == Qt::Checked;
+        if (childItem->checkState() == Qt::Checked) {
+            ++nbOfSelectedChildItems;
+
+            if (!childItem->rowCount())
+                ++pNbOfselectedData;
+        }
 
         if (childItem->checkState() == Qt::PartiallyChecked)
             partiallySelectedChildItems = true;
@@ -279,7 +282,7 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem)
 void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 {
     // Disable the handling of the itemChanged() signal (otherwise what we are
-    // doing here is going to be completely uneffective)
+    // doing here is going to be completely ineffective)
 
     disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                this, SLOT(updateDataSelectedState(QStandardItem *)));
@@ -290,19 +293,19 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 
     if (pItem && pItem->isAutoTristate())
         updateDataSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
-    else if (pItem)
-        mNbOfSelectedData += (pItem->checkState() == Qt::Checked)?1:-1;
 
     // Update the selected state of all our hierarchies
+
+    int nbOfSelectedData = 0;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *childItem = mModel->invisibleRootItem()->child(i);
 
-        checkDataSelectedState(childItem);
+        checkDataSelectedState(childItem, nbOfSelectedData);
     }
 
-    mGui->allDataCheckBox->setCheckState(mNbOfSelectedData?
-                                             (mNbOfSelectedData == mNbOfData)?
+    mGui->allDataCheckBox->setCheckState(nbOfSelectedData?
+                                             (nbOfSelectedData == mNbOfData)?
                                                  Qt::Checked:
                                                  Qt::PartiallyChecked:
                                              Qt::Unchecked);
@@ -333,8 +336,6 @@ void DataStoreDialog::on_allDataCheckBox_clicked()
     updateDataSelectedState(mModel->invisibleRootItem(),
                             mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
 
-    mNbOfSelectedData = mGui->allDataCheckBox->isChecked()?mNbOfData:0;
-
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updateDataSelectedState(QStandardItem *)));
 }
@@ -346,7 +347,7 @@ void DataStoreDialog::on_buttonBox_accepted()
     // Confirm that we accepted the data selection, but only if we have at least
     // one selected data
 
-    if (!mNbOfSelectedData) {
+    if (mGui->allDataCheckBox->checkState() == Qt::Unchecked) {
         Core::warningMessageBox(this, tr("Data Selector"),
                                 tr("Some data must be selected."));
     } else {

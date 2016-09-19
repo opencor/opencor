@@ -44,8 +44,8 @@ namespace PMRWindow {
 //==============================================================================
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
-    OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(),
+    WebViewerWidget::WebViewerWidget(pParent),
+    Core::CommonWidget(this),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
@@ -431,7 +431,7 @@ void PmrWindowWidget::linkHovered()
         if (!linkList[0].compare("cloneWorkspace")) {
             linkToolTip = tr("Clone Workspace");
         } else if (linkList.count() == 2) {
-            if (page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(linkList[1]))).firstChild().isNull())
+            if (page()->mainFrame()->documentElement().findFirst(QString("img[id=exposureFilesButton_%1]").arg(mExposureUrlId.value(linkList[1]))).hasClass("button"))
                 linkToolTip = tr("Show Exposure Files");
             else
                 linkToolTip = tr("Hide Exposure Files");

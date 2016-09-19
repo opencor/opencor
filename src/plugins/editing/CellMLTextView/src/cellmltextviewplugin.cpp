@@ -48,13 +48,13 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using the CellML Text format."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide du format CellML Text."));
 
-    return new PluginInfo("Editing", true, true,
+    return new PluginInfo(PluginInfo::Editing, true, true,
                           QStringList() << "CellMLEditingView",
                           descriptions);
 }
 
 //==============================================================================
-// CellML editing interface
+// CellML editing view interface
 //==============================================================================
 
 void CellMLTextViewPlugin::reformat(const QString &pFileName) const
@@ -328,20 +328,6 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given CellML file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
 QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
@@ -429,7 +415,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (errorMessage.isEmpty()) {
         if (pImport) {
-            OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
+            CellMLTextView::CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
@@ -441,9 +427,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 std::cout << converterOutputByteArray.constData();
             }
         } else {
-            OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+            CellMLTextView::CellmlTextViewParser parser;
 
-            if (!parser.execute(fileContents, OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1)) {
+            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
@@ -479,9 +465,9 @@ void CellMLTextViewPlugin::runHelpCommand()
     std::cout << "Commands supported by CellMLTextView:" << std::endl;
     std::cout << " * Display the commands supported by CellMLTextView:" << std::endl;
     std::cout << "      help" << std::endl;
-    std::cout << " * Export the CellML Text <file> to CellML:" << std::endl;
+    std::cout << " * Export a CellML Text <file> to CellML:" << std::endl;
     std::cout << "      export <file>" << std::endl;
-    std::cout << " * Import the CellML <file> to the CellML Text format:" << std::endl;
+    std::cout << " * Import a CellML <file> to the CellML Text format:" << std::endl;
     std::cout << "      import <file>" << std::endl;
 }
 

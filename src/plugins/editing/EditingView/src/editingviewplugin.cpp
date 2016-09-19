@@ -47,7 +47,7 @@ PLUGININFO_FUNC EditingViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core editing view facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition."));
 
-    return new PluginInfo("Editing", false, false,
+    return new PluginInfo(PluginInfo::Editing, false, false,
                           QStringList() << "EditorWidget",
                           descriptions);
 }
@@ -322,18 +322,18 @@ void EditingViewPlugin::initializePlugin()
     mEditRedoAction = Core::newAction(QIcon(":/oxygen/actions/edit-redo.png"),
                                       QKeySequence::Redo, Core::mainWindow());
 
-    mEditCutAction    = Core::newAction(QIcon(":/oxygen/actions/edit-cut.png"),
-                                        QKeySequence::Cut, Core::mainWindow());
-    mEditCopyAction   = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                        QKeySequence::Copy, Core::mainWindow());
-    mEditPasteAction  = Core::newAction(QIcon(":/oxygen/actions/edit-paste.png"),
-                                        QKeySequence::Paste, Core::mainWindow());
+    mEditCutAction = Core::newAction(QIcon(":/oxygen/actions/edit-cut.png"),
+                                     QKeySequence::Cut, Core::mainWindow());
+    mEditCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                      QKeySequence::Copy, Core::mainWindow());
+    mEditPasteAction = Core::newAction(QIcon(":/oxygen/actions/edit-paste.png"),
+                                       QKeySequence::Paste, Core::mainWindow());
     mEditDeleteAction = Core::newAction(QIcon(":/oxygen/actions/edit-delete.png"),
                                         QKeySequence::Delete, Core::mainWindow());
 
-    mEditFindReplaceAction  = Core::newAction(QIcon(":/oxygen/actions/edit-find.png"),
-                                              QKeySequence::Find, Core::mainWindow());
-    mEditFindNextAction     = Core::newAction(QKeySequence::FindNext, Core::mainWindow());
+    mEditFindReplaceAction = Core::newAction(QIcon(":/oxygen/actions/edit-find.png"),
+                                             QKeySequence::Find, Core::mainWindow());
+    mEditFindNextAction = Core::newAction(QKeySequence::FindNext, Core::mainWindow());
     mEditFindPreviousAction = Core::newAction(QKeySequence::FindPrevious, Core::mainWindow());
 
     mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, Core::mainWindow());

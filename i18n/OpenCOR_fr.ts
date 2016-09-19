@@ -212,58 +212,6 @@
 <context>
     <name>OpenCOR::PluginsDialog</name>
     <message>
-        <source>Analysis</source>
-        <translation>Analyse</translation>
-    </message>
-    <message>
-        <source>API</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Data Store</source>
-        <translation>Magasin de Données</translation>
-    </message>
-    <message>
-        <source>Editing</source>
-        <translation>Édition</translation>
-    </message>
-    <message>
-        <source>Miscellaneous</source>
-        <translation>Divers</translation>
-    </message>
-    <message>
-        <source>Organisation</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Sample</source>
-        <translation>Exemple</translation>
-    </message>
-    <message>
-        <source>Simulation</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Solver</source>
-        <translation>Solveur</translation>
-    </message>
-    <message>
-        <source>Support</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Third-party</source>
-        <translation>Externe</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation>Outils</translation>
-    </message>
-    <message>
-        <source>Widget</source>
-        <translation>Gadget</translation>
-    </message>
-    <message>
         <source>the plugin is not wanted.</source>
         <translation>l&apos;extension n&apos;est pas désirée.</translation>
     </message>
@@ -280,8 +228,8 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
     </message>
     <message>
-        <source>this is not a plugin.</source>
-        <translation>ce n&apos;est pas une extension.</translation>
+        <source>the plugin is not valid.</source>
+        <translation>l&apos;extension n&apos;est pas valide.</translation>
     </message>
     <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
@@ -337,6 +285,14 @@
         <translation>Catégorie :</translation>
     </message>
     <message>
+        <source>plugins that illustrate various plugin-related aspects.</source>
+        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
+    </message>
+    <message>
+        <source>plugins that are not valid.</source>
+        <translation>extensions qui ne sont pas valides.</translation>
+    </message>
+    <message>
         <source>plugins to analyse files.</source>
         <translation>extensions pour analyser des fichiers.</translation>
     </message>
@@ -359,10 +315,6 @@
     <message>
         <source>plugins to organise files.</source>
         <translation>extensions pour organiser des fichiers.</translation>
-    </message>
-    <message>
-        <source>plugins that illustrate various plugin-related aspects.</source>
-        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
     </message>
     <message>
         <source>plugins to simulate files.</source>
@@ -428,10 +380,6 @@
     <message>
         <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
         <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
-    </message>
-    <message>
-        <source>This version of %1 was built using &lt;a href=&quot;http://www.qt.io/&quot;&gt;Qt&lt;/a&gt; %2.</source>
-        <translation>Cette version d&apos;%1 a été compilée avec &lt;a href=&quot;http://www.qt.io/&quot;&gt;Qt&lt;/a&gt; %2.</translation>
     </message>
 </context>
 </TS>

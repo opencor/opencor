@@ -24,6 +24,11 @@ limitations under the License.
 
 //==============================================================================
 
+#include "coreglobal.h"
+#include "plugininfo.h"
+
+//==============================================================================
+
 #include <QSslError>
 #include <QString>
 
@@ -35,10 +40,6 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-#include "coreglobal.h"
 
 //==============================================================================
 
@@ -75,7 +76,6 @@ void initPluginsPath(const QString &pAppFileName);
 void initApplication(QString *pAppDate = 0);
 
 QString applicationDescription(const bool &pGuiMode = true);
-QString applicationBuildInformation(const bool &pGuiMode = true);
 
 //==============================================================================
 

@@ -26,6 +26,7 @@ limitations under the License.
 
 #include "coreglobal.h"
 #include "plugin.h"
+#include "plugininfo.h"
 
 //==============================================================================
 

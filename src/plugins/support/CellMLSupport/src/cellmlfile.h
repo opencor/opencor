@@ -78,16 +78,17 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
-    bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues);
+    bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues,
+                 const bool &pWithBusyWidget = false);
 
     bool isModified() const;
     void setModified(const bool &pModified) const;
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * runtime();
+    CellmlFileRuntime * runtime(const bool &pWithBusyWidget = false);
 
-    QStringList dependencies();
+    QStringList dependencies(const bool &pWithBusyWidget = false);
 
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
@@ -124,9 +125,11 @@ public:
     QString cmetaId();
     QString xmlBase();
 
-    bool exportTo(const QString &pFileName, const Version &pVersion);
+    bool exportTo(const QString &pFileName, const Version &pVersion,
+                  const bool &pWithBusyWidget = false);
     bool exportTo(const QString &pFileName,
-                  const QString &pUserDefinedFormatFileName);
+                  const QString &pUserDefinedFormatFileName,
+                  const bool &pWithBusyWidget = false);
 
     Version version();
 
@@ -164,7 +167,8 @@ private:
                          QStringList &pImportXmlBaseList);
 
     bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
-                                 CellmlFileIssues &pIssues);
+                                 CellmlFileIssues &pIssues,
+                                 const bool &pWithBusyWidget = false);
 
     bool doLoad(const QString &pFileName, const QString &pFileContents,
                 ObjRef<iface::cellml_api::Model> *pModel,

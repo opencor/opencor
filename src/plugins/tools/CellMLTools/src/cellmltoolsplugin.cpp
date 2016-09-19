@@ -51,7 +51,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access various <a href=\"http://www.cellml.org/\">CellML</a>-related tools."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder divers outils en rapport avec <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo("Tools", true, true,
+    return new PluginInfo(PluginInfo::Tools, true, true,
                           QStringList() << "CellMLSupport",
                           descriptions);
 }
@@ -272,7 +272,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, pVersion)) {
+    if (!cellmlFile->exportTo(fileName, pVersion, true)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 
@@ -483,7 +483,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
+    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName, true)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 

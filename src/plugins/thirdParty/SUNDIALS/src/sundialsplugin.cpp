@@ -33,10 +33,10 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a>, <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> and <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> solvers from <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a> 2.6.2."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder les solveurs <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a>, <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> et <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> de <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a> 2.6.2."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a>, <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> and <a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solvers from <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder les solveurs <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a>, <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> et <a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> de <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a>."));
 
-    return new PluginInfo("Third-party", false, false,
+    return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }

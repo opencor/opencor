@@ -19,7 +19,7 @@
         </script>
 
         <p>
-            The best way to familiarise yourself with OpenCOR's internals is by having a look at its <a href="https://github.com/opencor/opencor">source code</a>.
+            The best way to familiarise yourself with the internals of OpenCOR is by having a look at its <a href="https://github.com/opencor/opencor">source code</a>.
         </p>
 
         <div class="section">
@@ -27,7 +27,7 @@
         </div>
 
         <p>
-            All of OpenCOR's code is and must be made available under the <code>OpenCOR</code> namespace (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.cpp"><code>[OpenCOR]/src/mainwindow.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.h"><code>[OpenCOR]/src/mainwindow.h</code></a>). There are two exceptions to this rule: <a href="https://github.com/opencor/opencor/blob/master/src/main.cpp"><code>[OpenCOR]/src/main.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/windows/src/main.cpp"><code>[OpenCOR]/windows/src/main.cpp</code></a> (i.e. OpenCOR's two main <code>.cpp</code> files).
+            All of the source code is and must be made available under the <code>OpenCOR</code> namespace (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.cpp"><code>[OpenCOR]/src/mainwindow.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.h"><code>[OpenCOR]/src/mainwindow.h</code></a>). There are only two exceptions to this rule: <a href="https://github.com/opencor/opencor/blob/master/src/main.cpp"><code>[OpenCOR]/src/main.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/windows/main.cpp"><code>[OpenCOR]/src/windows/main.cpp</code></a> (i.e. OpenCOR's two main <code>.cpp</code> files).
         </p>
 
         <div class="section">
@@ -35,12 +35,12 @@
         </div>
 
         <p>
-            All changes to OpenCOR's codebase must be referenced in the list of <a href="https://github.com/opencor/opencor/issues">issues</a> using <a href="https://github.com/opencor/opencor/labels">labels</a>. There are three types of labels:
+            All changes to the source code must be referenced in the list of <a href="https://github.com/opencor/opencor/issues">issues</a> using <a href="https://github.com/opencor/opencor/labels">labels</a>. There are three types of labels:
         </p>
 
         <ul>
-            <li><strong>Version:</strong> they are used to request a <img src="res/pics/feature.png" width=51 height=19 align=absmiddle> or an <img src="res/pics/improvement.png" width=83 height=19 align=absmiddle> for a future version of OpenCOR or to report a <img src="res/pics/bug.png" width=30 height=19 align=absmiddle> with the current version of OpenCOR.</li>
-            <li><strong>Development:</strong> they are used to specify a <img src="res/pics/task.png" width=36 height=19 align=absmiddle> that needs to be carried out (in preparation of the next version of OpenCOR) or to report a <img src="res/pics/regression.png" width=73 height=19 align=absmiddle> issue with the current development version of OpenCOR.</li>
+            <li><strong>Version:</strong> they are used to request a <img src="res/pics/feature.png" width=51 height=19 align=absmiddle> or an <img src="res/pics/improvement.png" width=83 height=19 align=absmiddle> for a future version of OpenCOR, or to report a <img src="res/pics/bug.png" width=30 height=19 align=absmiddle> with the current official version of OpenCOR.</li>
+            <li><strong>Development:</strong> they are used to specify a <img src="res/pics/task.png" width=36 height=19 align=absmiddle> that needs to be carried out (in preparation for the next version of OpenCOR) or to report a <img src="res/pics/regression.png" width=73 height=19 align=absmiddle> issue with the current development version of OpenCOR.</li>
             <li><strong>Platform:</strong> they are used to specify the platform(s) (<img src="res/pics/windows.png" width=61 height=19 align=absmiddle>, <img src="res/pics/linux.png" width=39 height=19 align=absmiddle> and/or <img src="res/pics/osx.png" width=36 height=19 align=absmiddle>) affected by a <img src="res/pics/bug.png" width=30 height=19 align=absmiddle>, <img src="res/pics/task.png" width=36 height=19 align=absmiddle> or <img src="res/pics/regression.png" width=73 height=19 align=absmiddle> issue.</li>
         </ul>
 
@@ -49,7 +49,11 @@
         </div>
 
         <p>
-            Whenever something is pushed to our <A HREF ="https://github.com/opencor/opencor">Git repository</a>, OpenCOR gets automatically built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>'s <a href="https://docs.travis-ci.com/user/ci-environment/">Ubuntu</a> and <a href="https://docs.travis-ci.com/user/osx-ci-environment/">OS X</a> machines. That is, unless <code>[ci skip]</code> has been added to a commit comment. However, and as a general rule, a commit that closes an issue should always trigger OpenCOR to be built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>.
+            Whenever something is pushed to the <a href="https://github.com/opencor/opencor/tree/master">master branch</a>, OpenCOR gets automatically built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>'s <a href="https://docs.travis-ci.com/user/ci-environment/">Ubuntu</a> and <a href="https://docs.travis-ci.com/user/osx-ci-environment/">OS X</a> machines. That is, unless <code>[ci skip]</code> has been added to a commit message, although a commit that closes an issue should always result in OpenCOR being built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>.
+        </p>
+
+        <p>
+            However, it is not recommended to work directly on the <a href="https://github.com/opencor/opencor/tree/master">master branch</a>. Instead, anyone wanting to contribute to OpenCOR should first fork its <a href="https://github.com/opencor/opencor">Git repository</a>. Then, a new branch called <code>issueXXX</code> should be created. It will contain the work associated with issue <code>XXX</code>. The work completed, a pull request should be made. This pull request will trigger OpenCOR to be built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>. Assuming it all goes fine, it will then be up to the <a href="../../user/team.html">project manager</a> to merge the work.
         </p>
 
         <div class="section">

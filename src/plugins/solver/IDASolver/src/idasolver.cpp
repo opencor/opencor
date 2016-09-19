@@ -45,8 +45,8 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 
     IdaSolverUserData *userData = static_cast<IdaSolverUserData *>(pUserData);
 
-    double *rates     = N_VGetArrayPointer(pRates);
-    double *states    = N_VGetArrayPointer(pStates);
+    double *rates = N_VGetArrayPointer(pRates);
+    double *states = N_VGetArrayPointer(pStates);
     double *residuals = N_VGetArrayPointer(pResiduals);
 
     userData->computeRootInformation()(pVoi, userData->constants(), rates,
@@ -352,7 +352,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Create the states vector
 
-        mRatesVector  = N_VMake_Serial(pRatesStatesCount, pRates);
+        mRatesVector = N_VMake_Serial(pRatesStatesCount, pRates);
         mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
 
         // Create the IDA solver

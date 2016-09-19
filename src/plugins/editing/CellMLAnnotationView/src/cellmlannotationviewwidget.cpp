@@ -217,20 +217,23 @@ void CellmlAnnotationViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-CellmlAnnotationViewEditingWidget * CellmlAnnotationViewWidget::editingWidget(const QString &pFileName) const
+QWidget * CellmlAnnotationViewWidget::widget(const QString &pFileName)
 {
-    // Return the requested editing widget
+    // Return the requested (editing) widget
 
     return mEditingWidgets.value(pFileName);
 }
 
 //==============================================================================
 
-QWidget * CellmlAnnotationViewWidget::widget(const QString &pFileName)
+bool CellmlAnnotationViewWidget::saveFile(const QString &pOldFileName,
+                                          const QString &pNewFileName)
 {
-    // Return the requested (editing) widget
+    // Ask our CellML annotation view widget to save the given file
 
-    return editingWidget(pFileName);
+    CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+
+    return editingWidget?editingWidget->cellmlFile()->save(pNewFileName):false;
 }
 
 //==============================================================================

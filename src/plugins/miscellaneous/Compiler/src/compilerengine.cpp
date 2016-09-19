@@ -57,29 +57,6 @@ CompilerEngine::CompilerEngine() :
 
 //==============================================================================
 
-CompilerEngine::~CompilerEngine()
-{
-    // Reset ourselves
-
-    reset();
-}
-
-//==============================================================================
-
-void CompilerEngine::reset(const bool &pResetError)
-{
-    // Reset some internal objects
-
-    delete mExecutionEngine.release();
-
-    mExecutionEngine = std::unique_ptr<llvm::ExecutionEngine>();
-
-    if (pResetError)
-        mError = QString();
-}
-
-//==============================================================================
-
 bool CompilerEngine::hasError() const
 {
     // Return whether an error occurred
@@ -100,6 +77,12 @@ QString CompilerEngine::error() const
 
 bool CompilerEngine::compileCode(const QString &pCode)
 {
+    // Reset ourselves
+
+    mExecutionEngine.reset();
+
+    mError = QString();
+
     // Prepend all the external functions that may, or not, be needed by the
     // given code
     // Note: indeed, we cannot include header files since we don't (and don't
@@ -159,10 +142,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
                     "\n"
                    +pCode;
 
-    // Reset our compiler engine
-
-    reset();
-
     // Determine our target triple
     // Note: normally, we would call llvm::sys::getProcessTriple(), but this
     //       returns the information about the system on which LLVM was built.
@@ -219,10 +198,10 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // The compilation object should have only one command, so if it doesn't
     // then something went wrong
 
-    const clang::driver::JobList &jobList = compilation->getJobs();
+    const clang::driver::JobList &jobs = compilation->getJobs();
 
-    if (    (jobList.size() != 1)
-        || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
+    if (    (jobs.size() != 1)
+        || !llvm::isa<clang::driver::Command>(*jobs.begin())) {
         mError = tr("the compilation object must contain only one command");
 
         return false;
@@ -230,7 +209,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the command job
 
-    const clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobList.begin());
+    const clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobs.begin());
     QString commandName = command.getCreator().getName();
 
     if (commandName.compare("clang")) {
@@ -278,8 +257,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");
 
-        reset(false);
-
         return false;
     }
 
@@ -296,12 +273,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create and keep track of an execution engine
 
-    mExecutionEngine = std::unique_ptr<llvm::ExecutionEngine>(llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create());
+    mExecutionEngine.reset(llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create());
 
     if (!mExecutionEngine) {
         mError = tr("the execution engine could not be created");
 
-        delete module.release();
+        module.reset();
 
         return false;
     }

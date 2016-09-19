@@ -9,12 +9,11 @@
 
         <link href="../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
-        <script src="../../3rdparty/googleCodePrettify/prettify.js" type="text/javascript"></script>
         <script src="../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../../res/common.js" type="text/javascript"></script>
         <script src="../res/menu.js" type="text/javascript"></script>
     </head>
-    <body onload="prettyPrint();" ondragstart="return false;" ondrop="return false;">
+    <body ondragstart="return false;" ondrop="return false;">
         <script type="text/javascript">
             headerAndContentsMenu("Command Line Interface (CLI)", "../..");
         </script>
@@ -23,83 +22,92 @@
             Help
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -h
-
-<span class="nocode">Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [&lt;files&gt;]
+        <pre>$ ./OpenCOR -h
+Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [&lt;files&gt;]
  -a, --about     Display some information about OpenCOR
  -c, --command   Send a command to one or all the <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins
  -h, --help      Display this help information
  -p, --plugins   Display all the <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins
  -r, --reset     Reset all your settings
  -s, --status    Display the status of all the plugins
- -v, --version   Display the version of OpenCOR</span></pre>
+ -v, --version   Display the version of OpenCOR</pre>
 
         <div class="section">
             Version
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -v
-
-<span class="nocode">OpenCOR Version 0.4.1 (64-bit)</span></pre>
+        <pre>$ ./OpenCOR -v
+OpenCOR Version 0.5</pre>
 
         <div class="section">
             About
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -a
+        <pre>$ ./OpenCOR -a
+OpenCOR Version 0.5
+OS X El Capitan (10.11)
+Copyright 2011-2016
 
-<span class="nocode">OpenCOR Version 0.4.1 (64-bit)
-OS X 10.10 (Yosemite)
-Copyright 2011-2015
-
-OpenCOR is a cross-platform CellML-based modelling environment, which can be used to organise, edit, simulate and analyse CellML files.</span></pre>
+OpenCOR is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse CellML files.</pre>
 
         <div class="section">
             Plugins
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -p
-
-<span class="nocode">The following <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugin is available:
- - <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>: a plugin to access various CellML-related tools.</span></pre>
+        <pre>$ ./OpenCOR -p
+The following <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins are available:
+ - <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>: a plugin to edit CellML files using the CellML Text format.
+ - <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>: a plugin to access various CellML-related tools.</pre>
 
         <div class="section">
             Status
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -s
-
-<span class="nocode">The following plugins are available:
+        <pre>$ ./OpenCOR -s
+The following plugins are available:
  - CellMLAPI: the plugin is loaded and fully functional.
+ - CellMLEditingView: the plugin is loaded and fully functional.
  - CellMLSupport: the plugin is loaded and fully functional.
+ - <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>: the plugin is loaded and fully functional.
  - <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>: the plugin is loaded and fully functional.
  - Compiler: the plugin is loaded and fully functional.
  - Core: the plugin is loaded and fully functional.
- - CoreSolver: the plugin is loaded and fully functional.
- - LLVM: the plugin is loaded and fully functional.</span></pre>
+ - EditingView: the plugin is loaded and fully functional.
+ - EditorWidget: the plugin is loaded and fully functional.
+ - LLVM: the plugin is loaded and fully functional.
+ - MathMLViewerWidget: the plugin is loaded and fully functional.
+ - QScintilla: the plugin is loaded and fully functional.
+ - QScintillaSupport: the plugin is loaded and fully functional.
+ - Qwt: the plugin is loaded and fully functional.
+ - StandardSupport: the plugin is loaded and fully functional.</pre>
 
         <div class="section">
             Command
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -c help
-<span class="nocode">Commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
+        <pre>$ ./OpenCOR -c help
+Commands supported by <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>:
+ * Display the commands supported by <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>:
+      help
+ * Export a CellML Text &lt;file&gt; to CellML:
+      export &lt;file&gt;
+ * Import a CellML &lt;file&gt; to the CellML Text format:
+      import &lt;file&gt;
+
+Commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
  * Display the commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
       help
  * Export &lt;file&gt; to a &lt;predefined_format&gt; or a &lt;user_defined_format_file&gt;:
-      export &lt;file&gt; &lt;predefined_format&gt;|&lt;user_defined_format_file&gt;
+      export &lt;file&gt; &lt;predefined_format>|&lt;user_defined_format_file&gt;
    &lt;predefined_format&gt; can take one of the following values:
-      cellml_1_0: to export a CellML 1.1 file to CellML 1.0</span>
-$ ./OpenCOR -c CellMLTools::export <span class="nocode">in.cellml cellml_1_0 &gt; out.cellml</span>
-$ ./OpenCOR -c CellMLTools::export <span class="nocode">http://mydomain.com/in.cellml format.xml &gt; out.txt</span></pre>
+      cellml_1_0: to export a CellML 1.1 file to CellML 1.0</pre>
 
         <div class="section">
             Reset
         </div>
 
-        <pre class="prettyprint">$ ./OpenCOR -r
-
-<span class="nocode">All your settings have been reset.</span></pre>
+        <pre>$ ./OpenCOR -r
+All your settings have been reset.</pre>
 
         <script type="text/javascript">
             copyright("../..");

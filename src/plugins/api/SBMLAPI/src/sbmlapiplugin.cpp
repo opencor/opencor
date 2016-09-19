@@ -33,10 +33,10 @@ PLUGININFO_FUNC SBMLAPIPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> 5.13.0."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> 5.13.0."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
 
-    return new PluginInfo("API", false, false,
+    return new PluginInfo(PluginInfo::Api, false, false,
                           QStringList(),
                           descriptions);
 }

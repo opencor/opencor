@@ -50,7 +50,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to run single cell simulations."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
-    return new PluginInfo("Simulation", true, false,
+    return new PluginInfo(PluginInfo::Simulation, true, false,
                           QStringList() << "COMBINESupport"<< "GraphPanelWidget" << "Qwt" << "SEDMLSupport",
                           descriptions);
 }
@@ -61,6 +61,7 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(DataStoreInterfaces()),
     mCellmlEditingViewPlugins(Plugins()),
+    mCellmlSimulationViewPlugins(Plugins()),
     mSedmlFileTypes(FileTypes()),
     mCombineFileTypes(FileTypes())
 {
@@ -127,8 +128,7 @@ void SingleCellViewPlugin::fileReloaded(const QString &pFileName,
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
-    if (mViewWidget->contains(pFileName))
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -167,12 +167,12 @@ void SingleCellViewPlugin::retranslateUi()
 
 void SingleCellViewPlugin::initializePlugin()
 {
-    // Create our single view widget
+    // Create our single cell view widget
 
     mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
-    // Hide our single view widget since it may not initially be shown in our
-    // central widget
+    // Hide our single cell view widget since it may not initially be shown in
+    // our central widget
 
     mViewWidget->setVisible(false);
 }
@@ -206,16 +206,21 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (dataStoreInterface)
             mDataStoreInterfaces << dataStoreInterface;
 
-        // Look for a CellML capable editing view
+        // Look for a CellML capable editing or simulation view
 
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (viewInterface && (viewInterface->viewMode() == EditingMode)) {
+        if (   viewInterface
+            && (   (viewInterface->viewMode() == EditingMode)
+                || (viewInterface->viewMode() == SimulationMode))) {
             QStringList viewMimeTypes = viewInterface->viewMimeTypes(OpenMimeTypeMode);
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
-                mCellmlEditingViewPlugins << plugin;
+                if (viewInterface->viewMode() == EditingMode)
+                    mCellmlEditingViewPlugins << plugin;
+                else
+                    mCellmlSimulationViewPlugins << plugin;
             }
         }
 
@@ -296,20 +301,6 @@ QString SingleCellViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return CellMLSupport::CellmlFileExtension;
-}
-
-//==============================================================================
-
-bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given CellML file
-
-    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================
@@ -396,6 +387,15 @@ Plugins SingleCellViewPlugin::cellmlEditingViewPlugins() const
     // Return our CellML editing view plugins
 
     return mCellmlEditingViewPlugins;
+}
+
+//==============================================================================
+
+Plugins SingleCellViewPlugin::cellmlSimulationViewPlugins() const
+{
+    // Return our CellML simulation view plugins
+
+    return mCellmlSimulationViewPlugins;
 }
 
 //==============================================================================

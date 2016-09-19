@@ -46,7 +46,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to annotate CellML files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
 
-    return new PluginInfo("Editing", true, false,
+    return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "CellMLSupport" << "WebViewerWidget",
                           descriptions);
 }
@@ -72,11 +72,9 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 {
     Q_UNUSED(pNeedFeedback);
 
-    // Ask our CellML annotation view widget to save the given file
+    // Save the given file
 
-    CellmlAnnotationViewEditingWidget *editingWidget = mViewWidget->editingWidget(pOldFileName);
-
-    return editingWidget?editingWidget->cellmlFile()->save(pNewFileName):false;
+    return mViewWidget->saveFile(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -239,20 +237,6 @@ QString CellMLAnnotationViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return CellMLSupport::CellmlFileExtension;
-}
-
-//==============================================================================
-
-bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given CellML file
-
-    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================

@@ -49,7 +49,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
                                                                              SingleCellViewSimulationWidget *pSimulationWidget,
                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mPlugin(pPlugin),
     mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
@@ -236,8 +236,8 @@ void SingleCellViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                     GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SingleCellViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // Make sure that we have a property editor
 
@@ -270,18 +270,14 @@ void SingleCellViewInformationGraphsWidget::addGraph(GraphPanelWidget::GraphPane
                this, SLOT(graphChanged(Core::Property *)));
 
     propertyEditor->addListProperty(graphProperty);
-
-    Core::Property *xProperty = propertyEditor->addStringProperty(pGraph->parameterX()?
-                                                                      static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
-                                                                      Core::UnknownValue,
-                                                                  graphProperty);
-    Core::Property *yProperty = propertyEditor->addStringProperty(pGraph->parameterY()?
-                                                                      static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
-                                                                      Core::UnknownValue,
-                                                                  graphProperty);
-
-    xProperty->setEditable(true);
-    yProperty->setEditable(true);
+    propertyEditor->addStringProperty(pGraph->parameterX()?
+                                          static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
+                                          Core::UnknownValue,
+                                      graphProperty);
+    propertyEditor->addStringProperty(pGraph->parameterY()?
+                                          static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
+                                          Core::UnknownValue,
+                                      graphProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -520,8 +516,8 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     foreach (Core::Property *property, mGraphProperties) {
         bool graphSelected = property->isChecked();
 
-        canSelectAllGraphs   = canSelectAllGraphs   || !graphSelected;
-        canUnselectAllGraphs = canUnselectAllGraphs ||  graphSelected;
+        canSelectAllGraphs = canSelectAllGraphs || !graphSelected;
+        canUnselectAllGraphs = canUnselectAllGraphs || graphSelected;
     }
 
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);

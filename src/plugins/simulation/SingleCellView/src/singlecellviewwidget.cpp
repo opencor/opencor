@@ -205,15 +205,6 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
 
 //==============================================================================
 
-bool SingleCellViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mSimulationWidgets.contains(pFileName);
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
     // Stop tracking changes in our 'old' simulation widget's property editors'
@@ -381,10 +372,10 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
     mFileNames << pFileName;
 
-    // Make sure that GUI of our simulation widgets is up to date
+    // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -434,8 +425,8 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        foreach (SingleCellViewSimulationWidget *otherSimulationWidget, mSimulationWidgets.values())
-            otherSimulationWidget->updateGui();
+        foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+            simulationWidget->updateGui(true);
     }
 }
 
@@ -464,7 +455,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
     // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -475,10 +466,10 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
     mFileNames.removeOne(pFileName);
 
-    // Make sure that GUI of our simulation widgets is up to date
+    // Make sure that the GUI of our simulation widgets is up to date
 
     foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui();
+        simulationWidget->updateGui(true);
 }
 
 //==============================================================================
@@ -1324,7 +1315,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                 if (pFileType == SedmlFile) {
                     Core::FileManager::instance()->setDependencies(pFileName,
                                                                    QStringList() << pCellmlFile->fileName()
-                                                                                 << pCellmlFile->dependencies());
+                                                                                 << pCellmlFile->dependencies(true));
                 }
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
@@ -1343,7 +1334,7 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
             QString fileContents;
             QString errorMessage;
 
-            if (Core::readFileContentsFromUrl(modelSource, fileContents, &errorMessage)) {
+            if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {
                 // Save the contents of our model source to a local file and use
                 // that to create a CellML file object after having asked our
                 // file manager to manage it (so that CellML 1.1 files can be
@@ -1407,12 +1398,12 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
 
     pFileType = pCellmlFile?CellmlFile:pSedmlFile?SedmlFile:CombineArchive;
 
-    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
-    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
-
     // In the case of a COMBINE archive, we need to retrieve the corresponding
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
+
+    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
+    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
 
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);

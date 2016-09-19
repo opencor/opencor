@@ -262,10 +262,6 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                 property->setId(solverInterfaceProperty.id());
 
-                // Make the property editable
-
-                property->setEditable(true);
-
                 // Set the solver's property's 'unit', if needed
 
                 if (solverInterfaceProperty.hasVoiUnit()) {

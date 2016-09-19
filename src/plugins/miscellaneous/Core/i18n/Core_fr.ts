@@ -305,6 +305,62 @@
 <context>
     <name>QObject</name>
     <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
+    <message>
+        <source>Invalid</source>
+        <translation>Invalide</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation>Analyse</translation>
+    </message>
+    <message>
+        <source>API</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Data Store</source>
+        <translation>Magasin de Données</translation>
+    </message>
+    <message>
+        <source>Editing</source>
+        <translation>Édition</translation>
+    </message>
+    <message>
+        <source>Miscellaneous</source>
+        <translation>Divers</translation>
+    </message>
+    <message>
+        <source>Organisation</source>
+        <translation>Exemple</translation>
+    </message>
+    <message>
+        <source>Simulation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Solver</source>
+        <translation>Solveur</translation>
+    </message>
+    <message>
+        <source>Support</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Third-party</source>
+        <translation>Externe</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Outils</translation>
+    </message>
+    <message>
+        <source>Widget</source>
+        <translation>Gadget</translation>
+    </message>
+    <message>
         <source>No Internet connection available.</source>
         <translation>Aucune connexion Internet disponible.</translation>
     </message>

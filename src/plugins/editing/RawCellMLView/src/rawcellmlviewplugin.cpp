@@ -20,7 +20,6 @@ limitations under the License.
 // Raw CellML view plugin
 //==============================================================================
 
-#include "cellmleditingviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
@@ -48,13 +47,13 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
 
-    return new PluginInfo("Editing", true, false,
+    return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "CellMLEditingView",
                           descriptions);
 }
 
 //==============================================================================
-// CellML editing interface
+// CellML editing view interface
 //==============================================================================
 
 void RawCellMLViewPlugin::reformat(const QString &pFileName) const
@@ -304,20 +303,6 @@ QString RawCellMLViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support
 
     return CellMLSupport::CellmlFileExtension;
-}
-
-//==============================================================================
-
-bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return false;
-
-    // Return whether we have a view widget for the given CellML file
-
-    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================

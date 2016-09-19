@@ -101,14 +101,14 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     static const QIcon DownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
     mButton = new QToolButton(subWidget);
-    mTitle  = new CollapsibleHeaderTitleWidget(subWidget);
+    mTitle = new CollapsibleHeaderTitleWidget(subWidget);
 
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
     mButton->setStyleSheet("QToolButton {"
-                           "    border: 0px;"
+                           "    border: none;"
                            "}"
                            ""
                            "QToolButton:pressed {"
@@ -127,7 +127,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     // Note: we keep track of our top and bottom separators since we may need
     //       to hide them in some cases/circumstances...
 
-    mTopSeparator    = newLineWidget(pSeparatorColor, this);
+    mTopSeparator = newLineWidget(pSeparatorColor, this);
     mBottomSeparator = newLineWidget(pSeparatorColor, this);
 
     layout->addWidget(mTopSeparator);

@@ -73,9 +73,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     ObjRef<iface::rdf_api::Resource> predicate = pRdfTriple->predicate();
     ObjRef<iface::rdf_api::Node> object = pRdfTriple->object();
 
-    mSubject   = new CellmlFileRdfTripleElement(subject);
+    mSubject = new CellmlFileRdfTripleElement(subject);
     mPredicate = new CellmlFileRdfTripleElement(predicate);
-    mObject    = new CellmlFileRdfTripleElement(object);
+    mObject = new CellmlFileRdfTripleElement(object);
 
     // Determine the type of the RDF triple
 
@@ -147,7 +147,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
             mType = Unknown;
 
             mModelQualifier = ModelUnknown;
-            mBioQualifier   = BioUnknown;
+            mBioQualifier = BioUnknown;
         }
     }
 }
@@ -169,9 +169,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     static const QRegularExpression ModelRegEx = QRegularExpression("^model:");
 
-    mSubject   = new CellmlFileRdfTripleElement(pSubject);
+    mSubject = new CellmlFileRdfTripleElement(pSubject);
     mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(ModelRegEx)));
-    mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
+    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
 //==============================================================================
@@ -191,9 +191,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     static const QRegularExpression BioRegEx = QRegularExpression("^bio:");
 
-    mSubject   = new CellmlFileRdfTripleElement(pSubject);
+    mSubject = new CellmlFileRdfTripleElement(pSubject);
     mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(BioRegEx)));
-    mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
+    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
 //==============================================================================
@@ -533,7 +533,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         QStringList miriamUrnList = pTerm.split(":");
 
         pResource = Core::stringFromPercentEncoding(miriamUrnList[2]);
-        pId       = Core::stringFromPercentEncoding(miriamUrnList[3]);
+        pId = Core::stringFromPercentEncoding(miriamUrnList[3]);
 
         return true;
     } else if (IdentifierDotOrgRegEx.match(pTerm).hasMatch()) {
@@ -546,14 +546,14 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
 
         pResource = Core::stringFromPercentEncoding(identifiersDotOrgUriList[0]);
-        pId       = Core::stringFromPercentEncoding(identifiersDotOrgUriList[1]);
+        pId = Core::stringFromPercentEncoding(identifiersDotOrgUriList[1]);
 
         return true;
     } else {
         // Not a term we can recognise
 
         pResource = "???";
-        pId       = "???";
+        pId = "???";
 
         return false;
     }

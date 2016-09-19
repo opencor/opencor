@@ -262,7 +262,7 @@ int main(int pArgC, char *pArgV[])
     // Note: indeed, on Linux, to show our splash screen may result in our main
     //       window being shown in the background...
 
-    if (!win->shuttingDown())
+    if (!OpenCOR::aboutToQuit())
         win->showSelf();
     else
         canExecuteAplication = false;
@@ -281,7 +281,7 @@ int main(int pArgC, char *pArgV[])
     // to restart OpenCOR)
 
     QString appFilePath = guiApp->applicationFilePath();
-    QString appDirPath  = guiApp->applicationDirPath();
+    QString appDirPath = guiApp->applicationDirPath();
 
     // Delete our main window
 

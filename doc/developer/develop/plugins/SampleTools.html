@@ -51,7 +51,7 @@
         </div>
 
         <p>
-            Our plugin is part of the <code>Sample</code> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/"><code>[OpenCOR]/src/plugins/sample/SampleTools/</code></a>.
+            Our plugin is part of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/">Sample</a> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/"><code>[OpenCOR]/src/plugins/sample/SampleTools/</code></a>.
         </p>
 
         <div class="section">
@@ -63,7 +63,7 @@
         </p>
 
         <p>
-            More specifically, we want our plugin to work from the command line, so we need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl">CLI</a> interface. We also want our plugin to work through OpenCOR's <code>Tools</code> menu, which involves creating a menu item and making it available to OpenCOR so that it can add it for us to its <code>Tools</code> menu. To do these, we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces. While we are at it, we might as well internationalise our plugin, in which case it means that we also need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface.
+            More specifically, we want our plugin to work from the command line, so we need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl">CLI</a> interface. We also want our plugin to work through OpenCOR's <code>Tools</code> menu, which involves creating a menu item and making it available to OpenCOR so that it can add it for us to its <code>Tools</code> menu. To do these, we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interfaces. While we are at it, we might as well internationalise our plugin, in which case it means that we also need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface.
         </p>
 
         <div class="section">
@@ -95,7 +95,7 @@ ADD_PLUGIN(SampleTools
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16).
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16).
         </p>
 
         <div class="section">
@@ -172,13 +172,13 @@ private slots:
     descriptions.insert("en", QString::fromUtf8("a plugin that provides an addition tool."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un outil d'addition."));
 
-    return new PluginInfo("Sample", true, true,
+    return new PluginInfo(PluginInfo::Sample, true, true,
                           QStringList() << "Core" << "Sample",
                           descriptions);
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user and it offers direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 51). It also has a direct dependency on the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 52).
+            As can be seen, our plugin is selectable by the user and it offers direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 51). It also has a direct dependency on the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugins (line 52).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -267,11 +267,11 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
 //==============================================================================</pre>
 
         <p>
-            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 88-94). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 98-103). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 107-113). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
+            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 88-94). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 98-103). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 107-113). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface (see below).
         </p>
 
         <p>
-            After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface:
+            After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface:
         </p>
 
         <pre class="prettyprint linenums:115">//==============================================================================
@@ -292,7 +292,7 @@ void SampleToolsPlugin::retranslateUi()
         </p>
 
         <p>
-            Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
+            Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface:
         </p>
 
         <pre class="prettyprint linenums:126">//==============================================================================

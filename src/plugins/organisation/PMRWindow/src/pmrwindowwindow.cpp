@@ -149,6 +149,19 @@ void PmrWindowWindow::retranslateUi()
 
 //==============================================================================
 
+void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::OrganisationWidget::resizeEvent(pEvent);
+
+    // Resize our busy widget
+
+    mPmrWidget->resizeBusyWidget();
+}
+
+//==============================================================================
+
 void PmrWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
@@ -158,7 +171,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        showBusyWidget(mPmrWidget);
+        mPmrWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
@@ -166,7 +179,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
         // to mGui->filterValue, but only if the current window already has the
         // focus
 
-        hideBusyWidget();
+        mPmrWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 

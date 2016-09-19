@@ -72,6 +72,8 @@ public:
     ~PmrWindowWindow();
 
     virtual void retranslateUi();
+protected:
+    virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     Ui::PmrWindowWindow *mGui;

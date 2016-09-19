@@ -156,9 +156,10 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 mStatus = NotNeeded;
         }
     } else {
-       // What we thought was a plugin is not actually a plugin...
+       // What we thought was a plugin is not actually a plugin, so consider it
+        // as invalid...
 
-       mStatus = NotPlugin;
+       mStatus = Invalid;
     }
 }
 

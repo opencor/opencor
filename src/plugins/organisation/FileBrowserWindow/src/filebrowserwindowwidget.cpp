@@ -126,7 +126,7 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
         // The initial path doesn't exist, so just revert to the home path
 
         mInitPathDir = QDir::homePath();
-        mInitPath    = "";
+        mInitPath = "";
     } else {
         // The initial path exists, so retrieve some information about the
         // folder and/or file (depending on whether the initial path refers to a
@@ -142,12 +142,12 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
             // We are dealing with a folder
 
             mInitPathDir = initPathFileInfo.canonicalFilePath();
-            mInitPath    = "";
+            mInitPath = "";
         } else {
             // We are dealing with a file
 
             mInitPathDir = initPathFileInfo.canonicalPath();
-            mInitPath    = initPathFileInfo.canonicalFilePath();
+            mInitPath = initPathFileInfo.canonicalFilePath();
         }
     }
 
@@ -190,6 +190,12 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 
     if (!isExpanded(currentIndex()))
         setExpanded(currentIndex(), true);
+
+    // Make sure that the current path is visible
+    // Note: indeed, to process pending events only in directoryLoaded() is not
+    //       good enough (anymore?!) on OS X...
+
+    QCoreApplication::processEvents();
 
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -524,7 +530,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         && (   ( mInitPath.isEmpty() && mInitPathDir.contains(pPath))
             || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
         // mModel is still loading the initial path, so we try to expand it and
-        // scroll to it, but first we process any pending event (indeed, though
+        // scroll to it, but first we process pending events (indeed, though
         // Windows doesn't need this, Linux and OS X definitely do and it can't
         // harm having it for all three environments)
 

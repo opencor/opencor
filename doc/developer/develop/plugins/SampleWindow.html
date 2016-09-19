@@ -54,7 +54,7 @@
         </div>
 
         <p>
-            Our plugin is part of the <code>Sample</code> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/"><code>[OpenCOR]/src/plugins/sample/SampleWindow/</code></a>.
+            Our plugin is part of the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/">Sample</a> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/"><code>[OpenCOR]/src/plugins/sample/SampleWindow/</code></a>.
         </p>
 
         <div class="section">
@@ -66,7 +66,7 @@
         </p>
 
         <p>
-            More specifically, we want our plugin to be a dockable window, so we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">window</a> interfaces. While we are at it, we might as well internationalise our plugin, in which case it means that we also need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface.
+            More specifically, we want our plugin to be a dockable window, so we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">Window</a> interfaces. While we are at it, we might as well internationalise our plugin, in which case it means that we also need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface.
         </p>
 
         <div class="section">
@@ -101,7 +101,7 @@ ADD_PLUGIN(SampleWindow
 )</pre>
 
         <p>
-            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20 and 21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15).
+            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="Sample.html"><a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20 and 21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15).
         </p>
 
         <div class="section">
@@ -180,7 +180,7 @@ private:
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 45). It also has a direct dependency on both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (line 46).
+            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 45). It also has a direct dependency on both the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugins (line 46).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -194,7 +194,7 @@ private:
         </p>
 
         <p>
-            We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface:
+            We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface:
         </p>
 
         <pre class="prettyprint linenums:50">//==============================================================================
@@ -213,11 +213,11 @@ void SampleWindowPlugin::retranslateUi()
 //==============================================================================</pre>
 
         <p>
-            All that we need to do here is to (re)translate <code>mSampleWindowAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleWindow/i18n/SampleWindow_fr.ts"><code>SampleWindow_fr.ts</code></a> (together with some other translations needed in the <a href="#Plugin specific">next section</a>). Note that <code>mSampleWindowAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
+            All that we need to do here is to (re)translate <code>mSampleWindowAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleWindow/i18n/SampleWindow_fr.ts"><code>SampleWindow_fr.ts</code></a> (together with some other translations needed in the <a href="#Plugin specific">next section</a>). Note that <code>mSampleWindowAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface (see below).
         </p>
 
         <p>
-            Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
+            Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface:
         </p>
 
         <pre class="prettyprint linenums:63">//==============================================================================
@@ -285,7 +285,7 @@ void SampleWindowPlugin::handleUrl(const QUrl &pUrl)
         </p>
 
         <p>
-            Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">window</a> interface:
+            Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">Window</a> interface:
         </p>
 
         <pre class="prettyprint linenums:121">//==============================================================================
@@ -369,7 +369,7 @@ private slots:
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
+            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
         </p>
 
         <p>
@@ -435,7 +435,7 @@ void SampleWindowWindow::updateSum()
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleWindowWindow()</code> (lines 37-56) initialises the <code>SampleWindowWindow</code> object, as well as creates a couple of connections (lines 48-51) and initialises our sum by calling <code>updateSum()</code> (line 55). As can be seen, <code>updateSum()</code> calls the <code>add()</code> method from the <a href="Sample.html"><strong>Sample</strong></a> plugin (lines 69-74).
+            <code>SampleWindowWindow()</code> (lines 37-56) initialises the <code>SampleWindowWindow</code> object, as well as creates a couple of connections (lines 48-51) and initialises our sum by calling <code>updateSum()</code> (line 55). As can be seen, <code>updateSum()</code> calls the <code>add()</code> method from the <a href="Sample.html">Sample</a> plugin (lines 69-74).
         </p>
 
         <script type="text/javascript">

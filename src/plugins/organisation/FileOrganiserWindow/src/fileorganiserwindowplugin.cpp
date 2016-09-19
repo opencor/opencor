@@ -44,10 +44,10 @@ PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to virtually organise your files."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour organiser virtuellement vos fichiers."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to virtually organise files."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour organiser virtuellement des fichiers."));
 
-    return new PluginInfo("Organisation", true, false,
+    return new PluginInfo(PluginInfo::Organisation, true, false,
                           QStringList() << "Core",
                           descriptions);
 }

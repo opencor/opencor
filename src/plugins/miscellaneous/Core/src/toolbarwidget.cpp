@@ -36,7 +36,7 @@ ToolBarWidget::ToolBarWidget(QWidget *pParent) :
     // it doesn't look great when on a docked window)
 
     setStyleSheet("QToolBar {"
-                  "    border: 0px;"
+                  "    border: none;"
                   "}");
 
     // Force the size of the icons to be 20 by 20 pixels

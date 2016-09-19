@@ -65,7 +65,7 @@ void CheckForUpdatesEngine::check()
 
     mNewerVersions.clear();
 
-    if (OpenCOR::readFileContentsFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
+    if (readFileContentsFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
         QJsonParseError jsonParseError;
         QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
@@ -85,9 +85,9 @@ void CheckForUpdatesEngine::check()
                 versionMinor = versionMap["minor"].toInt();
                 versionPatch = versionMap["patch"].toInt();
 
-                versionDay   = versionMap["day"].toInt();
+                versionDay = versionMap["day"].toInt();
                 versionMonth = versionMap["month"].toInt();
-                versionYear  = versionMap["year"].toInt();
+                versionYear = versionMap["year"].toInt();
 
                 versionDate = QString("%1-%2-%3").arg(versionYear)
                                                  .arg(versionMonth, 2, 10, QChar('0'))

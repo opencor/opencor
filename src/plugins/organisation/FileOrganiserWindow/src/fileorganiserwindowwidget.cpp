@@ -112,10 +112,10 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
     itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
 
     if (!itemInfo.isEmpty()) {
-        QString textOrPath  = itemInfo[0];
+        QString textOrPath = itemInfo[0];
         int parentItemIndex = itemInfo[1].toInt();
         int childItemsCount = itemInfo[2].toInt();
-        bool expanded       = itemInfo[3].toInt();
+        bool expanded = itemInfo[3].toInt();
 
         // Create the item, in case we are not dealing with the root folder item
 
@@ -503,9 +503,9 @@ bool FileOrganiserWindowWidget::viewportEvent(QEvent *pEvent)
         QStandardItem *crtItem = mModel->itemFromIndex(indexAt(helpEvent->pos()));
 
         if (crtItem) {
-            setToolTip(Core::nativeCanonicalDirName(crtItem->data(Item::Folder).toBool()?
-                                                         QString():
-                                                         crtItem->data(Item::Path).toString()));
+            setToolTip(crtItem->data(Item::Folder).toBool()?
+                           QString():
+                           Core::nativeCanonicalDirName(crtItem->data(Item::Path).toString()));
         }
     }
 

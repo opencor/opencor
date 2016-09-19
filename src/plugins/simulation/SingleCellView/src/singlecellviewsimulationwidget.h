@@ -137,7 +137,7 @@ public:
 
     SingleCellViewSimulation *simulation() const;
 
-    void updateGui();
+    void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
                                  const qulonglong &pSimulationResultsSize,
                                  const bool &pClearGraphs);
@@ -159,7 +159,7 @@ private:
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
-    QMap<QAction *, Plugin *> mCellmlEditingViewPlugins;
+    QMap<QAction *, Plugin *> mCellmlBasedViewPlugins;
 
     SingleCellViewSimulation *mSimulation;
 
@@ -177,18 +177,18 @@ private:
 
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
+    QAction *mResetModelParametersAction;
+    QAction *mClearSimulationDataAction;
     QAction *mDevelopmentModeAction;
     QAction *mAddGraphPanelAction;
     QAction *mRemoveGraphPanelAction;
     QAction *mRemoveCurrentGraphPanelAction;
     QAction *mRemoveAllGraphPanelsAction;
-    QAction *mResetModelParametersAction;
-    QAction *mClearSimulationDataAction;
-    QAction *mSimulationDataExportAction;
+    QAction *mCellmlOpenAction;
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
-    QAction *mCellmlOpenAction;
+    QAction *mSimulationDataExportAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
