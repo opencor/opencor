@@ -297,7 +297,7 @@ function versions(downloads) {
 
         if ((versionType === 2) && downloads) {
             document.write("<div class=\"latest latestInfo\">\n");
-            document.write("    <strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable.\n");
+            document.write("    <strong>Note:</strong> this is effectively our release candidate for version 0.5 of OpenCOR. So, please give it a very serious try and <a href=\"https://github.com/opencor/opencor/issues/new?milestone=0.5\">report to us</a> any last-minute issue that you might have with it.\n");
             document.write("</div>\n");
         }
     }

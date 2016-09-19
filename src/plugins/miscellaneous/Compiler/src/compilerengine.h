@@ -50,7 +50,6 @@ class COMPILER_EXPORT CompilerEngine : public QObject
 
 public:
     explicit CompilerEngine();
-    ~CompilerEngine();
 
     bool hasError() const;
     QString error() const;
@@ -63,8 +62,6 @@ private:
     std::unique_ptr<llvm::ExecutionEngine> mExecutionEngine;
 
     QString mError;
-
-    void reset(const bool &pResetError = true);
 };
 
 //==============================================================================

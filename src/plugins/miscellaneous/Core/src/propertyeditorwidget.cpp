@@ -375,10 +375,9 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 {
     // Ignore events resulting from a key being pressed
 
-    if (pEvent->type() == QEvent::KeyPress)
-        return false;
-    else
-        return QStyledItemDelegate::eventFilter(pObject, pEvent);
+    return (pEvent->type() == QEvent::KeyPress)?
+               false:
+               QStyledItemDelegate::eventFilter(pObject, pEvent);
 }
 
 //==============================================================================
@@ -391,7 +390,7 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -428,9 +427,6 @@ PropertyItem::PropertyItem(Property *pOwner) :
     QStandardItem(),
     mOwner(pOwner)
 {
-    // By default, the property item is not editable
-
-    setEditable(false);
 }
 
 //==============================================================================
@@ -448,10 +444,9 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mOwner(pParent),
     mType(pType),
     mId(QString()),
-    mHasUnit(pParent->showUnits()),
     mName(new PropertyItem(this)),
-    mValue(new PropertyItem(this)),
-    mUnit(mHasUnit?new PropertyItem(this):0),
+    mValue((pType != Section)?new PropertyItem(this):0),
+    mUnit(pParent->showUnits()?new PropertyItem(this):0),
     mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
@@ -460,6 +455,13 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
+
+    // Make sure that our name and unit can't be edited
+
+    mName->setEditable(false);
+
+    if (mUnit)
+        mUnit->setEditable(false);
 }
 
 //==============================================================================
@@ -546,9 +548,12 @@ QList<QStandardItem *> Property::items() const
 {
     // Return our items as a list
 
-    QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
+    QList<QStandardItem *> res = QList<QStandardItem *>() << mName;
 
-    if (mHasUnit)
+    if (mValue)
+        res << mValue;
+
+    if (mUnit)
         res << mUnit;
 
     return res;
@@ -558,11 +563,14 @@ QList<QStandardItem *> Property::items() const
 
 bool Property::hasIndex(const QModelIndex &pIndex) const
 {
-    // Return whether the given is that our name, value or unit item
+    // Return whether the given index is that of our name, value or unit item
 
-    bool res = (mName->index() == pIndex) || (mValue->index() == pIndex);
+    bool res = mName->index() == pIndex;
 
-    if (mHasUnit)
+    if (mValue)
+        res = res || (mValue->index() == pIndex);
+
+    if (mUnit)
         res = res || (mUnit->index() == pIndex);
 
     return res;
@@ -635,18 +643,19 @@ void Property::setChecked(const bool &pChecked)
 
 bool Property::isEditable() const
 {
-    // Return whether our value item is editable
+    // Return whether our value item, if any, is editable
 
-    return mValue->isEditable();
+    return mUnit?mValue->isEditable():false;
 }
 
 //==============================================================================
 
 void Property::setEditable(const bool &pEditable)
 {
-    // Make our value item (non-)editable
+    // Make our value item, if any, (non-)editable
 
-    mValue->setEditable(pEditable);
+    if (mValue)
+        mValue->setEditable(pEditable);
 }
 
 //==============================================================================
@@ -696,10 +705,7 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    if (mType == Integer)
-        return mValue->text().toInt();
-    else
-        return 0;
+    return (mType == Integer)?mValue->text().toInt():0;
 }
 
 //==============================================================================
@@ -718,10 +724,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    if (mType == Double)
-        return mValue->text().toDouble();
-    else
-        return 0.0;
+    return (mType == Double)?mValue->text().toDouble():0.0;
 }
 
 //==============================================================================
@@ -742,9 +745,9 @@ void Property::setDoubleValue(const double &pDoubleValue,
 
 QString Property::value() const
 {
-    // Return our value
+    // Return our value, if any
 
-    return mValue->text();
+    return mValue?mValue->text():QString();
 }
 
 //==============================================================================
@@ -752,9 +755,9 @@ QString Property::value() const
 void Property::setValue(const QString &pValue, const bool &pForce,
                         const bool &pEmitSignal)
 {
-    // Set our value
+    // Set our value, if any
 
-    if (pValue.compare(mValue->text()) || pForce) {
+    if (mValue && (pValue.compare(mValue->text()) || pForce)) {
         QString oldValue = mValue->text();
 
         mValue->setText(pValue);
@@ -854,9 +857,9 @@ void Property::setListValues(const QStringList &pListValues,
 
 QString Property::listValue() const
 {
-    // Return our list value
+    // Return our list value, if any
 
-    return mValue->text();
+    return mValue?mValue->text():QString();
 }
 
 //==============================================================================
@@ -905,10 +908,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    if (mType == Boolean)
-        return !mValue->text().compare(TrueValue);
-    else
-        return false;
+    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
 }
 
 //==============================================================================
@@ -927,7 +927,7 @@ QString Property::unit() const
 {
     // Return our unit
 
-    return mHasUnit?mUnit->text():QString();
+    return mUnit?mUnit->text():QString();
 }
 
 //==============================================================================
@@ -936,7 +936,7 @@ void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
-    if (mHasUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
+    if (mUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
         if (pUpdateToolTip)
@@ -999,18 +999,19 @@ void Property::setVisible(const bool &pVisible)
 
 void Property::select() const
 {
-    // Have our owner select us (i.e. our value)
+    // Have our owner select our value, if any
 
-    mOwner->setCurrentIndex(mValue->index());
+    if (mValue)
+        mOwner->setCurrentIndex(mValue->index());
 }
 
 //==============================================================================
 
 void Property::edit() const
 {
-    // Have our owner edit our value
+    // Have our owner edit our value, if any
 
-    if (mValue->isEditable())
+    if (mValue && mValue->isEditable())
         mOwner->edit(mValue->index());
 }
 
@@ -1025,12 +1026,14 @@ void Property::updateToolTip()
     if (mType != Section) {
         toolTip += QObject::tr(": ");
 
-        if (mValue->text().isEmpty())
-            toolTip += UnknownValue;
-        else
-            toolTip += mValue->text();
+        if (mValue) {
+            if (mValue->text().isEmpty())
+                toolTip += UnknownValue;
+            else
+                toolTip += mValue->text();
+        }
 
-        if (mHasUnit && !mUnit->text().isEmpty())
+        if (mUnit && !mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
     }
 
@@ -1039,12 +1042,11 @@ void Property::updateToolTip()
 
     mName->setToolTip(toolTip);
 
-    if (mType != Section) {
+    if (mValue)
         mValue->setToolTip(toolTip);
 
-        if (mHasUnit)
-            mUnit->setToolTip(toolTip);
-    }
+    if (mUnit)
+        mUnit->setToolTip(toolTip);
 }
 
 //==============================================================================
@@ -1177,7 +1179,7 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 
     if (    currentProperty
         && (currentProperty->type() == Property::List)
-        && currentProperty->listValues().isEmpty()) {
+        &&  currentProperty->listValues().isEmpty()) {
         currentProperty->setValue(currentProperty->emptyListValue());
     }
 
@@ -1425,7 +1427,6 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 
     Property *res = addProperty(Property::List, pParent);
 
-    res->setEditable(true);
     res->setListValues(pValues, pValue);
 
     return res;
@@ -1456,11 +1457,9 @@ Property * PropertyEditorWidget::addBooleanProperty(const bool &pValue,
                                                     Property *pParent)
 {
     // Add a boolean property and return its information
-    // Note: a boolean property is necessarily editable...
 
     Property *res = addProperty(Property::Boolean, pParent);
 
-    res->setEditable(true);
     res->setBooleanValue(pValue);
 
     return res;
@@ -1801,9 +1800,9 @@ void PropertyEditorWidget::editorClosed()
 
 void PropertyEditorWidget::selectProperty(Property *pProperty)
 {
-    // Select the property, if one is provided
+    // Select the property, if one is provided and is not of section type
 
-    if (!pProperty)
+    if (!pProperty || (pProperty->type() == Property::Section))
         return;
 
     pProperty->select();
@@ -1988,9 +1987,10 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     // Return our information about the property at the given index
 
-    foreach (Property *property, mProperties)
+    foreach (Property *property, mProperties) {
         if (property->hasIndex(pIndex))
             return property;
+    }
 
     return 0;
 }

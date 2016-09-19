@@ -80,6 +80,50 @@ QString version()
 
 //==============================================================================
 
+QString pluginCategoryName(const PluginInfo::Category &pCategory)
+{
+    // Return the name of the given category
+
+    switch (pCategory) {
+#ifdef ENABLE_SAMPLES
+    case PluginInfo::Sample:
+        return QObject::tr("Sample");
+#endif
+    case PluginInfo::Invalid:
+        return QObject::tr("Invalid");
+    case PluginInfo::Analysis:
+        return QObject::tr("Analysis");
+    case PluginInfo::Api:
+        return QObject::tr("API");
+    case PluginInfo::DataStore:
+        return QObject::tr("Data Store");
+    case PluginInfo::Editing:
+        return QObject::tr("Editing");
+    case PluginInfo::Miscellaneous:
+        return QObject::tr("Miscellaneous");
+    case PluginInfo::Organisation:
+        return QObject::tr("Organisation");
+    case PluginInfo::Simulation:
+        return QObject::tr("Simulation");
+    case PluginInfo::Solver:
+        return QObject::tr("Solver");
+    case PluginInfo::Support:
+        return QObject::tr("Support");
+    case PluginInfo::ThirdParty:
+        return QObject::tr("Third-party");
+    case PluginInfo::Tools:
+        return QObject::tr("Tools");
+    case PluginInfo::Widget:
+        return QObject::tr("Widget");
+    }
+
+    return "???";
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
+}
+
+//==============================================================================
+
 QString nativeCanonicalDirName(const QString &pDirName)
 {
     // Return a native and canonical version of the given directory name or a

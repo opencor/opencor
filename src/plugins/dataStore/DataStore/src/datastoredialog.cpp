@@ -48,7 +48,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
     QStandardItem *dataItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -128,7 +128,6 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
                     if (!hierarchyItem) {
                         hierarchyItem = new QStandardItem(hierarchyPart);
 
-                        hierarchyItem->setAutoTristate(true);
                         hierarchyItem->setCheckable(true);
                         hierarchyItem->setEditable(false);
 
