@@ -90,7 +90,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mModel->invisibleRootItem()->appendRow(mGeneralItem);
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
+    foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
         if (preferencesInterface) {
