@@ -91,14 +91,14 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
-    // Make sure that all the widgets in our details layout can be resized if
+    // Make sure that all the widgets in our vertical layout can be resized if
     // necessary and if possible
     // Note: indeed, it's not the case on OS X since the field growth policy is
     //       set to FieldsStayAtSizeHint on that platform and also on Windows
     //       and Linux to make sure that, if anything, we get the same behaviour
     //       on all the platforms we support...
 
-    mGui->detailsLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+    mGui->verticalLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
 
     // Update the note label
 
@@ -123,7 +123,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     static const QIcon LoadedIcon    = QIcon(":/oxygen/actions/dialog-ok-apply.png");
     static const QIcon NotLoadedIcon = QIcon(":/oxygen/actions/edit-delete.png");
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
+    foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,

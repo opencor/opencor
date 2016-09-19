@@ -1,11 +1,5 @@
 PROJECT(libgit2Plugin)
 
-# Make sure that OpenSSL is available on Linux and OS X
-
-IF(NOT WIN32)
-    FIND_PACKAGE(OpenSSL REQUIRED QUIET)
-ENDIF()
-
 # Determine to which external binaries we need access
 
 IF(WIN32)
