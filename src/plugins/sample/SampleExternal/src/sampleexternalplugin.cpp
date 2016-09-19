@@ -36,7 +36,7 @@ PLUGININFO_FUNC SampleExternalPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to demonstrate third-party library packaging."));
     descriptions.insert("fr", QString::fromUtf8("une extension..."));
 
-    return new PluginInfo("Sample", false, false,
+    return new PluginInfo(PluginInfo::Sample, false, false,
                           QStringList(),
                           descriptions);
 }

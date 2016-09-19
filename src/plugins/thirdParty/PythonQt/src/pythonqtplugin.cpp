@@ -45,7 +45,7 @@ PLUGININFO_FUNC PythonQtPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to allow the use of Qt with Python."));
     descriptions.insert("fr", QString::fromUtf8("une extension ..."));
 
-    return new PluginInfo("Third-party", false, true,
+    return new PluginInfo(PluginInfo::ThirdParty, false, true,
                           QStringList() << "Python",
                           descriptions);
 }
