@@ -71,6 +71,14 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
+    // Create our general preferences and empty widgets
+
+    mGeneralPreferencesWidget = new GeneralPreferencesWidget(this);
+    mEmptyWidget = new QWidget(this);
+
+    mGui->stackedWidget->addWidget(mGeneralPreferencesWidget);
+    mGui->stackedWidget->addWidget(mEmptyWidget);
+
     // Set up the tree view widget
 
     mModel = new QStandardItemModel(mGui->treeView);
@@ -222,11 +230,11 @@ Q_UNUSED(pOldIndex);
     // Switch to the widget corresponding to the selected item
 
     if (pNewIndex == mGeneralItem->index())
-        mGui->stackedWidget->setCurrentWidget(mGui->generalPage);
-    else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
-        mGui->stackedWidget->setCurrentWidget(mGui->sectionPage);
+        mGui->stackedWidget->setCurrentWidget(mGeneralPreferencesWidget);
+//    else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
+//        mGui->stackedWidget->setCurrentWidget(mGui->sectionPage);
     else
-        mGui->stackedWidget->setCurrentWidget(0);
+        mGui->stackedWidget->setCurrentWidget(mEmptyWidget);
 }
 
 //==============================================================================

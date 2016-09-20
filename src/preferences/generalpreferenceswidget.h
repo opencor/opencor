@@ -17,30 +17,19 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences dialog
+// General preferences widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "generalpreferenceswidget.h"
-#include "plugininfo.h"
-
-//==============================================================================
-
-#include <QDialog>
-#include <QStyledItemDelegate>
-
-//==============================================================================
-
-class QStandardItem;
-class QStandardItemModel;
+#include <QWidget>
 
 //==============================================================================
 
 namespace Ui {
-    class PreferencesDialog;
+    class GeneralPreferencesWidget;
 }
 
 //==============================================================================
@@ -49,48 +38,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class PluginManager;
-
-//==============================================================================
-
-class PreferencesItemDelegate : public QStyledItemDelegate
-{
-public:
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
-};
-
-//==============================================================================
-
-class PreferencesDialog : public QDialog
+class GeneralPreferencesWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
-    ~PreferencesDialog();
+    explicit GeneralPreferencesWidget(QWidget *pParent);
+    ~GeneralPreferencesWidget();
 
 private:
-    Ui::PreferencesDialog *mGui;
-
-    PluginManager *mPluginManager;
-
-    QStandardItemModel *mModel;
-
-    QStandardItem *mGeneralItem;
-    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
-
-    GeneralPreferencesWidget *mGeneralPreferencesWidget;
-    QWidget *mEmptyWidget;
-
-    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
-
-private slots:
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-
-    void updatePreferencesWidget(const QModelIndex &pNewIndex,
-                                 const QModelIndex &pOldIndex);
+    Ui::GeneralPreferencesWidget *mGui;
 };
 
 //==============================================================================

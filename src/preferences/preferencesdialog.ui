@@ -33,13 +33,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QStackedWidget" name="stackedWidget">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="generalPage"/>
-       <widget class="QWidget" name="sectionPage"/>
-      </widget>
+      <widget class="QStackedWidget" name="stackedWidget"/>
      </item>
     </layout>
    </item>

@@ -17,31 +17,14 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences dialog
-//==============================================================================
-
-#pragma once
-
+// General preferences widget
 //==============================================================================
 
 #include "generalpreferenceswidget.h"
-#include "plugininfo.h"
 
 //==============================================================================
 
-#include <QDialog>
-#include <QStyledItemDelegate>
-
-//==============================================================================
-
-class QStandardItem;
-class QStandardItemModel;
-
-//==============================================================================
-
-namespace Ui {
-    class PreferencesDialog;
-}
+#include "ui_generalpreferenceswidget.h"
 
 //==============================================================================
 
@@ -49,49 +32,23 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class PluginManager;
+GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
+    QWidget(pParent),
+    mGui(new Ui::GeneralPreferencesWidget)
+{
+    // Set up the GUI
+
+    mGui->setupUi(this);
+}
 
 //==============================================================================
 
-class PreferencesItemDelegate : public QStyledItemDelegate
+GeneralPreferencesWidget::~GeneralPreferencesWidget()
 {
-public:
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
-};
+    // Delete the GUI
 
-//==============================================================================
-
-class PreferencesDialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
-    ~PreferencesDialog();
-
-private:
-    Ui::PreferencesDialog *mGui;
-
-    PluginManager *mPluginManager;
-
-    QStandardItemModel *mModel;
-
-    QStandardItem *mGeneralItem;
-    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
-
-    GeneralPreferencesWidget *mGeneralPreferencesWidget;
-    QWidget *mEmptyWidget;
-
-    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
-
-private slots:
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-
-    void updatePreferencesWidget(const QModelIndex &pNewIndex,
-                                 const QModelIndex &pOldIndex);
-};
+    delete mGui;
+}
 
 //==============================================================================
 

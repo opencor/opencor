@@ -92,6 +92,7 @@ SET(SOURCES
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
 
+    src/preferences/generalpreferenceswidget.cpp
     src/preferences/preferencesdialog.cpp
 )
 
@@ -107,6 +108,7 @@ SET(HEADERS_MOC
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
 
+    src/preferences/generalpreferenceswidget.h
     src/preferences/preferencesdialog.h
 )
 
@@ -116,6 +118,7 @@ SET(UIS
     src/pluginsdialog.ui
     src/splashscreenwindow.ui
 
+    src/preferences/generalpreferenceswidget.ui
     src/preferences/preferencesdialog.ui
 )
 
