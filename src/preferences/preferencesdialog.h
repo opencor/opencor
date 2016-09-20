@@ -80,6 +80,7 @@ private:
 
     QStandardItem *mGeneralItem;
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
+    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
 
     GeneralPreferencesWidget *mGeneralPreferencesWidget;
     PluginCategoryWidget *mPluginCategoryWidget;

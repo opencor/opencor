@@ -66,7 +66,8 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     QDialog(pParent),
     mGui(new Ui::PreferencesDialog),
     mPluginManager(pPluginManager),
-    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>())
+    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
+    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>())
 {
     // Set up the GUI
 
@@ -202,6 +203,7 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
         // Keep track of the relationship between our new item and its category
 
         mCategoryItems.insert(pCategory, res);
+        mItemCategories.insert(res, pCategory);
     }
 
     return res;
@@ -243,7 +245,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
         if (mCategoryItems.values().contains(item)) {
             mPluginCategoryWidget->setCategory(item->text());
-            mPluginCategoryWidget->setDescription("My description...");
+            mPluginCategoryWidget->setDescription(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))+".");
 
             mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
         } else {
