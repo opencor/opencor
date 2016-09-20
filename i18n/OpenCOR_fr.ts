@@ -273,6 +273,10 @@
         <translation>Description :</translation>
     </message>
     <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Status:</source>
         <translation>Statut :</translation>
     </message>
