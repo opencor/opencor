@@ -52,6 +52,24 @@ PluginCategoryWidget::~PluginCategoryWidget()
 
 //==============================================================================
 
+void PluginCategoryWidget::setCategory(const QString &pCategory)
+{
+    // Set our category
+
+    mGui->categoryValue->setText(pCategory);
+}
+
+//==============================================================================
+
+void PluginCategoryWidget::setDescription(const QString &pDescription)
+{
+    // Set our description
+
+    mGui->descriptionValue->setText(pDescription);
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

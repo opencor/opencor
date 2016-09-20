@@ -357,6 +357,17 @@
     </message>
 </context>
 <context>
+    <name>PluginCategoryWidget</name>
+    <message>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
+    </message>
+</context>
+<context>
     <name>PluginsDialog</name>
     <message>
         <source>Plugins</source>

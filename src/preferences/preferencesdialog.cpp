@@ -236,12 +236,16 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
     // Switch to the widget corresponding to the selected item
 
-    if (pNewIndex == mGeneralItem->index())
+    if (pNewIndex == mGeneralItem->index()) {
         mGui->stackedWidget->setCurrentWidget(mGeneralPreferencesWidget);
-    else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
+    } else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex))) {
+        mPluginCategoryWidget->setCategory("myCategory");
+        mPluginCategoryWidget->setDescription("My description...");
+
         mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
-    else
+    } else {
         mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
+    }
 }
 
 //==============================================================================

@@ -46,6 +46,9 @@ public:
     explicit PluginCategoryWidget(QWidget *pParent);
     ~PluginCategoryWidget();
 
+    void setCategory(const QString &pCategory);
+    void setDescription(const QString &pDescription);
+
 private:
     Ui::PluginCategoryWidget *mGui;
 };
