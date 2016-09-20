@@ -285,62 +285,6 @@
         <translation>Catégorie :</translation>
     </message>
     <message>
-        <source>plugins that illustrate various plugin-related aspects.</source>
-        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
-    </message>
-    <message>
-        <source>plugins that are not valid.</source>
-        <translation>extensions qui ne sont pas valides.</translation>
-    </message>
-    <message>
-        <source>plugins to analyse files.</source>
-        <translation>extensions pour analyser des fichiers.</translation>
-    </message>
-    <message>
-        <source>plugins to access various APIs.</source>
-        <translation>extensions pour accéder différentes APIs.</translation>
-    </message>
-    <message>
-        <source>plugins to store and manipulate data.</source>
-        <translation>extensions pour stocker et manipuler des données.</translation>
-    </message>
-    <message>
-        <source>plugins to edit files.</source>
-        <translation>extensions pour éditer des fichiers.</translation>
-    </message>
-    <message>
-        <source>plugins that do not fit in any other category.</source>
-        <translation>extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
-    </message>
-    <message>
-        <source>plugins to organise files.</source>
-        <translation>extensions pour organiser des fichiers.</translation>
-    </message>
-    <message>
-        <source>plugins to simulate files.</source>
-        <translation>extensions pour simuler des fichiers.</translation>
-    </message>
-    <message>
-        <source>plugins to access various solvers.</source>
-        <translation>extensions pour accéder différents solveurs.</translation>
-    </message>
-    <message>
-        <source>plugins to support various third-party libraries and APIs.</source>
-        <translation>extensions pour supporter différentes librairies externes et APIs.</translation>
-    </message>
-    <message>
-        <source>plugins to access various third-party libraries.</source>
-        <translation>extensions pour accéder différentes librairies externes.</translation>
-    </message>
-    <message>
-        <source>plugins to access various tools.</source>
-        <translation>extensions pour accéder différents outils.</translation>
-    </message>
-    <message>
-        <source>plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
-        <translation>extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
     </message>

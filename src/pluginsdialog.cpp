@@ -408,67 +408,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
         // The category's description
 
         mGui->fieldTwoLabel->setText(tr("Description:"));
-
-        switch (mItemCategories.value(item)) {
-#ifdef ENABLE_SAMPLES
-        case PluginInfo::Sample:
-            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
-
-            break;
-#endif
-        case PluginInfo::Invalid:
-            mGui->fieldTwoValue->setText(tr("plugins that are not valid."));
-
-            break;
-        case PluginInfo::Analysis:
-            mGui->fieldTwoValue->setText(tr("plugins to analyse files."));
-
-            break;
-        case PluginInfo::Api:
-            mGui->fieldTwoValue->setText(tr("plugins to access various APIs."));
-
-            break;
-        case PluginInfo::DataStore:
-            mGui->fieldTwoValue->setText(tr("plugins to store and manipulate data."));
-
-            break;
-        case PluginInfo::Editing:
-            mGui->fieldTwoValue->setText(tr("plugins to edit files."));
-
-            break;
-        case PluginInfo::Miscellaneous:
-            mGui->fieldTwoValue->setText(tr("plugins that do not fit in any other category."));
-
-            break;
-        case PluginInfo::Organisation:
-            mGui->fieldTwoValue->setText(tr("plugins to organise files."));
-
-            break;
-        case PluginInfo::Simulation:
-            mGui->fieldTwoValue->setText(tr("plugins to simulate files."));
-
-            break;
-        case PluginInfo::Solver:
-            mGui->fieldTwoValue->setText(tr("plugins to access various solvers."));
-
-            break;
-        case PluginInfo::Support:
-            mGui->fieldTwoValue->setText(tr("plugins to support various third-party libraries and APIs."));
-
-            break;
-        case PluginInfo::ThirdParty:
-            mGui->fieldTwoValue->setText(tr("plugins to access various third-party libraries."));
-
-            break;
-        case PluginInfo::Tools:
-            mGui->fieldTwoValue->setText(tr("plugins to access various tools."));
-
-            break;
-        case PluginInfo::Widget:
-            mGui->fieldTwoValue->setText(tr("plugins to access various <em>ad hoc</em> widgets."));
-
-            break;
-        }
+        mGui->fieldTwoValue->setText(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))+".");
     }
 
     // Show/hide the different fields
