@@ -11,6 +11,9 @@
    </rect>
   </property>
   <layout class="QFormLayout" name="layout">
+   <property name="formAlignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>

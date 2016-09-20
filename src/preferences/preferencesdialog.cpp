@@ -140,10 +140,14 @@ mGui->stackedWidget->addWidget(mUnderConstructionWidget);
     mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
     mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
 
+    // Make, through the stacked widget, sure that the dialog has a minimum
+    // width
+
+    mGui->stackedWidget->setMinimumWidth(2.5*mGui->treeView->minimumWidth());
+
     // Make sure that the dialog has a reasonable starting size
 
     mGui->layout->setSizeConstraint(QLayout::SetMinimumSize);
-//---ISSUE193--- DO WE ACTUALLY NEED IT?...
 
     // Connection to handle the change of preferences widget
 
