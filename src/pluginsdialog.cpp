@@ -403,7 +403,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
         // The category's description
 
         mGui->fieldTwoLabel->setText(tr("Description:"));
-        mGui->fieldTwoValue->setText(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))+".");
+        mGui->fieldTwoValue->setText(tr("%1.").arg(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))));
     }
 
     // Show/hide the different fields
