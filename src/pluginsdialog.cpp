@@ -238,20 +238,15 @@ PluginsDialog::~PluginsDialog()
 
 void PluginsDialog::selectFirstVisibleCategory()
 {
-    // Select the first visible category (besides our special invalid and sample
-    // categories)
+    // Select the first visible category
 
-    foreach (QStandardItem *categoryItem, mCategoryItems) {
-        if (    (mItemCategories.value(categoryItem) >= PluginInfo::Category(0))
-            && !mGui->treeView->isRowHidden(categoryItem->row(),
-                                            mModel->invisibleRootItem()->index())) {
-            mGui->treeView->setCurrentIndex(categoryItem->index());
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        if (!mGui->treeView->isRowHidden(i, mModel->invisibleRootItem()->index())) {
+            mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->index());
 
             return;
         }
     }
-
-    // No visible category could be found
 
     mGui->treeView->setCurrentIndex(QModelIndex());
 }
