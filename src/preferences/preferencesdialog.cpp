@@ -71,13 +71,17 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
-    // Create our general preferences and empty widgets
+    // Create our general preferences and plugin category widgets
 
     mGeneralPreferencesWidget = new GeneralPreferencesWidget(this);
-    mEmptyWidget = new QWidget(this);
+    mPluginCategoryWidget = new PluginCategoryWidget(this);
+//---ISSUE193---
+mEmptyWidget = new QWidget(this);
 
     mGui->stackedWidget->addWidget(mGeneralPreferencesWidget);
-    mGui->stackedWidget->addWidget(mEmptyWidget);
+    mGui->stackedWidget->addWidget(mPluginCategoryWidget);
+//---ISSUE193---
+mGui->stackedWidget->addWidget(mEmptyWidget);
 
     // Set up the tree view widget
 
@@ -231,8 +235,8 @@ Q_UNUSED(pOldIndex);
 
     if (pNewIndex == mGeneralItem->index())
         mGui->stackedWidget->setCurrentWidget(mGeneralPreferencesWidget);
-//    else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
-//        mGui->stackedWidget->setCurrentWidget(mGui->sectionPage);
+    else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
+        mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
     else
         mGui->stackedWidget->setCurrentWidget(mEmptyWidget);
 }
