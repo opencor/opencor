@@ -83,7 +83,7 @@ private:
 
     GeneralPreferencesWidget *mGeneralPreferencesWidget;
     PluginCategoryWidget *mPluginCategoryWidget;
-    QWidget *mEmptyWidget;
+    QWidget *mUnderConstructionWidget;
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 

@@ -31,6 +31,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QLabel>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -76,12 +77,13 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mGeneralPreferencesWidget = new GeneralPreferencesWidget(this);
     mPluginCategoryWidget = new PluginCategoryWidget(this);
 //---ISSUE193---
-mEmptyWidget = new QWidget(this);
+mUnderConstructionWidget = new QLabel(tr("Under construction..."), this);
+static_cast<QLabel *>(mUnderConstructionWidget)->setAlignment(Qt::AlignTop);
 
     mGui->stackedWidget->addWidget(mGeneralPreferencesWidget);
     mGui->stackedWidget->addWidget(mPluginCategoryWidget);
 //---ISSUE193---
-mGui->stackedWidget->addWidget(mEmptyWidget);
+mGui->stackedWidget->addWidget(mUnderConstructionWidget);
 
     // Set up the tree view widget
 
@@ -229,8 +231,9 @@ void PreferencesDialog::on_buttonBox_rejected()
 void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
                                                 const QModelIndex &pOldIndex)
 {
-//---ISSUE193---
-Q_UNUSED(pOldIndex);
+//---ISSUE193--- TO BE FINISHED...
+    Q_UNUSED(pOldIndex);
+
     // Switch to the widget corresponding to the selected item
 
     if (pNewIndex == mGeneralItem->index())
@@ -238,7 +241,7 @@ Q_UNUSED(pOldIndex);
     else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex)))
         mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
     else
-        mGui->stackedWidget->setCurrentWidget(mEmptyWidget);
+        mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
 }
 
 //==============================================================================

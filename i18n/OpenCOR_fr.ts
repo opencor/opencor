@@ -351,6 +351,10 @@
         <source>General</source>
         <translation>Général</translation>
     </message>
+    <message>
+        <source>Under construction...</source>
+        <translation>En construction...</translation>
+    </message>
 </context>
 <context>
     <name>PluginsDialog</name>
