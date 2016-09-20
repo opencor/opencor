@@ -238,13 +238,17 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
     if (pNewIndex == mGeneralItem->index()) {
         mGui->stackedWidget->setCurrentWidget(mGeneralPreferencesWidget);
-    } else if (mCategoryItems.values().contains(mModel->itemFromIndex(pNewIndex))) {
-        mPluginCategoryWidget->setCategory("myCategory");
-        mPluginCategoryWidget->setDescription("My description...");
-
-        mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
     } else {
-        mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
+        QStandardItem *item = mModel->itemFromIndex(pNewIndex);
+
+        if (mCategoryItems.values().contains(item)) {
+            mPluginCategoryWidget->setCategory(item->text());
+            mPluginCategoryWidget->setDescription("My description...");
+
+            mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
+        } else {
+            mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
+        }
     }
 }
 
