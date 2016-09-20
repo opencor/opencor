@@ -245,7 +245,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
         if (mCategoryItems.values().contains(item)) {
             mPluginCategoryWidget->setCategory(item->text());
-            mPluginCategoryWidget->setDescription(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))+".");
+            mPluginCategoryWidget->setDescription(tr("%1.").arg(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))));
 
             mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
         } else {
