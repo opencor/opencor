@@ -645,7 +645,7 @@ bool Property::isEditable() const
 {
     // Return whether our value item, if any, is editable
 
-    return mUnit?mValue->isEditable():false;
+    return mValue?mValue->isEditable():false;
 }
 
 //==============================================================================
