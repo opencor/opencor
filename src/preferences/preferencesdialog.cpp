@@ -109,20 +109,12 @@ mGui->stackedWidget->addWidget(mUnderConstructionWidget);
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
         if (preferencesInterface) {
-            // Create the item corresponding to the current plugin
+            // Create the item corresponding to the current plugin and add it to
+            // its corresponding category
 
             QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
-            // Only selectable plugins and plugins that are of the right type are
-            // checkable
-
-            PluginInfo *pluginInfo = plugin->info();
-
-            if (pluginInfo) {
-                // Add the plugin to its corresponding category
-
-                pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
-            }
+            pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
         }
     }
 
@@ -243,16 +235,27 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     // Switch to the widget corresponding to the selected item
 
     if (pNewIndex == mGeneralItem->index()) {
+        // We are dealing with the general preferences
+
         mGui->stackedWidget->setCurrentWidget(mGeneralPreferencesWidget);
     } else {
+        // Check whether we are dealing with a plugin category or a plugin's
+        // preferences
+
         QStandardItem *item = mModel->itemFromIndex(pNewIndex);
 
         if (mCategoryItems.values().contains(item)) {
+            // We are dealing with a plugin category, so retrieve and set the
+            // name and description of the plugin
+
             mPluginCategoryWidget->setCategory(item->text());
             mPluginCategoryWidget->setDescription(tr("%1.").arg(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))));
 
             mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
         } else {
+            // We are dealing with a plugin's preferences, so retrieve and show
+            // its preferences widget
+
             mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
         }
     }
