@@ -51,6 +51,7 @@ namespace OpenCOR {
 //==============================================================================
 
 class PluginManager;
+class PreferencesInterface;
 
 //==============================================================================
 
@@ -81,10 +82,10 @@ private:
     QStandardItem *mGeneralItem;
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
+    QMap<QStandardItem *, PreferencesInterface *> mItemPreferencesInterfaces;
 
     GeneralPreferencesWidget *mGeneralPreferencesWidget;
     PluginCategoryWidget *mPluginCategoryWidget;
-    QWidget *mUnderConstructionWidget;
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 

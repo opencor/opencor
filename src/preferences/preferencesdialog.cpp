@@ -67,7 +67,8 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mGui(new Ui::PreferencesDialog),
     mPluginManager(pPluginManager),
     mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
-    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>())
+    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
+    mItemPreferencesInterfaces(QMap<QStandardItem *, PreferencesInterface *>())
 {
     // Set up the GUI
 
@@ -77,14 +78,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGeneralPreferencesWidget = new GeneralPreferencesWidget(this);
     mPluginCategoryWidget = new PluginCategoryWidget(this);
-//---ISSUE193---
-mUnderConstructionWidget = new QLabel(tr("Under construction..."), this);
-static_cast<QLabel *>(mUnderConstructionWidget)->setAlignment(Qt::AlignTop);
 
     mGui->stackedWidget->addWidget(mGeneralPreferencesWidget);
     mGui->stackedWidget->addWidget(mPluginCategoryWidget);
-//---ISSUE193---
-mGui->stackedWidget->addWidget(mUnderConstructionWidget);
 
     // Set up the tree view widget
 
@@ -115,6 +111,8 @@ mGui->stackedWidget->addWidget(mUnderConstructionWidget);
             QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
             pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
+
+            mItemPreferencesInterfaces.insert(pluginItem, preferencesInterface);
         }
     }
 
@@ -256,7 +254,12 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
             // We are dealing with a plugin's preferences, so retrieve and show
             // its preferences widget
 
-            mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
+            QWidget *preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget();
+
+            if (mGui->stackedWidget->indexOf(preferencesWidget) == -1)
+                mGui->stackedWidget->addWidget(preferencesWidget);
+
+            mGui->stackedWidget->setCurrentWidget(preferencesWidget);
         }
     }
 
