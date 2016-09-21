@@ -633,6 +633,15 @@ QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pC
 
 //==============================================================================
 
+void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
+{
+    // We don't want plugin categories to be collapse, so cancel all collapsings
+
+    mGui->treeView->expand(pIndex);
+}
+
+//==============================================================================
+
 void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 {
     // Show/hide our unselectable plugins
