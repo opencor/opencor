@@ -96,6 +96,8 @@ private:
     void selectFirstVisibleCategory();
 
 private slots:
+    void on_treeView_collapsed(const QModelIndex &pIndex);
+
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
 
     void on_buttonBox_accepted();
