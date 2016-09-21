@@ -205,6 +205,15 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
 
 //==============================================================================
 
+void PreferencesDialog::on_treeView_collapsed(const QModelIndex &pIndex)
+{
+    // We don't want plugin categories to be collapse, so cancel all collapsings
+
+    mGui->treeView->expand(pIndex);
+}
+
+//==============================================================================
+
 void PreferencesDialog::on_buttonBox_accepted()
 {
 //---ISSUE193---
