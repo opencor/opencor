@@ -256,6 +256,15 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
             mGui->stackedWidget->setCurrentWidget(mUnderConstructionWidget);
         }
     }
+
+    // Make sure that the current widget has no layout margin (so that not only
+    // we don't waste space, but also developers don't have to worry about the
+    // layout margin of their preferences widget, assuming it has a layout)
+
+    QLayout *widgetLayout = mGui->stackedWidget->currentWidget()->layout();
+
+    if (widgetLayout)
+        widgetLayout->setMargin(0);
 }
 
 //==============================================================================
