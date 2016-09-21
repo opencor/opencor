@@ -310,10 +310,6 @@
         <source>%1.</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Under construction...</source>
-        <translation>En construction...</translation>
-    </message>
 </context>
 <context>
     <name>PluginCategoryWidget</name>

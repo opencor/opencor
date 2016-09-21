@@ -20,6 +20,7 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewinformationsolverswidget.cpp
         src/singlecellviewinformationwidget.cpp
         src/singlecellviewplugin.cpp
+        src/singlecellviewpreferenceswidget.cpp
         src/singlecellviewsimulation.cpp
         src/singlecellviewsimulationworker.cpp
         src/singlecellviewsimulationwidget.cpp
@@ -37,10 +38,13 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewinformationsolverswidget.h
         src/singlecellviewinformationwidget.h
         src/singlecellviewplugin.h
+        src/singlecellviewpreferenceswidget.h
         src/singlecellviewsimulation.h
         src/singlecellviewsimulationworker.h
         src/singlecellviewsimulationwidget.h
         src/singlecellviewwidget.h
+    UIS
+        src/singlecellviewpreferenceswidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

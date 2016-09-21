@@ -28,6 +28,7 @@ limitations under the License.
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewplugin.h"
+#include "singlecellviewpreferenceswidget.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
@@ -169,7 +170,7 @@ void SingleCellViewPlugin::initializePlugin()
 {
     // Create both our preferences and single cell view widgets
 
-    mPreferencesWidget = new QWidget(Core::mainWindow());
+    mPreferencesWidget = new SingleCellViewPreferencesWidget(Core::mainWindow());
     mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
     // Hide both rour preferences and single cell view widgets (the latter since

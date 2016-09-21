@@ -639,4 +639,11 @@
         <translation>Exporter Vers Archive COMBINE</translation>
     </message>
 </context>
+<context>
+    <name>SingleCellViewPreferencesWidget</name>
+    <message>
+        <source>Under construction...</source>
+        <translation>En construction...</translation>
+    </message>
+</context>
 </TS>
