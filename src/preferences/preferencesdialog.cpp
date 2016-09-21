@@ -227,7 +227,6 @@ void PreferencesDialog::on_buttonBox_rejected()
 void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
                                                 const QModelIndex &pOldIndex)
 {
-//---ISSUE193--- TO BE FINISHED...
     Q_UNUSED(pOldIndex);
 
     // Switch to the widget corresponding to the selected item

@@ -45,7 +45,6 @@ PLUGININFO_FUNC SingleCellViewPluginInfo();
 
 //==============================================================================
 
-class SingleCellViewPreferencesWidget;
 class SingleCellViewWidget;
 
 //==============================================================================
@@ -85,7 +84,6 @@ public:
     FileTypes combineFileTypes() const;
 
 private:
-    SingleCellViewPreferencesWidget *mPreferencesWidget;
     SingleCellViewWidget *mViewWidget;
 
     SolverInterfaces mSolverInterfaces;
