@@ -999,10 +999,9 @@ void Property::setVisible(const bool &pVisible)
 
 void Property::select() const
 {
-    // Have our owner select our value, if any
+    // Have our owner select ourselves by selecting our name
 
-    if (mValue)
-        mOwner->setCurrentIndex(mValue->index());
+    mOwner->setCurrentIndex(mName->index());
 }
 
 //==============================================================================
@@ -1796,9 +1795,9 @@ void PropertyEditorWidget::editorClosed()
 
 void PropertyEditorWidget::selectProperty(Property *pProperty)
 {
-    // Select the property, if one is provided and is not of section type
+    // Select the property, if one is provided
 
-    if (!pProperty || (pProperty->type() == Property::Section))
+    if (!pProperty)
         return;
 
     pProperty->select();
