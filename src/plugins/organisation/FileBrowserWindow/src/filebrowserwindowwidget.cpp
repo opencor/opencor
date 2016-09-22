@@ -65,6 +65,7 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     #error Unsupported platform
 #endif
     setModel(mModel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
 
     header()->setSectionsMovable(false);

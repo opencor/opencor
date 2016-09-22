@@ -47,7 +47,6 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setModel(mModel);
     setRootIsDecorated(false);
-    setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 //==============================================================================

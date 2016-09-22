@@ -66,6 +66,7 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 #endif
     setHeaderHidden(true);
     setModel(mModel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     // Some connections
 
