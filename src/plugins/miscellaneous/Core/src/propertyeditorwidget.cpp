@@ -1607,13 +1607,16 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     TreeViewWidget::mousePressEvent(pEvent);
 
     // Edit our 'new' property, but only if we are not right-clicking and if
-    // there is a 'new' property and it is different from our 'old' property
+    // there is a 'new' property and it is different from our 'old' property,
+    // otherwise cancel any editing if we are right-clicking
 
     Property *newProperty = property(indexAt(pEvent->pos()));
 
     mRightClicking = pEvent->button() == Qt::RightButton;
 
-    if (!mRightClicking && newProperty && (newProperty != oldProperty))
+    if (mRightClicking)
+        finishEditing(false);
+    else if (newProperty && (newProperty != oldProperty))
         editProperty(newProperty);
 }
 
