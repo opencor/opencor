@@ -1112,10 +1112,6 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(this, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(updateHeight()));
 
-    // Further customise ourselves
-
-    setSelectionMode(QAbstractItemView::SingleSelection);
-
     header()->setSectionsMovable(false);
 
     // Retranslate ourselves, so that we are properly initialised
