@@ -259,8 +259,8 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
             mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
         } else {
-            // We are dealing with a plugin's preferences, so retrieve and show
-            // its preferences widget
+            // We are dealing with a plugin's preferences, so retrieve its
+            // preferences widget and show it
 
 //---ITEM193--- NEED TO PROVIDE A POINTER TO A QSettings OBJECT THAT IS SPECIFIC
 //              TO THE PLUGIN IN QUESTION...
