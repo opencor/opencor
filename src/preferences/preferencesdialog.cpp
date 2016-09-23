@@ -262,7 +262,9 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
             // We are dealing with a plugin's preferences, so retrieve and show
             // its preferences widget
 
-            QWidget *preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget();
+//---ITEM193--- NEED TO PROVIDE A POINTER TO A QSettings OBJECT THAT IS SPECIFIC
+//              TO THE PLUGIN IN QUESTION...
+            QWidget *preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget(0);
 
             if (mGui->stackedWidget->indexOf(preferencesWidget) == -1)
                 mGui->stackedWidget->addWidget(preferencesWidget);

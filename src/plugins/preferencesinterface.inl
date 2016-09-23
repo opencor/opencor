@@ -4,6 +4,6 @@
     #define PURE
 #endif
 
-    virtual Preferences::PreferencesWidget * preferencesWidget() PURE;
+    virtual Preferences::PreferencesWidget * preferencesWidget(QSettings *pSettings) PURE;
 
 #undef PURE

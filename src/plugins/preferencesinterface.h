@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QSettings>
 #include <QWidget>
 
 //==============================================================================
@@ -38,7 +39,12 @@ class PreferencesWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PreferencesWidget(QWidget *pParent);
+    explicit PreferencesWidget(QSettings *pSettings, QWidget *pParent);
+
+    virtual void savePreferences() = 0;
+
+protected:
+    QSettings *mSettings;
 };
 
 //==============================================================================

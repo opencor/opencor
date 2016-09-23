@@ -33,8 +33,9 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewPreferencesWidget::SingleCellViewPreferencesWidget(QWidget *pParent) :
-    Preferences::PreferencesWidget(pParent),
+SingleCellViewPreferencesWidget::SingleCellViewPreferencesWidget(QSettings *pSettings,
+                                                                 QWidget *pParent) :
+    Preferences::PreferencesWidget(pSettings, pParent),
     mGui(new Ui::SingleCellViewPreferencesWidget)
 {
     // Set up the GUI
@@ -49,6 +50,13 @@ SingleCellViewPreferencesWidget::~SingleCellViewPreferencesWidget()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void SingleCellViewPreferencesWidget::savePreferences()
+{
+//---ISSUE193--- TO BE DONE...
 }
 
 //==============================================================================

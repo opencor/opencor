@@ -29,8 +29,9 @@ namespace Preferences {
 
 //==============================================================================
 
-PreferencesWidget::PreferencesWidget(QWidget *pParent) :
-    QWidget(pParent)
+PreferencesWidget::PreferencesWidget(QSettings *pSettings, QWidget *pParent) :
+    QWidget(pParent),
+    mSettings(pSettings)
 {
 }
 
