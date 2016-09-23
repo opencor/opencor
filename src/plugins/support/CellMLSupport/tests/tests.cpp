@@ -71,14 +71,12 @@ void Tests::doRuntimeTest(const QString &pFileName,
 
 void Tests::runtimeTests()
 {
-qDebug("00");
     // Run some runtime-related tests on the Noble 1962 model
 
     QStringList modelParameters = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/noble_model_1962.out"));
 
     doRuntimeTest(OpenCOR::fileName("models/noble_model_1962.cellml"), "1.0",
                   modelParameters);
-qDebug("01");
 
     // Do the same as above but using the CellML 1.1 namespace
     // Note: the idea is to check that what we are doing to retrieve the
@@ -93,7 +91,6 @@ qDebug("01");
     QVERIFY(OpenCOR::Core::writeFileContentsToFile(fileName, fileContents));
 
     doRuntimeTest(fileName, "1.1", modelParameters);
-qDebug("02");
 
     // Finally, we do the same for some proper CellML 1.1 models:
     //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
@@ -111,7 +108,6 @@ qDebug("02");
 
     doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
-qDebug("03");
 //---ISSUE1099---(BEGIN)
 // An indirect consequence of LLVM 3.9 (it would seem since it all works fine
 // using LLVM 3.8.1!) is that the CellML API crashes when trying to generate
@@ -121,24 +117,19 @@ qDebug("03");
 //---ISSUE1099---(END)
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
-qDebug("04");
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.out")));
-qDebug("05");
 //---ISSUE1099---(BEGIN)
 #endif
 //---ISSUE1099---(END)
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/units_import_only_parent_model.cellml"),
                   "1.1", modelParameters);
-qDebug("06");
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.out")));
-qDebug("07");
 
     // Clean up after ourselves
 
     QFile::remove(fileName);
-qDebug("08");
 }
 
 //==============================================================================
