@@ -10,6 +10,7 @@ ADD_PLUGIN(SingleCellView
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
+        ../../preferencesinterface.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
 
@@ -29,6 +30,7 @@ ADD_PLUGIN(SingleCellView
         ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
+        ../../preferencesinterface.h
         ../../solverinterface.h
 
         src/singlecellviewcontentswidget.h

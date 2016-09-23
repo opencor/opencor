@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QWidget>
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -39,7 +39,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewPreferencesWidget : public QWidget
+class SingleCellViewPreferencesWidget : public Preferences::PreferencesWidget
 {
     Q_OBJECT
 

@@ -17,43 +17,26 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view preferences widget
+// Preferences interface
 //==============================================================================
 
-#include "singlecellviewpreferenceswidget.h"
-
-//==============================================================================
-
-#include "ui_singlecellviewpreferenceswidget.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace Preferences {
 
 //==============================================================================
 
-SingleCellViewPreferencesWidget::SingleCellViewPreferencesWidget(QWidget *pParent) :
-    Preferences::PreferencesWidget(pParent),
-    mGui(new Ui::SingleCellViewPreferencesWidget)
+PreferencesWidget::PreferencesWidget(QWidget *pParent) :
+    QWidget(pParent)
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
 }
 
 //==============================================================================
 
-SingleCellViewPreferencesWidget::~SingleCellViewPreferencesWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-}   // namespace SingleCellView
+}   // namespace Preferences
 }   // namespace OpenCOR
 
 //==============================================================================

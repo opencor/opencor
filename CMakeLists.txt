@@ -91,6 +91,7 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
+    src/plugins/preferencesinterface.cpp
 
     src/preferences/generalpreferenceswidget.cpp
     src/preferences/plugincategorywidget.cpp
@@ -108,6 +109,7 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+    src/plugins/preferencesinterface.h
 
     src/preferences/generalpreferenceswidget.h
     src/preferences/plugincategorywidget.h
