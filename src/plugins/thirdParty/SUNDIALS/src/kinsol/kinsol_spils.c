@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4749 $
+ * $Date: 2016-04-23 18:42:38 -0700 (Sat, 23 Apr 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Radu Serban and Aaron Collier @ LLNL
  * -----------------------------------------------------------------
@@ -626,3 +626,14 @@ int KINSpilsDQJtimes(N_Vector v, N_Vector Jv,
   return(0);
 }
 
+int kinSpilsInitializeCounters(KINSpilsMem kinspils_mem)
+{
+  kinspils_mem->s_npe     = 0;
+  kinspils_mem->s_nli     = 0;
+  kinspils_mem->s_nps     = 0;
+  kinspils_mem->s_ncfl    = 0;
+  kinspils_mem->s_njtimes = 0;
+  kinspils_mem->s_nfes    = 0;
+
+  return(0);
+}
