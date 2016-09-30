@@ -578,7 +578,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
             IF(NOT EXISTS ${FULL_EXTERNAL_BINARY})
-                MESSAGE(FATAL_ERROR "${FULL_EXTERNAL_BINARY} does not exist...")
+                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -1021,7 +1021,7 @@ MACRO(RUNPATH2RPATH FILENAME)
                     RESULT_VARIABLE RESULT)
 
     IF(NOT RESULT EQUAL 0)
-        MESSAGE(FATAL_ERROR "The RUNPATH value of ${FILENAME} could not be converted to a RPATH value...")
+        MESSAGE(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to a RPATH value...")
     ENDIF()
 ENDMACRO()
 
@@ -1232,7 +1232,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
-            MESSAGE(FATAL_ERROR "The compressed version of ${FILENAME} could not be retrieved...")
+            MESSAGE(FATAL_ERROR "The compressed version of '${FILENAME}' could not be retrieved...")
         ENDIF()
 
         # Check that the file, if we managed to retrieve it, has the expected
@@ -1244,12 +1244,12 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
                 FILE(REMOVE ${REAL_FILENAME})
 
-                MESSAGE(FATAL_ERROR "${FILENAME} does not have the expected SHA-1 value...")
+                MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
         ELSE()
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
 
-            MESSAGE(FATAL_ERROR "${FILENAME} could not be uncompressed...")
+            MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
         ENDIF()
     ENDIF()
 ENDMACRO()
