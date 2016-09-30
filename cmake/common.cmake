@@ -336,7 +336,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Show the build information, if allowed
+    # Show the build information
 
     MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
 ENDMACRO()
@@ -1064,7 +1064,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
-    # Strip the Qt file of all its local symbols
+    # Strip the file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
@@ -1073,11 +1073,10 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
                            COMMAND strip -x ${FULL_FILENAME})
     ENDIF()
 
-    # Clean up the Qt file's id
+    # Clean up the file's id
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                       COMMAND install_name_tool -id ${FILENAME}
-                                                     ${FULL_FILENAME})
+                       COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
