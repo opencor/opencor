@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4829 $
+ * $Date: 2016-07-27 16:01:15 -0700 (Wed, 27 Jul 2016) $
  * -----------------------------------------------------------------
  * Programmers: Alan C. Hindmarsh, and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -134,7 +134,7 @@ int IDASpgmr(void *ida_mem, int maxl)
   IDAMem IDA_mem;
   IDASpilsMem idaspils_mem;
   SpgmrMem spgmr_mem;
-  int flag, maxl1;
+  int maxl1;
 
   /* Return immediately if ida_mem is NULL */
   if (ida_mem == NULL) {
@@ -149,7 +149,7 @@ int IDASpgmr(void *ida_mem, int maxl)
     return(IDASPILS_ILL_INPUT);
   }
 
-  if (lfree != NULL) flag = lfree((IDAMem) ida_mem);
+  if (lfree != NULL) lfree((IDAMem) ida_mem);
 
   /* Set five main function fields in ida_mem */
   linit  = IDASpgmrInit;
@@ -191,6 +191,9 @@ int IDASpgmr(void *ida_mem, int maxl)
   idaspils_mem->s_dqincfac = ONE;
 
   idaspils_mem->s_last_flag  = IDASPILS_SUCCESS;
+
+  /* initialize solver performance counters */
+  idaSpilsInitializeCounters(idaspils_mem);
 
   /* Set setupNonNull to FALSE */
   setupNonNull = FALSE;
@@ -269,8 +272,7 @@ static int IDASpgmrInit(IDAMem IDA_mem)
   idaspils_mem = (IDASpilsMem) lmem;
 
   /* Initialize counters */
-  npe = nli = nps = ncfl = 0;
-  njtimes = nres = 0;
+  idaSpilsInitializeCounters(idaspils_mem);
 
   /* Set setupNonNull to TRUE iff there is preconditioning with setup */
   setupNonNull = (psolve != NULL) && (pset != NULL);
@@ -478,4 +480,3 @@ static int IDASpgmrFree(IDAMem IDA_mem)
 
   return(0);
 }
-
