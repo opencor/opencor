@@ -326,8 +326,9 @@ MACRO(INITIALISE_PROJECT)
     # Try to build our runpath2rpath program, if we are on Linux
 
     IF(NOT WIN32 AND NOT APPLE)
-        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PROJECT_BUILD_DIR}/runpath2rpath runpath2rpath.c
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cmake
+        SET(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
+
+        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                         RESULT_VARIABLE RESULT)
 
         IF(NOT RESULT EQUAL 0)
