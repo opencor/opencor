@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4536 $
+ * $Date: 2015-09-16 14:14:12 -0700 (Wed, 16 Sep 2015) $
  * -----------------------------------------------------------------
  * Programmers: Alan C. Hindmarsh, and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -102,6 +102,7 @@ static int IDAICFailFlag(IDAMem IDA_mem, int retval);
 #define cj             (IDA_mem->ida_cj)
 #define cjratio        (IDA_mem->ida_cjratio)
 #define nbacktr        (IDA_mem->ida_nbacktr)
+#define maxbacks       (IDA_mem->ida_maxbacks)
 #define nre            (IDA_mem->ida_nre)
 #define ncfn           (IDA_mem->ida_ncfn)
 #define nni            (IDA_mem->ida_nni)
@@ -152,7 +153,8 @@ static int IDAICFailFlag(IDAMem IDA_mem, int retval);
  *   IDA_NO_RECOVERY     res, lsetup, or lsolve had a recoverable
  *                       error, but IDACalcIC could not recover
  *   IDA_CONSTR_FAIL     the inequality constraints could not be met
- *   IDA_LINESEARCH_FAIL the linesearch failed (on steptol test)
+ *   IDA_LINESEARCH_FAIL the linesearch failed (either on steptol test
+ *                       or on the maxbacks test)
  *   IDA_CONV_FAIL       the Newton iterations failed to converge
  * -----------------------------------------------------------------
  */
@@ -337,7 +339,8 @@ int IDACalcIC(void *ida_mem, int icopt, realtype tout1)
  * The error return values (positive) considered recoverable are:
  *  IC_FAIL_RECOV      if res, lsetup, or lsolve failed recoverably
  *  IC_CONSTR_FAILED   if the constraints could not be met
- *  IC_LINESRCH_FAILED if the linesearch failed (on steptol test)
+ *  IC_LINESRCH_FAILED if the linesearch failed (either on steptol test
+ *                     or on maxbacks test)
  *  IC_CONV_FAIL       if the Newton iterations failed to converge
  *  IC_SLOW_CONVRG     if the iterations are converging slowly
  *                     (failed the convergence test, but showed
@@ -409,7 +412,8 @@ static int IDAnlsIC (IDAMem IDA_mem)
  * The error return values (positive) considered recoverable are:
  *  IC_FAIL_RECOV      if res or lsolve failed recoverably
  *  IC_CONSTR_FAILED   if the constraints could not be met
- *  IC_LINESRCH_FAILED if the linesearch failed (on steptol test)
+ *  IC_LINESRCH_FAILED if the linesearch failed (either on steptol test
+ *                     or on maxbacks test)
  *  IC_CONV_FAIL       if the Newton iterations failed to converge
  *  IC_SLOW_CONVRG     if the iterations appear to be converging slowly.
  *                     They failed the convergence test, but showed
@@ -516,7 +520,8 @@ static int IDANewtonIC(IDAMem IDA_mem)
  * The error return values (positive) considered recoverable are:
  *  IC_FAIL_RECOV      if res or lsolve failed recoverably
  *  IC_CONSTR_FAILED   if the constraints could not be met
- *  IC_LINESRCH_FAILED if the linesearch failed (on steptol test)
+ *  IC_LINESRCH_FAILED if the linesearch failed (either on steptol test
+ *                     or on maxbacks test)
  * The error return values (negative) considered non-recoverable are:
  *  IDA_RES_FAIL   if res had a non-recoverable error
  *  IDA_LSOLVE_FAIL      if lsolve had a non-recoverable error
@@ -526,7 +531,7 @@ static int IDANewtonIC(IDAMem IDA_mem)
 static int IDALineSrch(IDAMem IDA_mem, realtype *delnorm, realtype *fnorm)
 {
   booleantype conOK;
-  int retval;
+  int retval, nbacks;
   realtype f1norm, fnormp, f1normp, ratio, lambda, minlam, slpi;
   N_Vector mc;
 
@@ -560,6 +565,7 @@ static int IDALineSrch(IDAMem IDA_mem, realtype *delnorm, realtype *fnorm)
   slpi = -TWO*f1norm*ratio;
   minlam = steptol/(*delnorm);
   lambda = ONE;
+  nbacks = 0;
 
   /* In IDA_Y_INIT case, set ypnew = yp0 (fixed) for linesearch. */
   if(icopt == IDA_Y_INIT) N_VScale(ONE, yp0, ypnew);
@@ -568,6 +574,7 @@ static int IDALineSrch(IDAMem IDA_mem, realtype *delnorm, realtype *fnorm)
 
   loop {
 
+    if (nbacks == maxbacks) return(IC_LINESRCH_FAILED);
     /* Get new (y,y') = (ynew,ypnew) and norm of new function value. */
     IDANewyyp(IDA_mem, lambda);
     retval = IDAfnorm(IDA_mem, &fnormp);
@@ -581,7 +588,7 @@ static int IDALineSrch(IDAMem IDA_mem, realtype *delnorm, realtype *fnorm)
     if(f1normp <= f1norm + ALPHALS*slpi*lambda) break;
     if(lambda < minlam) return(IC_LINESRCH_FAILED);
     lambda /= TWO;
-    nbacktr++;
+    nbacktr++; nbacks++;
 
   }  /* End of breakout linesearch loop */
 
