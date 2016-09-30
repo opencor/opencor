@@ -348,6 +348,7 @@ SET(PLUGINS
     editing/RawTextView
 
     miscellaneous/HelpWindow
+    miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
