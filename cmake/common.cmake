@@ -323,7 +323,20 @@ MACRO(INITIALISE_PROJECT)
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
-    # Show the build information, if allowed
+    # Try to build our runpath2rpath program, if we are on Linux
+
+    IF(NOT WIN32 AND NOT APPLE)
+        SET(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
+
+        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
+                        RESULT_VARIABLE RESULT)
+
+        IF(NOT RESULT EQUAL 0)
+            MESSAGE(FATAL_ERROR "runpath2rpath could not be built...")
+        ENDIF()
+    ENDIF()
+
+    # Show the build information
 
     MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
 ENDMACRO()
@@ -1001,6 +1014,19 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(RUNPATH2RPATH FILENAME)
+    # Convert the RUNPATH value, if any, of the given ELF file to a RPATH value
+
+    EXECUTE_PROCESS(COMMAND ${RUNPATH2RPATH} ${FILENAME}
+                    RESULT_VARIABLE RESULT)
+
+    IF(NOT RESULT EQUAL 0)
+        MESSAGE(FATAL_ERROR "The RUNPATH value of ${FILENAME} could not be converted to a RPATH value...")
+    ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
@@ -1009,11 +1035,14 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
 
     COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
 
+    # Make sure that the RUNPATH value is converted to a RPATH value
+
+    RUNPATH2RPATH(lib/${DEST_FILENAME})
+
     # Strip the Qt library of all its local symbols
 
     IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                           COMMAND strip -x lib/${DEST_FILENAME})
+        EXECUTE_PROCESS(COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
 
     # Deploy the Qt library
@@ -1034,11 +1063,14 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
+        # Make sure that the RUNPATH value is converted to a RPATH value
+
+        RUNPATH2RPATH(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+
         # Strip the Qt plugin of all its local symbols
 
         IF(RELEASE_MODE)
-            ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                               COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            EXECUTE_PROCESS(COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
 
         # Deploy the Qt plugin
@@ -1051,20 +1083,27 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
-    # Strip the Qt file of all its local symbols
+    # Strip the file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
     IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND strip -x ${FULL_FILENAME})
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            EXECUTE_PROCESS(COMMAND strip -x ${FULL_FILENAME})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND strip -x ${FULL_FILENAME})
+        ENDIF()
     ENDIF()
 
-    # Clean up the Qt file's id
+    # Clean up the file's id
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                       COMMAND install_name_tool -id ${FILENAME}
-                                                     ${FULL_FILENAME})
+    IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        EXECUTE_PROCESS(COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
+    ELSE()
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
+    ENDIF()
 
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
@@ -1074,10 +1113,16 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
         FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
             SET(OS_X_QT_LIBRARY_FILENAME ${OS_X_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${OS_X_QT_LIBRARY})
 
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
-                                                                 @rpath/${OS_X_QT_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
+            IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+                EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
+                                                                  @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                                                                  ${FULL_FILENAME})
+            ELSE()
+                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                                   COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
+                                                                     @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                                                                     ${FULL_FILENAME})
+            ENDIF()
         ENDFOREACH()
     ENDIF()
 ENDMACRO()
@@ -1087,13 +1132,12 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
-    ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                        ${DEST_DIRNAME}/${FILENAME})
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                                                     ${DEST_DIRNAME}/${FILENAME})
 
     # Clean up the Qt file
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
