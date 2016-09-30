@@ -1014,6 +1014,19 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(RUNPATH2RPATH FILENAME)
+    # Convert the RUNPATH value, if any, of the given ELF file to a RPATH value
+
+    EXECUTE_PROCESS(COMMAND ${RUNPATH2RPATH} ${FILENAME}
+                    RESULT_VARIABLE RESULT)
+
+    IF(NOT RESULT EQUAL 0)
+        MESSAGE(FATAL_ERROR "The RUNPATH value of ${FILENAME} could not be converted to a RPATH value...")
+    ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
@@ -1021,6 +1034,10 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     #       versions of Qt...
 
     COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+
+    # Make sure that the RUNPATH value is converted to a RPATH value
+
+    RUNPATH2RPATH(lib/${DEST_FILENAME})
 
     # Strip the Qt library of all its local symbols
 
@@ -1045,6 +1062,10 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+
+        # Make sure that the RUNPATH value is converted to a RPATH value
+
+        RUNPATH2RPATH(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
