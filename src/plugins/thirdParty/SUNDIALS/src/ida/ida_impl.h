@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4378 $
- * $Date: 2015-02-19 10:55:14 -0800 (Thu, 19 Feb 2015) $
+ * $Revision: 4920 $
+ * $Date: 2016-09-19 14:34:35 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Allan G. Taylor, Alan C. Hindmarsh, Radu Serban,
  *                and Aaron Collier @ LLNL
@@ -74,9 +74,9 @@ typedef struct IDAMemRec {
 
   booleantype    ida_setupNonNull;   /* Does setup do something?              */
   booleantype    ida_constraintsSet; /* constraints vector present:
-					do constraints calc                   */
+                                        do constraints calc                   */
   booleantype    ida_suppressalg;    /* true means suppress algebraic vars
-					in local error tests                  */
+                                        in local error tests                  */
 
   /* Divided differences array and associated minor arrays */
 
@@ -98,8 +98,8 @@ typedef struct IDAMemRec {
   N_Vector ida_constraints; /* vector of inequality constraint options        */
   N_Vector ida_savres;      /* saved residual vector (= tempv1)               */
   N_Vector ida_ee;          /* accumulated corrections to y vector, but
-			       set equal to estimated local errors upon
-			       successful return                              */
+                               set equal to estimated local errors upon
+                               successful return                              */
   N_Vector ida_mm;          /* mask vector in constraints tests (= tempv2)    */
   N_Vector ida_tempv1;      /* work space vector                              */
   N_Vector ida_tempv2;      /* work space vector                              */
@@ -121,6 +121,7 @@ typedef struct IDAMemRec {
   int ida_maxnit;           /* max. number of Netwon iterations in IC calc.   */
   int ida_nbacktr;          /* number of IC linesearch backtrack operations   */
   int ida_sysindex;         /* computed system index (0 or 1)                 */
+  int ida_maxbacks;         /* max backtracks per Newton step                 */
   realtype ida_epiccon;     /* IC nonlinear convergence test constant         */
   realtype ida_steptol;     /* minimum Newton step size in IC calculation     */
   realtype ida_tscale;      /* time scale factor = abs(tout1 - t0)            */
@@ -209,11 +210,11 @@ typedef struct IDAMemRec {
   int (*ida_linit)(struct IDAMemRec *idamem);
 
   int (*ida_lsetup)(struct IDAMemRec *idamem, N_Vector yyp,
-		    N_Vector ypp, N_Vector resp,
-		    N_Vector tempv1, N_Vector tempv2, N_Vector tempv3);
+                    N_Vector ypp, N_Vector resp,
+                    N_Vector tempv1, N_Vector tempv2, N_Vector tempv3);
 
   int (*ida_lsolve)(struct IDAMemRec *idamem, N_Vector b, N_Vector weight,
-		    N_Vector ycur, N_Vector ypcur, N_Vector rescur);
+                    N_Vector ycur, N_Vector ypcur, N_Vector rescur);
 
   int (*ida_lperf)(struct IDAMemRec *idamem, int perftask);
 
@@ -337,7 +338,8 @@ typedef struct IDAMemRec {
  * -----------------------------------------------------------------
  * ida_lfree should free up any memory allocated by the linear
  * solver. This routine is called once a problem has been
- * completed and the linear solver is no longer needed.
+ * completed and the linear solver is no longer needed.  It should
+ * return 0 upon success, nonzero on failure.
  * -----------------------------------------------------------------
  */
 
@@ -354,13 +356,13 @@ int IDAEwtSet(N_Vector ycur, N_Vector weight, void *data);
 /* High level error handler */
 
 void IDAProcessError(IDAMem IDA_mem,
-		     int error_code, const char *module, const char *fname,
-		     const char *msgfmt, ...);
+                     int error_code, const char *module, const char *fname,
+                     const char *msgfmt, ...);
 
 /* Prototype of internal errHandler function */
 
 void IDAErrHandler(int error_code, const char *module, const char *function,
-		   char *msg, void *data);
+                   char *msg, void *data);
 
 /*
  * =================================================================
@@ -423,6 +425,7 @@ void IDAErrHandler(int error_code, const char *module, const char *function,
 /* IDACalcIC error messages */
 
 #define MSG_IC_BAD_ICOPT   "icopt has an illegal value."
+#define MSG_IC_BAD_MAXBACKS "maxbacks <= 0 illegal."
 #define MSG_IC_MISSING_ID  "id = NULL conflicts with icopt."
 #define MSG_IC_TOO_CLOSE   "tout1 too close to t0 to attempt initial condition calculation."
 #define MSG_IC_BAD_ID      "id has illegal values."
@@ -433,7 +436,7 @@ void IDAErrHandler(int error_code, const char *module, const char *function,
 #define MSG_IC_SOLVE_FAIL  "The linear solver solve failed unrecoverably."
 #define MSG_IC_NO_RECOVERY "The residual routine or the linear setup or solve routine had a recoverable error, but IDACalcIC was unable to recover."
 #define MSG_IC_FAIL_CONSTR "Unable to satisfy the inequality constraints."
-#define MSG_IC_FAILED_LINS "The linesearch algorithm failed with too small a step."
+#define MSG_IC_FAILED_LINS "The linesearch algorithm failed: step too small or too many backtracks."
 #define MSG_IC_CONV_FAILED "Newton/Linesearch algorithm failed to converge."
 
 /* IDASolve error messages */

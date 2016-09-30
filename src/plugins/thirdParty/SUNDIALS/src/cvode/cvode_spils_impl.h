@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4378 $
- * $Date: 2015-02-19 10:55:14 -0800 (Thu, 19 Feb 2015) $
+ * $Revision: 4922 $
+ * $Date: 2016-09-19 14:35:32 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -82,7 +82,7 @@ typedef struct CVSpilsMemRec {
    */
   CVSpilsPrecSetupFn s_pset;
   CVSpilsPrecSolveFn s_psolve;
-  void (*s_pfree)(CVodeMem cv_mem);
+  int (*s_pfree)(CVodeMem cv_mem);
   void *s_P_data;
 
   /* Jacobian times vector compuation
@@ -118,6 +118,10 @@ int CVSpilsPSolve(void *cv_mem, N_Vector r, N_Vector z, int lr);
 int CVSpilsDQJtimes(N_Vector v, N_Vector Jv, realtype t,
                     N_Vector y, N_Vector fy, void *data,
                     N_Vector work);
+
+/* Auxilliary functions */
+int cvSpilsInitializeCounters(CVSpilsMem cvspils_mem);
+
 
 /*
  * -----------------------------------------------------------------

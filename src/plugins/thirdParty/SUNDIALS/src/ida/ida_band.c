@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4951 $
+ * $Date: 2016-09-22 10:21:00 -0700 (Thu, 22 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -116,7 +116,6 @@ int IDABand(void *ida_mem, long int Neq, long int mupper, long int mlower)
 {
   IDAMem IDA_mem;
   IDADlsMem idadls_mem;
-  int flag;
 
   /* Return immediately if ida_mem is NULL. */
   if (ida_mem == NULL) {
@@ -137,7 +136,7 @@ int IDABand(void *ida_mem, long int Neq, long int mupper, long int mlower)
     return(IDADLS_ILL_INPUT);
   }
 
-  if (lfree != NULL) flag = lfree((IDAMem) ida_mem);
+  if (lfree != NULL) lfree((IDAMem) ida_mem);
 
   /* Set five main function fields in ida_mem. */
   linit  = IDABandInit;
@@ -163,6 +162,8 @@ int IDABand(void *ida_mem, long int Neq, long int mupper, long int mlower)
   jacdata = NULL;
 
   last_flag = IDADLS_SUCCESS;
+
+  idaDlsInitializeCounters(idadls_mem);
 
   setupNonNull = TRUE;
 
@@ -216,9 +217,12 @@ static int IDABandInit(IDAMem IDA_mem)
 
   idadls_mem = (IDADlsMem) lmem;
 
-  /* Initialize nje and nreB */
-  nje   = 0;
-  nreDQ = 0;
+  idaDlsInitializeCounters(idadls_mem);
+
+/*
+    nje   = 0;
+    nreDQ = 0;
+*/
 
   if (jacDQ) {
     bjac = idaDlsBandDQJac;

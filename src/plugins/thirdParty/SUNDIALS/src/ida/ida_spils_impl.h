@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4378 $
- * $Date: 2015-02-19 10:55:14 -0800 (Thu, 19 Feb 2015) $
+ * $Revision: 4920 $
+ * $Date: 2016-09-19 14:34:35 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmers: Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -95,7 +95,7 @@ typedef struct IDASpilsMemRec {
 
   IDASpilsPrecSetupFn s_pset;
   IDASpilsPrecSolveFn s_psolve;
-  void (*s_pfree)(IDAMem IDA_mem);
+  int (*s_pfree)(IDAMem IDA_mem);
   void *s_pdata;
 
   /* Jacobian times vector compuation
@@ -134,6 +134,9 @@ int IDASpilsDQJtimes(realtype tt,
                      realtype c_j, void *data,
                      N_Vector work1, N_Vector work2);
 
+/* Auxilliary functions */
+
+int idaSpilsInitializeCounters(IDASpilsMem idaspils_mem);
 
 
 /*

@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4749 $
+ * $Date: 2016-04-23 18:42:38 -0700 (Sat, 23 Apr 2016) $
  * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -466,3 +466,10 @@ int cvDlsBandDQJac(long int N, long int mupper, long int mlower,
   return(retval);
 }
 
+int cvDlsInitializeCounters(CVDlsMem cvdls_mem)
+{
+  cvdls_mem->d_nje   = 0;
+  cvdls_mem->d_nfeDQ = 0;
+  cvdls_mem->d_nstlj = 0;
+  return(0);
+}

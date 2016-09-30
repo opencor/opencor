@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4321 $
- * $Date: 2015-01-14 16:53:35 -0800 (Wed, 14 Jan 2015) $
+ * $Revision: 4845 $
+ * $Date: 2016-08-03 15:45:09 -0700 (Wed, 03 Aug 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Alan Hindmarsh, Radu Serban and Aaron Collier @ LLNL
  * -----------------------------------------------------------------
@@ -193,6 +193,7 @@
 #define MAXNJ            4  /* max. number of J tries in IC calc. */
 #define MAXNI           10  /* max. Newton iterations in IC calc. */
 #define EPCON RCONST(0.33)  /* Newton convergence test constant */
+#define MAXBACKS       100  /* max backtracks per Newton step in IDACalcIC */
 
 /* IDANewtonIter constants */
 
@@ -344,6 +345,7 @@ void *IDACreate(void)
   IDA_mem->ida_maxnh   = MAXNH;
   IDA_mem->ida_maxnj   = MAXNJ;
   IDA_mem->ida_maxnit  = MAXNI;
+  IDA_mem->ida_maxbacks  = MAXBACKS;
   IDA_mem->ida_lsoff   = FALSE;
   IDA_mem->ida_steptol = SUNRpowerR(IDA_mem->ida_uround, TWOTHIRDS);
 
@@ -1913,7 +1915,7 @@ static int IDAStopTest1(IDAMem IDA_mem, realtype tout, realtype *tret,
     return(CONTINUE_STEPS);
 
   }
-  return(-99);
+  return(IDA_ILL_INPUT);
 }
 
 /*
@@ -1940,7 +1942,7 @@ static int IDAStopTest1(IDAMem IDA_mem, realtype tout, realtype *tret,
 static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
                         N_Vector yret, N_Vector ypret, int itask)
 {
-  int ier;
+  /* int ier; */
   realtype troundoff;
 
   switch (itask) {
@@ -1949,7 +1951,7 @@ static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
 
       /* Test for tn past tout. */
       if ((tn - tout)*hh >= ZERO) {
-        ier = IDAGetSolution(IDA_mem, tout, yret, ypret);
+        /* ier = */ IDAGetSolution(IDA_mem, tout, yret, ypret);
         *tret = tretlast = tout;
         return(IDA_SUCCESS);
       }
@@ -1958,7 +1960,7 @@ static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
         /* Test for tn at tstop and for tn near tstop */
         troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
         if (SUNRabs(tn - tstop) <= troundoff) {
-          ier = IDAGetSolution(IDA_mem, tstop, yret, ypret);
+          /* ier = */ IDAGetSolution(IDA_mem, tstop, yret, ypret);
           *tret = tretlast = tstop;
           tstopset = FALSE;
           return(IDA_TSTOP_RETURN);
@@ -1975,7 +1977,7 @@ static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
         /* Test for tn at tstop and for tn near tstop */
         troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
         if (SUNRabs(tn - tstop) <= troundoff) {
-          ier = IDAGetSolution(IDA_mem, tstop, yret, ypret);
+          /* ier = */ IDAGetSolution(IDA_mem, tstop, yret, ypret);
           *tret = tretlast = tstop;
           tstopset = FALSE;
           return(IDA_TSTOP_RETURN);
@@ -1988,7 +1990,7 @@ static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
       return(IDA_SUCCESS);
 
   }
-  return -99;
+  return IDA_ILL_INPUT;
 }
 
 /*
@@ -2040,7 +2042,7 @@ static int IDAHandleFailure(IDAMem IDA_mem, int sflag)
 
   }
 
-  return -99;
+  return (IDA_UNRECOGNISED_ERROR);
 }
 
 /*

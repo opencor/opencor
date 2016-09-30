@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4378 $
- * $Date: 2015-02-19 10:55:14 -0800 (Thu, 19 Feb 2015) $
+ * $Revision: 4924 $
+ * $Date: 2016-09-19 14:36:05 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Allan Taylor, Alan Hindmarsh, Radu Serban, and
  *                Aaron Collier @ LLNL
@@ -161,9 +161,9 @@ typedef struct KINMemRec {
   N_Vector *kin_df_aa;	    /* vector array needed for AA, Broyden, and NLEN */
   N_Vector *kin_dg_aa;	    /* vector array needed for AA, Broyden and NLEN */
   N_Vector *kin_q_aa;	    /* vector array needed for AA */
-  N_Vector *kin_qtmp_aa;    /* vector array needed for AA */
   realtype *kin_gamma_aa;   /* array of size maa used in AA */
   realtype *kin_R_aa;       /* array of size maa*maa used in AA */
+  int      *kin_ipt_map;    /* array of size maa used in AA */
   long int kin_m_aa;	    /* parameter for AA, Broyden or NLEN */
   booleantype kin_aamem_aa; /* sets additional memory needed for Anderson Acc */
   booleantype kin_setstop_aa; /* determines whether user will set stopping criterion */
@@ -190,7 +190,7 @@ typedef struct KINMemRec {
   int (*kin_lsolve)(struct KINMemRec *kin_mem, N_Vector xx, N_Vector bb,
 		    realtype *sJpnorm, realtype *sFdotJp);
 
-  void (*kin_lfree)(struct KINMemRec *kin_mem);
+  int (*kin_lfree)(struct KINMemRec *kin_mem);
 
   booleantype kin_inexact_ls; /* flag set by the linear solver module
 				 (in linit) indicating whether this is an
@@ -337,11 +337,12 @@ typedef struct KINMemRec {
 
 /*
  * -----------------------------------------------------------------
- * Function : void (*kin_lfree)(KINMem kin_mem)
+ * Function : int (*kin_lfree)(KINMem kin_mem)
  * -----------------------------------------------------------------
  * kin_lfree is called by KINFree and should free (deallocate) all
  * system memory resources allocated for the linear solver module
- * (see KINSpgmrFree/KINSpbcgFree).
+ * (see KINSpgmrFree/KINSpbcgFree).  It should return 0 upon
+ * success, nonzero on failure.
  *
  *  kinmem  pointer to an internal memory block allocated during
  *          prior calls to KINCreate and KINMalloc

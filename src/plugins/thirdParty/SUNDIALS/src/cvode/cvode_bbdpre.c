@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4922 $
+ * $Date: 2016-09-19 14:35:32 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Michael Wittman, Alan C. Hindmarsh, Radu Serban,
  *                and Aaron Collier @ LLNL
@@ -54,7 +54,7 @@ static int CVBBDPrecSolve(realtype t, N_Vector y, N_Vector fy,
                           int lr, void *bbd_data, N_Vector tmp);
 
 /* Prototype for CVBBDPrecFree */
-static void CVBBDPrecFree(CVodeMem cv_mem);
+static int CVBBDPrecFree(CVodeMem cv_mem);
 
 
 /* Prototype for difference quotient Jacobian calculation routine */
@@ -164,7 +164,12 @@ int CVBBDPrecInit(void *cvode_mem, long int Nlocal,
   pdata->ipwsize = Nlocal;
   pdata->nge = 0;
 
-  /* Overwrite the P_data field in the SPILS memory */
+  /* make sure s_P_data is free from any previous allocations */
+  if (cvspils_mem->s_pfree != NULL) {
+    cvspils_mem->s_pfree(cv_mem);
+  }
+
+  /* Point to the new P_data field in the SPILS memory */
   cvspils_mem->s_P_data = pdata;
 
   /* Attach the pfree function */
@@ -441,15 +446,15 @@ static int CVBBDPrecSolve(realtype t, N_Vector y, N_Vector fy,
 }
 
 
-static void CVBBDPrecFree(CVodeMem cv_mem)
+static int CVBBDPrecFree(CVodeMem cv_mem)
 {
   CVSpilsMem cvspils_mem;
   CVBBDPrecData pdata;
 
-  if (cv_mem->cv_lmem == NULL) return;
+  if (cv_mem->cv_lmem == NULL) return(0);
   cvspils_mem = (CVSpilsMem) cv_mem->cv_lmem;
 
-  if (cvspils_mem->s_P_data == NULL) return;
+  if (cvspils_mem->s_P_data == NULL) return(0);
   pdata = (CVBBDPrecData) cvspils_mem->s_P_data;
 
   DestroyMat(savedJ);
@@ -458,6 +463,8 @@ static void CVBBDPrecFree(CVodeMem cv_mem)
 
   free(pdata);
   pdata = NULL;
+
+  return(0);
 }
 
 
