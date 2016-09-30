@@ -83,10 +83,10 @@ int main(int pArgC, char *pArgV[])
     fileDescriptor = open(pArgV[1], O_RDWR);
 
     if (fileDescriptor == -1)
-        return error("The file cannot be opened.\n");
+        return error("The file could not be opened.\n");
 
     if (read(fileDescriptor, &elfHeader, EI_NIDENT) != EI_NIDENT)
-        return error("The ELF header (identifier) cannot be read.\n");
+        return error("The ELF header (identifier) could not be read.\n");
 
     if (   memcmp(elfHeader.e_ident, ELFMAG, SELFMAG)
         || (elfHeader.e_ident[EI_CLASS] != ELFCLASS64)
@@ -96,7 +96,7 @@ int main(int pArgC, char *pArgV[])
     }
 
     if (read(fileDescriptor, ((char *) &elfHeader)+EI_NIDENT, sizeof(Elf64_Ehdr)-EI_NIDENT) != (ssize_t) (sizeof(Elf64_Ehdr)-EI_NIDENT))
-        return error("The ELF header cannot be read.\n");
+        return error("The ELF header could not be read.\n");
 
     if ((size_t) elfHeader.e_phentsize != sizeof(Elf64_Phdr))
         return error("The program header size is wrong.\n");
@@ -104,11 +104,11 @@ int main(int pArgC, char *pArgV[])
     // Check that we have a dynamic section
 
     if (lseek(fileDescriptor, elfHeader.e_phoff, SEEK_SET) == -1)
-        return error("The program header cannot be found.\n");
+        return error("The program header could not be found.\n");
 
     for (i = 0; i < elfHeader.e_phnum; ++i) {
         if (read(fileDescriptor, &programHeader, sizeof(Elf64_Phdr)) != (ssize_t) sizeof(Elf64_Phdr))
-            return error("The dynamic section header cannot be read.\n");
+            return error("The dynamic section header could not be read.\n");
 
         if (programHeader.p_type == PT_DYNAMIC)
             break;
@@ -125,15 +125,15 @@ int main(int pArgC, char *pArgV[])
     dynamicSection = malloc(programHeader.p_filesz);
 
     if (!dynamicSection)
-        return error("Memory for the dynamic section cannot be allocated.\n");
+        return error("Memory for the dynamic section could not be allocated.\n");
 
     memset(dynamicSection, 0, programHeader.p_filesz);
 
     if (lseek(fileDescriptor, programHeader.p_offset, SEEK_SET) == -1)
-        return error("The dynamic section cannot be found.\n");
+        return error("The dynamic section could not be found.\n");
 
     if (read(fileDescriptor, dynamicSection, programHeader.p_filesz) != (ssize_t) programHeader.p_filesz)
-        return error("The dynamic section cannot be read.\n");
+        return error("The dynamic section could not be read.\n");
 
     // Retrieve the index of the RUNPATH tag
 
@@ -155,10 +155,10 @@ int main(int pArgC, char *pArgV[])
     ((Elf64_Dyn *) dynamicSection)[runpathTagIndex].d_tag = DT_RPATH;
 
     if (lseek(fileDescriptor, programHeader.p_offset, SEEK_SET) == -1)
-        return error("The RUNPATH value cannot be found.\n");
+        return error("The RUNPATH value could not be found.\n");
 
     if (write(fileDescriptor, dynamicSection, programHeader.p_filesz) != (int) programHeader.p_filesz)
-        return error("The RUNPATH value cannot be converted to a RPATH value.\n");
+        return error("The RUNPATH value could not be converted to a RPATH value.\n");
 
     // We are all done, so clean up and leave
 
