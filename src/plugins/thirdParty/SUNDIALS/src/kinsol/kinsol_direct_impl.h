@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4378 $
- * $Date: 2015-02-19 10:55:14 -0800 (Thu, 19 Feb 2015) $
+ * $Revision: 4749 $
+ * $Date: 2016-04-23 18:42:38 -0700 (Sat, 23 Apr 2016) $
  * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -74,14 +74,17 @@ typedef struct KINDlsMemRec {
  */
 
 int kinDlsDenseDQJac(long int N,
-		     N_Vector u, N_Vector fu,
-		     DlsMat Jac, void *data,
-		     N_Vector tmp1, N_Vector tmp2);
+                     N_Vector u, N_Vector fu,
+                     DlsMat Jac, void *data,
+                     N_Vector tmp1, N_Vector tmp2);
 
 int kinDlsBandDQJac(long int N, long int mupper, long int mlower,
-		    N_Vector u, N_Vector fu,
-		    DlsMat Jac, void *data,
-		    N_Vector tmp1, N_Vector tmp2);
+                    N_Vector u, N_Vector fu,
+                    DlsMat Jac, void *data,
+                    N_Vector tmp1, N_Vector tmp2);
+
+/* Auxilliary functions */
+int kinDlsInitializeCounters(KINDlsMem kindls_mem);
 
 /*
  * -----------------------------------------------------------------

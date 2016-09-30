@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4922 $
+ * $Date: 2016-09-19 14:35:32 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -39,13 +39,13 @@
 static int CVSptfqmrInit(CVodeMem cv_mem);
 
 static int CVSptfqmrSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
-			  N_Vector fpred, booleantype *jcurPtr, N_Vector vtemp1,
-			  N_Vector vtemp2, N_Vector vtemp3);
+                          N_Vector fpred, booleantype *jcurPtr, N_Vector vtemp1,
+                          N_Vector vtemp2, N_Vector vtemp3);
 
 static int CVSptfqmrSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
-			  N_Vector ynow, N_Vector fnow);
+                          N_Vector ynow, N_Vector fnow);
 
-static void CVSptfqmrFree(CVodeMem cv_mem);
+static int CVSptfqmrFree(CVodeMem cv_mem);
 
 
 /* Readability Replacements */
@@ -167,6 +167,8 @@ int CVSptfqmr(void *cvode_mem, int pretype, int maxl)
 
   cvspils_mem->s_last_flag = CVSPILS_SUCCESS;
 
+  cvSpilsInitializeCounters(cvspils_mem);
+
   setupNonNull = FALSE;
 
   /* Check for legal pretype */
@@ -245,8 +247,7 @@ static int CVSptfqmrInit(CVodeMem cv_mem)
   sptfqmr_mem = (SptfqmrMem) spils_mem;
 
   /* Initialize counters */
-  npe = nli = nps = ncfl = nstlpre = 0;
-  njtimes = nfes = 0;
+  cvSpilsInitializeCounters(cvspils_mem);
 
   /* Check for legal combination pretype - psolve */
   if ((pretype != PREC_NONE) && (psolve == NULL)) {
@@ -441,7 +442,7 @@ static int CVSptfqmrSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
  * -----------------------------------------------------------------
  */
 
-static void CVSptfqmrFree(CVodeMem cv_mem)
+static int CVSptfqmrFree(CVodeMem cv_mem)
 {
   CVSpilsMem cvspils_mem;
   SptfqmrMem sptfqmr_mem;
@@ -459,6 +460,6 @@ static void CVSptfqmrFree(CVodeMem cv_mem)
   free(cvspils_mem);
   cv_mem->cv_lmem = NULL;
 
-  return;
+  return(0);
 }
 

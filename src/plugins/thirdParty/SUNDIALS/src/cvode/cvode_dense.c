@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4951 $
+ * $Date: 2016-09-22 10:21:00 -0700 (Thu, 22 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
@@ -46,7 +46,7 @@ static int cvDenseSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
 static int cvDenseSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
                         N_Vector ycur, N_Vector fcur);
 
-static void cvDenseFree(CVodeMem cv_mem);
+static int cvDenseFree(CVodeMem cv_mem);
 
 /* Readability Replacements */
 
@@ -149,6 +149,8 @@ int CVDense(void *cvode_mem, long int N)
 
   last_flag = CVDLS_SUCCESS;
 
+  cvDlsInitializeCounters(cvdls_mem);
+
   setupNonNull = TRUE;
 
   /* Set problem dimension */
@@ -202,9 +204,11 @@ static int cvDenseInit(CVodeMem cv_mem)
 
   cvdls_mem = (CVDlsMem) lmem;
 
-  nje   = 0;
-  nfeDQ = 0;
-  nstlj = 0;
+  cvDlsInitializeCounters(cvdls_mem);
+  /*   nje   = 0;
+   nfeDQ = 0;
+   nstlj = 0;
+  */
 
   /* Set Jacobian function and data, depending on jacDQ */
   if (jacDQ) {
@@ -331,7 +335,7 @@ static int cvDenseSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
  * -----------------------------------------------------------------
  */
 
-static void cvDenseFree(CVodeMem cv_mem)
+static int cvDenseFree(CVodeMem cv_mem)
 {
   CVDlsMem  cvdls_mem;
 
@@ -342,5 +346,7 @@ static void cvDenseFree(CVodeMem cv_mem)
   DestroyArray(lpivots);
   free(cvdls_mem);
   cv_mem->cv_lmem = NULL;
+
+  return(0);
 }
 
