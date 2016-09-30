@@ -323,6 +323,18 @@ MACRO(INITIALISE_PROJECT)
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
+    # Try to build our runpath2rpath program, if we are on Linux
+
+    IF(NOT WIN32 AND NOT APPLE)
+        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PROJECT_BUILD_DIR}/runpath2rpath runpath2rpath.c
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cmake
+                        RESULT_VARIABLE RESULT)
+
+        IF(NOT RESULT EQUAL 0)
+            MESSAGE(FATAL_ERROR "runpath2rpath could not be built...")
+        ENDIF()
+    ENDIF()
+
     # Show the build information, if allowed
 
     MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
