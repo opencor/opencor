@@ -57,6 +57,11 @@ SingleCellViewPreferencesWidget::~SingleCellViewPreferencesWidget()
 void SingleCellViewPreferencesWidget::savePreferences()
 {
 //---ISSUE193--- TO BE DONE...
+qDebug("[%s]", qPrintable(mSettings->group()));
+int value = mSettings->value("TEST").toInt();
+qDebug("  OLD: %d", value);
+mSettings->setValue("TEST", ++value);
+qDebug("  NEW: %d", mSettings->value("TEST").toInt());
 }
 
 //==============================================================================

@@ -35,6 +35,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QSettings;
 class QStandardItem;
 class QStandardItemModel;
 
@@ -52,6 +53,12 @@ namespace OpenCOR {
 
 class PluginManager;
 class PreferencesInterface;
+
+//==============================================================================
+
+namespace Preferences {
+    class PreferencesWidget;
+}   // namespace Preferences
 
 //==============================================================================
 
@@ -83,6 +90,8 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
     QMap<QStandardItem *, PreferencesInterface *> mItemPreferencesInterfaces;
+    QMap<QStandardItem *, QSettings *> mItemSettings;
+    QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
 
     GeneralPreferencesWidget *mGeneralPreferencesWidget;
     PluginCategoryWidget *mPluginCategoryWidget;

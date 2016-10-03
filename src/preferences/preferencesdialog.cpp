@@ -68,7 +68,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mPluginManager(pPluginManager),
     mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
     mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
-    mItemPreferencesInterfaces(QMap<QStandardItem *, PreferencesInterface *>())
+    mItemPreferencesInterfaces(QMap<QStandardItem *, PreferencesInterface *>()),
+    mItemSettings(QMap<QStandardItem *, QSettings *>()),
+    mItemPreferencesWidgets(QMap<QStandardItem *, Preferences::PreferencesWidget *>())
 {
     // Set up the GUI
 
@@ -153,6 +155,11 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
 PreferencesDialog::~PreferencesDialog()
 {
+    // Delete some internal objects
+
+    foreach (QSettings *settings, mItemSettings.values())
+        delete settings;
+
     // Delete the GUI
 
     delete mGui;
@@ -216,7 +223,11 @@ void PreferencesDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 void PreferencesDialog::on_buttonBox_accepted()
 {
-//---ISSUE193---
+    // Save all of our plugins' preferences
+
+    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets.values())
+        preferencesWidget->savePreferences();
+
     // Confirm that we accepted the changes
 
     accept();
@@ -262,14 +273,26 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
             // We are dealing with a plugin's preferences, so retrieve its
             // preferences widget and show it
 
-//---ITEM193--- NEED TO PROVIDE A POINTER TO A QSettings OBJECT THAT IS SPECIFIC
-//              TO THE PLUGIN IN QUESTION...
-            QWidget *preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget(0);
+            QSettings *settings = mItemSettings.value(item);
+
+            if (!settings) {
+                settings = new QSettings();
+
+                settings->beginGroup(SettingsPlugins);
+                settings->beginGroup(item->text());
+                settings->beginGroup("Preferences");
+
+                mItemSettings.insert(item, settings);
+            }
+
+            Preferences::PreferencesWidget *preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget(settings);
 
             if (mGui->stackedWidget->indexOf(preferencesWidget) == -1)
                 mGui->stackedWidget->addWidget(preferencesWidget);
 
             mGui->stackedWidget->setCurrentWidget(preferencesWidget);
+
+            mItemPreferencesWidgets.insert(item, preferencesWidget);
         }
     }
 
