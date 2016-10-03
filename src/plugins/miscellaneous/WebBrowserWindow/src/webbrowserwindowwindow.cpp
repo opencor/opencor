@@ -105,6 +105,24 @@ void WebBrowserWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
+void WebBrowserWindowWindow::on_urlValue_returnPressed()
+{
+    // Load the URL
+
+    mWebBrowserWidget->load(QUrl(mGui->urlValue->text()));
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_refreshButton_clicked()
+{
+    // Reload the URL
+
+    mWebBrowserWidget->reload();
+}
+
+//==============================================================================
+
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 

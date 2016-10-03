@@ -19,12 +19,12 @@
         <translation>Navigateur Web</translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation>Rafraîchir</translation>
+        <source>Reload</source>
+        <translation>Recharger</translation>
     </message>
     <message>
-        <source>Refresh the Web page</source>
-        <translation>Rafraîchir la page Web</translation>
+        <source>Reload this Web page</source>
+        <translation>Recharger cette page Web</translation>
     </message>
 </context>
 </TS>

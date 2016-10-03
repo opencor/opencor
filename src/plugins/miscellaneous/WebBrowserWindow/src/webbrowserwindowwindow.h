@@ -59,6 +59,10 @@ private:
     Ui::WebBrowserWindowWindow *mGui;
 
     QWebView *mWebBrowserWidget;
+
+private slots:
+    void on_urlValue_returnPressed();
+    void on_refreshButton_clicked();
 };
 
 //==============================================================================
