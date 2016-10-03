@@ -21,8 +21,11 @@ limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "webbrowserwindowwidget.h"
 #include "webbrowserwindowwindow.h"
+
+//==============================================================================
+
+#include <QWebView>
 
 //==============================================================================
 
