@@ -26,11 +26,11 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QStandardItemModel>
+#include "ui_datastoredialog.h"
 
 //==============================================================================
 
-#include "ui_datastoredialog.h"
+#include <QStandardItemModel>
 
 //==============================================================================
 
