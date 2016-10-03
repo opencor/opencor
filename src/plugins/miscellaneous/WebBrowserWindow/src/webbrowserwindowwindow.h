@@ -28,6 +28,10 @@ limitations under the License.
 
 //==============================================================================
 
+class QWebView;
+
+//==============================================================================
+
 namespace Ui {
     class WebBrowserWindowWindow;
 }
@@ -36,10 +40,6 @@ namespace Ui {
 
 namespace OpenCOR {
 namespace WebBrowserWindow {
-
-//==============================================================================
-
-class WebBrowserWindowWidget;
 
 //==============================================================================
 
@@ -58,7 +58,7 @@ protected:
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
-    WebBrowserWindowWidget *mWebBrowserWidget;
+    QWebView *mWebBrowserWidget;
 };
 
 //==============================================================================

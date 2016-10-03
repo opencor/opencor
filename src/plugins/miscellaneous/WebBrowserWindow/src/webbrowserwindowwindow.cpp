@@ -55,7 +55,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Create and add the web browser widget
 
-    mWebBrowserWidget = new WebBrowserWindowWidget(this);
+    mWebBrowserWidget = new QWebView(this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
