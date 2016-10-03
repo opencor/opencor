@@ -334,7 +334,7 @@
     </message>
     <message>
         <source>Organisation</source>
-        <translation>Exemple</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Simulation</source>
@@ -359,6 +359,62 @@
     <message>
         <source>Widget</source>
         <translation>Gadget</translation>
+    </message>
+    <message>
+        <source>Plugins that illustrate various plugin-related aspects.</source>
+        <translation>Extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
+    </message>
+    <message>
+        <source>Plugins that are not valid.</source>
+        <translation>Extensions qui ne sont pas valides.</translation>
+    </message>
+    <message>
+        <source>Plugins to analyse files.</source>
+        <translation>Extensions pour analyser des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various APIs.</source>
+        <translation>Extensions pour accéder différentes APIs.</translation>
+    </message>
+    <message>
+        <source>Plugins to store and manipulate data.</source>
+        <translation>Extensions pour stocker et manipuler des données.</translation>
+    </message>
+    <message>
+        <source>Plugins to edit files.</source>
+        <translation>Extensions pour éditer des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins that do not fit in any other category.</source>
+        <translation>Extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
+    </message>
+    <message>
+        <source>Plugins to organise files.</source>
+        <translation>Extensions pour organiser des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to simulate files.</source>
+        <translation>Extensions pour simuler des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various solvers.</source>
+        <translation>Extensions pour accéder différents solveurs.</translation>
+    </message>
+    <message>
+        <source>Plugins to support various third-party libraries and APIs.</source>
+        <translation>Extensions pour supporter différentes librairies externes et APIs.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various third-party libraries.</source>
+        <translation>Extensions pour accéder différentes librairies externes.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various tools.</source>
+        <translation>Extensions pour accéder différents outils.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
+        <translation>Extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
     </message>
     <message>
         <source>No Internet connection available.</source>

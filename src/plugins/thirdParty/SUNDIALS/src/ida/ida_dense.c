@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4075 $
- * $Date: 2014-04-24 10:46:58 -0700 (Thu, 24 Apr 2014) $
+ * $Revision: 4951 $
+ * $Date: 2016-09-22 10:21:00 -0700 (Thu, 22 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -109,7 +109,6 @@ int IDADense(void *ida_mem, long int Neq)
 {
   IDAMem IDA_mem;
   IDADlsMem idadls_mem;
-  int flag;
 
   /* Return immediately if ida_mem is NULL. */
   if (ida_mem == NULL) {
@@ -125,7 +124,7 @@ int IDADense(void *ida_mem, long int Neq)
     return(IDADLS_ILL_INPUT);
   }
 
-  if (lfree != NULL) flag = lfree(IDA_mem);
+  if (lfree != NULL) lfree(IDA_mem);
 
   /* Set five main function fields in IDA_mem. */
   linit  = IDADenseInit;
@@ -151,6 +150,8 @@ int IDADense(void *ida_mem, long int Neq)
   jacdata = NULL;
 
   last_flag = IDADLS_SUCCESS;
+
+  idaDlsInitializeCounters(idadls_mem);
 
   setupNonNull = TRUE;
 
@@ -198,9 +199,11 @@ static int IDADenseInit(IDAMem IDA_mem)
 
   idadls_mem = (IDADlsMem) lmem;
 
-
-  nje   = 0;
-  nreDQ = 0;
+  idaDlsInitializeCounters(idadls_mem);
+  /*
+   nje   = 0;
+   nreDQ = 0;
+  */
 
   if (jacDQ) {
     djac = idaDlsDenseDQJac;

@@ -25,11 +25,11 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QRegularExpressionValidator>
+#include "ui_graphpanelwidgetcustomaxesdialog.h"
 
 //==============================================================================
 
-#include "ui_graphpanelwidgetcustomaxesdialog.h"
+#include <QRegularExpressionValidator>
 
 //==============================================================================
 

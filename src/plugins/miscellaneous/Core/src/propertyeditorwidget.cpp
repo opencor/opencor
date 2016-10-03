@@ -645,7 +645,7 @@ bool Property::isEditable() const
 {
     // Return whether our value item, if any, is editable
 
-    return mUnit?mValue->isEditable():false;
+    return mValue?mValue->isEditable():false;
 }
 
 //==============================================================================
@@ -999,10 +999,9 @@ void Property::setVisible(const bool &pVisible)
 
 void Property::select() const
 {
-    // Have our owner select our value, if any
+    // Have our owner select ourselves by selecting our name
 
-    if (mValue)
-        mOwner->setCurrentIndex(mValue->index());
+    mOwner->setCurrentIndex(mName->index());
 }
 
 //==============================================================================
@@ -1111,10 +1110,6 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
             this, SLOT(updateHeight()));
     connect(this, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(updateHeight()));
-
-    // Further customise ourselves
-
-    setSelectionMode(QAbstractItemView::SingleSelection);
 
     header()->setSectionsMovable(false);
 
@@ -1612,13 +1607,16 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     TreeViewWidget::mousePressEvent(pEvent);
 
     // Edit our 'new' property, but only if we are not right-clicking and if
-    // there is a 'new' property and it is different from our 'old' property
+    // there is a 'new' property and it is different from our 'old' property,
+    // otherwise cancel any editing if we are right-clicking
 
     Property *newProperty = property(indexAt(pEvent->pos()));
 
     mRightClicking = pEvent->button() == Qt::RightButton;
 
-    if (!mRightClicking && newProperty && (newProperty != oldProperty))
+    if (mRightClicking)
+        finishEditing(false);
+    else if (newProperty && (newProperty != oldProperty))
         editProperty(newProperty);
 }
 
@@ -1800,9 +1798,9 @@ void PropertyEditorWidget::editorClosed()
 
 void PropertyEditorWidget::selectProperty(Property *pProperty)
 {
-    // Select the property, if one is provided and is not of section type
+    // Select the property, if one is provided
 
-    if (!pProperty || (pProperty->type() == Property::Section))
+    if (!pProperty)
         return;
 
     pProperty->select();

@@ -51,7 +51,10 @@ public:
     ~PluginManager();
 
     Plugins plugins() const;
+    Plugins sortedPlugins() const;
+
     Plugins loadedPlugins() const;
+    Plugins sortedLoadedPlugins() const;
 
     QString pluginsDir() const;
 

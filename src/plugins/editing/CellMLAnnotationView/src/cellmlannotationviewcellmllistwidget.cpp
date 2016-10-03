@@ -354,10 +354,6 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setRootIsDecorated(false);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    // Note: the selection mode we are opting for means that there is always
-    //       going to be a CellML element which is selected, so it's something
-    //       that we must keep in mind when showing the context menu...
 
     // Populate ourselves
 

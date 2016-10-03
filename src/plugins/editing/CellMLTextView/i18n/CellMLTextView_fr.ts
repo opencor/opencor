@@ -19,6 +19,10 @@
         <translation>dans le fichier CellML d&apos;origine</translation>
     </message>
     <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>You might want to use the Raw (CellML) view to edit the file.</source>
         <translation>Vous pouvez utiliser la vue (CellML) Brut pour éditer le fichier.</translation>
     </message>

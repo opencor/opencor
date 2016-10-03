@@ -124,6 +124,50 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
 
 //==============================================================================
 
+QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
+{
+    // Return the description of the given category
+
+    switch (pCategory) {
+#ifdef ENABLE_SAMPLES
+    case PluginInfo::Sample:
+        return QObject::tr("Plugins that illustrate various plugin-related aspects.");
+#endif
+    case PluginInfo::Invalid:
+        return QObject::tr("Plugins that are not valid.");
+    case PluginInfo::Analysis:
+        return QObject::tr("Plugins to analyse files.");
+    case PluginInfo::Api:
+        return QObject::tr("Plugins to access various APIs.");
+    case PluginInfo::DataStore:
+        return QObject::tr("Plugins to store and manipulate data.");
+    case PluginInfo::Editing:
+        return QObject::tr("Plugins to edit files.");
+    case PluginInfo::Miscellaneous:
+        return QObject::tr("Plugins that do not fit in any other category.");
+    case PluginInfo::Organisation:
+        return QObject::tr("Plugins to organise files.");
+    case PluginInfo::Simulation:
+        return QObject::tr("Plugins to simulate files.");
+    case PluginInfo::Solver:
+        return QObject::tr("Plugins to access various solvers.");
+    case PluginInfo::Support:
+        return QObject::tr("Plugins to support various third-party libraries and APIs.");
+    case PluginInfo::ThirdParty:
+        return QObject::tr("Plugins to access various third-party libraries.");
+    case PluginInfo::Tools:
+        return QObject::tr("Plugins to access various tools.");
+    case PluginInfo::Widget:
+        return QObject::tr("Plugins to access various <em>ad hoc</em> widgets.");
+    }
+
+    return "???";
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
+}
+
+//==============================================================================
+
 QString nativeCanonicalDirName(const QString &pDirName)
 {
     // Return a native and canonical version of the given directory name or a

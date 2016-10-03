@@ -89,7 +89,6 @@ SET(SOURCES
     src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
 
-    src/plugins/datastoreinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
@@ -109,8 +108,6 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
-
-    src/plugins/datastoreinterface.h
 )
 
 SET(UIS
@@ -554,8 +551,8 @@ ELSE()
             )
         ENDIF()
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 247fad7f3ff9a5eb7ee328c8f930e40aa26f2bf2)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 42abe98a74ad39cea66fe755350da4e97f5711ef)
+        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 58f3cc096cfc002f575fb9041de757da8af6fd8d)
+        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll beca4818b830b2d9a0727b12df4794a1dfdb8cfd)
 
         LIST(APPEND ADDITIONAL_FILES
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
