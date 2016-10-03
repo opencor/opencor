@@ -20,12 +20,12 @@ limitations under the License.
 // Web Browser window
 //==============================================================================
 
-#include "ui_webbrowserwindowwindow.h"
+#include "borderedwidget.h"
+#include "webbrowserwindowwindow.h"
 
 //==============================================================================
 
-#include "borderedwidget.h"
-#include "webbrowserwindowwindow.h"
+#include "ui_webbrowserwindowwindow.h"
 
 //==============================================================================
 
