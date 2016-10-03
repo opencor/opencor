@@ -66,10 +66,10 @@
       <item>
        <widget class="QPushButton" name="refreshButton">
         <property name="toolTip">
-         <string>Refresh</string>
+         <string>Reload</string>
         </property>
         <property name="statusTip">
-         <string>Refresh the list of exposures</string>
+         <string>Reload the list of exposures</string>
         </property>
         <property name="text">
          <string/>
