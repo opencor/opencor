@@ -32,9 +32,7 @@ install:
     else
          brew update
       && brew install qt5
-      && set OPENSSL_ROOT_DIR=/usr/local/opt/openssl
-      && ls -lh /usr/local/opt/openssl
-      && ls -lhR /usr/local/Cellar/openssl/1.0.2j
+      && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi
