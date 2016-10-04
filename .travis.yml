@@ -30,9 +30,9 @@ install:
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
       ;
     else
-         set OPENSSL_ROOT_DIR=/usr/local/opt/openssl
-      && brew update
-      && brew install qt5
+         brew update
+      && brew install openssl qt5
+      && set OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi
