@@ -31,8 +31,7 @@ install:
       ;
     else
          brew update
-      && brew unlink cmake
-      && brew install cmake qt5
+      && brew install qt5
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi
