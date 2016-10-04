@@ -285,7 +285,8 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-    api/BioSignalMLAPI
+#---ISSUE1121---
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
@@ -338,7 +339,8 @@ SET(PLUGINS
 
     # Selectable plugins
 
-    dataStore/BioSignalMLDataStore
+#---ISSUE1121---
+#    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
