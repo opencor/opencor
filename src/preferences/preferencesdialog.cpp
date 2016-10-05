@@ -187,14 +187,17 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
 
         for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
             QStandardItem *categoryItem = rootItem->child(i);
-            int comparison = nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text()));
 
-            if (comparison < 0) {
-                inserted = true;
+            if (categoryItem->hasChildren()) {
+                int comparison = nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text()));
 
-                mModel->invisibleRootItem()->insertRow(i, res);
+                if (comparison < 0) {
+                    inserted = true;
 
-                break;
+                    mModel->invisibleRootItem()->insertRow(i, res);
+
+                    break;
+                }
             }
         }
 
