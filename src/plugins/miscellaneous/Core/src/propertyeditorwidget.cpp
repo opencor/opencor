@@ -216,7 +216,7 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // Note: we would normally call style()->hitTestComplexControl() and, if it
     //       returns QStyle::SC_ComboBoxArrow, then allow the default handling
     //       of the event, but if this works fine on Windows and Linux, it just
-    //       doesn't work on OS X. Indeed, no matter where we are over the
+    //       doesn't work on macOS. Indeed, no matter where we are over the
     //       widget, style()->hitTestComplexControl() will always (and as
     //       expected; [QtSources]/qtbase/src/widgets/styles/qmacstyle_mac.mm)
     //       return QStyle::SC_ComboBoxArrow. So, to get the behaviour we are
