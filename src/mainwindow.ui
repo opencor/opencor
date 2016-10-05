@@ -51,7 +51,6 @@
     <addaction name="separator"/>
     <addaction name="actionPlugins"/>
     <addaction name="separator"/>
-    <addaction name="separator"/>
     <addaction name="actionResetAll"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
