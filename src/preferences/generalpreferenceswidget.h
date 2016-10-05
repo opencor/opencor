@@ -46,6 +46,8 @@ public:
     explicit GeneralPreferencesWidget(QWidget *pParent);
     ~GeneralPreferencesWidget();
 
+    void savePreferences();
+
 private:
     Ui::GeneralPreferencesWidget *mGui;
 };

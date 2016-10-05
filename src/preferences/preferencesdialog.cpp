@@ -223,6 +223,10 @@ void PreferencesDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 void PreferencesDialog::on_buttonBox_accepted()
 {
+    // Save our general preferences
+
+    mGeneralPreferencesWidget->savePreferences();
+
     // Save all of our plugins' preferences
 
     foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets.values())

@@ -28,7 +28,15 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QSettings>
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+static const auto SettingsPreferences = QStringLiteral("Preferences");
 
 //==============================================================================
 
@@ -48,6 +56,24 @@ GeneralPreferencesWidget::~GeneralPreferencesWidget()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void GeneralPreferencesWidget::savePreferences()
+{
+    // Save our preferences
+
+    QSettings settings;
+
+    settings.beginGroup(SettingsPreferences);
+//---ISSUE193--- TO BE DONE...
+qDebug("[%s]", qPrintable(settings.group()));
+int value = settings.value("TEST").toInt();
+qDebug("  OLD: %d", value);
+settings.setValue("TEST", ++value);
+qDebug("  NEW: %d", settings.value("TEST").toInt());
+    settings.endGroup();
 }
 
 //==============================================================================
