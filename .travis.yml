@@ -31,8 +31,8 @@ install:
       ;
     else
          brew update
-      && brew unlink cmake
-      && brew install cmake qt5
+      && brew install qt5
+      && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi

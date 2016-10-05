@@ -273,7 +273,7 @@ class LLVMPlugin : public QObject
         </div>
 
         <p>
-            There may be cases where a plugin declares a function or defines a class that we want to be able to use from another plugin. On <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="https://en.wikipedia.org/wiki/OS_X">OS X</a>, nothing special needs to be done, but on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, the function or class needs to be exported by the original plugin:
+            There may be cases where a plugin declares a function or defines a class that we want to be able to use from another plugin. On <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="https://en.wikipedia.org/wiki/MacOS">macOS</a>, nothing special needs to be done, but on <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, the function or class needs to be exported by the original plugin:
         </p>
 
         <pre class="prettyprint">void __declspec(dllexport) myFunction();
