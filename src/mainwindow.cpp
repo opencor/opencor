@@ -32,7 +32,6 @@ limitations under the License.
 #include "plugininterface.h"
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
-#include "preferencesdialog.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -155,18 +154,17 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Set up the GUI
     // Note: the application icon (which needs to be set for Linux, but not for
-    //       Windows or OS X, since it's set through CMake in those cases (see
+    //       Windows or macOS, since it's set through CMake in those cases (see
     //       CMakeLists.txt)) is set within the GUI file. This being said, it's
     //       good to have it set for all three platforms, since it can then be
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
 
-    // Set the role of some of our menu items, so that OS X can move them into
+    // Set the role of some of our menu items, so that macOS can move them into
     // the application menu
 
     mGui->actionQuit->setMenuRole(QAction::QuitRole);
-    mGui->actionPreferences->setMenuRole(QAction::PreferencesRole);
     mGui->actionAbout->setMenuRole(QAction::AboutRole);
     mGui->actionCheckForUpdates->setMenuRole(QAction::ApplicationSpecificRole);
 
@@ -233,8 +231,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 #endif
 
 #ifdef Q_OS_MAC
-    // A special shortcut to have OpenCOR minimised on OS X when pressing Cmd+M
-    // Note: indeed, when pressing Cmd+M on OS X, the active application is
+    // A special shortcut to have OpenCOR minimised on macOS when pressing Cmd+M
+    // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
 
     new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_M),
@@ -354,7 +352,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
     } else if (pEvent->type() == QEvent::WindowStateChange) {
         // The window state has changed, so update the checked state of our full
         // screen action
-        // Note: useful on OS X since there is a special full screen button in
+        // Note: useful on macOS since there is a special full screen button in
         //       the main window's title bar...
 
         mGui->actionFullScreen->setChecked(isFullScreen());
@@ -713,8 +711,8 @@ void MainWindow::loadSettings()
         //       Core interface, so no need to check anything...
     }
 
-    // Remove the File menu when on OS X, should no plugins be loaded
-    // Note: our File menu should only contain the Exit menu item, but on OS X
+    // Remove the File menu when on macOS, should no plugins be loaded
+    // Note: our File menu should only contain the Exit menu item, but on macOS
     //       that menu item gets automatically moved to the application menu...
 
 #ifdef Q_OS_MAC
@@ -974,7 +972,7 @@ void MainWindow::showSelf()
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    // We are on Linux or OS X, so we can simply activate the window and raise
+    // We are on Linux or macOS, so we can simply activate the window and raise
     // ourselves
 
     activateWindow();
@@ -1163,17 +1161,6 @@ void MainWindow::on_actionPlugins_triggered()
         warningMessageBox(this, tr("Plugins"),
                           tr("No plugins could be found."));
     }
-}
-
-//==============================================================================
-
-void MainWindow::on_actionPreferences_triggered()
-{
-    // Show the preferences dialog
-
-    PreferencesDialog preferencesDialog(mPluginManager, this);
-
-    preferencesDialog.exec();
 }
 
 //==============================================================================

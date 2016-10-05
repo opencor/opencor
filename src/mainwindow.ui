@@ -21,7 +21,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -51,7 +51,6 @@
     <addaction name="separator"/>
     <addaction name="actionPlugins"/>
     <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionResetAll"/>
    </widget>
@@ -244,21 +243,6 @@
    </property>
    <property name="statusTip">
     <string>Show/hide all the recent/current docked windows</string>
-   </property>
-  </action>
-  <action name="actionPreferences">
-   <property name="icon">
-    <iconset resource="../res/ui.qrc">
-     <normaloff>:/oxygen/categories/preferences-system.png</normaloff>:/oxygen/categories/preferences-system.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Preferences...</string>
-   </property>
-   <property name="toolTip">
-    <string>Preferences</string>
-   </property>
-   <property name="statusTip">
-    <string>Preferences for OpenCOR and its plugins</string>
    </property>
   </action>
   <action name="actionCheckForUpdates">

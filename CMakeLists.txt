@@ -178,7 +178,7 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
-# Set the application icon, but only for Windows and OS X, since in the case of
+# Set the application icon, but only for Windows and macOS, since in the case of
 # Linux, it's done through the use of app_icon (see res/ui.qrc) in
 # src/mainwindow.ui
 # Note: on Windows, we set a bit more than just the application icon. We also
@@ -272,7 +272,7 @@ IF(ENABLE_TESTS)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
-    # Clean up our test program, but only if we are on OS X
+    # Clean up our test program, but only if we are on macOS
 
     IF(APPLE)
         OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
@@ -686,7 +686,7 @@ IF(WIN32)
         ")
     ENDIF()
 ELSEIF(APPLE)
-    # Select PackageMaker and ZIP as the packagers on OS X
+    # Select PackageMaker and ZIP as the packagers on macOS
     # Note: this is actually done within the package script, so that the ZIP
     #       package can be done 'properly', i.e. we don't have the full tree
     #       structure in the ZIP file...
@@ -748,10 +748,11 @@ ELSE()
             RENAME libstdc++.so.6)
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and OS X, we don't have a macro for deploying all
-    #       of our Qt libraries at once. Indeed, on Linux, the version of a file
-    #       is appended to its suffix, so unless making the macro unnecessarily
-    #       cumbersome to use, it's better to deploy one Qt library at a time...
+    # Note: unlike for Windows and macOS, we don't have a macro for deploying
+    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
+    #       file is appended to its suffix, so unless making the macro
+    #       unnecessarily cumbersome to use, it's better to deploy one Qt
+    #       library at a time...
 
     IF(ENABLE_TESTS)
         SET(TEST Test)

@@ -150,18 +150,6 @@
         <translation>Montrer/cacher toutes les fenêtres ancrées récentes/actuelles</translation>
     </message>
     <message>
-        <source>&amp;Preferences...</source>
-        <translation>&amp;Préférences...</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation>Préférences</translation>
-    </message>
-    <message>
-        <source>Preferences for OpenCOR and its plugins</source>
-        <translation>Préférences pour OpenCOR et ses extensions</translation>
-    </message>
-    <message>
         <source>Check For Updates...</source>
         <translation>Vérifier Pour Des Mises À Jour...</translation>
     </message>
@@ -335,13 +323,6 @@
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
         <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent prendre effet.</translation>
-    </message>
-</context>
-<context>
-    <name>PreferencesDialog</name>
-    <message>
-        <source>Preferences</source>
-        <translation>Préférences</translation>
     </message>
 </context>
 <context>
