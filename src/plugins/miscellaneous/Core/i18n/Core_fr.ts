@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CorePreferencesWidget</name>
+    <message>
+        <source>Under construction...</source>
+        <translation>En construction...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::Core::CentralWidget</name>
     <message>
         <source>Sample</source>
