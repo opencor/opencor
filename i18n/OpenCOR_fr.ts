@@ -157,6 +157,18 @@
         <source>Check for updates</source>
         <translation>Vérifier pour des mises à jour</translation>
     </message>
+    <message>
+        <source>&amp;Preferences...</source>
+        <translation>&amp;Préférences...</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Preferences for OpenCOR and its plugins</source>
+        <translation>Préférences pour OpenCOR et ses extensions</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
@@ -323,6 +335,13 @@
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
         <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent prendre effet.</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesDialog</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
     </message>
 </context>
 <context>
