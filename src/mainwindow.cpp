@@ -32,7 +32,6 @@ limitations under the License.
 #include "plugininterface.h"
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
-#include "preferencesdialog.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -161,14 +160,11 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
-//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT USER PREFERENCES...
-showEnableAction(mGui->actionPreferences, false);
 
     // Set the role of some of our menu items, so that OS X can move them into
     // the application menu
 
     mGui->actionQuit->setMenuRole(QAction::QuitRole);
-    mGui->actionPreferences->setMenuRole(QAction::PreferencesRole);
     mGui->actionAbout->setMenuRole(QAction::AboutRole);
     mGui->actionCheckForUpdates->setMenuRole(QAction::ApplicationSpecificRole);
 
@@ -1165,17 +1161,6 @@ void MainWindow::on_actionPlugins_triggered()
         warningMessageBox(this, tr("Plugins"),
                           tr("No plugins could be found."));
     }
-}
-
-//==============================================================================
-
-void MainWindow::on_actionPreferences_triggered()
-{
-    // Show the preferences dialog
-
-    PreferencesDialog preferencesDialog(this);
-
-    preferencesDialog.exec();
 }
 
 //==============================================================================
