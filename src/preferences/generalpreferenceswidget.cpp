@@ -40,9 +40,11 @@ static const auto SettingsPreferences = QStringLiteral("Preferences");
 
 //==============================================================================
 
-GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
+GeneralPreferencesWidget::GeneralPreferencesWidget(PluginManager *pPluginManager,
+                                                   QWidget *pParent) :
     QWidget(pParent),
-    mGui(new Ui::GeneralPreferencesWidget)
+    mGui(new Ui::GeneralPreferencesWidget),
+    mPluginManager(pPluginManager)
 {
     // Set up the GUI
 

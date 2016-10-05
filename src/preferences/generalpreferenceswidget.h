@@ -38,18 +38,25 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class PluginManager;
+
+//==============================================================================
+
 class GeneralPreferencesWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit GeneralPreferencesWidget(QWidget *pParent);
+    explicit GeneralPreferencesWidget(PluginManager *pPluginManager,
+                                      QWidget *pParent);
     ~GeneralPreferencesWidget();
 
     void savePreferences();
 
 private:
     Ui::GeneralPreferencesWidget *mGui;
+
+    PluginManager *mPluginManager;
 };
 
 //==============================================================================

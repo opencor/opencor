@@ -78,7 +78,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Create our general preferences and plugin category widgets
 
-    mGeneralPreferencesWidget = new GeneralPreferencesWidget(this);
+    mGeneralPreferencesWidget = new GeneralPreferencesWidget(mPluginManager, this);
     mPluginCategoryWidget = new PluginCategoryWidget(this);
 
     mGui->stackedWidget->addWidget(mGeneralPreferencesWidget);
