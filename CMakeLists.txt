@@ -285,7 +285,8 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-    api/BioSignalMLAPI
+#---OPENCOR---
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
@@ -338,7 +339,8 @@ SET(PLUGINS
 
     # Selectable plugins
 
-    dataStore/BioSignalMLDataStore
+#---OPENCOR---
+#    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
@@ -465,7 +467,7 @@ IF(APPLE)
 
     SET(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macos/Info.plist.in
                    ${INFO_PLIST_FILENAME})
 
     SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
@@ -678,9 +680,9 @@ ELSEIF(APPLE)
     #       package can be done 'properly', i.e. we don't have the full tree
     #       structure in the ZIP file...
 
-    SET(CPACK_SYSTEM_NAME "OSX")
+    SET(CPACK_SYSTEM_NAME "macOS")
 
-    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/osx/welcome.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
@@ -694,7 +696,7 @@ ELSEIF(APPLE)
 
     SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
                    ${SH_FILENAME})
 
     INSTALL(FILES ${SH_FILENAME}
