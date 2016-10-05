@@ -12,7 +12,7 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(APPLE)
         IF(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
            AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on OS X...")
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
         ENDIF()
     ELSE()
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
@@ -102,7 +102,7 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
     SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
-    # On OS X, keep track of the Qt libraries against which we need to link
+    # On macOS, keep track of the Qt libraries against which we need to link
 
     IF(APPLE)
         IF(ENABLE_TESTS)
@@ -140,7 +140,7 @@ MACRO(INITIALISE_PROJECT)
         )
     ENDIF()
 
-    # Make sure that OpenSSL is available on Linux and OS X
+    # Make sure that OpenSSL is available on Linux and macOS
     # Note: it's currently needed for libgit2, but it might be needed for other
     #       things too in the future, so make sure it's available...
 
@@ -183,7 +183,7 @@ MACRO(INITIALISE_PROJECT)
 
     # Some general build settings
     # Note: MSVC enables C++11 support by default, so we just need to enable it
-    #       on Linux and OS X...
+    #       on Linux and macOS...
 
     IF(WIN32)
         SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc")
@@ -204,7 +204,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # On OS X, we want to be able to access Cocoa
+    # On macOS, we want to be able to access Cocoa
 
     IF(APPLE)
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -framework AppKit")
@@ -226,7 +226,7 @@ MACRO(INITIALISE_PROJECT)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
             #          size of OpenCOR or one its shared libraries...
-            # Note #2: the above linking option has become obsolete on OS X...
+            # Note #2: the above linking option has become obsolete on macOS...
         ENDIF()
 
         # Make sure that debugging is off in Qt
@@ -275,7 +275,7 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DENABLE_SAMPLES)
     ENDIF()
 
-    # On OS X, make sure that we support 10.8 and later, unless a specific
+    # On macOS, make sure that we support 10.8 and later, unless a specific
     # deployment target has been specified
 
     IF(APPLE)
@@ -283,7 +283,13 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
         ENDIF()
 
-        SET(BUILD_INFORMATION "${BUILD_INFORMATION} for OS X ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
+        IF(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
+            SET(SYSTEM_NAME "OS X")
+        ELSE()
+            SET(SYSTEM_NAME macOS)
+        ENDIF()
+
+        SET(BUILD_INFORMATION "${BUILD_INFORMATION} for ${SYSTEM_NAME} ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
     ENDIF()
 
     # Destination of our plugins so that we don't have to deploy OpenCOR on
@@ -310,7 +316,7 @@ MACRO(INITIALISE_PROJECT)
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
     ENDIF()
 
-    # Set the RPATH (and RPATH link, if needed) information on Linux and OS X
+    # Set the RPATH (and RPATH link, if needed) information on Linux and macOS
 
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -661,7 +667,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # A few OS X specific things
+    # A few macOS specific things
 
     IF(APPLE)
         # Clean up our plugin
@@ -691,7 +697,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin, but only if we are not on OS X since it will have
+    # Package the plugin, but only if we are not on macOS since it will have
     # already been copied
 
     IF(NOT APPLE)
@@ -819,7 +825,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # A few OS X specific things
+                # A few macOS specific things
 
                 IF(APPLE)
                     # Clean up our plugin's tests
@@ -894,7 +900,7 @@ ENDIF()
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                      ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # Package the plugin, but only if we are not on OS X since it will have
+    # Package the plugin, but only if we are not on macOS since it will have
     # already been copied
 
     IF(NOT APPLE)
@@ -902,9 +908,9 @@ ENDIF()
                 DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
-    # On OS X, and in case we are on Travis CI, make sure that the plugin binary
-    # refers to the system version of the Qt libraries since we don't embed the
-    # Qt libraries in that case (see the main CMakeLists.txt file)
+    # On macOS, and in case we are on Travis CI, make sure that the plugin
+    # binary refers to the system version of the Qt libraries since we don't
+    # embed the Qt libraries in that case (see the main CMakeLists.txt file)
 
     IF(APPLE AND ENABLE_TRAVIS_CI)
         FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})

@@ -137,7 +137,6 @@ private slots:
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();
     void on_actionPlugins_triggered();
-    void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
     void on_actionCheckForUpdates_triggered();
     void on_actionAbout_triggered();

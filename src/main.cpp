@@ -53,9 +53,9 @@ int main(int pArgC, char *pArgV[])
     //             its GUI version.
     //  - Linux: we always try the CLI version of OpenCOR and then go for its
     //           GUI version, if needed.
-    //  - OS X: we try the CLI version of OpenCOR unless the user double clicks
-    //          on the OpenCOR bundle or opens it from the command line by
-    //          entering something like:
+    //  - macOS: we try the CLI version of OpenCOR unless the user double clicks
+    //           on the OpenCOR bundle or opens it from the command line by
+    //           entering something like:
     //              open OpenCOR.app
     //          in which case we go for its GUI version.
     // Note #1: on Windows, we have two binaries (.com and .exe that are for the
@@ -68,7 +68,7 @@ int main(int pArgC, char *pArgV[])
     //          have OpenCOR to behave as both a CLI and a GUI application on
     //          Windows, hence the [OpenCOR]/windows/main.cpp file, which is
     //          used to generate the CLI version of OpenCOR...
-    // Note #2: on OS X, if we were to try to open the OpenCOR bundle from the
+    // Note #2: on macOS, if we were to try to open the OpenCOR bundle from the
     //          command line, then we would get an error message similar to:
     //              LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
     //          Fortunately, when double clicking on the OpenCOR bundle or

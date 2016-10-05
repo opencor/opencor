@@ -578,9 +578,9 @@ QString eolString()
 #ifdef Q_OS_WIN
     return "\r\n";
 #else
-    // Note: before OS X, the EOL string would have been "\r", but since OS X it
-    //       is the same as on Linux (i.e. "\n") and since we don't support
-    //       versions prior to OS X...
+    // Note: before macOS, the EOL string would have been "\r", but since macOS
+    //       it is the same as on Linux (i.e. "\n") and since we don't support
+    //       versions prior to macOS...
 
     return "\n";
 #endif

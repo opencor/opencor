@@ -375,12 +375,12 @@ void CorePlugin::initializePlugin()
     //       QKeySequence::PreviousChild and QKeySequence::NextChild,
     //       respectively, but for Qt this means using Ctrl+Shift+BackTab and
     //       Ctrl+Tab, respectively, on Windows/Linux, and Ctrl+{ and Ctrl+},
-    //       respectively, on OS X. On Windows, Ctrl+Shift+BackTab just doesn't
-    //       work, on OS X those key sequences are not the most natural ones.
+    //       respectively, on macOS. On Windows, Ctrl+Shift+BackTab just doesn't
+    //       work, on macOS those key sequences are not the most natural ones.
     //       So, instead, it would be more natural to use Ctrl+Shift+Tab and
     //       Ctr+Tab, respectively, on Windows/Linux, and Meta+Shift+Tab and
-    //       Meta+Tab, respectively, on OS X. The original plan was therefore to
-    //       use QKeySequence::PreviousChild and QKeySequence::NextChild, as
+    //       Meta+Tab, respectively, on macOS. The original plan was therefore
+    //       to use QKeySequence::PreviousChild and QKeySequence::NextChild, as
     //       well as our preferred key sequences, but Qt ended up 'allowing'
     //       only using one of them. So, in the end, we only use our preferred
     //       key sequences...
