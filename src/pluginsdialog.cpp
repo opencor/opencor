@@ -419,6 +419,10 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
     mGui->fieldFourLabel->setVisible(atLeastOneItem && validItem && pluginItem);
     mGui->fieldFourValue->setVisible(atLeastOneItem && validItem && pluginItem);
+
+    // Make sure that we are big enough to show our contents
+
+    adjustWidgetSize(this);
 }
 
 //==============================================================================

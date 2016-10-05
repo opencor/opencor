@@ -55,6 +55,30 @@ bool aboutToQuit()
 
 //==============================================================================
 
+void adjustWidgetSize(QWidget *pWidget)
+{
+    // Adjust the size of the given widget, if needed
+
+    QSize sizeHint = pWidget->sizeHint();
+    QSize size = pWidget->size();
+    int sHintWidth = sizeHint.width();
+    int sizeWidth = size.width();
+    int sHintHeight = sizeHint.height();
+    int sizeHeight = size.height();
+    QPoint pos = pWidget->pos();
+
+    if ((sHintWidth > sizeWidth) || (sHintHeight > sizeHeight)) {
+        pWidget->adjustSize();
+
+        if (pWidget->isVisible()) {
+            pWidget->move(pos.x()-((sHintWidth-sizeWidth) >> 1),
+                          pos.y()-((sHintHeight-sizeHeight) >> 1));
+        }
+    }
+}
+
+//==============================================================================
+
 void showEnableAction(QAction *pAction, const bool &pVisible,
                       const bool &pEnabled)
 {
