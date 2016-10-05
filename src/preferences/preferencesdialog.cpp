@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+#include "guiutils.h"
 #include "pluginmanager.h"
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
@@ -311,6 +312,10 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
     if (widgetLayout)
         widgetLayout->setMargin(0);
+
+    // Make sure that we are big enough to show our contents
+
+    adjustWidgetSize(this);
 }
 
 //==============================================================================
