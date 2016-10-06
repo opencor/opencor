@@ -170,9 +170,9 @@ int main(int pArgC, char *pArgV[])
     // Check whether we want to check for new versions at startup and, if so,
     // whether a new version of OpenCOR is available
 
+#ifndef QT_DEBUG
     QSettings settings;
 
-#ifndef QT_DEBUG
     settings.beginGroup("CheckForUpdatesDialog");
         bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
         bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
@@ -321,6 +321,8 @@ int main(int pArgC, char *pArgV[])
             // We want a clean restart, so clear all the user settings (indeed,
             // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
+
+            QSettings settings;
 
             settings.clear();
         }
