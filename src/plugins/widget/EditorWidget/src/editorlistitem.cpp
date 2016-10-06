@@ -48,9 +48,9 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
     if ((pLine == -1) && (pColumn == -1))
         setText(pMessage);
     else if (pColumn == -1)
-        setText(QString("[%1] %2").arg(pLine).arg(pMessage));
+        setText(QString("[%1] %2").arg(QString::number(pLine), pMessage));
     else
-        setText(QString("[%1:%2] %3").arg(pLine).arg(pColumn).arg(pMessage));
+        setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
 
     setToolTip(text());
 
