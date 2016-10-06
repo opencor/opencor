@@ -15,8 +15,8 @@
 <context>
     <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>
     <message>
-        <source>in the original CellML file</source>
-        <translation>dans le fichier CellML d&apos;origine</translation>
+        <source> in the original CellML file</source>
+        <translation> dans le fichier CellML d&apos;origine</translation>
     </message>
     <message>
         <source>%1.</source>
