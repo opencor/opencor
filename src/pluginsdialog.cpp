@@ -76,6 +76,10 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
+static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySelectablePlugins");
+
+//==============================================================================
+
 PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                              QWidget *pParent) :
     QDialog(pParent),
@@ -220,48 +224,13 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
             this, SLOT(apply()));
 
-    // Select the first category item
-
-    selectFirstVisibleCategory();
-}
-
-//==============================================================================
-
-PluginsDialog::~PluginsDialog()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-void PluginsDialog::selectFirstVisibleCategory()
-{
-    // Select the first visible category
-
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-        if (!mGui->treeView->isRowHidden(i, mModel->invisibleRootItem()->index())) {
-            mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->index());
-
-            return;
-        }
-    }
-
-    mGui->treeView->setCurrentIndex(QModelIndex());
-}
-
-//==============================================================================
-
-static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySelectablePlugins");
-
-//==============================================================================
-
-void PluginsDialog::loadSettings(QSettings *pSettings)
-{
     // Retrieve whether to show selectable plugins
 
-    mGui->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins, true).toBool());
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    mGui->selectablePluginsCheckBox->setChecked(settings.value(SettingsShowOnlySelectablePlugins, true).toBool());
 
     // Show/hide our unselectable plugins
 
@@ -270,12 +239,20 @@ void PluginsDialog::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PluginsDialog::saveSettings(QSettings *pSettings) const
+PluginsDialog::~PluginsDialog()
 {
     // Keep track of whether to show selectable plugins
 
-    pSettings->setValue(SettingsShowOnlySelectablePlugins,
-                        mGui->selectablePluginsCheckBox->isChecked());
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    settings.setValue(SettingsShowOnlySelectablePlugins,
+                      mGui->selectablePluginsCheckBox->isChecked());
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
@@ -679,9 +656,17 @@ void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
         }
     }
 
-    // Select the first category item
+    // Select the first visible category
 
-    selectFirstVisibleCategory();
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        if (!mGui->treeView->isRowHidden(i, mModel->invisibleRootItem()->index())) {
+            mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->index());
+
+            return;
+        }
+    }
+
+    mGui->treeView->setCurrentIndex(QModelIndex());
 }
 
 //==============================================================================
