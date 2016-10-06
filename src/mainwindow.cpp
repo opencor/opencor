@@ -1169,15 +1169,7 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 
     CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-    mSettings->beginGroup(checkForUpdatesDialog.objectName());
-        checkForUpdatesDialog.loadSettings(mSettings);
-    mSettings->endGroup();
-
     checkForUpdatesDialog.exec();
-
-    mSettings->beginGroup(checkForUpdatesDialog.objectName());
-        checkForUpdatesDialog.saveSettings(mSettings);
-    mSettings->endGroup();
 }
 
 //==============================================================================
