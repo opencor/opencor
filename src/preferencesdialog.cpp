@@ -32,12 +32,72 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QFormLayout>
 #include <QLabel>
 #include <QStandardItemModel>
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+PluginCategoryWidget::PluginCategoryWidget(QWidget *pParent) :
+    QWidget(pParent)
+{
+    // Create a form widget layout
+
+    QFormLayout *formWidgetLayout = new QFormLayout(this);
+
+    formWidgetLayout->setFormAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+
+    setLayout(formWidgetLayout);
+
+    // Add both our category and description fields to our form widget layout
+
+    mCategoryValue = new QLabel(this);
+    mDescriptionValue = new QLabel(this);
+
+    formWidgetLayout->addRow(label(tr("Category:")), mCategoryValue);
+    formWidgetLayout->addRow(label(tr("Description:")), mDescriptionValue);
+}
+
+//==============================================================================
+
+void PluginCategoryWidget::setCategory(const QString &pCategory)
+{
+    // Set our category
+
+    mCategoryValue->setText(pCategory);
+}
+
+//==============================================================================
+
+void PluginCategoryWidget::setDescription(const QString &pDescription)
+{
+    // Set our description
+
+    mDescriptionValue->setText(pDescription);
+}
+
+//==============================================================================
+
+QLabel * PluginCategoryWidget::label(const QString &pLabel)
+{
+    // Create and return a label
+
+    QLabel *res = new QLabel(pLabel, this);
+
+    res->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+
+    QFont newFont = res->font();
+
+    newFont.setBold(true);
+
+    res->setFont(newFont);
+
+    return res;
+}
 
 //==============================================================================
 

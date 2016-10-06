@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "plugincategorywidget.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -34,6 +33,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QLabel;
 class QSettings;
 class QStandardItem;
 class QStandardItemModel;
@@ -58,6 +58,25 @@ class PreferencesInterface;
 namespace Preferences {
     class PreferencesWidget;
 }   // namespace Preferences
+
+//==============================================================================
+
+class PluginCategoryWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit PluginCategoryWidget(QWidget *pParent);
+
+    void setCategory(const QString &pCategory);
+    void setDescription(const QString &pDescription);
+
+private:
+    QLabel *mCategoryValue;
+    QLabel *mDescriptionValue;
+
+    QLabel * label(const QString &pLabel);
+};
 
 //==============================================================================
 

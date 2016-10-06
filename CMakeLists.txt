@@ -79,6 +79,7 @@ SET(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
+    src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
@@ -92,15 +93,13 @@ SET(SOURCES
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-
-    src/preferences/plugincategorywidget.cpp
-    src/preferences/preferencesdialog.cpp
 )
 
 SET(HEADERS_MOC
     src/checkforupdatesdialog.h
     src/mainwindow.h
     src/pluginsdialog.h
+    src/preferencesdialog.h
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
@@ -109,19 +108,14 @@ SET(HEADERS_MOC
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
     src/plugins/preferencesinterface.h
-
-    src/preferences/plugincategorywidget.h
-    src/preferences/preferencesdialog.h
 )
 
 SET(UIS
     src/checkforupdatesdialog.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
+    src/preferencesdialog.ui
     src/splashscreenwindow.ui
-
-    src/preferences/plugincategorywidget.ui
-    src/preferences/preferencesdialog.ui
 )
 
 SET(RESOURCES

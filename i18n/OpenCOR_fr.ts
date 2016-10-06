@@ -218,6 +218,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PluginCategoryWidget</name>
+    <message>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PluginsDialog</name>
     <message>
         <source>the plugin is not wanted.</source>
@@ -306,17 +317,6 @@
     <message>
         <source>%1.</source>
         <translation></translation>
-    </message>
-</context>
-<context>
-    <name>PluginCategoryWidget</name>
-    <message>
-        <source>Category:</source>
-        <translation>Catégorie :</translation>
-    </message>
-    <message>
-        <source>Description:</source>
-        <translation>Description :</translation>
     </message>
 </context>
 <context>
