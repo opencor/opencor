@@ -33,6 +33,7 @@ limitations under the License.
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
 #include "preferencesdialog.h"
+#include "preferencesinterface.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -1169,11 +1170,27 @@ void MainWindow::on_actionPlugins_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    // Show the preferences dialog
+    // Show the preferences dialog, if we have at least one plugin that supports
+    // the Preferences interface
 
-    PreferencesDialog preferencesDialog(mPluginManager, this);
+    bool canShowPreferences = false;
 
-    preferencesDialog.exec();
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
+        if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
+            canShowPreferences = true;
+
+            break;
+        }
+    }
+
+    if (canShowPreferences) {
+        PreferencesDialog preferencesDialog(mPluginManager, this);
+
+        preferencesDialog.exec();
+    } else {
+        warningMessageBox(this, tr("Preferences"),
+                          tr("No plugins have preferences."));
+    }
 }
 
 //==============================================================================

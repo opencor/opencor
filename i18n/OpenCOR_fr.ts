@@ -201,6 +201,14 @@
         <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
     </message>
     <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>No plugins have preferences.</source>
+        <translation>Aucunes extensions n&apos;ont de préférences.</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>À Propos</translation>
     </message>
