@@ -207,15 +207,7 @@ int main(int pArgC, char *pArgV[])
 
             OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(checkForUpdatesEngine);
 
-            settings.beginGroup(checkForUpdatesDialog.objectName());
-                checkForUpdatesDialog.loadSettings(&settings);
-            settings.endGroup();
-
             checkForUpdatesDialog.exec();
-
-            settings.beginGroup(checkForUpdatesDialog.objectName());
-                checkForUpdatesDialog.saveSettings(&settings);
-            settings.endGroup();
         } else {
             delete checkForUpdatesEngine;
         }
