@@ -1139,18 +1139,7 @@ void MainWindow::on_actionPlugins_triggered()
 
         PluginsDialog pluginsDialog(mPluginManager, this);
 
-        mSettings->beginGroup(pluginsDialog.objectName());
-            pluginsDialog.loadSettings(mSettings);
-        mSettings->endGroup();
-
         pluginsDialog.exec();
-        // Note: the execution of the plugins dialog may result in the saving of
-        //       the application's settings, so for this to work we must ensure
-        //       that any opened settings group has first been closed...
-
-        mSettings->beginGroup(pluginsDialog.objectName());
-            pluginsDialog.saveSettings(mSettings);
-        mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
