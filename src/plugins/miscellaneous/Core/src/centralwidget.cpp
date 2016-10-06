@@ -1582,9 +1582,7 @@ QString CentralWidget::viewKey(const int &pMode, const int &pView,
     // Return the view key to be used with mViews for the given mode, view and
     // file name
 
-    return QString("%1|%2|%3").arg(QString::number(pMode),
-                                   QString::number(pView),
-                                   pFileName);
+    return QString("%1|%2|%3").arg(QString::number(pMode), QString::number(pView), pFileName);
 }
 
 //==============================================================================
