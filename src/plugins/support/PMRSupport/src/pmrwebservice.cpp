@@ -158,8 +158,7 @@ void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
        const git_error *gitError = giterr_last();
 
        emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                Core::formatMessage(gitError->message)):
+                        tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
                         tr("An error occurred while trying to clone the workspace."));
    } else if (gitRepository) {
        git_repository_free(gitRepository);

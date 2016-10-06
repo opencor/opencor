@@ -89,20 +89,19 @@ void CheckForUpdatesEngine::check()
                 versionMonth = versionMap["month"].toInt();
                 versionYear = versionMap["year"].toInt();
 
-                versionDate = QString("%1-%2-%3").arg(versionYear)
-                                                 .arg(versionMonth, 2, 10, QChar('0'))
-                                                 .arg(versionDay, 2, 10, QChar('0'));
+                versionDate = QDate(versionYear, versionMonth, versionDay).toString("yyyy-MM-dd");
 
                 if (!versionMajor && !versionMinor && !versionPatch) {
                     versionVersion = versionDate;
                 } else {
-                    versionVersion = QString("%1.%2").arg(versionMajor, versionMinor);
+                    versionVersion = QString("%1.%2").arg(QString::number(versionMajor), QString::number(versionMinor));
 
                     if (versionPatch)
-                        versionVersion = QString("%1.%2").arg(versionVersion, versionPatch);
+                        versionVersion = QString("%1.%2").arg(versionVersion, QString::number(versionPatch));
                 }
 
-                // Check whether the version is newer and, if so, add it to our list
+                // Check whether the version is newer and, if so, add it to our
+                // list
 
                 if (mApplicationDate.compare(versionDate) < 0)
                     mNewerVersions << versionVersion;

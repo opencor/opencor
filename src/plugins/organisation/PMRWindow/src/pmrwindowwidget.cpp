@@ -138,7 +138,7 @@ QString PmrWindowWidget::message() const
         } else if (mNumberOfFilteredExposures == 1) {
             res = tr("<strong>1</strong> exposure was found:");
         } else {
-            res = tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures);
+            res = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
         }
     } else {
         res = tr("<strong>Error:</strong> ")+Core::formatMessage(mInternetConnectionAvailable?

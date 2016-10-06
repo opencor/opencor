@@ -418,9 +418,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
             CellMLTextView::CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
-                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
-                                                                                       .arg(converter.errorColumn())
-                                                                                       .arg(Core::formatMessage(converter.errorMessage(), false));
+                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(QString::number(converter.errorLine()),
+                                                                                            QString::number(converter.errorColumn()),
+                                                                                            Core::formatMessage(converter.errorMessage(), false));
             } else {
                 QByteArray converterOutputByteArray = converter.output().toUtf8();
 
@@ -434,9 +434,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
                     if (message.type() == CellmlTextViewParserMessage::Error) {
-                        errorMessage += QString("\n [%1:%2] %3").arg(message.line())
-                                                                .arg(message.column())
-                                                                .arg(message.message());
+                        errorMessage += QString("\n [%1:%2] %3").arg(QString::number(message.line()),
+                                                                     QString::number(message.column()),
+                                                                     message.message());
                     }
                 }
             } else {
