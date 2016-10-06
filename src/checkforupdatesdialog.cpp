@@ -94,10 +94,10 @@ void CheckForUpdatesEngine::check()
                 if (!versionMajor && !versionMinor && !versionPatch) {
                     versionVersion = versionDate;
                 } else {
-                    versionVersion = QString("%1.%2").arg(versionMajor).arg(versionMinor);
+                    versionVersion = QString("%1.%2").arg(QString::number(versionMajor), QString::number(versionMinor));
 
                     if (versionPatch)
-                        versionVersion = QString("%1.%2").arg(versionVersion).arg(versionPatch);
+                        versionVersion = QString("%1.%2").arg(versionVersion, QString::number(versionPatch));
                 }
 
                 // Check whether the version is newer and, if so, add it to our
