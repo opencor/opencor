@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "generalpreferenceswidget.h"
 #include "plugincategorywidget.h"
 #include "plugininfo.h"
 
@@ -86,14 +85,12 @@ private:
 
     QStandardItemModel *mModel;
 
-    QStandardItem *mGeneralItem;
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
     QMap<QStandardItem *, PreferencesInterface *> mItemPreferencesInterfaces;
     QMap<QStandardItem *, QSettings *> mItemSettings;
     QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
 
-    GeneralPreferencesWidget *mGeneralPreferencesWidget;
     PluginCategoryWidget *mPluginCategoryWidget;
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);

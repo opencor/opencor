@@ -93,7 +93,6 @@ SET(SOURCES
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
 
-    src/preferences/generalpreferenceswidget.cpp
     src/preferences/plugincategorywidget.cpp
     src/preferences/preferencesdialog.cpp
 )
@@ -111,7 +110,6 @@ SET(HEADERS_MOC
     src/plugins/pluginmanager.h
     src/plugins/preferencesinterface.h
 
-    src/preferences/generalpreferenceswidget.h
     src/preferences/plugincategorywidget.h
     src/preferences/preferencesdialog.h
 )
@@ -122,7 +120,6 @@ SET(UIS
     src/pluginsdialog.ui
     src/splashscreenwindow.ui
 
-    src/preferences/generalpreferenceswidget.ui
     src/preferences/plugincategorywidget.ui
     src/preferences/preferencesdialog.ui
 )
