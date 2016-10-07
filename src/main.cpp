@@ -53,9 +53,9 @@ int main(int pArgC, char *pArgV[])
     //             its GUI version.
     //  - Linux: we always try the CLI version of OpenCOR and then go for its
     //           GUI version, if needed.
-    //  - OS X: we try the CLI version of OpenCOR unless the user double clicks
-    //          on the OpenCOR bundle or opens it from the command line by
-    //          entering something like:
+    //  - macOS: we try the CLI version of OpenCOR unless the user double clicks
+    //           on the OpenCOR bundle or opens it from the command line by
+    //           entering something like:
     //              open OpenCOR.app
     //          in which case we go for its GUI version.
     // Note #1: on Windows, we have two binaries (.com and .exe that are for the
@@ -68,7 +68,7 @@ int main(int pArgC, char *pArgV[])
     //          have OpenCOR to behave as both a CLI and a GUI application on
     //          Windows, hence the [OpenCOR]/windows/main.cpp file, which is
     //          used to generate the CLI version of OpenCOR...
-    // Note #2: on OS X, if we were to try to open the OpenCOR bundle from the
+    // Note #2: on macOS, if we were to try to open the OpenCOR bundle from the
     //          command line, then we would get an error message similar to:
     //              LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
     //          Fortunately, when double clicking on the OpenCOR bundle or
@@ -170,9 +170,9 @@ int main(int pArgC, char *pArgV[])
     // Check whether we want to check for new versions at startup and, if so,
     // whether a new version of OpenCOR is available
 
+#ifndef QT_DEBUG
     QSettings settings;
 
-#ifndef QT_DEBUG
     settings.beginGroup("CheckForUpdatesDialog");
         bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
         bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
@@ -207,15 +207,7 @@ int main(int pArgC, char *pArgV[])
 
             OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(checkForUpdatesEngine);
 
-            settings.beginGroup(checkForUpdatesDialog.objectName());
-                checkForUpdatesDialog.loadSettings(&settings);
-            settings.endGroup();
-
             checkForUpdatesDialog.exec();
-
-            settings.beginGroup(checkForUpdatesDialog.objectName());
-                checkForUpdatesDialog.saveSettings(&settings);
-            settings.endGroup();
         } else {
             delete checkForUpdatesEngine;
         }
@@ -321,6 +313,8 @@ int main(int pArgC, char *pArgV[])
             // We want a clean restart, so clear all the user settings (indeed,
             // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
+
+            QSettings settings;
 
             settings.clear();
         }

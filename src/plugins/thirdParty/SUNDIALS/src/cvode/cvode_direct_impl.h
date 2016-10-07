@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4075 $
- * $Date: 2014-04-24 10:46:58 -0700 (Thu, 24 Apr 2014) $
+ * $Revision: 4749 $
+ * $Date: 2016-04-23 18:42:38 -0700 (Sat, 23 Apr 2016) $
  * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -86,15 +86,17 @@ typedef struct CVDlsMemRec {
  */
 
 int cvDlsDenseDQJac(long int N, realtype t,
-		    N_Vector y, N_Vector fy,
-		    DlsMat Jac, void *data,
-		    N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+                    N_Vector y, N_Vector fy,
+                    DlsMat Jac, void *data,
+                    N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 int cvDlsBandDQJac(long int N, long int mupper, long int mlower,
-		   realtype t, N_Vector y, N_Vector fy,
-		   DlsMat Jac, void *data,
-		   N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+                   realtype t, N_Vector y, N_Vector fy,
+                   DlsMat Jac, void *data,
+                   N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
+/* Auxilliary functions */
+int cvDlsInitializeCounters(CVDlsMem cvdls_mem);
 
 /*
  * -----------------------------------------------------------------

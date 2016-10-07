@@ -169,7 +169,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Group:
-        setText(QObject::tr("Group #%1").arg(QString::number(pNumber)));
+        setText(QObject::tr("Group #%1").arg(pNumber));
 
         break;
     case RelationshipReference: {
@@ -185,7 +185,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Connection:
-        setText(QObject::tr("Connection #%1").arg(QString::number(pNumber)));
+        setText(QObject::tr("Connection #%1").arg(pNumber));
 
         break;
     case ComponentMapping: {
@@ -354,10 +354,6 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setRootIsDecorated(false);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    // Note: the selection mode we are opting for means that there is always
-    //       going to be a CellML element which is selected, so it's something
-    //       that we must keep in mind when showing the context menu...
 
     // Populate ourselves
 

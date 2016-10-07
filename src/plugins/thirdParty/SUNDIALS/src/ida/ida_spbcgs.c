@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4829 $
+ * $Date: 2016-07-27 16:01:15 -0700 (Wed, 27 Jul 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -134,7 +134,7 @@ int IDASpbcg(void *ida_mem, int maxl)
   IDAMem IDA_mem;
   IDASpilsMem idaspils_mem;
   SpbcgMem spbcg_mem;
-  int flag, maxl1;
+  int maxl1;
 
   /* Return immediately if ida_mem is NULL */
   if (ida_mem == NULL) {
@@ -149,7 +149,7 @@ int IDASpbcg(void *ida_mem, int maxl)
     return(IDASPILS_ILL_INPUT);
   }
 
-  if (lfree != NULL) flag = lfree((IDAMem) ida_mem);
+  if (lfree != NULL) lfree((IDAMem) ida_mem);
 
   /* Set five main function fields in ida_mem */
   linit  = IDASpbcgInit;
@@ -189,6 +189,8 @@ int IDASpbcg(void *ida_mem, int maxl)
   idaspils_mem->s_dqincfac  = ONE;
 
   idaspils_mem->s_last_flag = IDASPILS_SUCCESS;
+
+  idaSpilsInitializeCounters(idaspils_mem);
 
   /* Set setupNonNull to FALSE */
   setupNonNull = FALSE;
@@ -266,9 +268,7 @@ static int IDASpbcgInit(IDAMem IDA_mem)
   idaspils_mem = (IDASpilsMem) lmem;
   spbcg_mem = (SpbcgMem) spils_mem;
 
-  /* Initialize counters */
-  npe = nli = nps = ncfl = 0;
-  njtimes = nres = 0;
+  idaSpilsInitializeCounters(idaspils_mem);
 
   /* Set setupNonNull to TRUE iff there is preconditioning with setup */
   setupNonNull = (psolve != NULL) && (pset != NULL);

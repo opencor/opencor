@@ -37,7 +37,7 @@ KEEP_TRACK_OF_FILE(${BUILD_DIRECTORY_FILENAME})
 
 # Version/snapshot of OpenCOR
 
-IF ("${PROJECT_VERSION}" STREQUAL "")
+IF("${PROJECT_VERSION}" STREQUAL "")
     SET(SNAPSHOT ON)
 ELSE()
     SET(SNAPSHOT OFF)
@@ -79,7 +79,6 @@ SET(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
-    src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
@@ -87,7 +86,6 @@ SET(SOURCES
     src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
 
-    src/plugins/datastoreinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
@@ -99,7 +97,6 @@ SET(HEADERS_MOC
     src/checkforupdatesdialog.h
     src/mainwindow.h
     src/pluginsdialog.h
-    src/preferencesdialog.h
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
@@ -107,15 +104,12 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
-
-    src/plugins/datastoreinterface.h
 )
 
 SET(UIS
     src/checkforupdatesdialog.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
-    src/preferencesdialog.ui
     src/splashscreenwindow.ui
 )
 
@@ -169,7 +163,7 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
-# Set the application icon, but only for Windows and OS X, since in the case of
+# Set the application icon, but only for Windows and macOS, since in the case of
 # Linux, it's done through the use of app_icon (see res/ui.qrc) in
 # src/mainwindow.ui
 # Note: on Windows, we set a bit more than just the application icon. We also
@@ -263,7 +257,7 @@ IF(ENABLE_TESTS)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
-    # Clean up our test program, but only if we are on OS X
+    # Clean up our test program, but only if we are on macOS
 
     IF(APPLE)
         OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
@@ -469,7 +463,7 @@ IF(APPLE)
 
     SET(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macos/Info.plist.in
                    ${INFO_PLIST_FILENAME})
 
     SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
@@ -550,8 +544,8 @@ ELSE()
             )
         ENDIF()
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 247fad7f3ff9a5eb7ee328c8f930e40aa26f2bf2)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 42abe98a74ad39cea66fe755350da4e97f5711ef)
+        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 58f3cc096cfc002f575fb9041de757da8af6fd8d)
+        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll beca4818b830b2d9a0727b12df4794a1dfdb8cfd)
 
         LIST(APPEND ADDITIONAL_FILES
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
@@ -677,14 +671,14 @@ IF(WIN32)
         ")
     ENDIF()
 ELSEIF(APPLE)
-    # Select PackageMaker and ZIP as the packagers on OS X
+    # Select PackageMaker and ZIP as the packagers on macOS
     # Note: this is actually done within the package script, so that the ZIP
     #       package can be done 'properly', i.e. we don't have the full tree
     #       structure in the ZIP file...
 
-    SET(CPACK_SYSTEM_NAME "OSX")
+    SET(CPACK_SYSTEM_NAME "macOS")
 
-    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/osx/welcome.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
@@ -698,7 +692,7 @@ ELSEIF(APPLE)
 
     SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
                    ${SH_FILENAME})
 
     INSTALL(FILES ${SH_FILENAME}
@@ -739,10 +733,11 @@ ELSE()
             RENAME libstdc++.so.6)
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and OS X, we don't have a macro for deploying all
-    #       of our Qt libraries at once. Indeed, on Linux, the version of a file
-    #       is appended to its suffix, so unless making the macro unnecessarily
-    #       cumbersome to use, it's better to deploy one Qt library at a time...
+    # Note: unlike for Windows and macOS, we don't have a macro for deploying
+    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
+    #       file is appended to its suffix, so unless making the macro
+    #       unnecessarily cumbersome to use, it's better to deploy one Qt
+    #       library at a time...
 
     IF(ENABLE_TESTS)
         SET(TEST Test)

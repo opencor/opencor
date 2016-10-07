@@ -76,6 +76,10 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
+static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySelectablePlugins");
+
+//==============================================================================
+
 PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                              QWidget *pParent) :
     QDialog(pParent),
@@ -91,14 +95,14 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
-    // Make sure that all the widgets in our vertical layout can be resized if
+    // Make sure that all the widgets in our form layout can be resized, if
     // necessary and if possible
-    // Note: indeed, it's not the case on OS X since the field growth policy is
+    // Note: indeed, it's not the case on macOS since the field growth policy is
     //       set to FieldsStayAtSizeHint on that platform and also on Windows
     //       and Linux to make sure that, if anything, we get the same behaviour
     //       on all the platforms we support...
 
-    mGui->verticalLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+    mGui->formLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
 
     // Update the note label
 
@@ -123,7 +127,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     static const QIcon LoadedIcon    = QIcon(":/oxygen/actions/dialog-ok-apply.png");
     static const QIcon NotLoadedIcon = QIcon(":/oxygen/actions/edit-delete.png");
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
+    foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,
@@ -220,53 +224,13 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
             this, SLOT(apply()));
 
-    // Select the first category item
-
-    selectFirstVisibleCategory();
-}
-
-//==============================================================================
-
-PluginsDialog::~PluginsDialog()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-void PluginsDialog::selectFirstVisibleCategory()
-{
-    // Select the first visible category (besides our special invalid and sample
-    // categories)
-
-    foreach (QStandardItem *categoryItem, mCategoryItems) {
-        if (    (mItemCategories.value(categoryItem) >= PluginInfo::Category(0))
-            && !mGui->treeView->isRowHidden(categoryItem->row(),
-                                            mModel->invisibleRootItem()->index())) {
-            mGui->treeView->setCurrentIndex(categoryItem->index());
-
-            return;
-        }
-    }
-
-    // No visible category could be found
-
-    mGui->treeView->setCurrentIndex(QModelIndex());
-}
-
-//==============================================================================
-
-static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySelectablePlugins");
-
-//==============================================================================
-
-void PluginsDialog::loadSettings(QSettings *pSettings)
-{
     // Retrieve whether to show selectable plugins
 
-    mGui->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins, true).toBool());
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    mGui->selectablePluginsCheckBox->setChecked(settings.value(SettingsShowOnlySelectablePlugins, true).toBool());
 
     // Show/hide our unselectable plugins
 
@@ -275,12 +239,20 @@ void PluginsDialog::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PluginsDialog::saveSettings(QSettings *pSettings) const
+PluginsDialog::~PluginsDialog()
 {
     // Keep track of whether to show selectable plugins
 
-    pSettings->setValue(SettingsShowOnlySelectablePlugins,
-                        mGui->selectablePluginsCheckBox->isChecked());
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    settings.setValue(SettingsShowOnlySelectablePlugins,
+                      mGui->selectablePluginsCheckBox->isChecked());
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
@@ -408,67 +380,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
         // The category's description
 
         mGui->fieldTwoLabel->setText(tr("Description:"));
-
-        switch (mItemCategories.value(item)) {
-#ifdef ENABLE_SAMPLES
-        case PluginInfo::Sample:
-            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
-
-            break;
-#endif
-        case PluginInfo::Invalid:
-            mGui->fieldTwoValue->setText(tr("plugins that are not valid."));
-
-            break;
-        case PluginInfo::Analysis:
-            mGui->fieldTwoValue->setText(tr("plugins to analyse files."));
-
-            break;
-        case PluginInfo::Api:
-            mGui->fieldTwoValue->setText(tr("plugins to access various APIs."));
-
-            break;
-        case PluginInfo::DataStore:
-            mGui->fieldTwoValue->setText(tr("plugins to store and manipulate data."));
-
-            break;
-        case PluginInfo::Editing:
-            mGui->fieldTwoValue->setText(tr("plugins to edit files."));
-
-            break;
-        case PluginInfo::Miscellaneous:
-            mGui->fieldTwoValue->setText(tr("plugins that do not fit in any other category."));
-
-            break;
-        case PluginInfo::Organisation:
-            mGui->fieldTwoValue->setText(tr("plugins to organise files."));
-
-            break;
-        case PluginInfo::Simulation:
-            mGui->fieldTwoValue->setText(tr("plugins to simulate files."));
-
-            break;
-        case PluginInfo::Solver:
-            mGui->fieldTwoValue->setText(tr("plugins to access various solvers."));
-
-            break;
-        case PluginInfo::Support:
-            mGui->fieldTwoValue->setText(tr("plugins to support various third-party libraries and APIs."));
-
-            break;
-        case PluginInfo::ThirdParty:
-            mGui->fieldTwoValue->setText(tr("plugins to access various third-party libraries."));
-
-            break;
-        case PluginInfo::Tools:
-            mGui->fieldTwoValue->setText(tr("plugins to access various tools."));
-
-            break;
-        case PluginInfo::Widget:
-            mGui->fieldTwoValue->setText(tr("plugins to access various <em>ad hoc</em> widgets."));
-
-            break;
-        }
+        mGui->fieldTwoValue->setText(tr("%1.").arg(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))));
     }
 
     // Show/hide the different fields
@@ -484,6 +396,10 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
     mGui->fieldFourLabel->setVisible(atLeastOneItem && validItem && pluginItem);
     mGui->fieldFourValue->setVisible(atLeastOneItem && validItem && pluginItem);
+
+    // Make sure that we are big enough to show our contents
+
+    adjustWidgetSize(this);
 }
 
 //==============================================================================
@@ -698,6 +614,15 @@ QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pC
 
 //==============================================================================
 
+void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
+{
+    // We don't want plugin categories to be collapse, so cancel all collapsings
+
+    mGui->treeView->expand(pIndex);
+}
+
+//==============================================================================
+
 void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 {
     // Show/hide our unselectable plugins
@@ -731,9 +656,17 @@ void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
         }
     }
 
-    // Select the first category item
+    // Select the first visible category
 
-    selectFirstVisibleCategory();
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        if (!mGui->treeView->isRowHidden(i, mModel->invisibleRootItem()->index())) {
+            mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->index());
+
+            return;
+        }
+    }
+
+    mGui->treeView->setCurrentIndex(QModelIndex());
 }
 
 //==============================================================================

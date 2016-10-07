@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4867 $
+ * $Date: 2016-08-19 10:05:14 -0700 (Fri, 19 Aug 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh, Radu Serban,
  *                and Aaron Collier @ LLNL
@@ -60,6 +60,15 @@ static void VScaleBy_Serial(realtype a, N_Vector x);
  * -----------------------------------------------------------------
  */
 
+/* ----------------------------------------------------------------
+ * Returns vector type ID. Used to identify vector implementation
+ * from abstract N_Vector interface.
+ */
+N_Vector_ID N_VGetVectorID_Serial(N_Vector v)
+{
+  return SUNDIALS_NVEC_SERIAL;
+}
+
 /* ----------------------------------------------------------------------------
  * Function to create a new empty serial vector
  */
@@ -80,6 +89,7 @@ N_Vector N_VNewEmpty_Serial(long int length)
   ops = (N_Vector_Ops) malloc(sizeof(struct _generic_N_Vector_Ops));
   if (ops == NULL) { free(v); return(NULL); }
 
+  ops->nvgetvectorid     = N_VGetVectorID_Serial;
   ops->nvclone           = N_VClone_Serial;
   ops->nvcloneempty      = N_VCloneEmpty_Serial;
   ops->nvdestroy         = N_VDestroy_Serial;
@@ -243,6 +253,15 @@ void N_VDestroyVectorArray_Serial(N_Vector *vs, int count)
 }
 
 /* ----------------------------------------------------------------------------
+ * Function to return number of vector elements
+ */
+long int N_VGetLength_Serial(N_Vector v)
+{
+  return NV_LENGTH_S(v);
+}
+
+
+/* ----------------------------------------------------------------------------
  * Function to print the a serial vector
  */
 
@@ -294,6 +313,7 @@ N_Vector N_VCloneEmpty_Serial(N_Vector w)
   ops = (N_Vector_Ops) malloc(sizeof(struct _generic_N_Vector_Ops));
   if (ops == NULL) { free(v); return(NULL); }
 
+  ops->nvgetvectorid     = w->ops->nvgetvectorid;
   ops->nvclone           = w->ops->nvclone;
   ops->nvcloneempty      = w->ops->nvcloneempty;
   ops->nvdestroy         = w->ops->nvdestroy;

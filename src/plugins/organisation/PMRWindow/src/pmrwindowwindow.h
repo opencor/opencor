@@ -30,10 +30,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
-
-//==============================================================================
-
 namespace Ui {
     class PmrWindowWindow;
 }
@@ -72,6 +68,7 @@ public:
     ~PmrWindowWindow();
 
     virtual void retranslateUi();
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 

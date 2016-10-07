@@ -70,12 +70,12 @@
         <translation>Filtre :</translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation>Rafraîchir</translation>
+        <source>Reload</source>
+        <translation>Recharger</translation>
     </message>
     <message>
-        <source>Refresh the list of exposures</source>
-        <translation>Rafraîchir la liste d&quot;expositions</translation>
+        <source>Reload the list of exposures</source>
+        <translation>Recharger la liste d&apos;expositions</translation>
     </message>
 </context>
 </TS>

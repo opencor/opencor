@@ -29,6 +29,7 @@ QString CORE_EXPORT shortVersion();
 QString CORE_EXPORT version();
 
 QString CORE_EXPORT pluginCategoryName(const PluginInfo::Category &pCategory);
+QString CORE_EXPORT pluginCategoryDescription(const PluginInfo::Category &pCategory);
 
 QString CORE_EXPORT nativeCanonicalDirName(const QString &pDirName);
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);

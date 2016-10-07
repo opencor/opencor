@@ -95,7 +95,7 @@ void PmrRepository::authenticate(const bool &pLink)
 
 //==============================================================================
 
-void PmrRepository::getAuthenticationStatus(void)
+void PmrRepository::getAuthenticationStatus()
 {
     emit authenticated(mPmrRepositoryManager->isAuthenticated());
 }
@@ -133,7 +133,7 @@ static const char *WorkspaceProperty  = "Workspace";
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestExposuresList(void)
+void PmrRepository::requestExposuresList()
 {
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
@@ -296,10 +296,13 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 
                 QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
                 if (!exposureFile.isEmpty()) {
+                    hasExposureFileInformation = true;
+
                     exposure->addExposureFile(exposureFile); // Decrements count left...
 
                     // Check whether the exposure file has a link
                     // called "Launch with OpenCOR"
+
                     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
                         QVariantMap linksMap = linksVariant.toMap();
                         QString promptValue = linksMap["prompt"].toString();
@@ -317,6 +320,7 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                             }
                         }
                     }
+
                     // Ask our widget to add our exposure files,
                     // should we have no exposure file URLs left to
                     // handle
@@ -324,7 +328,6 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     if (exposure->fileUrlsLeftCount() == 0) {
                         emit exposureFilesList(exposure->url(), exposure->exposureFileList());
                     }
-                    hasExposureFileInformation = true;
                 }
             }
         }
@@ -556,7 +559,7 @@ void PmrRepository::workspaceCreatedResponse(const QString &pUrl)
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestWorkspacesList(void)
+void PmrRepository::requestWorkspacesList()
 {
     auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(QString("%1/my-workspaces").arg(Url()),
                                                                     true);

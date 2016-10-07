@@ -115,7 +115,7 @@ void CommonWidget::doShowBusyWidget(const double &pProgress)
         mParent->setEnabled(false);
 
     // Make sure that our busy widget is shown straightaway
-    // Note: indeed, depending on the operating system (e.g. OS X) and on what
+    // Note: indeed, depending on the operating system (e.g. macOS) and on what
     //       we do next (e.g. retrieving a remote file), our busy widget may or
     //       not show straightaway...
 

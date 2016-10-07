@@ -89,20 +89,19 @@ void CheckForUpdatesEngine::check()
                 versionMonth = versionMap["month"].toInt();
                 versionYear = versionMap["year"].toInt();
 
-                versionDate = QString("%1-%2-%3").arg(versionYear)
-                                                 .arg(versionMonth, 2, 10, QChar('0'))
-                                                 .arg(versionDay, 2, 10, QChar('0'));
+                versionDate = QDate(versionYear, versionMonth, versionDay).toString("yyyy-MM-dd");
 
                 if (!versionMajor && !versionMinor && !versionPatch) {
                     versionVersion = versionDate;
                 } else {
-                    versionVersion = QString("%1.%2").arg(versionMajor, versionMinor);
+                    versionVersion = QString("%1.%2").arg(QString::number(versionMajor), QString::number(versionMinor));
 
                     if (versionPatch)
-                        versionVersion = QString("%1.%2").arg(versionVersion, versionPatch);
+                        versionVersion = QString("%1.%2").arg(versionVersion, QString::number(versionPatch));
                 }
 
-                // Check whether the version is newer and, if so, add it to our list
+                // Check whether the version is newer and, if so, add it to our
+                // list
 
                 if (mApplicationDate.compare(versionDate) < 0)
                     mNewerVersions << versionVersion;
@@ -165,13 +164,17 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
                                         CheckForUpdatesEngine *pEngine)
 {
+    // We are not yet initialised
+
+    mInitialized = false;
+
     // Set up the GUI
 
     mGui = new Ui::CheckForUpdatesDialog;
 
     mGui->setupUi(this);
 
-    // Create and initialise our engine, if needed, and update our GUI
+    // Create/set our engine and check for updates in the former case
 
     if (pEngine) {
         mEngine = pEngine;
@@ -181,7 +184,20 @@ void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
         mEngine->check();
     }
 
+    // Retrieve and set some properties
+
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    mGui->checkForUpdatesAtStartupCheckBox->setChecked(settings.value(SettingsCheckForUpdatesAtStartup, true).toBool());
+    mGui->includeSnapshotsCheckBox->setChecked(settings.value(SettingsIncludeSnapshots, false).toBool());
+
+    // Update our GUI
+
     updateGui();
+
+    mInitialized = true;
 }
 
 //==============================================================================
@@ -209,6 +225,17 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
 
 CheckForUpdatesDialog::~CheckForUpdatesDialog()
 {
+    // Keep track of some properties
+
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    settings.setValue(SettingsCheckForUpdatesAtStartup,
+                      mGui->checkForUpdatesAtStartupCheckBox->isChecked());
+    settings.setValue(SettingsIncludeSnapshots,
+                      mGui->includeSnapshotsCheckBox->isChecked());
+
     // Delete some internal objects
 
     delete mEngine;
@@ -216,28 +243,6 @@ CheckForUpdatesDialog::~CheckForUpdatesDialog()
     // Delete the GUI
 
     delete mGui;
-}
-
-//==============================================================================
-
-void CheckForUpdatesDialog::loadSettings(QSettings *pSettings)
-{
-    // Retrieve and set some properties
-
-    mGui->checkForUpdatesAtStartupCheckBox->setChecked(pSettings->value(SettingsCheckForUpdatesAtStartup, true).toBool());
-    mGui->includeSnapshotsCheckBox->setChecked(pSettings->value(SettingsIncludeSnapshots, false).toBool());
-}
-
-//==============================================================================
-
-void CheckForUpdatesDialog::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of some properties
-
-    pSettings->setValue(SettingsCheckForUpdatesAtStartup,
-                        mGui->checkForUpdatesAtStartupCheckBox->isChecked());
-    pSettings->setValue(SettingsIncludeSnapshots,
-                        mGui->includeSnapshotsCheckBox->isChecked());
 }
 
 //==============================================================================
@@ -336,9 +341,11 @@ void CheckForUpdatesDialog::on_includeSnapshotsCheckBox_toggled(bool pChecked)
 {
     Q_UNUSED(pChecked);
 
-    // Update the GUI
+    // Update the GUI, but only if we are initialised (since updateGui() gets
+    // called when initialising ourselves)
 
-    updateGui();
+    if (mInitialized)
+        updateGui();
 }
 
 //==============================================================================

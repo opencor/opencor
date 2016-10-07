@@ -12,7 +12,7 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(APPLE)
         IF(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
            AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on OS X...")
+            MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
         ENDIF()
     ELSE()
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
@@ -52,7 +52,7 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
-    # Required packages
+    # Required Qt packages
 
     IF(ENABLE_TESTS)
         SET(TEST Test)
@@ -75,7 +75,7 @@ MACRO(INITIALISE_PROJECT)
     IF(WIN32)
         SET(PLATFORM_DIR windows)
     ELSEIF(APPLE)
-        SET(PLATFORM_DIR osx)
+        SET(PLATFORM_DIR macos)
     ELSE()
         SET(PLATFORM_DIR linux)
     ENDIF()
@@ -102,7 +102,7 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
     SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
-    # On OS X, keep track of the Qt libraries against which we need to link
+    # On macOS, keep track of the Qt libraries against which we need to link
 
     IF(APPLE)
         IF(ENABLE_TESTS)
@@ -140,6 +140,14 @@ MACRO(INITIALISE_PROJECT)
         )
     ENDIF()
 
+    # Make sure that OpenSSL is available on Linux and macOS
+    # Note: it's currently needed for libgit2, but it might be needed for other
+    #       things too in the future, so make sure it's available...
+
+    IF(NOT WIN32)
+        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
+    ENDIF()
+
     # Determine the effective build directory
 
     SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
@@ -175,7 +183,7 @@ MACRO(INITIALISE_PROJECT)
 
     # Some general build settings
     # Note: MSVC enables C++11 support by default, so we just need to enable it
-    #       on Linux and OS X...
+    #       on Linux and macOS...
 
     IF(WIN32)
         SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc")
@@ -196,7 +204,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # On OS X, we want to be able to access Cocoa
+    # On macOS, we want to be able to access Cocoa
 
     IF(APPLE)
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -framework AppKit")
@@ -218,7 +226,7 @@ MACRO(INITIALISE_PROJECT)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
             #          size of OpenCOR or one its shared libraries...
-            # Note #2: the above linking option has become obsolete on OS X...
+            # Note #2: the above linking option has become obsolete on macOS...
         ENDIF()
 
         # Make sure that debugging is off in Qt
@@ -267,7 +275,7 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DENABLE_SAMPLES)
     ENDIF()
 
-    # On OS X, make sure that we support 10.8 and later, unless a specific
+    # On macOS, make sure that we support 10.8 and later, unless a specific
     # deployment target has been specified
 
     IF(APPLE)
@@ -275,7 +283,13 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
         ENDIF()
 
-        SET(BUILD_INFORMATION "${BUILD_INFORMATION} for OS X ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
+        IF(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
+            SET(SYSTEM_NAME "OS X")
+        ELSE()
+            SET(SYSTEM_NAME "macOS")
+        ENDIF()
+
+        SET(BUILD_INFORMATION "${BUILD_INFORMATION} for ${SYSTEM_NAME} ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
     ENDIF()
 
     # Destination of our plugins so that we don't have to deploy OpenCOR on
@@ -302,7 +316,7 @@ MACRO(INITIALISE_PROJECT)
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
     ENDIF()
 
-    # Set the RPATH (and RPATH link, if needed) information on Linux and OS X
+    # Set the RPATH (and RPATH link, if needed) information on Linux and macOS
 
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -315,7 +329,20 @@ MACRO(INITIALISE_PROJECT)
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
-    # Show the build information, if allowed
+    # Try to build our runpath2rpath program, if we are on Linux
+
+    IF(NOT WIN32 AND NOT APPLE)
+        SET(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
+
+        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
+                        RESULT_VARIABLE RESULT)
+
+        IF(NOT RESULT EQUAL 0)
+            MESSAGE(FATAL_ERROR "runpath2rpath could not be built...")
+        ENDIF()
+    ENDIF()
+
+    # Show the build information
 
     MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
 ENDMACRO()
@@ -557,7 +584,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
             IF(NOT EXISTS ${FULL_EXTERNAL_BINARY})
-                MESSAGE(FATAL_ERROR "${FULL_EXTERNAL_BINARY} does not exist...")
+                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -631,7 +658,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # A few OS X specific things
+    # A few macOS specific things
 
     IF(APPLE)
         # Clean up our plugin
@@ -661,7 +688,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin, but only if we are not on OS X since it will have
+    # Package the plugin, but only if we are not on macOS since it will have
     # already been copied
 
     IF(NOT APPLE)
@@ -781,7 +808,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # A few OS X specific things
+                # A few macOS specific things
 
                 IF(APPLE)
                     # Clean up our plugin's tests
@@ -851,7 +878,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                      ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # Package the plugin, but only if we are not on OS X since it will have
+    # Package the plugin, but only if we are not on macOS since it will have
     # already been copied
 
     IF(NOT APPLE)
@@ -859,9 +886,9 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                 DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
-    # On OS X, and in case we are on Travis CI, make sure that the plugin binary
-    # refers to the system version of the Qt libraries since we don't embed the
-    # Qt libraries in that case (see the main CMakeLists.txt file)
+    # On macOS, and in case we are on Travis CI, make sure that the plugin
+    # binary refers to the system version of the Qt libraries since we don't
+    # embed the Qt libraries in that case (see the main CMakeLists.txt file)
 
     IF(APPLE AND ENABLE_TRAVIS_CI)
         FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
@@ -993,6 +1020,19 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(RUNPATH2RPATH FILENAME)
+    # Convert the RUNPATH value, if any, of the given ELF file to a RPATH value
+
+    EXECUTE_PROCESS(COMMAND ${RUNPATH2RPATH} ${FILENAME}
+                    RESULT_VARIABLE RESULT)
+
+    IF(NOT RESULT EQUAL 0)
+        MESSAGE(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to a RPATH value...")
+    ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
@@ -1001,11 +1041,14 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
 
     COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
 
+    # Make sure that the RUNPATH value is converted to a RPATH value
+
+    RUNPATH2RPATH(lib/${DEST_FILENAME})
+
     # Strip the Qt library of all its local symbols
 
     IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                           COMMAND strip -x lib/${DEST_FILENAME})
+        EXECUTE_PROCESS(COMMAND strip -x lib/${DEST_FILENAME})
     ENDIF()
 
     # Deploy the Qt library
@@ -1026,11 +1069,14 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
+        # Make sure that the RUNPATH value is converted to a RPATH value
+
+        RUNPATH2RPATH(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+
         # Strip the Qt plugin of all its local symbols
 
         IF(RELEASE_MODE)
-            ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                               COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            EXECUTE_PROCESS(COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         ENDIF()
 
         # Deploy the Qt plugin
@@ -1043,20 +1089,27 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
-    # Strip the Qt file of all its local symbols
+    # Strip the file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
     IF(RELEASE_MODE)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND strip -x ${FULL_FILENAME})
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            EXECUTE_PROCESS(COMMAND strip -x ${FULL_FILENAME})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND strip -x ${FULL_FILENAME})
+        ENDIF()
     ENDIF()
 
-    # Clean up the Qt file's id
+    # Clean up the file's id
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                       COMMAND install_name_tool -id ${FILENAME}
-                                                     ${FULL_FILENAME})
+    IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        EXECUTE_PROCESS(COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
+    ELSE()
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
+    ENDIF()
 
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
@@ -1066,10 +1119,16 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
         FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
             SET(OS_X_QT_LIBRARY_FILENAME ${OS_X_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${OS_X_QT_LIBRARY})
 
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
-                                                                 @rpath/${OS_X_QT_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
+            IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+                EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
+                                                                  @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                                                                  ${FULL_FILENAME})
+            ELSE()
+                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                                   COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
+                                                                     @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                                                                     ${FULL_FILENAME})
+            ENDIF()
         ENDFOREACH()
     ENDIF()
 ENDMACRO()
@@ -1079,13 +1138,12 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
-    ADD_CUSTOM_COMMAND(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                        ${DEST_DIRNAME}/${FILENAME})
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                                                     ${DEST_DIRNAME}/${FILENAME})
 
     # Clean up the Qt file
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
@@ -1180,7 +1238,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
-            MESSAGE(FATAL_ERROR "The compressed version of ${FILENAME} could not be retrieved...")
+            MESSAGE(FATAL_ERROR "The compressed version of '${FILENAME}' could not be retrieved...")
         ENDIF()
 
         # Check that the file, if we managed to retrieve it, has the expected
@@ -1192,12 +1250,12 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
                 FILE(REMOVE ${REAL_FILENAME})
 
-                MESSAGE(FATAL_ERROR "${FILENAME} does not have the expected SHA-1 value...")
+                MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
         ELSE()
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
 
-            MESSAGE(FATAL_ERROR "${FILENAME} could not be uncompressed...")
+            MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
         ENDIF()
     ENDIF()
 ENDMACRO()

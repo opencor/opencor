@@ -15,8 +15,12 @@
 <context>
     <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>
     <message>
-        <source>in the original CellML file</source>
-        <translation>dans le fichier CellML d&apos;origine</translation>
+        <source> in the original CellML file</source>
+        <translation> dans le fichier CellML d&apos;origine</translation>
+    </message>
+    <message>
+        <source>%1.</source>
+        <translation></translation>
     </message>
     <message>
         <source>You might want to use the Raw (CellML) view to edit the file.</source>

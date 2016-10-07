@@ -351,13 +351,13 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     // Retrieve and return the 'global' instance of an object
     // Note: initially, the plan was to have a static instance of an object and
     //       return its address. However, this approach doesn't work on Windows
-    //       and Linux (but does on OS X). Indeed, say that the Core plugin is
+    //       and Linux (but does on macOS). Indeed, say that the Core plugin is
     //       required by two other plugins, then these two plugins won't get the
     //       same 'copy' of the Core plugin. (It seems like) each 'copy' gets
-    //       its own address space. (This is not the case on OS X, (most likely)
-    //       because of the way applications are bundled on that platform.) So,
-    //       to address this issue, we keep track of the address of a 'global'
-    //       instance as a qApp property...
+    //       its own address space. (This is not the case on macOS, (most
+    //       likely) because of the way applications are bundled on that
+    //       platform.) So, to address this issue, we keep track of the address
+    //       of a 'global' instance as a qApp property...
 
     QByteArray objectName = pObjectName.toUtf8();
     QVariant res = qApp->property(objectName.constData());

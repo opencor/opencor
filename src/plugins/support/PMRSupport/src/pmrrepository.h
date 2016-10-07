@@ -59,19 +59,19 @@ public:
     explicit PmrRepository(QObject *parent = 0);
     ~PmrRepository();
 
-    static const QString Url(void);
-    static const QByteArray CollectionMimeType(void);
-    static const QByteArray RequestMimeType(void);
+    static const QString Url();
+    static const QByteArray CollectionMimeType();
+    static const QByteArray RequestMimeType();
 
     void requestExposureFiles(const QString &pUrl);
-    void requestExposuresList(void);
+    void requestExposuresList();
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
     PmrWorkspace *getWorkspace(const QString &pUrl);
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
-    void requestWorkspacesList(void);
+    void requestWorkspacesList();
     void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
@@ -120,7 +120,7 @@ signals:
 
 public slots:
     void authenticate(const bool &pLink = true);
-    void getAuthenticationStatus(void);
+    void getAuthenticationStatus();
     void unauthorised(const QString &pUrl);
 
 private slots:

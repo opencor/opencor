@@ -281,10 +281,10 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             foreach (const CellMLTextViewConverterWarning &warning, mConverter.warnings()) {
                 editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
-                                                        successfulConversion?-1:warning.line(),
-                                                        successfulConversion?
-                                                            QString("[%1] ").arg(warning.line())+warning.message().arg(" "+tr("in the original CellML file")):
-                                                            warning.message().arg(QString()));
+                                                           successfulConversion?-1:warning.line(),
+                                                           successfulConversion?
+                                                               QString("[%1] %2").arg(QString::number(warning.line()), warning.message().arg(tr(" in the original CellML file"))):
+                                                               warning.message().arg(QString()));
             }
         }
 
@@ -314,12 +314,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             //       we want it done straightaway...
 
             editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Error,
-                                                    mConverter.errorLine(),
-                                                    mConverter.errorColumn(),
-                                                    Core::formatMessage(mConverter.errorMessage(), false)+".");
-
+                                                       mConverter.errorLine(),
+                                                       mConverter.errorColumn(),
+                                                       tr("%1.").arg(Core::formatMessage(mConverter.errorMessage(), false)));
             editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Hint,
-                                                    tr("You might want to use the Raw (CellML) view to edit the file."));
+                                                       tr("You might want to use the Raw (CellML) view to edit the file."));
 
             // Apply an XML lexer to our editor
 
@@ -761,10 +760,10 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
             if (   !pOnlyErrors
                 || (message.type() == CellmlTextViewParserMessage::Error)) {
                 editingWidget->editorListWidget()->addItem((message.type() == CellmlTextViewParserMessage::Error)?
-                                                         EditorWidget::EditorListItem::Error:
-                                                         EditorWidget::EditorListItem::Warning,
-                                                     message.line(), message.column(),
-                                                     message.message());
+                                                               EditorWidget::EditorListItem::Error:
+                                                               EditorWidget::EditorListItem::Warning,
+                                                           message.line(), message.column(),
+                                                           message.message());
             }
         }
 

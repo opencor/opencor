@@ -477,9 +477,9 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
         // Customise our MathML document
         // Note: to go for 100% of the 'optimal' font size might result in the
         //       edges of the contents being clipped on Windows (compared to
-        //       Linux and OS X) or in some cases on Linux and OS X (e.g. if the
-        //       contents includes a square root), hence we go for 75% of the
-        //       'optimal' font size instead...
+        //       Linux and macOS) or in some cases on Linux and macOS (e.g. if
+        //       the contents includes a square root), hence we go for 75% of
+        //       the 'optimal' font size instead...
 
         mMathmlDocument.setBackgroundColor(backgroundColor);
         mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));

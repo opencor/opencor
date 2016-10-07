@@ -75,7 +75,7 @@ namespace PMRWorkspaces {
 
 PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent) :
     OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(),
+    Core::CommonWidget(this),
     mPmrRepository(pPmrRepository),
     mWorkspacesManager(OpenCOR::PMRSupport::PmrWorkspacesManager::instance()),
     mWorkspaceFolders(QMap<QString, QString>()),

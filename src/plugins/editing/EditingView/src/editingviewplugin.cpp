@@ -257,16 +257,16 @@ void EditingViewPlugin::retranslateUi()
     retranslateMenu(mEditMenu, tr("Edit"));
 
     // Unpopulate our Edit menu
-    // Note #1: this is required on OS X otherwise we get several console
+    // Note #1: this is required on macOS otherwise we get several console
     //          messages that read
     //              void QCocoaMenu::insertNative(QCocoaMenuItem *, QCocoaMenuItem *) Menu item is already in a menu, remove it from the other menu first before inserting
     // Note #2: beforeAction is used to keep track of where our first action
-    //          should really be. Indeed, on OS X, our Edit menu gets additional
-    //          menu items (they are automatically added by OS X at the end of
-    //          our Edit menu, should in the system locale), so we cannot just
-    //          use mEditMenu->clear() to unpopulate our Edit menu since
-    //          otherwise when repopulating it those extra menu items will end
-    //          up before (rather than after) our menu items...
+    //          should really be. Indeed, on macOS, our Edit menu gets
+    //          additional menu items (they are automatically added by macOS at
+    //          the end of our Edit menu, should in the system locale), so we
+    //          cannot just use mEditMenu->clear() to unpopulate our Edit menu
+    //          since otherwise when repopulating it those extra menu items will
+    //          end up before (rather than after) our menu items...
 
     QAction *beforeAction = mEditMenu->insertSeparator(mEditUndoAction);
 

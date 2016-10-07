@@ -71,9 +71,6 @@ public:
     explicit PluginsDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PluginsDialog();
 
-    void loadSettings(QSettings *pSettings);
-    void saveSettings(QSettings *pSettings) const;
-
 private:
     Ui::PluginsDialog *mGui;
 
@@ -93,9 +90,9 @@ private:
 
     QString statusDescription(Plugin *pPlugin) const;
 
-    void selectFirstVisibleCategory();
-
 private slots:
+    void on_treeView_collapsed(const QModelIndex &pIndex);
+
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
 
     void on_buttonBox_accepted();

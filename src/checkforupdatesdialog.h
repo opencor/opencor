@@ -82,13 +82,12 @@ public:
     explicit CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine);
     ~CheckForUpdatesDialog();
 
-    void loadSettings(QSettings *pSettings);
-    void saveSettings(QSettings *pSettings) const;
-
 private:
     Ui::CheckForUpdatesDialog *mGui;
 
     CheckForUpdatesEngine *mEngine;
+
+    bool mInitialized;
 
     void constructor(const QString &pApplicationDate,
                      CheckForUpdatesEngine *pEngine);

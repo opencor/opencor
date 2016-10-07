@@ -209,7 +209,7 @@ void PmrWorkspacesWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        showBusyWidget(mWorkspacesWidget);
+        showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
