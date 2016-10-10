@@ -264,7 +264,7 @@ bool PmrWorkspace::open(void)
 
 //==============================================================================
 
-bool PmrWorkspace::opened(void) const
+bool PmrWorkspace::isOpen(void) const
 {
     return (mGitRepository != nullptr);
 }
@@ -290,8 +290,7 @@ void PmrWorkspace::refreshStatus(void)
     mRootFileNode = new PmrWorkspaceFileNode("", mPath);
 // TODO: Need to check that we aren't in the middle of a (failed) merge.
 
-    git_index *index;
-    if (opened() && git_repository_index(&index, mGitRepository) == 0) {
+    if (isOpen()) {
 
         git_status_options statusOptions;
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
@@ -349,7 +348,6 @@ void PmrWorkspace::refreshStatus(void)
             }
             git_status_list_free(statusList);
         }
-        git_index_free(index);
     }
 }
 
@@ -541,7 +539,7 @@ bool PmrWorkspace::fetch(void)
 {
     // Fetch any updates for a workspace
 
-    if (!this->opened()) return false;
+    if (!this->isOpen()) return false;
 
     bool fetched = true;
 
@@ -806,9 +804,9 @@ bool PmrWorkspace::merge(void)
 {
     // Merge and commit fetched updates
 
-    if (!this->opened()) return false;
+    if (!this->isOpen()) return false;
 
-    bool success = true;
+    bool result = true;
 
     int error = git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this);
     if (error == 0) {
@@ -834,10 +832,10 @@ bool PmrWorkspace::merge(void)
         else {
             emitGitError(errorMessage);
         }
-        success = false;
+        result = false;
     }
 
-    return success;
+    return result;
 }
 
 //==============================================================================
@@ -864,7 +862,7 @@ void PmrWorkspace::push(void)
 {
     // Push a workspace
 
-    if (!this->opened()) return;
+    if (!this->isOpen()) return;
 
     git_push_options pushOptions;
     git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
@@ -942,7 +940,7 @@ bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git
 
 bool PmrWorkspace::commit(const QString &pMessage)
 {
-    if (!this->opened()) return false;
+    if (!this->isOpen()) return false;
 
     // Get an empty buffer to hold the cleaned message
     git_buf message;
@@ -995,13 +993,13 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus(void) const
 
     auto status = StatusUnknown;
 
-    if (this->opened()) {
+    if (this->isOpen()) {
 
         if (git_repository_head_unborn(mGitRepository) == 1) {
             status = StatusCurrent;
         }
         else {
-            bool error=false;
+            bool error = false;
 
             git_oid masterOid;
             if (git_reference_name_to_id(&masterOid, mGitRepository,
@@ -1083,7 +1081,7 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 {
     auto status = QPair<QChar, QChar>(' ', ' ');
 
-    if (this->opened()) {
+    if (this->isOpen()) {
         auto repoDir = QDir(mPath);
         auto relativePath = repoDir.relativeFilePath(pPath);
 
@@ -1104,27 +1102,27 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 
 void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
-    if (this->opened()) {
+    if (this->isOpen()) {
         auto repoDir = QDir(mPath);
-        auto relativePath = repoDir.relativeFilePath(pPath).toUtf8();
+        auto relativePathBuffer = repoDir.relativeFilePath(pPath).toUtf8();
+        auto relativePath = relativePathBuffer.constData();
         bool success = false;
-
         git_index *index;
-        if (git_repository_index(&index, mGitRepository) == 0) {
 
+       if (git_repository_index(&index, mGitRepository) == 0) {
             if (pStage) {
                 unsigned int statusFlags = 0;
-                git_status_file(&statusFlags, mGitRepository, relativePath.constData());
+                git_status_file(&statusFlags, mGitRepository, relativePath);
                 if (statusFlags & GIT_STATUS_WT_DELETED) {
-                    success = (git_index_remove_bypath(index, relativePath.constData()) == 0);
+                    success = (git_index_remove_bypath(index, relativePath) == 0);
                 }
                 else {
-                    success = (git_index_add_bypath(index, relativePath.constData()) == 0);
+                    success = (git_index_add_bypath(index, relativePath) == 0);
                 }
             }
 
             else if (git_repository_head_unborn(mGitRepository) == 1) {
-                success = (git_index_remove_bypath(index, relativePath.constData()) == 0);
+                success = (git_index_remove_bypath(index, relativePath) == 0);
             }
 
             else {
@@ -1135,18 +1133,18 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
                     git_tree *headTree;
                     if (git_reference_peel((git_object **)&headTree, headReference, GIT_OBJ_TREE) == 0) {
                         git_tree_entry *headEntry;
-                        if (git_tree_entry_bypath(&headEntry, headTree, relativePath.constData()) == 0) {
+                        if (git_tree_entry_bypath(&headEntry, headTree, relativePath) == 0) {
                             git_index_entry indexEntry;
                             memset(&indexEntry, '\0', sizeof(git_index_entry));
                             indexEntry.id = *git_tree_entry_id(headEntry);
                             indexEntry.mode = git_tree_entry_filemode(headEntry);
-                            indexEntry.path = relativePath.constData();
+                            indexEntry.path = relativePath;
                             git_index_add(index, &indexEntry);
                             git_tree_entry_free(headEntry);
                             success = true;
                         }
                         else {
-                            success = (git_index_remove_bypath(index, relativePath.constData()) == 0);
+                            success = (git_index_remove_bypath(index, relativePath) == 0);
                         }
                         git_tree_free(headTree);
                     }

@@ -58,8 +58,8 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
 public:
     explicit PmrWorkspace(PmrRepository *parent=0);
     PmrWorkspace(const QString &pUrl, const QString &pName,
-                           const QString &pDescription, const QString &pOwner,
-     PmrRepository *parent);
+                 const QString &pDescription, const QString &pOwner,
+                 PmrRepository *parent);
     virtual ~PmrWorkspace();
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
@@ -69,7 +69,7 @@ public:
     static QString getUrlFromFile(const QString &pPath);
     static QString getUrlFromFolder(const QString &pFolder);
 
-    static QString WorkspacesDirectory(void);
+    static QString WorkspacesDirectory();
 
     bool isLocal(void) const;
     bool isNull(void) const;
@@ -80,22 +80,22 @@ public:
     bool isOwned(void) const;
     void setOwned(const bool &pOwned);
 
-    const QString &description(void) const;
-    const QString &name(void) const;
-    const QString &owner(void) const;
-    const QString &path(void) const;
-    const QString &url(void) const;
+    const QString &description() const;
+    const QString &name() const;
+    const QString &owner() const;
+    const QString &path() const;
+    const QString &url() const;
 
-    const PmrWorkspaceFileNode *rootFileNode(void) const;
+    const PmrWorkspaceFileNode *rootFileNode() const;
 
     void clone(const QString &pDirName);
-    void close(void);
+    void close();
     bool commit(const QString &pMessage);
-    bool open(void);
-    bool opened(void) const;
-    void refreshStatus(void);
     bool commitMerge();
     bool isMerging() const;
+    bool isOpen() const;
+    bool open();
+    void refreshStatus();
     void synchronise(const bool pOnlyPull);
 
     enum WorkspaceStatus {
@@ -111,7 +111,7 @@ public:
     const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
 
     void stageFile(const QString &pPath, const bool &pStage);
-    QStringList stagedFilesList(void);
+    QStringList stagedFilesList();
 
 private:
     bool mOwned;
@@ -158,9 +158,9 @@ private:
     static const QPair<QChar, QChar> gitStatusChars(const int &pFlags);
 
     bool doCommit(const char *pMessage, size_t pParentCount, const git_commit **pParents);
-    bool fetch(void);
-    bool merge(void);
-    void push(void);
+    bool fetch();
+    bool merge();
+    void push();
 
 signals:
     void information(const QString &pMessage) const;
