@@ -447,28 +447,34 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
     auto status = QString("");
     auto actionList = QList<QPair<QString, QString> >();
 
-    auto remoteStatus = pWorkspace->gitRemoteStatus();
+    auto workspaceStatus = pWorkspace->gitWorkspaceStatus();
 
     if (path.isEmpty()) {
         actionList << QPair<QString, QString>("clone", url);
     }
+
+    else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict)
+        // Indicate that there are merge conflicts
+
+        status = "C";       // TODO: Show an icon without an action ??
+
     else {
 
         // Indicate whether there are unstaged files
 
-        if (remoteStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
-            status = "?";   // Have an icon (but without an action)??
+        if (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
+            status = "?";   // TODO: Show an icon without an action ??
 
         // Indicate whether files are staged for commit
 
-        if (remoteStatus & PMRSupport::PmrWorkspace::StatusCommit)
+        if (workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit)
             actionList << QPair<QString, QString>("commit", url);
 
         // Show synchronisation button, with different styles to
         // indicate exactly what it will do
 
         if (pWorkspace->isOwned()) {
-            if (remoteStatus & PMRSupport::PmrWorkspace::StatusAhead)
+            if (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
                 actionList << QPair<QString, QString>("push", url);
             else
                 actionList << QPair<QString, QString>("sync", url);
@@ -684,8 +690,14 @@ void PmrWorkspacesWidget::displayWorkspaces(void)
 void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
 {
     auto webElement = page()->mainFrame()->hitTestContent(event->pos()).element();
-    while (!webElement.isNull() && webElement.tagName() != "A" && webElement.tagName() != "TR")
+    while (!webElement.isNull()
+      &&    webElement.tagName() != "A"
+      &&   !webElement.hasClass("status")
+      &&   !webElement.hasClass("istatus")
+      &&   !webElement.hasClass("wstatus")
+      &&    webElement.tagName() != "TR") {
         webElement = webElement.parent();
+    }
 
     auto toolTip = QString();
     auto mouseCursor = QCursor(Qt::ArrowCursor);
@@ -717,7 +729,23 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
                 toolTip = tr("Commit staged changes");
             }
         }
-        else {
+
+        else if (webElement.hasClass("status")
+          ||     webElement.hasClass("istatus")
+          ||     webElement.hasClass("wstatus")) {
+            auto statusChar = webElement.toPlainText().trimmed();
+            if (webElement.hasClass("status")) {
+                if (statusChar == "C") toolTip = tr("Workspace has merge conflicts");
+            }
+            else {
+                if      (statusChar == "A") toolTip = tr("File has been added");
+                else if (statusChar == "C") toolTip = tr("File has merge conflicts");
+                else if (statusChar == "D") toolTip = tr("File has been deleted");
+                else if (statusChar == "M") toolTip = tr("File has been modified");
+            }
+        }
+
+        if (toolTip.isEmpty()) {
             QString link = webElement.attribute("id");
             if (webElement.hasClass("workspace")) {
                 auto workspace = mWorkspacesManager->workspace(link);
@@ -1053,11 +1081,17 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
 
     if (workspace && !workspace->isNull() && workspace->isLocal()) {
 
-        auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFilesList());
+        if (workspace->isMerging()) {
+            workspace->commitMerge();
+        }
+        else {
+            auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFilesList());
 
-        if (commitDialog->exec() == QDialog::Accepted
-         && workspace->commit(commitDialog->message()))
-            refreshWorkspace(workspace->url());
+            if (commitDialog->exec() == QDialog::Accepted)
+                workspace->commit(commitDialog->message()) ;
+        }
+
+        refreshWorkspace(workspace->url());
     }
 }
 

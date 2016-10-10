@@ -638,6 +638,60 @@ int PmrWorkspace::mergehead_foreach_cb(const git_oid *oid, void *payload)
 
 //==============================================================================
 
+bool PmrWorkspace::commitMerge()
+{
+    bool result = false;
+
+    // Get the number of merge heads so we can allocate an array for parents
+    MergeHeadCallbackData mergeCallbackData = {0, nullptr, nullptr};
+    git_repository_mergehead_foreach(mGitRepository, mergehead_foreach_cb, &mergeCallbackData);
+    size_t nParents = mergeCallbackData.size + 1;
+    auto parents = new git_commit *[nParents]();
+
+    // HEAD is always a parent
+
+    git_oid parentId;
+    if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0
+     && git_commit_lookup(parents, mGitRepository, &parentId) == 0) {
+        result = true;
+
+        // Now populate the list of commit parents
+
+        if (nParents > 1) {
+            mergeCallbackData.size = 0;
+            mergeCallbackData.repository = mGitRepository;
+            mergeCallbackData.parents = &(parents[1]);
+            if (git_repository_mergehead_foreach(mGitRepository, mergehead_foreach_cb, &mergeCallbackData))
+                result = false;
+        }
+
+        if (result) {
+        // TODO: Name comes from fetch head??
+        // Also to have in reflog: "pull: Merge made by the 'recursive' strategy." ??
+// Use MERGE_MSG ???
+            auto message = std::string("Merge branch 'master' of "); // + remote_url;
+            if (doCommit(message.c_str(), nParents, (const git_commit **)parents)) {
+                git_repository_state_cleanup(mGitRepository);
+            }
+            else {
+                result = false;
+        //Error 10: cannot create a tree from a not fully merged index.
+            }
+        }
+    }
+
+    for (size_t n = 0; n < nParents; ++n)
+        git_commit_free(parents[n]);
+    delete[] parents;
+
+    if (!result)
+        emitGitError(tr("An error occurred while trying to commit the merge."));
+
+    return result;
+}
+
+//==============================================================================
+
 int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_url, const git_oid *oid,
                                        unsigned int is_merge, void *payload)
 {
@@ -727,55 +781,23 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
 // Setting this means we don't update file with conflict lines...
 //              mergeOptions.flags = GIT_MERGE_FAIL_ON_CONFLICT;
 
-                if (git_merge(repository, (const git_annotated_commit**)(&remoteCommitHead), 1,
-                                    &mergeOptions, &checkoutOptions) != 0) {
-                    success = false;
-                }
-                else {
-                    // Get the number of merge heads so we can allocate an array for parents
-
-                    MergeHeadCallbackData mergeCallbackData = {0, nullptr, nullptr};
-                    git_repository_mergehead_foreach(repository, mergehead_foreach_cb, &mergeCallbackData);
-                    size_t nParents = mergeCallbackData.size + 1;
-                    auto parents = new git_commit *[nParents]();
-
-                    // HEAD is always a parent
-                    git_oid parentId;
-                    if (git_reference_name_to_id(&parentId, repository, "HEAD") == 0
-                     && git_commit_lookup(parents, repository, &parentId) == 0) {
-                        // Now populate the list of commit parents
-
-                        if (nParents > 1) {
-                            mergeCallbackData.size = 0;
-                            mergeCallbackData.repository = repository;
-                            mergeCallbackData.parents = &(parents[1]);
-                            if (git_repository_mergehead_foreach(repository, mergehead_foreach_cb, &mergeCallbackData))
-                                success = false;
-                        }
-                        // TODO: Name comes from fetch head??
-                        // Also to have in reflog: "pull: Merge made by the 'recursive' strategy." ??
-                        auto message = std::string("Merge branch 'master' of ") + remote_url;
-                        success = success
-                               && workspace->doCommit(message.c_str(), nParents, (const git_commit **)parents);
-                    }
-                    if (success) {
-                        git_repository_state_cleanup(repository);
-                    }
-                    else {
-                        //Error 10: cannot create a tree from a not fully merged index.
-                    }
-                    for (size_t n = 0; n < nParents; ++n)
-                        git_commit_free(parents[n]);
-                    delete[] parents;
-                }
+                success = git_merge(repository, (const git_annotated_commit**)(&remoteCommitHead), 1,
+                                    &mergeOptions, &checkoutOptions) == 0;
             }
-        }
 
-    if (remoteCommitHead != nullptr)
         git_annotated_commit_free(remoteCommitHead);
+        }
     }
 
     return success ? 0 : 1;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::isMerging(void) const
+{
+    return mGitRepository != nullptr
+      && git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE;
 }
 
 //==============================================================================
@@ -790,6 +812,12 @@ bool PmrWorkspace::merge(void)
 
     int error = git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this);
     if (error == 0) {
+
+        // We only need to commit NORMAL merges
+
+        if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
+            result = commitMerge();
+
         // emit information(tr("Merge succeeded..."));
 
         // List of updated files:
@@ -907,8 +935,6 @@ bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git
     if (index != nullptr) git_index_free(index);
     if (author != nullptr) git_signature_free(author);
 
-    if (error) emitGitError(tr("An error occurred while trying to commit to the workspace"));
-
     return !error;
 }
 
@@ -946,8 +972,12 @@ bool PmrWorkspace::commit(const QString &pMessage)
             }
         }
 
-        if (nParents >= 0)
+        if (nParents >= 0) {
             committed = doCommit(message.ptr, nParents, (const git_commit **)(&parent));
+
+            if (!committed)
+                emitGitError(tr("An error occurred while trying to commit to the workspace."));
+        }
 
         if (parent != nullptr) git_commit_free(parent);
     }
@@ -959,7 +989,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
 //==============================================================================
 
-PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
+PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus(void) const
 {
     // Get the status of the repository
 
@@ -983,8 +1013,8 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
                     size_t behind = 0;
                     if (git_graph_ahead_behind(&ahead, &behind, mGitRepository,
                                                &masterOid, &originMasterOid) == 0) {
-                        status = behind ? StatusBehind
-                               : ahead  ? StatusAhead
+                        status = ahead  ? StatusAhead
+                               : behind ? StatusBehind
                                :          StatusCurrent;
                     }
                     else error = true;
@@ -999,8 +1029,17 @@ PmrWorkspace::RemoteStatus PmrWorkspace::gitRemoteStatus(void) const
                 emitGitError(tr("An error occurred while trying to get the remote status of %1").arg(mPath));
         }
 
-        if (mStagedCount > 0) status = (RemoteStatus)(status | StatusCommit);
-        if (mUnstagedCount > 0) status = (RemoteStatus)(status | StatusUnstaged);
+        git_index *index;
+        if (git_repository_index(&index, mGitRepository) == 0) {
+            if (git_index_has_conflicts(index)) {
+                status = (WorkspaceStatus)(status | StatusConflict);
+            }
+            else {
+                if (mStagedCount > 0) status = (WorkspaceStatus)(status | StatusCommit);
+                if (mUnstagedCount > 0) status = (WorkspaceStatus)(status | StatusUnstaged);
+            }
+            git_index_free(index);
+        }
     }
 
     return status;
@@ -1026,9 +1065,15 @@ const QPair<QChar, QChar> PmrWorkspace::gitStatusChars(const int &pFlags)
     if (pFlags & GIT_STATUS_WT_TYPECHANGE) wstatus = 'T';
 
     if (pFlags & GIT_STATUS_IGNORED) {
-        istatus = '!';
+        istatus = ' ';
         wstatus = '!';
     }
+
+    if (pFlags & GIT_STATUS_CONFLICTED) {
+        istatus = ' ';
+        wstatus = 'C';
+    }
+
     return QPair<QChar, QChar>(istatus, wstatus);
 }
 

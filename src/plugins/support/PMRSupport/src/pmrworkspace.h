@@ -94,17 +94,20 @@ public:
     bool open(void);
     bool opened(void) const;
     void refreshStatus(void);
+    bool commitMerge();
+    bool isMerging() const;
     void synchronise(const bool pOnlyPull);
 
-    enum RemoteStatus {
+    enum WorkspaceStatus {
         StatusUnknown  = 0,
         StatusAhead    = 1,
         StatusBehind   = 2,
         StatusCurrent  = 4,
+        StatusConflict = 32,
         StatusCommit   = 64,
         StatusUnstaged = 128
     };
-    RemoteStatus gitRemoteStatus(void) const;
+    WorkspaceStatus gitWorkspaceStatus() const;
     const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
 
     void stageFile(const QString &pPath, const bool &pStage);
