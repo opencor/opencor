@@ -52,6 +52,14 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
+    # Make sure that OpenSSL is available on Linux and macOS
+    # Note: it's currently needed for libgit2, but it might be needed for other
+    #       things too in the future, so make sure it's available...
+
+    IF(NOT WIN32)
+        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
+    ENDIF()
+
     # Required Qt packages
 
     IF(ENABLE_TESTS)
@@ -138,14 +146,6 @@ MACRO(INITIALISE_PROJECT)
             QtXml
             QtXmlPatterns
         )
-    ENDIF()
-
-    # Make sure that OpenSSL is available on Linux and macOS
-    # Note: it's currently needed for libgit2, but it might be needed for other
-    #       things too in the future, so make sure it's available...
-
-    IF(NOT WIN32)
-        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
     ENDIF()
 
     # Determine the effective build directory
