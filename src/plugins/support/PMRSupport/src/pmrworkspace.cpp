@@ -234,15 +234,23 @@ void PmrWorkspace::emitProgress(const double &pProgress) const
 
 void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
+#ifdef QT_DEBUG
+
     const git_error *gitError = giterr_last();
 
     QString gitErrorMessage = gitError ? (tr("Error %1: %2.").arg(QString::number(gitError->klass),
                                                                   Core::formatMessage(gitError->message)))
                                        : QString();
-    if (gitError)
-        qDebug() << gitErrorMessage;
+    if (gitError) qDebug() << gitErrorMessage;
 
-    emit warning(pMessage + (gitError ? (QString("\n\n") + gitErrorMessage) : ""));
+//    emit warning(pMessage + (gitError ? (QString("\n\n") + gitErrorMessage) : ""));
+    emit warning(pMessage);
+
+#else
+
+    emit warning(pMessage);
+
+#endif
 }
 
 //==============================================================================
@@ -1024,7 +1032,7 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus(void) const
             else error = true;
 
             if (error)
-                emitGitError(tr("An error occurred while trying to get the remote status of %1").arg(mPath));
+                emitGitError(tr("An error occurred while trying to get the remote status of %1.").arg(mPath));
         }
 
         git_index *index;
@@ -1093,7 +1101,7 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
                 mRepositoryStatusMap.value(pPath)->setStatus(status);
         }
         else
-            emitGitError(tr("An error occurred while trying to get the status of %1").arg(pPath));
+            emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
     }
     return status;
 }
@@ -1157,7 +1165,7 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
             git_index_free(index);
         }
         if (!success)
-            emitGitError(tr("An error occurred while trying to stage %1").arg(pPath));
+            emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
     }
 }
 
