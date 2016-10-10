@@ -5,8 +5,11 @@ MACRO(INITIALISE_PROJECT)
     # Make sure that we are using the compiler we support
 
     IF(WIN32)
+        STRING(REGEX REPLACE "\\..*$" ""
+               CMAKE_CXX_COMPILER_VERSION_MAJOR "${CMAKE_CXX_COMPILER_VERSION}")
+
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-           OR NOT CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "19")
+           OR NOT CMAKE_CXX_COMPILER_VERSION_MAJOR VERSION_EQUAL "19")
             MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2015 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
