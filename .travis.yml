@@ -1,3 +1,6 @@
+# Note: on Linux, we should upgrade to ppa:beineri/opt-qt562-trusty whenever it
+#       becomes available...
+
 language: cpp
 
 sudo: required
