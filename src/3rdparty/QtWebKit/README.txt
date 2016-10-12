@@ -56,7 +56,7 @@ Once QtWebKit is fully built:
  - Copy the macOS contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the macOS contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets; and
  - For each supported platform, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called QtWebKit.tar.gz that contains:
     - Windows:
-       - [QtWebKit]/bin minus all of its original contents, but plus the .dll files from [QtWebKit]/lib, as well as icudt57.dll, icuin57.dll and icuuc57.dll from the ICU library; and
-       - [QtWebKit]/lib minus the cmake folder, as well as the .dll, .exp and .ilk files;
+       - [QtWebKit]/bin minus all of its original contents, but plus the .dll files from [QtWebKit]/lib, and icudt57.dll, icuin57.dll and icuuc57.dll from the ICU library; and
+       - [QtWebKit]/lib minus the cmake folder, and the .dll, .exp and .ilk files;
     - Linux: [QtWebKit]/lib minus the cmake and pkgconfig folders; and
-    - macOS: [QtWebKit]/lib/QtWebKit.framework and [QtWebKit]/lib/QtWebKitWidgets.framework.
+    - macOS: [QtWebKit]/lib minus the cmake folder and the .dSYM files.
