@@ -1,5 +1,5 @@
 QtWebKit has been officially replaced with Qt WebEngine starting with Qt 5.6 LTS. However, Qt WebEngine is still lacking some features, making it impossible for us to switch to it just yet. Our original plan was therefore to stick with the Qt 5.5 branch, but it has known issues (e.g. https://bugreports.qt.io/browse/QTBUG-46882) and they will never be addressed since that branch is not being maintained anymore. We therefore decided to switch to Qt 5.6 LTS, which means having to build our own copy of QtWebKit. This requires the following:
- - QtWebKit's core source code (see http://download.qt.io/community_releases/5.6/5.6.1/); and
+ - QtWebKit's core source code (see http://download.qt.io/community_releases/5.6/5.6.2/); and
  - Making sure that we are all set to to build QtWebKit on:
     - Windows, i.e. installing:
        - Perl 5.22 (see http://www.activestate.com/activeperl/);
@@ -56,7 +56,7 @@ Once QtWebKit is fully built:
  - Copy the macOS contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the macOS contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets; and
  - For each supported platform, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called QtWebKit.tar.gz that contains:
     - Windows:
-       - [QtWebKit]/bin minus all of its original contents, but plus the .dll files from [QtWebKit]/lib, as well as icudt57.dll, icuin57.dll and icuuc57.dll from the ICU library; and
-       - [QtWebKit]/lib minus the cmake folder, as well as the .dll, .exp and .ilk files;
-    - Linux: [QtWebKit]/lib minus the cmake and pkgconfig folders; and
-    - macOS: [QtWebKit]/lib minus the cmake folder.
+       - [QtWebKit]/bin containing the .dll files from [QtWebKit]/lib, and icudt57.dll, icuin57.dll and icuuc57.dll from the ICU library; and
+       - [QtWebKit]/lib containing only the original .lib files;
+    - Linux: [QtWebKit]/lib containing only the original .so* files; and
+    - macOS: [QtWebKit]/lib containing only the original .framework folders.
