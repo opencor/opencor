@@ -5,8 +5,11 @@ MACRO(INITIALISE_PROJECT)
     # Make sure that we are using the compiler we support
 
     IF(WIN32)
+        STRING(REGEX REPLACE "\\..*$" ""
+               CMAKE_CXX_COMPILER_VERSION_MAJOR "${CMAKE_CXX_COMPILER_VERSION}")
+
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-           OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19")
+           OR NOT CMAKE_CXX_COMPILER_VERSION_MAJOR VERSION_EQUAL "19")
             MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2015 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
@@ -50,6 +53,14 @@ MACRO(INITIALISE_PROJECT)
         SET(RELEASE_MODE FALSE)
     ELSE()
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
+    ENDIF()
+
+    # Make sure that OpenSSL is available on Linux and macOS
+    # Note: it's currently needed for libgit2, but it might be needed for other
+    #       things too in the future, so make sure it's available...
+
+    IF(NOT WIN32)
+        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
     ENDIF()
 
     # Required Qt packages
@@ -138,14 +149,6 @@ MACRO(INITIALISE_PROJECT)
             QtXml
             QtXmlPatterns
         )
-    ENDIF()
-
-    # Make sure that OpenSSL is available on Linux and macOS
-    # Note: it's currently needed for libgit2, but it might be needed for other
-    #       things too in the future, so make sure it's available...
-
-    IF(NOT WIN32)
-        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
     ENDIF()
 
     # Determine the effective build directory
