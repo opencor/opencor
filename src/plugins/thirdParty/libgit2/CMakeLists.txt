@@ -147,7 +147,7 @@ ELSE()
             src/win32/path_w32.c
             src/win32/posix_w32.c
             src/win32/precompiled.c
-            src/win32/pthread.c
+            src/win32/thread.c
             src/win32/utf-conv.c
             src/win32/w32_buffer.c
             src/win32/w32_crtdbg_stacktrace.c
