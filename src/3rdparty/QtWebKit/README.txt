@@ -59,4 +59,4 @@ Once QtWebKit is fully built:
        - [QtWebKit]/bin minus all of its original contents, but plus the .dll files from [QtWebKit]/lib, as well as icudt57.dll, icuin57.dll and icuuc57.dll from the ICU library; and
        - [QtWebKit]/lib minus the cmake folder, as well as the .dll, .exp and .ilk files;
     - Linux: [QtWebKit]/lib minus the cmake and pkgconfig folders; and
-    - macOS: [QtWebKit]/lib minus the cmake folder.
+    - macOS: [QtWebKit]/lib/QtWebKit.framework and [QtWebKit]/lib/QtWebKitWidgets.framework.
