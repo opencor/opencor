@@ -103,7 +103,7 @@ ELSE()
         STDC
     )
 
-    # Ignore some warnings on Windows and OS X
+    # Ignore some warnings on Windows and macOS
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")

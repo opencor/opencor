@@ -35,7 +35,7 @@ From there, do the following from the command prompt or terminal:
     $ export PKG_CONFIG_PATH=[ICU]/install/lib/pkgconfig:$PKG_CONFIG_PATH
     $ qmake
     $ make
- - Terminal (OS X):
+ - Terminal (macOS):
     $ cd [QtWebKit]
     $ qmake
     $ make release
@@ -53,10 +53,10 @@ Once QtWebKit has been fully built:
       with
        set(_qt5WebKitWidgets_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
       in [OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake.
- - Copy the OS X contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the OS X contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets; and
+ - Copy the macOS contents of [QtWebKit]/lib/QtWebKit.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit and the macOS contents of [QtWebKit]/lib/QtWebKitWidgets.framework/Headers to [OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets; and
  - For each supported platform, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called QtWebKit.tar.gz that contains:
     - Windows:
        - [QtWebKit]/bin minus all of its original contents, but plus the .dll files from [QtWebKit]/lib, as well as icudt57.dll, icuin57.dll and icuuc57.dll from the ICU library; and
        - [QtWebKit]/lib minus the cmake folder, as well as the .dll, .exp and .ilk files;
     - Linux: [QtWebKit]/lib minus the cmake and pkgconfig folders; and
-    - OS X: [QtWebKit]/lib minus the cmake folder.
+    - macOS: [QtWebKit]/lib minus the cmake folder.
