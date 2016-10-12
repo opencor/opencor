@@ -6,7 +6,7 @@ endif()
 set(_qt5WebKit_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
 
 # For backwards compatibility only. Use Qt5WebKit_VERSION instead.
-set(Qt5WebKit_VERSION_STRING 5.6.1)
+set(Qt5WebKit_VERSION_STRING 5.6.2)
 
 set(Qt5WebKit_LIBRARIES Qt5::WebKit)
 
@@ -43,8 +43,8 @@ if (NOT TARGET Qt5::WebKit)
 
     set(_Qt5WebKit_OWN_INCLUDE_DIRS "${_qt5WebKit_install_prefix}/include/" "${_qt5WebKit_install_prefix}/include/QtWebKit")
     set(Qt5WebKit_PRIVATE_INCLUDE_DIRS
-        "${_qt5WebKit_install_prefix}/include/QtWebKit/5.6.1"
-        "${_qt5WebKit_install_prefix}/include/QtWebKit/5.6.1/QtWebKit"
+        "${_qt5WebKit_install_prefix}/include/QtWebKit/5.6.2"
+        "${_qt5WebKit_install_prefix}/include/QtWebKit/5.6.2/QtWebKit"
     )
 
     foreach(_dir ${_Qt5WebKit_OWN_INCLUDE_DIRS})
@@ -85,7 +85,7 @@ if (NOT TARGET Qt5::WebKit)
     foreach(_module_dep ${_Qt5WebKit_MODULE_DEPENDENCIES})
         if (NOT Qt5${_module_dep}_FOUND)
             find_package(Qt5${_module_dep}
-                5.6.1 ${_Qt5WebKit_FIND_VERSION_EXACT}
+                5.6.2 ${_Qt5WebKit_FIND_VERSION_EXACT}
                 ${_Qt5WebKit_DEPENDENCIES_FIND_QUIET}
                 ${_Qt5WebKit_FIND_DEPENDENCIES_REQUIRED}
                 PATHS "${CMAKE_CURRENT_LIST_DIR}/.." NO_DEFAULT_PATH
@@ -119,7 +119,7 @@ if (NOT TARGET Qt5::WebKit)
     set_property(TARGET Qt5::WebKit PROPERTY
       INTERFACE_COMPILE_DEFINITIONS QT_WEBKIT_LIB)
 
-    _populate_WebKit_target_properties(RELEASE "libQt5WebKit.so.5.6.1" "" )
+    _populate_WebKit_target_properties(RELEASE "libQt5WebKit.so.5.6.2" "" )
 
 
 
