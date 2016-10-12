@@ -1,5 +1,5 @@
 QtWebKit has been officially replaced with Qt WebEngine starting with Qt 5.6 LTS. However, Qt WebEngine is still lacking some features, making it impossible for us to switch to it just yet. Our original plan was therefore to stick with the Qt 5.5 branch, but it has known issues (e.g. https://bugreports.qt.io/browse/QTBUG-46882) and they will never be addressed since that branch is not being maintained anymore. We therefore decided to switch to Qt 5.6 LTS, which means having to build our own copy of QtWebKit. This requires the following:
- - QtWebKit's core source code (see http://download.qt.io/community_releases/5.6/5.6.1/); and
+ - QtWebKit's core source code (see http://download.qt.io/community_releases/5.6/5.6.2/); and
  - Making sure that we are all set to to build QtWebKit on:
     - Windows, i.e. installing:
        - Perl 5.22 (see http://www.activestate.com/activeperl/);
