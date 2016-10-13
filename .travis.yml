@@ -28,7 +28,7 @@ install:
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
-      && apt list --installed | grep std
+      && apt list --installed
       ;
     else
          brew update
