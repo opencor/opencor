@@ -1091,7 +1091,7 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
+MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
     # Strip the file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
@@ -1113,6 +1113,14 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
     ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
+    # Clean up the file
+
+    MACOS_CLEAN_UP_FILE(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
@@ -1134,6 +1142,25 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
             ENDIF()
         ENDFOREACH()
     ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(MACOS_DEPLOY_LIBRARY DIRNAME FILENAME)
+    # Copy the library
+
+    SET(DEST_DIRNAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
+
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
+                                                     ${DEST_DIRNAME}/${FILENAME})
+
+    # Make sure the library is writable (so we can actually clean it up)
+
+    EXECUTE_PROCESS(COMMAND chmod 755 ${DEST_DIRNAME}/${FILENAME})
+
+    # Clean up the library
+
+    MACOS_CLEAN_UP_FILE(DIRECT ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
