@@ -1036,27 +1036,27 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
+MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to a RPATH value
 
-    RUNPATH2RPATH(lib/${DEST_FILENAME})
+    RUNPATH2RPATH(lib/${FILENAME})
 
     # Strip the Qt library of all its local symbols
 
     IF(RELEASE_MODE)
-        EXECUTE_PROCESS(COMMAND strip -x lib/${DEST_FILENAME})
+        EXECUTE_PROCESS(COMMAND strip -x lib/${FILENAME})
     ENDIF()
 
     # Deploy the Qt library
 
-    INSTALL(FILES ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME}
+    INSTALL(FILES ${PROJECT_BUILD_DIR}/lib/${FILENAME}
             DESTINATION lib)
 ENDMACRO()
 
