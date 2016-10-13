@@ -54,7 +54,7 @@ ELSE()
         SET(DEFINITIONS)
     ENDIF()
 
-    # Ignore some warnings on Windows and OS X
+    # Ignore some warnings on Windows
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
