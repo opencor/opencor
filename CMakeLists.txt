@@ -260,7 +260,7 @@ IF(ENABLE_TESTS)
     # Clean up our test program, but only if we are on macOS
 
     IF(APPLE)
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+        MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -474,7 +474,7 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+    MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Deploy our Qt libraries
     # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
@@ -484,18 +484,18 @@ IF(APPLE)
     #       don't deploy the Qt frameworks...
 
     IF(NOT ENABLE_TRAVIS_CI)
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            OS_X_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
+        FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+            MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
         ENDFOREACH()
     ENDIF()
 
     # Deploy some plugins
 
-    OS_X_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
-    OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-    OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
-    OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
-    OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    MACOS_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
+    MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
+    MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
+    MACOS_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
+    MACOS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 ELSE()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
