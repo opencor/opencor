@@ -22,11 +22,9 @@
 #ifndef QSCISCINTILLA_H
 #define QSCISCINTILLA_H
 
-/*---OPENCOR---
 #ifdef __APPLE__
 extern "C++" {
 #endif
-*/
 
 #include <QByteArray>
 #include <QList>
@@ -2137,9 +2135,7 @@ private:
     int ct_cursor;
     QList<int> ct_shifts;
     AutoCompletionUseSingle use_single;
-/*---OPENCOR---
     QPointer<QsciLexer> lex;
-*/
     QsciCommandSet *stdCmds;
     QsciDocument doc;
     QColor nl_text_colour;
@@ -2161,10 +2157,8 @@ private:
     QsciScintilla &operator=(const QsciScintilla &);
 };
 
-/*---OPENCOR---
 #ifdef __APPLE__
 }
 #endif
-*/
 
 #endif

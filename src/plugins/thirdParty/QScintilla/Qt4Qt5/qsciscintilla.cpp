@@ -35,9 +35,6 @@
 #include <QMenu>
 #include <QPoint>
 
-//---OPENCOR--- BEGIN
-QPointer<QsciLexer> lex;
-//---OPENCOR--- END
 #include "Qsci/qsciabstractapis.h"
 #include "Qsci/qscicommandset.h"
 #include "Qsci/qscilexer.h"
