@@ -666,7 +666,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+        MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
 
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
@@ -816,7 +816,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(APPLE)
                     # Clean up our plugin's tests
 
-                    MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
 
                     # Make sure that the plugin's tests refer to our embedded
                     # version of the binary plugins on which they depend
@@ -1091,7 +1091,7 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
+MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
     # Strip the file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
@@ -1113,6 +1113,43 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
     ENDIF()
+
+    # Make sure that the file refers to our embedded copy of OpenSSL
+    # Note: we try two different paths for a given OpenSSL library since the
+    #       former path will be used by libssl.1.0.0.dylib while the latter path
+    #       will be used by our plugins...
+
+    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${OPENSSL_LIBRARY} DIRECTORY)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
+
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
+                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                              ${FULL_FILENAME})
+            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                              ${FULL_FILENAME})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
+                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+        ENDIF()
+    ENDFOREACH()
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
+    # Clean up the file
+
+    MACOS_CLEAN_UP_FILE(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
@@ -1138,6 +1175,25 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(MACOS_DEPLOY_LIBRARY DIRNAME FILENAME)
+    # Copy the library
+
+    SET(DEST_DIRNAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
+
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
+                                                     ${DEST_DIRNAME}/${FILENAME})
+
+    # Make sure the library is writable (so we can actually clean it up)
+
+    EXECUTE_PROCESS(COMMAND chmod 755 ${DEST_DIRNAME}/${FILENAME})
+
+    # Clean up the library
+
+    MACOS_CLEAN_UP_FILE(DIRECT ${DEST_DIRNAME} ${FILENAME})
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(MACOS_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
@@ -1146,7 +1202,7 @@ MACRO(MACOS_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
     # Clean up the Qt file
 
-    MACOS_CLEAN_UP_FILE_WITH_QT_LIBRARIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
+    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
