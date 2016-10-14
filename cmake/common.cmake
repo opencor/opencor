@@ -63,7 +63,7 @@ MACRO(INITIALISE_PROJECT)
         FIND_PACKAGE(OpenSSL REQUIRED QUIET)
     ENDIF()
 
-    # Required Qt packages
+    # Required Qt modules and packages
 
     IF(ENABLE_TESTS)
         SET(TEST Test)
@@ -1024,7 +1024,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(RUNPATH2RPATH FILENAME)
-    # Convert the RUNPATH value, if any, of the given ELF file to a RPATH value
+    # Convert the RUNPATH value, if any, of the given ELF file to an RPATH value
 
     EXECUTE_PROCESS(COMMAND ${RUNPATH2RPATH} ${FILENAME}
                     RESULT_VARIABLE RESULT)
@@ -1044,7 +1044,7 @@ MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME FILENAME)
 
     COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${FILENAME})
 
-    # Make sure that the RUNPATH value is converted to a RPATH value
+    # Make sure that the RUNPATH value is converted to an RPATH value
 
     RUNPATH2RPATH(lib/${FILENAME})
 
@@ -1072,7 +1072,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
-        # Make sure that the RUNPATH value is converted to a RPATH value
+        # Make sure that the RUNPATH value is converted to an RPATH value
 
         RUNPATH2RPATH(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
