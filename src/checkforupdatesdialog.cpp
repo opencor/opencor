@@ -254,7 +254,7 @@ void CheckForUpdatesDialog::updateGui()
     static const QString WhatIsNewUrl = "http://opencor.ws/user/whatIsNew.html?#";
 
     QString versionInformation = tr("<a href=\"%1\">%2 %3</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
-    QString snapshotInformation = tr("The <a href=\"%1\">latest snapshot</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
+    QString snapshotInformation = tr("The <a href=\"%1\">latest snapshot</a> (%2) is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
 
     if (mEngine->status().isEmpty()) {
         if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked) {
@@ -277,7 +277,7 @@ void CheckForUpdatesDialog::updateGui()
                     version = mEngine->newerVersions().first();
 
                 if (version.contains("-"))
-                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest"));
+                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest", version));
                 else
                     mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
             } else {
