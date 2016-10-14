@@ -1000,9 +1000,12 @@ void Property::setVisible(const bool &pVisible)
 void Property::select() const
 {
     // Have our owner select ourselves by selecting our value, if any, or our
-    // name
+    // name, preserving the position of its horizontal scrollbar
+
+    int horizontalScrollBarValue = mOwner->horizontalScrollBar()->value();
 
     mOwner->setCurrentIndex(mValue?mValue->index():mName->index());
+    mOwner->horizontalScrollBar()->setValue(horizontalScrollBarValue);
 }
 
 //==============================================================================
