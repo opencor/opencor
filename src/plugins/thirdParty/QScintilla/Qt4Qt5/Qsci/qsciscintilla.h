@@ -2140,6 +2140,10 @@ private:
 /*---OPENCOR---
     QPointer<QsciLexer> lex;
 */
+//---OPENCOR--- BEGIN
+    struct Lexer;
+    Lexer *lexerStruct;
+//---OPENCOR--- END
     QsciCommandSet *stdCmds;
     QsciDocument doc;
     QColor nl_text_colour;

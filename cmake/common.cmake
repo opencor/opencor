@@ -63,7 +63,7 @@ MACRO(INITIALISE_PROJECT)
         FIND_PACKAGE(OpenSSL REQUIRED QUIET)
     ENDIF()
 
-    # Required Qt packages
+    # Required Qt modules and packages
 
     IF(ENABLE_TESTS)
         SET(TEST Test)
@@ -122,7 +122,7 @@ MACRO(INITIALISE_PROJECT)
             SET(QT_TEST)
         ENDIF()
 
-        SET(OS_X_QT_LIBRARIES
+        SET(MACOS_QT_LIBRARIES
             QtCLucene
             QtConcurrent
             QtCore
@@ -666,7 +666,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+        MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
 
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
@@ -816,7 +816,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(APPLE)
                     # Clean up our plugin's tests
 
-                    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
 
                     # Make sure that the plugin's tests refer to our embedded
                     # version of the binary plugins on which they depend
@@ -894,11 +894,11 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # embed the Qt libraries in that case (see the main CMakeLists.txt file)
 
     IF(APPLE AND ENABLE_TRAVIS_CI)
-        FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            SET(OS_X_QT_LIBRARY_FILENAME ${OS_X_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${OS_X_QT_LIBRARY})
+        FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
+            SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
 
-            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${OS_X_QT_LIBRARY_FILENAME}
-                                                              ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
+            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${MACOS_QT_LIBRARY_FILENAME}
+                                                              ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
                                                               ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -1024,7 +1024,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(RUNPATH2RPATH FILENAME)
-    # Convert the RUNPATH value, if any, of the given ELF file to a RPATH value
+    # Convert the RUNPATH value, if any, of the given ELF file to an RPATH value
 
     EXECUTE_PROCESS(COMMAND ${RUNPATH2RPATH} ${FILENAME}
                     RESULT_VARIABLE RESULT)
@@ -1036,27 +1036,27 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
+MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${FILENAME})
 
-    # Make sure that the RUNPATH value is converted to a RPATH value
+    # Make sure that the RUNPATH value is converted to an RPATH value
 
-    RUNPATH2RPATH(lib/${DEST_FILENAME})
+    RUNPATH2RPATH(lib/${FILENAME})
 
     # Strip the Qt library of all its local symbols
 
     IF(RELEASE_MODE)
-        EXECUTE_PROCESS(COMMAND strip -x lib/${DEST_FILENAME})
+        EXECUTE_PROCESS(COMMAND strip -x lib/${FILENAME})
     ENDIF()
 
     # Deploy the Qt library
 
-    INSTALL(FILES ${PROJECT_BUILD_DIR}/lib/${DEST_FILENAME}
+    INSTALL(FILES ${PROJECT_BUILD_DIR}/lib/${FILENAME}
             DESTINATION lib)
 ENDMACRO()
 
@@ -1072,7 +1072,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
-        # Make sure that the RUNPATH value is converted to a RPATH value
+        # Make sure that the RUNPATH value is converted to an RPATH value
 
         RUNPATH2RPATH(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
@@ -1091,7 +1091,7 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
+MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
     # Strip the file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
@@ -1114,22 +1114,59 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
                            COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
     ENDIF()
 
+    # Make sure that the file refers to our embedded copy of OpenSSL
+    # Note: we try two different paths for a given OpenSSL library since the
+    #       former path will be used by libssl.1.0.0.dylib while the latter path
+    #       will be used by our plugins...
+
+    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${OPENSSL_LIBRARY} DIRECTORY)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
+
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
+                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                              ${FULL_FILENAME})
+            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                              ${FULL_FILENAME})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
+                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+        ENDIF()
+    ENDFOREACH()
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
+    # Clean up the file
+
+    MACOS_CLEAN_UP_FILE(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
+
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
     # in that case; see the main CMakeLists.txt file)
 
     IF(NOT ENABLE_TRAVIS_CI)
-        FOREACH(OS_X_QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            SET(OS_X_QT_LIBRARY_FILENAME ${OS_X_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${OS_X_QT_LIBRARY})
+        FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
+            SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
 
             IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-                EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
-                                                                  @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
+                                                                  @rpath/${MACOS_QT_LIBRARY_FILENAME}
                                                                   ${FULL_FILENAME})
             ELSE()
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                                   COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${OS_X_QT_LIBRARY_FILENAME}
-                                                                     @rpath/${OS_X_QT_LIBRARY_FILENAME}
+                                   COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
+                                                                     @rpath/${MACOS_QT_LIBRARY_FILENAME}
                                                                      ${FULL_FILENAME})
             ENDIF()
         ENDFOREACH()
@@ -1138,7 +1175,26 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
+MACRO(MACOS_DEPLOY_LIBRARY DIRNAME FILENAME)
+    # Copy the library
+
+    SET(DEST_DIRNAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
+
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
+                                                     ${DEST_DIRNAME}/${FILENAME})
+
+    # Make sure the library is writable (so we can actually clean it up)
+
+    EXECUTE_PROCESS(COMMAND chmod 755 ${DEST_DIRNAME}/${FILENAME})
+
+    # Clean up the library
+
+    MACOS_CLEAN_UP_FILE(DIRECT ${DEST_DIRNAME} ${FILENAME})
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(MACOS_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
@@ -1146,12 +1202,12 @@ MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
     # Clean up the Qt file
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
+    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
+MACRO(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     # Deploy the Qt library
 
     SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
@@ -1163,20 +1219,20 @@ MACRO(OS_X_DEPLOY_QT_LIBRARY LIBRARY_NAME)
         SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
     ENDIF()
 
-    OS_X_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
-                        ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
-                        ${LIBRARY_NAME})
+    MACOS_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
+                         ${LIBRARY_NAME})
 ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+MACRO(MACOS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin
 
-        OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
-                            ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
-                            ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        MACOS_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
+                             ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
+                             ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 ENDMACRO()
 

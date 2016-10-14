@@ -314,9 +314,7 @@ int main(int pArgC, char *pArgV[])
             // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
 
-            QSettings settings;
-
-            settings.clear();
+            QSettings().clear();
         }
 
         // Restart OpenCOR, but without providing any of the arguments that were
