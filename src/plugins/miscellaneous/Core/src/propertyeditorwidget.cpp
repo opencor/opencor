@@ -705,7 +705,7 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    return (mType == Integer)?mValue->text().toInt():0;
+    return (mValue && (mType == Integer))?mValue->text().toInt():0;
 }
 
 //==============================================================================
@@ -724,7 +724,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    return (mType == Double)?mValue->text().toDouble():0.0;
+    return (mValue && (mType == Double))?mValue->text().toDouble():0.0;
 }
 
 //==============================================================================
@@ -908,7 +908,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
+    return (mValue && (mType == Boolean))?!mValue->text().compare(TrueValue):false;
 }
 
 //==============================================================================
@@ -999,9 +999,10 @@ void Property::setVisible(const bool &pVisible)
 
 void Property::select() const
 {
-    // Have our owner select ourselves by selecting our name
+    // Have our owner select ourselves by selecting our value, if any, or our
+    // name
 
-    mOwner->setCurrentIndex(mName->index());
+    mOwner->setCurrentIndex(mValue?mValue->index():mName->index());
 }
 
 //==============================================================================
