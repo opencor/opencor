@@ -35,15 +35,20 @@
 #include <QMenu>
 #include <QPoint>
 
-//---OPENCOR--- BEGIN
-QPointer<QsciLexer> lex;
-//---OPENCOR--- END
 #include "Qsci/qsciabstractapis.h"
 #include "Qsci/qscicommandset.h"
 #include "Qsci/qscilexer.h"
 #include "Qsci/qscistyle.h"
 #include "Qsci/qscistyledtext.h"
 
+//---OPENCOR--- BEGIN
+struct QsciScintilla::Lexer
+{
+    QPointer<QsciLexer> object;
+};
+
+#define lex (lexerStruct->object)
+//---OPENCOR--- END
 
 // Make sure these match the values in Scintilla.h.  We don't #include that
 // file because it just causes more clashes.
@@ -70,6 +75,9 @@ QsciScintilla::QsciScintilla(QWidget *parent)
       wchars(defaultWordChars), call_tips_position(CallTipsBelowText),
       call_tips_style(CallTipsNoContext), maxCallTips(-1),
       use_single(AcusNever), explicit_fillups(""), fillups_enabled(false)
+//---OPENCOR--- BEGIN
+    , lexerStruct(new Lexer())
+//---OPENCOR--- END
 {
     connect(this,SIGNAL(SCN_MODIFYATTEMPTRO()),
              SIGNAL(modificationAttempted()));
@@ -149,6 +157,9 @@ QsciScintilla::~QsciScintilla()
 
     doc.undisplay(this);
     delete stdCmds;
+//---OPENCOR--- BEGIN
+    delete lexerStruct;
+//---OPENCOR--- END
 }
 
 

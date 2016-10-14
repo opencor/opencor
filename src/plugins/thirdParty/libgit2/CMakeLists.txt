@@ -41,16 +41,16 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll f73827656c1c65469771e3cdd1f589f814f0cd95)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 2ed7cf6add6ca9c05d92f1f8ba83299a2978213a)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 654835d81ccf3223a4d123c39d1373327cd113e0)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib af22622144c1b1635c9c72ed902379d3fd2118aa)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll bb73f9c427c603db0c875a9cb2103eaf00562903)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib ee838f1c50f581de26d9d670277d56640a92a2cc)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll c25d799ae5c34f18cc1423f1c3e4f48990dec155)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib f5c4ce1339fbda80b19fca3ab4784a41879730fe)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 7538e882b0e6e913073e2b8629d2c8539eb52b66)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib a3018559abe9feb2c3c387dd7528c7946a5f0fba)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so c6b81fd22a5f053b0a62242070fd855b302fdaff)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 3f3408fc3819c1651beb9bf2b4b3d60076487c40)
     ENDIF()
 
     # Add the plugin as a binary
@@ -103,7 +103,7 @@ ELSE()
         STDC
     )
 
-    # Ignore some warnings on Windows and OS X
+    # Ignore some warnings on Windows and macOS
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")
@@ -147,7 +147,7 @@ ELSE()
             src/win32/path_w32.c
             src/win32/posix_w32.c
             src/win32/precompiled.c
-            src/win32/pthread.c
+            src/win32/thread.c
             src/win32/utf-conv.c
             src/win32/w32_buffer.c
             src/win32/w32_crtdbg_stacktrace.c
