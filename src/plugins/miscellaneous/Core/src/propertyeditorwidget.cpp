@@ -445,7 +445,7 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mType(pType),
     mId(QString()),
     mName(new PropertyItem(this)),
-    mValue((pType != Section)?new PropertyItem(this):0),
+    mValue(new PropertyItem(this)),
     mUnit(pParent->showUnits()?new PropertyItem(this):0),
     mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
@@ -548,10 +548,7 @@ QList<QStandardItem *> Property::items() const
 {
     // Return our items as a list
 
-    QList<QStandardItem *> res = QList<QStandardItem *>() << mName;
-
-    if (mValue)
-        res << mValue;
+    QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
 
     if (mUnit)
         res << mUnit;
@@ -565,10 +562,7 @@ bool Property::hasIndex(const QModelIndex &pIndex) const
 {
     // Return whether the given index is that of our name, value or unit item
 
-    bool res = mName->index() == pIndex;
-
-    if (mValue)
-        res = res || (mValue->index() == pIndex);
+    bool res = (mName->index() == pIndex) || (mValue->index() == pIndex);
 
     if (mUnit)
         res = res || (mUnit->index() == pIndex);
@@ -643,19 +637,18 @@ void Property::setChecked(const bool &pChecked)
 
 bool Property::isEditable() const
 {
-    // Return whether our value item, if any, is editable
+    // Return whether our value item is editable
 
-    return mValue?mValue->isEditable():false;
+    return mValue->isEditable();
 }
 
 //==============================================================================
 
 void Property::setEditable(const bool &pEditable)
 {
-    // Make our value item, if any, (non-)editable
+    // Make our value item (non-)editable
 
-    if (mValue)
-        mValue->setEditable(pEditable);
+    mValue->setEditable(pEditable);
 }
 
 //==============================================================================
@@ -705,7 +698,7 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    return (mValue && (mType == Integer))?mValue->text().toInt():0;
+    return (mType == Integer)?mValue->text().toInt():0;
 }
 
 //==============================================================================
@@ -724,7 +717,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    return (mValue && (mType == Double))?mValue->text().toDouble():0.0;
+    return (mType == Double)?mValue->text().toDouble():0.0;
 }
 
 //==============================================================================
@@ -745,9 +738,9 @@ void Property::setDoubleValue(const double &pDoubleValue,
 
 QString Property::value() const
 {
-    // Return our value, if any
+    // Return our value
 
-    return mValue?mValue->text():QString();
+    return mValue->text();
 }
 
 //==============================================================================
@@ -755,9 +748,9 @@ QString Property::value() const
 void Property::setValue(const QString &pValue, const bool &pForce,
                         const bool &pEmitSignal)
 {
-    // Set our value, if any
+    // Set our value
 
-    if (mValue && (pValue.compare(mValue->text()) || pForce)) {
+    if (pValue.compare(mValue->text()) || pForce) {
         QString oldValue = mValue->text();
 
         mValue->setText(pValue);
@@ -857,9 +850,9 @@ void Property::setListValues(const QStringList &pListValues,
 
 QString Property::listValue() const
 {
-    // Return our list value, if any
+    // Return our list value
 
-    return mValue?mValue->text():QString();
+    return mValue->text();
 }
 
 //==============================================================================
@@ -908,7 +901,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    return (mValue && (mType == Boolean))?!mValue->text().compare(TrueValue):false;
+    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
 }
 
 //==============================================================================
@@ -999,12 +992,12 @@ void Property::setVisible(const bool &pVisible)
 
 void Property::select() const
 {
-    // Have our owner select ourselves by selecting our value, if any, or our
-    // name, preserving the position of its horizontal scrollbar
+    // Have our owner select ourselves (i.e. our value), preserving the position
+    // of our horizontal scrollbar
 
     int horizontalScrollBarValue = mOwner->horizontalScrollBar()->value();
 
-    mOwner->setCurrentIndex(mValue?mValue->index():mName->index());
+    mOwner->setCurrentIndex(mValue->index());
     mOwner->horizontalScrollBar()->setValue(horizontalScrollBarValue);
 }
 
@@ -1012,9 +1005,9 @@ void Property::select() const
 
 void Property::edit() const
 {
-    // Have our owner edit our value, if any
+    // Have our owner edit our value
 
-    if (mValue && mValue->isEditable())
+    if (mValue->isEditable())
         mOwner->edit(mValue->index());
 }
 
@@ -1029,12 +1022,10 @@ void Property::updateToolTip()
     if (mType != Section) {
         toolTip += QObject::tr(": ");
 
-        if (mValue) {
-            if (mValue->text().isEmpty())
-                toolTip += UnknownValue;
-            else
-                toolTip += mValue->text();
-        }
+        if (mValue->text().isEmpty())
+            toolTip += UnknownValue;
+        else
+            toolTip += mValue->text();
 
         if (mUnit && !mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
@@ -1045,11 +1036,12 @@ void Property::updateToolTip()
 
     mName->setToolTip(toolTip);
 
-    if (mValue)
+    if (mType != Section) {
         mValue->setToolTip(toolTip);
 
-    if (mUnit)
-        mUnit->setToolTip(toolTip);
+        if (mUnit)
+            mUnit->setToolTip(toolTip);
+    }
 }
 
 //==============================================================================
