@@ -143,28 +143,28 @@ QString PmrWebService::informationNoteMessage() const
 void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
                                      const QString &pDirName)
 {
-   // Clone the workspace
+    // Clone the workspace, trusting PMR's SSL certificate
 
-   git_libgit2_init();
+    git_libgit2_init();
 
-   git_repository *gitRepository = 0;
-   QByteArray workspaceByteArray = pWorkspace.toUtf8();
-   QByteArray dirNameByteArray = pDirName.toUtf8();
+    git_repository *gitRepository = 0;
+    QByteArray workspaceByteArray = pWorkspace.toUtf8();
+    QByteArray dirNameByteArray = pDirName.toUtf8();
 
-   int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                       dirNameByteArray.constData(), 0);
+    int res = git_clone(&gitRepository, workspaceByteArray.constData(),
+                        dirNameByteArray.constData(), 0);
 
-   if (res) {
-       const git_error *gitError = giterr_last();
+    if (res) {
+        const git_error *gitError = giterr_last();
 
-       emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
-                        tr("An error occurred while trying to clone the workspace."));
-   } else if (gitRepository) {
-       git_repository_free(gitRepository);
-   }
+        emit warning(gitError?
+                         tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
+                         tr("An error occurred while trying to clone the workspace."));
+    } else if (gitRepository) {
+        git_repository_free(gitRepository);
+    }
 
-   git_libgit2_shutdown();
+    git_libgit2_shutdown();
 }
 
 //==============================================================================
