@@ -34,6 +34,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "git2/types.h"
+
+//==============================================================================
+
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -80,6 +84,11 @@ private:
     QMap<QString, QString> mExposureFileNames;
 
     QString informationNoteMessage() const;
+
+    static int bypassCertificateCheck(git_cert *pCertificate, int pValid,
+                                      const char *pHost, void *pPayload);
+    static int processEvents(const git_transfer_progress *pStatistics,
+                             void *pPayload);
 
     void doCloneWorkspace(const QString &pWorkspace, const QString &pDirName);
     void doShowExposureFiles(const QString &pExposureUrl);

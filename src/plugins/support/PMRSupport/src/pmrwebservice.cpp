@@ -140,31 +140,68 @@ QString PmrWebService::informationNoteMessage() const
 
 //==============================================================================
 
+int PmrWebService::bypassCertificateCheck(git_cert *pCertificate, int pValid,
+                                          const char *pHost, void *pPayload)
+{
+    Q_UNUSED(pCertificate);
+    Q_UNUSED(pValid);
+    Q_UNUSED(pHost);
+    Q_UNUSED(pPayload);
+
+    // Bypass the certificate check
+
+    return 1;
+}
+
+//==============================================================================
+
+int PmrWebService::processEvents(const git_transfer_progress *pStatistics,
+                                 void *pPayload)
+{
+    Q_UNUSED(pStatistics);
+    Q_UNUSED(pPayload);
+
+    // Make sure that our busy widget gets updated
+
+    QCoreApplication::processEvents();
+
+    return 0;
+}
+
+//==============================================================================
+
 void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
                                      const QString &pDirName)
 {
-   // Clone the workspace
+    // Clone the workspace, ignoring the certificate check (i.e. trusting PMR's
+    // SSL certificate) and making sure that any busy widget gets updated
 
-   git_libgit2_init();
+    git_libgit2_init();
 
-   git_repository *gitRepository = 0;
-   QByteArray workspaceByteArray = pWorkspace.toUtf8();
-   QByteArray dirNameByteArray = pDirName.toUtf8();
+    git_repository *gitRepository = 0;
+    QByteArray workspaceByteArray = pWorkspace.toUtf8();
+    QByteArray dirNameByteArray = pDirName.toUtf8();
+    git_clone_options cloneOptions;
 
-   int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                       dirNameByteArray.constData(), 0);
+    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
 
-   if (res) {
-       const git_error *gitError = giterr_last();
+    cloneOptions.fetch_opts.callbacks.certificate_check = bypassCertificateCheck;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = processEvents;
 
-       emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
-                        tr("An error occurred while trying to clone the workspace."));
-   } else if (gitRepository) {
-       git_repository_free(gitRepository);
-   }
+    int res = git_clone(&gitRepository, workspaceByteArray.constData(),
+                        dirNameByteArray.constData(), &cloneOptions);
 
-   git_libgit2_shutdown();
+    if (res) {
+        const git_error *gitError = giterr_last();
+
+        emit warning(gitError?
+                         tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
+                         tr("An error occurred while trying to clone the workspace."));
+    } else if (gitRepository) {
+        git_repository_free(gitRepository);
+    }
+
+    git_libgit2_shutdown();
 }
 
 //==============================================================================
