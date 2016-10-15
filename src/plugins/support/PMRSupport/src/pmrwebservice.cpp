@@ -81,14 +81,14 @@ PmrWebService::~PmrWebService()
 
 static const char *PmrRequestProperty = "PmrRequest";
 static const char *ActionProperty     = "Action";
-static const char *NameProperty       = "Name";
+static const char *DirNameProperty    = "DirName";
 
 //==============================================================================
 
 void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
                                    const QString &pUrl,
                                    const Action pAction,
-                                   const QString &pName)
+                                   const QString &pDirName)
 {
     // Let the user know that we are busy
 
@@ -123,7 +123,7 @@ void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
 
         networkReply->setProperty(PmrRequestProperty, pPmrRequest);
         networkReply->setProperty(ActionProperty, pAction);
-        networkReply->setProperty(NameProperty, pName);
+        networkReply->setProperty(DirNameProperty, pDirName);
     } else {
         finished();
     }
@@ -489,7 +489,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
         if (   mWorkspaces.contains(exposureUrl)
             && (Action(pNetworkReply->property(ActionProperty).toInt()) == CloneWorkspace)) {
             doCloneWorkspace(mWorkspaces.value(exposureUrl),
-                             pNetworkReply->property(NameProperty).toString());
+                             pNetworkReply->property(DirNameProperty).toString());
         }
 
         break;
