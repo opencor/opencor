@@ -87,7 +87,7 @@ private:
     void sendPmrRequest(const PmrRequest &pPmrRequest,
                         const QString &pUrl = QString(),
                         const Action pAction = None,
-                        const QString &pName = QString());
+                        const QString &pDirName = QString());
 
 signals:
     void busy(const bool &pBusy);
