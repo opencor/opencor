@@ -1,26 +1,4 @@
 var jsonData = { "versions": [
-                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 9, "year": 2016, "type": 2,
-                     "platforms": [
-                       { "name": "Windows", "supported": "Windows 7 and later",
-                         "files": [
-                           { "extension": ".exe" }, { "extension": ".zip" }
-                         ]
-                       },
-                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
-                         "files": [
-                           { "extension": ".tar.gz" }
-                         ]
-                       },
-                       { "name": "macOS", "supported": "Mac OS X 10.7 (Lion) and later",
-                         "files": [
-                           { "extension": ".dmg" }, { "extension": ".zip" }
-                         ]
-                       }
-                     ],
-                     "changes": [
-                       { "change": "This is our release candidate for OpenCOR 0.5." }
-                     ]
-                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 26, "month": 7, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
