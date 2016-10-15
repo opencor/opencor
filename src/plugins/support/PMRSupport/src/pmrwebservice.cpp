@@ -140,19 +140,56 @@ QString PmrWebService::informationNoteMessage() const
 
 //==============================================================================
 
+int PmrWebService::bypassCertificateCheck(git_cert *pCertificate, int pValid,
+                                          const char *pHost, void *pPayload)
+{
+    Q_UNUSED(pCertificate);
+    Q_UNUSED(pValid);
+    Q_UNUSED(pHost);
+    Q_UNUSED(pPayload);
+
+    // Bypass the certificate check
+
+    return 1;
+}
+
+//==============================================================================
+
+int PmrWebService::processEvents(const git_transfer_progress *pStatistics,
+                                 void *pPayload)
+{
+    Q_UNUSED(pStatistics);
+    Q_UNUSED(pPayload);
+
+    // Make sure that our busy widget gets updated
+
+    QCoreApplication::processEvents();
+
+    return 0;
+}
+
+//==============================================================================
+
 void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
                                      const QString &pDirName)
 {
-    // Clone the workspace, trusting PMR's SSL certificate
+    // Clone the workspace, ignoring the certificate check (i.e. trusting PMR's
+    // SSL certificate) and making sure that any busy widget gets updated
 
     git_libgit2_init();
 
     git_repository *gitRepository = 0;
     QByteArray workspaceByteArray = pWorkspace.toUtf8();
     QByteArray dirNameByteArray = pDirName.toUtf8();
+    git_clone_options cloneOptions;
+
+    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
+
+    cloneOptions.fetch_opts.callbacks.certificate_check = bypassCertificateCheck;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = processEvents;
 
     int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                        dirNameByteArray.constData(), 0);
+                        dirNameByteArray.constData(), &cloneOptions);
 
     if (res) {
         const git_error *gitError = giterr_last();
