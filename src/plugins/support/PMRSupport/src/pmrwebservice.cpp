@@ -332,7 +332,8 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                     mExposureUrls.insert(workspaceUrl, url);
 
                     sendPmrRequest(WorkspaceInformation, workspaceUrl,
-                                   Action(pNetworkReply->property(ActionProperty).toInt()));
+                                   Action(pNetworkReply->property(ActionProperty).toInt()),
+                                   pNetworkReply->property(DirNameProperty).toString());
 
                     foreach (const QString &exposureFileUrl, exposureFileUrls) {
                         mExposureUrls.insert(exposureFileUrl, url);
