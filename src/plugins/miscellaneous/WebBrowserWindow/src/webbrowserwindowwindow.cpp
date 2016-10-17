@@ -116,8 +116,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    // Some connections to handle the change in URL or page action status of our
-    // web browser widget
+    // Various connections to handle our web browser widget
 
     connect(mWebBrowserWidget, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
@@ -126,6 +125,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
             this, SLOT(documentChanged()));
     connect(mWebBrowserWidget->pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(documentChanged()));
+
+    connect(mWebBrowserWidget->page(), SIGNAL(selectionChanged()),
+            this, SLOT(updateActions()));
 
     // Start with a clear web browser widget
 
@@ -199,7 +201,7 @@ void WebBrowserWindowWindow::updateActions()
 
     mGui->actionClear->setEnabled(!mGui->urlValue->text().isEmpty());
 
-    mGui->actionCopy->setEnabled(false);
+    mGui->actionCopy->setEnabled(!mWebBrowserWidget->page()->selectedText().isEmpty());
 
     mGui->actionNormalSize->setEnabled(mZoomLevel != DefaultZoomLevel);
     mGui->actionZoomOut->setEnabled(mZoomLevel != MinimumZoomLevel);
@@ -308,6 +310,15 @@ void WebBrowserWindowWindow::on_actionForward_triggered()
     // Go to the next page
 
     mWebBrowserWidget->forward();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionCopy_triggered()
+{
+    // Copy the current slection to the clipboard
+
+    QApplication::clipboard()->setText(mWebBrowserWidget->selectedText());
 }
 
 //==============================================================================
