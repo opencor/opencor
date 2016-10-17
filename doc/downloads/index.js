@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> improved support for macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1134\">#1134</a>)." },
                        { "change": "<strong>Web Browser window:</strong> added a Web browser like window (see issue <a href=\"https://github.com/opencor/opencor/issues/1115\">#1115</a>)." }
                      ]
                    },
