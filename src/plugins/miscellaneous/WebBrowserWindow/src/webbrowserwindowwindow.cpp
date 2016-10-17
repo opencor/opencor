@@ -254,6 +254,8 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
         mWebBrowserWidget->print(&printer);
 }
 
+//==============================================================================
+
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
