@@ -60,9 +60,21 @@ private:
 
     QWebView *mWebBrowserWidget;
 
+    int mZoomLevel;
+
+    void setZoomLevel(const int &pZoomLevel);
+
 private slots:
     void on_urlValue_returnPressed();
     void on_refreshButton_clicked();
+
+    void on_actionClear_triggered();
+    void on_actionNormalSize_triggered();
+    void on_actionZoomIn_triggered();
+    void on_actionZoomOut_triggered();
+    void on_actionPrint_triggered();
+
+    void updateActions();
 };
 
 //==============================================================================

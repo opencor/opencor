@@ -31,6 +31,12 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QClipboard>
+#include <QMenu>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPrinterInfo>
+#include <QWebFrame>
 #include <QWebView>
 
 //==============================================================================
@@ -40,9 +46,18 @@ namespace WebBrowserWindow {
 
 //==============================================================================
 
+enum {
+    MinimumZoomLevel =  1,
+    DefaultZoomLevel = 10
+};
+
+//==============================================================================
+
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::WebBrowserWindowWindow)
+    mGui(new Ui::WebBrowserWindowWindow),
+    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
+                     // first call to setZoomLevel
 {
     // Set up the GUI
 
@@ -80,12 +95,10 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mGui->dockWidgetContents->layout()->addWidget(toolBarWidget);
 
     // Create and add the web browser widget
-    // Note: to set an empty page to our web browser widget will make it
-    //       completely, which looks better than the default grey background...
 
     mWebBrowserWidget = new QWebView(this);
 
-    mWebBrowserWidget->setHtml(QString());
+    setZoomLevel(DefaultZoomLevel);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
@@ -132,11 +145,50 @@ void WebBrowserWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
+void WebBrowserWindowWindow::updateActions()
+{
+    // Update the enabled state of our various actions
+
+    mGui->actionClear->setEnabled(!mGui->urlValue->text().isEmpty());
+
+    mGui->actionBack->setEnabled(false);
+    mGui->actionForward->setEnabled(false);
+
+    mGui->actionCopy->setEnabled(false);
+
+    mGui->actionNormalSize->setEnabled(mZoomLevel != DefaultZoomLevel);
+    mGui->actionZoomOut->setEnabled(mZoomLevel != MinimumZoomLevel);
+
+    mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::setZoomLevel(const int &pZoomLevel)
+{
+    if (pZoomLevel == mZoomLevel)
+        return;
+
+    // Set the zoom level of the help document contents to a particular value
+
+    mZoomLevel = pZoomLevel;
+
+    mWebBrowserWidget->setZoomFactor(0.1*mZoomLevel);
+
+    // Emit a few zoom-related signals
+
+    updateActions();
+}
+
+//==============================================================================
+
 void WebBrowserWindowWindow::on_urlValue_returnPressed()
 {
     // Load the URL
 
     mWebBrowserWidget->load(QUrl(mGui->urlValue->text()));
+
+    updateActions();
 }
 
 //==============================================================================
@@ -149,6 +201,58 @@ void WebBrowserWindowWindow::on_refreshButton_clicked()
 }
 
 //==============================================================================
+
+void WebBrowserWindowWindow::on_actionClear_triggered()
+{
+    // Go to the home page, i.e. a blank page
+    // Note: to set a blank page will make our web page completely white, which
+    //       looks better than the default grey background...
+
+    mGui->urlValue->setText(QString());
+
+    on_urlValue_returnPressed();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionNormalSize_triggered()
+{
+    // Reset the zoom level of the page contents
+
+    setZoomLevel(DefaultZoomLevel);
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionZoomIn_triggered()
+{
+    // Zoom in the page contents
+
+    setZoomLevel(mZoomLevel+1);
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionZoomOut_triggered()
+{
+    // Zoom out the page contents
+
+    setZoomLevel(qMax(int(MinimumZoomLevel), mZoomLevel-1));
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionPrint_triggered()
+{
+    // Retrieve the printer with which the user wants to print the page and
+    // print it, should s/he still want to go ahead with the printing
+
+    QPrinter printer;
+    QPrintDialog printDialog(&printer);
+
+    if (printDialog.exec() == QDialog::Accepted)
+        mWebBrowserWidget->print(&printer);
+}
 
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR

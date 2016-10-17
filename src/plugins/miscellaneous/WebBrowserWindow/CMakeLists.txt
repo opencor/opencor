@@ -19,4 +19,6 @@ ADD_PLUGIN(WebBrowserWindow
     PLUGINS
         Core
         WebViewerWidget
+    QT_MODULES
+        PrintSupport
 )
