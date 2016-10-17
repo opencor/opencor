@@ -37,6 +37,7 @@ limitations under the License.
 #include <QPrinter>
 #include <QPrinterInfo>
 #include <QWebFrame>
+#include <QWebHistory>
 #include <QWebView>
 
 //==============================================================================
@@ -72,6 +73,11 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // Make the URL value our focus proxy
 
     setFocusProxy(mGui->urlValue);
+
+    // Initially, we cannot go backward/forward
+
+    mGui->actionBack->setEnabled(false);
+    mGui->actionForward->setEnabled(false);
 
     // Create a tool bar widget with different buttons
 
@@ -109,6 +115,21 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
+
+    // Some connections to handle the change in URL or page action status of our
+    // web browser widget
+
+    connect(mWebBrowserWidget, SIGNAL(urlChanged(const QUrl &)),
+            this, SLOT(urlChanged(const QUrl &)));
+
+    connect(mWebBrowserWidget->pageAction(QWebPage::Back), SIGNAL(changed()),
+            this, SLOT(documentChanged()));
+    connect(mWebBrowserWidget->pageAction(QWebPage::Forward), SIGNAL(changed()),
+            this, SLOT(documentChanged()));
+
+    // Start with a clear web browser widget
+
+    on_actionClear_triggered();
 
     // Create and populate our context menu
 
@@ -178,15 +199,40 @@ void WebBrowserWindowWindow::updateActions()
 
     mGui->actionClear->setEnabled(!mGui->urlValue->text().isEmpty());
 
-    mGui->actionBack->setEnabled(false);
-    mGui->actionForward->setEnabled(false);
-
     mGui->actionCopy->setEnabled(false);
 
     mGui->actionNormalSize->setEnabled(mZoomLevel != DefaultZoomLevel);
     mGui->actionZoomOut->setEnabled(mZoomLevel != MinimumZoomLevel);
 
     mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
+{
+    // The URL has changed, so update our URL value
+
+    QString url = pUrl.toString();
+
+    mGui->urlValue->setText(url.compare("about:blank")?pUrl.toString():QString());
+
+    updateActions();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::documentChanged()
+{
+    // A new page has been loaded, resulting in the previous or next page
+    // becoming either available or not
+
+    QAction *action = qobject_cast<QAction *>(sender());
+
+    if (action == mWebBrowserWidget->pageAction(QWebPage::Back))
+        mGui->actionBack->setEnabled(action->isEnabled());
+    else if (action == mWebBrowserWidget->pageAction(QWebPage::Forward))
+        mGui->actionForward->setEnabled(action->isEnabled());
 }
 
 //==============================================================================
@@ -213,7 +259,7 @@ void WebBrowserWindowWindow::on_urlValue_returnPressed()
 {
     // Load the URL
 
-    mWebBrowserWidget->load(QUrl(mGui->urlValue->text()));
+    mWebBrowserWidget->load(mGui->urlValue->text());
 
     updateActions();
 }
@@ -235,9 +281,29 @@ void WebBrowserWindowWindow::on_actionClear_triggered()
     // Note: to set a blank page will make our web page completely white, which
     //       looks better than the default grey background...
 
-    mGui->urlValue->setText(QString());
+    mGui->urlValue->setText("about:blank");
 
     on_urlValue_returnPressed();
+
+    mWebBrowserWidget->history()->clear();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionBack_triggered()
+{
+    // Go to the previous page
+
+    mWebBrowserWidget->back();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionForward_triggered()
+{
+    // Go to the next page
+
+    mWebBrowserWidget->forward();
 }
 
 //==============================================================================
