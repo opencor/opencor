@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QMenu;
 class QWebView;
 
 //==============================================================================
@@ -60,6 +61,8 @@ private:
 
     QWebView *mWebBrowserWidget;
 
+    QMenu *mContextMenu;
+
     int mZoomLevel;
 
     void setZoomLevel(const int &pZoomLevel);
@@ -75,6 +78,7 @@ private slots:
     void on_actionPrint_triggered();
 
     void updateActions();
+    void showCustomContextMenu() const;
 };
 
 //==============================================================================

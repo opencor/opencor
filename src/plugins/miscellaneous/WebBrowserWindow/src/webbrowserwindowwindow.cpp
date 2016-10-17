@@ -110,6 +110,33 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
+    // Create and populate our context menu
+
+    mContextMenu = new QMenu(this);
+
+    mContextMenu->addAction(mGui->actionClear);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionBack);
+    mContextMenu->addAction(mGui->actionForward);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionCopy);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionNormalSize);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionZoomIn);
+    mContextMenu->addAction(mGui->actionZoomOut);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionPrint);
+
+    // We want our own context menu for the help window widget (indeed, we don't
+    // want the default one, which has the reload menu item and not the other
+    // actions that we have in our tool bar widget)
+
+    mWebBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mWebBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu()));
+
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -252,6 +279,16 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
 
     if (printDialog.exec() == QDialog::Accepted)
         mWebBrowserWidget->print(&printer);
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::showCustomContextMenu() const
+{
+    // Show our context menu which items match the contents of our tool bar
+    // widget
+
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
