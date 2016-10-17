@@ -209,13 +209,17 @@ void WebBrowserWindowWindow::updateActions()
 
 //==============================================================================
 
+static const auto AboutBlank = QStringLiteral("about:blank");
+
+//==============================================================================
+
 void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so update our URL value
 
     QString url = pUrl.toString();
 
-    mGui->urlValue->setText(url.compare("about:blank")?pUrl.toString():QString());
+    mGui->urlValue->setText(url.compare(AboutBlank)?pUrl.toString():QString());
 
     updateActions();
 }
@@ -281,7 +285,7 @@ void WebBrowserWindowWindow::on_actionClear_triggered()
     // Note: to set a blank page will make our web page completely white, which
     //       looks better than the default grey background...
 
-    mGui->urlValue->setText("about:blank");
+    mGui->urlValue->setText(AboutBlank);
 
     on_urlValue_returnPressed();
 
