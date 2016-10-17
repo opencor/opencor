@@ -48,6 +48,16 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initQtMessagePattern();
 
+    // On macOS, make sure that no ApplePersistenceIgnoreState message is shown
+
+#ifdef Q_OS_MAC
+    QProcess::execute("defaults",
+                      QStringList() << "write"
+                                    << "ws.opencor"
+                                    << "ApplePersistenceIgnoreState"
+                                    << "NO");
+#endif
+
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
     //             its GUI version.

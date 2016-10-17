@@ -43,7 +43,7 @@
     <key>CFBundleExecutable</key>
     <string>${CMAKE_PROJECT_NAME}</string>
     <key>CFBundleIdentifier</key>
-    <string>ws.opencor.${VERSION}</string>
+    <string>ws.opencor</string>
     <key>CFBundleVersion</key>
     <string>${VERSION}</string>
     <key>CFBundleShortVersionString</key>
