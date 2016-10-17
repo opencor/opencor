@@ -21,6 +21,8 @@ limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "coreguiutils.h"
+#include "toolbarwidget.h"
 #include "webbrowserwindowwindow.h"
 
 //==============================================================================
@@ -55,6 +57,27 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // Make the URL value our focus proxy
 
     setFocusProxy(mGui->urlValue);
+
+    // Create a tool bar widget with different buttons
+
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+
+    toolBarWidget->addAction(mGui->actionHome);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionBack);
+    toolBarWidget->addAction(mGui->actionForward);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionCopy);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionNormalSize);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionZoomIn);
+    toolBarWidget->addAction(mGui->actionZoomOut);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionPrint);
+
+    mGui->dockWidgetContents->layout()->addWidget(Core::newLineWidget(this));
+    mGui->dockWidgetContents->layout()->addWidget(toolBarWidget);
 
     // Create and add the web browser widget
     // Note: to set an empty page to our web browser widget will make it
