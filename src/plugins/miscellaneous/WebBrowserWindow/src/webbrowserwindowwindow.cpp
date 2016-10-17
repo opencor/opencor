@@ -57,8 +57,12 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     setFocusProxy(mGui->urlValue);
 
     // Create and add the web browser widget
+    // Note: to set an empty page to our web browser widget will make it
+    //       completely, which looks better than the default grey background...
 
     mWebBrowserWidget = new QWebView(this);
+
+    mWebBrowserWidget->setHtml(QString());
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
