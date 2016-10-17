@@ -27,12 +27,12 @@
         <translation>Recharger cette page Web</translation>
     </message>
     <message>
-        <source>Home</source>
-        <translation>Page Principale</translation>
+        <source>Clear</source>
+        <translation>Effacer</translation>
     </message>
     <message>
-        <source>Go to the home page</source>
-        <translation>Aller à la page principale</translation>
+        <source>Clear the page</source>
+        <translation>Effacer la page</translation>
     </message>
     <message>
         <source>Back</source>

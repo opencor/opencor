@@ -62,7 +62,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBarWidget->addAction(mGui->actionHome);
+    toolBarWidget->addAction(mGui->actionClear);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionBack);
     toolBarWidget->addAction(mGui->actionForward);

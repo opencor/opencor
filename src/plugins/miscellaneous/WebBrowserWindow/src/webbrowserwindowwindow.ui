@@ -77,16 +77,19 @@
     </item>
    </layout>
   </widget>
-  <action name="actionHome">
+  <action name="actionClear">
    <property name="icon">
     <iconset resource="../../../../../res/ui.qrc">
-     <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
+     <normaloff>:/oxygen/actions/trash-empty.png</normaloff>:/oxygen/actions/trash-empty.png</iconset>
    </property>
    <property name="text">
-    <string>Home</string>
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear</string>
    </property>
    <property name="statusTip">
-    <string>Go to the home page</string>
+    <string>Clear the page</string>
    </property>
   </action>
   <action name="actionBack">
