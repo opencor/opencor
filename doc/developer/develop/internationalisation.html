@@ -34,8 +34,10 @@
 
         <ol>
             <li>
-                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[CompilerVersion]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). For every language supported by OpenCOR (except for English, which is natively supported by Qt), we need to add the corresponding Qt-specific translation file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
-                <pre class="prettyprint">&lt;file alias=&quot;qt_xx&quot;&gt;qt_xx.qm&lt;/file&gt;</pre>
+                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[CompilerVersion]/translations/qtXXX_xx.qm</code> with <code>XXX</code> the type of translations (e.g. <code>base</code>) and <code>xx</code> the language code (e.g. <code>fr</code> for French). For every language supported by OpenCOR (except for English, which is natively supported by Qt), we need to add the corresponding Qt-specific translation files to <a href="https://github.com/opencor/opencor/tree/master/res/translations"><code>[OpenCOR]/res/translations</code></a>. Then, an entry for those files must be added to <a href="https://github.com/opencor/opencor/blob/master/res/translations.qrc"><code>[OpenCOR]/res/translations.qrc</code></a>:
+                <pre class="prettyprint">&lt;file&gt;translations/qt_help_xx.qm&lt;/file&gt;
+&lt;file&gt;translations/qtbase_xx.qm&lt;/file&gt;
+&lt;file&gt;translations/qtxmlpatterns_xx.qm&lt;/file&gt;</pre>
             </li>
             <li>
                 <strong>OpenCOR-specific translation files:</strong> for each supported language (again, except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about it is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:

@@ -1594,6 +1594,5 @@
         <file>oxygen/status/weather-storm-day.png</file>
         <file>oxygen/status/weather-storm-night.png</file>
         <file>oxygen/status/weather-storm.png</file>
-        <file alias="qt_fr">qt_fr.qm</file>
     </qresource>
 </RCC>
