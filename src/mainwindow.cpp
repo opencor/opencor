@@ -795,9 +795,17 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 
         QLocale::setDefault(QLocale(newLocale));
 
-        qApp->removeTranslator(&mQtTranslator);
-        mQtTranslator.load(":qt_"+newLocale);
-        qApp->installTranslator(&mQtTranslator);
+        qApp->removeTranslator(&mQtBaseTranslator);
+        mQtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtBaseTranslator);
+
+        qApp->removeTranslator(&mQtHelpTranslator);
+        mQtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtHelpTranslator);
+
+        qApp->removeTranslator(&mQtXmlPatternsTranslator);
+        mQtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtXmlPatternsTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
         mAppTranslator.load(":app_"+newLocale);

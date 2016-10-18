@@ -202,11 +202,19 @@ int main(int pArgC, char *pArgV[])
 
             QLocale::setDefault(QLocale(locale));
 
-            QTranslator qtTranslator;
+            QTranslator qtBaseTranslator;
+            QTranslator qtHelpTranslator;
+            QTranslator qtXmlPatternsTranslator;
             QTranslator appTranslator;
 
-            qtTranslator.load(":qt_"+locale);
-            guiApp->installTranslator(&qtTranslator);
+            qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtBaseTranslator);
+
+            qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtHelpTranslator);
+
+            qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtXmlPatternsTranslator);
 
             appTranslator.load(":app_"+locale);
             guiApp->installTranslator(&appTranslator);

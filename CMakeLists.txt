@@ -116,6 +116,7 @@ SET(UIS
 SET(RESOURCES
     ${COMMON_QRC_FILENAME}
     ${I18N_QRC_FILENAME}
+    res/translations.qrc
     res/ui.qrc
 )
 
@@ -502,7 +503,6 @@ IF(APPLE)
 
     # Deploy some plugins
 
-    MACOS_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
     MACOS_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
@@ -640,7 +640,6 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
     WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
@@ -777,7 +776,6 @@ ELSE()
 
     # Qt plugins required by OpenCOR
 
-    LINUX_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
