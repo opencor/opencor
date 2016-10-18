@@ -24,6 +24,7 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "toolbarwidget.h"
 #include "webbrowserwindowwindow.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -36,9 +37,7 @@ limitations under the License.
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPrinterInfo>
-#include <QWebFrame>
 #include <QWebHistory>
-#include <QWebView>
 
 //==============================================================================
 
@@ -102,7 +101,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Create and add the web browser widget
 
-    mWebBrowserWidget = new QWebView(this);
+    mWebBrowserWidget = new WebViewerWidget::WebViewerWidget(this);
 
     setZoomLevel(DefaultZoomLevel);
 
@@ -160,10 +159,10 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mWebBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
 
-    // Some further initialisations that are done as part of retranslating the
-    // GUI (so that they can be updated when changing languages)
+    // En/disable the printing action, depending on whether printers are
+    // available
 
-    retranslateUi();
+    mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
 }
 
 //==============================================================================
@@ -205,8 +204,6 @@ void WebBrowserWindowWindow::updateActions()
 
     mGui->actionNormalSize->setEnabled(mZoomLevel != DefaultZoomLevel);
     mGui->actionZoomOut->setEnabled(mZoomLevel != MinimumZoomLevel);
-
-    mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
 }
 
 //==============================================================================

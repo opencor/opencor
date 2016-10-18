@@ -29,7 +29,6 @@ limitations under the License.
 //==============================================================================
 
 class QMenu;
-class QWebView;
 
 //==============================================================================
 
@@ -40,6 +39,15 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
+
+//==============================================================================
+
 namespace WebBrowserWindow {
 
 //==============================================================================
@@ -59,7 +67,7 @@ protected:
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
-    QWebView *mWebBrowserWidget;
+    WebViewerWidget::WebViewerWidget *mWebBrowserWidget;
 
     QMenu *mContextMenu;
 
