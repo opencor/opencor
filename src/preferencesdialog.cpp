@@ -34,6 +34,7 @@ limitations under the License.
 
 #include <QFormLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -311,8 +312,11 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     // preferences
 
     QStandardItem *item = mModel->itemFromIndex(pNewIndex);
+    bool isPluginCategory = mCategoryItems.values().contains(item);
 
-    if (mCategoryItems.values().contains(item)) {
+    mResetPluginButton->setEnabled(!isPluginCategory);
+
+    if (isPluginCategory) {
         // We are dealing with a plugin category, so retrieve and set the name
         // and description of the plugin
 
