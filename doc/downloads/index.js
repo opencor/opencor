@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> improved support for macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1134\">#1134</a>)." },
+                       { "change": "<strong>General:</strong> improved support for macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1134\">#1134</a>). Improved the translation of Qt-related messages (see issue <a href=\"https://github.com/opencor/opencor/issues/1135\">#1135</a>)." },
                        { "change": "<strong>Web Browser window:</strong> added a Web browser like window (see issue <a href=\"https://github.com/opencor/opencor/issues/1115\">#1115</a>)." }
                      ]
                    },

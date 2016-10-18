@@ -94,7 +94,9 @@ private:
 
     QString mRawLocale;
 
-    QTranslator mQtTranslator;
+    QTranslator mQtBaseTranslator;
+    QTranslator mQtHelpTranslator;
+    QTranslator mQtXmlPatternsTranslator;
     QTranslator mAppTranslator;
 
     QMap<QString, QMenu *> mMenus;

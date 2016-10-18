@@ -116,6 +116,7 @@ SET(UIS
 SET(RESOURCES
     ${COMMON_QRC_FILENAME}
     ${I18N_QRC_FILENAME}
+    res/translations.qrc
     res/ui.qrc
 )
 
