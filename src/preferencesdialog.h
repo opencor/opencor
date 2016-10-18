@@ -112,6 +112,9 @@ private:
 
     PluginCategoryWidget *mPluginCategoryWidget;
 
+    QPushButton *mResetAllButton;
+    QPushButton *mResetPluginButton;
+
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 
 private slots:

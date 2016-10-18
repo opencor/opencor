@@ -315,6 +315,14 @@
 <context>
     <name>OpenCOR::PreferencesDialog</name>
     <message>
+        <source>Reset All</source>
+        <translation>Tout Réinitialiser</translation>
+    </message>
+    <message>
+        <source>Reset Plugin</source>
+        <translation>Réinitialiser Extension</translation>
+    </message>
+    <message>
         <source>%1.</source>
         <translation></translation>
     </message>

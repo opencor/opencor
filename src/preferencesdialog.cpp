@@ -137,6 +137,12 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
+    // Customise our GUI's button box by having both a reset plugin settings and
+    // reset all settings buttons
+
+    mResetAllButton = mGui->buttonBox->addButton(tr("Reset All"), QDialogButtonBox::ActionRole);
+    mResetPluginButton = mGui->buttonBox->addButton(tr("Reset Plugin"), QDialogButtonBox::ActionRole);
+
     // Create and add our plugin category widget
 
     mPluginCategoryWidget = new PluginCategoryWidget(this);
