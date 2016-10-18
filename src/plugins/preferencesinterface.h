@@ -41,6 +41,7 @@ class PreferencesWidget : public QWidget
 public:
     explicit PreferencesWidget(QSettings *pSettings, QWidget *pParent);
 
+    virtual void resetPreferences() = 0;
     virtual void savePreferences() = 0;
 
 protected:

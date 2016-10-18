@@ -47,6 +47,7 @@ public:
     explicit CorePreferencesWidget(QSettings *pSettings, QWidget *pParent);
     ~CorePreferencesWidget();
 
+    virtual void resetPreferences();
     virtual void savePreferences();
 
 private:

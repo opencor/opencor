@@ -48,6 +48,7 @@ public:
                                              QWidget *pParent);
     ~SingleCellViewPreferencesWidget();
 
+    virtual void resetPreferences();
     virtual void savePreferences();
 
 private:
