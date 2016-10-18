@@ -162,12 +162,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // En/disable the printing action, depending on whether printers are
     // available
 
-//---ISSUE908---- WE SHOULD EVENTUALLY REMOVE THIS Qt VERSION CHECK...
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
-#else
-    mGui->actionPrint->setEnabled(false);
-#endif
 }
 
 //==============================================================================
@@ -357,14 +352,11 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
     // Retrieve the printer with which the user wants to print the page and
     // print it, should s/he still want to go ahead with the printing
 
-//---ISSUE908---- WE SHOULD EVENTUALLY REMOVE THIS Qt VERSION CHECK...
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     QPrinter printer;
     QPrintDialog printDialog(&printer);
 
     if (printDialog.exec() == QDialog::Accepted)
         mWebBrowserWidget->print(&printer);
-#endif
 }
 
 //==============================================================================
