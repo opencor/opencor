@@ -32,6 +32,8 @@ limitations under the License.
 #include "plugininterface.h"
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
+#include "preferencesdialog.h"
+#include "preferencesinterface.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -134,7 +136,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager(qApp);
+    mPluginManager = new PluginManager();
 
     // Retrieve some categories of plugins
 
@@ -165,6 +167,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // the application menu
 
     mGui->actionQuit->setMenuRole(QAction::QuitRole);
+    mGui->actionPreferences->setMenuRole(QAction::PreferencesRole);
     mGui->actionAbout->setMenuRole(QAction::AboutRole);
     mGui->actionCheckForUpdates->setMenuRole(QAction::ApplicationSpecificRole);
 
@@ -1157,6 +1160,33 @@ void MainWindow::on_actionPlugins_triggered()
     } else {
         warningMessageBox(this, tr("Plugins"),
                           tr("No plugins could be found."));
+    }
+}
+
+//==============================================================================
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences dialog, if we have at least one plugin that supports
+    // the Preferences interface
+
+    bool canShowPreferences = false;
+
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
+        if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
+            canShowPreferences = true;
+
+            break;
+        }
+    }
+
+    if (canShowPreferences) {
+        PreferencesDialog preferencesDialog(mPluginManager, this);
+
+        preferencesDialog.exec();
+    } else {
+        warningMessageBox(this, tr("Preferences"),
+                          tr("No plugins have preferences."));
     }
 }
 
