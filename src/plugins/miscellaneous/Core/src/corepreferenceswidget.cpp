@@ -33,9 +33,9 @@ namespace Core {
 
 //==============================================================================
 
-CorePreferencesWidget::CorePreferencesWidget(QSettings *pSettings,
+CorePreferencesWidget::CorePreferencesWidget(QObject *pPluginInstance,
                                              QWidget *pParent) :
-    Preferences::PreferencesWidget(pSettings, pParent),
+    Preferences::PreferencesWidget(pPluginInstance, pParent),
     mGui(new Ui::CorePreferencesWidget)
 {
     // Set up the GUI

@@ -20,7 +20,13 @@ limitations under the License.
 // Preferences interface
 //==============================================================================
 
+#include "plugin.h"
 #include "preferencesinterface.h"
+
+//==============================================================================
+
+#include <QRegularExpression>
+#include <QSettings>
 
 //==============================================================================
 
@@ -29,10 +35,26 @@ namespace Preferences {
 
 //==============================================================================
 
-PreferencesWidget::PreferencesWidget(QSettings *pSettings, QWidget *pParent) :
-    QWidget(pParent),
-    mSettings(pSettings)
+PreferencesWidget::PreferencesWidget(QObject *pPluginInstance, QWidget *pParent) :
+    QWidget(pParent)
 {
+    static const QRegularExpression BeforeRegEx = QRegularExpression("^.*:");
+    static const QRegularExpression AfterRegEx = QRegularExpression("Plugin$");
+
+    mSettings = new QSettings();
+
+    mSettings->beginGroup(SettingsPlugins);
+    mSettings->beginGroup(QString(pPluginInstance->metaObject()->className()).remove(BeforeRegEx).remove(AfterRegEx));
+    mSettings->beginGroup("Preferences");
+}
+
+//==============================================================================
+
+PreferencesWidget::~PreferencesWidget()
+{
+    // Delete some internal objects
+
+    delete mSettings;
 }
 
 //==============================================================================

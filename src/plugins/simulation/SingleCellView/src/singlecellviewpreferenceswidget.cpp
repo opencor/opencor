@@ -33,9 +33,9 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewPreferencesWidget::SingleCellViewPreferencesWidget(QSettings *pSettings,
+SingleCellViewPreferencesWidget::SingleCellViewPreferencesWidget(QObject *pPluginInstance,
                                                                  QWidget *pParent) :
-    Preferences::PreferencesWidget(pSettings, pParent),
+    Preferences::PreferencesWidget(pPluginInstance, pParent),
     mGui(new Ui::SingleCellViewPreferencesWidget)
 {
     // Set up the GUI

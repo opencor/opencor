@@ -107,7 +107,6 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
     QMap<QStandardItem *, PreferencesInterface *> mItemPreferencesInterfaces;
-    QMap<QStandardItem *, QSettings *> mItemSettings;
     QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
 
     PluginCategoryWidget *mPluginCategoryWidget;
@@ -125,6 +124,9 @@ private slots:
 
     void updatePreferencesWidget(const QModelIndex &pNewIndex,
                                  const QModelIndex &pOldIndex);
+
+    void resetAll();
+    void resetPlugin();
 };
 
 //==============================================================================

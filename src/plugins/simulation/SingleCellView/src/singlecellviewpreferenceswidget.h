@@ -44,7 +44,7 @@ class SingleCellViewPreferencesWidget : public Preferences::PreferencesWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewPreferencesWidget(QSettings *pSettings,
+    explicit SingleCellViewPreferencesWidget(QObject *pPluginInstance,
                                              QWidget *pParent);
     ~SingleCellViewPreferencesWidget();
 

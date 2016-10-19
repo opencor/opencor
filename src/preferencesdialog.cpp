@@ -131,7 +131,6 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
     mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
     mItemPreferencesInterfaces(QMap<QStandardItem *, PreferencesInterface *>()),
-    mItemSettings(QMap<QStandardItem *, QSettings *>()),
     mItemPreferencesWidgets(QMap<QStandardItem *, Preferences::PreferencesWidget *>())
 {
     // Set up the GUI
@@ -143,6 +142,11 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mResetAllButton = mGui->buttonBox->addButton(tr("Reset All"), QDialogButtonBox::ActionRole);
     mResetPluginButton = mGui->buttonBox->addButton(tr("Reset Plugin"), QDialogButtonBox::ActionRole);
+
+    connect(mResetAllButton, SIGNAL(clicked(bool)),
+            this, SLOT(resetAll()));
+    connect(mResetPluginButton, SIGNAL(clicked(bool)),
+            this, SLOT(resetPlugin()));
 
     // Create and add our plugin category widget
 
@@ -217,11 +221,6 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
 PreferencesDialog::~PreferencesDialog()
 {
-    // Delete some internal objects
-
-    foreach (QSettings *settings, mItemSettings.values())
-        delete settings;
-
     // Delete the GUI
 
     delete mGui;
@@ -326,28 +325,19 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
         mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
     } else {
         // We are dealing with a plugin's preferences, so retrieve its
-        // preferences widget and show it
+        // preferences widget, if needed, and show it
 
-        QSettings *settings = mItemSettings.value(item);
+        Preferences::PreferencesWidget *preferencesWidget = mItemPreferencesWidgets.value(item);
 
-        if (!settings) {
-            settings = new QSettings();
+        if (!preferencesWidget) {
+            preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget();
 
-            settings->beginGroup(SettingsPlugins);
-            settings->beginGroup(item->text());
-            settings->beginGroup("Preferences");
-
-            mItemSettings.insert(item, settings);
-        }
-
-        Preferences::PreferencesWidget *preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget(settings);
-
-        if (mGui->stackedWidget->indexOf(preferencesWidget) == -1)
             mGui->stackedWidget->addWidget(preferencesWidget);
 
-        mGui->stackedWidget->setCurrentWidget(preferencesWidget);
+            mItemPreferencesWidgets.insert(item, preferencesWidget);
+        }
 
-        mItemPreferencesWidgets.insert(item, preferencesWidget);
+        mGui->stackedWidget->setCurrentWidget(preferencesWidget);
     }
 
     // Make sure that the current widget has no layout margin (so that not only
@@ -362,6 +352,25 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     // Make sure that we are big enough to show our contents
 
     adjustWidgetSize(this);
+}
+
+//==============================================================================
+
+void PreferencesDialog::resetAll()
+{
+    // Reset all of our plugins' preferences
+
+    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets.values())
+        preferencesWidget->resetPreferences();
+}
+
+//==============================================================================
+
+void PreferencesDialog::resetPlugin()
+{
+    // Reset all of the current plugin's preferences
+
+    static_cast<Preferences::PreferencesWidget *>(mGui->stackedWidget->currentWidget())->resetPreferences();
 }
 
 //==============================================================================

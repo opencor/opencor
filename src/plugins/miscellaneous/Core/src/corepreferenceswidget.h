@@ -44,7 +44,7 @@ class CorePreferencesWidget : public Preferences::PreferencesWidget
     Q_OBJECT
 
 public:
-    explicit CorePreferencesWidget(QSettings *pSettings, QWidget *pParent);
+    explicit CorePreferencesWidget(QObject *pPluginInstance, QWidget *pParent);
     ~CorePreferencesWidget();
 
     virtual void resetPreferences();

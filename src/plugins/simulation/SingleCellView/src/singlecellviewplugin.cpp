@@ -273,11 +273,11 @@ void SingleCellViewPlugin::handleUrl(const QUrl &pUrl)
 // Preferences interface
 //==============================================================================
 
-Preferences::PreferencesWidget * SingleCellViewPlugin::preferencesWidget(QSettings *pSettings)
+Preferences::PreferencesWidget * SingleCellViewPlugin::preferencesWidget()
 {
     // Return our preferences widget
 
-    return new SingleCellViewPreferencesWidget(pSettings, Core::mainWindow());
+    return new SingleCellViewPreferencesWidget(this, Core::mainWindow());
 }
 
 //==============================================================================

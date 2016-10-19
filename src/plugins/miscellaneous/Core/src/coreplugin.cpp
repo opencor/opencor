@@ -623,11 +623,11 @@ void CorePlugin::handleUrl(const QUrl &pUrl)
 // Preferences interface
 //==============================================================================
 
-Preferences::PreferencesWidget * CorePlugin::preferencesWidget(QSettings *pSettings)
+Preferences::PreferencesWidget * CorePlugin::preferencesWidget()
 {
     // Return our preferences widget
 
-    return new CorePreferencesWidget(pSettings, mainWindow());
+    return new CorePreferencesWidget(this, mainWindow());
 }
 
 //==============================================================================
