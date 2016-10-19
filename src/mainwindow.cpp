@@ -134,7 +134,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager(qApp);
+    mPluginManager = new PluginManager();
 
     // Retrieve some categories of plugins
 
