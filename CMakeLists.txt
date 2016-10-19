@@ -151,7 +151,6 @@ ENDIF()
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-    src/plugins/miscellaneous/Core/src
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
