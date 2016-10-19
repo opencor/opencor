@@ -3,7 +3,7 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "General",
                          "entries": [
-                           { "type": "Added", "description": "Preferences window." },
+                           { "type": "Added", "description": "Preferences dialog." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." }
                          ]
                        },
