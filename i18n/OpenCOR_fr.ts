@@ -150,6 +150,18 @@
         <source>Check for updates</source>
         <translation>Vérifier pour des mises à jour</translation>
     </message>
+    <message>
+        <source>&amp;Preferences...</source>
+        <translation>&amp;Préférences...</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Preferences for OpenCOR and its plugins</source>
+        <translation>Préférences pour OpenCOR et ses extensions</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
@@ -189,12 +201,31 @@
         <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
     </message>
     <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>No plugins have preferences.</source>
+        <translation>Aucunes extensions n&apos;ont de préférences.</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>À Propos</translation>
     </message>
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PluginCategoryWidget</name>
+    <message>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
     </message>
 </context>
 <context>
@@ -282,6 +313,21 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PreferencesDialog</name>
+    <message>
+        <source>Reset All</source>
+        <translation>Tout Réinitialiser</translation>
+    </message>
+    <message>
+        <source>Reset Plugin</source>
+        <translation>Réinitialiser Extension</translation>
+    </message>
+    <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>PluginsDialog</name>
     <message>
         <source>Plugins</source>
@@ -294,6 +340,13 @@
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
         <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent prendre effet.</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesDialog</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
     </message>
 </context>
 <context>

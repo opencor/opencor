@@ -79,6 +79,7 @@ SET(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
+    src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
@@ -91,12 +92,14 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
+    src/plugins/preferencesinterface.cpp
 )
 
 SET(HEADERS_MOC
     src/checkforupdatesdialog.h
     src/mainwindow.h
     src/pluginsdialog.h
+    src/preferencesdialog.h
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
@@ -104,12 +107,14 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+    src/plugins/preferencesinterface.h
 )
 
 SET(UIS
     src/checkforupdatesdialog.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
+    src/preferencesdialog.ui
     src/splashscreenwindow.ui
 )
 
@@ -151,6 +156,7 @@ ENDIF()
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
+    src/preferences
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
