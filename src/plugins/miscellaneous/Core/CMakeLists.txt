@@ -16,7 +16,6 @@ ADD_PLUGIN(Core
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
-        ../../preferencesinterface.cpp
         ../../viewinterface.cpp
 
         src/borderedwidget.cpp
@@ -27,7 +26,6 @@ ADD_PLUGIN(Core
         src/corecliutils.cpp
         src/coreguiutils.cpp
         src/coreplugin.cpp
-        src/corepreferenceswidget.cpp
         src/file.cpp
         src/filemanager.cpp
         src/mathmlconverter.cpp
@@ -45,7 +43,6 @@ ADD_PLUGIN(Core
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
-        ../../preferencesinterface.h
 
         src/borderedwidget.h
         src/busywidget.h
@@ -53,7 +50,6 @@ ADD_PLUGIN(Core
         src/collapsiblewidget.h
         src/corecliutils.h
         src/coreplugin.h
-        src/corepreferenceswidget.h
         src/filemanager.h
         src/mathmlconverter.h
         src/organisationwidget.h
@@ -67,8 +63,6 @@ ADD_PLUGIN(Core
         src/widget.h
         src/windowwidget.h
         src/xsltransformer.h
-    UIS
-        src/corepreferenceswidget.ui
     INCLUDE_DIRS
         src
     QT_MODULES

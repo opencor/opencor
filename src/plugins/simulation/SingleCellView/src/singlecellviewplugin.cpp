@@ -28,7 +28,6 @@ limitations under the License.
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "singlecellviewplugin.h"
-#include "singlecellviewpreferenceswidget.h"
 #include "singlecellviewsimulationwidget.h"
 #include "singlecellviewwidget.h"
 
@@ -267,17 +266,6 @@ void SingleCellViewPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-// Preferences interface
-//==============================================================================
-
-Preferences::PreferencesWidget * SingleCellViewPlugin::preferencesWidget()
-{
-    // Return our preferences widget
-
-    return new SingleCellViewPreferencesWidget(this, Core::mainWindow());
 }
 
 //==============================================================================

@@ -30,7 +30,6 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
-#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -53,8 +52,7 @@ class CentralWidget;
 
 class CorePlugin : public QObject, public CoreInterface,
                    public FileHandlingInterface, public GuiInterface,
-                   public I18nInterface, public PluginInterface,
-                   public PreferencesInterface
+                   public I18nInterface, public PluginInterface
 {
     Q_OBJECT
 
@@ -65,7 +63,6 @@ class CorePlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::PreferencesInterface)
 
 public:
     explicit CorePlugin();
@@ -75,7 +72,6 @@ public:
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
-#include "preferencesinterface.inl"
 
 private:
     CentralWidget *mCentralWidget;

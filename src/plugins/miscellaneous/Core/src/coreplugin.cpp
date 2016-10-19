@@ -24,7 +24,6 @@ limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "coreplugin.h"
-#include "corepreferenceswidget.h"
 #include "filemanager.h"
 #include "organisationwidget.h"
 #include "plugin.h"
@@ -617,17 +616,6 @@ void CorePlugin::handleUrl(const QUrl &pUrl)
 
         mCentralWidget->selectView(urlArguments(pUrl));
     }
-}
-
-//==============================================================================
-// Preferences interface
-//==============================================================================
-
-Preferences::PreferencesWidget * CorePlugin::preferencesWidget()
-{
-    // Return our preferences widget
-
-    return new CorePreferencesWidget(this, mainWindow());
 }
 
 //==============================================================================
