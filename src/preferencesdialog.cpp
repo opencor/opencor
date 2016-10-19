@@ -130,7 +130,6 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mPluginManager(pPluginManager),
     mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
     mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
-    mItemPreferencesInterfaces(QMap<QStandardItem *, PreferencesInterface *>()),
     mItemPreferencesWidgets(QMap<QStandardItem *, Preferences::PreferencesWidget *>())
 {
     // Set up the GUI
@@ -180,7 +179,14 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
             pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
 
-            mItemPreferencesInterfaces.insert(pluginItem, preferencesInterface);
+            // Retrieve the corresponding preferences widget and add it to our
+            // stacked widget, as well as keep track of it
+
+            Preferences::PreferencesWidget *preferencesWidget = preferencesInterface->preferencesWidget();
+
+            mGui->stackedWidget->addWidget(preferencesWidget);
+
+            mItemPreferencesWidgets.insert(pluginItem, preferencesWidget);
         }
     }
 
@@ -324,20 +330,9 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
         mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
     } else {
-        // We are dealing with a plugin's preferences, so retrieve its
-        // preferences widget, if needed, and show it
+        // We are dealing with a plugin's preferences, so show it
 
-        Preferences::PreferencesWidget *preferencesWidget = mItemPreferencesWidgets.value(item);
-
-        if (!preferencesWidget) {
-            preferencesWidget = mItemPreferencesInterfaces.value(item)->preferencesWidget();
-
-            mGui->stackedWidget->addWidget(preferencesWidget);
-
-            mItemPreferencesWidgets.insert(item, preferencesWidget);
-        }
-
-        mGui->stackedWidget->setCurrentWidget(preferencesWidget);
+        mGui->stackedWidget->setCurrentWidget(mItemPreferencesWidgets.value(item));
     }
 
     // Make sure that the current widget has no layout margin (so that not only
