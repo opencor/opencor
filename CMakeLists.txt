@@ -156,7 +156,6 @@ ENDIF()
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-#    src/plugins/miscellaneous/Core/src
     src/preferences
 )
 
