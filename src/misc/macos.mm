@@ -46,6 +46,11 @@ void removeMacosSpecificMenuItems()
     if ([NSWindow respondsToSelector:@selector(allowsAutomaticWindowTabbing)]) {
         NSWindow.allowsAutomaticWindowTabbing = NO;
     }
+
+    // Remove (don't have) the "Enter Full Screen" menu item from the "View"
+    // menu
+
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
 //==============================================================================
