@@ -34,7 +34,14 @@ namespace OpenCOR {
 
 void removeMacosSpecificMenuItems()
 {
-    // Remove the "Show Tab Bar" menu item under the "View" menu, if supported
+    // Remove (disable) the "Start Dictation..." and "Emoji & Symbols" menu
+    // items from the "Edit" menu
+
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NSDisabledDictationMenuItem"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NSDisabledCharacterPaletteMenuItem"];
+
+    // Remove (don't allow) the "Show Tab Bar" menu item from the "View" menu,
+    // if supported
 
     if ([NSWindow respondsToSelector:@selector(allowsAutomaticWindowTabbing)]) {
         NSWindow.allowsAutomaticWindowTabbing = NO;
