@@ -73,10 +73,6 @@
         <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
     </message>
     <message>
-        <source>An error occurred while trying to get the status of %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select Empty Directory</source>
         <translation>Sélectionner Répertoire Vide</translation>
     </message>
@@ -89,18 +85,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>An error occurred while trying to commit to the workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An error occurred while trying to get the remote status of %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An error occurred while trying to stage %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>An error occurred while trying to fetch the remote workspace.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -110,6 +94,26 @@
     </message>
     <message>
         <source>The following files have conflicts:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to commit the merge.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to commit to the workspace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to get the remote status of %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to get the status of %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to stage %1.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

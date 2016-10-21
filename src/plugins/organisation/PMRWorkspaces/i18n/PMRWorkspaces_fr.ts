@@ -70,6 +70,26 @@
         <source>Path: &lt;a href=&quot;file://%1/&quot;&gt;%1&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Workspace has merge conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File has been added</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File has merge conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File has been deleted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File has been modified</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspaces::PmrWorkspacesWindow</name>
