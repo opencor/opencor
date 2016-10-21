@@ -55,6 +55,75 @@ bool aboutToQuit()
 
 //==============================================================================
 
+void adjustWidgetSize(QWidget *pWidget)
+{
+    // Determine the adjusted size of the given widget
+    // Note: this is based on QWidgetPrivate::adjustedSize()...
+
+    QSize adjustedSize = pWidget->sizeHint();
+
+    if (pWidget->isWindow()) {
+        Qt::Orientations expandingDirections;
+        QLayout *layout = pWidget->layout();
+
+        if (layout) {
+            if (layout->hasHeightForWidth())
+                adjustedSize.setHeight(layout->totalHeightForWidth(adjustedSize.width()));
+
+            expandingDirections = layout->expandingDirections();
+        } else {
+            if (pWidget->sizePolicy().hasHeightForWidth())
+                adjustedSize.setHeight(pWidget->heightForWidth(adjustedSize.width()));
+
+            expandingDirections = pWidget->sizePolicy().expandingDirections();
+        }
+
+        if (expandingDirections & Qt::Horizontal)
+            adjustedSize.setWidth(qMax(adjustedSize.width(), 200));
+
+        if (expandingDirections & Qt::Vertical)
+            adjustedSize.setHeight(qMax(adjustedSize.height(), 100));
+
+        QRect screen = QApplication::desktop()->screenGeometry(pWidget->pos());
+
+        adjustedSize.setWidth(qMin(adjustedSize.width(), screen.width()*2/3));
+        adjustedSize.setHeight(qMin(adjustedSize.height(), screen.height()*2/3));
+    }
+
+    if (!adjustedSize.isValid()) {
+        QRect childrenRect = pWidget->childrenRect();
+
+        if (!childrenRect.isNull())
+            adjustedSize = childrenRect.size()+QSize(2*childrenRect.x(), 2*childrenRect.y());
+    }
+
+    if (!adjustedSize.isValid())
+        return;
+
+    // Determine the new size of the given widget, and resize and recenter it,
+    // if needed
+
+    QSize oldSize = pWidget->size();
+    QSize newSize = QSize(qMax(adjustedSize.width(), oldSize.width()),
+                          qMax(adjustedSize.height(), oldSize.height()));
+
+    if (newSize != oldSize) {
+        // Note: if the given widget is not visible then we only resize it
+        //       otherwise we also recenter it since being visible we are sure
+        //       that it has an original position to recenter against...
+
+        if (pWidget->isVisible()) {
+            pWidget->setGeometry(pWidget->geometry().x()-((newSize.width()-oldSize.width()) >> 1),
+                                 pWidget->geometry().y()-((newSize.height()-oldSize.height()) >> 1),
+                                 newSize.width(), newSize.height());
+        } else {
+            pWidget->resize(newSize);
+        }
+    }
+}
+
+//==============================================================================
+
 void showEnableAction(QAction *pAction, const bool &pVisible,
                       const bool &pEnabled)
 {

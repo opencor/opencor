@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4397 $
- * $Date: 2015-02-28 14:03:10 -0800 (Sat, 28 Feb 2015) $
+ * $Revision: 4924 $
+ * $Date: 2016-09-19 14:36:05 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -45,7 +45,7 @@ static int kinDenseInit(KINMem kin_mem);
 static int kinDenseSetup(KINMem kin_mem);
 static int kinDenseSolve(KINMem kin_mem, N_Vector x, N_Vector b,
                          realtype *sJpnorm, realtype *sFdotJp);
-static void kinDenseFree(KINMem kin_mem);
+static int kinDenseFree(KINMem kin_mem);
 
 /*
  * =================================================================
@@ -163,6 +163,8 @@ int KINDense(void *kinmem, long int N)
   J_data = NULL;
   last_flag = KINDLS_SUCCESS;
 
+  kinDlsInitializeCounters(kindls_mem);
+
   setupNonNull = TRUE;
 
   /* Set problem dimension */
@@ -217,8 +219,7 @@ static int kinDenseInit(KINMem kin_mem)
 
   kindls_mem = (KINDlsMem) lmem;
 
-  nje   = 0;
-  nfeDQ = 0;
+  kinDlsInitializeCounters(kindls_mem);
 
   if (jacDQ) {
     djac = kinDlsDenseDQJac;
@@ -323,7 +324,7 @@ static int kinDenseSolve(KINMem kin_mem, N_Vector x, N_Vector b,
  * -----------------------------------------------------------------
  */
 
-static void kinDenseFree(KINMem kin_mem)
+static int kinDenseFree(KINMem kin_mem)
 {
   KINDlsMem  kindls_mem;
 
@@ -332,5 +333,7 @@ static void kinDenseFree(KINMem kin_mem)
   DestroyMat(J);
   DestroyArray(lpivots);
   free(kindls_mem); kindls_mem = NULL;
+
+  return(0);
 }
 

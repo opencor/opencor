@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4397 $
- * $Date: 2015-02-28 14:03:10 -0800 (Sat, 28 Feb 2015) $
+ * $Revision: 4924 $
+ * $Date: 2016-09-19 14:36:05 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -51,7 +51,7 @@ static int KINSpbcgInit(KINMem kin_mem);
 static int KINSpbcgSetup(KINMem kin_mem);
 static int KINSpbcgSolve(KINMem kin_mem, N_Vector xx,
 			 N_Vector bb, realtype *sJpnorm, realtype *sFdotJp);
-static void KINSpbcgFree(KINMem kin_mem);
+static int KINSpbcgFree(KINMem kin_mem);
 
 /*
  * -----------------------------------------------------------------
@@ -187,6 +187,8 @@ int KINSpbcg(void *kinmem, int maxl)
   kinspils_mem->s_pretype   = PREC_NONE;
   kinspils_mem->s_last_flag = KINSPILS_SUCCESS;
 
+  kinSpilsInitializeCounters(kinspils_mem);
+
   /* Call SpbcgMalloc to allocate workspace for SPBCG */
 
   /* vec_tmpl passed as template vector */
@@ -242,9 +244,7 @@ static int KINSpbcgInit(KINMem kin_mem)
   spbcg_mem = (SpbcgMem) spils_mem;
 
   /* initialize counters */
-
-  npe = nli = nps = ncfl = 0;
-  njtimes = nfes = 0;
+  kinSpilsInitializeCounters(kinspils_mem);
 
   /* set preconditioner type */
 
@@ -424,7 +424,7 @@ static int KINSpbcgSolve(KINMem kin_mem, N_Vector xx, N_Vector bb,
  * -----------------------------------------------------------------
  */
 
-static void KINSpbcgFree(KINMem kin_mem)
+static int KINSpbcgFree(KINMem kin_mem)
 {
   KINSpilsMem kinspils_mem;
   SpbcgMem spbcg_mem;
@@ -437,4 +437,6 @@ static void KINSpbcgFree(KINMem kin_mem)
   if (kinspils_mem->s_pfree != NULL) (kinspils_mem->s_pfree)(kin_mem);
 
   free(kinspils_mem); kinspils_mem = NULL;
+
+  return(0);
 }

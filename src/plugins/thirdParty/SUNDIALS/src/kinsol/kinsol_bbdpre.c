@@ -1,7 +1,7 @@
 /*
  *-----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4924 $
+ * $Date: 2016-09-19 14:36:05 -0700 (Mon, 19 Sep 2016) $
  *-----------------------------------------------------------------
  * Programmer(s): Allan Taylor, Alan Hindmarsh, Radu Serban, and
  *                Aaron Collier @ LLNL
@@ -58,7 +58,7 @@ static int KINBBDPrecSolve(N_Vector uu, N_Vector uscale,
 
 /* Prototype for KINBBDPrecFree */
 
-static void KINBBDPrecFree(KINMem kin_mem);
+static int KINBBDPrecFree(KINMem kin_mem);
 
 /* Prototype for difference quotient jacobian calculation routine */
 
@@ -193,7 +193,12 @@ int KINBBDPrecInit(void *kinmem, long int Nlocal,
   pdata->ipwsize = Nlocal + 1;
   pdata->nge = 0;
 
-  /* Overwrite the P_data field in the SPILS memory */
+  /* make sure s_P_data is free from any previous allocations */
+  if (kinspils_mem->s_pfree != NULL) {
+    kinspils_mem->s_pfree(kin_mem);
+  }
+
+  /* Point to the new P_data field in the SPILS memory */
   kinspils_mem->s_P_data = pdata;
 
   /* Attach the pfree function */
@@ -426,15 +431,15 @@ static int KINBBDPrecSolve(N_Vector uu, N_Vector uscale,
 }
 
 
-static void KINBBDPrecFree(KINMem kin_mem)
+static int KINBBDPrecFree(KINMem kin_mem)
 {
   KINSpilsMem kinspils_mem;
   KBBDPrecData pdata;
 
-  if (kin_mem->kin_lmem == NULL) return;
+  if (kin_mem->kin_lmem == NULL) return(0);
   kinspils_mem = (KINSpilsMem) kin_mem->kin_lmem;
 
-  if (kinspils_mem->s_P_data == NULL) return;
+  if (kinspils_mem->s_P_data == NULL) return(0);
   pdata = (KBBDPrecData) kinspils_mem->s_P_data;
 
   N_VDestroy(vtemp3);
@@ -443,6 +448,8 @@ static void KINBBDPrecFree(KINMem kin_mem)
 
   free(pdata);
   pdata = NULL;
+
+  return(0);
 }
 
 

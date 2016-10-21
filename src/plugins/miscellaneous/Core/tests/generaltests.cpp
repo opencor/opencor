@@ -53,8 +53,8 @@ void GeneralTests::sizeAsStringTests()
     QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 7)), QString("256 ZB"));
     QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 8)), QString("256 YB"));
 
-    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2)), QString("256.3 MB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2), 3), QString("256.256 MB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2)), QLocale().toString(256.3)+" MB");
+    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2), 3), QLocale().toString(256.256)+" MB");
 }
 
 //==============================================================================

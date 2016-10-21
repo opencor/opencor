@@ -36,7 +36,7 @@ limitations under the License.
 #include <QApplication>
 #include <QBuffer>
 #include <QColor>
-#include <QDate>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -44,6 +44,7 @@ limitations under the License.
 #include <QFrame>
 #include <QIODevice>
 #include <QLabel>
+#include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
@@ -589,9 +590,13 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     if (icon.isNull())
         return QString();
 
+    auto availableSizes = icon.availableSizes();
+    if (availableSizes.count() == 0)
+        return QString();
+
     QByteArray data;
     QBuffer buffer(&data);
-    QSize iconSize = icon.availableSizes().first();
+    QSize iconSize = availableSizes.first();
 
     buffer.open(QIODevice::WriteOnly);
     icon.pixmap((pWidth == -1)?iconSize.width():pWidth,

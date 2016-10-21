@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4075 $
- * $Date: 2014-04-24 10:46:58 -0700 (Thu, 24 Apr 2014) $
+ * $Revision: 4790 $
+ * $Date: 2016-06-29 14:47:05 -0700 (Wed, 29 Jun 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Radu Serban and Aaron Collier @ LLNL
  * -----------------------------------------------------------------
@@ -30,6 +30,13 @@
  * Functions in the 'ops' structure
  * -----------------------------------------------------------------
  */
+
+N_Vector_ID N_VGetVectorID(N_Vector w)
+{
+  N_Vector_ID id;
+  id = w->ops->nvgetvectorid(w);
+  return(id);
+}
 
 N_Vector N_VClone(N_Vector w)
 {

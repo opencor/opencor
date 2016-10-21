@@ -36,8 +36,8 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter le <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
 
-    return new PluginInfo("Support", false, false,
-                          QStringList() << "Core" << "libgit2" << "zlib",
+    return new PluginInfo(PluginInfo::Support, false, false,
+                          QStringList() << "Core" << "libgit2" << "OAuth" << "zlib",
                           descriptions);
 }
 

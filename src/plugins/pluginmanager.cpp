@@ -39,6 +39,17 @@ namespace OpenCOR {
 
 //==============================================================================
 
+bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
+{
+    // Determine which of the two plugins should be first based on their name
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a plugin (when we list them)...
+
+    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 PluginManager::PluginManager(const bool &pGuiMode) :
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
@@ -208,11 +219,37 @@ Plugins PluginManager::plugins() const
 
 //==============================================================================
 
+Plugins PluginManager::sortedPlugins() const
+{
+    // Return a sorted version of mPlugins
+
+    Plugins res = mPlugins;
+
+    std::sort(res.begin(), res.end(), sortPlugins);
+
+    return res;
+}
+
+//==============================================================================
+
 Plugins PluginManager::loadedPlugins() const
 {
     // Return a list of our loaded plugins
 
     return mLoadedPlugins;
+}
+
+//==============================================================================
+
+Plugins PluginManager::sortedLoadedPlugins() const
+{
+    // Return a sorted version of mLoadedPlugins
+
+    Plugins res = mLoadedPlugins;
+
+    std::sort(res.begin(), res.end(), sortPlugins);
+
+    return res;
 }
 
 //==============================================================================

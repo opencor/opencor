@@ -26,7 +26,9 @@ limitations under the License.
 
 #include <QAction>
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
+#include <QLayout>
 #include <QMainWindow>
 #include <QPointer>
 #include <QPushButton>

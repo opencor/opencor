@@ -28,7 +28,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginInfo::PluginInfo(const QString &pCategory, const bool &pSelectable,
+PluginInfo::PluginInfo(const Category &pCategory, const bool &pSelectable,
                        const bool &pCliSupport,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions,
@@ -45,7 +45,7 @@ PluginInfo::PluginInfo(const QString &pCategory, const bool &pSelectable,
 
 //==============================================================================
 
-QString PluginInfo::category() const
+PluginInfo::Category PluginInfo::category() const
 {
     // Return the plugin's category
 

@@ -57,9 +57,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             // Note: normally, we would only do this on Windows systems since,
             //       on Windows, a shared library's dependencies must be loaded
             //       before the shared library itself can be loaded, while on
-            //       Linux / OS X, it's possible to load a shared library even
-            //       if its dependencies are not loaded. Still, it doesn't harm
-            //       doing the same on Linux / OS X...
+            //       Linux/macOS, it's possible to load a shared library even if
+            //       its dependencies are not loaded. Still, it doesn't harm
+            //       doing the same on Linux/macOS...
 
             bool pluginDependenciesLoaded = true;
 
@@ -156,9 +156,10 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 mStatus = NotNeeded;
         }
     } else {
-       // What we thought was a plugin is not actually a plugin...
+       // What we thought was a plugin is not actually a plugin, so consider it
+        // as invalid...
 
-       mStatus = NotPlugin;
+       mStatus = Invalid;
     }
 }
 
