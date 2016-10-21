@@ -1648,7 +1648,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
             int graphCounter = 0;
             libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
-            sedmlPlot2d->setId(QString("plot%1").arg(QString::number(graphPlotCounter)).toStdString());
+            sedmlPlot2d->setId(QString("plot%1").arg(graphPlotCounter).toStdString());
 
             foreach (Core::Property *property, graphs) {
                 ++graphCounter;

@@ -157,8 +157,8 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     // "C:" instead of "C:/") and this causes problems below (when wanting to
     // retrieve the different folders), so we must make sure that that
     // mInitPathDir contains a trailing separator
-    // Note: this is clearly not needed on Linux and OS X, but it doesn't harm
-    //       doing it for these platforms too...
+    // Note: this is clearly not needed on Linux and macOS, but it doesn't
+    //       harm doing it for these platforms too...
 
     mInitPathDir = QDir(mInitPathDir+QDir::separator()).canonicalPath();
 
@@ -194,7 +194,7 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 
     // Make sure that the current path is visible
     // Note: indeed, to process pending events only in directoryLoaded() is not
-    //       good enough (anymore?!) on OS X...
+    //       good enough (anymore?!) on macOS...
 
     QCoreApplication::processEvents();
 
@@ -532,7 +532,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
             || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
         // mModel is still loading the initial path, so we try to expand it and
         // scroll to it, but first we process pending events (indeed, though
-        // Windows doesn't need this, Linux and OS X definitely do and it can't
+        // Windows doesn't need this, Linux and macOS definitely do and it can't
         // harm having it for all three environments)
 
         QCoreApplication::processEvents();
@@ -565,8 +565,8 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         //          to pPath. Indeed, say that mInitPathDir is on the C: drive,
         //          then eventually pPath will be equal to "C:" while
         //          mInitPathDirs will know about "C:/"...
-        // Note #2: this is clearly not needed on Linux and OS X, but it doesn't
-        //          harm adding it for these platforms too...
+        // Note #2: this is clearly not needed on Linux and macOS, but it
+        //          doesn't harm adding it for these platforms too...
 
         // Check whether we are done initializing
 

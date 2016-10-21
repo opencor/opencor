@@ -6,7 +6,7 @@ endif()
 set(_qt5WebKitWidgets_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
 
 # For backwards compatibility only. Use Qt5WebKitWidgets_VERSION instead.
-set(Qt5WebKitWidgets_VERSION_STRING 5.6.1)
+set(Qt5WebKitWidgets_VERSION_STRING 5.6.2)
 
 set(Qt5WebKitWidgets_LIBRARIES Qt5::WebKitWidgets)
 
@@ -43,8 +43,8 @@ if (NOT TARGET Qt5::WebKitWidgets)
 
     set(_Qt5WebKitWidgets_OWN_INCLUDE_DIRS "${_qt5WebKitWidgets_install_prefix}/include/" "${_qt5WebKitWidgets_install_prefix}/include/QtWebKitWidgets")
     set(Qt5WebKitWidgets_PRIVATE_INCLUDE_DIRS
-        "${_qt5WebKitWidgets_install_prefix}/include/QtWebKitWidgets/5.6.1"
-        "${_qt5WebKitWidgets_install_prefix}/include/QtWebKitWidgets/5.6.1/QtWebKitWidgets"
+        "${_qt5WebKitWidgets_install_prefix}/include/QtWebKitWidgets/5.6.2"
+        "${_qt5WebKitWidgets_install_prefix}/include/QtWebKitWidgets/5.6.2/QtWebKitWidgets"
     )
 
     foreach(_dir ${_Qt5WebKitWidgets_OWN_INCLUDE_DIRS})
@@ -85,7 +85,7 @@ if (NOT TARGET Qt5::WebKitWidgets)
     foreach(_module_dep ${_Qt5WebKitWidgets_MODULE_DEPENDENCIES})
         if (NOT Qt5${_module_dep}_FOUND)
             find_package(Qt5${_module_dep}
-                5.6.1 ${_Qt5WebKitWidgets_FIND_VERSION_EXACT}
+                5.6.2 ${_Qt5WebKitWidgets_FIND_VERSION_EXACT}
                 ${_Qt5WebKitWidgets_DEPENDENCIES_FIND_QUIET}
                 ${_Qt5WebKitWidgets_FIND_DEPENDENCIES_REQUIRED}
                 PATHS "${CMAKE_CURRENT_LIST_DIR}/.." NO_DEFAULT_PATH
@@ -119,7 +119,7 @@ if (NOT TARGET Qt5::WebKitWidgets)
     set_property(TARGET Qt5::WebKitWidgets PROPERTY
       INTERFACE_COMPILE_DEFINITIONS QT_WEBKITWIDGETS_LIB)
 
-    _populate_WebKitWidgets_target_properties(RELEASE "libQt5WebKitWidgets.so.5.6.1" "" )
+    _populate_WebKitWidgets_target_properties(RELEASE "libQt5WebKitWidgets.so.5.6.2" "" )
 
 
 

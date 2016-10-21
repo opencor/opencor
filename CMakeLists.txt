@@ -39,7 +39,7 @@ KEEP_TRACK_OF_FILE(${BUILD_DIRECTORY_FILENAME})
 
 # Version/snapshot of OpenCOR
 
-IF ("${PROJECT_VERSION}" STREQUAL "")
+IF("${PROJECT_VERSION}" STREQUAL "")
     SET(SNAPSHOT ON)
 ELSE()
     SET(SNAPSHOT OFF)
@@ -94,6 +94,7 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
+    src/plugins/preferencesinterface.cpp
 )
 
 SET(HEADERS_MOC
@@ -108,6 +109,7 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+    src/plugins/preferencesinterface.h
 )
 
 SET(UIS
@@ -121,6 +123,7 @@ SET(UIS
 SET(RESOURCES
     ${COMMON_QRC_FILENAME}
     ${I18N_QRC_FILENAME}
+    res/translations.qrc
     res/ui.qrc
 )
 
@@ -155,7 +158,7 @@ ENDIF()
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-    src/plugins/miscellaneous/Core/src
+    src/preferences
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
@@ -168,7 +171,7 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
-# Set the application icon, but only for Windows and OS X, since in the case of
+# Set the application icon, but only for Windows and macOS, since in the case of
 # Linux, it's done through the use of app_icon (see res/ui.qrc) in
 # src/mainwindow.ui
 # Note: on Windows, we set a bit more than just the application icon. We also
@@ -262,10 +265,10 @@ IF(ENABLE_TESTS)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
-    # Clean up our test program, but only if we are on OS X
+    # Clean up our test program, but only if we are on macOS
 
     IF(APPLE)
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+        MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -354,6 +357,7 @@ SET(PLUGINS
     editing/RawTextView
 
     miscellaneous/HelpWindow
+    miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
@@ -396,6 +400,12 @@ ENDFOREACH()
 QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 QT5_WRAP_UI(SOURCES_UIS ${UIS})
 QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+
+IF(APPLE)
+    LIST(APPEND SOURCES
+        src/misc/macos.mm
+    )
+ENDIF()
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES}
@@ -470,7 +480,7 @@ IF(APPLE)
 
     SET(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macos/Info.plist.in
                    ${INFO_PLIST_FILENAME})
 
     SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
@@ -483,7 +493,17 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+
+    # Deploy the OpenSSL libraries
+
+    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${REAL_OPENSSL_LIBRARY} DIRECTORY)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
+
+        MACOS_DEPLOY_LIBRARY(${REAL_OPENSSL_LIBRARY_DIRNAME} ${REAL_OPENSSL_LIBRARY_FILENAME})
+    ENDFOREACH()
 
     # Deploy our Qt libraries
     # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
@@ -493,18 +513,17 @@ IF(APPLE)
     #       don't deploy the Qt frameworks...
 
     IF(NOT ENABLE_TRAVIS_CI)
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            OS_X_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
+        FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+            MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
         ENDFOREACH()
     ENDIF()
 
     # Deploy some plugins
 
-    OS_X_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
-    OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-    OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
-    OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
-    OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
+    MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
+    MACOS_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
+    MACOS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 ELSE()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
@@ -638,7 +657,6 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
     WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
@@ -678,14 +696,14 @@ IF(WIN32)
         ")
     ENDIF()
 ELSEIF(APPLE)
-    # Select PackageMaker and ZIP as the packagers on OS X
+    # Select PackageMaker and ZIP as the packagers on macOS
     # Note: this is actually done within the package script, so that the ZIP
     #       package can be done 'properly', i.e. we don't have the full tree
     #       structure in the ZIP file...
 
-    SET(CPACK_SYSTEM_NAME "OSX")
+    SET(CPACK_SYSTEM_NAME "macOS")
 
-    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/osx/welcome.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
@@ -699,7 +717,7 @@ ELSEIF(APPLE)
 
     SET(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
                    ${SH_FILENAME})
 
     INSTALL(FILES ${SH_FILENAME}
@@ -740,10 +758,11 @@ ELSE()
             RENAME libstdc++.so.6)
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and OS X, we don't have a macro for deploying all
-    #       of our Qt libraries at once. Indeed, on Linux, the version of a file
-    #       is appended to its suffix, so unless making the macro unnecessarily
-    #       cumbersome to use, it's better to deploy one Qt library at a time...
+    # Note: unlike for Windows and macOS, we don't have a macro for deploying
+    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
+    #       file is appended to its suffix, so unless making the macro
+    #       unnecessarily cumbersome to use, it's better to deploy one Qt
+    #       library at a time...
 
     IF(ENABLE_TESTS)
         SET(TEST Test)
@@ -759,9 +778,7 @@ ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         ENDIF()
 
-        LINUX_DEPLOY_QT_LIBRARY(${REAL_QT_LIBRARY_DIR}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        LINUX_DEPLOY_QT_LIBRARY(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
     IF(NOT ENABLE_TRAVIS_CI)
@@ -770,15 +787,12 @@ ELSE()
         #       libraries...
 
         FOREACH(QT_FILE icudata icui18n icuuc)
-            LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56.1
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
+            LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
         ENDFOREACH()
     ENDIF()
 
     # Qt plugins required by OpenCOR
 
-    LINUX_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)

@@ -33,6 +33,7 @@ limitations under the License.
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
 #include "preferencesdialog.h"
+#include "preferencesinterface.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -135,7 +136,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager(qApp);
+    mPluginManager = new PluginManager();
 
     // Retrieve some categories of plugins
 
@@ -155,16 +156,14 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Set up the GUI
     // Note: the application icon (which needs to be set for Linux, but not for
-    //       Windows or OS X, since it's set through CMake in those cases (see
+    //       Windows or macOS, since it's set through CMake in those cases (see
     //       CMakeLists.txt)) is set within the GUI file. This being said, it's
     //       good to have it set for all three platforms, since it can then be
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
-//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT USER PREFERENCES...
-showEnableAction(mGui->actionPreferences, false);
 
-    // Set the role of some of our menu items, so that OS X can move them into
+    // Set the role of some of our menu items, so that macOS can move them into
     // the application menu
 
     mGui->actionQuit->setMenuRole(QAction::QuitRole);
@@ -235,8 +234,8 @@ showEnableAction(mGui->actionPreferences, false);
 #endif
 
 #ifdef Q_OS_MAC
-    // A special shortcut to have OpenCOR minimised on OS X when pressing Cmd+M
-    // Note: indeed, when pressing Cmd+M on OS X, the active application is
+    // A special shortcut to have OpenCOR minimised on macOS when pressing Cmd+M
+    // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
 
     new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_M),
@@ -356,7 +355,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
     } else if (pEvent->type() == QEvent::WindowStateChange) {
         // The window state has changed, so update the checked state of our full
         // screen action
-        // Note: useful on OS X since there is a special full screen button in
+        // Note: useful on macOS since there is a special full screen button in
         //       the main window's title bar...
 
         mGui->actionFullScreen->setChecked(isFullScreen());
@@ -715,8 +714,8 @@ void MainWindow::loadSettings()
         //       Core interface, so no need to check anything...
     }
 
-    // Remove the File menu when on OS X, should no plugins be loaded
-    // Note: our File menu should only contain the Exit menu item, but on OS X
+    // Remove the File menu when on macOS, should no plugins be loaded
+    // Note: our File menu should only contain the Exit menu item, but on macOS
     //       that menu item gets automatically moved to the application menu...
 
 #ifdef Q_OS_MAC
@@ -799,9 +798,17 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 
         QLocale::setDefault(QLocale(newLocale));
 
-        qApp->removeTranslator(&mQtTranslator);
-        mQtTranslator.load(":qt_"+newLocale);
-        qApp->installTranslator(&mQtTranslator);
+        qApp->removeTranslator(&mQtBaseTranslator);
+        mQtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtBaseTranslator);
+
+        qApp->removeTranslator(&mQtHelpTranslator);
+        mQtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtHelpTranslator);
+
+        qApp->removeTranslator(&mQtXmlPatternsTranslator);
+        mQtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtXmlPatternsTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
         mAppTranslator.load(":app_"+newLocale);
@@ -976,7 +983,7 @@ void MainWindow::showSelf()
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    // We are on Linux or OS X, so we can simply activate the window and raise
+    // We are on Linux or macOS, so we can simply activate the window and raise
     // ourselves
 
     activateWindow();
@@ -1143,18 +1150,7 @@ void MainWindow::on_actionPlugins_triggered()
 
         PluginsDialog pluginsDialog(mPluginManager, this);
 
-        mSettings->beginGroup(pluginsDialog.objectName());
-            pluginsDialog.loadSettings(mSettings);
-        mSettings->endGroup();
-
         pluginsDialog.exec();
-        // Note: the execution of the plugins dialog may result in the saving of
-        //       the application's settings, so for this to work we must ensure
-        //       that any opened settings group has first been closed...
-
-        mSettings->beginGroup(pluginsDialog.objectName());
-            pluginsDialog.saveSettings(mSettings);
-        mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
@@ -1171,11 +1167,27 @@ void MainWindow::on_actionPlugins_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    // Show the preferences dialog
+    // Show the preferences dialog, if we have at least one plugin that supports
+    // the Preferences interface
 
-    PreferencesDialog preferencesDialog(this);
+    bool canShowPreferences = false;
 
-    preferencesDialog.exec();
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
+        if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
+            canShowPreferences = true;
+
+            break;
+        }
+    }
+
+    if (canShowPreferences) {
+        PreferencesDialog preferencesDialog(mPluginManager, this);
+
+        preferencesDialog.exec();
+    } else {
+        warningMessageBox(this, tr("Preferences"),
+                          tr("No plugins have preferences."));
+    }
 }
 
 //==============================================================================
@@ -1195,15 +1207,7 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 
     CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-    mSettings->beginGroup(checkForUpdatesDialog.objectName());
-        checkForUpdatesDialog.loadSettings(mSettings);
-    mSettings->endGroup();
-
     checkForUpdatesDialog.exec();
-
-    mSettings->beginGroup(checkForUpdatesDialog.objectName());
-        checkForUpdatesDialog.saveSettings(mSettings);
-    mSettings->endGroup();
 }
 
 //==============================================================================

@@ -145,11 +145,11 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Determine our target triple
     // Note: normally, we would call llvm::sys::getProcessTriple(), but this
     //       returns the information about the system on which LLVM was built.
-    //       In most cases it is fine, but on OS X it may be a problem. Indeed,
+    //       In most cases it is fine, but on macOS it may be a problem. Indeed,
     //       with OS X 10.9, Apple decided to extend the C standard by adding
     //       some functions (e.g. __exp10()). So, if the given code needs one of
     //       those functions, then OpenCOR will crash if run on an 'old' version
-    //       of OS X. So, to avoid this issue, we set the target triple
+    //       of macOS. So, to avoid this issue, we set the target triple
     //       ourselves, based on the system on which OpenCOR is to be used...
 
     std::string targetTriple;

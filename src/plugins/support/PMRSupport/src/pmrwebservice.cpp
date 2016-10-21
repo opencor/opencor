@@ -81,14 +81,14 @@ PmrWebService::~PmrWebService()
 
 static const char *PmrRequestProperty = "PmrRequest";
 static const char *ActionProperty     = "Action";
-static const char *NameProperty       = "Name";
+static const char *DirNameProperty    = "DirName";
 
 //==============================================================================
 
 void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
                                    const QString &pUrl,
                                    const Action pAction,
-                                   const QString &pName)
+                                   const QString &pDirName)
 {
     // Let the user know that we are busy
 
@@ -123,7 +123,7 @@ void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
 
         networkReply->setProperty(PmrRequestProperty, pPmrRequest);
         networkReply->setProperty(ActionProperty, pAction);
-        networkReply->setProperty(NameProperty, pName);
+        networkReply->setProperty(DirNameProperty, pDirName);
     } else {
         finished();
     }
@@ -140,32 +140,68 @@ QString PmrWebService::informationNoteMessage() const
 
 //==============================================================================
 
+int PmrWebService::bypassCertificateCheck(git_cert *pCertificate, int pValid,
+                                          const char *pHost, void *pPayload)
+{
+    Q_UNUSED(pCertificate);
+    Q_UNUSED(pValid);
+    Q_UNUSED(pHost);
+    Q_UNUSED(pPayload);
+
+    // Bypass the certificate check
+
+    return 1;
+}
+
+//==============================================================================
+
+int PmrWebService::processEvents(const git_transfer_progress *pStatistics,
+                                 void *pPayload)
+{
+    Q_UNUSED(pStatistics);
+    Q_UNUSED(pPayload);
+
+    // Make sure that our busy widget gets updated
+
+    QCoreApplication::processEvents();
+
+    return 0;
+}
+
+//==============================================================================
+
 void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
                                      const QString &pDirName)
 {
-   // Clone the workspace
+    // Clone the workspace, ignoring the certificate check (i.e. trusting PMR's
+    // SSL certificate) and making sure that any busy widget gets updated
 
-   git_libgit2_init();
+    git_libgit2_init();
 
-   git_repository *gitRepository = 0;
-   QByteArray workspaceByteArray = pWorkspace.toUtf8();
-   QByteArray dirNameByteArray = pDirName.toUtf8();
+    git_repository *gitRepository = 0;
+    QByteArray workspaceByteArray = pWorkspace.toUtf8();
+    QByteArray dirNameByteArray = pDirName.toUtf8();
+    git_clone_options cloneOptions;
 
-   int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                       dirNameByteArray.constData(), 0);
+    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
 
-   if (res) {
-       const git_error *gitError = giterr_last();
+    cloneOptions.fetch_opts.callbacks.certificate_check = bypassCertificateCheck;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = processEvents;
 
-       emit warning(gitError?
-                        tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                Core::formatMessage(gitError->message)):
-                        tr("An error occurred while trying to clone the workspace."));
-   } else if (gitRepository) {
-       git_repository_free(gitRepository);
-   }
+    int res = git_clone(&gitRepository, workspaceByteArray.constData(),
+                        dirNameByteArray.constData(), &cloneOptions);
 
-   git_libgit2_shutdown();
+    if (res) {
+        const git_error *gitError = giterr_last();
+
+        emit warning(gitError?
+                         tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
+                         tr("An error occurred while trying to clone the workspace."));
+    } else if (gitRepository) {
+        git_repository_free(gitRepository);
+    }
+
+    git_libgit2_shutdown();
 }
 
 //==============================================================================
@@ -333,7 +369,8 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
                     mExposureUrls.insert(workspaceUrl, url);
 
                     sendPmrRequest(WorkspaceInformation, workspaceUrl,
-                                   Action(pNetworkReply->property(ActionProperty).toInt()));
+                                   Action(pNetworkReply->property(ActionProperty).toInt()),
+                                   pNetworkReply->property(DirNameProperty).toString());
 
                     foreach (const QString &exposureFileUrl, exposureFileUrls) {
                         mExposureUrls.insert(exposureFileUrl, url);
@@ -490,7 +527,7 @@ void PmrWebService::finished(QNetworkReply *pNetworkReply)
         if (   mWorkspaces.contains(exposureUrl)
             && (Action(pNetworkReply->property(ActionProperty).toInt()) == CloneWorkspace)) {
             doCloneWorkspace(mWorkspaces.value(exposureUrl),
-                             pNetworkReply->property(NameProperty).toString());
+                             pNetworkReply->property(DirNameProperty).toString());
         }
 
         break;

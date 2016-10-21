@@ -143,6 +143,14 @@
         <translation>Montrer/cacher toutes les fenêtres ancrées récentes/actuelles</translation>
     </message>
     <message>
+        <source>Check For Updates...</source>
+        <translation>Vérifier Pour Des Mises À Jour...</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Vérifier pour des mises à jour</translation>
+    </message>
+    <message>
         <source>&amp;Preferences...</source>
         <translation>&amp;Préférences...</translation>
     </message>
@@ -154,14 +162,6 @@
         <source>Preferences for OpenCOR and its plugins</source>
         <translation>Préférences pour OpenCOR et ses extensions</translation>
     </message>
-    <message>
-        <source>Check For Updates...</source>
-        <translation>Vérifier Pour Des Mises À Jour...</translation>
-    </message>
-    <message>
-        <source>Check for updates</source>
-        <translation>Vérifier pour des mises à jour</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
@@ -170,8 +170,8 @@
         <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
-        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
+        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; (%2) is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
+        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; (%2) est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No newer version or snapshot of %1 is available.</source>
@@ -199,6 +199,14 @@
     <message>
         <source>No plugins could be found.</source>
         <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>No plugins have preferences.</source>
+        <translation>Aucunes extensions n&apos;ont de préférences.</translation>
     </message>
     <message>
         <source>About</source>
@@ -291,6 +299,32 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PreferencesDialog</name>
+    <message>
+        <source>Reset All</source>
+        <translation>Tout Réinitialiser</translation>
+    </message>
+    <message>
+        <source>Reset Plugin</source>
+        <translation>Réinitialiser Extension</translation>
+    </message>
+    <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PreferencesPluginCategoryWidget</name>
+    <message>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
     </message>
 </context>
 <context>

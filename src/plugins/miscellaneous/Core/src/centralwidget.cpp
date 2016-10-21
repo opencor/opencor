@@ -1582,9 +1582,7 @@ QString CentralWidget::viewKey(const int &pMode, const int &pView,
     // Return the view key to be used with mViews for the given mode, view and
     // file name
 
-    return QString("%1|%2|%3").arg(QString::number(pMode),
-                                   QString::number(pView),
-                                   pFileName);
+    return QString("%1|%2|%3").arg(QString::number(pMode), QString::number(pView), pFileName);
 }
 
 //==============================================================================
@@ -1811,7 +1809,7 @@ TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
     res->setTabsClosable(pTabsClosable);
     res->setUsesScrollButtons(true);
     // Note: the above property is style dependent and it happens that it's not
-    //       enabled on OS X, so set it in all cases, even though it's already
+    //       enabled on macOS, so set it in all cases, even though it's already
     //       set on Windows and Linux (but better be safe than sorry)...
 
     return res;
