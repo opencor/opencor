@@ -1,11 +1,15 @@
-[submodule "src/plugins/thirdParty/Python/PythonCMakeBuild"]
-	path = src/plugins/thirdParty/Python/PythonCMakeBuild
-	url = git@github.com:python-cmake-buildsystem/python-cmake-buildsystem.git
-[submodule "src/plugins/thirdParty/PythonQt/PythonQt"]
-	path = src/plugins/thirdParty/PythonQt/PythonQt
-	url = https://github.com/commontk/PythonQt
-	branch = patched-6
+[submodule "src/plugins/thirdParty/OAuth/o2"]
+    path = src/plugins/thirdParty/OAuth/o2
+    url = https://www.github.com/dbrnz/o2.git
+    branch = win_export
 [submodule "src/plugins/thirdParty/OpenSSL/OpenSSL"]
 	path = src/plugins/thirdParty/OpenSSL/OpenSSL
 	url = git@github.com:openssl/openssl.git
 	branch = OpenSSL_1_0_2-stable
+[submodule "src/plugins/thirdParty/Python/PythonCMakeBuild"]
+    path = src/plugins/thirdParty/Python/PythonCMakeBuild
+    url = git@github.com:python-cmake-buildsystem/python-cmake-buildsystem.git
+[submodule "src/plugins/thirdParty/PythonQt/PythonQt"]
+    path = src/plugins/thirdParty/PythonQt/PythonQt
+    url = https://github.com/commontk/PythonQt
+    branch = patched-6

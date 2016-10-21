@@ -28,40 +28,71 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
 #include <QList>
+#include <QSet>
 #include <QString>
+#include <QStringList>
+#include <QVector>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace PMRSupport {
 
+class PmrWorkspace;
+
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposure
+class PMRSUPPORT_EXPORT PmrExposure : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit PmrExposure(const QString &pUrl, const QString &pName);
+    explicit PmrExposure(QObject *parent=0);
+    PmrExposure(const QString &pUrl, const QString &pName, QObject *parent);
 
     static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
 
-    QString url() const;
+    bool isNull() const;
+
     QString name() const;
+    QString url() const;
+
+    int fileUrlsLeftCount(void) const;
+    void setFileUrlsLeftCount(const int &count);
+
+    void addExposureFile(const QString &pFileName);
+    void addOtherFile(const QString &pFileName);
+    const QStringList exposureFileList(void) const;
+
+    PmrWorkspace *workspace(void) const;
+    void setWorkspace(PmrWorkspace *pWorkspace);
+
+    QString toHtml(void) const;
 
 private:
-    QString mUrl;
     QString mName;
+    QString mUrl;
+
+    QStringList mExposureFileList;
+    int mFileUrlsLeftCount;
+    PmrWorkspace *mWorkspace;
 };
 
 //==============================================================================
 
-class PmrExposures : public QList<PmrExposure *>
+#ifdef _MSC_VER
+template class PMRSUPPORT_EXPORT QSet<PmrExposure *>;
+template class PMRSUPPORT_EXPORT QVector<PmrExposure *>;
+#endif
+
+class PMRSUPPORT_EXPORT PmrExposureList : public QList<PmrExposure *>
 {
 public:
-    PmrExposures();
-    virtual ~PmrExposures();
+    PmrExposureList();
 
-    void add(const QString &pUrl, const QString &pName);
+    void add(const QString &pUrl, const QString &pName, QObject *parent);
 };
 
 //==============================================================================

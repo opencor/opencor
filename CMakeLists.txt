@@ -302,6 +302,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LLVM
+    thirdParty/OAuth
     thirdParty/OpenSSL
     thirdParty/PythonQt
     thirdParty/QScintilla
@@ -362,6 +363,7 @@ SET(PLUGINS
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
     organisation/PMRWindow
+    organisation/PMRWorkspaces
 
     simulation/SingleCellView
 
