@@ -22,9 +22,9 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "pmrauthentication.h"
-#include "pmrrepository.h"
-#include "pmrrepositorymanager.h"
-#include "pmrrepositoryresponse.h"
+#include "pmrwebservice.h"
+#include "pmrwebservicemanager.h"
+#include "pmrwebserviceresponse.h"
 
 //==============================================================================
 
@@ -43,13 +43,13 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrRepositoryManager::PmrRepositoryManager(PmrRepository *pPmrRepository) :
-    QNetworkAccessManager(pPmrRepository),
-    mPmrRepository(pPmrRepository)
+PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
+    QNetworkAccessManager(pPmrWebService),
+    mPmrWebService(pPmrWebService)
 {
     // Create an OAuth client for authenticated requests to the Physiome Model Repository
 
-    mPmrOAuthClient = new PmrOAuthClient(pPmrRepository->Url(), this);
+    mPmrOAuthClient = new PmrOAuthClient(pPmrWebService->Url(), this);
 
     // Make sure that we get told when there are SSL errors (which would happen if the
     // website's certificate is invalid, e.g. it has expired)
@@ -66,13 +66,13 @@ PmrRepositoryManager::PmrRepositoryManager(PmrRepository *pPmrRepository) :
 
 //==============================================================================
 
-PmrRepositoryManager::~PmrRepositoryManager()
+PmrWebServiceManager::~PmrWebServiceManager()
 {
 }
 
 //==============================================================================
 
-void PmrRepositoryManager::authenticate(const bool &pLink)
+void PmrWebServiceManager::authenticate(const bool &pLink)
 {
     if (pLink) mPmrOAuthClient->link();
     else       mPmrOAuthClient->unlink();
@@ -80,14 +80,14 @@ void PmrRepositoryManager::authenticate(const bool &pLink)
 
 //==============================================================================
 
-void PmrRepositoryManager::authenticationFailed()
+void PmrWebServiceManager::authenticationFailed()
 {
     emit authenticated(false);
 }
 
 //==============================================================================
 
-void PmrRepositoryManager::authenticationSucceeded()
+void PmrWebServiceManager::authenticationSucceeded()
 {
     PmrOAuthClient *o1t = qobject_cast<PmrOAuthClient *>(sender());
 
@@ -96,21 +96,21 @@ void PmrRepositoryManager::authenticationSucceeded()
 
 //==============================================================================
 
-bool PmrRepositoryManager::isAuthenticated(void) const
+bool PmrWebServiceManager::isAuthenticated(void) const
 {
     return mPmrOAuthClient->linked();
 }
 
 //==============================================================================
 
-void PmrRepositoryManager::openBrowser(const QUrl &pUrl)
+void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
     QDesktopServices::openUrl(pUrl);
 }
 
 //==============================================================================
 
-void PmrRepositoryManager::sslErrors(QNetworkReply *pNetworkReply,
+void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
                                      const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we trust the website and therefore its
@@ -121,7 +121,7 @@ void PmrRepositoryManager::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl,
+PmrWebServiceResponse *PmrWebServiceManager::sendPmrRequest(const QString &pUrl,
                                                             const bool &pSecureRequest,
                                                             const bool &pUsePost,
                                                             const QJsonDocument &pJsonDocument)
@@ -161,7 +161,7 @@ PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl,
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
         }
         else {
-            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrRepository::RequestMimeType());
+            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrWebService::RequestMimeType());
             networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(), requestData);
         }
 
@@ -170,20 +170,20 @@ PmrRepositoryResponse *PmrRepositoryManager::sendPmrRequest(const QString &pUrl,
             networkReply = this->get(networkRequest);
         }
         else {
-            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrRepository::RequestMimeType());
+            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrWebService::RequestMimeType());
             networkReply = this->post(networkRequest, requestData);
         }
     }
 
-    auto pmrRepositoryResponse = new PmrRepositoryResponse(networkReply);
-    connect(pmrRepositoryResponse, SIGNAL(busy(bool)),
-            mPmrRepository, SIGNAL(busy(bool)));
-    connect(pmrRepositoryResponse, SIGNAL(error(QString, bool)),
-            mPmrRepository, SIGNAL(error(QString, bool)));
-    connect(pmrRepositoryResponse, SIGNAL(unauthorised(QString)),
-            mPmrRepository, SLOT(unauthorised(QString)));
+    auto pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
+    connect(pmrWebServiceResponse, SIGNAL(busy(bool)),
+            mPmrWebService, SIGNAL(busy(bool)));
+    connect(pmrWebServiceResponse, SIGNAL(error(QString, bool)),
+            mPmrWebService, SIGNAL(error(QString, bool)));
+    connect(pmrWebServiceResponse, SIGNAL(unauthorised(QString)),
+            mPmrWebService, SLOT(unauthorised(QString)));
 
-    return pmrRepositoryResponse;
+    return pmrWebServiceResponse;
 }
 
 //==============================================================================

@@ -20,8 +20,8 @@ limitations under the License.
 // PMR network response
 //==============================================================================
 
-#include "pmrrepository.h"
-#include "pmrrepositoryresponse.h"
+#include "pmrwebservice.h"
+#include "pmrwebserviceresponse.h"
 
 //==============================================================================
 
@@ -39,21 +39,21 @@ namespace PMRSupport {
 
 //==============================================================================
 
-const QStringList PmrRepositoryResponse::ResponseMimeTypes = QStringList()
+const QStringList PmrWebServiceResponse::ResponseMimeTypes = QStringList()
                                                            << QString("application/json")
-                                                           << QString(PmrRepository::RequestMimeType())
-                                                           << QString(PmrRepository::CollectionMimeType());
+                                                           << QString(PmrWebService::RequestMimeType())
+                                                           << QString(PmrWebService::CollectionMimeType());
 
 //==============================================================================
 
-PmrRepositoryResponse::PmrRepositoryResponse(QNetworkReply *pNetworkReply) : mNetworkReply(pNetworkReply)
+PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) : mNetworkReply(pNetworkReply)
 {
     connect(mNetworkReply, SIGNAL(finished()), this, SLOT(processResponse()));
 }
 
 //==============================================================================
 
-void PmrRepositoryResponse::processResponse(void)
+void PmrWebServiceResponse::processResponse(void)
 {
     // Uncompress the response body and check that it is valid JSON
 

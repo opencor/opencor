@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "pmrrepository.h"
+#include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacefilenode.h"
 #include "pmrworkspacesmanager.h"
@@ -42,7 +42,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(false),
+PmrWorkspace::PmrWorkspace(PmrWebService *parent) : QObject(parent), mOwned(false),
     mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
     mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
@@ -53,7 +53,7 @@ PmrWorkspace::PmrWorkspace(PmrRepository *parent) : QObject(parent), mOwned(fals
 
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
                            const QString &pDescription, const QString &pOwner,
- PmrRepository *parent) :
+ PmrWebService *parent) :
     QObject(parent), mOwned(false),
     mDescription(pDescription), mName(pName), mOwner(pOwner), mUrl(pUrl),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
@@ -61,7 +61,7 @@ PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
 {
     // Description and owner are set when workspace information is received from PMR
 
-    // Our messages are directly emitted by our parent PmrRepository
+    // Our messages are directly emitted by our parent PmrWebService
 
     connect(this, SIGNAL(information(QString)), parent, SIGNAL(information(QString)));
     connect(this, SIGNAL(progress(double)), parent, SIGNAL(progress(double)));
@@ -460,7 +460,7 @@ int PmrWorkspace::certificate_check_cb(git_cert *cert, int valid, const char *ho
     Q_UNUSED(host)
     Q_UNUSED(payload)
 
-    // pmrRepository.Url().compare(host)
+    // pmrWebService.Url().compare(host)
     return 1; // since we trust PMR (but should check host matches PMR...)
               // 0 = disallow, -ve = error
 }
@@ -1170,7 +1170,7 @@ PmrWorkspaceList::PmrWorkspaceList() :
 
 //==============================================================================
 
-void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, PmrRepository *parent)
+void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, PmrWebService *parent)
 {
     // Add a new workspace to the list
 

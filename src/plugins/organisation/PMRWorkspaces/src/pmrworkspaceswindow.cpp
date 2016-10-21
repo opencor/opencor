@@ -23,10 +23,11 @@ specific language governing permissions and limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
+#include "toolbarwidget.h"
+#include "pmrwebservice.h"
 #include "pmrworkspacesnewworkspace.h"
 #include "pmrworkspaceswidget.h"
 #include "pmrworkspaceswindow.h"
-#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -62,7 +63,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Create an instance of the Physiome Model Repository
 
-    mPmrRepository = new PMRSupport::PmrRepository(this);
+    mPmrWebService = new PMRSupport::PmrWebService(this);
 
     // Create a tool bar widget with different buttons
 
@@ -89,7 +90,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Create and add the workspaces widget
 
-    mWorkspacesWidget = new PmrWorkspacesWidget(mPmrRepository, this);
+    mWorkspacesWidget = new PmrWorkspacesWidget(mPmrWebService, this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWorkspacesWidget,
@@ -132,15 +133,15 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     // Connections to process responses from the PMR repository
 
-    connect(mPmrRepository, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
-    connect(mPmrRepository, SIGNAL(progress(double)), this, SLOT(showProgress(double)));
+    connect(mPmrWebService, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
+    connect(mPmrWebService, SIGNAL(progress(double)), this, SLOT(showProgress(double)));
 
-    connect(mPmrRepository, SIGNAL(error(QString, bool)), this, SLOT(showError(QString)));
-    connect(mPmrRepository, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
-    connect(mPmrRepository, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
+    connect(mPmrWebService, SIGNAL(error(QString, bool)), this, SLOT(showError(QString)));
+    connect(mPmrWebService, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
+    connect(mPmrWebService, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
 
-    connect(mPmrRepository, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
-    connect(mPmrRepository, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
+    connect(mPmrWebService, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
+    connect(mPmrWebService, SIGNAL(workspacesList(PMRSupport::PmrWorkspaceList)),
             mWorkspacesWidget, SLOT(initialiseWorkspaceWidget(PMRSupport::PmrWorkspaceList)));
 
     // Connections to process requests from our widget
@@ -282,7 +283,7 @@ void PmrWorkspacesWindow::getAuthenticationStatus(void)
 {
     // Results in us being sent an `authenticated` signal.
 
-    mPmrRepository->getAuthenticationStatus();
+    mPmrWebService->getAuthenticationStatus();
 }
 
 //==============================================================================
@@ -315,7 +316,7 @@ void PmrWorkspacesWindow::on_actionAuthenticate_triggered()
 {
     // Log on to PMR
 
-    mPmrRepository->authenticate();
+    mPmrWebService->authenticate();
 }
 
 //==============================================================================
@@ -349,7 +350,7 @@ void PmrWorkspacesWindow::on_actionNew_triggered()
         // will result in the (empty) workspace being cloned into
         // its folder.
 
-        mPmrRepository->requestNewWorkspace(newWorkspaceDialog->title(),
+        mPmrWebService->requestNewWorkspace(newWorkspaceDialog->title(),
                                             newWorkspaceDialog->description(),
                                             newWorkspaceDialog->path());
     }
@@ -381,7 +382,7 @@ void PmrWorkspacesWindow::on_actionUnauthenticate_triggered()
 
     if (QMessageBox::question(this, tr("OpenCOR"),
                               tr("Log off the Physiome Model Repository?")) == QMessageBox::Yes)
-        mPmrRepository->authenticate(false);
+        mPmrWebService->authenticate(false);
 }
 
 //==============================================================================

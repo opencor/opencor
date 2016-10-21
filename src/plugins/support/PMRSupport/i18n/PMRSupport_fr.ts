@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::PMRSupport::PmrRepository</name>
+    <name>OpenCOR::PMRSupport::PmrWebService</name>
     <message>
         <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to email &lt;a href=&quot;mailto: help@physiomeproject.org&quot;&gt;help@physiomeproject.org&lt;/a&gt; and ask why this is the case.</source>
         <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous pourriez vouloir envoyer un message à &lt;a href=&quot;mailto: help@physiomeproject.org&quot;&gt;help@physiomeproject.org&lt;/a&gt; et demander pourquoi c&apos;est le cas.</translation>
@@ -49,14 +49,14 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRSupport::PmrRepositoryManager</name>
+    <name>OpenCOR::PMRSupport::PmrWebServiceManager</name>
     <message>
         <source>Cannot connect to Internet</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRSupport::PmrRepositoryResponse</name>
+    <name>OpenCOR::PMRSupport::PmrWebServiceResponse</name>
     <message>
         <source>Response has unexpected content type</source>
         <translation type="unfinished"></translation>

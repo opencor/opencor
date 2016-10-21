@@ -21,9 +21,9 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "pmrrepository.h"
-#include "pmrrepositorymanager.h"
-#include "pmrrepositoryresponse.h"
+#include "pmrwebservice.h"
+#include "pmrwebservicemanager.h"
+#include "pmrwebserviceresponse.h"
 #include "pmrworkspacesmanager.h"
 
 //==============================================================================
@@ -40,7 +40,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-const QString PmrRepository::Url()
+const QString PmrWebService::Url()
 {
 #if PMR_PRODUCTION
     return "https://models.physiomeproject.org";
@@ -51,58 +51,58 @@ const QString PmrRepository::Url()
 
 //==============================================================================
 
-const QByteArray PmrRepository::CollectionMimeType()
+const QByteArray PmrWebService::CollectionMimeType()
 {
     return "application/vnd.physiome.pmr2.json.1";
 }
 
 //==============================================================================
 
-const QByteArray PmrRepository::RequestMimeType()
+const QByteArray PmrWebService::RequestMimeType()
 {
     return "application/vnd.physiome.pmr2.json.0";
 }
 
 //==============================================================================
 
-PmrRepository::PmrRepository(QObject *parent) : QObject(parent),
+PmrWebService::PmrWebService(QObject *parent) : QObject(parent),
     mExposures(QMap<QString, PmrExposure *>())
 {
     // Create a network access manager so that we can then retrieve various
     // things from the PMR
 
-    mPmrRepositoryManager = new PmrRepositoryManager(this);
+    mPmrWebServiceManager = new PmrWebServiceManager(this);
 
     // Pass network manager signals directly to ourselves
 
-    connect(mPmrRepositoryManager, SIGNAL(authenticated(bool)), this, SIGNAL(authenticated(bool)));
-    connect(mPmrRepositoryManager, SIGNAL(busy(bool)), this, SIGNAL(busy(bool)));
-    connect(mPmrRepositoryManager, SIGNAL(error(QString, bool)), this, SIGNAL(error(QString, bool)));
+    connect(mPmrWebServiceManager, SIGNAL(authenticated(bool)), this, SIGNAL(authenticated(bool)));
+    connect(mPmrWebServiceManager, SIGNAL(busy(bool)), this, SIGNAL(busy(bool)));
+    connect(mPmrWebServiceManager, SIGNAL(error(QString, bool)), this, SIGNAL(error(QString, bool)));
 }
 
 //==============================================================================
 
-PmrRepository::~PmrRepository()
+PmrWebService::~PmrWebService()
 {
 }
 
 //==============================================================================
 
-void PmrRepository::authenticate(const bool &pLink)
+void PmrWebService::authenticate(const bool &pLink)
 {
-    mPmrRepositoryManager->authenticate(pLink);
+    mPmrWebServiceManager->authenticate(pLink);
 }
 
 //==============================================================================
 
-void PmrRepository::getAuthenticationStatus()
+void PmrWebService::getAuthenticationStatus()
 {
-    emit authenticated(mPmrRepositoryManager->isAuthenticated());
+    emit authenticated(mPmrWebServiceManager->isAuthenticated());
 }
 
 //==============================================================================
 
-QString PmrRepository::informationNoteMessage() const
+QString PmrWebService::informationNoteMessage() const
 {
     // Return some information note
 
@@ -111,14 +111,14 @@ QString PmrRepository::informationNoteMessage() const
 
 //==============================================================================
 
-void PmrRepository::emitInformation(const QString &pMessage)
+void PmrWebService::emitInformation(const QString &pMessage)
 {
     emit information(pMessage + "<br/><br/>" + informationNoteMessage());
 }
 
 //==============================================================================
 
-void PmrRepository::unauthorised(const QString &pUrl)
+void PmrWebService::unauthorised(const QString &pUrl)
 {
     emitInformation(tr("Not authorised to access %1").arg(pUrl));
 }
@@ -133,12 +133,12 @@ static const char *WorkspaceProperty  = "Workspace";
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestExposuresList()
+void PmrWebService::requestExposuresList()
 {
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
 
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(QString("%1/exposure").arg(Url()),
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/exposure").arg(Url()),
                                                                     false);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(exposuresListResponse(QJsonDocument)));
@@ -146,7 +146,7 @@ void PmrRepository::requestExposuresList()
 
 //==============================================================================
 
-void PmrRepository::exposuresListResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::exposuresListResponse(const QJsonDocument &pJsonDocument)
 {
     PmrExposureList exposureList = PmrExposureList();
 
@@ -176,7 +176,7 @@ void PmrRepository::exposuresListResponse(const QJsonDocument &pJsonDocument)
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestExposureFiles(const QString &pUrl)
+void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
     auto exposure = mExposures.value(pUrl);
 
@@ -197,9 +197,9 @@ void PmrRepository::requestExposureFiles(const QString &pUrl)
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction)
+void PmrWebService::requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction)
 {
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pExposure->url(), false);
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pExposure->url(), false);
 
     repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     repositoryResponse->setProperty(NextActionProperty, pNextAction);
@@ -209,7 +209,7 @@ void PmrRepository::requestExposureInformation(PmrExposure *pExposure, const Act
 
 //==============================================================================
 
-void PmrRepository::exposureInformationResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocument)
 {
     auto exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
 
@@ -265,9 +265,9 @@ void PmrRepository::exposureInformationResponse(const QJsonDocument &pJsonDocume
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl)
+void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl)
 {
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pUrl, false);
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, false);
     repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(exposureFileInformationResponse(QJsonDocument)));
@@ -276,7 +276,7 @@ void PmrRepository::requestExposureFileInformation(PmrExposure *pExposure, const
 
 //==============================================================================
 
-void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDocument)
 {
     auto exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
 
@@ -339,7 +339,7 @@ void PmrRepository::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 
 //==============================================================================
 
-void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
+void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
@@ -351,7 +351,7 @@ void PmrRepository::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QStrin
 
 //==============================================================================
 
-void PmrRepository::workspaceCloneFinished(PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceCloneFinished(PmrWorkspace *pWorkspace)
 {
     Q_UNUSED(pWorkspace)
 
@@ -360,7 +360,7 @@ void PmrRepository::workspaceCloneFinished(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
+void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 {
     // Check whether we already know about the workspace for the given exposure
 
@@ -396,7 +396,7 @@ void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
         // To clone the workspace associated with the given exposure, we first
         // need to retrieve some information about the exposure itself
 
-        auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pExposureUrl, false);
+        auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pExposureUrl, false);
         repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)exposure));
         repositoryResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
         connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
@@ -406,7 +406,7 @@ void PmrRepository::requestExposureWorkspaceClone(const QString &pExposureUrl)
 
 //==============================================================================
 
-void PmrRepository::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull)
+void PmrWebService::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull)
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
@@ -418,7 +418,7 @@ void PmrRepository::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const 
 
 //==============================================================================
 
-void PmrRepository::workspaceSynchroniseFinished(PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceSynchroniseFinished(PmrWorkspace *pWorkspace)
 {
     emit busy(false);
     emit workspaceSynchronised(pWorkspace);
@@ -426,19 +426,19 @@ void PmrRepository::workspaceSynchroniseFinished(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrRepository::requestWorkspaceInformation(const QString &pUrl)
+void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 {
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pUrl, true);
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspaceInformationResponse(QJsonDocument)));
 }
 
 //==============================================================================
 
-void PmrRepository::requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
+void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
                                                 PmrExposure *pExposure)
 {
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pUrl, true);
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
     repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     repositoryResponse->setProperty(DirNameProperty, pDirName);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
@@ -447,7 +447,7 @@ void PmrRepository::requestWorkspaceInformation(const QString &pUrl, const QStri
 
 //==============================================================================
 
-void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocument)
 {
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
@@ -525,7 +525,7 @@ void PmrRepository::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestNewWorkspace(const QString &pName, const QString &pDescription,
+void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDescription,
                                         const QString &pDirName)
 {
     Q_UNUSED(pDirName)  // set as property
@@ -539,7 +539,7 @@ void PmrRepository::requestNewWorkspace(const QString &pName, const QString &pDe
         "]}}").arg(pName, pDescription).toUtf8());
 
     auto repositoryResponse =
-        mPmrRepositoryManager->sendPmrRequest(QString("%1/workspace/+/addWorkspace").arg(Url()),
+        mPmrWebServiceManager->sendPmrRequest(QString("%1/workspace/+/addWorkspace").arg(Url()),
                                               true, true, jsonCreateWorkspace);
     repositoryResponse->setProperty(DirNameProperty, pDirName);
 
@@ -548,7 +548,7 @@ void PmrRepository::requestNewWorkspace(const QString &pName, const QString &pDe
 
 //==============================================================================
 
-void PmrRepository::workspaceCreatedResponse(const QString &pUrl)
+void PmrWebService::workspaceCreatedResponse(const QString &pUrl)
 {
     emit workspaceCreated(pUrl);
 
@@ -559,9 +559,9 @@ void PmrRepository::workspaceCreatedResponse(const QString &pUrl)
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::requestWorkspacesList()
+void PmrWebService::requestWorkspacesList()
 {
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(QString("%1/my-workspaces").arg(Url()),
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(Url()),
                                                                     true);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspacesListResponse(QJsonDocument)));
@@ -569,7 +569,7 @@ void PmrRepository::requestWorkspacesList()
 
 //==============================================================================
 
-void PmrRepository::workspacesListResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::workspacesListResponse(const QJsonDocument &pJsonDocument)
 {
     // Retrieve the list of workspaces
 
@@ -599,9 +599,9 @@ void PmrRepository::workspacesListResponse(const QJsonDocument &pJsonDocument)
 //==============================================================================
 //==============================================================================
 
-void PmrRepository::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
+void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pWorkspace->url() + "/request_temporary_password",
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pWorkspace->url() + "/request_temporary_password",
                                                                     true, true);
     repositoryResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)pWorkspace));
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
@@ -616,7 +616,7 @@ void PmrRepository::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrRepository::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
 {
     QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
 
@@ -629,11 +629,11 @@ void PmrRepository::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 //==============================================================================
 //==============================================================================
 
-PmrWorkspace *PmrRepository::getWorkspace(const QString &pUrl)
+PmrWorkspace *PmrWebService::getWorkspace(const QString &pUrl)
 {
     PmrWorkspace *newWorkspace = nullptr;
 
-    auto repositoryResponse = mPmrRepositoryManager->sendPmrRequest(pUrl, true);
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
     repositoryResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(getWorkspaceResponse(QJsonDocument)));
@@ -655,7 +655,7 @@ PmrWorkspace *PmrRepository::getWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-void PmrRepository::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 {
     auto workspacePtr = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
 
@@ -702,7 +702,7 @@ void PmrRepository::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 
 //==============================================================================
 
-void PmrRepository::workspaceUnauthorised(const QString &pUrl)
+void PmrWebService::workspaceUnauthorised(const QString &pUrl)
 {
     Q_UNUSED(pUrl)
 

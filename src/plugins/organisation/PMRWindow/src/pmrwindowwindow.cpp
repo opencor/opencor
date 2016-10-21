@@ -23,7 +23,7 @@ limitations under the License.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "pmrrepository.h"
+#include "pmrwebservice.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
 
@@ -87,26 +87,26 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Get a PMR repository
 
-    mPmrRepository = new PMRSupport::PmrRepository(this);
+    mPmrWebService = new PMRSupport::PmrWebService(this);
 
     // Some connections to process responses from the PMR repository
 
-    connect(mPmrRepository, SIGNAL(busy(const bool &)),
+    connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
-    connect(mPmrRepository, SIGNAL(progress(double)),
+    connect(mPmrWebService, SIGNAL(progress(double)),
             this, SLOT(showProgress(double)));
 
-    connect(mPmrRepository, SIGNAL(error(const QString &, const bool &)),
+    connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
             this, SLOT(repositoryError(const QString &, const bool &)));
-    connect(mPmrRepository, SIGNAL(information(const QString &)),
+    connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
-    connect(mPmrRepository, SIGNAL(warning(const QString &)),
+    connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrRepository, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &)),
+    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &)),
             this, SLOT(gotExposuresList(const PMRSupport::PmrExposureList &)));
 
-    connect(mPmrRepository, SIGNAL(exposureFilesList(const QString &, const QStringList &)),
+    connect(mPmrWebService, SIGNAL(exposureFilesList(const QString &, const QStringList &)),
             mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
 
     // Some connections to know what our PMR widget wants from us
@@ -237,7 +237,7 @@ void PmrWindowWindow::on_refreshButton_clicked()
 {
     // Get the list of exposures from our PMR repository
 
-    mPmrRepository->requestExposuresList();
+    mPmrWebService->requestExposuresList();
 }
 
 //==============================================================================
@@ -282,7 +282,7 @@ void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
 
 void PmrWindowWindow::cloneWorkspace(const QString &pExposureUrl)
 {
-    mPmrRepository->requestExposureWorkspaceClone(pExposureUrl);
+    mPmrWebService->requestExposureWorkspaceClone(pExposureUrl);
 }
 
 //==============================================================================
@@ -291,7 +291,7 @@ void PmrWindowWindow::requestExposureFiles(const QString &pUrl)
 {
     // Request a list of the exposure's files from our PMR repository
 
-    mPmrRepository->requestExposureFiles(pUrl);
+    mPmrWebService->requestExposureFiles(pUrl);
 }
 
 //==============================================================================

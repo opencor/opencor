@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR network manager
+// PMR response
 //==============================================================================
 
 #pragma once
@@ -25,9 +25,8 @@ limitations under the License.
 //==============================================================================
 
 #include <QJsonDocument>
-#include <QList>
-#include <QNetworkAccessManager>
-#include <QSslError>
+#include <QObject>
+#include <QString>
 
 //==============================================================================
 
@@ -40,43 +39,27 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrOAuthClient;
-class PmrRepository;
-class PmrRepositoryResponse;
-
-//==============================================================================
-
-class PmrRepositoryManager : public QNetworkAccessManager
+class PmrWebServiceResponse : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit PmrRepositoryManager(PmrRepository *pPmrRepository);
-    virtual ~PmrRepositoryManager();
+    explicit PmrWebServiceResponse(QNetworkReply *pNetworkReply);
 
-    void authenticate(const bool &pLink);
-    bool isAuthenticated(void) const;
+    static const QStringList ResponseMimeTypes;
 
-    PmrRepositoryResponse *sendPmrRequest(const QString &pUrl, const bool &pSecureRequest,
-                                          const bool &pUsePost=false, // When no document
-                                          const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
-    PmrOAuthClient *mPmrOAuthClient;
-    PmrRepository *mPmrRepository;
+    QNetworkReply *mNetworkReply;
 
 signals:
-    void authenticated(const bool &pAuthenticated);
-    void busy(const bool &pBusy);
+    void busy(bool);
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
+    void finished(void);
+    void gotJsonResponse(const QJsonDocument &pJsonDocument);
+    void movedLocation(const QString &locationUrl);
+    void unauthorised(const QString &pUrl);
 
 private slots:
-    void authenticationFailed();
-    void authenticationSucceeded();
-    void openBrowser(const QUrl &pUrl);
-
-    void sslErrors(QNetworkReply *pNetworkReply,
-                   const QList<QSslError> &pSslErrors);
-
+    void processResponse(void);
 };
 
 //==============================================================================

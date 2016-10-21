@@ -47,17 +47,17 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrRepositoryManager;
+class PmrWebServiceManager;
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrRepository : public QObject
+class PMRSUPPORT_EXPORT PmrWebService : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrRepository(QObject *parent = 0);
-    ~PmrRepository();
+    explicit PmrWebService(QObject *parent = 0);
+    ~PmrWebService();
 
     static const QString Url();
     static const QByteArray CollectionMimeType();
@@ -85,7 +85,7 @@ private:
         RequestExposureFiles
     };
 
-    PmrRepositoryManager *mPmrRepositoryManager;
+    PmrWebServiceManager *mPmrWebServiceManager;
 
     QMap<QString, PmrExposure *> mExposures;    // Exposure Url --> Exposure
 

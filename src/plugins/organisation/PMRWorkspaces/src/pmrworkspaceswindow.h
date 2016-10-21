@@ -23,12 +23,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "pmrworkspacesglobal.h"
-
-//==============================================================================
-
 #include "organisationwidget.h"
-#include "pmrrepository.h"
+#include "pmrworkspacesglobal.h"
 
 //==============================================================================
 
@@ -47,6 +43,15 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace PMRSupport {
+    class PmrWebService;
+}   // namespace PMRSupport
+
+//==============================================================================
+
 namespace PMRWorkspaces {
 
 //==============================================================================
@@ -74,7 +79,7 @@ public:
 private:
     Ui::PmrWorkspacesWindow *mGui;
 
-    PMRSupport::PmrRepository *mPmrRepository;
+    PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWidget *mWorkspacesWidget;
 
     QMenu *mContextMenu;

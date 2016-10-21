@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "pmrrepository.h"
+#include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacefilenode.h"
 #include "pmrworkspacescommit.h"
@@ -73,10 +73,10 @@ namespace PMRWorkspaces {
 
 //==============================================================================
 
-PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent) :
+PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrWebService *pPmrWebService, QWidget *pParent) :
     OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(this),
-    mPmrRepository(pPmrRepository),
+    mPmrWebService(pPmrWebService),
     mWorkspacesManager(OpenCOR::PMRSupport::PmrWorkspacesManager::instance()),
     mWorkspaceFolders(QMap<QString, QString>()),
     mWorkspaceUrls(QMap<QString, QPair<QString, bool> >()),
@@ -96,11 +96,11 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrReposito
 
     // Connections to handle responses from PMR
 
-    connect(mPmrRepository, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+    connect(mPmrWebService, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(mPmrRepository, SIGNAL(workspaceCreated(QString)),
+    connect(mPmrWebService, SIGNAL(workspaceCreated(QString)),
             this, SLOT(workspaceCreated(QString)));
-    connect(mPmrRepository, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
+    connect(mPmrWebService, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
 
     // Handle workspace cloned signals from other plugins
@@ -1011,7 +1011,7 @@ void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspa
         if (!urlsIterator.value().second) {
             QString url = urlsIterator.key();
 
-            auto workspace = mPmrRepository->getWorkspace(url);
+            auto workspace = mPmrWebService->getWorkspace(url);
             if (workspace) {
                 mWorkspacesManager->addWorkspace(workspace);
                 workspace->setPath(urlsIterator.value().first);
@@ -1068,7 +1068,7 @@ void PmrWorkspacesWidget::cloneWorkspace(const QString &pUrl)
             if (!workspaceFolder.exists())
                 workspaceFolder.mkpath(".");
 
-            mPmrRepository->requestWorkspaceClone(workspace, dirName);
+            mPmrWebService->requestWorkspaceClone(workspace, dirName);
         }
     }
 }
@@ -1154,7 +1154,7 @@ void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
 
     // `initialiseWorkspaceWidget()` will be called when list received.
 
-    mPmrRepository->requestWorkspacesList();
+    mPmrWebService->requestWorkspacesList();
 }
 
 //==============================================================================
@@ -1164,7 +1164,7 @@ void PmrWorkspacesWidget::synchroniseWorkspace(const QString &pUrl, const bool p
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
     if (workspace && !workspace->isNull() && workspace->isLocal())
-        mPmrRepository->requestWorkspaceSynchronise(workspace, pOnlyPull);
+        mPmrWebService->requestWorkspaceSynchronise(workspace, pOnlyPull);
 }
 
 //==============================================================================

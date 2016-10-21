@@ -46,7 +46,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace PMRSupport {
-    class PmrRepository;
+    class PmrWebService;
 }   // namespace PMRSupport
 
 //==============================================================================
@@ -75,7 +75,7 @@ protected:
 private:
     Ui::PmrWindowWindow *mGui;
 
-    PMRSupport::PmrRepository *mPmrRepository;
+    PMRSupport::PmrWebService *mPmrWebService;
 
     PmrWindowWidget *mPmrWidget;
 

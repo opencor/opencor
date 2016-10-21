@@ -45,7 +45,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace PMRSupport {
-    class PmrRepository;
+    class PmrWebService;
 }   // namespace PMRSupport
 
 //==============================================================================
@@ -59,7 +59,7 @@ class PmrWorkspacesWidget : public OpenCOR::WebViewerWidget::WebViewerWidget, pu
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWidget(PMRSupport::PmrRepository *pPmrRepository, QWidget *pParent);
+    explicit PmrWorkspacesWidget(PMRSupport::PmrWebService *pPmrWebService, QWidget *pParent);
     ~PmrWorkspacesWidget();
 
     virtual void loadSettings(QSettings *pSettings);
@@ -82,7 +82,7 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
-    PMRSupport::PmrRepository *mPmrRepository;
+    PMRSupport::PmrWebService *mPmrWebService;
 
     OpenCOR::PMRSupport::PmrWorkspacesManager *mWorkspacesManager;
 

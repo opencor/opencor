@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "pmrauthentication.h"
-#include "pmrrepository.h"
+#include "pmrwebservice.h"
 
 //==============================================================================
 
@@ -71,7 +71,7 @@ PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *parent) : O1(parent
     // Create a store object for writing the received authentication tokens
 
     O0SettingsStore *store = new O0SettingsStore(EncryptionKey());
-    store->setGroupKey(PmrRepository::Url().toUtf8().constData());
+    store->setGroupKey(PmrWebService::Url().toUtf8().constData());
     setStore(store);
 }
 
