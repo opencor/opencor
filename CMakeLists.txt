@@ -357,7 +357,7 @@ SET(PLUGINS
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
     organisation/PMRWindow
-    organisation/PMRWorkspaces
+    organisation/PMRWorkspacesWindow
 
     simulation/SingleCellView
 
