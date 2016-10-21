@@ -28,6 +28,10 @@ limitations under the License.
 #include "mainwindow.h"
 #include "splashscreenwindow.h"
 
+#ifdef Q_OS_MAC
+    #include "macos.h"
+#endif
+
 //==============================================================================
 
 #include <QDir>
@@ -47,6 +51,19 @@ int main(int pArgC, char *pArgV[])
     // Initialise Qt's message pattern
 
     OpenCOR::initQtMessagePattern();
+
+    // On macOS, make sure that no ApplePersistenceIgnoreState message is shown
+    // and that some macOS specific menu items are not shown
+
+#ifdef Q_OS_MAC
+    QProcess::execute("defaults",
+                      QStringList() << "write"
+                                    << "ws.opencor"
+                                    << "ApplePersistenceIgnoreState"
+                                    << "NO");
+
+    OpenCOR::removeMacosSpecificMenuItems();
+#endif
 
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
@@ -192,11 +209,19 @@ int main(int pArgC, char *pArgV[])
 
             QLocale::setDefault(QLocale(locale));
 
-            QTranslator qtTranslator;
+            QTranslator qtBaseTranslator;
+            QTranslator qtHelpTranslator;
+            QTranslator qtXmlPatternsTranslator;
             QTranslator appTranslator;
 
-            qtTranslator.load(":qt_"+locale);
-            guiApp->installTranslator(&qtTranslator);
+            qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtBaseTranslator);
+
+            qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtHelpTranslator);
+
+            qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtXmlPatternsTranslator);
 
             appTranslator.load(":app_"+locale);
             guiApp->installTranslator(&appTranslator);
@@ -314,9 +339,7 @@ int main(int pArgC, char *pArgV[])
             // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
 
-            QSettings settings;
-
-            settings.clear();
+            QSettings().clear();
         }
 
         // Restart OpenCOR, but without providing any of the arguments that were

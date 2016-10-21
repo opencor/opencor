@@ -22,7 +22,7 @@ install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo apt-get install python-software-properties
       && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-      && sudo apt-add-repository -y ppa:beineri/opt-qt561-trusty
+      && sudo apt-add-repository -y ppa:beineri/opt-qt562-trusty
       && sudo apt-get -qq update
       && sudo apt-get -qq install gcc-4.9 g++-4.9
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
@@ -41,10 +41,11 @@ script:
   # Note: on Linux, the linking of CellMLTextView_conversiontests and
   #       CellMLTextView_parsingtests results in an error regarding
   #       __cxa_throw_bad_array_new_length@Qt_5 not being defined in
-  #       libQScintilla.so. It’s not clear why it is the case (since everything
-  #       works fine locally and when deployed), but not to use the prebuilt
-  #       version of QScintilla 'solves' our problem, so this is what we are
-  #       doing here...
+  #       libQScintilla.so. Everything works fine locally and when deployed, so
+  #       it is most likely related to the PPA version of Qt that we are using
+  #       here (due to the way it must have been built). However, a simple
+  #       workaround is to build QScintilla, so this is what we are doing
+  #       here...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..

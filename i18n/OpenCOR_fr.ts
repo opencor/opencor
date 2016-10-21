@@ -150,6 +150,18 @@
         <source>Check for updates</source>
         <translation>Vérifier pour des mises à jour</translation>
     </message>
+    <message>
+        <source>&amp;Preferences...</source>
+        <translation>&amp;Préférences...</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Preferences for OpenCOR and its plugins</source>
+        <translation>Préférences pour OpenCOR et ses extensions</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
@@ -158,8 +170,8 @@
         <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
-        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
+        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; (%2) is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
+        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; (%2) est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No newer version or snapshot of %1 is available.</source>
@@ -187,6 +199,14 @@
     <message>
         <source>No plugins could be found.</source>
         <translation>Aucunes extensions n&apos;ont pu être trouvées.</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>No plugins have preferences.</source>
+        <translation>Aucunes extensions n&apos;ont de préférences.</translation>
     </message>
     <message>
         <source>About</source>
@@ -282,6 +302,32 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PreferencesDialog</name>
+    <message>
+        <source>Reset All</source>
+        <translation>Tout Réinitialiser</translation>
+    </message>
+    <message>
+        <source>Reset Plugin</source>
+        <translation>Réinitialiser Extension</translation>
+    </message>
+    <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PreferencesPluginCategoryWidget</name>
+    <message>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
+    </message>
+</context>
+<context>
     <name>PluginsDialog</name>
     <message>
         <source>Plugins</source>
@@ -294,6 +340,13 @@
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
         <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent prendre effet.</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesDialog</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
     </message>
 </context>
 <context>

@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 9, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -18,7 +18,30 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 1,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 0, "month": 0, "year": 0, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> improved the translation of Qt-related messages (see issue <a href=\"https://github.com/opencor/opencor/issues/1135\">#1135</a>). Improved support for macOS (see issues <a href=\"https://github.com/opencor/opencor/issues/1134\">#1134</a> and <a href=\"https://github.com/opencor/opencor/issues/1137\">#1137</a>). Now have a Preferences dialog so the user can specify his preferences for OpenCOR and its plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/193\">#193</a>)." },
+                       { "change": "<strong>Web Browser window:</strong> added a Web browser like window (see issue <a href=\"https://github.com/opencor/opencor/issues/1115\">#1115</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [

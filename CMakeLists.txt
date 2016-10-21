@@ -79,6 +79,7 @@ SET(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
+    src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
@@ -91,12 +92,14 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
+    src/plugins/preferencesinterface.cpp
 )
 
 SET(HEADERS_MOC
     src/checkforupdatesdialog.h
     src/mainwindow.h
     src/pluginsdialog.h
+    src/preferencesdialog.h
     src/splashscreenwindow.h
 
     src/misc/cliutils.h
@@ -104,18 +107,21 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+    src/plugins/preferencesinterface.h
 )
 
 SET(UIS
     src/checkforupdatesdialog.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
+    src/preferencesdialog.ui
     src/splashscreenwindow.ui
 )
 
 SET(RESOURCES
     ${COMMON_QRC_FILENAME}
     ${I18N_QRC_FILENAME}
+    res/translations.qrc
     res/ui.qrc
 )
 
@@ -150,7 +156,7 @@ ENDIF()
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-    src/plugins/miscellaneous/Core/src
+    src/preferences
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
@@ -260,7 +266,7 @@ IF(ENABLE_TESTS)
     # Clean up our test program, but only if we are on macOS
 
     IF(APPLE)
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+        MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -346,6 +352,7 @@ SET(PLUGINS
     editing/RawTextView
 
     miscellaneous/HelpWindow
+    miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
@@ -389,6 +396,12 @@ ENDFOREACH()
 QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 QT5_WRAP_UI(SOURCES_UIS ${UIS})
 QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+
+IF(APPLE)
+    LIST(APPEND SOURCES
+        src/misc/macos.mm
+    )
+ENDIF()
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES}
@@ -476,7 +489,17 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+
+    # Deploy the OpenSSL libraries
+
+    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${REAL_OPENSSL_LIBRARY} DIRECTORY)
+        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
+
+        MACOS_DEPLOY_LIBRARY(${REAL_OPENSSL_LIBRARY_DIRNAME} ${REAL_OPENSSL_LIBRARY_FILENAME})
+    ENDFOREACH()
 
     # Deploy our Qt libraries
     # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
@@ -486,18 +509,17 @@ IF(APPLE)
     #       don't deploy the Qt frameworks...
 
     IF(NOT ENABLE_TRAVIS_CI)
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            OS_X_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
+        FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+            MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
         ENDFOREACH()
     ENDIF()
 
     # Deploy some plugins
 
-    OS_X_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
-    OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-    OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
-    OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
-    OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
+    MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
+    MACOS_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
+    MACOS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 ELSE()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
@@ -631,7 +653,6 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
     WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
@@ -753,9 +774,7 @@ ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         ENDIF()
 
-        LINUX_DEPLOY_QT_LIBRARY(${REAL_QT_LIBRARY_DIR}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        LINUX_DEPLOY_QT_LIBRARY(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
     IF(NOT ENABLE_TRAVIS_CI)
@@ -764,15 +783,12 @@ ELSE()
         #       libraries...
 
         FOREACH(QT_FILE icudata icui18n icuuc)
-            LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56.1
-                                    ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
+            LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
         ENDFOREACH()
     ENDIF()
 
     # Qt plugins required by OpenCOR
 
-    LINUX_DEPLOY_QT_PLUGIN(bearer qgenericbearer)
     LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)

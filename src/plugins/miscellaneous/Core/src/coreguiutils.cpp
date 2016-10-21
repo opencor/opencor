@@ -36,6 +36,7 @@ limitations under the License.
 #include <QApplication>
 #include <QBuffer>
 #include <QColor>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -43,6 +44,7 @@ limitations under the License.
 #include <QFrame>
 #include <QIODevice>
 #include <QLabel>
+#include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
