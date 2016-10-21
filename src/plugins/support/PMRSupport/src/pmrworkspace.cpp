@@ -238,7 +238,7 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 
     // TODO: Should the details not go into a log file? Reporting them
     //       directly may not help a naive user.
-    if (gitError) {
+    if (gitError)
         qDebug() << tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message));
 
     emit warning(pMessage);
