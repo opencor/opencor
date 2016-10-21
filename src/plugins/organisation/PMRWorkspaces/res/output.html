@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+        <style type="text/css">
+            body {
+                -webkit-user-select: none;
+                font-family: arial, sans-serif;
+                font-size: 10pt;
+                cursor: default;
+                margin-top: 0;
+                background-color: white;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            a {
+                outline: 0px;
+                color: rgb(54, 96, 146);
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            a:visited {
+                color: rgb(54, 96, 146);
+            }
+
+            a:hover {
+                margin: -1px;
+                border: 1px solid rgba(54, 96, 146, 0.13);
+                background-color: rgba(54, 96, 146, 0.05);
+                color: rgb(54, 96, 146);
+            }
+
+            a.noHover:hover {
+                margin: 0px;
+                border: 0px;
+                background: rgba(255, 255, 255, 0);
+            }
+
+            td.action img,
+                margin-top: 2px;
+                margin-right: 2px;
+                margin-left: 0;
+            }
+
+            td.icon img {
+                margin-top: 2px;
+                margin-left: 4px;
+            }
+            td.icon img.star {
+              margin-top: 0;
+              }
+
+            td.status {
+              width: 2.5em;
+              text-align: right;
+            }
+            td.action {
+              width: 35px;
+              text-align: right;
+            }
+            td.icon {
+              width: 24px;
+            }
+
+            td.icon a,
+            td.name a {
+                width: 100%;
+            }
+
+            table {
+              border-spacing: 0px;
+              border-collapse: collapse;
+              width: 100%;
+              table-layout: fixed;
+            }
+
+            table,
+            td,
+            tr {
+              margin: 0;
+              padding: 0;
+              color: rgb(54, 96, 146);
+            }
+
+            td {
+              vertical-align: top;
+              padding-top: 2px;
+              padding-bottom: 2px;
+            }
+
+            tr.contents > td {
+              padding-top: 0;
+              padding-bottom: 4px;
+            }
+
+            td:last-child,
+            tr.folder > td,
+            tr.workspace > td,
+              padding-bottom: 0;
+            }
+
+            tr.workspace > td.name {
+              padding-top: 4px;
+            }
+
+            tr.workspace > td.status {
+              width: 1em;
+              font-weight: bold;
+              color: #800;
+            }
+            tr.workspace > td.action {
+              padding: 0;
+              width: 50px;
+            }
+
+            tr.folder td.icon {
+              padding-left: 0;
+            }
+
+            td.name {
+              width: 100%;
+              padding-top: 2px;
+              overflow-wrap: break-word;
+            }
+
+            tr.folder > td.icon {
+              padding-top: 0;
+            }
+
+            tr.workspace {
+              background-color: #DDD;
+              border-top: 4px solid white;
+            }
+
+            tr.workspace + tr.contents {
+              border-top: 4px solid white;
+            }
+
+            tr.even {
+              background: rgb(240, 240, 250)
+            }
+
+            tr.selected {
+              background: #559EF9;
+              color: #000;
+            }
+
+            tr.selected a {
+              color: #FFF;
+            }
+
+            /* Colour of file status indicators */
+            span.istatus {
+              color: #080;
+              display: inline-block;
+              width: 1em;
+            }
+            span.wstatus {
+              color: #800;
+              display: inline-block;
+              width: 1em;
+            }
+
+            img.button {
+                position: relative;
+                margin-left: 2px;
+                border: 1px solid rgb(213, 213, 213);
+                border-radius: 5px;
+                padding: 2px;
+                background: linear-gradient(rgb(252, 252, 252), rgb(238, 238, 238));
+                cursor: default;
+            }
+/*
+            img.button:hover {
+                border: 1px solid rgb(221, 221, 221);
+                background: linear-gradient(rgb(238, 238, 238), rgb(221, 221, 221));
+            }
+
+            img.button:active {
+                border: 1px solid rgb(181, 181, 181);
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+            }
+
+            img.downButton {
+                position: relative;
+                top: 1px;
+                margin-left: 4px;
+                border: 1px solid rgb(181, 181, 181);
+                border-radius: 5px;
+                padding: 2px;
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+                cursor: default;
+            }
+*/
+            img.clone {
+                content: url("%1");
+            }
+            img.commit {
+                content: url("%2");
+            }
+            img.folder {
+                content: url("%3");
+            }
+            img.open {
+                content: url("%4");
+            }
+            img.star {
+                content: url("%5");
+            }
+/*
+            img.pull {
+                content: url("%xx");
+            }
+            img.push {
+                content: url("%xx");
+            }
+*/
+            img.stage {
+                content: url("%6");
+                /* Overide button class */
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                margin-right: 2px;
+            }
+            img.pull {
+                content: url("%7");
+            }
+            img.push {
+                content: url("%8");
+            }
+            img.sync {
+                content: url("%9");
+            }
+            img.unstage {
+                content: url("%10");
+                /* Overide button class */
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                margin-right: 2px;
+            }
+        </style>
+    </head>
+    <body ondragstart="return false;" ondrop="return false;">
+        <table class="fullWidth">
+            <tbody id="workspaces">
+                %11
+            </tbody>
+        </table>
+    </body>
+</html>

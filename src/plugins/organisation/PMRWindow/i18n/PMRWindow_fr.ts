@@ -60,13 +60,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
-    <message>
-        <source>Select Empty Directory</source>
-        <translation>Sélectionner Répertoire Vide</translation>
-    </message>
-</context>
-<context>
     <name>PmrWindowWindow</name>
     <message>
         <source>Physiome Model Repository</source>

@@ -1,0 +1,4 @@
+[submodule "src/plugins/thirdParty/OAuth/o2"]
+	path = src/plugins/thirdParty/OAuth/o2
+	url = https://www.github.com/dbrnz/o2.git
+	branch = win_export
