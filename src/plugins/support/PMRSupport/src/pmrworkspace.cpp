@@ -234,23 +234,14 @@ void PmrWorkspace::emitProgress(const double &pProgress) const
 
 void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
-#ifdef QT_DEBUG
-
     const git_error *gitError = giterr_last();
 
-    QString gitErrorMessage = gitError ? (tr("Error %1: %2.").arg(QString::number(gitError->klass),
-                                                                  Core::formatMessage(gitError->message)))
-                                       : QString();
-    if (gitError) qDebug() << gitErrorMessage;
-
-//    emit warning(pMessage + (gitError ? (QString("\n\n") + gitErrorMessage) : ""));
-    emit warning(pMessage);
-
-#else
+    // TODO: Should the details not go into a log file? Reporting them
+    //       directly may not help a naive user.
+    if (gitError) {
+        qDebug() << tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message));
 
     emit warning(pMessage);
-
-#endif
 }
 
 //==============================================================================
