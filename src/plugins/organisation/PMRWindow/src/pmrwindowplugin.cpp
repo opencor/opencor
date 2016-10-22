@@ -61,8 +61,7 @@ void PMRWindowPlugin::retranslateUi()
 {
     // Retranslate our PMR window action
 
-    retranslateAction(mPmrWindowAction,
-                      tr("PMR"),
+    retranslateAction(mPmrWindowAction, tr("PMR"),
                       tr("Show/hide the PMR window"));
 
     // Retranslate our PMR window
