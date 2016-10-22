@@ -42,7 +42,9 @@ void OXTwitter::link() {
     }
 
     if (username_.isEmpty() || password_.isEmpty()) {
+/*---OPENCOR---
         qWarning() << "Error: XAuth parameters not set. Aborting!";
+*/
         return;
     }
 

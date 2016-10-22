@@ -79,7 +79,9 @@ QByteArray O0SimpleCrypt::encryptToByteArray(const QString& plaintext)
 QByteArray O0SimpleCrypt::encryptToByteArray(QByteArray plaintext)
 {
     if (m_keyParts.isEmpty()) {
+/*---OPENCOR---
         qWarning() << "No key set.";
+*/
         m_lastError = ErrorNoKeySet;
         return QByteArray();
     }
@@ -179,7 +181,9 @@ QByteArray O0SimpleCrypt::decryptToByteArray(const QString& cyphertext)
 QByteArray O0SimpleCrypt::decryptToByteArray(QByteArray cypher)
 {
     if (m_keyParts.isEmpty()) {
+/*---OPENCOR---
         qWarning() << "No key set.";
+*/
         m_lastError = ErrorNoKeySet;
         return QByteArray();
     }
@@ -195,7 +199,9 @@ QByteArray O0SimpleCrypt::decryptToByteArray(QByteArray cypher)
 
     if (version !=3) {  //we only work with version 3
         m_lastError = ErrorUnknownVersion;
+/*---OPENCOR---
         qWarning() << "Invalid version or not a cyphertext.";
+*/
         return QByteArray();
     }
 

@@ -27,10 +27,12 @@ void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
     Q_EMIT closeBrowser();
 
     if (response.contains("error")) {
+/*---OPENCOR---
         qWarning() << "O2Facebook::onVerificationReceived: Verification failed";
         foreach (QString key, response.keys()) {
             qWarning() << "O2Facebook::onVerificationReceived:" << key << response.value(key);
         }
+*/
         Q_EMIT linkingFailed();
         return;
     }
@@ -88,7 +90,9 @@ void O2Facebook::onTokenReplyFinished() {
         timedReplies_.remove(tokenReply);
         setLinked(true);
         Q_EMIT linkingSucceeded();
+/*---OPENCOR---
     } else {
         qWarning() << "O2Facebook::onTokenReplyFinished:" << tokenReply->errorString();
+*/
     }
 }
