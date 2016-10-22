@@ -135,7 +135,7 @@ void PMRWorkspacesPlugin::retranslateUi()
 {
     // Retranslate our workspaces window action
 
-    retranslateAction(mPmrWorkspacesAction, tr("Workspaces"),
+    retranslateAction(mPmrWorkspacesAction, tr("PMR Workspaces"),
                       tr("Show/hide the PMR Workspaces window"));
 
     // Retranslate our workspaces window

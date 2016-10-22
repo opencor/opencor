@@ -4,11 +4,11 @@
 <context>
     <name>OpenCOR::PMRWorkspaces::PMRWorkspacesPlugin</name>
     <message>
-        <source>Workspaces</source>
+        <source>Show/hide the PMR Workspaces window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show/hide the PMR Workspaces window</source>
+        <source>PMR Workspaces</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -151,10 +151,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>My PMR Workspaces</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>New Workspace</source>
         <translation type="unfinished"></translation>
     </message>
@@ -172,6 +168,10 @@
     </message>
     <message>
         <source>Rescan workspace folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PMR Workspaces</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

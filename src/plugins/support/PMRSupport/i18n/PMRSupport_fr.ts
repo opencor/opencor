@@ -65,10 +65,6 @@
 <context>
     <name>OpenCOR::PMRSupport::PmrWorkspace</name>
     <message>
-        <source>Error %1: %2.</source>
-        <translation>Erreur %1 : %2.</translation>
-    </message>
-    <message>
         <source>An error occurred while trying to clone the workspace.</source>
         <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
     </message>
