@@ -43,7 +43,7 @@ namespace PMRSupport {
 //==============================================================================
 
 // PMR OAuth 1.0 client
-// Constants must match values assigned to the Physiome Model Repository
+// Constants must match values assigned to PMR
 
 class PmrOAuthClient: public O1
 {

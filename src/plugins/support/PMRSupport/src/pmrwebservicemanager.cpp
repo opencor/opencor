@@ -47,7 +47,7 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
     mPmrWebService(pPmrWebService)
 {
-    // Create an OAuth client for authenticated requests to the Physiome Model Repository
+    // Create an OAuth client for authenticated requests to PMR
 
     mPmrOAuthClient = new PmrOAuthClient(pPmrWebService->Url(), this);
 

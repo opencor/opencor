@@ -98,7 +98,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Log off the Physiome Model Repository?</source>
+        <source>Log off PMR?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

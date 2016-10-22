@@ -61,7 +61,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Create an instance of the Physiome Model Repository
+    // Create an instance of PMR
 
     mPmrWebService = new PMRSupport::PmrWebService(this);
 
@@ -381,7 +381,7 @@ void PmrWorkspacesWindow::on_actionUnauthenticate_triggered()
     // Log off PMR
 
     if (QMessageBox::question(this, tr("OpenCOR"),
-                              tr("Log off the Physiome Model Repository?")) == QMessageBox::Yes)
+                              tr("Log off PMR?")) == QMessageBox::Yes)
         mPmrWebService->authenticate(false);
 }
 
