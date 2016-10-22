@@ -964,7 +964,7 @@ void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaceList)
+void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaces)
 {
     // First clear existing workspaces from the manager
 
@@ -982,7 +982,7 @@ void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspa
         urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
     }
 
-    foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaceList) {
+    foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
 
         // Remember our workspace so we can find it by URL
 
@@ -1153,7 +1153,7 @@ void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
 
     // `initialiseWorkspaceWidget()` will be called when list received.
 
-    mPmrWebService->requestWorkspacesList();
+    mPmrWebService->requestWorkspaces();
 }
 
 //==============================================================================

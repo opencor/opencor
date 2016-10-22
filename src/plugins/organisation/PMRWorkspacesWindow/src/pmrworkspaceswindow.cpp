@@ -105,7 +105,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     // Keep track of the window's visibility, so that we can request the list of
     // exposures, if necessary
 
-    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(retrieveWorkspacesList(bool)));
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(retrieveWorkspaces(bool)));
 
     // Create and populate our context menu
 
@@ -141,7 +141,7 @@ PmrWorkspacesWindow::PmrWorkspacesWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
 
     connect(mPmrWebService, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
-    connect(mPmrWebService, SIGNAL(workspacesList(PMRSupport::PmrWorkspaces)),
+    connect(mPmrWebService, SIGNAL(workspaces(PMRSupport::PmrWorkspaces)),
             mWorkspacesWidget, SLOT(initialiseWorkspaceWidget(PMRSupport::PmrWorkspaces)));
 
     // Connections to process requests from our widget
@@ -260,7 +260,7 @@ void PmrWorkspacesWindow::showWarning(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWorkspacesWindow::retrieveWorkspacesList(const bool &pVisible)
+void PmrWorkspacesWindow::retrieveWorkspaces(const bool &pVisible)
 {
     // Request authentication status, if we are becoming visible and the list
     // of workspaces has never been requested before (through a single shot, this

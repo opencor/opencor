@@ -557,25 +557,24 @@ void PmrWebService::workspaceCreatedResponse(const QString &pUrl)
 }
 
 //==============================================================================
-//==============================================================================
 
-void PmrWebService::requestWorkspacesList()
+void PmrWebService::requestWorkspaces()
 {
     auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(Url()),
                                                                     true);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(workspacesListResponse(QJsonDocument)));
+            this, SLOT(workspacesResponse(QJsonDocument)));
 }
 
 //==============================================================================
 
-void PmrWebService::workspacesListResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 {
     // Retrieve the list of workspaces
 
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
-    PmrWorkspaces workspaceList = PmrWorkspaces();
+    PmrWorkspaces workspaces = PmrWorkspaces();
 
     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
         QVariantMap linksMap = linksVariant.toMap();
@@ -587,16 +586,15 @@ void PmrWebService::workspacesListResponse(const QJsonDocument &pJsonDocument)
             if (   !workspaceUrl.isEmpty()
                 && !workspaceName.isEmpty()) {
 
-                workspaceList.add(workspaceUrl, workspaceName, this);
-                workspaceList.last()->setOwned(true);
+                workspaces.add(workspaceUrl, workspaceName, this);
+                workspaces.last()->setOwned(true);
             }
         }
     }
 
-    emit workspacesList(workspaceList);
+    emit PmrWebService::workspaces(workspaces);
 }
 
-//==============================================================================
 //==============================================================================
 
 void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)

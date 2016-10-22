@@ -91,7 +91,7 @@ private slots:
     void showWarning(const QString &pMessage);
 
     void getAuthenticationStatus();
-    void retrieveWorkspacesList(const bool &pVisible);
+    void retrieveWorkspaces(const bool &pVisible);
     void updateAuthenticationStatus(const bool &pAuthenticated);
 
     void on_actionAuthenticate_triggered();

@@ -71,7 +71,7 @@ public:
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
-    void requestWorkspacesList();
+    void requestWorkspaces();
     void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
@@ -114,7 +114,7 @@ signals:
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-    void workspacesList(const PMRSupport::PmrWorkspaces &pWorkspaceList);
+    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
     void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
@@ -131,7 +131,7 @@ private slots:
     void workspaceUnauthorised(const QString &pUrl);
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
-    void workspacesListResponse(const QJsonDocument &pJsonDocument);
+    void workspacesResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreatedResponse(const QString &pUrl);
