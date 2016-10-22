@@ -235,17 +235,9 @@ void PmrWorkspace::emitProgress(const double &pProgress) const
 
 void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
-    const git_error *gitError = giterr_last();
-
-    // TODO: Should the details not go into a log file? Reporting them
-    //       directly may not help a naive user.
-    if (gitError)
-        qDebug() << tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message));
-
     emit warning(pMessage);
 }
 
-//==============================================================================
 //==============================================================================
 
 bool PmrWorkspace::open(void)
@@ -597,15 +589,12 @@ int PmrWorkspace::checkout_notify_cb(git_checkout_notify_t why, const char *path
 
     if (why == GIT_CHECKOUT_NOTIFY_CONFLICT) {
         workspace->mConflictedFiles << QString(path);
-// qDebug() << "Conflict: " << path;
     }
     else if (why == GIT_CHECKOUT_NOTIFY_DIRTY) {
         // TODO: We may want to report dirty files...
-// qDebug() << "Dirty: " << path;
     }
     else if (why == GIT_CHECKOUT_NOTIFY_UPDATED) {
         workspace->mUpdatedFiles << QString(path);
-// qDebug() << "Update: " << path;
     }
 
     return 0;

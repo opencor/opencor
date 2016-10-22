@@ -112,9 +112,6 @@ void PmrWebServiceResponse::processResponse(void)
         else {
             QString errorMessage = mNetworkReply->errorString();
 
-            qCritical() << "Http status " << httpStatusCode << ": " << errorMessage;
-            qDebug() << contentData;
-
             emit error(errorMessage, true);
         }
     }
@@ -129,10 +126,6 @@ void PmrWebServiceResponse::processResponse(void)
     // Check we actually have JSON from PMR
 
     else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
-        qCritical() << "Response has wrong content type: "
-                    << mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString();
-        qDebug() << contentData;
-
         emit error(tr("Response has unexpected content type"), true);
     }
 
@@ -144,13 +137,8 @@ void PmrWebServiceResponse::processResponse(void)
 
         // Check for parse errors
 
-        if (jsonParseError.error != QJsonParseError::NoError) {
-
-            qCritical() << "JSON Error: " << jsonParseError.errorString();
-            qDebug() << contentData;
-
+        if (jsonParseError.error != QJsonParseError::NoError)
             emit error(jsonParseError.errorString(), true);
-        }
 
         // All good...
 
