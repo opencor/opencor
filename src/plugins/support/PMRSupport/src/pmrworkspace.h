@@ -57,7 +57,6 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(PmrWebService *pParent = nullptr);
     explicit PmrWorkspace(const QString &pUrl, const QString &pName,
                           const QString &pDescription, const QString &pOwner,
                           PmrWebService *pParent);
@@ -73,7 +72,6 @@ public:
     static QString WorkspacesDirectory();
 
     bool isLocal() const;
-    bool isNull() const;
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
     void setPath(const QString &pPath);
@@ -81,13 +79,13 @@ public:
     bool isOwned() const;
     void setOwned(const bool &pOwned);
 
-    const QString &description() const;
-    const QString &name() const;
-    const QString &owner() const;
-    const QString &path() const;
-    const QString &url() const;
+    QString description() const;
+    QString name() const;
+    QString owner() const;
+    QString path() const;
+    QString url() const;
 
-    const PmrWorkspaceFileNode *rootFileNode() const;
+    PmrWorkspaceFileNode * rootFileNode() const;
 
     void clone(const QString &pDirName);
     void close();

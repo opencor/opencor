@@ -179,13 +179,9 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
     auto exposure = mUrlExposures.value(pUrl);
 
-    if (exposure->isNull()) {
-        emit warning(tr("Unknown exposure: ") + pUrl);
-    }
-    else if (exposure->fileUrlsLeftCount() < 0) {
+    if (exposure->fileUrlsLeftCount() < 0) {
         requestExposureInformation(exposure, RequestExposureFiles);
-    }
-    else if (exposure->fileUrlsLeftCount() == 0) {
+    } else if (exposure->fileUrlsLeftCount() == 0) {
         if (exposure->exposureFileList().count())
             emit exposureFiles(pUrl, exposure->exposureFileList());
         else
@@ -363,10 +359,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 
     auto exposure = mUrlExposures.value(pExposureUrl);
 
-    if (exposure->isNull()) {
-        emit warning(tr("Unknown exposure: ") + pExposureUrl);
-    }
-    else if (!exposure->workspace()->isNull()) {
+    if (exposure->workspace()) {
         auto url = exposure->workspace()->url();
         auto dirName = exposure->workspace()->path();
 

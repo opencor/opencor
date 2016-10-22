@@ -240,8 +240,8 @@ void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
 void PmrWorkspacesWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                        const bool &pOwned)
 {
-    const QString &folder = pWorkspace->path();
-    const QString &url = pWorkspace->url();
+    QString folder = pWorkspace->path();
+    QString url = pWorkspace->url();
 
     if (!mWorkspaceFolders.contains(folder)) {
         if (mWorkspaceUrls.contains(url)) {
@@ -438,11 +438,11 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode
 
 QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace)
 {
-    const QString &url = pWorkspace->url();
-    const QString &name = pWorkspace->name();
-    const QString &path = pWorkspace->path();
+    QString url = pWorkspace->url();
+    QString name = pWorkspace->name();
+    QString path = pWorkspace->path();
 
-    const QString icon = pWorkspace->isOwned() ? "star" : "folder";
+    QString icon = pWorkspace->isOwned() ? "star" : "folder";
     auto status = QString("");
     auto actionList = QList<QPair<QString, QString> >();
 
@@ -498,8 +498,7 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
 QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     QString fullname = pFileNode->fullName();
-
-    const QString icon = mExpandedItems.contains(fullname) ? "open" : "folder";
+    QString icon = mExpandedItems.contains(fullname) ? "open" : "folder";
 
     mRow += 1;
     QStringList html = QStringList(containerHtml((mRow % 2) ? "folder" : "folder even",
@@ -983,10 +982,9 @@ void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspa
     }
 
     foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
-
         // Remember our workspace so we can find it by URL
 
-        const QString &url = workspace->url();
+        QString url = workspace->url();
 
         mWorkspacesManager->addWorkspace(workspace);
 
@@ -1057,7 +1055,7 @@ void PmrWorkspacesWidget::cloneWorkspace(const QString &pUrl)
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
-    if (workspace && !(workspace->isNull() || workspace->isLocal())) {
+    if (workspace && !workspace->isLocal()) {
         auto dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
 
         if (!dirName.isEmpty()) {
@@ -1078,7 +1076,7 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
-    if (workspace && !workspace->isNull() && workspace->isLocal()) {
+    if (workspace && workspace->isLocal()) {
 
         if (workspace->isMerging()) {
             workspace->commitMerge();
@@ -1125,8 +1123,7 @@ void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
 {
-    auto fileElement = page()->mainFrame()->documentElement().findFirst(
-                                                     QString("tr.file[id=\"%1\"]").arg(pPath));
+    auto fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
     auto workspaceElement = parentWorkspaceElement(fileElement);
 
     if (!workspaceElement.isNull()) {
@@ -1162,7 +1159,7 @@ void PmrWorkspacesWidget::synchroniseWorkspace(const QString &pUrl, const bool p
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
-    if (workspace && !workspace->isNull() && workspace->isLocal())
+    if (workspace && workspace->isLocal())
         mPmrWebService->requestWorkspaceSynchronise(workspace, pOnlyPull);
 }
 

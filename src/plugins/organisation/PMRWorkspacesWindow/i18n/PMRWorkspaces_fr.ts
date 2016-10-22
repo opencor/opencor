@@ -2,22 +2,18 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::PMRWorkspaces::PMRWorkspacesPlugin</name>
-    <message>
-        <source>Show/hide the PMR Workspaces window</source>
-        <translation type="unfinished"></translation>
-    </message>
+    <name>OpenCOR::PMRWorkspacesWindow::PMRWorkspacesPlugin</name>
     <message>
         <source>PMR Workspaces</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>OpenCOR::PMRWorkspaces::PmrWorkspacesWidget</name>
     <message>
-        <source>About the workspace</source>
+        <source>Show/hide the PMR Workspaces window</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWidget</name>
     <message>
         <source>Stage</source>
         <translation type="unfinished"></translation>
@@ -35,18 +31,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Commit staged changes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Refresh display</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show containing folder...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Synchronise with PMR</source>
         <translation type="unfinished"></translation>
     </message>
@@ -55,19 +39,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>View in PMR...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Owner: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PMR: &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Path: &lt;a href=&quot;file://%1/&quot;&gt;%1&lt;/a&gt;</source>
+        <source>Commit staged changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -90,9 +62,37 @@
         <source>File has been modified</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Refresh display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View in PMR...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show containing folder...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About the workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Owner: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PMR: &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path: &lt;a href=&quot;file://%1/&quot;&gt;%1&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>OpenCOR::PMRWorkspaces::PmrWorkspacesWindow</name>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindow</name>
     <message>
         <source>OpenCOR</source>
         <translation type="unfinished"></translation>

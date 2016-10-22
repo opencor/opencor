@@ -49,13 +49,10 @@ class PMRSUPPORT_EXPORT PmrExposure : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrExposure(QObject *pParent = nullptr);
     explicit PmrExposure(const QString &pUrl, const QString &pName,
                         QObject *pParent);
 
     static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
-
-    bool isNull() const;
 
     QString name() const;
     QString url() const;

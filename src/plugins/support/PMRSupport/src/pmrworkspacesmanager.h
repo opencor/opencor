@@ -61,7 +61,7 @@ public:
     size_t count() const;
 
     bool hasWorkspace(const QString &pUrl) const ;
-    PmrWorkspace *workspace(const QString &pUrl) const;
+    PmrWorkspace * workspace(const QString &pUrl) const;
     QList<PmrWorkspace *> workspaces() const;
 
 private:

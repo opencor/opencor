@@ -30,13 +30,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrExposure::PmrExposure(QObject *pParent) :
-    QObject(pParent), mName(QString()), mUrl(QString())
-{
-}
-
-//==============================================================================
-
 PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
                          QObject *pParent) :
     QObject(pParent),
@@ -44,7 +37,7 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
     mUrl(pUrl),
     mExposureFileList(QStringList()),
     mFileUrlsLeftCount(-1),
-    mWorkspace(new PmrWorkspace())
+    mWorkspace(nullptr)
 {
 }
 
@@ -56,14 +49,6 @@ bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pSecond)
     // worrying about casing)
 
     return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-bool PmrExposure::isNull() const
-{
-    return mUrl.isNull();
-
 }
 
 //==============================================================================

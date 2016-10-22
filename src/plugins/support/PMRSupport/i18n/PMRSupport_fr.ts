@@ -12,10 +12,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unknown exposure: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No exposure files could be found for %1.</source>
         <translation type="unfinished"></translation>
     </message>

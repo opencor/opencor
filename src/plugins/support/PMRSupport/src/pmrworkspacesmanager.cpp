@@ -102,7 +102,7 @@ bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
 
 //==============================================================================
 
-PmrWorkspace *PmrWorkspacesManager::workspace(const QString &pUrl) const
+PmrWorkspace * PmrWorkspacesManager::workspace(const QString &pUrl) const
 {
     return mUrlWorkspaces.value(pUrl);
 }

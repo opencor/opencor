@@ -43,16 +43,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(PmrWebService *pParent) :
-    QObject(pParent), mOwned(false),
-    mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
-    mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
-    mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
-{
-}
-
-//==============================================================================
-
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
                            const QString &pDescription, const QString &pOwner,
                            PmrWebService *pParent) :
@@ -81,15 +71,8 @@ PmrWorkspace::~PmrWorkspace()
 
 bool PmrWorkspace::isLocal() const
 {
-    return !mPath.isNull();
-  }
-
-//==============================================================================
-
-bool PmrWorkspace::isNull() const
-{
-    return mUrl.isNull();
-  }
+    return !mPath.isEmpty();
+}
 
 //==============================================================================
 
@@ -181,14 +164,14 @@ void PmrWorkspace::setPath(const QString &pPath)
 
 //==============================================================================
 
-const QString &PmrWorkspace::description() const
+QString PmrWorkspace::description() const
 {
     return mDescription;
 }
 
 //==============================================================================
 
-const QString &PmrWorkspace::name() const
+QString PmrWorkspace::name() const
 {
     // Return our name
 
@@ -197,21 +180,21 @@ const QString &PmrWorkspace::name() const
 
 //==============================================================================
 
-const QString &PmrWorkspace::owner() const
+QString PmrWorkspace::owner() const
 {
     return mOwner;
 }
 
 //==============================================================================
 
-const QString &PmrWorkspace::path() const
+QString PmrWorkspace::path() const
 {
     return mPath;
 }
 
 //==============================================================================
 
-const QString &PmrWorkspace::url() const
+QString PmrWorkspace::url() const
 {
     // Return our URL
 
@@ -220,7 +203,7 @@ const QString &PmrWorkspace::url() const
 
 //==============================================================================
 
-const PmrWorkspaceFileNode *PmrWorkspace::rootFileNode() const
+PmrWorkspaceFileNode * PmrWorkspace::rootFileNode() const
 {
     return mRootFileNode;
 }
@@ -246,7 +229,9 @@ bool PmrWorkspace::open()
     close();
 
     if (!mPath.isEmpty()) {
-        if (git_repository_open(&mGitRepository, mPath.toUtf8().constData()) == 0) {
+        QByteArray pathByteArray = mPath.toUtf8();
+
+        if (git_repository_open(&mGitRepository, pathByteArray.constData()) == 0) {
             refreshStatus();
             return true;
         }
@@ -280,7 +265,7 @@ void PmrWorkspace::refreshStatus()
     mUnstagedCount = 0;
     mRepositoryStatusMap.clear();
 
-    mRootFileNode = new PmrWorkspaceFileNode("", mPath);
+    mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath);
 // TODO: Need to check that we aren't in the middle of a (failed) merge.
 
     if (isOpen()) {
@@ -416,8 +401,10 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 
     auto url = QString();
 
-    git_repository *gitRepository = 0;
-    if (git_repository_open(&gitRepository, pFolder.toUtf8().constData()) == 0) {
+    git_repository *gitRepository = nullptr;
+    QByteArray folderByteArray = pFolder.toUtf8();
+
+    if (git_repository_open(&gitRepository, folderByteArray.constData()) == 0) {
 
         git_strarray remotes ;
         if (git_remote_list(&remotes, gitRepository) == 0) {
@@ -939,7 +926,9 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
     // Clean up message and remove `;` comments
 
-    git_message_prettify(&message, pMessage.toUtf8().constData(), true, ';');
+    QByteArray messageByteArray = pMessage.toUtf8();
+
+    git_message_prettify(&message, messageByteArray.constData(), true, ';');
 
     bool committed = true;
     if (message.size > 0) {
@@ -1073,10 +1062,10 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 
     if (this->isOpen()) {
         auto repoDir = QDir(mPath);
-        auto relativePath = repoDir.relativeFilePath(pPath);
-
         unsigned int statusFlags = 0;
-        if (git_status_file(&statusFlags, mGitRepository, relativePath.toUtf8().constData()) == 0) {
+        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
+
+        if (git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData()) == 0) {
             status = gitStatusChars(statusFlags);
             // Also update status in file tree
             if (mRepositoryStatusMap.contains(pPath))
