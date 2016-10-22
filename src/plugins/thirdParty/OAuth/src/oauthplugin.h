@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 // OAuth plugin
 //==============================================================================
 
-#ifndef OAUTHPLUGIN_H
-#define OAUTHPLUGIN_H
+#pragma once
 
 //==============================================================================
 
@@ -48,10 +47,6 @@ class OAuthPlugin : public QObject
 
 }   // namespace OAuth
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

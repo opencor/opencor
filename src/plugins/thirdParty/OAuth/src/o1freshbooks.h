@@ -1,11 +1,18 @@
 #ifndef O1FRESHBOOKS_H
 #define O1FRESHBOOKS_H
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o1.h"
 
 /// FreshBooks authenticator.
-class O0_EXPORT O1Freshbooks: public O1 {
+/*---OPENCOR---
+class O1Freshbooks: public O1 {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O1Freshbooks: public O1 {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:

@@ -1,11 +1,18 @@
 #ifndef O1TWITTER_H
 #define O1TWITTER_H
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o1.h"
 
 /// Twitter OAuth 1.0 client
-class O0_EXPORT O1Twitter: public O1 {
+/*---OPENCOR---
+class O1Twitter: public O1 {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O1Twitter: public O1 {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:

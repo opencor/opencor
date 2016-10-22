@@ -30,8 +30,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QString>
 #include <QVector>
 #include <QFlags>
-
-#include "o0baseauth.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 
 /**
   @short Simple encryption and decryption of strings and byte arrays
@@ -56,7 +57,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   SimpleCrypt is prepared for the case that the encryption and decryption
   algorithm is changed in a later version, by prepending a version identifier to the cypertext.
   */
-class O0_EXPORT O0SimpleCrypt
+/*---OPENCOR---
+class O0SimpleCrypt
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O0SimpleCrypt
+//---OPENCOR--- END
 {
 public:
     /**
@@ -211,7 +217,7 @@ public:
                     CryptoFlagChecksum = 0x02,
                     CryptoFlagHash = 0x04
                    };
-    Q_DECLARE_FLAGS(CryptoFlags, CryptoFlag);
+    Q_DECLARE_FLAGS(CryptoFlags, CryptoFlag)
 private:
 
     void splitKey();

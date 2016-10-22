@@ -1,11 +1,18 @@
 #ifndef O2GFT_H
 #define O2GFT_H
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o2.h"
 
 /// Google Fusion Tables' dialect of OAuth 2.0
-class O0_EXPORT O2Gft: public O2 {
+/*---OPENCOR---
+class O2Gft: public O2 {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O2Gft: public O2 {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:

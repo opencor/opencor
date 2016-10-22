@@ -5,7 +5,9 @@
 #include <QNetworkRequest>
 #include <QByteArray>
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o1.h"
 
 class QNetworkAccessManager;
@@ -13,13 +15,18 @@ class QNetworkReply;
 class O1;
 
 /// Makes authenticated requests using OAuth 1.0.
-class O0_EXPORT O1Requestor: public QObject {
+/*---OPENCOR---
+class O1Requestor: public QObject {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O1Requestor: public QObject {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:
     explicit O1Requestor(QNetworkAccessManager *manager, O1 *authenticator, QObject *parent = 0);
 
-public slots:
+public Q_SLOTS:
     /// Make a GET request.
     /// @param  req                 Network request.
     /// @param  signingParameters   Extra (non-OAuth) parameters participating in signing.

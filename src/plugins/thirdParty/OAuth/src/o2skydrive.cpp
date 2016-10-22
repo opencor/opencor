@@ -48,26 +48,26 @@ void O2Skydrive::link() {
     query.setQueryItems(parameters);
     url.setQuery(query);
 #endif
-    emit openBrowser(url);
+    Q_EMIT openBrowser(url);
 }
 
 void O2Skydrive::redirected(const QUrl &url) {
     qDebug() << "O2Skydrive::redirected" << url;
 
-    emit closeBrowser();
+    Q_EMIT closeBrowser();
 
     if (grantFlow_ == GrantFlowAuthorizationCode) {
         // Get access code
         QString urlCode;
 #if QT_VERSION < 0x050000
-        urlCode = url.queryItemValue(O2_OAUTH2_CODE);
+        urlCode = url.queryItemValue(O2_OAUTH2_GRANT_TYPE_CODE);
 #else
         QUrlQuery query(url);
         urlCode = query.queryItemValue(O2_OAUTH2_GRANT_TYPE_CODE);
 #endif
         if (urlCode.isEmpty()) {
             qDebug() << "O2Skydrive::redirected: Code not received";
-            emit linkingFailed();
+            Q_EMIT linkingFailed();
             return;
         }
         setCode(urlCode);
@@ -116,10 +116,10 @@ void O2Skydrive::redirected(const QUrl &url) {
         setRefreshToken(urlRefreshToken);
         setExpires(QDateTime::currentMSecsSinceEpoch() / 1000 + urlExpiresIn);
         if (urlToken.isEmpty()) {
-            emit linkingFailed();
+            Q_EMIT linkingFailed();
         } else {
             setLinked(true);
-            emit linkingSucceeded();
+            Q_EMIT linkingSucceeded();
         }
     }
 }

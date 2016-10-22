@@ -5,13 +5,20 @@
 #include <QUrl>
 #include <QNetworkReply>
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o0baseauth.h"
 
 class O2ReplyServer;
 
 /// Simple OAuth 1.0 authenticator.
-class O0_EXPORT O1: public O0BaseAuth {
+/*---OPENCOR---
+class O1: public O0BaseAuth {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O1: public O0BaseAuth {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:
@@ -78,20 +85,20 @@ public:
     /// Build a concatenated/percent-encoded string from a list of headers.
     static QByteArray encodeHeaders(const QList<O0RequestParameter> &headers);
 
-public slots:
+public Q_SLOTS:
     /// Authenticate.
     Q_INVOKABLE virtual void link();
 
     /// De-authenticate.
     Q_INVOKABLE virtual void unlink();
 
-signals:
+Q_SIGNALS:
     void requestTokenUrlChanged();
     void authorizeUrlChanged();
     void accessTokenUrlChanged();
     void signatureMethodChanged();
 
-protected slots:
+protected Q_SLOTS:
     /// Handle verification received from the reply server.
     virtual void onVerificationReceived(QMap<QString,QString> params);
 

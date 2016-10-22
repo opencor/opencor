@@ -1,11 +1,18 @@
 #ifndef O1FLICKR_H
 #define O1FLICKR_H
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o1.h"
 
 /// Flickr authenticator.
-class O0_EXPORT O1Flickr: public O1 {
+/*---OPENCOR---
+class O1Flickr: public O1 {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O1Flickr: public O1 {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:

@@ -1,11 +1,18 @@
 #ifndef OXTWITTER_H
 #define OXTWITTER_H
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o1twitter.h"
 
 /// Twitter authenticator using Twitter XAuth
-class O0_EXPORT OXTwitter: public O1Twitter {
+/*---OPENCOR---
+class OXTwitter: public O1Twitter {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT OXTwitter: public O1Twitter {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:
@@ -21,11 +28,11 @@ public:
     QString password();
     void setPassword(const QString &password);
 
-public slots:
+public Q_SLOTS:
     /// Authenticate.
     Q_INVOKABLE virtual void link();
 
-signals:
+Q_SIGNALS:
     void usernameChanged();
     void passwordChanged();
 

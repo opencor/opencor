@@ -1,11 +1,18 @@
 #ifndef O2HUBIC_H
 #define O2HUBIC_H
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o2.h"
 
 /// Hubic's dialect of OAuth 2.0
-class O0_EXPORT O2Hubic: public O2 {
+/*---OPENCOR---
+class O2Hubic: public O2 {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O2Hubic: public O2 {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:

@@ -3,11 +3,17 @@
 
 #include <QObject>
 #include <QString>
-
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 
 /// Storage for strings.
-class O0_EXPORT O0AbstractStore: public QObject {
+/*---OPENCOR---
+class O0AbstractStore: public QObject {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O0AbstractStore: public QObject {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:

@@ -3,23 +3,29 @@
 
 #include <QNetworkReply>
 #include <QTimer>
-
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 
 /// A timer connected to a network reply.
-class O0_EXPORT O1TimedReply: public QTimer {
+/*---OPENCOR---
+class O1TimedReply: public QTimer {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O1TimedReply: public QTimer {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:
     explicit O1TimedReply(QNetworkReply *parent, int pTimeout=60*1000);
 
-signals:
+Q_SIGNALS:
     /// Emitted when we have timed out waiting for the network reply.
     void error(QNetworkReply::NetworkError);
     /// Emitted when the network reply has responded.
     void finished();
 
-private slots:
+private Q_SLOTS:
     void onFinished();
     void onTimeout();
 };

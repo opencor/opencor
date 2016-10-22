@@ -8,12 +8,19 @@
 #include <QUrl>
 #include <QVariantMap>
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o0abstractstore.h"
 #include "o0requestparameter.h"
 
 /// Base class of OAuth authenticators
-class O0_EXPORT O0BaseAuth : public QObject {
+/*---OPENCOR---
+class O0BaseAuth : public QObject {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O0BaseAuth : public QObject {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:
@@ -61,14 +68,14 @@ public:
     /// Construct query string from list of headers
     static QByteArray createQueryParameters(const QList<O0RequestParameter> &parameters);
 
-public slots:
+public Q_SLOTS:
     /// Authenticate.
     Q_INVOKABLE virtual void link() = 0;
 
     /// De-authenticate.
     Q_INVOKABLE virtual void unlink() = 0;
 
-signals:
+Q_SIGNALS:
     /// Emitted when client needs to open a web browser window, with the given URL.
     void openBrowser(const QUrl &url);
 

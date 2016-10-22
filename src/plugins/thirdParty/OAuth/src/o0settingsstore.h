@@ -4,12 +4,19 @@
 #include <QSettings>
 #include <QString>
 
-#include "o0baseauth.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o0abstractstore.h"
 #include "o0simplecrypt.h"
 
 /// Persistent storage for authentication tokens, using QSettings.
-class O0_EXPORT O0SettingsStore: public O0AbstractStore {
+/*---OPENCOR---
+class O0SettingsStore: public O0AbstractStore {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O0SettingsStore: public O0AbstractStore {
+//---OPENCOR--- END
     Q_OBJECT
 
 public:
@@ -30,7 +37,7 @@ public:
     /// Set a string value for a key
     void setValue(const QString &key, const QString &value);
 
-signals:
+Q_SIGNALS:
     // Property change signals
     void groupKeyChanged();
 

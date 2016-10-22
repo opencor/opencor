@@ -1,5 +1,7 @@
 #include "o2hubic.h"
+/*---OPENCOR---
 #include "o2globals.h"
+*/
 #include "o2replyserver.h"
 #include <QHostAddress>
 

@@ -43,11 +43,13 @@ PLUGININFO_FUNC PMRWorkspacesPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to manage your Physiome Model Repository workspaces."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to manage your <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a> workspaces."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder vos espaces de travail <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
 
     return new PluginInfo(PluginInfo::Organisation, true, false,
                           QStringList() << "PMRSupport" << "WebViewerWidget",
-                          descriptions);
+                          descriptions,
+                          QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
 }
 
 //==============================================================================

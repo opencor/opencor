@@ -22,14 +22,14 @@ O2Facebook::O2Facebook(QObject *parent): O2(parent) {
 
 void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
     qDebug() << "O2Facebook::onVerificationReceived: Emitting closeBrowser()";
-    emit closeBrowser();
+    Q_EMIT closeBrowser();
 
     if (response.contains("error")) {
         qWarning() << "O2Facebook::onVerificationReceived: Verification failed";
         foreach (QString key, response.keys()) {
             qWarning() << "O2Facebook::onVerificationReceived:" << key << response.value(key);
         }
-        emit linkingFailed();
+        Q_EMIT linkingFailed();
         return;
     }
 
@@ -42,7 +42,7 @@ void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
     url.addQueryItem(O2_OAUTH2_CLIENT_ID, clientId_);
     url.addQueryItem(O2_OAUTH2_CLIENT_SECRET, clientSecret_);
     url.addQueryItem(O2_OAUTH2_SCOPE, scope_);
-    url.addQueryItem(O2_OAUTH2_CODE, code());
+    url.addQueryItem(O2_OAUTH2_GRANT_TYPE_CODE, code());
     url.addQueryItem(O2_OAUTH2_REDIRECT_URI, redirectUri_);
 #else
     QUrlQuery query(url);
@@ -83,7 +83,7 @@ void O2Facebook::onTokenReplyFinished() {
         setExtraTokens(reply);
         timedReplies_.remove(tokenReply);
         setLinked(true);
-        emit linkingSucceeded();
+        Q_EMIT linkingSucceeded();
     } else {
         qWarning() << "O2Facebook::onTokenReplyFinished:" << tokenReply->errorString();
     }

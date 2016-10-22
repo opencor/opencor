@@ -6,7 +6,9 @@
 #include <QNetworkReply>
 #include <QPair>
 
-#include "o0export.h"
+//---OPENCOR--- BEGIN
+#include "oauthglobal.h"
+//---OPENCOR--- END
 #include "o0baseauth.h"
 #include "o2reply.h"
 #include "o0abstractstore.h"
@@ -14,7 +16,12 @@
 class O2ReplyServer;
 
 /// Simple OAuth2 authenticator.
-class O0_EXPORT O2: public O0BaseAuth {
+/*---OPENCOR---
+class O2: public O0BaseAuth {
+*/
+//---OPENCOR--- BEGIN
+class OAUTH_EXPORT O2: public O0BaseAuth {
+//---OPENCOR--- END
     Q_OBJECT
     Q_ENUMS(GrantFlow)
 
@@ -100,7 +107,7 @@ public:
     /// Get token expiration time (seconds from Epoch).
     int expires();
 
-public slots:
+public Q_SLOTS:
     /// Authenticate.
     Q_INVOKABLE virtual void link();
 
@@ -110,7 +117,7 @@ public slots:
     /// Refresh token.
     Q_INVOKABLE void refresh();
 
-signals:
+Q_SIGNALS:
     /// Emitted when a token refresh has been completed or failed.
     void refreshFinished(QNetworkReply::NetworkError error);
 
@@ -123,7 +130,7 @@ signals:
     void refreshTokenUrlChanged();
     void tokenUrlChanged();
 
-protected slots:
+protected Q_SLOTS:
     /// Handle verification response.
     virtual void onVerificationReceived(QMap<QString, QString>);
 
