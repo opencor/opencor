@@ -85,7 +85,7 @@ QString PmrExposure::name() const
 
 //==============================================================================
 
-QString PmrExposure::toHtml(void) const
+QString PmrExposure::toHtml() const
 {
     // Return an HTML description of ourselves
 
@@ -94,7 +94,7 @@ QString PmrExposure::toHtml(void) const
 
 //==============================================================================
 
-int PmrExposure::fileUrlsLeftCount(void) const
+int PmrExposure::fileUrlsLeftCount() const
 {
     return mFileUrlsLeftCount;
 }
@@ -126,14 +126,14 @@ void PmrExposure::addOtherFile(const QString &pFileName)
 }
 
 //==============================================================================
-const QStringList PmrExposure::exposureFileList(void) const
+const QStringList PmrExposure::exposureFileList() const
 {
     return mExposureFileList;
 }
 
 //==============================================================================
 
-PmrWorkspace *PmrExposure::workspace(void) const
+PmrWorkspace *PmrExposure::workspace() const
 {
     return mWorkspace;
 }

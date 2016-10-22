@@ -59,17 +59,17 @@ public:
     QString name() const;
     QString url() const;
 
-    int fileUrlsLeftCount(void) const;
+    int fileUrlsLeftCount() const;
     void setFileUrlsLeftCount(const int &count);
 
     void addExposureFile(const QString &pFileName);
     void addOtherFile(const QString &pFileName);
-    const QStringList exposureFileList(void) const;
+    const QStringList exposureFileList() const;
 
-    PmrWorkspace *workspace(void) const;
+    PmrWorkspace *workspace() const;
     void setWorkspace(PmrWorkspace *pWorkspace);
 
-    QString toHtml(void) const;
+    QString toHtml() const;
 
 private:
     QString mName;

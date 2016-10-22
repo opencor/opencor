@@ -288,9 +288,8 @@ const QString PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
 }
 
 //==============================================================================
-//==============================================================================
 
-void PmrWorkspacesWidget::scanDefaultWorkspaceDirectory(void)
+void PmrWorkspacesWidget::scanDefaultWorkspaceDirectory()
 {
     QDir workspaceDirectory = QDir(PMRSupport::PmrWorkspace::WorkspacesDirectory());
     foreach(QFileInfo info, workspaceDirectory.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
@@ -394,7 +393,7 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pF
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::emptyContentsHtml(void)
+QString PmrWorkspacesWidget::emptyContentsHtml()
 {
     static const QString html = "<tr></tr>\n";
 
@@ -624,7 +623,7 @@ void PmrWorkspacesWidget::setSelected(QWebElement pNewSelectedRow)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::scrollToSelected(void)
+void PmrWorkspacesWidget::scrollToSelected()
 {
     // Position the frame so that the selected line is shown
 
@@ -655,14 +654,14 @@ void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::clearWorkspaces(void)
+void PmrWorkspacesWidget::clearWorkspaces()
 {
     setHtml(mTemplate.arg(QString()));
 }
 
 //==============================================================================
 
-void PmrWorkspacesWidget::displayWorkspaces(void)
+void PmrWorkspacesWidget::displayWorkspaces()
 {
     QList<PMRSupport::PmrWorkspace *> workspaces = mWorkspacesManager->workspaces();
 

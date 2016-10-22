@@ -64,20 +64,20 @@ public:
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
-    static QString getEmptyWorkspaceDirectory(void);
+    static QString getEmptyWorkspaceDirectory();
 
     static QString getUrlFromFile(const QString &pPath);
     static QString getUrlFromFolder(const QString &pFolder);
 
     static QString WorkspacesDirectory();
 
-    bool isLocal(void) const;
-    bool isNull(void) const;
+    bool isLocal() const;
+    bool isNull() const;
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
     void setPath(const QString &pPath);
 
-    bool isOwned(void) const;
+    bool isOwned() const;
     void setOwned(const bool &pOwned);
 
     const QString &description() const;

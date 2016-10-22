@@ -35,7 +35,7 @@ namespace PMRSupport {
 
 PmrWorkspacesManager::PmrWorkspacesManager(QObject *parent) :
   QObject(parent),
-  mWorkspacesMap(QMap<QString, PMRSupport::PmrWorkspace *>())
+  mUrlWorkspaces(QMap<QString, PMRSupport::PmrWorkspace *>())
 {
     git_libgit2_init();
 }
@@ -72,44 +72,44 @@ void PmrWorkspacesManager::emitWorkspaceCloned(PmrWorkspace *pWorkspace)
 
 void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 {
-    if (pWorkspace) mWorkspacesMap.insert(pWorkspace->url(), pWorkspace);
+    if (pWorkspace) mUrlWorkspaces.insert(pWorkspace->url(), pWorkspace);
 }
 
 //==============================================================================
 
-void PmrWorkspacesManager::clearWorkspaces(void)
+void PmrWorkspacesManager::clearWorkspaces()
 {
-    foreach (PmrWorkspace *workspace, mWorkspacesMap.values())
+    foreach (PmrWorkspace *workspace, mUrlWorkspaces.values())
         workspace->close();
-    mWorkspacesMap.clear();
+    mUrlWorkspaces.clear();
 }
 
 //==============================================================================
 
-size_t PmrWorkspacesManager::count(void) const
+size_t PmrWorkspacesManager::count() const
 {
-    return mWorkspacesMap.count();
+    return mUrlWorkspaces.count();
 }
 
 //==============================================================================
 
 bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
 {
-    return mWorkspacesMap.contains(pUrl);
+    return mUrlWorkspaces.contains(pUrl);
 }
 
 //==============================================================================
 
 PmrWorkspace *PmrWorkspacesManager::workspace(const QString &pUrl) const
 {
-    return mWorkspacesMap.value(pUrl);
+    return mUrlWorkspaces.value(pUrl);
 }
 
 //==============================================================================
 
-QList<PmrWorkspace *> PmrWorkspacesManager::workspaces(void) const
+QList<PmrWorkspace *> PmrWorkspacesManager::workspaces() const
 {
-    return mWorkspacesMap.values();
+    return mUrlWorkspaces.values();
 }
 
 //==============================================================================

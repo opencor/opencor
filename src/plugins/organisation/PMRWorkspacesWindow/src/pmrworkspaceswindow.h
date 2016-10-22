@@ -90,7 +90,7 @@ private slots:
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
 
-    void getAuthenticationStatus(void);
+    void getAuthenticationStatus();
     void retrieveWorkspacesList(const bool &pVisible);
     void updateAuthenticationStatus(const bool &pAuthenticated);
 

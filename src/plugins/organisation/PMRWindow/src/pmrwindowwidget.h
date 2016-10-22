@@ -85,8 +85,8 @@ private:
     void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
     void setShowExposureFilesUrl(const QString &pUrl);
-    void startShowExposureFilesTimer(void);
-    void stopShowExposureFilesTimer(void);
+    void startShowExposureFilesTimer();
+    void stopShowExposureFilesTimer();
 
 signals:
     void cloneWorkspaceRequested(const QString &pUrl);
@@ -106,7 +106,7 @@ private slots:
 
     void showCustomContextMenu();
 
-    void clearShowExposureFilesUrl(void);
+    void clearShowExposureFilesUrl();
 };
 
 //==============================================================================

@@ -55,7 +55,7 @@ public:
     virtual ~PmrWebServiceManager();
 
     void authenticate(const bool &pLink);
-    bool isAuthenticated(void) const;
+    bool isAuthenticated() const;
 
     PmrWebServiceResponse *sendPmrRequest(const QString &pUrl, const bool &pSecureRequest,
                                           const bool &pUsePost=false, // When no document

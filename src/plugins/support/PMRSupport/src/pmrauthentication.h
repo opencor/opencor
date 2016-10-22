@@ -53,24 +53,24 @@ public:
     explicit PmrOAuthClient(const QString &pUrl, QObject *parent = 0);
 
 private:
-    static const char *CallbackUrl(void);
-    static int         CallbackPort(void);
+    static const char *CallbackUrl();
+    static int         CallbackPort();
 
     // Authorisation Url templates
 
-    static const QString &AccessTokenUrl(void);
-    static const QString &AuthorizeUrl(void);
-    static const QString &RequestTokenUrl(void);
+    static const QString &AccessTokenUrl();
+    static const QString &AuthorizeUrl();
+    static const QString &RequestTokenUrl();
 
     // Scope template for request
 
-    static const QString &RequestScope(void);
+    static const QString &RequestScope();
 
     // Keep these out of the header file
 
-    static const char *ConsumerKey(void);
-    static const char *ConsumerSecret(void);
-    static const char *EncryptionKey(void);
+    static const char *ConsumerKey();
+    static const char *ConsumerSecret();
+    static const char *EncryptionKey();
 };
 
 //==============================================================================

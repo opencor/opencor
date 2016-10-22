@@ -49,7 +49,7 @@ public:
 
     virtual void retranslateUi();
 
-    const QString message(void) const;
+    const QString message() const;
 
 private:
     Ui::PmrWorkspacesCommit *mGui;

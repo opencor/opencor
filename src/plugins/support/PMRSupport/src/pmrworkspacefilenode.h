@@ -48,11 +48,11 @@ public:
                          PmrWorkspaceFileNode *parent=0);
     PmrWorkspaceFileNode *addChild(const QString &pName,
                                    const QPair<QChar, QChar> &pStatus=QPair<QChar, QChar>());
-    const QString &shortName(void) const;
-    const QString &fullName(void) const;
-    const QPair<QChar, QChar> &status(void) const;
-    QList<PmrWorkspaceFileNode *> children(void) const;
-    bool hasChildren(void) const;
+    const QString &shortName() const;
+    const QString &fullName() const;
+    const QPair<QChar, QChar> &status() const;
+    QList<PmrWorkspaceFileNode *> children() const;
+    bool hasChildren() const;
     void setStatus(const QPair<QChar, QChar> &pStatus);
 
 private:

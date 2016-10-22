@@ -282,7 +282,7 @@ void PmrWindowWidget::addExposureFiles(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWindowWidget::clearShowExposureFilesUrl(void)
+void PmrWindowWidget::clearShowExposureFilesUrl()
 {
     stopShowExposureFilesTimer();
     mShowExposureFilesUrl.clear();
@@ -299,7 +299,7 @@ void PmrWindowWidget::setShowExposureFilesUrl(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWindowWidget::startShowExposureFilesTimer(void)
+void PmrWindowWidget::startShowExposureFilesTimer()
 {
     // Only show exposure files if list received with 30 seconds
     stopShowExposureFilesTimer();
@@ -311,7 +311,7 @@ void PmrWindowWidget::startShowExposureFilesTimer(void)
 
 //==============================================================================
 
-void PmrWindowWidget::stopShowExposureFilesTimer(void)
+void PmrWindowWidget::stopShowExposureFilesTimer()
 {
     // Stop any active timer
 

@@ -55,34 +55,34 @@ void PmrWorkspaceFileNode::setStatus(const QPair<QChar, QChar> &pStatus)
 
 //==============================================================================
 
-const QString &PmrWorkspaceFileNode::shortName(void) const
+const QString &PmrWorkspaceFileNode::shortName() const
 {
     return mShortName;
 }
 //==============================================================================
 
-const QString &PmrWorkspaceFileNode::fullName(void) const
+const QString &PmrWorkspaceFileNode::fullName() const
 {
     return mFullName;
 }
 
 //==============================================================================
 
-const QPair<QChar, QChar> &PmrWorkspaceFileNode::status(void) const
+const QPair<QChar, QChar> &PmrWorkspaceFileNode::status() const
 {
     return mStatus;
 }
 
 //==============================================================================
 
-QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNode::children(void) const
+QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNode::children() const
 {
     return mChildren;
 }
 
 //==============================================================================
 
-bool PmrWorkspaceFileNode::hasChildren(void) const
+bool PmrWorkspaceFileNode::hasChildren() const
 {
     return (mChildren.size() > 0);
 }

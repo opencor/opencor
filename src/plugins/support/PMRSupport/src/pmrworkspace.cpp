@@ -78,14 +78,14 @@ PmrWorkspace::~PmrWorkspace()
 
 //==============================================================================
 
-bool PmrWorkspace::isLocal(void) const
+bool PmrWorkspace::isLocal() const
 {
     return !mPath.isNull();
   }
 
 //==============================================================================
 
-bool PmrWorkspace::isNull(void) const
+bool PmrWorkspace::isNull() const
 {
     return mUrl.isNull();
   }
@@ -119,7 +119,7 @@ QString PmrWorkspace::WorkspacesDirectory()
 
 //==============================================================================
 
-QString PmrWorkspace::getEmptyWorkspaceDirectory(void)
+QString PmrWorkspace::getEmptyWorkspaceDirectory()
 {
     // Retrieve the name of an empty directory
 
@@ -130,7 +130,7 @@ QString PmrWorkspace::getEmptyWorkspaceDirectory(void)
 
 //==============================================================================
 
-bool PmrWorkspace::isOwned(void) const
+bool PmrWorkspace::isOwned() const
 {
     return mOwned;
 }
@@ -219,7 +219,7 @@ const QString &PmrWorkspace::url() const
 
 //==============================================================================
 
-const PmrWorkspaceFileNode *PmrWorkspace::rootFileNode(void) const
+const PmrWorkspaceFileNode *PmrWorkspace::rootFileNode() const
 {
     return mRootFileNode;
 }
@@ -240,7 +240,7 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 
 //==============================================================================
 
-bool PmrWorkspace::open(void)
+bool PmrWorkspace::open()
 {
     close();
 
@@ -256,14 +256,14 @@ bool PmrWorkspace::open(void)
 
 //==============================================================================
 
-bool PmrWorkspace::isOpen(void) const
+bool PmrWorkspace::isOpen() const
 {
     return (mGitRepository != nullptr);
 }
 
 //==============================================================================
 
-void PmrWorkspace::close(void)
+void PmrWorkspace::close()
 {
     if (mGitRepository != nullptr) {
         git_repository_free(mGitRepository);
@@ -273,7 +273,7 @@ void PmrWorkspace::close(void)
 
 //==============================================================================
 
-void PmrWorkspace::refreshStatus(void)
+void PmrWorkspace::refreshStatus()
 {
     mStagedCount = 0;
     mUnstagedCount = 0;
@@ -345,7 +345,7 @@ void PmrWorkspace::refreshStatus(void)
 
 //==============================================================================
 
-QStringList PmrWorkspace::stagedFiles(void)
+QStringList PmrWorkspace::stagedFiles()
 {
     auto fileList = QStringList();
 
@@ -527,7 +527,7 @@ void PmrWorkspace::clone(const QString &pDirName)
 
 //==============================================================================
 
-bool PmrWorkspace::fetch(void)
+bool PmrWorkspace::fetch()
 {
     // Fetch any updates for a workspace
 
@@ -781,7 +781,7 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
 
 //==============================================================================
 
-bool PmrWorkspace::isMerging(void) const
+bool PmrWorkspace::isMerging() const
 {
     return mGitRepository != nullptr
       && git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE;
@@ -789,7 +789,7 @@ bool PmrWorkspace::isMerging(void) const
 
 //==============================================================================
 
-bool PmrWorkspace::merge(void)
+bool PmrWorkspace::merge()
 {
     // Merge and commit fetched updates
 
@@ -847,7 +847,7 @@ void PmrWorkspace::synchronise(const bool pOnlyPull)
 
 //==============================================================================
 
-void PmrWorkspace::push(void)
+void PmrWorkspace::push()
 {
     // Push a workspace
 
@@ -976,7 +976,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
 //==============================================================================
 
-PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus(void) const
+PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 {
     // Get the status of the repository
 

@@ -73,7 +73,7 @@ public:
     void aboutWorkspace(const QString &pUrl);
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
     const QString addWorkspaceFolder(const QString &pFolder);
-    void clearWorkspaces(void);
+    void clearWorkspaces();
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
     void refreshWorkspaces(const bool &pScanFolders);
@@ -101,12 +101,12 @@ private:
 
     QTimer *mTimer;
 
-    void scanDefaultWorkspaceDirectory(void);
+    void scanDefaultWorkspaceDirectory();
 
-    void displayWorkspaces(void);
+    void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
 
-    void scrollToSelected(void);
+    void scrollToSelected();
     void setSelected(QWebElement pNewSelectedRow);
 
     void setCurrentWorkspaceUrl(const QString &pUrl);
@@ -117,7 +117,7 @@ private:
                           const QString &pStatus,
                           const QList<QPair<QString, QString> > &pActionList);
     QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode, const bool &pHidden);
-    QString emptyContentsHtml(void);
+    QString emptyContentsHtml();
 
     static const QStringList fileStatusActionHtml(const QString &pPath,
                                                   const QPair<QChar, QChar> &pGitStatus);

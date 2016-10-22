@@ -96,7 +96,7 @@ void PmrWebServiceManager::authenticationSucceeded()
 
 //==============================================================================
 
-bool PmrWebServiceManager::isAuthenticated(void) const
+bool PmrWebServiceManager::isAuthenticated() const
 {
     return mPmrOAuthClient->linked();
 }

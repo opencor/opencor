@@ -53,7 +53,7 @@ PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) : mNe
 
 //==============================================================================
 
-void PmrWebServiceResponse::processResponse(void)
+void PmrWebServiceResponse::processResponse()
 {
     // Uncompress the response body and check that it is valid JSON
 

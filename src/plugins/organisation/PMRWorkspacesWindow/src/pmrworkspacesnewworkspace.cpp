@@ -89,21 +89,21 @@ void PmrWorkspacesNewWorkspace::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesNewWorkspace::description(void) const
+const QString PmrWorkspacesNewWorkspace::description() const
 {
     return mGui->description->toPlainText().trimmed();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesNewWorkspace::path(void) const
+const QString PmrWorkspacesNewWorkspace::path() const
 {
     return mGui->path->text();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesNewWorkspace::title(void) const
+const QString PmrWorkspacesNewWorkspace::title() const
 {
     return mGui->title->text().trimmed();
 }

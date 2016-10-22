@@ -77,7 +77,7 @@ PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *parent) : O1(parent
 
 //==============================================================================
 
-const char *PmrOAuthClient::CallbackUrl(void)
+const char *PmrOAuthClient::CallbackUrl()
 {
     static const char *callbackUrl = "http://localhost:%1/";
 
@@ -86,14 +86,14 @@ const char *PmrOAuthClient::CallbackUrl(void)
 
 //==============================================================================
 
-int PmrOAuthClient::CallbackPort(void)
+int PmrOAuthClient::CallbackPort()
 {
     return 1234;
 }
 
 //==============================================================================
 
-const QString &PmrOAuthClient::AccessTokenUrl(void)
+const QString &PmrOAuthClient::AccessTokenUrl()
 {
     static const QString accessTokenUrl = QString("%1/OAuthGetAccessToken");
 
@@ -102,7 +102,7 @@ const QString &PmrOAuthClient::AccessTokenUrl(void)
 
 //==============================================================================
 
-const QString &PmrOAuthClient::AuthorizeUrl(void)
+const QString &PmrOAuthClient::AuthorizeUrl()
 {
     static const QString authorizeUrl = QString("%1/OAuthAuthorizeToken");
 
@@ -111,7 +111,7 @@ const QString &PmrOAuthClient::AuthorizeUrl(void)
 
 //==============================================================================
 
-const QString &PmrOAuthClient::RequestTokenUrl(void)
+const QString &PmrOAuthClient::RequestTokenUrl()
 {
     static const QString requestTokenUrl = QString("%1/OAuthRequestToken");
 
@@ -120,7 +120,7 @@ const QString &PmrOAuthClient::RequestTokenUrl(void)
 
 //==============================================================================
 
-const QString &PmrOAuthClient::RequestScope(void)
+const QString &PmrOAuthClient::RequestScope()
 {
     static const QString requestScope = QString("%1/oauth_scope/collection,"
                                                 "%1/oauth_scope/search,"
@@ -131,7 +131,7 @@ const QString &PmrOAuthClient::RequestScope(void)
 
 //==============================================================================
 
-const char *PmrOAuthClient::ConsumerKey(void)
+const char *PmrOAuthClient::ConsumerKey()
 {
     static const char *consumerKey = "9uuENvnELA1cdoy7WhFg4Gsq";
 
@@ -140,7 +140,7 @@ const char *PmrOAuthClient::ConsumerKey(void)
 
 //==============================================================================
 
-const char *PmrOAuthClient::ConsumerSecret(void)
+const char *PmrOAuthClient::ConsumerSecret()
 {
     static const char *consumerSecret = "IqCnqYJZmYzVbFmMsRE_C66F";
 
@@ -149,7 +149,7 @@ const char *PmrOAuthClient::ConsumerSecret(void)
 
 //==============================================================================
 
-const char *PmrOAuthClient::EncryptionKey(void)
+const char *PmrOAuthClient::EncryptionKey()
 {
     // Used to encrypt saved access tokens
 

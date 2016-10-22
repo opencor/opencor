@@ -53,13 +53,13 @@ private:
 signals:
     void busy(bool);
     void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
-    void finished(void);
+    void finished();
     void gotJsonResponse(const QJsonDocument &pJsonDocument);
     void movedLocation(const QString &locationUrl);
     void unauthorised(const QString &pUrl);
 
 private slots:
-    void processResponse(void);
+    void processResponse();
 };
 
 //==============================================================================

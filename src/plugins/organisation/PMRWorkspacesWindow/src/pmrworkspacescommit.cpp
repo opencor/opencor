@@ -82,7 +82,7 @@ void PmrWorkspacesCommit::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesCommit::message(void) const
+const QString PmrWorkspacesCommit::message() const
 {
     return mGui->message->toPlainText().trimmed();
 }

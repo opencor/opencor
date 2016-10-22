@@ -51,20 +51,20 @@ public:
     explicit PmrWorkspacesManager(QObject *parent = 0);
     virtual ~PmrWorkspacesManager();
 
-    static PmrWorkspacesManager *instance(void);
+    static PmrWorkspacesManager *instance();
 
     void emitWorkspaceCloned(PmrWorkspace *pWorkspace);
 
     void addWorkspace(PmrWorkspace *pWorkspace);
-    void clearWorkspaces(void);
-    size_t count(void) const;
+    void clearWorkspaces();
+    size_t count() const;
 
     bool hasWorkspace(const QString &pUrl) const ;
     PmrWorkspace *workspace(const QString &pUrl) const;
-    QList<PmrWorkspace *> workspaces(void) const;
+    QList<PmrWorkspace *> workspaces() const;
 
 private:
-    QMap<QString, PMRSupport::PmrWorkspace *> mWorkspacesMap;  // Url --> Workspace
+    QMap<QString, PMRSupport::PmrWorkspace *> mUrlWorkspaces;
 
 signals:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

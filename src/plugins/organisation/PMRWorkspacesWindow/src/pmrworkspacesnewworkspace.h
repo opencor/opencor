@@ -48,9 +48,9 @@ public:
 
     virtual void retranslateUi();
 
-    const QString description(void) const;
-    const QString path(void) const;
-    const QString title(void) const;
+    const QString description() const;
+    const QString path() const;
+    const QString title() const;
 
 private slots:
     void titleTextChanged(const QString &text);

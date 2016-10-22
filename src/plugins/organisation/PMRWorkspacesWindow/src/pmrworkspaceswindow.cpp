@@ -279,7 +279,7 @@ void PmrWorkspacesWindow::retrieveWorkspacesList(const bool &pVisible)
 
 //==============================================================================
 
-void PmrWorkspacesWindow::getAuthenticationStatus(void)
+void PmrWorkspacesWindow::getAuthenticationStatus()
 {
     // Results in us being sent an `authenticated` signal.
 
