@@ -49,8 +49,9 @@ class PMRSUPPORT_EXPORT PmrExposure : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrExposure(QObject *parent=0);
-    PmrExposure(const QString &pUrl, const QString &pName, QObject *parent);
+    explicit PmrExposure(QObject *pParent = nullptr);
+    explicit PmrExposure(const QString &pUrl, const QString &pName,
+                        QObject *pParent);
 
     static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
 
@@ -66,7 +67,7 @@ public:
     void addOtherFile(const QString &pFileName);
     const QStringList exposureFileList() const;
 
-    PmrWorkspace *workspace() const;
+    PmrWorkspace * workspace() const;
     void setWorkspace(PmrWorkspace *pWorkspace);
 
     QString toHtml() const;

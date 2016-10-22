@@ -87,7 +87,7 @@ private:
 
     PmrWebServiceManager *mPmrWebServiceManager;
 
-    QMap<QString, PmrExposure *> mExposures;    // Exposure Url --> Exposure
+    QMap<QString, PmrExposure *> mUrlExposures;
 
     void emitInformation(const QString &pMessage);
     QString informationNoteMessage() const;
@@ -141,7 +141,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWindow
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

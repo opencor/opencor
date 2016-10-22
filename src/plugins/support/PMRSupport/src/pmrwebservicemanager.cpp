@@ -144,7 +144,6 @@ PmrWebServiceResponse *PmrWebServiceManager::sendPmrRequest(const QString &pUrl,
 
     networkRequest.setRawHeader("Accept", "application/json");
     networkRequest.setRawHeader("Accept-Encoding", "gzip");
-//    networkRequest.setRawHeader("Accept-Encoding", "identity");
 
     networkRequest.setUrl(QUrl(pUrl));
 

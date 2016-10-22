@@ -37,7 +37,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWorkspaces {
+namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
@@ -154,7 +154,7 @@ void PmrWorkspacesNewWorkspace::setPathToolTip(const QString &text)
 
 //==============================================================================
 
-}   // namespace PMRWindow
+}   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 
 //==============================================================================

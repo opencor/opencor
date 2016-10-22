@@ -36,7 +36,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWorkspaces {
+namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
@@ -237,7 +237,7 @@ QDockWidget * PMRWorkspacesPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace PMRWorkspaces
+}   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 
 //==============================================================================

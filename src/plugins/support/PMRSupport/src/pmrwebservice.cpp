@@ -66,7 +66,7 @@ const QByteArray PmrWebService::RequestMimeType()
 //==============================================================================
 
 PmrWebService::PmrWebService(QObject *parent) : QObject(parent),
-    mExposures(QMap<QString, PmrExposure *>())
+    mUrlExposures(QMap<QString, PmrExposure *>())
 {
     // Create a network access manager so that we can then retrieve various
     // things from the PMR
@@ -131,7 +131,6 @@ static const char *NextActionProperty = "NextAction";
 static const char *WorkspaceProperty  = "Workspace";
 
 //==============================================================================
-//==============================================================================
 
 void PmrWebService::requestExposures()
 {
@@ -161,7 +160,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
             if (   !exposureUrl.isEmpty() && !exposureName.isEmpty()) {
                 auto exposure = new PmrExposure(exposureUrl, exposureName, this);
 
-                mExposures.insert(exposureUrl, exposure);
+                mUrlExposures.insert(exposureUrl, exposure);
                 exposures.append(exposure);
             }
         }
@@ -178,7 +177,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
-    auto exposure = mExposures.value(pUrl);
+    auto exposure = mUrlExposures.value(pUrl);
 
     if (exposure->isNull()) {
         emit warning(tr("Unknown exposure: ") + pUrl);
@@ -194,7 +193,6 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
     }
 }
 
-//==============================================================================
 //==============================================================================
 
 void PmrWebService::requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction)
@@ -262,7 +260,6 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
     }
 }
 
-//==============================================================================
 //==============================================================================
 
 void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl)
@@ -364,7 +361,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 {
     // Check whether we already know about the workspace for the given exposure
 
-    auto exposure = mExposures.value(pExposureUrl);
+    auto exposure = mUrlExposures.value(pExposureUrl);
 
     if (exposure->isNull()) {
         emit warning(tr("Unknown exposure: ") + pExposureUrl);
@@ -523,7 +520,6 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 }
 
 //==============================================================================
-//==============================================================================
 
 void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDescription,
                                         const QString &pDirName)
@@ -625,7 +621,6 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 }
 
 //==============================================================================
-//==============================================================================
 
 PmrWorkspace *PmrWebService::getWorkspace(const QString &pUrl)
 {
@@ -707,7 +702,6 @@ void PmrWebService::workspaceUnauthorised(const QString &pUrl)
     // Do nothing, `getWorkspace()` will return `nullptr`.
 }
 
-//==============================================================================
 //==============================================================================
 
 }   // namespace PMRSupport

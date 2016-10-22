@@ -53,7 +53,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWorkspaces {
+namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
@@ -1210,7 +1210,7 @@ void PmrWorkspacesWidget::workspaceSynchronised(PMRSupport::PmrWorkspace *pWorks
 
 //==============================================================================
 
-}   // namespace PMRWorkspaces
+}   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 
 //==============================================================================

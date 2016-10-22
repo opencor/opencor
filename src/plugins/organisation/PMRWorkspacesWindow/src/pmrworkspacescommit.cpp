@@ -35,7 +35,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWorkspaces {
+namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
@@ -89,7 +89,7 @@ const QString PmrWorkspacesCommit::message() const
 
 //==============================================================================
 
-}   // namespace PMRWindow
+}   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 
 //==============================================================================

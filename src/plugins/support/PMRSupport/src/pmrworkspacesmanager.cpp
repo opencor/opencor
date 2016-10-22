@@ -80,8 +80,9 @@ void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 
 void PmrWorkspacesManager::clearWorkspaces()
 {
-    foreach (PmrWorkspace *workspace, mUrlWorkspaces.values())
+    foreach (auto workspace, mUrlWorkspaces.values())
         workspace->close();
+
     mUrlWorkspaces.clear();
 }
 
@@ -115,7 +116,7 @@ QList<PmrWorkspace *> PmrWorkspacesManager::workspaces() const
 
 //==============================================================================
 
-}   // namespace PMRWorkspaces
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -50,7 +50,7 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRWorkspaces {
+namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
@@ -435,7 +435,7 @@ void PmrWorkspacesWindow::fileRenamed(const QString &pOldFileName, const QString
 
 //==============================================================================
 
-}   // namespace PMRWorkspaces
+}   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 
 //==============================================================================

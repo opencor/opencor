@@ -30,15 +30,16 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrExposure::PmrExposure(QObject *parent) :
-    QObject(parent), mName(QString()), mUrl(QString())
+PmrExposure::PmrExposure(QObject *pParent) :
+    QObject(pParent), mName(QString()), mUrl(QString())
 {
 }
 
 //==============================================================================
 
-PmrExposure::PmrExposure(const QString &pUrl, const QString &pName, QObject *parent) :
-    QObject(parent),
+PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
+                         QObject *pParent) :
+    QObject(pParent),
     mName(pName),
     mUrl(pUrl),
     mExposureFileList(QStringList()),
