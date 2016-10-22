@@ -152,7 +152,7 @@ private slots:
     void refreshCurrentWorkspace();
 
 public slots:
-    void initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaceList &pWorkspaces);
+    void initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaces);
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
     void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);

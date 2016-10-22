@@ -133,7 +133,7 @@ static const char *WorkspaceProperty  = "Workspace";
 //==============================================================================
 //==============================================================================
 
-void PmrWebService::requestExposuresList()
+void PmrWebService::requestExposures()
 {
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
@@ -141,14 +141,14 @@ void PmrWebService::requestExposuresList()
     auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/exposure").arg(Url()),
                                                                     false);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(exposuresListResponse(QJsonDocument)));
+            this, SLOT(exposuresResponse(QJsonDocument)));
 }
 
 //==============================================================================
 
-void PmrWebService::exposuresListResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 {
-    PmrExposureList exposureList = PmrExposureList();
+    PmrExposures exposures = PmrExposures();
 
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
@@ -162,18 +162,18 @@ void PmrWebService::exposuresListResponse(const QJsonDocument &pJsonDocument)
                 auto exposure = new PmrExposure(exposureUrl, exposureName, this);
 
                 mExposures.insert(exposureUrl, exposure);
-                exposureList.append(exposure);
+                exposures.append(exposure);
             }
         }
     }
-    std::sort(exposureList.begin(), exposureList.end(), PmrExposure::compare);
+
+    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
 
     // Respond with a list of exposures
 
-    emit exposuresList(exposureList);
+    emit PmrWebService::exposures(exposures);
 }
 
-//==============================================================================
 //==============================================================================
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
@@ -188,7 +188,7 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
     }
     else if (exposure->fileUrlsLeftCount() == 0) {
         if (exposure->exposureFileList().count())
-            emit exposureFilesList(pUrl, exposure->exposureFileList());
+            emit exposureFiles(pUrl, exposure->exposureFileList());
         else
             emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
     }
@@ -326,7 +326,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     // handle
 
                     if (exposure->fileUrlsLeftCount() == 0) {
-                        emit exposureFilesList(exposure->url(), exposure->exposureFileList());
+                        emit exposureFiles(exposure->url(), exposure->exposureFileList());
                     }
                 }
             }
@@ -575,7 +575,7 @@ void PmrWebService::workspacesListResponse(const QJsonDocument &pJsonDocument)
 
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
-    PmrWorkspaceList workspaceList = PmrWorkspaceList();
+    PmrWorkspaces workspaceList = PmrWorkspaces();
 
     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
         QVariantMap linksMap = linksVariant.toMap();

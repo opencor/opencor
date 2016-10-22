@@ -64,7 +64,7 @@ public:
     static const QByteArray RequestMimeType();
 
     void requestExposureFiles(const QString &pUrl);
-    void requestExposuresList();
+    void requestExposures();
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
     PmrWorkspace *getWorkspace(const QString &pUrl);
@@ -101,7 +101,6 @@ private:
 
 signals:
     void authenticated(const bool &pAuthenticated);
-    //void authenticationChanged(const bool &pAuthenticated);
 
     void busy(const bool &pBusy);
     void progress(const double &pProgress);
@@ -110,12 +109,12 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-    void exposureFilesList(const QString &pUrl, const QStringList &pExposureFiles);
-    void exposuresList(const PMRSupport::PmrExposureList &pExposureList);
+    void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
+    void exposures(const PMRSupport::PmrExposures &pExposures);
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-    void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
+    void workspacesList(const PMRSupport::PmrWorkspaces &pWorkspaceList);
     void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
@@ -126,7 +125,7 @@ public slots:
 private slots:
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
-    void exposuresListResponse(const QJsonDocument &pJsonDocument);
+    void exposuresResponse(const QJsonDocument &pJsonDocument);
 
     void getWorkspaceResponse(const QJsonDocument &pJsonDocument);
     void workspaceUnauthorised(const QString &pUrl);

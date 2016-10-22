@@ -82,16 +82,9 @@ private:
 
 //==============================================================================
 
-#ifdef _MSC_VER
-template class PMRSUPPORT_EXPORT QSet<PmrExposure *>;
-template class PMRSUPPORT_EXPORT QVector<PmrExposure *>;
-#endif
-
-class PMRSUPPORT_EXPORT PmrExposureList : public QList<PmrExposure *>
+class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
 {
 public:
-    PmrExposureList();
-
     void add(const QString &pUrl, const QString &pName, QObject *parent);
 };
 

@@ -91,9 +91,9 @@ private slots:
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
 
-    void retrieveExposuresList(const bool &pVisible);
+    void retrieveExposures(const bool &pVisible);
 
-    void gotExposuresList(const PMRSupport::PmrExposureList &pExposureList);
+    void gotExposures(const PMRSupport::PmrExposures &pExposures);
 
     void requestExposureFiles(const QString &pUrl);
 

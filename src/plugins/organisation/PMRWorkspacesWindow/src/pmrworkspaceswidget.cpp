@@ -965,7 +965,7 @@ void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaceList &pWorkspaceList)
+void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaceList)
 {
     // First clear existing workspaces from the manager
 
@@ -1085,7 +1085,7 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
             workspace->commitMerge();
         }
         else {
-            auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFilesList());
+            auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFiles());
 
             if (commitDialog->exec() == QDialog::Accepted)
                 workspace->commit(commitDialog->message()) ;

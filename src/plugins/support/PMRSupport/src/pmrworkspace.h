@@ -56,10 +56,10 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(PmrWebService *parent=0);
-    PmrWorkspace(const QString &pUrl, const QString &pName,
-                 const QString &pDescription, const QString &pOwner,
-                 PmrWebService *parent);
+    explicit PmrWorkspace(PmrWebService *pParent = nullptr);
+    explicit PmrWorkspace(const QString &pUrl, const QString &pName,
+                          const QString &pDescription, const QString &pOwner,
+                          PmrWebService *pParent);
     virtual ~PmrWorkspace();
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
@@ -111,7 +111,7 @@ public:
     const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
 
     void stageFile(const QString &pPath, const bool &pStage);
-    QStringList stagedFilesList();
+    QStringList stagedFiles();
 
 private:
     bool mOwned;
@@ -172,19 +172,11 @@ signals:
 };
 
 //==============================================================================
-//==============================================================================
 
-#ifdef _MSC_VER
-template class PMRSUPPORT_EXPORT QSet<PmrWorkspace *>;
-template class PMRSUPPORT_EXPORT QVector<PmrWorkspace *>;
-#endif
-
-class PMRSUPPORT_EXPORT PmrWorkspaceList : public QList<PmrWorkspace *>
+class PMRSUPPORT_EXPORT PmrWorkspaces : public QList<PmrWorkspace *>
 {
 public:
-    PmrWorkspaceList();
-
-    void add(const QString &pUrl, const QString &pName, PmrWebService *parent);
+    void add(const QString &pUrl, const QString &pName, PmrWebService *pParent);
 };
 
 //==============================================================================

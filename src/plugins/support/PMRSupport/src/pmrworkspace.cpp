@@ -42,7 +42,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(PmrWebService *parent) : QObject(parent), mOwned(false),
+PmrWorkspace::PmrWorkspace(PmrWebService *pParent) :
+    QObject(pParent), mOwned(false),
     mDescription(QString()), mName(QString()), mOwner(QString()), mUrl(QString()),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
     mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
@@ -53,8 +54,8 @@ PmrWorkspace::PmrWorkspace(PmrWebService *parent) : QObject(parent), mOwned(fals
 
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
                            const QString &pDescription, const QString &pOwner,
- PmrWebService *parent) :
-    QObject(parent), mOwned(false),
+                           PmrWebService *pParent) :
+    QObject(pParent), mOwned(false),
     mDescription(pDescription), mName(pName), mOwner(pOwner), mUrl(pUrl),
     mPassword(QString()), mUsername(QString()), mGitRepository(nullptr), mPath(QString()),
     mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()), mRootFileNode(nullptr)
@@ -63,9 +64,9 @@ PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
 
     // Our messages are directly emitted by our parent PmrWebService
 
-    connect(this, SIGNAL(information(QString)), parent, SIGNAL(information(QString)));
-    connect(this, SIGNAL(progress(double)), parent, SIGNAL(progress(double)));
-    connect(this, SIGNAL(warning(QString)), parent, SIGNAL(warning(QString)));
+    connect(this, SIGNAL(information(QString)), pParent, SIGNAL(information(QString)));
+    connect(this, SIGNAL(progress(double)), pParent, SIGNAL(progress(double)));
+    connect(this, SIGNAL(warning(QString)), pParent, SIGNAL(warning(QString)));
 }
 
 //==============================================================================
@@ -352,7 +353,7 @@ void PmrWorkspace::refreshStatus(void)
 
 //==============================================================================
 
-QStringList PmrWorkspace::stagedFilesList(void)
+QStringList PmrWorkspace::stagedFiles(void)
 {
     auto fileList = QStringList();
 
@@ -1161,20 +1162,13 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 }
 
 //==============================================================================
-//==============================================================================
 
-PmrWorkspaceList::PmrWorkspaceList() :
-    QList<PmrWorkspace *>()
-{
-}
-
-//==============================================================================
-
-void PmrWorkspaceList::add(const QString &pUrl, const QString &pName, PmrWebService *parent)
+void PmrWorkspaces::add(const QString &pUrl, const QString &pName,
+                        PmrWebService *pParent)
 {
     // Add a new workspace to the list
 
-    QList::append(new PmrWorkspace(pUrl, pName, "", "", parent));
+    QList::append(new PmrWorkspace(pUrl, pName, QString(), QString(), pParent));
 }
 
 //==============================================================================

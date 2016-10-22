@@ -87,7 +87,7 @@ QString PmrExposure::name() const
 
 QString PmrExposure::toHtml(void) const
 {
-    // Return a HTML description of ourself
+    // Return an HTML description of ourselves
 
     return QString("<a href=\"%1\">%2</a>").arg(mUrl, mName);
 }
@@ -97,7 +97,6 @@ QString PmrExposure::toHtml(void) const
 int PmrExposure::fileUrlsLeftCount(void) const
 {
     return mFileUrlsLeftCount;
-
 }
 
 //==============================================================================
@@ -111,9 +110,10 @@ void PmrExposure::setFileUrlsLeftCount(const int &count)
 
 void PmrExposure::addExposureFile(const QString &pFileName)
 {
-    if (mFileUrlsLeftCount > 0) {
+    if (mFileUrlsLeftCount) {
         mExposureFileList << pFileName;
-        mFileUrlsLeftCount -= 1;
+
+        --mFileUrlsLeftCount;
     }
 }
 
@@ -146,16 +146,8 @@ void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
 }
 
 //==============================================================================
-//==============================================================================
 
-PmrExposureList::PmrExposureList() :
-    QList<PmrExposure *>()
-{
-}
-
-//==============================================================================
-
-void PmrExposureList::add(const QString &pUrl, const QString &pName, QObject *parent)
+void PmrExposures::add(const QString &pUrl, const QString &pName, QObject *parent)
 {
     // Add a new exposure to the list
 

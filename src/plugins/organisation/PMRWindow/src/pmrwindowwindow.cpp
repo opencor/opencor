@@ -83,7 +83,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // exposures, if necessary
 
     connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveExposuresList(const bool &)));
+            this, SLOT(retrieveExposures(const bool &)));
 
     // Get a PMR repository
 
@@ -103,10 +103,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &)),
-            this, SLOT(gotExposuresList(const PMRSupport::PmrExposureList &)));
+    connect(mPmrWebService, SIGNAL(exposures(const PMRSupport::PmrExposures &)),
+            this, SLOT(gotExposures(const PMRSupport::PmrExposures &)));
 
-    connect(mPmrWebService, SIGNAL(exposureFilesList(const QString &, const QStringList &)),
+    connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
             mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
 
     // Some connections to know what our PMR widget wants from us
@@ -237,12 +237,12 @@ void PmrWindowWindow::on_refreshButton_clicked()
 {
     // Get the list of exposures from our PMR repository
 
-    mPmrWebService->requestExposuresList();
+    mPmrWebService->requestExposures();
 }
 
 //==============================================================================
 
-void PmrWindowWindow::gotExposuresList(const PMRSupport::PmrExposureList &pExposures)
+void PmrWindowWindow::gotExposures(const PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
@@ -256,13 +256,15 @@ void PmrWindowWindow::repositoryError(const QString &pErrorMessage,
 {
     // Tell our PMR widget we have a problem
 
-    mPmrWidget->initialize(PMRSupport::PmrExposureList(), "", pInternetConnectionAvailable);
+    mPmrWidget->initialize(PMRSupport::PmrExposures(), QString(),
+                           pInternetConnectionAvailable);
+
     showError(pErrorMessage);
 }
 
 //==============================================================================
 
-void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
+void PmrWindowWindow::retrieveExposures(const bool &pVisible)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this

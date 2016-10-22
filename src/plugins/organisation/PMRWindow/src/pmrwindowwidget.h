@@ -50,7 +50,8 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PMRSupport::PmrExposureList &pExposureList, const QString &pFilter,
+    void initialize(const PMRSupport::PmrExposures &pExposures,
+                    const QString &pFilter,
                     const bool &pInternetConnectionAvailable);
 
     void filter(const QString &pFilter);
