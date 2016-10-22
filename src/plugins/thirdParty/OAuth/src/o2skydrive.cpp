@@ -17,9 +17,13 @@ O2Skydrive::O2Skydrive(QObject *parent): O2(parent) {
 }
 
 void O2Skydrive::link() {
+/*---OPENCOR---
     qDebug() << "O2Skydrive::link";
+*/
     if (linked()) {
+/*---OPENCOR---
         qDebug() << "O2kydrive::link: Linked already";
+*/
         return;
     }
 
@@ -52,7 +56,9 @@ void O2Skydrive::link() {
 }
 
 void O2Skydrive::redirected(const QUrl &url) {
+/*---OPENCOR---
     qDebug() << "O2Skydrive::redirected" << url;
+*/
 
     Q_EMIT closeBrowser();
 
@@ -66,7 +72,9 @@ void O2Skydrive::redirected(const QUrl &url) {
         urlCode = query.queryItemValue(O2_OAUTH2_GRANT_TYPE_CODE);
 #endif
         if (urlCode.isEmpty()) {
+/*---OPENCOR---
             qDebug() << "O2Skydrive::redirected: Code not received";
+*/
             Q_EMIT linkingFailed();
             return;
         }
@@ -101,7 +109,9 @@ void O2Skydrive::redirected(const QUrl &url) {
                 }
                 QString key = item.left(index);
                 QString value = item.mid(index + 1);
+/*---OPENCOR---
                 qDebug() << "O2Skydrive::redirected: Got" << key;
+*/
                 if (key == O2_OAUTH2_ACCESS_TOKEN) {
                     urlToken = value;
                 } else if (key == O2_OAUTH2_EXPIRES_IN) {

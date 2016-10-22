@@ -25,7 +25,9 @@ void O2ReplyServer::onIncomingConnection() {
 }
 
 void O2ReplyServer::onBytesReady() {
+/*---OPENCOR---
     qDebug() << "O2ReplyServer::onBytesReady";
+*/
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (!socket) {
         return;
@@ -45,7 +47,9 @@ void O2ReplyServer::onBytesReady() {
 }
 
 QMap<QString, QString> O2ReplyServer::parseQueryParams(QByteArray *data) {
+/*---OPENCOR---
     qDebug() << "O2ReplyServer::parseQueryParams";
+*/
 
     QString splitGetLine = QString(*data).split("\r\n").first();
     splitGetLine.remove("GET ");

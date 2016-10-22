@@ -31,9 +31,13 @@ void OXTwitter::setPassword(const QString &password) {
 }
 
 void OXTwitter::link() {
+/*---OPENCOR---
     qDebug() << "OXTwitter::link";
+*/
     if (linked()) {
+/*---OPENCOR---
         qDebug() << "Linked already";
+*/
         return;
     }
 

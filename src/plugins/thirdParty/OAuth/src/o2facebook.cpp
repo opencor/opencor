@@ -21,7 +21,9 @@ O2Facebook::O2Facebook(QObject *parent): O2(parent) {
 }
 
 void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
+/*---OPENCOR---
     qDebug() << "O2Facebook::onVerificationReceived: Emitting closeBrowser()";
+*/
     Q_EMIT closeBrowser();
 
     if (response.contains("error")) {
@@ -62,7 +64,9 @@ void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
 }
 
 void O2Facebook::onTokenReplyFinished() {
+/*---OPENCOR---
     qDebug() << "O2Facebook::onTokenReplyFinished";
+*/
 
     QNetworkReply *tokenReply = qobject_cast<QNetworkReply *>(sender());
     if (tokenReply->error() == QNetworkReply::NoError) {
