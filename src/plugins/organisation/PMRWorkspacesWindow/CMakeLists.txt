@@ -1,27 +1,27 @@
-PROJECT(PMRWorkspacesPlugin)
+PROJECT(PMRWorkspacesWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PMRWorkspaces
+ADD_PLUGIN(PMRWorkspacesWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/pmrworkspacescommit.cpp
-        src/pmrworkspacesnewworkspace.cpp
-        src/pmrworkspacesplugin.cpp
-        src/pmrworkspaceswidget.cpp
-        src/pmrworkspaceswindow.cpp
+        src/pmrworkspaceswindowcommit.cpp
+        src/pmrworkspaceswindownewworkspace.cpp
+        src/pmrworkspaceswindowplugin.cpp
+        src/pmrworkspaceswindowwidget.cpp
+        src/pmrworkspaceswindowwindow.cpp
     HEADERS_MOC
-        src/pmrworkspacescommit.h
-        src/pmrworkspacesnewworkspace.h
-        src/pmrworkspacesplugin.h
-        src/pmrworkspaceswidget.h
-        src/pmrworkspaceswindow.h
+        src/pmrworkspaceswindowcommit.h
+        src/pmrworkspaceswindownewworkspace.h
+        src/pmrworkspaceswindowplugin.h
+        src/pmrworkspaceswindowwidget.h
+        src/pmrworkspaceswindowwindow.h
     UIS
-        src/pmrworkspacescommit.ui
-        src/pmrworkspacesnewworkspace.ui
-        src/pmrworkspaceswindow.ui
+        src/pmrworkspaceswindowcommit.ui
+        src/pmrworkspaceswindownewworkspace.ui
+        src/pmrworkspaceswindowwindow.ui
     INCLUDE_DIRS
         src
     PLUGINS

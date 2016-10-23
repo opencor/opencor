@@ -17,12 +17,12 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Workspaces plugin
+// PMR Workspaces window plugin
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "pmrworkspacesplugin.h"
-#include "pmrworkspaceswindow.h"
+#include "pmrworkspaceswindowplugin.h"
+#include "pmrworkspaceswindowwindow.h"
 
 //==============================================================================
 
@@ -40,7 +40,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC PMRWorkspacesPluginInfo()
+PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -57,7 +57,7 @@ PLUGININFO_FUNC PMRWorkspacesPluginInfo()
 // File handling interface
 //==============================================================================
 
-bool PMRWorkspacesPlugin::isIndirectRemoteFile(const QString &pFileName)
+bool PMRWorkspacesWindowPlugin::isIndirectRemoteFile(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 
@@ -66,9 +66,9 @@ bool PMRWorkspacesPlugin::isIndirectRemoteFile(const QString &pFileName)
 
 //==============================================================================
 
-bool PMRWorkspacesPlugin::saveFile(const QString &pOldFileName,
-                                   const QString &pNewFileName,
-                                   bool &pNeedFeedback)
+bool PMRWorkspacesWindowPlugin::saveFile(const QString &pOldFileName,
+                                         const QString &pNewFileName,
+                                         bool &pNeedFeedback)
 {
     Q_UNUSED(pOldFileName)
     Q_UNUSED(pNewFileName)
@@ -79,51 +79,51 @@ bool PMRWorkspacesPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::fileOpened(const QString &pFileName)
+void PMRWorkspacesWindowPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::filePermissionsChanged(const QString &pFileName)
+void PMRWorkspacesWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::fileModified(const QString &pFileName)
+void PMRWorkspacesWindowPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::fileReloaded(const QString &pFileName,
-                                       const bool &pFileChanged)
+void PMRWorkspacesWindowPlugin::fileReloaded(const QString &pFileName,
+                                             const bool &pFileChanged)
 {
     Q_UNUSED(pFileChanged)
 
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
-    mPmrWorkspacesWindow->fileReloaded(pFileName);
+    mPmrWorkspacesWindowWindow->fileReloaded(pFileName);
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::fileRenamed(const QString &pOldFileName,
-                                      const QString &pNewFileName)
+void PMRWorkspacesWindowPlugin::fileRenamed(const QString &pOldFileName,
+                                            const QString &pNewFileName)
 {
     // Let our view widget know that a file has been renamed
 
-    mPmrWorkspacesWindow->fileRenamed(pOldFileName, pNewFileName);
+    mPmrWorkspacesWindowWindow->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::fileClosed(const QString &pFileName)
+void PMRWorkspacesWindowPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 }
@@ -132,43 +132,43 @@ void PMRWorkspacesPlugin::fileClosed(const QString &pFileName)
 // I18n interface
 //==============================================================================
 
-void PMRWorkspacesPlugin::retranslateUi()
+void PMRWorkspacesWindowPlugin::retranslateUi()
 {
     // Retranslate our workspaces window action
 
-    retranslateAction(mPmrWorkspacesAction, tr("PMR Workspaces"),
+    retranslateAction(mPmrWorkspacesWindowAction, tr("PMR Workspaces"),
                       tr("Show/hide the PMR Workspaces window"));
 
     // Retranslate our workspaces window
 
-    mPmrWorkspacesWindow->retranslateUi();
+    mPmrWorkspacesWindowWindow->retranslateUi();
 }
 
 //==============================================================================
 // Plugin interface
 //==============================================================================
 
-void PMRWorkspacesPlugin::initializePlugin()
+void PMRWorkspacesWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our workspaces window
 
-    mPmrWorkspacesAction = Core::newAction(true, Core::mainWindow());
+    mPmrWorkspacesWindowAction = Core::newAction(true, Core::mainWindow());
 
     // Create our workspaces window
 
-    mPmrWorkspacesWindow = new PmrWorkspacesWindow(Core::mainWindow());
+    mPmrWorkspacesWindowWindow = new PmrWorkspacesWindowWindow(Core::mainWindow());
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::finalizePlugin()
+void PMRWorkspacesWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PMRWorkspacesWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -177,29 +177,29 @@ void PMRWorkspacesPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::loadSettings(QSettings *pSettings)
+void PMRWorkspacesWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindow->objectName());
-        mPmrWorkspacesWindow->loadSettings(pSettings);
+    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
+        mPmrWorkspacesWindowWindow->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::saveSettings(QSettings *pSettings) const
+void PMRWorkspacesWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindow->objectName());
-        mPmrWorkspacesWindow->saveSettings(pSettings);
+    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
+        mPmrWorkspacesWindowWindow->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void PMRWorkspacesPlugin::handleUrl(const QUrl &pUrl)
+void PMRWorkspacesWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -210,7 +210,7 @@ void PMRWorkspacesPlugin::handleUrl(const QUrl &pUrl)
 // Window interface
 //==============================================================================
 
-Qt::DockWidgetArea PMRWorkspacesPlugin::windowDefaultDockArea() const
+Qt::DockWidgetArea PMRWorkspacesWindowPlugin::windowDefaultDockArea() const
 {
     // Return our default dock area
 
@@ -219,20 +219,20 @@ Qt::DockWidgetArea PMRWorkspacesPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QAction * PMRWorkspacesPlugin::windowAction() const
+QAction * PMRWorkspacesWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mPmrWorkspacesAction;
+    return mPmrWorkspacesWindowAction;
 }
 
 //==============================================================================
 
-QDockWidget * PMRWorkspacesPlugin::windowWidget() const
+QDockWidget * PMRWorkspacesWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mPmrWorkspacesWindow;
+    return mPmrWorkspacesWindowWindow;
 }
 
 //==============================================================================

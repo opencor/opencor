@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/PMRWorkspaces">
+    <qresource prefix="/PMRWorkspacesWindow">
         <file>icons/pmr-authenticated.png</file>
         <file>icons/pmr-unauthenticated.png</file>
         <file>icons/sync-pull.png</file>

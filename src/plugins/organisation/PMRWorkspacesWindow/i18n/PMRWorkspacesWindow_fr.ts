@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::PMRWorkspacesWindow::PMRWorkspacesPlugin</name>
+    <name>OpenCOR::PMRWorkspacesWindow::PMRWorkspacesWindowPlugin</name>
     <message>
         <source>PMR Workspaces</source>
         <translation type="unfinished"></translation>
@@ -13,7 +13,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWidget</name>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
         <source>Stage</source>
         <translation type="unfinished"></translation>
@@ -92,7 +92,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindow</name>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
     <message>
         <source>OpenCOR</source>
         <translation type="unfinished"></translation>
@@ -103,7 +103,7 @@
     </message>
 </context>
 <context>
-    <name>PmrWorkspacesCommit</name>
+    <name>PmrWorkspacesWindowCommit</name>
     <message>
         <source>Commit staged files</source>
         <translation type="unfinished"></translation>
@@ -114,7 +114,7 @@
     </message>
 </context>
 <context>
-    <name>PmrWorkspacesNewWorkspace</name>
+    <name>PmrWorkspacesWindowNewWorkspace</name>
     <message>
         <source>Create a New Workspace</source>
         <translation type="unfinished"></translation>
@@ -137,7 +137,11 @@
     </message>
 </context>
 <context>
-    <name>PmrWorkspacesWindow</name>
+    <name>PmrWorkspacesWindowWindow</name>
+    <message>
+        <source>PMR Workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Log on to PMR</source>
         <translation type="unfinished"></translation>
@@ -147,11 +151,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create a new workspace</source>
+        <source>New Workspace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New Workspace</source>
+        <source>Create a new workspace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -168,10 +172,6 @@
     </message>
     <message>
         <source>Rescan workspace folders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PMR Workspaces</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

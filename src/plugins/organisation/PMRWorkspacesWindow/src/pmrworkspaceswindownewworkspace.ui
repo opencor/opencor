@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PmrWorkspacesNewWorkspace</class>
- <widget class="QDialog" name="PmrWorkspacesNewWorkspace">
+ <class>PmrWorkspacesWindowNewWorkspace</class>
+ <widget class="QDialog" name="PmrWorkspacesWindowNewWorkspace">
   <property name="geometry">
    <rect>
     <x>0</x>

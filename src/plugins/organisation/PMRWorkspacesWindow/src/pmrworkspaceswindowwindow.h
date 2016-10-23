@@ -25,7 +25,6 @@ limitations under the License.
 //==============================================================================
 
 #include "organisationwidget.h"
-#include "pmrworkspacesglobal.h"
 
 //==============================================================================
 
@@ -34,7 +33,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PmrWorkspacesWindow;
+    class PmrWorkspacesWindowWindow;
 }
 
 //==============================================================================
@@ -57,17 +56,17 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWidget;
+class PmrWorkspacesWindowWidget;
 
 //==============================================================================
 
-class PmrWorkspacesWindow : public Core::OrganisationWidget
+class PmrWorkspacesWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindow(QWidget *pParent);
-    ~PmrWorkspacesWindow();
+    explicit PmrWorkspacesWindowWindow(QWidget *pParent);
+    ~PmrWorkspacesWindowWindow();
 
     virtual void retranslateUi();
 
@@ -81,10 +80,10 @@ protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
-    Ui::PmrWorkspacesWindow *mGui;
+    Ui::PmrWorkspacesWindowWindow *mGui;
 
     PMRSupport::PmrWebService *mPmrWebService;
-    PmrWorkspacesWidget *mWorkspacesWidget;
+    PmrWorkspacesWindowWidget *mWorkspacesWindowWidget;
 
     QMenu *mContextMenu;
 

@@ -17,12 +17,12 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Create a new PMR workspace dialog
+// PMR Workspaces window new workspace dialog
 //==============================================================================
 
 #include "coreguiutils.h"
 #include "pmrworkspace.h"
-#include "pmrworkspacesnewworkspace.h"
+#include "pmrworkspaceswindownewworkspace.h"
 
 //==============================================================================
 
@@ -32,7 +32,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_pmrworkspacesnewworkspace.h"
+#include "ui_pmrworkspaceswindownewworkspace.h"
 
 //==============================================================================
 
@@ -41,9 +41,9 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesNewWorkspace::PmrWorkspacesNewWorkspace(QWidget *pParent) :
+PmrWorkspacesWindowNewWorkspace::PmrWorkspacesWindowNewWorkspace(QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesNewWorkspace),
+    mGui(new Ui::PmrWorkspacesWindowNewWorkspace),
     mPathChosen(false)
 {
     // Set up the GUI
@@ -71,7 +71,7 @@ PmrWorkspacesNewWorkspace::PmrWorkspacesNewWorkspace(QWidget *pParent) :
 
 //==============================================================================
 
-PmrWorkspacesNewWorkspace::~PmrWorkspacesNewWorkspace()
+PmrWorkspacesWindowNewWorkspace::~PmrWorkspacesWindowNewWorkspace()
 {
     // Delete the GUI
 
@@ -80,7 +80,7 @@ PmrWorkspacesNewWorkspace::~PmrWorkspacesNewWorkspace()
 
 //==============================================================================
 
-void PmrWorkspacesNewWorkspace::retranslateUi()
+void PmrWorkspacesWindowNewWorkspace::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -89,28 +89,28 @@ void PmrWorkspacesNewWorkspace::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesNewWorkspace::description() const
+const QString PmrWorkspacesWindowNewWorkspace::description() const
 {
     return mGui->description->toPlainText().trimmed();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesNewWorkspace::path() const
+const QString PmrWorkspacesWindowNewWorkspace::path() const
 {
     return mGui->path->text();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesNewWorkspace::title() const
+const QString PmrWorkspacesWindowNewWorkspace::title() const
 {
     return mGui->title->text().trimmed();
 }
 
 //==============================================================================
 
-void PmrWorkspacesNewWorkspace::titleTextChanged(const QString &text)
+void PmrWorkspacesWindowNewWorkspace::titleTextChanged(const QString &text)
 {
     // Only save if there is a title
 
@@ -120,7 +120,7 @@ void PmrWorkspacesNewWorkspace::titleTextChanged(const QString &text)
 
 //==============================================================================
 
-void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
+void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &checked)
 {
     Q_UNUSED(checked)
 
@@ -137,7 +137,7 @@ void PmrWorkspacesNewWorkspace::choosePath(const bool &checked)
 
 //==============================================================================
 
-void PmrWorkspacesNewWorkspace::setPathToolTip(const QString &text)
+void PmrWorkspacesWindowNewWorkspace::setPathToolTip(const QString &text)
 {
     // Show the full path as a tooltip if its display field is too short
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PmrWorkspacesWindow</class>
+ <class>PmrWorkspacesWindowWindow</class>
  <widget class="QDockWidget" name="PmrWorkspacesWindow">
   <property name="geometry">
    <rect>
@@ -53,8 +53,8 @@
   </widget>
   <action name="actionAuthenticate">
    <property name="icon">
-    <iconset resource="../res/PmrWorkspaces_ui.qrc">
-     <normaloff>:/PMRWorkspaces/icons/pmr-unauthenticated.png</normaloff>:/PMRWorkspaces/icons/pmr-unauthenticated.png</iconset>
+    <iconset resource="../res/PMRWorkspacesWindow_ui.qrc">
+     <normaloff>:/PMRWorkspacesWindow/icons/pmr-unauthenticated.png</normaloff>:/PMRWorkspacesWindow/icons/pmr-unauthenticated.png</iconset>
    </property>
    <property name="text">
     <string>Log on to PMR</string>
@@ -65,8 +65,8 @@
   </action>
   <action name="actionUnauthenticate">
    <property name="icon">
-    <iconset resource="../res/PmrWorkspaces_ui.qrc">
-     <normaloff>:/PMRWorkspaces/icons/pmr-authenticated.png</normaloff>:/PMRWorkspaces/icons/pmr-authenticated.png</iconset>
+    <iconset resource="../res/PMRWorkspacesWindow_ui.qrc">
+     <normaloff>:/PMRWorkspacesWindow/icons/pmr-authenticated.png</normaloff>:/PMRWorkspacesWindow/icons/pmr-authenticated.png</iconset>
    </property>
    <property name="text">
     <string>Log off PMR</string>
@@ -113,7 +113,7 @@
  </widget>
  <resources>
   <include location="../../../../../res/ui.qrc"/>
-  <include location="../res/PmrWorkspaces_ui.qrc"/>
+  <include location="../res/PMRWorkspacesWindow_ui.qrc"/>
  </resources>
  <connections/>
 </ui>

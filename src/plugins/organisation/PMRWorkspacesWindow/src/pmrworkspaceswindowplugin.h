@@ -17,21 +17,18 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// A PMR workspace commit dialog
+// PMR Workspaces window plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QDialog>
-#include <QStringList>
-
-//==============================================================================
-
-namespace Ui {
-    class PmrWorkspacesCommit;
-}
+#include "filehandlinginterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
+#include "windowinterface.h"
 
 //==============================================================================
 
@@ -40,20 +37,37 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesCommit : public QDialog
+PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo();
+
+//==============================================================================
+
+class PmrWorkspacesWindowWindow;
+
+//==============================================================================
+
+class PMRWorkspacesWindowPlugin : public QObject, public FileHandlingInterface,
+                                  public I18nInterface, public PluginInterface,
+                                  public WindowInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.PMRWorkspacesWindowPlugin" FILE "pmrworkspaceswindowplugin.json")
+
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::WindowInterface)
+
 public:
-    explicit PmrWorkspacesCommit(const QStringList &pStagedFiles, QWidget * pParent=0);
-    ~PmrWorkspacesCommit();
-
-    virtual void retranslateUi();
-
-    const QString message() const;
+#include "filehandlinginterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "windowinterface.inl"
 
 private:
-    Ui::PmrWorkspacesCommit *mGui;
+    QAction *mPmrWorkspacesWindowAction;
+
+    PmrWorkspacesWindowWindow *mPmrWorkspacesWindowWindow;
 };
 
 //==============================================================================

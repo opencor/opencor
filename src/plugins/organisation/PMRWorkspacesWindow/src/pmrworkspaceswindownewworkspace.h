@@ -17,22 +17,58 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMRWorkspace global
+// PMR Workspaces window new workspace dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef PMRWorkspace_PLUGIN
-        #define PMRWORKSPACE_EXPORT __declspec(dllexport)
-    #else
-        #define PMRWORKSPACE_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define PMRWORKSPACE_EXPORT
-#endif
+#include <QDialog>
+
+//==============================================================================
+
+namespace Ui {
+    class PmrWorkspacesWindowNewWorkspace;
+}
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace PMRWorkspacesWindow {
+
+//==============================================================================
+
+class PmrWorkspacesWindowNewWorkspace : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit PmrWorkspacesWindowNewWorkspace(QWidget * pParent=0);
+    ~PmrWorkspacesWindowNewWorkspace();
+
+    virtual void retranslateUi();
+
+    const QString description() const;
+    const QString path() const;
+    const QString title() const;
+
+private slots:
+    void titleTextChanged(const QString &text);
+
+    void choosePath(const bool &checked);
+    void setPathToolTip(const QString &text);
+
+
+private:
+    Ui::PmrWorkspacesWindowNewWorkspace *mGui;
+    bool mPathChosen;
+};
+
+//==============================================================================
+
+}   // namespace PMRWorkspacesWindow
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

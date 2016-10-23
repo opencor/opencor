@@ -17,12 +17,12 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Create a new PMR workspace dialog
+// PMR Workspaces window commit dialog
 //==============================================================================
 
 #include "coreguiutils.h"
 #include "pmrworkspace.h"
-#include "pmrworkspacescommit.h"
+#include "pmrworkspaceswindowcommit.h"
 
 //==============================================================================
 
@@ -30,7 +30,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_pmrworkspacescommit.h"
+#include "ui_pmrworkspaceswindowcommit.h"
 
 //==============================================================================
 
@@ -39,9 +39,10 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesCommit::PmrWorkspacesCommit(const QStringList &pStagedFiles, QWidget *pParent) :
+PmrWorkspacesWindowCommit::PmrWorkspacesWindowCommit(const QStringList &pStagedFiles, 
+                                                     QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesCommit)
+    mGui(new Ui::PmrWorkspacesWindowCommit)
 {
     // Set up the GUI
 
@@ -64,7 +65,7 @@ PmrWorkspacesCommit::PmrWorkspacesCommit(const QStringList &pStagedFiles, QWidge
 
 //==============================================================================
 
-PmrWorkspacesCommit::~PmrWorkspacesCommit()
+PmrWorkspacesWindowCommit::~PmrWorkspacesWindowCommit()
 {
     // Delete the GUI
 
@@ -73,7 +74,7 @@ PmrWorkspacesCommit::~PmrWorkspacesCommit()
 
 //==============================================================================
 
-void PmrWorkspacesCommit::retranslateUi()
+void PmrWorkspacesWindowCommit::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -82,7 +83,7 @@ void PmrWorkspacesCommit::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesCommit::message() const
+const QString PmrWorkspacesWindowCommit::message() const
 {
     return mGui->message->toPlainText().trimmed();
 }

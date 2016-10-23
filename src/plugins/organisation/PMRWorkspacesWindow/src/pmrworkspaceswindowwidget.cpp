@@ -24,9 +24,9 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacefilenode.h"
-#include "pmrworkspacescommit.h"
 #include "pmrworkspacesmanager.h"
-#include "pmrworkspaceswidget.h"
+#include "pmrworkspaceswindowcommit.h"
+#include "pmrworkspaceswindowwidget.h"
 
 //==============================================================================
 
@@ -74,11 +74,12 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrWebService *pPmrWebService, QWidget *pParent) :
-    OpenCOR::WebViewerWidget::WebViewerWidget(pParent),
+PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService, 
+                                                     QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(this),
     mPmrWebService(pPmrWebService),
-    mWorkspacesManager(OpenCOR::PMRSupport::PmrWorkspacesManager::instance()),
+    mWorkspacesManager(PMRSupport::PmrWorkspacesManager::instance()),
     mWorkspaceFolders(QMap<QString, QString>()),
     mWorkspaceUrls(QMap<QString, QPair<QString, bool> >()),
     mCurrentWorkspaceUrl(QString()),
@@ -106,7 +107,7 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrWebService *pPmrWebServi
 
     // Handle workspace cloned signals from other plugins
 
-    connect(OpenCOR::PMRSupport::PmrWorkspacesManager::instance(), SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+    connect(PMRSupport::PmrWorkspacesManager::instance(), SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
     // Retrieve the HTML template
@@ -147,7 +148,7 @@ PmrWorkspacesWidget::PmrWorkspacesWidget(PMRSupport::PmrWebService *pPmrWebServi
 
 //==============================================================================
 
-PmrWorkspacesWidget::~PmrWorkspacesWidget()
+PmrWorkspacesWindowWidget::~PmrWorkspacesWindowWidget()
 {
     // Delete some internal objects
 
@@ -156,7 +157,7 @@ PmrWorkspacesWidget::~PmrWorkspacesWidget()
 
 //==============================================================================
 
-QSize PmrWorkspacesWidget::sizeHint() const
+QSize PmrWorkspacesWindowWidget::sizeHint() const
 {
     // Suggest a default size for our PMR workspaces widget
     // Note: this is critical if we want a docked widget, with a PMR workspaces
@@ -175,7 +176,7 @@ static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
 
 //==============================================================================
 
-void PmrWorkspacesWidget::loadSettings(QSettings *pSettings)
+void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
     pSettings->beginGroup(SettingsWorkspaces);
 
@@ -211,7 +212,7 @@ void PmrWorkspacesWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
+void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     pSettings->remove(SettingsWorkspaces);
     pSettings->beginGroup(SettingsWorkspaces);
@@ -237,8 +238,8 @@ void PmrWorkspacesWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PmrWorkspacesWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                                       const bool &pOwned)
+void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                             const bool &pOwned)
 {
     QString folder = pWorkspace->path();
     QString url = pWorkspace->url();
@@ -257,15 +258,16 @@ void PmrWorkspacesWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-void PmrWorkspacesWidget::duplicateCloneMessage(const QString &pUrl,
-                                                const QString &pPath1, const QString &pPath2)
+void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
+                                                      const QString &pPath1, 
+                                                      const QString &pPath2)
 {
     emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
+const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 {
     if (!mWorkspaceFolders.contains(pFolder)) {
         // Get the workspace url (= remote.origin.url)
@@ -289,7 +291,7 @@ const QString PmrWorkspacesWidget::addWorkspaceFolder(const QString &pFolder)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::scanDefaultWorkspaceDirectory()
+void PmrWorkspacesWindowWidget::scanDefaultWorkspaceDirectory()
 {
     QDir workspaceDirectory = QDir(PMRSupport::PmrWorkspace::WorkspacesDirectory());
     foreach(QFileInfo info, workspaceDirectory.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
@@ -299,7 +301,7 @@ void PmrWorkspacesWidget::scanDefaultWorkspaceDirectory()
 
 //==============================================================================
 
-const QString PmrWorkspacesWidget::actionHtml(const QList<QPair<QString, QString> > &pActions)
+const QString PmrWorkspacesWindowWidget::actionHtml(const QList<QPair<QString, QString>> &pActions)
 {
     QPair<QString, QString> action;
     QStringList actions;
@@ -311,10 +313,12 @@ const QString PmrWorkspacesWidget::actionHtml(const QList<QPair<QString, QString
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString &pIcon,
-                                           const QString &pId, const QString &pName,
-                                           const QString &pStatus,
-                                           const QList<QPair<QString, QString> > &pActionList)
+QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass, 
+                                                 const QString &pIcon,
+                                                 const QString &pId, 
+                                                 const QString &pName,
+                                                 const QString &pStatus,
+                                                 const QList<QPair<QString, QString>> &pActionList)
 {
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "  <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
@@ -336,8 +340,8 @@ QString PmrWorkspacesWidget::containerHtml(const QString &pClass, const QString 
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const QString &pPath,
-                                                            const QPair<QChar, QChar> &pGitStatus)
+const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
+                                                                  const QPair<QChar, QChar> &pGitStatus)
 {
     static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
 
@@ -353,22 +357,22 @@ const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const QString &pPath
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                                            const QString &pPath)
+const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                                                                  const QString &pPath)
 {
     return fileStatusActionHtml(pPath, pWorkspace->gitFileStatus(pPath));
 }
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     return fileStatusActionHtml(pFileNode->fullName(), pFileNode->status());
 }
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
                                 "  <td colspan=\"2\" class=\"name\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
@@ -393,7 +397,7 @@ QString PmrWorkspacesWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pF
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::emptyContentsHtml()
+QString PmrWorkspacesWindowWidget::emptyContentsHtml()
 {
     static const QString html = "<tr></tr>\n";
 
@@ -402,8 +406,8 @@ QString PmrWorkspacesWidget::emptyContentsHtml()
 
 //==============================================================================
 
-QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                          const bool &pHidden)
+QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                const bool &pHidden)
 {
     static const QString html = "<tr class=\"contents%1\">\n"
                                 "  <td></td>\n"
@@ -436,7 +440,7 @@ QString PmrWorkspacesWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode
 //==============================================================================
 
 
-QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace)
+QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace)
 {
     QString url = pWorkspace->url();
     QString name = pWorkspace->name();
@@ -495,7 +499,7 @@ QStringList PmrWorkspacesWidget::workspaceHtml(const PMRSupport::PmrWorkspace *p
 
 //==============================================================================
 
-QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     QString fullname = pFileNode->fullName();
     QString icon = mExpandedItems.contains(fullname) ? "open" : "folder";
@@ -511,7 +515,7 @@ QStringList PmrWorkspacesWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNo
 
 //==============================================================================
 
-const QWebElement PmrWorkspacesWidget::parentWorkspaceElement(const QWebElement &pRowElement)
+const QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
 {
     auto workspaceElement = pRowElement;
 
@@ -529,7 +533,7 @@ const QWebElement PmrWorkspacesWidget::parentWorkspaceElement(const QWebElement 
 
 //==============================================================================
 
-void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
+void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 {
     if (pUrl != mCurrentWorkspaceUrl) {
 
@@ -560,7 +564,7 @@ void PmrWorkspacesWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::startStopTimer()
+void PmrWorkspacesWindowWidget::startStopTimer()
 {
     // Start our timer if OpenCOR is active and we have a current workspace, or stop
     // it if either OpenCOR is not active or we no longer have have a current workspace.
@@ -589,7 +593,7 @@ void PmrWorkspacesWidget::startStopTimer()
 
 //==============================================================================
 
-void PmrWorkspacesWidget::focusWindowChanged()
+void PmrWorkspacesWindowWidget::focusWindowChanged()
 {
     // Start/stop our timer
 
@@ -598,14 +602,14 @@ void PmrWorkspacesWidget::focusWindowChanged()
 
 //==============================================================================
 
-void PmrWorkspacesWidget::refreshCurrentWorkspace()
+void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
 {
     refreshWorkspace(mCurrentWorkspaceUrl);
 }
 
 //==============================================================================
 
-void PmrWorkspacesWidget::setSelected(QWebElement pNewSelectedRow)
+void PmrWorkspacesWindowWidget::setSelected(QWebElement pNewSelectedRow)
 {
     QString id = pNewSelectedRow.attribute("id");
 
@@ -622,7 +626,7 @@ void PmrWorkspacesWidget::setSelected(QWebElement pNewSelectedRow)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::scrollToSelected()
+void PmrWorkspacesWindowWidget::scrollToSelected()
 {
     // Position the frame so that the selected line is shown
 
@@ -635,7 +639,7 @@ void PmrWorkspacesWidget::scrollToSelected()
 
 //==============================================================================
 
-void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
+void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
 {
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
                                 QString("tr[id=\"%1\"] + tr").arg(pId));
@@ -653,14 +657,14 @@ void PmrWorkspacesWidget::expandHtmlTree(const QString &pId)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::clearWorkspaces()
+void PmrWorkspacesWindowWidget::clearWorkspaces()
 {
     setHtml(mTemplate.arg(QString()));
 }
 
 //==============================================================================
 
-void PmrWorkspacesWidget::displayWorkspaces()
+void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
     QList<PMRSupport::PmrWorkspace *> workspaces = mWorkspacesManager->workspaces();
 
@@ -685,7 +689,7 @@ void PmrWorkspacesWidget::displayWorkspaces()
 
 //==============================================================================
 
-void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
+void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *event)
 {
     auto webElement = page()->mainFrame()->hitTestContent(event->pos()).element();
     while (!webElement.isNull()
@@ -759,7 +763,7 @@ void PmrWorkspacesWidget::mouseMoveEvent(QMouseEvent *event)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
+void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         // Find the containing row and highlight it
@@ -842,7 +846,7 @@ void PmrWorkspacesWidget::mousePressEvent(QMouseEvent *event)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::mouseDoubleClickEvent(QMouseEvent *event)
+void PmrWorkspacesWindowWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
@@ -852,7 +856,7 @@ void PmrWorkspacesWidget::mouseDoubleClickEvent(QMouseEvent *event)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
+void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *event)
 {
 // TODO: Context menus for folders and files
 
@@ -956,14 +960,14 @@ void PmrWorkspacesWidget::contextMenuEvent(QContextMenuEvent *event)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::showInGraphicalShell(const QString &pPath)
+void PmrWorkspacesWindowWidget::showInGraphicalShell(const QString &pPath)
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(pPath));
 }
 
 //==============================================================================
 
-void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaces)
 {
     // First clear existing workspaces from the manager
 
@@ -1032,7 +1036,7 @@ void PmrWorkspacesWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspa
 
 //==============================================================================
 
-void PmrWorkspacesWidget::aboutWorkspace(const QString &pUrl)
+void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 {
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
                                                           QString("tr.workspace[id=\"%1\"]").arg(pUrl));
@@ -1051,7 +1055,7 @@ void PmrWorkspacesWidget::aboutWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::cloneWorkspace(const QString &pUrl)
+void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
@@ -1072,7 +1076,7 @@ void PmrWorkspacesWidget::cloneWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
+void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
@@ -1082,7 +1086,7 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
             workspace->commitMerge();
         }
         else {
-            auto commitDialog = new PmrWorkspacesCommit(workspace->stagedFiles());
+            auto commitDialog = new PmrWorkspacesWindowCommit(workspace->stagedFiles());
 
             if (commitDialog->exec() == QDialog::Accepted)
                 workspace->commit(commitDialog->message()) ;
@@ -1094,7 +1098,7 @@ void PmrWorkspacesWidget::commitWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
+void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 {
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
                                        QString("tr.workspace[id=\"%1\"]").arg(pUrl));
@@ -1121,7 +1125,7 @@ void PmrWorkspacesWidget::refreshWorkspace(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
+void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 {
     auto fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
     auto workspaceElement = parentWorkspaceElement(fileElement);
@@ -1144,7 +1148,7 @@ void PmrWorkspacesWidget::refreshWorkspaceFile(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
+void PmrWorkspacesWindowWidget::refreshWorkspaces(const bool &pScanFolders)
 {
     if (pScanFolders) scanDefaultWorkspaceDirectory();
 
@@ -1155,7 +1159,8 @@ void PmrWorkspacesWidget::refreshWorkspaces(const bool &pScanFolders)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::synchroniseWorkspace(const QString &pUrl, const bool pOnlyPull)
+void PmrWorkspacesWindowWidget::synchroniseWorkspace(const QString &pUrl, 
+                                                     const bool pOnlyPull)
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
 
@@ -1165,7 +1170,7 @@ void PmrWorkspacesWidget::synchroniseWorkspace(const QString &pUrl, const bool p
 
 //==============================================================================
 
-void PmrWorkspacesWidget::workspaceCreated(const QString &pUrl)
+void PmrWorkspacesWindowWidget::workspaceCreated(const QString &pUrl)
 {
     Q_UNUSED(pUrl)
 
@@ -1174,7 +1179,7 @@ void PmrWorkspacesWidget::workspaceCreated(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     if (pWorkspace) {
         QString url = pWorkspace->url();
@@ -1198,7 +1203,7 @@ void PmrWorkspacesWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrWorkspacesWidget::workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace)
 {
     if (pWorkspace) {
         refreshWorkspace(pWorkspace->url());

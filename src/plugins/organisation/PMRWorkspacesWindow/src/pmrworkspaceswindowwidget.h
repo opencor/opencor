@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Workspaces widget
+// PMR Workspaces widget
 //==============================================================================
 
 #pragma once
@@ -55,13 +55,15 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWidget : public OpenCOR::WebViewerWidget::WebViewerWidget, public Core::CommonWidget
+class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget, 
+                                  public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWidget(PMRSupport::PmrWebService *pPmrWebService, QWidget *pParent);
-    ~PmrWorkspacesWidget();
+    explicit PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService, 
+                                       QWidget *pParent);
+    ~PmrWorkspacesWindowWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -85,7 +87,7 @@ protected:
 private:
     PMRSupport::PmrWebService *mPmrWebService;
 
-    OpenCOR::PMRSupport::PmrWorkspacesManager *mWorkspacesManager;
+    PMRSupport::PmrWorkspacesManager *mWorkspacesManager;
 
     QMap<QString, QString> mWorkspaceFolders;                 // Folder name --> Url
     QMap<QString, QPair<QString, bool> > mWorkspaceUrls;      // Url --> (Folder name, mine)
@@ -112,11 +114,11 @@ private:
 
     void setCurrentWorkspaceUrl(const QString &pUrl);
 
-    static const QString actionHtml(const QList<QPair<QString, QString> > &pActions);
+    static const QString actionHtml(const QList<QPair<QString, QString>> &pActions);
     QString containerHtml(const QString &pClass, const QString &pIcon,
                           const QString &pId, const QString &pName,
                           const QString &pStatus,
-                          const QList<QPair<QString, QString> > &pActionList);
+                          const QList<QPair<QString, QString>> &pActionList);
     QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode, const bool &pHidden);
     QString emptyContentsHtml();
 
