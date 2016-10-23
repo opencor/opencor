@@ -39,7 +39,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowCommit::PmrWorkspacesWindowCommit(const QStringList &pStagedFiles, 
+PmrWorkspacesWindowCommit::PmrWorkspacesWindowCommit(const QStringList &pStagedFiles,
                                                      QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::PmrWorkspacesWindowCommit)

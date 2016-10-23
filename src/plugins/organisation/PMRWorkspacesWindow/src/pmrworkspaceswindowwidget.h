@@ -55,13 +55,13 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget, 
+class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget,
                                   public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService, 
+    explicit PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                        QWidget *pParent);
     ~PmrWorkspacesWindowWidget();
 

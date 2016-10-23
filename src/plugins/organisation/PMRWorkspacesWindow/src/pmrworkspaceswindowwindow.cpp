@@ -411,7 +411,7 @@ void PmrWorkspacesWindowWindow::showCustomContextMenu() const
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::fileCreated(const QString &pFileName, 
+void PmrWorkspacesWindowWindow::fileCreated(const QString &pFileName,
                                             const QString &pUrl)
 {
     Q_UNUSED(pFileName)

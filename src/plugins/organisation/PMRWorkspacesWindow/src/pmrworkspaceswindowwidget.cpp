@@ -74,7 +74,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService, 
+PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(this),
@@ -259,7 +259,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
-                                                      const QString &pPath1, 
+                                                      const QString &pPath1,
                                                       const QString &pPath2)
 {
     emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));
@@ -313,9 +313,9 @@ const QString PmrWorkspacesWindowWidget::actionHtml(const QList<QPair<QString, Q
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass, 
+QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                                  const QString &pIcon,
-                                                 const QString &pId, 
+                                                 const QString &pId,
                                                  const QString &pName,
                                                  const QString &pStatus,
                                                  const QList<QPair<QString, QString>> &pActionList)
@@ -1159,7 +1159,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces(const bool &pScanFolders)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::synchroniseWorkspace(const QString &pUrl, 
+void PmrWorkspacesWindowWidget::synchroniseWorkspace(const QString &pUrl,
                                                      const bool pOnlyPull)
 {
     auto workspace = mWorkspacesManager->workspace(pUrl);
