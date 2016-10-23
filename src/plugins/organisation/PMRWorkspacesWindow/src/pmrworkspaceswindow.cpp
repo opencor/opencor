@@ -180,6 +180,19 @@ void PmrWorkspacesWindow::retranslateUi()
 
 //==============================================================================
 
+void PmrWorkspacesWindow::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::OrganisationWidget::resizeEvent(pEvent);
+
+    // Resize our busy widget
+
+    mWorkspacesWidget->resizeBusyWidget();
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the workspaces widget
@@ -211,13 +224,13 @@ void PmrWorkspacesWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        showBusyWidget();
+        mWorkspacesWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side
 
-        hideBusyWidget();
+        mWorkspacesWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 

@@ -77,6 +77,9 @@ public:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileReloaded(const QString &pFileName);
 
+protected:
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
 private:
     Ui::PmrWorkspacesWindow *mGui;
 
