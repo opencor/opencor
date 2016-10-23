@@ -1170,23 +1170,28 @@ void MainWindow::on_actionPreferences_triggered()
     // Show the preferences dialog, if we have at least one plugin that supports
     // the Preferences interface
 
-    bool canShowPreferences = false;
+    if (mPluginManager->plugins().count()) {
+        bool pluginsWithPreferences = false;
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
-        if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
-            canShowPreferences = true;
+        foreach (Plugin *plugin, mPluginManager->plugins()) {
+            if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
+                pluginsWithPreferences = true;
 
-            break;
+                break;
+            }
         }
-    }
 
-    if (canShowPreferences) {
-        PreferencesDialog preferencesDialog(mPluginManager, this);
+        if (pluginsWithPreferences) {
+            PreferencesDialog preferencesDialog(mPluginManager, this);
 
-        preferencesDialog.exec();
+            preferencesDialog.exec();
+        } else {
+            warningMessageBox(this, tr("Preferences"),
+                              tr("No plugins have preferences."));
+        }
     } else {
         warningMessageBox(this, tr("Preferences"),
-                          tr("No plugins have preferences."));
+                          tr("No plugins could be found."));
     }
 }
 
