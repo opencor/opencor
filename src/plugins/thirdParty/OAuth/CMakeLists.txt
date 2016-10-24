@@ -38,6 +38,8 @@ IF(USE_PREBUILT_OAUTH_PLUGIN)
 ELSE()
     # Add the plugin
 
+    SET(OAUTH_PLUGIN OAuth PARENT_SCOPE)
+
     ADD_PLUGIN(OAuth
         THIRD_PARTY
         SOURCES
@@ -45,43 +47,21 @@ ELSE()
 
             src/o0baseauth.cpp
             src/o0settingsstore.cpp
-            src/o1.cpp
-            src/o1requestor.cpp
-            src/o1timedreply.cpp
             src/o2.cpp
-            src/o2facebook.cpp
-            src/o2gft.cpp
-            src/o2hubic.cpp
             src/o2reply.cpp
             src/o2replyserver.cpp
             src/o2requestor.cpp
             src/o2simplecrypt.cpp
-            src/o2skydrive.cpp
-            src/o2surveymonkey.cpp
             src/oauthplugin.cpp
-            src/oxtwitter.cpp
         HEADERS_MOC
             src/o0abstractstore.h
             src/o0baseauth.h
             src/o0settingsstore.h
-            src/o1.h
-            src/o1dropbox.h
-            src/o1flickr.h
-            src/o1freshbooks.h
-            src/o1requestor.h
-            src/o1timedreply.h
-            src/o1twitter.h
             src/o2.h
-            src/o2facebook.h
-            src/o2gft.h
-            src/o2hubic.h
             src/o2reply.h
             src/o2replyserver.h
             src/o2requestor.h
-            src/o2skydrive.h
-            src/o2surveymonkey.h
             src/oauthplugin.h
-            src/oxtwitter.h
         INCLUDE_DIRS
             src
         QT_MODULES
