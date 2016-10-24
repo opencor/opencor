@@ -89,7 +89,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mPmrWebService = new PMRSupport::PmrWebService(this);
 
-    // Some connections to process responses from the PMR repository
+    // Some connections to process responses from the PMR web service
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
@@ -291,7 +291,7 @@ void PmrWindowWindow::cloneWorkspace(const QString &pExposureUrl)
 
 void PmrWindowWindow::requestExposureFiles(const QString &pUrl)
 {
-    // Request a list of the exposure's files from our PMR repository
+    // Request a list of the exposure's files from our PMR web service
 
     mPmrWebService->requestExposureFiles(pUrl);
 }

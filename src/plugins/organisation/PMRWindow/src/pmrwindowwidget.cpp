@@ -369,6 +369,7 @@ void PmrWindowWidget::linkClicked()
     QWebElement element = retrieveLinkInformation(link, textContent);
 
     // Check whether we have clicked a text or button link
+
     if (textContent.isEmpty()) {
         // We have clicked on a button link, so let people know whether we want
         // to clone a workspace or whether we want to show/hide exposure files
@@ -387,8 +388,8 @@ void PmrWindowWidget::linkClicked()
             QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
 
             if (ulElement.firstChild().isNull()) {
-                // Remember the exposure so its files can be shown when they are recieved
-                // and request them
+                // Remember the exposure so its files can be shown when they are
+                // received and request them
 
                 setShowExposureFilesUrl(linkList[1]);
                 emit requestExposureFiles(linkList[1]);

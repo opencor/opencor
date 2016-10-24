@@ -55,8 +55,8 @@ PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
 
     // Our messages are directly emitted by our parent PmrWebService
 
-    connect(this, SIGNAL(information(QString)), pParent, SIGNAL(information(QString)));
     connect(this, SIGNAL(progress(double)), pParent, SIGNAL(progress(double)));
+    connect(this, SIGNAL(information(QString)), pParent, SIGNAL(information(QString)));
     connect(this, SIGNAL(warning(QString)), pParent, SIGNAL(warning(QString)));
 }
 
@@ -406,7 +406,7 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 
     if (git_repository_open(&gitRepository, folderByteArray.constData()) == 0) {
 
-        git_strarray remotes ;
+        git_strarray remotes;
         if (git_remote_list(&remotes, gitRepository) == 0) {
 
             for (int i = 0; i < (int)remotes.count; i++) {
@@ -487,7 +487,7 @@ void PmrWorkspace::clone(const QString &pDirName)
 
     // Track clone and checkout progress
 
-    cloneOptions.fetch_opts.callbacks.transfer_progress = transfer_progress_cb ;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = transfer_progress_cb;
     cloneOptions.fetch_opts.callbacks.payload = (void *)this;
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
     cloneOptions.checkout_opts.progress_cb = checkout_progress_cb;
@@ -532,7 +532,7 @@ bool PmrWorkspace::fetch()
 
     // Track push progress
 
-    fetchOptions.callbacks.transfer_progress = transfer_progress_cb ;
+    fetchOptions.callbacks.transfer_progress = transfer_progress_cb;
     fetchOptions.callbacks.payload = (void *)this;
 
     // Set up Basic authorization
@@ -850,7 +850,7 @@ void PmrWorkspace::push()
 
     // Track push progress
 
-    pushOptions.callbacks.transfer_progress = transfer_progress_cb ;
+    pushOptions.callbacks.transfer_progress = transfer_progress_cb;
     pushOptions.callbacks.payload = (void *)this;
 
     // Set up Basic authorization

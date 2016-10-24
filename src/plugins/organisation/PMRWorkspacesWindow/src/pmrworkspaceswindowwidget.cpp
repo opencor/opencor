@@ -1089,7 +1089,7 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
             auto commitDialog = new PmrWorkspacesWindowCommit(workspace->stagedFiles());
 
             if (commitDialog->exec() == QDialog::Accepted)
-                workspace->commit(commitDialog->message()) ;
+                workspace->commit(commitDialog->message());
         }
 
         refreshWorkspace(workspace->url());

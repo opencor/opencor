@@ -132,7 +132,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(fileManagerInstance, SIGNAL(fileDuplicated(QString)), this, SLOT(fileDuplicated(QString)));
     connect(fileManagerInstance, SIGNAL(fileDeleted(QString)), this, SLOT(fileDeleted(QString)));
 
-    // Connections to process responses from the PMR repository
+    // Some connections to process responses from the PMR web service
 
     connect(mPmrWebService, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
     connect(mPmrWebService, SIGNAL(progress(double)), this, SLOT(showProgress(double)));

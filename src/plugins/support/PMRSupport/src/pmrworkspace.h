@@ -135,10 +135,6 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
-//    void setDescription(const QString &pDescription);
-//    void setName(const QString &pName);
-//    void setOwner(const QString &pOwner);
-
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
@@ -162,8 +158,8 @@ private:
     void push();
 
 signals:
-    void information(const QString &pMessage) const;
     void progress(const double &pProgress) const;
+    void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

@@ -36,7 +36,7 @@ limitations under the License.
 
 //==============================================================================
 
-class QContextMenuEvent ;
+class QContextMenuEvent;
 class QTimer;
 
 //==============================================================================
