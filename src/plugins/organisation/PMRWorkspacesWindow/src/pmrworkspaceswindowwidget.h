@@ -89,8 +89,8 @@ private:
 
     PMRSupport::PmrWorkspacesManager *mWorkspacesManager;
 
-    QMap<QString, QString> mWorkspaceFolders;                 // Folder name --> Url
-    QMap<QString, QPair<QString, bool> > mWorkspaceUrls;      // Url --> (Folder name, mine)
+    QMap<QString, QString> mWorkspaceFolderUrls;
+    QMap<QString, QPair<QString, bool>> mUrlFolderNameMines;
 
     QString mCurrentWorkspaceUrl;
     QSet<QString> mExpandedItems;
@@ -100,7 +100,7 @@ private:
 
     int mRow;
     int mRowAnchor;
-    QMap<QString, int> mAnchors;                               // Item id --> Anchor
+    QMap<QString, int> mItemAnchors;
 
     QTimer *mTimer;
 

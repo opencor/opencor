@@ -80,13 +80,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     Core::CommonWidget(this),
     mPmrWebService(pPmrWebService),
     mWorkspacesManager(PMRSupport::PmrWorkspacesManager::instance()),
-    mWorkspaceFolders(QMap<QString, QString>()),
-    mWorkspaceUrls(QMap<QString, QPair<QString, bool> >()),
+    mWorkspaceFolderUrls(QMap<QString, QString>()),
+    mUrlFolderNameMines(QMap<QString, QPair<QString, bool>>()),
     mCurrentWorkspaceUrl(QString()),
     mExpandedItems(QSet<QString>()),
     mSelectedItem(QString()),
     mRowAnchor(0),
-    mAnchors(QMap<QString, int>())
+    mItemAnchors(QMap<QString, int>())
 {
     // Prevent objects from being dropped on us
 
@@ -219,7 +219,7 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 
         // Keep track of the names of folders containing cloned workspaces
 
-        pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolders.keys()));
+        pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolderUrls.keys()));
 
         // Keep track of the names of expanded workspaces and folders
 
@@ -244,13 +244,13 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     QString folder = pWorkspace->path();
     QString url = pWorkspace->url();
 
-    if (!mWorkspaceFolders.contains(folder)) {
-        if (mWorkspaceUrls.contains(url)) {
-            duplicateCloneMessage(url, mWorkspaceUrls.value(url).first, folder);
+    if (!mWorkspaceFolderUrls.contains(folder)) {
+        if (mUrlFolderNameMines.contains(url)) {
+            duplicateCloneMessage(url, mUrlFolderNameMines.value(url).first, folder);
         }
         else {
-            mWorkspaceFolders.insert(folder, url);
-            mWorkspaceUrls.insert(url, QPair<QString, bool>(folder, pOwned));
+            mWorkspaceFolderUrls.insert(folder, url);
+            mUrlFolderNameMines.insert(url, QPair<QString, bool>(folder, pOwned));
             mWorkspacesManager->addWorkspace(pWorkspace);
         }
     }
@@ -269,23 +269,23 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 {
-    if (!mWorkspaceFolders.contains(pFolder)) {
+    if (!mWorkspaceFolderUrls.contains(pFolder)) {
         // Get the workspace url (= remote.origin.url)
 
         QString url = PMRSupport::PmrWorkspace::getUrlFromFolder(pFolder);
         if (!url.isEmpty()) {
-            if (mWorkspaceUrls.contains(url)) {
-                duplicateCloneMessage(url, mWorkspaceUrls.value(url).first, pFolder);
+            if (mUrlFolderNameMines.contains(url)) {
+                duplicateCloneMessage(url, mUrlFolderNameMines.value(url).first, pFolder);
             }
             else {
-                mWorkspaceFolders.insert(pFolder, url);
-                mWorkspaceUrls.insert(url, QPair<QString, bool>(pFolder, false));
+                mWorkspaceFolderUrls.insert(pFolder, url);
+                mUrlFolderNameMines.insert(url, QPair<QString, bool>(pFolder, false));
             }
         }
         return url;
     }
     else {
-        return mWorkspaceFolders.value(pFolder);
+        return mWorkspaceFolderUrls.value(pFolder);
     }
 }
 
@@ -333,7 +333,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
     // Use an anchor element to allow us to set the scroll position at a row
 
     mRowAnchor += 1;
-    mAnchors.insert(pId, mRowAnchor);
+    mItemAnchors.insert(pId, mRowAnchor);
 
     return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActionList)).arg(mRowAnchor);
 }
@@ -345,7 +345,7 @@ const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString 
 {
     static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
 
-    auto actionList = QList<QPair<QString, QString> >();
+    auto actionList = QList<QPair<QString, QString>>();
     if      (pGitStatus.second != ' ')
         actionList << QPair<QString, QString>("stage", pPath);
     else if (pGitStatus.first != ' ')
@@ -390,7 +390,7 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
     // Use an anchor element to allow us to set the scroll position at a row
 
     mRowAnchor += 1;
-    mAnchors.insert(path, mRowAnchor);
+    mItemAnchors.insert(path, mRowAnchor);
 
     return html.arg(rowClass, path, pFileNode->shortName(), statusActionHtml[0], statusActionHtml[1]).arg(mRowAnchor);
 }
@@ -448,7 +448,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
 
     QString icon = pWorkspace->isOwned() ? "star" : "folder";
     auto status = QString("");
-    auto actionList = QList<QPair<QString, QString> >();
+    auto actionList = QList<QPair<QString, QString>>();
 
     auto workspaceStatus = pWorkspace->gitWorkspaceStatus();
 
@@ -507,7 +507,7 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
     mRow += 1;
     QStringList html = QStringList(containerHtml((mRow % 2) ? "folder" : "folder even",
                                                  icon, fullname, pFileNode->shortName(), "",
-                                                 QList<QPair<QString, QString> >()));
+                                                 QList<QPair<QString, QString>>()));
     html << contentsHtml(pFileNode, !mExpandedItems.contains(fullname));
 
     return html;
@@ -630,10 +630,10 @@ void PmrWorkspacesWindowWidget::scrollToSelected()
 {
     // Position the frame so that the selected line is shown
 
-    if (!mSelectedItem.isEmpty() && mAnchors.contains(mSelectedItem)) {
+    if (!mSelectedItem.isEmpty() && mItemAnchors.contains(mSelectedItem)) {
         // Position two rows before the selected item to show some context.
 
-        page()->mainFrame()->scrollToAnchor(QString("a_%1").arg(mAnchors.value(mSelectedItem) - 2));
+        page()->mainFrame()->scrollToAnchor(QString("a_%1").arg(mItemAnchors.value(mSelectedItem) - 2));
     }
 }
 
@@ -675,7 +675,7 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
     // Reset our row anchors
 
     mRowAnchor = 0;
-    mAnchors.clear();
+    mItemAnchors.clear();
 
     // Finally generate and emit HTML
 
@@ -979,7 +979,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
     // First clear the `owned` flag from the list of URLs with workspace folders
 
-    QMutableMapIterator<QString, QPair<QString, bool> > urlsIterator(mWorkspaceUrls);
+    QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
     while (urlsIterator.hasNext()) {
         urlsIterator.next();
         urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
@@ -994,10 +994,10 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
         // Check if we know its folder and flag it is ours
 
-        if (mWorkspaceUrls.contains(url)) {
-            QString path = mWorkspaceUrls.value(url).first;
+        if (mUrlFolderNameMines.contains(url)) {
+            QString path = mUrlFolderNameMines.value(url).first;
 
-            mWorkspaceUrls.insert(url, QPair<QString, bool>(path, true));
+            mUrlFolderNameMines.insert(url, QPair<QString, bool>(path, true));
             workspace->setPath(path);
             workspace->open();
         }
@@ -1019,7 +1019,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
                 workspace->open();
             }
             else {
-                mWorkspaceFolders.remove(urlsIterator.value().first);
+                mWorkspaceFolderUrls.remove(urlsIterator.value().first);
                 urlsIterator.remove();
             }
         }
@@ -1186,7 +1186,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         // Ensure our widget knows about the workspace
 
-        if (!mWorkspaceUrls.contains(url))
+        if (!mUrlFolderNameMines.contains(url))
             addWorkspace(pWorkspace);
 
         // Close display of current workspace and set the cloned one current
