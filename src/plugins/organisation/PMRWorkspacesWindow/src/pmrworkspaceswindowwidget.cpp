@@ -67,9 +67,9 @@ namespace PMRWorkspacesWindow {
 //#define ICON_PUSH         ":/oxygen/actions/arrow-up-double.png"
 #define ICON_REFRESH      ":/oxygen/actions/view-refresh.png"
 #define ICON_STAGE        ":/oxygen/actions/dialog-ok-apply.png"
-#define ICON_SYNC_PULL    ":/PMRWorkspaces/icons/sync-pull.png"
-#define ICON_SYNC_PUSH    ":/PMRWorkspaces/icons/sync-push.png"
-#define ICON_SYNCHRONISE  ":/PMRWorkspaces/icons/synchronise.png"
+#define ICON_SYNC_PULL    ":/PMRWorkspacesWindow/icons/sync-pull.png"
+#define ICON_SYNC_PUSH    ":/PMRWorkspacesWindow/icons/sync-push.png"
+#define ICON_SYNCHRONISE  ":/PMRWorkspacesWindow/icons/synchronise.png"
 #define ICON_UNSTAGE      ":/oxygen/actions/dialog-cancel.png"
 
 //==============================================================================
@@ -113,7 +113,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     // Retrieve the HTML template
 
     QString fileContents;
-    Core::readFileContentsFromFile(":/PMRWorkspaces/output.html", fileContents);
+    Core::readFileContentsFromFile(":/PMRWorkspacesWindow/output.html", fileContents);
     mTemplate = fileContents.arg( // clone, commit, folder, open, star, stage, pull, push, sync, unstage
                                  Core::iconDataUri(ICON_CLONE, 16, 16),
                                  Core::iconDataUri(ICON_COMMIT, 16, 16),
