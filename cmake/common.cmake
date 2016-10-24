@@ -445,6 +445,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         IF(WIN32)
             ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
         ENDIF()
+
+        # Prevent all debug outputs
+
+        ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
     ENDIF()
 
     # Various include directories
