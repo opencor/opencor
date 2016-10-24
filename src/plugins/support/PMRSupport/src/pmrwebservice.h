@@ -31,12 +31,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
-#include <QObject>
-#include <QString>
-
-//==============================================================================
-
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -62,7 +56,7 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWebService(QObject *pParent = nullptr);
+    explicit PmrWebService(QObject *pParent = 0);
     ~PmrWebService();
 
     static const QByteArray CollectionMimeType();
@@ -74,10 +68,12 @@ public:
 
     PmrWorkspace *getWorkspace(const QString &pUrl);
 
-    void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
+    void requestWorkspaceClone(PmrWorkspace *pWorkspace,
+                               const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
     void requestWorkspaces();
-    void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull);
+    void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace,
+                                     const bool pOnlyPull);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pDirName);
@@ -98,11 +94,14 @@ private:
     QString informationNoteMessage() const;
 
     void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
-    void requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl);
-    void requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction);
+    void requestExposureFileInformation(PmrExposure *pExposure,
+                                        const QString &pUrl);
+    void requestExposureInformation(PmrExposure *pExposure,
+                                    const Action &pNextAction);
 
-    void requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
-                                     PmrExposure *pExposure=nullptr);
+    void requestWorkspaceInformation(const QString &pUrl,
+                                     const QString &pDirName,
+                                     PmrExposure *pExposure = 0);
 
 signals:
     void authenticated(const bool &pAuthenticated);
@@ -110,7 +109,8 @@ signals:
     void busy(const bool &pBusy);
     void progress(const double &pProgress);
 
-    void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
+    void error(const QString &pErrorMessage,
+               const bool &pInternetConnectionAvailable);
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 

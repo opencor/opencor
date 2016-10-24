@@ -121,17 +121,17 @@ void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-PmrWebServiceResponse *PmrWebServiceManager::sendPmrRequest(const QString &pUrl,
-                                                            const bool &pSecureRequest,
-                                                            const bool &pUsePost,
-                                                            const QJsonDocument &pJsonDocument)
+PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl,
+                                                             const bool &pSecureRequest,
+                                                             const bool &pUsePost,
+                                                             const QJsonDocument &pJsonDocument)
 {
     // Check that we are connected to the Internet
 
     if (!Core::internetConnectionAvailable()) {
 
         emit error(tr("Cannot connect to Internet"), false);
-        return nullptr;
+        return 0;
     }
 
     // Let the user know that we are busy

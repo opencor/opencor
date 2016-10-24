@@ -359,7 +359,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         }
         else {
             auto existing = PmrWorkspacesManager::instance()->workspace(url);
-            if (existing == nullptr) {
+            if (!existing) {
                 // Retrieve the name of an empty directory
 
                 dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
@@ -472,7 +472,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     // Check that we aren't already managing a clone of the workspace
 
                     auto existing = PmrWorkspacesManager::instance()->workspace(workspaceUrl);
-                    if (existing == nullptr) {
+                    if (!existing) {
                         // Retrieve the name of an empty directory
 
                         dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
@@ -606,7 +606,7 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 
 PmrWorkspace *PmrWebService::getWorkspace(const QString &pUrl)
 {
-    PmrWorkspace *newWorkspace = nullptr;
+    PmrWorkspace *newWorkspace = 0;
 
     auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
     repositoryResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
@@ -681,7 +681,7 @@ void PmrWebService::workspaceUnauthorised(const QString &pUrl)
 {
     Q_UNUSED(pUrl)
 
-    // Do nothing, `getWorkspace()` will return `nullptr`.
+    // Do nothing, getWorkspace() will return 0
 }
 
 //==============================================================================

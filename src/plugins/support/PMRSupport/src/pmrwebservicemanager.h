@@ -57,9 +57,10 @@ public:
     void authenticate(const bool &pLink);
     bool isAuthenticated() const;
 
-    PmrWebServiceResponse *sendPmrRequest(const QString &pUrl, const bool &pSecureRequest,
-                                          const bool &pUsePost=false, // When no document
-                                          const QJsonDocument &pJsonDocument = QJsonDocument());
+    PmrWebServiceResponse * sendPmrRequest(const QString &pUrl,
+                                           const bool &pSecureRequest,
+                                           const bool &pUsePost = false,
+                                           const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
     PmrOauthClient *mPmrOAuthClient;
     PmrWebService *mPmrWebService;
@@ -67,7 +68,8 @@ private:
 signals:
     void authenticated(const bool &pAuthenticated);
     void busy(const bool &pBusy);
-    void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
+    void error(const QString &pErrorMessage,
+               const bool &pInternetConnectionAvailable);
 
 private slots:
     void authenticationFailed();

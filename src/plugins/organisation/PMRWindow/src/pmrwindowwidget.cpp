@@ -53,7 +53,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mInternetConnectionAvailable(true),
     mNumberOfFilteredExposures(0),
     mExposureUrl(QString()),
-    mShowExposureFilesTimer(nullptr),
+    mShowExposureFilesTimer(0),
     mShowExposureFilesUrl(QString())
 {
     // Create and populate our context menu
@@ -320,7 +320,7 @@ void PmrWindowWidget::stopShowExposureFilesTimer()
     if (mShowExposureFilesTimer) {
         mShowExposureFilesTimer->stop();
         delete mShowExposureFilesTimer;
-        mShowExposureFilesTimer = nullptr;
+        mShowExposureFilesTimer = 0;
     }
 }
 

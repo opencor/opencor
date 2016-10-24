@@ -38,7 +38,7 @@ class PmrOauthClient: public O1
     Q_OBJECT
 
 public:
-    explicit PmrOauthClient(const QString &pUrl, QObject *pParent = nullptr);
+    explicit PmrOauthClient(const QString &pUrl, QObject *pParent = 0);
 };
 
 //==============================================================================
