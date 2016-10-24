@@ -85,7 +85,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveExposures(const bool &)));
 
-    // Get a PMR repository
+    // Create an instance of the PMR web service
 
     mPmrWebService = new PMRSupport::PmrWebService(this);
 
@@ -235,7 +235,7 @@ void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
 
 void PmrWindowWindow::on_refreshButton_clicked()
 {
-    // Get the list of exposures from our PMR repository
+    // Get the list of exposures from our PMR web service
 
     mPmrWebService->requestExposures();
 }

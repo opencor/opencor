@@ -360,9 +360,8 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
             // isn't empty??
         }
 
-        // Ask the PMR repository to create a new workspace. This
-        // will result in the (empty) workspace being cloned into
-        // its folder.
+        // Ask the PMR web service to create a new workspace, resulting in the
+        // (empty) workspace being cloned into its folder
 
         mPmrWebService->requestNewWorkspace(newWorkspaceDialog->title(),
                                             newWorkspaceDialog->description(),
