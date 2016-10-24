@@ -48,19 +48,19 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
-static const auto VariableDegree = QStringLiteral("variableDegree");
-static const auto SolverProperties = QStringLiteral("solverProperties");
-static const auto SolverProperty = QStringLiteral("solverProperty");
-static const auto SolverPropertyId = QStringLiteral("id");
+static const auto OpencorNamespace    = QStringLiteral("http://www.opencor.ws/");
+static const auto VariableDegree      = QStringLiteral("variableDegree");
+static const auto SolverProperties    = QStringLiteral("solverProperties");
+static const auto SolverProperty      = QStringLiteral("solverProperty");
+static const auto SolverPropertyId    = QStringLiteral("id");
 static const auto SolverPropertyValue = QStringLiteral("value");
-static const auto NlaSolver = QStringLiteral("nlaSolver");
-static const auto NlaSolverName = QStringLiteral("name");
+static const auto NlaSolver           = QStringLiteral("nlaSolver");
+static const auto NlaSolverName       = QStringLiteral("name");
 
 //==============================================================================
 
 namespace Language {
-    static const auto Cellml = QStringLiteral("urn:sedml:language:cellml");
+    static const auto Cellml     = QStringLiteral("urn:sedml:language:cellml");
     static const auto Cellml_1_0 = QStringLiteral("urn:sedml:language:cellml.1_0");
     static const auto Cellml_1_1 = QStringLiteral("urn:sedml:language:cellml.1_1");
 }
