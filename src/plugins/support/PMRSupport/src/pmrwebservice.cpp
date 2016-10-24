@@ -40,20 +40,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-const QByteArray PmrWebService::CollectionMimeType()
-{
-    return "application/vnd.physiome.pmr2.json.1";
-}
-
-//==============================================================================
-
-const QByteArray PmrWebService::RequestMimeType()
-{
-    return "application/vnd.physiome.pmr2.json.0";
-}
-
-//==============================================================================
-
 PmrWebService::PmrWebService(QObject *pParent) : QObject(pParent),
     mUrlExposures(QMap<QString, PmrExposure *>())
 {
@@ -67,12 +53,6 @@ PmrWebService::PmrWebService(QObject *pParent) : QObject(pParent),
     connect(mPmrWebServiceManager, SIGNAL(authenticated(bool)), this, SIGNAL(authenticated(bool)));
     connect(mPmrWebServiceManager, SIGNAL(busy(bool)), this, SIGNAL(busy(bool)));
     connect(mPmrWebServiceManager, SIGNAL(error(QString, bool)), this, SIGNAL(error(QString, bool)));
-}
-
-//==============================================================================
-
-PmrWebService::~PmrWebService()
-{
 }
 
 //==============================================================================
@@ -123,13 +103,12 @@ static const char *WorkspaceProperty  = "Workspace";
 
 void PmrWebService::requestExposures()
 {
-    // Get the list of exposures from the PMR after making sure that our
-    // internal data has been reset
+    // Request the list of exposures from PMR
 
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/exposure").arg(PmrUrl),
-                                                                    false);
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(exposuresResponse(QJsonDocument)));
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(PmrUrl+"/exposure", false);
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(exposuresResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
@@ -182,11 +161,12 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
 
 void PmrWebService::requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction)
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pExposure->url(), false);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pExposure->url(), false);
 
-    repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
-    repositoryResponse->setProperty(NextActionProperty, pNextAction);
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+    pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
+    pmrResponse->setProperty(NextActionProperty, pNextAction);
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(exposureInformationResponse(QJsonDocument)));
 }
 
@@ -249,11 +229,12 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
 
 void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl)
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, false);
-    repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(exposureFileInformationResponse(QJsonDocument)));
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, false);
 
+    pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+            this, SLOT(exposureFileInformationResponse(QJsonDocument)));
 }
 
 //==============================================================================
@@ -375,10 +356,12 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         // To clone the workspace associated with the given exposure, we first
         // need to retrieve some information about the exposure itself
 
-        auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pExposureUrl, false);
-        repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)exposure));
-        repositoryResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
-        connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+        PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pExposureUrl, false);
+
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)exposure));
+        pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
+
+        connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
                 this, SLOT(exposureInformationResponse(QJsonDocument)));
     }
 }
@@ -407,8 +390,9 @@ void PmrWebService::workspaceSynchroniseFinished(PmrWorkspace *pWorkspace)
 
 void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspaceInformationResponse(QJsonDocument)));
 }
 
@@ -417,10 +401,12 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
                                                 PmrExposure *pExposure)
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
-    repositoryResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
-    repositoryResponse->setProperty(DirNameProperty, pDirName);
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
+
+    pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
+    pmrResponse->setProperty(DirNameProperty, pDirName);
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspaceInformationResponse(QJsonDocument)));
 }
 
@@ -506,9 +492,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDescription,
                                         const QString &pDirName)
 {
-    Q_UNUSED(pDirName)  // set as property
-
-    auto jsonCreateWorkspace = QJsonDocument::fromJson(QString(
+    QJsonDocument jsonCreateWorkspace = QJsonDocument::fromJson(QString(
         "{\"template\": {\"data\": ["
             "{\"name\": \"form.widgets.title\", \"value\": \"%1\"},"
             "{\"name\": \"form.widgets.description\", \"value\": \"%2\"},"
@@ -516,12 +500,13 @@ void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDe
             "{\"name\": \"form.buttons.add\", \"value\": \"Add\"}"
         "]}}").arg(pName, pDescription).toUtf8());
 
-    auto repositoryResponse =
-        mPmrWebServiceManager->sendPmrRequest(QString("%1/workspace/+/addWorkspace").arg(PmrUrl),
-                                              true, true, jsonCreateWorkspace);
-    repositoryResponse->setProperty(DirNameProperty, pDirName);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(PmrUrl+"/workspace/+/addWorkspace",
+                                                                               true, true, jsonCreateWorkspace);
 
-    connect(repositoryResponse, SIGNAL(movedLocation(QString)), this, SLOT(workspaceCreatedResponse(QString)));
+    pmrResponse->setProperty(DirNameProperty, pDirName);
+
+    connect(pmrResponse, SIGNAL(movedLocation(QString)),
+            this, SLOT(workspaceCreatedResponse(QString)));
 }
 
 //==============================================================================
@@ -530,17 +515,17 @@ void PmrWebService::workspaceCreatedResponse(const QString &pUrl)
 {
     emit workspaceCreated(pUrl);
 
-    auto dirName = sender()->property(DirNameProperty).toString();
-    requestWorkspaceInformation(pUrl, dirName);  // Non-empty dirname will clone workspace
+    requestWorkspaceInformation(pUrl, sender()->property(DirNameProperty).toString());
+    // Note: a non-empty dirname will clone the workspace...
 }
 
 //==============================================================================
 
 void PmrWebService::requestWorkspaces()
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(PmrUrl),
-                                                                    true);
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(PmrUrl), true);
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspacesResponse(QJsonDocument)));
 }
 
@@ -577,16 +562,20 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pWorkspace->url() + "/request_temporary_password",
-                                                                    true, true);
-    repositoryResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)pWorkspace));
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pWorkspace->url() + "/request_temporary_password",
+                                                                               true, true);
+
+    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)pWorkspace));
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspaceCredentialsResponse(QJsonDocument)));
 
-    // Don't return until response has been processed
+    // Don't return until the response has been processed
 
     QEventLoop waitLoop;
-    connect(repositoryResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+
+    connect(pmrResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+
     waitLoop.exec();
 }
 
@@ -604,25 +593,28 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 
 //==============================================================================
 
-PmrWorkspace *PmrWebService::getWorkspace(const QString &pUrl)
+PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
 {
     PmrWorkspace *newWorkspace = 0;
 
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
-    repositoryResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
-    connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
+
+    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
+
+    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(getWorkspaceResponse(QJsonDocument)));
 
     // We want to catch any 403 (unauthorised) response
 
-    disconnect(repositoryResponse, SIGNAL(unauthorised(QString)), 0, 0);
-    connect(repositoryResponse, SIGNAL(unauthorised(QString)),
+    connect(pmrResponse, SIGNAL(unauthorised(const QString &)),
             this, SLOT(workspaceUnauthorised(QString)));
 
-    // Don't return until response has been processed
+    // Don't return until the response has been processed
 
     QEventLoop waitLoop;
-    connect(repositoryResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+
+    connect(pmrResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+
     waitLoop.exec();
 
     return newWorkspace;
@@ -653,14 +645,23 @@ void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
             QVariantMap dataMap = dataVariant.toMap();
             QString fieldName = dataMap["name"].toString();
 
-            if      (fieldName == "storage")     storageValue = dataMap["value"].toString();
-            else if (fieldName == "description") workspaceDescription = dataMap["value"].toString();
-            else if (fieldName == "owner")       workspaceOwner = dataMap["value"].toString();
-            else if (fieldName == "title")       workspaceName = dataMap["value"].toString();
-            else if (fieldName == "id")          workspaceId = dataMap["value"].toString();
+            if (!fieldName.compare("storage"))
+                storageValue = dataMap["value"].toString();
+            else if (!fieldName.compare("description"))
+                workspaceDescription = dataMap["value"].toString();
+            else if (!fieldName.compare("owner"))
+                workspaceOwner = dataMap["value"].toString();
+            else if (!fieldName.compare("title"))
+                workspaceName = dataMap["value"].toString();
+            else if (!fieldName.compare("id"))
+                workspaceId = dataMap["value"].toString();
         }
-        if (workspaceName.isEmpty()) workspaceName = workspaceId;
-        if (workspaceName.isEmpty()) workspaceName = tr("** Unknown name **");
+
+        if (workspaceName.isEmpty())
+            workspaceName = workspaceId;
+
+        if (workspaceName.isEmpty())
+            workspaceName = tr("** Unknown name **");
 
         if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
 

@@ -160,7 +160,7 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
         }
         else {
-            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrWebService::RequestMimeType());
+            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
             networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(), requestData);
         }
 
@@ -169,7 +169,7 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
             networkReply = this->get(networkRequest);
         }
         else {
-            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, PmrWebService::RequestMimeType());
+            networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
             networkReply = this->post(networkRequest, requestData);
         }
     }

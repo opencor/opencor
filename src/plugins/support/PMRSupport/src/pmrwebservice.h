@@ -51,22 +51,23 @@ static const auto PmrUrl = QStringLiteral("http://staging.physiomeproject.org");
 
 //==============================================================================
 
+static const auto CollectionMimeType = QStringLiteral("application/vnd.physiome.pmr2.json.1");
+static const auto RequestMimeType    = QStringLiteral("application/vnd.physiome.pmr2.json.0");
+
+//==============================================================================
+
 class PMRSUPPORT_EXPORT PmrWebService : public QObject
 {
     Q_OBJECT
 
 public:
     explicit PmrWebService(QObject *pParent = 0);
-    ~PmrWebService();
 
-    static const QByteArray CollectionMimeType();
-    static const QByteArray RequestMimeType();
-
-    void requestExposureFiles(const QString &pUrl);
     void requestExposures();
+    void requestExposureFiles(const QString &pUrl);
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
-    PmrWorkspace *getWorkspace(const QString &pUrl);
+    PmrWorkspace * getWorkspace(const QString &pUrl);
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                const QString &pDirName);

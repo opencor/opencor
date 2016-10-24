@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR network response
+// PMR web service response
 //==============================================================================
 
 #include "pmrwebservice.h"
@@ -39,16 +39,11 @@ namespace PMRSupport {
 
 //==============================================================================
 
-const QStringList PmrWebServiceResponse::ResponseMimeTypes = QStringList()
-                                                           << QString("application/json")
-                                                           << QString(PmrWebService::RequestMimeType())
-                                                           << QString(PmrWebService::CollectionMimeType());
-
-//==============================================================================
-
-PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) : mNetworkReply(pNetworkReply)
+PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) :
+    mNetworkReply(pNetworkReply)
 {
-    connect(mNetworkReply, SIGNAL(finished()), this, SLOT(processResponse()));
+    connect(mNetworkReply, SIGNAL(finished()),
+            this, SLOT(processResponse()));
 }
 
 //==============================================================================
@@ -103,6 +98,10 @@ void PmrWebServiceResponse::processResponse()
     int httpStatusCode = mNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     // Check for network errors
+
+    static const QStringList ResponseMimeTypes = QStringList() << "application/json"
+                                                               << RequestMimeType
+                                                               << CollectionMimeType;
 
     if (mNetworkReply->error() != QNetworkReply::NoError) {
 

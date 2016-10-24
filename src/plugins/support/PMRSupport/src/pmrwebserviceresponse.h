@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR response
+// PMR web service response
 //==============================================================================
 
 #pragma once
@@ -44,8 +44,6 @@ class PmrWebServiceResponse : public QObject
     Q_OBJECT
 public:
     explicit PmrWebServiceResponse(QNetworkReply *pNetworkReply);
-
-    static const QStringList ResponseMimeTypes;
 
 private:
     QNetworkReply *mNetworkReply;
