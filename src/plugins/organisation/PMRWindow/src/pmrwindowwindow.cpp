@@ -171,7 +171,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWidget->showBusyWidget();
+        mPmrWidget->showProgressBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {

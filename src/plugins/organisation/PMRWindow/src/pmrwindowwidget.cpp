@@ -259,14 +259,15 @@ void PmrWindowWidget::addExposureFiles(const QString &pUrl,
 {
     // Add the given exposure files to the exposure
 
-    auto sortedFiles = QStringList(pExposureFiles);
-    sortedFiles.sort(Qt::CaseInsensitive);
+    auto sortedExposureFiles = QStringList(pExposureFiles);
+
+    sortedExposureFiles.sort(Qt::CaseInsensitive);
 
     static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
     QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
 
-    foreach (const QString &exposureFile, sortedFiles) {
+    foreach (const QString &exposureFile, sortedExposureFiles) {
         ulElement.appendInside(QString("<li class=\"exposureFile\">"
                                        "    <a href=\"%1\">%2</a>"
                                        "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
@@ -274,8 +275,9 @@ void PmrWindowWidget::addExposureFiles(const QString &pUrl,
 
     // Show the exposure files if we've been waiting for them
 
-    if (pUrl == mShowExposureFilesUrl) {
+    if (!pUrl.compare(mShowExposureFilesUrl)) {
         showExposureFiles(mShowExposureFilesUrl, true);
+
         clearShowExposureFilesUrl();
     }
 }
