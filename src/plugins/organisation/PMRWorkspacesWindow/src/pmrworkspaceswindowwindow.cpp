@@ -142,8 +142,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
 
     connect(mPmrWebService, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
-    connect(mPmrWebService, SIGNAL(workspaces(PMRSupport::PmrWorkspacesWindow)),
-            mWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(PMRSupport::PmrWorkspacesWindow)));
+    connect(mPmrWebService, SIGNAL(workspaces(PMRSupport::PmrWorkspaces)),
+            mWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(PMRSupport::PmrWorkspaces)));
 
     // Connections to process requests from our widget
 
