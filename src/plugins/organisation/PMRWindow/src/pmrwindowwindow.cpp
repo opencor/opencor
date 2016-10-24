@@ -191,7 +191,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 void PmrWindowWindow::showProgress(const double &pProgress)
 {
-    setBusyWidgetProgress(pProgress);
+    mPmrWidget->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

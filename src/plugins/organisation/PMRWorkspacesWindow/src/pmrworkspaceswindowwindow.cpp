@@ -242,7 +242,7 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 
 void PmrWorkspacesWindowWindow::showProgress(const double &pProgress)
 {
-    setBusyWidgetProgress(pProgress);
+    mWorkspacesWindowWidget->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
