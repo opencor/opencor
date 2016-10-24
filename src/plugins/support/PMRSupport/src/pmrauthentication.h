@@ -28,49 +28,17 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
-#include <QUrl>
-#include <QVariantMap>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace PMRSupport {
 
 //==============================================================================
 
-// PMR OAuth 1.0 client
-// Constants must match values assigned to PMR
-
-class PmrOAuthClient: public O1
+class PmrOauthClient: public O1
 {
     Q_OBJECT
 
 public:
-    explicit PmrOAuthClient(const QString &pUrl, QObject *pParent = nullptr);
-
-private:
-    static const char *CallbackUrl();
-    static int         CallbackPort();
-
-    // Authorisation Url templates
-
-    static const QString &AccessTokenUrl();
-    static const QString &AuthorizeUrl();
-    static const QString &RequestTokenUrl();
-
-    // Scope template for request
-
-    static const QString &RequestScope();
-
-    // Keep these out of the header file
-
-    static const char *ConsumerKey();
-    static const char *ConsumerSecret();
-    static const char *EncryptionKey();
+    explicit PmrOauthClient(const QString &pUrl, QObject *pParent = nullptr);
 };
 
 //==============================================================================

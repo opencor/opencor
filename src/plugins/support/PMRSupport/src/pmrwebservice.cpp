@@ -40,17 +40,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-const QString PmrWebService::Url()
-{
-#if PMR_PRODUCTION
-    return "https://models.physiomeproject.org";
-#else
-    return "http://staging.physiomeproject.org";
-#endif
-}
-
-//==============================================================================
-
 const QByteArray PmrWebService::CollectionMimeType()
 {
     return "application/vnd.physiome.pmr2.json.1";
@@ -137,7 +126,7 @@ void PmrWebService::requestExposures()
     // Get the list of exposures from the PMR after making sure that our
     // internal data has been reset
 
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/exposure").arg(Url()),
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/exposure").arg(PmrUrl),
                                                                     false);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(exposuresResponse(QJsonDocument)));
@@ -528,7 +517,7 @@ void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDe
         "]}}").arg(pName, pDescription).toUtf8());
 
     auto repositoryResponse =
-        mPmrWebServiceManager->sendPmrRequest(QString("%1/workspace/+/addWorkspace").arg(Url()),
+        mPmrWebServiceManager->sendPmrRequest(QString("%1/workspace/+/addWorkspace").arg(PmrUrl),
                                               true, true, jsonCreateWorkspace);
     repositoryResponse->setProperty(DirNameProperty, pDirName);
 
@@ -549,7 +538,7 @@ void PmrWebService::workspaceCreatedResponse(const QString &pUrl)
 
 void PmrWebService::requestWorkspaces()
 {
-    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(Url()),
+    auto repositoryResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(PmrUrl),
                                                                     true);
     connect(repositoryResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
             this, SLOT(workspacesResponse(QJsonDocument)));

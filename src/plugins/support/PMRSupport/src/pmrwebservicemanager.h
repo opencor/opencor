@@ -40,7 +40,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrOAuthClient;
+class PmrOauthClient;
 class PmrWebService;
 class PmrWebServiceResponse;
 
@@ -61,7 +61,7 @@ public:
                                           const bool &pUsePost=false, // When no document
                                           const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
-    PmrOAuthClient *mPmrOAuthClient;
+    PmrOauthClient *mPmrOAuthClient;
     PmrWebService *mPmrWebService;
 
 signals:

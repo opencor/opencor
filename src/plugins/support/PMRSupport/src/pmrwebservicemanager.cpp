@@ -49,7 +49,7 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 {
     // Create an OAuth client for authenticated requests to PMR
 
-    mPmrOAuthClient = new PmrOAuthClient(pPmrWebService->Url(), this);
+    mPmrOAuthClient = new PmrOauthClient(PmrUrl, this);
 
     // Make sure that we get told when there are SSL errors (which would happen if the
     // website's certificate is invalid, e.g. it has expired)
@@ -89,7 +89,7 @@ void PmrWebServiceManager::authenticationFailed()
 
 void PmrWebServiceManager::authenticationSucceeded()
 {
-    PmrOAuthClient *o1t = qobject_cast<PmrOAuthClient *>(sender());
+    PmrOauthClient *o1t = qobject_cast<PmrOauthClient *>(sender());
 
     emit authenticated(o1t->linked());
 }

@@ -51,6 +51,12 @@ class PmrWebServiceManager;
 
 //==============================================================================
 
+static const auto PmrUrl = QStringLiteral("http://staging.physiomeproject.org");
+//---OPENCOR--- THE ABOVE SHOULD EVENTUALLY BE REPLACED WITH THE BELOW...
+//static const auto PmrUrl = QStringLiteral("https://models.physiomeproject.org");
+
+//==============================================================================
+
 class PMRSUPPORT_EXPORT PmrWebService : public QObject
 {
     Q_OBJECT
@@ -59,7 +65,6 @@ public:
     explicit PmrWebService(QObject *pParent = nullptr);
     ~PmrWebService();
 
-    static const QString Url();
     static const QByteArray CollectionMimeType();
     static const QByteArray RequestMimeType();
 
