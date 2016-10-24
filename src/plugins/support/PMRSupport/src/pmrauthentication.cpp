@@ -47,7 +47,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *parent) : O1(parent)
+PmrOAuthClient::PmrOAuthClient(const QString &pUrl, QObject *pParent) :
+    O1(pParent)
 {
     setClientId(ConsumerKey());
     setClientSecret(ConsumerSecret());

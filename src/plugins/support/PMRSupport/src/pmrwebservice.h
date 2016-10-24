@@ -56,7 +56,7 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWebService(QObject *parent = 0);
+    explicit PmrWebService(QObject *pParent = nullptr);
     ~PmrWebService();
 
     static const QString Url();

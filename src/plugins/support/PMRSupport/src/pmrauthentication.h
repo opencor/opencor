@@ -50,7 +50,7 @@ class PmrOAuthClient: public O1
     Q_OBJECT
 
 public:
-    explicit PmrOAuthClient(const QString &pUrl, QObject *parent = 0);
+    explicit PmrOAuthClient(const QString &pUrl, QObject *pParent = nullptr);
 
 private:
     static const char *CallbackUrl();

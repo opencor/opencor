@@ -49,7 +49,7 @@ class PMRSUPPORT_EXPORT PmrWorkspacesManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesManager(QObject *parent = 0);
+    explicit PmrWorkspacesManager(QObject *pParent = nullptr);
     virtual ~PmrWorkspacesManager();
 
     static PmrWorkspacesManager *instance();

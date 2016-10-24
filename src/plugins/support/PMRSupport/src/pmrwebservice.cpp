@@ -65,7 +65,7 @@ const QByteArray PmrWebService::RequestMimeType()
 
 //==============================================================================
 
-PmrWebService::PmrWebService(QObject *parent) : QObject(parent),
+PmrWebService::PmrWebService(QObject *pParent) : QObject(pParent),
     mUrlExposures(QMap<QString, PmrExposure *>())
 {
     // Create a network access manager so that we can then retrieve various
