@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "borderedwidget.h"
 #include "coreguiutils.h"
+#include "progressbarwidget.h"
 #include "toolbarwidget.h"
 #include "webbrowserwindowwindow.h"
 #include "webviewerwidget.h"
@@ -37,6 +38,7 @@ limitations under the License.
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPrinterInfo>
+#include <QTimer>
 #include <QWebHistory>
 
 //==============================================================================
@@ -56,6 +58,7 @@ enum {
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
     mGui(new Ui::WebBrowserWindowWindow),
+    mUrl(QString()),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
                      // first call to setZoomLevel
 {
@@ -103,6 +106,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWidget = new WebViewerWidget::WebViewerWidget(this);
 
+    mWebBrowserWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
     setZoomLevel(DefaultZoomLevel);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -114,6 +119,16 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
+
+    // Create our (thin) simulation progress widget
+
+    mProgressBarWidget = new Core::ProgressBarWidget(this);
+
+    mProgressBarWidget->setFixedHeight(3);
+    mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+    mGui->dockWidgetContents->layout()->addWidget(Core::newLineWidget(this));
+    mGui->dockWidgetContents->layout()->addWidget(mProgressBarWidget);
 
     // Various connections to handle our web browser widget
 
@@ -127,6 +142,11 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     connect(mWebBrowserWidget->page(), SIGNAL(selectionChanged()),
             this, SLOT(updateActions()));
+
+    connect(mWebBrowserWidget, SIGNAL(loadProgress(int)),
+            this, SLOT(loadProgress(const int &)));
+    connect(mWebBrowserWidget, SIGNAL(loadFinished(bool)),
+            this, SLOT(loadFinished()));
 
     // Start with a clear web browser widget
 
@@ -149,6 +169,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mContextMenu->addAction(mGui->actionZoomOut);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionPrint);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionInspect);
 
     // We want our own context menu for the help window widget (indeed, we don't
     // want the default one, which has the reload menu item and not the other
@@ -218,7 +240,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
     QString url = pUrl.toString();
 
-    mGui->urlValue->setText(url.compare(AboutBlank)?pUrl.toString():QString());
+    mGui->urlValue->setText(url.compare(AboutBlank)?url:QString());
 
     updateActions();
 }
@@ -261,8 +283,14 @@ void WebBrowserWindowWindow::setZoomLevel(const int &pZoomLevel)
 void WebBrowserWindowWindow::on_urlValue_returnPressed()
 {
     // Load the URL
+    // Note: we keep track of the URL since, in loadProgress(), the initial
+    //       value of mWebBrowserWidget->url() will be that of the previous
+    //       URL, meaning that we would, in the case of a blank page, start
+    //       showing the progress while we clearly shouldn't be...
 
-    mWebBrowserWidget->load(mGui->urlValue->text());
+    mUrl = mGui->urlValue->text();
+
+    mWebBrowserWidget->load(mUrl);
 
     updateActions();
 }
@@ -361,12 +389,57 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
+void WebBrowserWindowWindow::on_actionInspect_triggered()
+{
+    // Inspect the current page
+
+    mWebBrowserWidget->pageAction(QWebPage::InspectElement)->trigger();
+}
+
+//==============================================================================
+
 void WebBrowserWindowWindow::showCustomContextMenu() const
 {
     // Show our context menu which items match the contents of our tool bar
     // widget
 
     mContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::loadProgress(const int &pProgress)
+{
+    // Update the value of our progress bar, but only if we are not dealing with
+    // a blank page
+
+    if (mUrl.compare(AboutBlank))
+        mProgressBarWidget->setValue(0.01*pProgress);
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::loadFinished()
+{
+    // The loading is finished, so reset our progress bar, but only if we are
+    // not dealing with a blank page and with a slight delay (it looks better
+    // that way)
+
+    enum {
+        ResetDelay = 169
+    };
+
+    if (mUrl.compare(AboutBlank))
+        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================
