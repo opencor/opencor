@@ -41,7 +41,7 @@ class DataStoreVariable
 {
 public:
     explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
-    virtual ~DataStoreVariable();
+    ~DataStoreVariable();
 
     bool isVisible() const;
 
@@ -104,7 +104,7 @@ class DataStore
 {
 public:
     explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
-    virtual ~DataStore();
+    ~DataStore();
 
     QString uri() const;
 
