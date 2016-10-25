@@ -42,6 +42,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace WebViewerWidget {
     class WebViewerWidget;
 }   // namespace WebViewerWidget
@@ -71,7 +77,10 @@ private:
 
     QMenu *mContextMenu;
 
+    QString mUrl;
     int mZoomLevel;
+
+    Core::ProgressBarWidget *mProgressBarWidget;
 
     void setZoomLevel(const int &pZoomLevel);
 
@@ -87,11 +96,15 @@ private slots:
     void on_actionZoomIn_triggered();
     void on_actionZoomOut_triggered();
     void on_actionPrint_triggered();
+    void on_actionInspect_triggered();
 
     void updateActions();
     void urlChanged(const QUrl &pUrl);
     void documentChanged();
     void showCustomContextMenu() const;
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 };
 
 //==============================================================================
