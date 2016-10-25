@@ -166,11 +166,11 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
 
     } else {
         if (!pUsePost && pJsonDocument.isNull()) {
-            networkReply = this->get(networkRequest);
+            networkReply = get(networkRequest);
         }
         else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
-            networkReply = this->post(networkRequest, requestData);
+            networkReply = post(networkRequest, requestData);
         }
     }
 

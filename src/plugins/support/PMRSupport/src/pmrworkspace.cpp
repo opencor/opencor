@@ -527,7 +527,7 @@ bool PmrWorkspace::fetch()
 {
     // Fetch any updates for a workspace
 
-    if (!this->isOpen()) return false;
+    if (!isOpen()) return false;
 
     bool fetched = true;
 
@@ -795,7 +795,7 @@ bool PmrWorkspace::merge()
 {
     // Merge and commit fetched updates
 
-    if (!this->isOpen()) return false;
+    if (!isOpen()) return false;
 
     bool result = true;
 
@@ -835,13 +835,13 @@ void PmrWorkspace::synchronise(const bool pOnlyPull)
 {
     // Synchronise our local workspace with PMR
 
-    if (this->fetch()
-      && this->merge()
+    if (fetch()
+      && merge()
       && !pOnlyPull) {
         // We've successfully fetched and merged
         // so push if we are allowed to.
 
-        this->push();
+        push();
     }
 
     emit workspaceSynchronised(this);
@@ -853,7 +853,7 @@ void PmrWorkspace::push()
 {
     // Push a workspace
 
-    if (!this->isOpen()) return;
+    if (!isOpen()) return;
 
     git_push_options pushOptions;
     git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
@@ -936,7 +936,7 @@ bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git
 
 bool PmrWorkspace::commit(const QString &pMessage)
 {
-    if (!this->isOpen()) return false;
+    if (!isOpen()) return false;
 
     // Get an empty buffer to hold the cleaned message
     git_buf message;
@@ -992,7 +992,7 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
     auto status = StatusUnknown;
 
-    if (this->isOpen()) {
+    if (isOpen()) {
 
         if (git_repository_head_unborn(mGitRepository) == 1) {
             status = StatusCurrent;
@@ -1080,7 +1080,7 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 {
     auto status = QPair<QChar, QChar>(' ', ' ');
 
-    if (this->isOpen()) {
+    if (isOpen()) {
         auto repoDir = QDir(mPath);
         unsigned int statusFlags = 0;
         QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
@@ -1101,7 +1101,7 @@ const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) cons
 
 void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
-    if (this->isOpen()) {
+    if (isOpen()) {
         auto repoDir = QDir(mPath);
         auto relativePathBuffer = repoDir.relativeFilePath(pPath).toUtf8();
         auto relativePath = relativePathBuffer.constData();

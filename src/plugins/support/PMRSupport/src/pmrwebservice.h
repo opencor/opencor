@@ -51,8 +51,8 @@ static const auto PmrUrl = QStringLiteral("http://staging.physiomeproject.org");
 
 //==============================================================================
 
-static const auto CollectionMimeType = QStringLiteral("application/vnd.physiome.pmr2.json.1");
 static const auto RequestMimeType    = QStringLiteral("application/vnd.physiome.pmr2.json.0");
+static const auto CollectionMimeType = QStringLiteral("application/vnd.physiome.pmr2.json.1");
 
 //==============================================================================
 
@@ -80,7 +80,6 @@ public:
                              const QString &pDirName);
 
 private:
-
     enum Action {
         None,
         CloneExposureWorkspace,
