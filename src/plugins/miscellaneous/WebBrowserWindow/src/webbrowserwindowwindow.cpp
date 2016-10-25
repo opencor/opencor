@@ -124,11 +124,20 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mProgressBarWidget = new Core::ProgressBarWidget(this);
 
-    mProgressBarWidget->setFixedHeight(3);
-    mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                                               false, true, true, true);
+#elif defined(Q_OS_MAC)
+    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                                               true, false, false, false);
+#else
+    #error Unsupported platform
+#endif
 
-    mGui->dockWidgetContents->layout()->addWidget(Core::newLineWidget(this));
-    mGui->dockWidgetContents->layout()->addWidget(mProgressBarWidget);
+    progressBarBorderedWidget->setFixedHeight(4);
+    progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+    mGui->dockWidgetContents->layout()->addWidget(progressBarBorderedWidget);
 
     // Various connections to handle our web browser widget
 
