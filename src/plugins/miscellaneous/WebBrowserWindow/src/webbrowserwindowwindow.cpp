@@ -218,7 +218,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
     QString url = pUrl.toString();
 
-    mGui->urlValue->setText(url.compare(AboutBlank)?pUrl.toString():QString());
+    mGui->urlValue->setText(url.compare(AboutBlank)?url:QString());
 
     updateActions();
 }
