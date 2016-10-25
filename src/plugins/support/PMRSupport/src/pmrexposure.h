@@ -58,8 +58,8 @@ private:
 class PmrExposures : public QList<PmrExposure *>
 {
 public:
-    PmrExposures();
-    virtual ~PmrExposures();
+    explicit PmrExposures();
+    ~PmrExposures();
 
     void add(const QString &pUrl, const QString &pName);
 };
