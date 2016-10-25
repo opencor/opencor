@@ -20,7 +20,6 @@ limitations under the License.
 // PMR web service
 //==============================================================================
 
-#include "corecliutils.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
@@ -28,9 +27,10 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QFuture>
-#include <QJsonDocument>
 #include <QJsonObject>
+
+//==============================================================================
+
 #include <QtConcurrent/QtConcurrent>
 
 //==============================================================================
@@ -309,7 +309,7 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QStrin
     connect(pWorkspace, SIGNAL(workspaceCloned(PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished(PmrWorkspace *)));
 
-    QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
+    QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
 }
 
 //==============================================================================
@@ -375,7 +375,7 @@ void PmrWebService::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const 
     connect(pWorkspace, SIGNAL(workspaceSynchronised(PmrWorkspace *)),
             this, SLOT(workspaceSynchroniseFinished(PmrWorkspace *)));
 
-    QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronise, pOnlyPull);
+    QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronise, pOnlyPull);
 }
 
 //==============================================================================
