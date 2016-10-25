@@ -24,15 +24,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include "pmrauthentication.h"
 #include "pmrexposure.h"
 #include "pmrsupportglobal.h"
 #include "pmrworkspace.h"
-
-//==============================================================================
-
-class QNetworkAccessManager;
-class QNetworkReply;
 
 //==============================================================================
 
@@ -61,7 +55,7 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWebService(QObject *pParent = 0);
+    explicit PmrWebService(QObject *pParent);
 
     void requestExposures();
     void requestExposureFiles(const QString &pUrl);
@@ -138,10 +132,10 @@ private slots:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesResponse(const QJsonDocument &pJsonDocument);
 
-    void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloneFinished(PmrWorkspace *pWorkspace);
     void workspaceCreatedResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
-    void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchroniseFinished(PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

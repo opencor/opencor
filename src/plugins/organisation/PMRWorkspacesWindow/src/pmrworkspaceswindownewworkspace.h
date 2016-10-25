@@ -44,7 +44,7 @@ class PmrWorkspacesWindowNewWorkspace : public QDialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowNewWorkspace(QWidget * pParent=0);
+    explicit PmrWorkspacesWindowNewWorkspace(QWidget *pParent);
     ~PmrWorkspacesWindowNewWorkspace();
 
     virtual void retranslateUi();

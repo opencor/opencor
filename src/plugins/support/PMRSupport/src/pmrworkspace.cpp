@@ -116,7 +116,7 @@ QString PmrWorkspace::getEmptyWorkspaceDirectory()
     // Retrieve the name of an empty directory
 
     return Core::getExistingDirectory(tr("Select Empty Directory"),
-                                      PMRSupport::PmrWorkspace::WorkspacesDirectory(),
+                                      PmrWorkspace::WorkspacesDirectory(),
                                       true);
 }
 

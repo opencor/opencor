@@ -39,6 +39,7 @@ limitations under the License.
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QHelpEvent>
+#include <QMainWindow>
 #include <QMenu>
 #include <QMutableMapIterator>
 #include <QProcess>
@@ -1086,7 +1087,8 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
             workspace->commitMerge();
         }
         else {
-            auto commitDialog = new PmrWorkspacesWindowCommit(workspace->stagedFiles());
+            auto commitDialog = new PmrWorkspacesWindowCommit(workspace->stagedFiles(),
+                                                              Core::mainWindow());
 
             if (commitDialog->exec() == QDialog::Accepted)
                 workspace->commit(commitDialog->message());

@@ -339,7 +339,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
     // Create a new workspace
 
-    auto newWorkspaceDialog = new PmrWorkspacesWindowNewWorkspace();
+    auto newWorkspaceDialog = new PmrWorkspacesWindowNewWorkspace(Core::mainWindow());
 
     if (newWorkspaceDialog->exec() == QDialog::Accepted) {
 

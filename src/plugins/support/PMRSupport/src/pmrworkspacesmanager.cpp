@@ -34,9 +34,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspacesManager::PmrWorkspacesManager(QObject *pParent) :
-    QObject(pParent),
-    mUrlWorkspaces(QMap<QString, PMRSupport::PmrWorkspace *>())
+PmrWorkspacesManager::PmrWorkspacesManager() :
+    mUrlWorkspaces(QMap<QString, PmrWorkspace *>())
 {
     git_libgit2_init();
 }
@@ -50,7 +49,7 @@ PmrWorkspacesManager::~PmrWorkspacesManager()
 
 //==============================================================================
 
-PmrWorkspacesManager *PmrWorkspacesManager::instance()
+PmrWorkspacesManager * PmrWorkspacesManager::instance()
 {
     // Return the 'global' instance of our workspaces manager class
 

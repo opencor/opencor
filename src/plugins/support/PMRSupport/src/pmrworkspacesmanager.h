@@ -49,10 +49,10 @@ class PMRSUPPORT_EXPORT PmrWorkspacesManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesManager(QObject *pParent = 0);
-    virtual ~PmrWorkspacesManager();
+    explicit PmrWorkspacesManager();
+    ~PmrWorkspacesManager();
 
-    static PmrWorkspacesManager *instance();
+    static PmrWorkspacesManager * instance();
 
     void emitWorkspaceCloned(PmrWorkspace *pWorkspace);
 
@@ -65,7 +65,7 @@ public:
     QList<PmrWorkspace *> workspaces() const;
 
 private:
-    QMap<QString, PMRSupport::PmrWorkspace *> mUrlWorkspaces;
+    QMap<QString, PmrWorkspace *> mUrlWorkspaces;
 
 signals:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

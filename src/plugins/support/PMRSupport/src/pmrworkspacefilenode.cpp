@@ -29,18 +29,23 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName, const QString &pFullName,
+PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName,
+                                           const QString &pFullName,
                                            const QPair<QChar, QChar> &pStatus,
-                                           PmrWorkspaceFileNode *parent) :
-    QObject(parent), mShortName(pShortName), mFullName(pFullName),
-    mStatus(pStatus), mChildren(QList<PmrWorkspaceFileNode *>())
+                                           PmrWorkspaceFileNode *pParent) :
+    QObject(pParent),
+    mShortName(pShortName),
+    mFullName(pFullName),
+    mStatus(pStatus),
+    mChildren(QList<PmrWorkspaceFileNode *>())
 {
 
 }
 
 //==============================================================================
 
-PmrWorkspaceFileNode *PmrWorkspaceFileNode::addChild(const QString &pShortName, const QPair<QChar, QChar> &pStatus)
+PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pShortName,
+                                                      const QPair<QChar, QChar> &pStatus)
 {
     auto newNode = new PmrWorkspaceFileNode(pShortName, fullName() + "/" + pShortName, pStatus, this);
     mChildren.append(newNode);

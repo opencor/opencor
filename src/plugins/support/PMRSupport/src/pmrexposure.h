@@ -83,7 +83,7 @@ private:
 class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
 {
 public:
-    void add(const QString &pUrl, const QString &pName, QObject *parent);
+    void add(const QString &pUrl, const QString &pName, QObject *pParent);
 };
 
 //==============================================================================

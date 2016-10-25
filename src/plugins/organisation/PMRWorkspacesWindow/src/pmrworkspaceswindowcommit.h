@@ -45,7 +45,8 @@ class PmrWorkspacesWindowCommit : public QDialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowCommit(const QStringList &pStagedFiles, QWidget * pParent=0);
+    explicit PmrWorkspacesWindowCommit(const QStringList &pStagedFiles,
+                                       QWidget *pParent);
     ~PmrWorkspacesWindowCommit();
 
     virtual void retranslateUi();

@@ -119,7 +119,7 @@ const QStringList PmrExposure::exposureFileList() const
 
 //==============================================================================
 
-PmrWorkspace *PmrExposure::workspace() const
+PmrWorkspace * PmrExposure::workspace() const
 {
     return mWorkspace;
 }
@@ -133,11 +133,12 @@ void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrExposures::add(const QString &pUrl, const QString &pName, QObject *parent)
+void PmrExposures::add(const QString &pUrl, const QString &pName,
+                       QObject *pParent)
 {
     // Add a new exposure to the list
 
-    QList::append(new PmrExposure(pUrl, pName, parent));
+    QList::append(new PmrExposure(pUrl, pName, pParent));
 }
 
 //==============================================================================

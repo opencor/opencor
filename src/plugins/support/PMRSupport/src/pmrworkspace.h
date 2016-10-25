@@ -60,7 +60,7 @@ public:
     explicit PmrWorkspace(const QString &pUrl, const QString &pName,
                           const QString &pDescription, const QString &pOwner,
                           PmrWebService *pParent);
-    virtual ~PmrWorkspace();
+    ~PmrWorkspace();
 
     static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
@@ -162,8 +162,8 @@ signals:
     void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(PmrWorkspace *pWorkspace);
+    void workspaceSynchronised(PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

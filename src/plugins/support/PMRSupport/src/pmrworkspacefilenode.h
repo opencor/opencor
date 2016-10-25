@@ -45,10 +45,10 @@ class PMRSUPPORT_EXPORT PmrWorkspaceFileNode : public QObject
 
 public:
     PmrWorkspaceFileNode(const QString &shortName, const QString &fullName,
-                         const QPair<QChar, QChar> &pStatus=QPair<QChar, QChar>(),
-                         PmrWorkspaceFileNode *parent=0);
-    PmrWorkspaceFileNode *addChild(const QString &pName,
-                                   const QPair<QChar, QChar> &pStatus=QPair<QChar, QChar>());
+                         const QPair<QChar, QChar> &pStatus = QPair<QChar, QChar>(),
+                         PmrWorkspaceFileNode *pParent = 0);
+    PmrWorkspaceFileNode * addChild(const QString &pName,
+                                    const QPair<QChar, QChar> &pStatus = QPair<QChar, QChar>());
     const QString &shortName() const;
     const QString &fullName() const;
     const QPair<QChar, QChar> &status() const;

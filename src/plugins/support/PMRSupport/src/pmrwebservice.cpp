@@ -306,8 +306,8 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QStrin
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
-    connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
+    connect(pWorkspace, SIGNAL(workspaceCloned(PmrWorkspace *)),
+            this, SLOT(workspaceCloneFinished(PmrWorkspace *)));
 
     QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
 }
@@ -372,8 +372,8 @@ void PmrWebService::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const 
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
-    connect(pWorkspace, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *)));
+    connect(pWorkspace, SIGNAL(workspaceSynchronised(PmrWorkspace *)),
+            this, SLOT(workspaceSynchroniseFinished(PmrWorkspace *)));
 
     QFuture<void> future = QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronise, pOnlyPull);
 }
