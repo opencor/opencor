@@ -93,11 +93,12 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
-    connect(mPmrWebService, SIGNAL(progress(double)),
-            this, SLOT(showProgress(double)));
+    connect(mPmrWebService, SIGNAL(progress(const double &)),
+            this, SLOT(showProgress(const double &)));
 
     connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
-            this, SLOT(repositoryError(const QString &, const bool &)));
+            this, SLOT(pmrError(const QString &, const bool &)));
+
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
@@ -191,16 +192,22 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 void PmrWindowWindow::showProgress(const double &pProgress)
 {
+    // Update our busy widget progress
+
     mPmrWidget->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
 
-void PmrWindowWindow::showError(const QString &pMessage)
+void PmrWindowWindow::pmrError(const QString &pErrorMessage,
+                               const bool &pInternetConnectionAvailable)
 {
-    // Show the given message as an error
+    // Tell our PMR widget we have a problem
 
-    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    mPmrWidget->initialize(PMRSupport::PmrExposures(), QString(),
+                           pInternetConnectionAvailable);
+
+    showError(pErrorMessage);
 }
 
 //==============================================================================
@@ -219,6 +226,15 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
     // Show the given message as a warning
 
     Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::showError(const QString &pMessage)
+{
+    // Show the given message as an error
+
+    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -247,19 +263,6 @@ void PmrWindowWindow::gotExposures(const PMRSupport::PmrExposures &pExposures)
     // Ask our PMR widget to initialise itself
 
     mPmrWidget->initialize(pExposures, mGui->filterValue->text(), true);
-}
-
-//==============================================================================
-
-void PmrWindowWindow::repositoryError(const QString &pErrorMessage,
-                                      const bool &pInternetConnectionAvailable)
-{
-    // Tell our PMR widget we have a problem
-
-    mPmrWidget->initialize(PMRSupport::PmrExposures(), QString(),
-                           pInternetConnectionAvailable);
-
-    showError(pErrorMessage);
 }
 
 //==============================================================================

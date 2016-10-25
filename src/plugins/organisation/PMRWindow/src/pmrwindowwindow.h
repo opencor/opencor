@@ -86,10 +86,12 @@ private slots:
     void busy(const bool &pBusy);
     void showProgress(const double &pProgress);
 
-    void repositoryError(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
-    void showError(const QString &pMessage);
+    void pmrError(const QString &pErrorMessage,
+                  const bool &pInternetConnectionAvailable);
+
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
+    void showError(const QString &pMessage);
 
     void retrieveExposures(const bool &pVisible);
 

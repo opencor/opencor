@@ -607,13 +607,14 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
     // We want to catch any 403 (unauthorised) response
 
     connect(pmrResponse, SIGNAL(unauthorised(const QString &)),
-            this, SLOT(workspaceUnauthorised(QString)));
+            this, SLOT(workspaceUnauthorised(const QString &)));
 
     // Don't return until the response has been processed
 
     QEventLoop waitLoop;
 
-    connect(pmrResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+    connect(pmrResponse, SIGNAL(finished()),
+            &waitLoop, SLOT(quit()));
 
     waitLoop.exec();
 
