@@ -106,6 +106,7 @@ public:
         StatusCommit   = 64,
         StatusUnstaged = 128
     };
+
     WorkspaceStatus gitWorkspaceStatus() const;
     const CharPair gitFileStatus(const QString &pPath) const;
 

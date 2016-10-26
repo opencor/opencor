@@ -55,6 +55,11 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
+typedef QPair<QString, QString> StringPair;
+typedef QList<StringPair> StringPairs;
+
+//==============================================================================
+
 class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget,
                                   public Core::CommonWidget
 {
@@ -114,19 +119,19 @@ private:
 
     void setCurrentWorkspaceUrl(const QString &pUrl);
 
-    static const QString actionHtml(const QList<QPair<QString, QString>> &pActions);
+    static const QString actionHtml(const StringPairs &pActions);
     QString containerHtml(const QString &pClass, const QString &pIcon,
                           const QString &pId, const QString &pName,
                           const QString &pStatus,
-                          const QList<QPair<QString, QString>> &pActionList);
+                          const StringPairs &pActionList);
     QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode, const bool &pHidden);
     QString emptyContentsHtml();
 
-    static const QStringList fileStatusActionHtml(const QString &pPath,
-                                                  const PMRSupport::CharPair &pGitStatus);
-    static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                                  const QString &pPath);
-    static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    static QStringList fileStatusActionHtml(const QString &pPath,
+                                            const PMRSupport::CharPair &pGitStatus);
+    static QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                                            const QString &pPath);
+    static QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
     QString fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);

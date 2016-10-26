@@ -190,9 +190,10 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         QStringList folders = pSettings->value(SettingsFolders).toStringList();
         foreach (QString folder, folders) {
             if (!folder.isEmpty()) {
-                auto url = addWorkspaceFolder(folder);
+                QString url = addWorkspaceFolder(folder);
 
                 // Ensure only the current workspace is expanded
+
                 if (url == mCurrentWorkspaceUrl)
                     mExpandedItems.insert(mCurrentWorkspaceUrl);
                 else if (mExpandedItems.contains(url))
@@ -300,9 +301,9 @@ void PmrWorkspacesWindowWidget::scanDefaultWorkspaceDirectory()
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowWidget::actionHtml(const QList<QPair<QString, QString>> &pActions)
+const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 {
-    QPair<QString, QString> action;
+    StringPair action;
     QStringList actions;
     foreach (action, pActions)
         actions << QString("<a href=\"%1|%2\"><img class=\"button noHover %1\" /></a>").arg(action.first, action.second);
@@ -317,7 +318,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                                  const QString &pId,
                                                  const QString &pName,
                                                  const QString &pStatus,
-                                                 const QList<QPair<QString, QString>> &pActionList)
+                                                 const StringPairs &pActionList)
 {
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "  <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
@@ -339,17 +340,17 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
-                                                                  const PMRSupport::CharPair &pGitStatus)
+QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
+                                                            const PMRSupport::CharPair &pGitStatus)
 {
     static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
 
-    auto actionList = QList<QPair<QString, QString>>();
+    StringPairs actionList = StringPairs();
 
     if (pGitStatus.second != ' ')
-        actionList << QPair<QString, QString>("stage", pPath);
+        actionList << StringPair("stage", pPath);
     else if (pGitStatus.first != ' ')
-        actionList << QPair<QString, QString>("unstage", pPath);
+        actionList << StringPair("unstage", pPath);
 
     return QStringList() << statusHtml.arg(pGitStatus.first).arg(pGitStatus.second)
                          << actionHtml(actionList);
@@ -357,15 +358,15 @@ const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString 
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
-                                                                  const QString &pPath)
+QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+                                                            const QString &pPath)
 {
     return fileStatusActionHtml(pPath, pWorkspace->gitFileStatus(pPath));
 }
 
 //==============================================================================
 
-const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     return fileStatusActionHtml(pFileNode->fullName(), pFileNode->status());
 }
@@ -379,7 +380,7 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
                                 "  <td class=\"status\">%4</td>\n"
                                 "  <td class=\"action\">%5</td>\n"
                                 "</tr>\n";
-    auto path = pFileNode->fullName();
+    QString path = pFileNode->fullName();
 
     ++mRow;
 
@@ -388,7 +389,7 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
     if (path == mSelectedItem)
         rowClass += " selected";
 
-    auto statusActionHtml = fileStatusActionHtml(pFileNode);
+    QStringList statusActionHtml = fileStatusActionHtml(pFileNode);
 
     // Use an anchor element to allow us to set the scroll position at a row
 
@@ -454,13 +455,13 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
     QString path = pWorkspace->path();
 
     QString icon = pWorkspace->isOwned() ? "star" : "folder";
-    auto status = QString("");
-    auto actionList = QList<QPair<QString, QString>>();
+    QString status = QString();
+    StringPairs actionList = StringPairs();
 
-    auto workspaceStatus = pWorkspace->gitWorkspaceStatus();
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
 
     if (path.isEmpty()) {
-        actionList << QPair<QString, QString>("clone", url);
+        actionList << StringPair("clone", url);
     } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict) {
         // Indicate that there are merge conflicts
 
@@ -474,18 +475,18 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
         // Indicate whether files are staged for commit
 
         if (workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit)
-            actionList << QPair<QString, QString>("commit", url);
+            actionList << StringPair("commit", url);
 
         // Show synchronisation button, with different styles to
         // indicate exactly what it will do
 
         if (pWorkspace->isOwned()) {
             if (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
-                actionList << QPair<QString, QString>("push", url);
+                actionList << StringPair("push", url);
             else
-                actionList << QPair<QString, QString>("sync", url);
+                actionList << StringPair("sync", url);
         } else {
-            actionList << QPair<QString, QString>("pull", url);
+            actionList << StringPair("pull", url);
         }
     }
 
@@ -511,7 +512,7 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 
     QStringList html = QStringList(containerHtml((mRow % 2)?"folder":"folder even",
                                                  icon, fullname, pFileNode->shortName(), "",
-                                                 QList<QPair<QString, QString>>()));
+                                                 StringPairs()));
 
     html << contentsHtml(pFileNode, !mExpandedItems.contains(fullname));
 
@@ -547,8 +548,7 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
         // Close the current workspace if we are selecting a different one
 
         if (!mCurrentWorkspaceUrl.isEmpty()) {
-            auto workspaceContents = page()->mainFrame()->documentElement().findFirst(
-                                        QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
+            QWebElement workspaceContents = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
 
             if (!workspaceContents.isNull()) {
                 workspaceContents.previousSibling().removeClass("selected");
@@ -564,8 +564,10 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
         // Set the active directory to the workspace
 
-        auto workspace = mWorkspacesManager->workspace(pUrl);
-        if (workspace->isLocal()) Core::setActiveDirectory(workspace->path());
+        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
+
+        if (workspace->isLocal())
+            Core::setActiveDirectory(workspace->path());
     }
 }
 
@@ -693,18 +695,19 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
-    auto webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
-    while (!webElement.isNull()
-      &&    webElement.tagName() != "A"
-      &&   !webElement.hasClass("status")
-      &&   !webElement.hasClass("istatus")
-      &&   !webElement.hasClass("wstatus")
-      &&    webElement.tagName() != "TR") {
+    QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
+
+    while (   !webElement.isNull()
+           &&  webElement.tagName().compare("A")
+           &&  webElement.tagName().compare("TR")
+           && !webElement.hasClass("status")
+           && !webElement.hasClass("istatus")
+           && !webElement.hasClass("wstatus")) {
         webElement = webElement.parent();
     }
 
-    auto toolTip = QString();
-    auto mouseCursor = QCursor(Qt::ArrowCursor);
+    QString toolTip = QString();
+    QCursor mouseCursor = QCursor(Qt::ArrowCursor);
 
     if (!webElement.isNull()) {
         if (webElement.tagName() == "A" && !webElement.attribute("href").isEmpty()) {
@@ -750,7 +753,7 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
             QString link = webElement.attribute("id");
 
             if (webElement.hasClass("workspace")) {
-                auto workspace = mWorkspacesManager->workspace(link);
+                PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(link);
 
                 toolTip = QString("%1\n%2").arg(workspace->url(), workspace->path());
             }
@@ -813,18 +816,21 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
                     if (!workspaceElement.isNull()) {
                         // Stage/unstage the file
 
-                        auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+                        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
                         workspace->stageFile(linkUrl, (action == "stage"));
 
                         // Now update the file's status and action
 
-                        auto statusActionHtml = fileStatusActionHtml(workspace, linkUrl);
+                        QStringList statusActionHtml = fileStatusActionHtml(workspace, linkUrl);
+                        QWebElement statusElement = trElement.findFirst("td.status");
 
-                        auto statusElement = trElement.findFirst("td.status");
-                        if (!statusElement.isNull()) statusElement.setInnerXml(statusActionHtml[0]);
+                        if (!statusElement.isNull())
+                            statusElement.setInnerXml(statusActionHtml[0]);
 
-                        auto actionElement = trElement.findFirst("td.action");
-                        if (!actionElement.isNull()) actionElement.setInnerXml(statusActionHtml[1]);
+                        QWebElement actionElement = trElement.findFirst("td.action");
+
+                        if (!actionElement.isNull())
+                            actionElement.setInnerXml(statusActionHtml[1]);
 
                         // And update the workspace's header icons
 
@@ -866,26 +872,25 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
 // TODO: Context menus for folders and files
 
-    auto menu = new QMenu(this);
+    QMenu *menu = new QMenu(this);
+    const QPoint &pos = pEvent->pos();
+    QWebElement trElement = page()->mainFrame()->hitTestContent(pos).element();
 
-    auto pos = pEvent->pos();
-
-    auto trElement = page()->mainFrame()->hitTestContent(pos).element();
-    while (!trElement.isNull() && trElement.tagName() != "TR")
+    while (!trElement.isNull() && trElement.tagName().compare("TR"))
         trElement = trElement.parent();
 
     if (!trElement.isNull() && trElement.hasClass("workspace")) {
         QString elementId = trElement.attribute("id");
 
         if (!trElement.findFirst("img.clone").isNull()) {
-            auto action = new QAction(QIcon(ICON_CLONE), tr("Clone workspace"), this);
+            QAction *action = new QAction(QIcon(ICON_CLONE), tr("Clone workspace"), this);
 
             action->setData(QString("clone|%1").arg(elementId));
 
             menu->addAction(action);
         } else {
             if (!trElement.findFirst("img.commit").isNull()) {
-                auto action = new QAction(QIcon(ICON_COMMIT), tr("Commit staged changes"), this);
+                QAction *action = new QAction(QIcon(ICON_COMMIT), tr("Commit staged changes"), this);
 
                 action->setData(QString("commit|%1").arg(elementId));
 
@@ -893,7 +898,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
             }
 
             if (!trElement.findFirst("img.pull").isNull()) {
-                auto action = new QAction(QIcon(ICON_SYNC_PULL), tr("Synchronise with PMR"), this);
+                QAction *action = new QAction(QIcon(ICON_SYNC_PULL), tr("Synchronise with PMR"), this);
 
                 action->setData(QString("pull|%1").arg(elementId));
 
@@ -901,13 +906,13 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
             }
 
             if (!trElement.findFirst("img.sync").isNull()) {
-                auto action = new QAction(QIcon(ICON_SYNCHRONISE), tr("Synchronise with PMR"), this);
+                QAction *action = new QAction(QIcon(ICON_SYNCHRONISE), tr("Synchronise with PMR"), this);
 
                 action->setData(QString("sync|%1").arg(elementId));
 
                 menu->addAction(action);
             } else if (!trElement.findFirst("img.push").isNull()) {
-                auto action = new QAction(QIcon(ICON_SYNC_PUSH), tr("Synchronise and upload to PMR"), this);
+                QAction *action = new QAction(QIcon(ICON_SYNC_PUSH), tr("Synchronise and upload to PMR"), this);
 
                 action->setData(QString("push|%1").arg(elementId));
 
@@ -917,16 +922,16 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addSeparator();
 
-        auto refreshAction = new QAction(QIcon(ICON_REFRESH), tr("Refresh display"), this);
+        QAction *refreshAction = new QAction(QIcon(ICON_REFRESH), tr("Refresh display"), this);
 
         refreshAction->setData(QString("refresh|%1").arg(elementId));
 
         menu->addAction(refreshAction);
 
-        auto workspace = mWorkspacesManager->workspace(elementId);
+        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(elementId);
 
         if (workspace) {
-            auto action = new QAction(tr("View in PMR..."), this);
+            QAction *action = new QAction(tr("View in PMR..."), this);
 
             action->setData(QString("pmr|%1").arg(workspace->url()));
 
@@ -943,7 +948,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addSeparator();
 
-        auto aboutAction = new QAction(QIcon(ICON_ABOUT), tr("About the workspace"), this);
+        QAction *aboutAction = new QAction(QIcon(ICON_ABOUT), tr("About the workspace"), this);
 
         aboutAction->setData(QString("about|%1").arg(elementId));
 
@@ -1031,7 +1036,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
         if (!urlsIterator.value().second) {
             QString url = urlsIterator.key();
-            auto workspace = mPmrWebService->getWorkspace(url);
+            PMRSupport::PmrWorkspace *workspace = mPmrWebService->getWorkspace(url);
 
             if (workspace) {
                 mWorkspacesManager->addWorkspace(workspace);
@@ -1057,16 +1062,25 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
 void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 {
-    QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
-                                                          QString("tr.workspace[id=\"%1\"]").arg(pUrl));
+    QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
+
     if (!workspaceElement.isNull()) {
-        auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+
         if (workspace) {
             QStringList workspaceInformation = QStringList() << workspace->name();
-            if (!workspace->description().isEmpty()) workspaceInformation << workspace->description();
-            if (!workspace->owner().isEmpty()) workspaceInformation << tr("Owner: %1").arg(workspace->owner());
+
+            if (!workspace->description().isEmpty())
+                workspaceInformation << workspace->description();
+
+            if (!workspace->owner().isEmpty())
+                workspaceInformation << tr("Owner: %1").arg(workspace->owner());
+
             workspaceInformation << tr("PMR: <a href=\"%1\">%1</a>").arg(workspace->url());
-            if (workspace->isLocal()) workspaceInformation << tr("Path: <a href=\"file://%1/\">%1</a>").arg(workspace->path());
+
+            if (workspace->isLocal())
+                workspaceInformation << tr("Path: <a href=\"file://%1/\">%1</a>").arg(workspace->path());
+
             emit information(workspaceInformation.join("<br></br><br></br>"));
         }
     }
@@ -1076,15 +1090,16 @@ void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 {
-    auto workspace = mWorkspacesManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
 
     if (workspace && !workspace->isLocal()) {
-        auto dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
+        QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
 
         if (!dirName.isEmpty()) {
             // Create the folder for the new workspace
 
-            auto workspaceFolder = QDir(dirName);
+            QDir workspaceFolder = QDir(dirName);
+
             if (!workspaceFolder.exists())
                 workspaceFolder.mkpath(".");
 
@@ -1097,14 +1112,13 @@ void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
-    auto workspace = mWorkspacesManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal()) {
-
         if (workspace->isMerging()) {
             workspace->commitMerge();
         } else {
-            auto commitDialog = new PmrWorkspacesWindowCommit(workspace->stagedFiles(), Core::mainWindow());
+            PmrWorkspacesWindowCommit *commitDialog = new PmrWorkspacesWindowCommit(workspace->stagedFiles(), Core::mainWindow());
 
             if (commitDialog->exec() == QDialog::Accepted)
                 workspace->commit(commitDialog->message());
@@ -1121,7 +1135,8 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
                                        QString("tr.workspace[id=\"%1\"]").arg(pUrl));
     if (!workspaceElement.isNull()) {
-        auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+
         if (workspace) {
             // We have a valid workspace so refresh its status
 
@@ -1129,14 +1144,14 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 
             // And replace the header and content rows
 
-            auto htmlRows = workspaceHtml(workspace);
+            QStringList htmlRows = workspaceHtml(workspace);
 
             // Using workspaceElement.nextSibling() directly doesn't update Xml
 
-            auto contentsElement = workspaceElement.nextSibling();
+            QWebElement contentsElement = workspaceElement.nextSibling();
 
-            workspaceElement.setOuterXml(htmlRows[0]);    // header
-            contentsElement.setOuterXml(htmlRows[1]);     // contents
+            workspaceElement.setOuterXml(htmlRows[0]);
+            contentsElement.setOuterXml(htmlRows[1]);
         }
     }
 }
@@ -1145,21 +1160,26 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 {
-    auto fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
+    QWebElement fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
     QWebElement workspaceElement = parentWorkspaceElement(fileElement);
 
     if (!workspaceElement.isNull()) {
-        auto workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+
         if (workspace) {
             // We have a valid workspace so update file's status
 
-            auto statusActionHtml = fileStatusActionHtml(workspace, pPath);
+            QStringList statusActionHtml = fileStatusActionHtml(workspace, pPath);
 
-            auto statusElement = fileElement.findFirst("td.status");
-            if (!statusElement.isNull()) statusElement.setInnerXml(statusActionHtml[0]);
+            QWebElement statusElement = fileElement.findFirst("td.status");
 
-            auto actionElement = fileElement.findFirst("td.action");
-            if (!actionElement.isNull()) actionElement.setInnerXml(statusActionHtml[1]);
+            if (!statusElement.isNull())
+                statusElement.setInnerXml(statusActionHtml[0]);
+
+            QWebElement actionElement = fileElement.findFirst("td.action");
+
+            if (!actionElement.isNull())
+                actionElement.setInnerXml(statusActionHtml[1]);
         }
     }
 }
@@ -1180,7 +1200,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces(const bool &pScanFolders)
 void PmrWorkspacesWindowWidget::synchroniseWorkspace(const QString &pUrl,
                                                      const bool pOnlyPull)
 {
-    auto workspace = mWorkspacesManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal())
         mPmrWebService->requestWorkspaceSynchronise(workspace, pOnlyPull);
