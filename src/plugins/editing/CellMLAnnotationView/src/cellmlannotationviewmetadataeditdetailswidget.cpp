@@ -147,6 +147,15 @@ bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotati
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataEditDetailsItems::sort()
+{
+    // Sort our items
+
+    std::sort(begin(), end());
+}
+
+//==============================================================================
+
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
                                                                                              CellmlAnnotationViewEditingWidget *pViewEditingWidget,
                                                                                              CellMLSupport::CellmlFile *pCellmlFile,
@@ -1041,7 +1050,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Update our GUI with the results of the look up after having sorted them
     // and kept track of it size
 
-    std::sort(items.begin(), items.end());
+    items.sort();
 
     mItemsCount = items.count();
 

@@ -397,6 +397,26 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
 
 //==============================================================================
 
+void Plugins::sort()
+{
+    // Sort our plugins
+
+    std::sort(begin(), end(), Plugins::compare);
+}
+
+//==============================================================================
+
+bool Plugins::compare(Plugin *pPlugin1, Plugin *pPlugin2)
+{
+    // Determine which of the two plugins should be first based on their name
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a plugin (when we list them)...
+
+    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

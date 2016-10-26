@@ -147,6 +147,15 @@ QString CellmlFileIssue::importedFile() const
 
 //==============================================================================
 
+void CellmlFileIssues::sort()
+{
+    // Sort our issues
+
+    std::sort(begin(), end());
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

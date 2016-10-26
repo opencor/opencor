@@ -104,7 +104,15 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
+class CellmlFileRuntimeParameters : public QList<CellmlFileRuntimeParameter *>
+{
+public:
+    void sort();
+
+private:
+    static bool compare(CellmlFileRuntimeParameter *pParameter1,
+                        CellmlFileRuntimeParameter *pParameter2);
+};
 
 //==============================================================================
 
