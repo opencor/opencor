@@ -52,15 +52,15 @@ public:
     explicit PmrExposure(const QString &pUrl, const QString &pName,
                          QObject *pParent);
 
-    QString name() const;
     QString url() const;
+    QString name() const;
 
     int fileUrlsLeftCount() const;
     void setFileUrlsLeftCount(const int &count);
 
     void addExposureFile(const QString &pFileName);
     void addOtherFile(const QString &pFileName);
-    const QStringList exposureFileList() const;
+    QStringList exposureFiles() const;
 
     PmrWorkspace * workspace() const;
     void setWorkspace(PmrWorkspace *pWorkspace);
@@ -68,10 +68,10 @@ public:
     QString toHtml() const;
 
 private:
-    QString mName;
     QString mUrl;
+    QString mName;
 
-    QStringList mExposureFileList;
+    QStringList mExposureFiles;
     int mFileUrlsLeftCount;
     PmrWorkspace *mWorkspace;
 };

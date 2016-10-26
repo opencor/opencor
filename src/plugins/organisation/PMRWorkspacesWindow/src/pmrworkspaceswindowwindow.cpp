@@ -127,10 +127,14 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Watch for changes to managed files
 
-    auto fileManagerInstance = Core::FileManager::instance();
-    connect(fileManagerInstance, SIGNAL(fileCreated(QString, QString)), this, SLOT(fileCreated(QString, QString)));
-    connect(fileManagerInstance, SIGNAL(fileDuplicated(QString)), this, SLOT(fileDuplicated(QString)));
-    connect(fileManagerInstance, SIGNAL(fileDeleted(QString)), this, SLOT(fileDeleted(QString)));
+    Core::FileManager * fileManagerInstance = Core::FileManager::instance();
+
+    connect(fileManagerInstance, SIGNAL(fileCreated(const QString &, const QString &)),
+            this, SLOT(fileCreated(const QString &, const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileDuplicated(const QString &)),
+            this, SLOT(fileDuplicated(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
+            this, SLOT(fileDeleted(const QString &)));
 
     // Some connections to process responses from the PMR web service
 
@@ -339,7 +343,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
     // Create a new workspace
 
-    auto newWorkspaceDialog = new PmrWorkspacesWindowNewWorkspace(Core::mainWindow());
+    PmrWorkspacesWindowNewWorkspace *newWorkspaceDialog = new PmrWorkspacesWindowNewWorkspace(Core::mainWindow());
 
     if (newWorkspaceDialog->exec() == QDialog::Accepted) {
 

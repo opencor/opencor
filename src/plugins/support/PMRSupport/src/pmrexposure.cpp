@@ -33,9 +33,9 @@ namespace PMRSupport {
 PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
                          QObject *pParent) :
     QObject(pParent),
-    mName(pName),
     mUrl(pUrl),
-    mExposureFileList(QStringList()),
+    mName(pName),
+    mExposureFiles(QStringList()),
     mFileUrlsLeftCount(-1),
     mWorkspace(0)
 {
@@ -87,7 +87,7 @@ void PmrExposure::setFileUrlsLeftCount(const int &count)
 void PmrExposure::addExposureFile(const QString &pFileName)
 {
     if (mFileUrlsLeftCount) {
-        mExposureFileList << pFileName;
+        mExposureFiles << pFileName;
 
         --mFileUrlsLeftCount;
     }
@@ -97,14 +97,16 @@ void PmrExposure::addExposureFile(const QString &pFileName)
 
 void PmrExposure::addOtherFile(const QString &pFileName)
 {
-    if (!mExposureFileList.contains(pFileName))
-        mExposureFileList << pFileName;
+    if (!mExposureFiles.contains(pFileName))
+        mExposureFiles << pFileName;
 }
 
 //==============================================================================
-const QStringList PmrExposure::exposureFileList() const
+QStringList PmrExposure::exposureFiles() const
 {
-    return mExposureFileList;
+    // Return our list of exposure files
+
+    return mExposureFiles;
 }
 
 //==============================================================================

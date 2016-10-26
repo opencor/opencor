@@ -126,7 +126,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
             QString exposureName = linksMap["prompt"].toString().simplified();
 
             if (   !exposureUrl.isEmpty() && !exposureName.isEmpty()) {
-                auto exposure = new PmrExposure(exposureUrl, exposureName, this);
+                PmrExposure *exposure = new PmrExposure(exposureUrl, exposureName, this);
 
                 mUrlExposures.insert(exposureUrl, exposure);
 
@@ -146,13 +146,13 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
-    auto exposure = mUrlExposures.value(pUrl);
+    PmrExposure * exposure = mUrlExposures.value(pUrl);
 
     if (exposure->fileUrlsLeftCount() < 0) {
         requestExposureInformation(exposure, RequestExposureFiles);
     } else if (exposure->fileUrlsLeftCount() == 0) {
-        if (exposure->exposureFileList().count())
-            emit exposureFiles(pUrl, exposure->exposureFileList());
+        if (exposure->exposureFiles().count())
+            emit exposureFiles(pUrl, exposure->exposureFiles());
         else
             emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
     }
@@ -175,7 +175,7 @@ void PmrWebService::requestExposureInformation(PmrExposure *pExposure, const Act
 
 void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocument)
 {
-    auto exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
+    PmrExposure *exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
 
     if (exposure) {
         QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
@@ -242,7 +242,7 @@ void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const
 
 void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDocument)
 {
-    auto exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
+    PmrExposure *exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
 
     if (exposure) {
 
@@ -290,7 +290,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     // handle
 
                     if (exposure->fileUrlsLeftCount() == 0) {
-                        emit exposureFiles(exposure->url(), exposure->exposureFileList());
+                        emit exposureFiles(exposure->url(), exposure->exposureFiles());
                     }
                 }
             }
@@ -328,11 +328,11 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 {
     // Check whether we already know about the workspace for the given exposure
 
-    auto exposure = mUrlExposures.value(pExposureUrl);
+    PmrExposure *exposure = mUrlExposures.value(pExposureUrl);
 
     if (exposure->workspace()) {
-        auto url = exposure->workspace()->url();
-        auto dirName = exposure->workspace()->path();
+        QString url = exposure->workspace()->url();
+        QString dirName = exposure->workspace()->path();
 
         // Check that we aren't already managing a clone of the workspace
         if (!dirName.isEmpty()) {
@@ -340,7 +340,8 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
             // TODO Prompt user to create a fork on PMR??
         }
         else {
-            auto existing = PmrWorkspacesManager::instance()->workspace(url);
+            PmrWorkspace *existing = PmrWorkspacesManager::instance()->workspace(url);
+
             if (!existing) {
                 // Retrieve the name of an empty directory
 
@@ -442,24 +443,30 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 workspaceName = dataMap["value"].toString();
         }
 
-        auto exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
+        PmrExposure *exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
 
         if (!workspaceUrl.isEmpty()) {
 
             // Make sure that our workspace is a Git repository
 
             if (!storageValue.compare("git")) {
-                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName,
-                                                  workspaceDescription,
-                                                  workspaceOwner, this);
-                auto dirName = QString();
+                PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
+                                                           workspaceName,
+                                                           workspaceDescription,
+                                                           workspaceOwner,
+                                                           this);
+                QString dirName = QString();
 
-                if (exposure) {         // Cloning a workspace from an exposure
+                if (exposure) {
+                    // Cloning a workspace from an exposure
+
                     exposure->setWorkspace(workspace);
 
-                    // Check that we aren't already managing a clone of the workspace
+                    // Check that we aren't already managing a clone of the
+                    // workspace
 
-                    auto existing = PmrWorkspacesManager::instance()->workspace(workspaceUrl);
+                    PmrWorkspace *existing = PmrWorkspacesManager::instance()->workspace(workspaceUrl);
+
                     if (!existing) {
                         // Retrieve the name of an empty directory
 
@@ -470,7 +477,9 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                         // TODO Prompt user to create a fork on PMR??
                     }
                 }
-                else {                  // Cloning after creating a new workspace
+                else {
+                    // Cloning after creating a new workspace
+
                     dirName = sender()->property(DirNameProperty).toString();
                 }
 
@@ -590,7 +599,7 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 {
     QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
 
-    auto workspace = (PmrWorkspace *)sender()->property(WorkspaceProperty).value<void *>();
+    PmrWorkspace *workspace = (PmrWorkspace *)sender()->property(WorkspaceProperty).value<void *>();
 
     if (workspace && jsonResponse["target"].toString() == workspace->url())
         workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
@@ -630,7 +639,7 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
 
 void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 {
-    auto workspacePtr = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
+    PmrWorkspace **workspacePointer = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
 
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
@@ -671,12 +680,14 @@ void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 
         if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
 
-            auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, workspaceDescription,
-                                              workspaceOwner, this);
+            PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
+                                                       workspaceName,
+                                                       workspaceDescription,
+                                                       workspaceOwner, this);
 
             // Return result to requestor
 
-            *workspacePtr = workspace;
+            *workspacePointer = workspace;
         }
 
     }

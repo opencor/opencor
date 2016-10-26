@@ -333,7 +333,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
     // Use an anchor element to allow us to set the scroll position at a row
 
-    mRowAnchor += 1;
+    ++mRowAnchor;
     mItemAnchors.insert(pId, mRowAnchor);
 
     return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActionList)).arg(mRowAnchor);
@@ -342,7 +342,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 //==============================================================================
 
 const QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
-                                                                  const QPair<QChar, QChar> &pGitStatus)
+                                                                  const PMRSupport::CharPair &pGitStatus)
 {
     static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
 
@@ -382,15 +382,19 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
                                 "</tr>\n";
     auto path = pFileNode->fullName();
 
-    mRow += 1;
-    QString rowClass = (mRow % 2) ? "" : " even";
-    if (path == mSelectedItem) rowClass += " selected";
+    ++mRow;
+
+    QString rowClass = (mRow % 2)?QString():" even";
+
+    if (path == mSelectedItem)
+        rowClass += " selected";
 
     auto statusActionHtml = fileStatusActionHtml(pFileNode);
 
     // Use an anchor element to allow us to set the scroll position at a row
 
-    mRowAnchor += 1;
+    ++mRowAnchor;
+
     mItemAnchors.insert(path, mRowAnchor);
 
     return html.arg(rowClass, path, pFileNode->shortName(), statusActionHtml[0], statusActionHtml[1]).arg(mRowAnchor);
@@ -461,9 +465,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
         // Indicate that there are merge conflicts
 
         status = "C";       // TODO: Show an icon without an action ??
-
     else {
-
         // Indicate whether there are unstaged files
 
         if (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
@@ -503,12 +505,14 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
 QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     QString fullname = pFileNode->fullName();
-    QString icon = mExpandedItems.contains(fullname) ? "open" : "folder";
+    QString icon = mExpandedItems.contains(fullname)?"open":"folder";
 
-    mRow += 1;
-    QStringList html = QStringList(containerHtml((mRow % 2) ? "folder" : "folder even",
+    ++mRow;
+
+    QStringList html = QStringList(containerHtml((mRow % 2)?"folder":"folder even",
                                                  icon, fullname, pFileNode->shortName(), "",
                                                  QList<QPair<QString, QString>>()));
+
     html << contentsHtml(pFileNode, !mExpandedItems.contains(fullname));
 
     return html;
@@ -679,7 +683,7 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
     QStringList html;
 
     foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
-        html.append(workspaceHtml(workspace));
+        html << workspaceHtml(workspace);
 
     setHtml(mTemplate.arg(html.join("\n")));
 }

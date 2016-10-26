@@ -174,13 +174,14 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
         }
     }
 
-    auto pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
-    connect(pmrWebServiceResponse, SIGNAL(busy(bool)),
-            mPmrWebService, SIGNAL(busy(bool)));
-    connect(pmrWebServiceResponse, SIGNAL(error(QString, bool)),
-            mPmrWebService, SIGNAL(error(QString, bool)));
-    connect(pmrWebServiceResponse, SIGNAL(unauthorised(QString)),
-            mPmrWebService, SLOT(unauthorised(QString)));
+    PmrWebServiceResponse *pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
+
+    connect(pmrWebServiceResponse, SIGNAL(busy(const bool &)),
+            mPmrWebService, SIGNAL(busy(const bool &)));
+    connect(pmrWebServiceResponse, SIGNAL(error(const QString &, const bool &)),
+            mPmrWebService, SIGNAL(error(const QString &, const bool &)));
+    connect(pmrWebServiceResponse, SIGNAL(unauthorised(const QString &)),
+            mPmrWebService, SLOT(unauthorised(const QString &)));
 
     return pmrWebServiceResponse;
 }

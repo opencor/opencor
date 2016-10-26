@@ -590,7 +590,7 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     if (icon.isNull())
         return QString();
 
-    auto iconAvailableSizes = icon.availableSizes();
+    QList<QSize> iconAvailableSizes = icon.availableSizes();
 
     if (!iconAvailableSizes.count())
         return QString();
@@ -599,6 +599,7 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     QBuffer buffer(&data);
 
     buffer.open(QIODevice::WriteOnly);
+
     icon.pixmap((pWidth == -1)?iconAvailableSizes.first().width():pWidth,
                 (pHeight == -1)?iconAvailableSizes.first().height():pHeight,
                 pMode).save(&buffer, "PNG");

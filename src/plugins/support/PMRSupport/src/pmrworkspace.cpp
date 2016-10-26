@@ -112,13 +112,16 @@ bool PmrWorkspace::isLocal() const
 
 QString PmrWorkspace::WorkspacesDirectory()
 {
-    static QString workspacesHome = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                                  + QDir::separator() + "OpenCOR" + QDir::separator() + "Workspaces";
-
+    static QString workspacesHome =  QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                                    +QDir::separator()+"OpenCOR"+QDir::separator()+"Workspaces";
     static bool checkedFolder = false;
+
     if (!checkedFolder) {
-        auto workspacesFolder = QDir(workspacesHome);
-        if (!workspacesFolder.exists()) workspacesFolder.mkpath(".");
+        QDir workspacesFolder = QDir(workspacesHome);
+
+        if (!workspacesFolder.exists())
+            workspacesFolder.mkpath(".");
+
         checkedFolder = true;
     }
 
@@ -304,44 +307,52 @@ void PmrWorkspace::refreshStatus()
                             | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
 
         git_status_list *statusList;
+
         if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == 0) {
-
             size_t entries = git_status_list_entrycount(statusList);
-            auto lastComponents = QStringList();
+            PmrWorkspaceFileNodes fileNodes = PmrWorkspaceFileNodes();
+            PmrWorkspaceFileNode *currentFileNode = mRootFileNode;
 
-            auto fileNodeStack = QList<PmrWorkspaceFileNode *>();
-            auto currentFileNode = mRootFileNode;
-            fileNodeStack.append(currentFileNode);
+            fileNodes << currentFileNode;
 
             for (size_t i = 0; i < entries; ++i) {
-                auto status = git_status_byindex(statusList, i);
+                const git_status_entry *status = git_status_byindex(statusList, i);
                 const char *filePath = (status->head_to_index)    ? status->head_to_index->old_file.path
                                      : (status->index_to_workdir) ? status->index_to_workdir->old_file.path
                                      :                              0;
                 if (filePath) {
-                    auto pathComponents = QString(filePath).split('/'); // This is also valid for Windows
-                    auto statusChars = gitStatusChars(status->status);
+                    QStringList pathComponents = QString(filePath).split('/');
+                    const CharPair statusChars = gitStatusChars(status->status);
 
-                    if (statusChars.first != ' ') mStagedCount += 1;
-                    if (statusChars.second != ' ') mUnstagedCount += 1;
+                    if (statusChars.first != ' ')
+                        ++mStagedCount;
+
+                    if (statusChars.second != ' ')
+                        ++mUnstagedCount;
 
                     // Find correct place in tree to add file
+
                     int i = 0;
-                    int n = std::min(pathComponents.size(), fileNodeStack.size()) - 1;
-                    while (i < n
-                        && pathComponents[i].compare(fileNodeStack[i+1]->shortName(), Qt::CaseInsensitive)) {
-                        i += 1;
+                    int n = std::min(pathComponents.size(), fileNodes.size()) - 1;
+
+                    while (   (i < n )
+                           && pathComponents[i].compare(fileNodes[i+1]->shortName(), Qt::CaseInsensitive)) {
+                        ++i;
                     }
                     // Cut back stack to matching path component
-                    while ((i + 1) < fileNodeStack.size())
-                        fileNodeStack.removeLast();
-                    currentFileNode = fileNodeStack[i];
+
+                    while ((i + 1) < fileNodes.size())
+                        fileNodes.removeLast();
+
+                    currentFileNode = fileNodes[i];
 
                     // Add directory nodes as required
                     while (i < (pathComponents.size() - 1)) {
                         currentFileNode = currentFileNode->addChild(pathComponents[i]);
-                        fileNodeStack.append(currentFileNode);
-                        i += 1;
+
+                        fileNodes << currentFileNode;
+
+                        ++i;
                     }
 
                     mRepositoryStatusMap.insert(QString(filePath),
@@ -401,9 +412,10 @@ void PmrWorkspace::setGitAuthorisation(git_strarray *pAuthorisationStrArray)
     if (!mUsername.isEmpty()) {
         // Initialise a git_strarray with a Basic Authorization header
 
-        auto authorisationHeader = QByteArray();
-        authorisationHeader.append("Authorization: Basic ");
-        authorisationHeader.append((mUsername + ":" + mPassword).toUtf8().toBase64());
+        QByteArray authorisationHeader = QByteArray("Authorization: Basic ");
+        QByteArray usernamePassword = QString(mUsername+":"+mPassword).toUtf8();
+
+        authorisationHeader += usernamePassword.toBase64();
 
         char *authorisationStrArrayData = (char *)malloc(authorisationHeader.count() + 1);
         memcpy(authorisationStrArrayData, authorisationHeader.constData(), authorisationHeader.count() + 1);
@@ -630,7 +642,8 @@ int PmrWorkspace::mergehead_foreach_cb(const git_oid *oid, void *payload)
     if (mergeCallbackData->parents)
         error = git_commit_lookup(&(mergeCallbackData->parents[mergeCallbackData->size]), mergeCallbackData->repository, oid);
 
-    if (!error) mergeCallbackData->size += 1;
+    if (!error)
+        ++mergeCallbackData->size;
 
     return error;
 }
@@ -811,17 +824,17 @@ bool PmrWorkspace::merge()
 {
     // Merge and commit fetched updates
 
-    if (!isOpen()) return false;
+    if (!isOpen())
+        return false;
 
-    bool result = true;
-
+    bool res = true;
     int error = git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this);
-    if (error == 0) {
 
+    if (error == 0) {
         // We only need to commit NORMAL merges
 
         if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
-            result = commitMerge();
+            res = commitMerge();
 
         // emit information(tr("Merge succeeded..."));
 
@@ -830,19 +843,22 @@ bool PmrWorkspace::merge()
         // Just emit the list... ???
     }
     else if (error != GIT_ENOTFOUND) {
-        auto errorMessage = tr("An error occurred while trying to merge the workspace.");
+        QString errorMessage = tr("An error occurred while trying to merge the workspace.");
+
         if (mConflictedFiles.size()) {
-            errorMessage.append("\n\n" + tr("The following files have conflicts:")
-                              + "\n\t" + mConflictedFiles.join("\n\t"));
+            errorMessage +=  "\n\n"+tr("The following files have conflicts:")
+                            +"\n\t"+mConflictedFiles.join("\n\t");
+
             emit warning(errorMessage);
         }
         else {
             emitGitError(errorMessage);
         }
-        result = false;
+
+        res = false;
     }
 
-    return result;
+    return res;
 }
 
 //==============================================================================
@@ -1060,41 +1076,54 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
 //==============================================================================
 
-const QPair<QChar, QChar> PmrWorkspace::gitStatusChars(const int &pFlags)
+const CharPair PmrWorkspace::gitStatusChars(const int &pFlags)
 {
-    char istatus = ' ';
-    char wstatus = ' ';
+    // Git status
 
-    if (pFlags & GIT_STATUS_INDEX_NEW) istatus = 'A';
-    if (pFlags & GIT_STATUS_INDEX_MODIFIED) istatus = 'M';
-    if (pFlags & GIT_STATUS_INDEX_DELETED) istatus = 'D';
-    if (pFlags & GIT_STATUS_INDEX_RENAMED) istatus = 'R';
-    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE) istatus = 'T';
+    if (pFlags & GIT_STATUS_CONFLICTED)
+        return CharPair(' ', 'C');
 
-    if (pFlags & GIT_STATUS_WT_NEW) wstatus = 'A';
-    if (pFlags & GIT_STATUS_WT_MODIFIED) wstatus = 'M';
-    if (pFlags & GIT_STATUS_WT_DELETED) wstatus = 'D';
-    if (pFlags & GIT_STATUS_WT_RENAMED) wstatus = 'R';
-    if (pFlags & GIT_STATUS_WT_TYPECHANGE) wstatus = 'T';
+    if (pFlags & GIT_STATUS_IGNORED)
+        return CharPair(' ', '!');
 
-    if (pFlags & GIT_STATUS_IGNORED) {
-        istatus = ' ';
-        wstatus = '!';
-    }
+    // iStatus
 
-    if (pFlags & GIT_STATUS_CONFLICTED) {
-        istatus = ' ';
-        wstatus = 'C';
-    }
+    QChar iStatus = ' ';
 
-    return QPair<QChar, QChar>(istatus, wstatus);
+    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
+        iStatus = 'T';
+    else if (pFlags & GIT_STATUS_INDEX_RENAMED)
+        iStatus = 'R';
+    else if (pFlags & GIT_STATUS_INDEX_DELETED)
+        iStatus = 'D';
+    else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
+        iStatus = 'M';
+    else if (pFlags & GIT_STATUS_INDEX_NEW)
+        iStatus = 'A';
+
+    // wStatus
+
+    QChar wStatus = ' ';
+
+    if (pFlags & GIT_STATUS_WT_TYPECHANGE)
+        wStatus = 'T';
+    else if (pFlags & GIT_STATUS_WT_RENAMED)
+        wStatus = 'R';
+    else if (pFlags & GIT_STATUS_WT_DELETED)
+        wStatus = 'D';
+    else if (pFlags & GIT_STATUS_WT_MODIFIED)
+        wStatus = 'M';
+    else if (pFlags & GIT_STATUS_WT_NEW)
+        wStatus = 'A';
+
+    return CharPair(iStatus, wStatus);
 }
 
 //==============================================================================
 
-const QPair<QChar, QChar> PmrWorkspace::gitFileStatus(const QString &pPath) const
+const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
-    auto status = QPair<QChar, QChar>(' ', ' ');
+    auto status = CharPair(' ', ' ');
 
     if (isOpen()) {
         auto repoDir = QDir(mPath);

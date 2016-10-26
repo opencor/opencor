@@ -259,7 +259,7 @@ void PmrWindowWidget::addExposureFiles(const QString &pUrl,
 {
     // Add the given exposure files to the exposure
 
-    auto sortedExposureFiles = QStringList(pExposureFiles);
+    QStringList sortedExposureFiles = QStringList(pExposureFiles);
 
     sortedExposureFiles.sort(Qt::CaseInsensitive);
 

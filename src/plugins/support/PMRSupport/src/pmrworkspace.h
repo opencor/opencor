@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrsupportglobal.h"
+#include "pmrworkspacefilenode.h"
 
 //==============================================================================
 
@@ -48,7 +49,6 @@ namespace PMRSupport {
 //==============================================================================
 
 class PmrWebService;
-class PmrWorkspaceFileNode;
 
 //==============================================================================
 
@@ -107,7 +107,7 @@ public:
         StatusUnstaged = 128
     };
     WorkspaceStatus gitWorkspaceStatus() const;
-    const QPair<QChar, QChar> gitFileStatus(const QString &pPath) const;
+    const CharPair gitFileStatus(const QString &pPath) const;
 
     void stageFile(const QString &pPath, const bool &pStage);
     QStringList stagedFiles();
@@ -154,7 +154,7 @@ private:
     void emitGitError(const QString &pMessage) const;
     void emitProgress(const double &pProgress) const;
 
-    static const QPair<QChar, QChar> gitStatusChars(const int &pFlags);
+    static const CharPair gitStatusChars(const int &pFlags);
 
     bool doCommit(const char *pMessage, size_t pParentCount, const git_commit **pParents);
     bool fetch();

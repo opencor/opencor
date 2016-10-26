@@ -123,7 +123,7 @@ private:
     QString emptyContentsHtml();
 
     static const QStringList fileStatusActionHtml(const QString &pPath,
-                                                  const QPair<QChar, QChar> &pGitStatus);
+                                                  const PMRSupport::CharPair &pGitStatus);
     static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
                                                   const QString &pPath);
     static const QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);

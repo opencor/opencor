@@ -49,8 +49,9 @@ private:
     QNetworkReply *mNetworkReply;
 
 signals:
-    void busy(bool);
-    void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
+    void busy(const bool &pBusy);
+    void error(const QString &pErrorMessage,
+               const bool &pInternetConnectionAvailable);
     void finished();
     void gotJsonResponse(const QJsonDocument &pJsonDocument);
     void movedLocation(const QString &locationUrl);

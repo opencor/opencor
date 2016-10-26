@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #pragma once
+
 //==============================================================================
 
 #include "pmrsupportglobal.h"
@@ -39,28 +40,46 @@ namespace PMRSupport {
 
 //==============================================================================
 
+typedef QPair<QChar, QChar> CharPair;
+
+//==============================================================================
+
+class PmrWorkspaceFileNode;
+
+//==============================================================================
+
+typedef QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNodes;
+
+//==============================================================================
+
 class PMRSUPPORT_EXPORT PmrWorkspaceFileNode : public QObject
 {
     Q_OBJECT
 
 public:
-    PmrWorkspaceFileNode(const QString &shortName, const QString &fullName,
-                         const QPair<QChar, QChar> &pStatus = QPair<QChar, QChar>(),
-                         PmrWorkspaceFileNode *pParent = 0);
+    explicit PmrWorkspaceFileNode(const QString &pShortName,
+                                  const QString &pFullName,
+                                  const CharPair &pStatus = CharPair(),
+                                  PmrWorkspaceFileNode *pParent = 0);
+
     PmrWorkspaceFileNode * addChild(const QString &pName,
-                                    const QPair<QChar, QChar> &pStatus = QPair<QChar, QChar>());
-    const QString &shortName() const;
-    const QString &fullName() const;
-    const QPair<QChar, QChar> &status() const;
-    QList<PmrWorkspaceFileNode *> children() const;
+                                    const CharPair &pStatus = CharPair());
+
+    QString shortName() const;
+    QString fullName() const;
+    CharPair status() const;
+
     bool hasChildren() const;
-    void setStatus(const QPair<QChar, QChar> &pStatus);
+    PmrWorkspaceFileNodes children() const;
+
+    void setStatus(const CharPair &pStatus);
 
 private:
     QString mShortName;
     QString mFullName;
-    QPair<QChar, QChar> mStatus;
-    QList<PmrWorkspaceFileNode *> mChildren;
+    CharPair mStatus;
+
+    PmrWorkspaceFileNodes mChildren;
 };
 
 //==============================================================================

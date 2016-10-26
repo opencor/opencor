@@ -31,13 +31,13 @@ namespace PMRSupport {
 
 PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName,
                                            const QString &pFullName,
-                                           const QPair<QChar, QChar> &pStatus,
+                                           const CharPair &pStatus,
                                            PmrWorkspaceFileNode *pParent) :
     QObject(pParent),
     mShortName(pShortName),
     mFullName(pFullName),
     mStatus(pStatus),
-    mChildren(QList<PmrWorkspaceFileNode *>())
+    mChildren(PmrWorkspaceFileNodes())
 {
 
 }
@@ -45,45 +45,42 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName,
 //==============================================================================
 
 PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pShortName,
-                                                      const QPair<QChar, QChar> &pStatus)
+                                                      const CharPair &pStatus)
 {
-    auto newNode = new PmrWorkspaceFileNode(pShortName, fullName() + "/" + pShortName, pStatus, this);
-    mChildren.append(newNode);
-    return newNode;
+    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pShortName,
+                                                         fullName()+"/"+pShortName,
+                                                         pStatus, this);
+
+    mChildren << res;
+
+    return res;
 }
 
 //==============================================================================
 
-void PmrWorkspaceFileNode::setStatus(const QPair<QChar, QChar> &pStatus)
+void PmrWorkspaceFileNode::setStatus(const CharPair &pStatus)
 {
     mStatus = pStatus;
 }
 
 //==============================================================================
 
-const QString &PmrWorkspaceFileNode::shortName() const
+QString PmrWorkspaceFileNode::shortName() const
 {
     return mShortName;
 }
 //==============================================================================
 
-const QString &PmrWorkspaceFileNode::fullName() const
+QString PmrWorkspaceFileNode::fullName() const
 {
     return mFullName;
 }
 
 //==============================================================================
 
-const QPair<QChar, QChar> &PmrWorkspaceFileNode::status() const
+CharPair PmrWorkspaceFileNode::status() const
 {
     return mStatus;
-}
-
-//==============================================================================
-
-QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNode::children() const
-{
-    return mChildren;
 }
 
 //==============================================================================
@@ -91,6 +88,13 @@ QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNode::children() const
 bool PmrWorkspaceFileNode::hasChildren() const
 {
     return (mChildren.size() > 0);
+}
+
+//==============================================================================
+
+PmrWorkspaceFileNodes PmrWorkspaceFileNode::children() const
+{
+    return mChildren;
 }
 
 //==============================================================================
