@@ -2442,7 +2442,7 @@ void SingleCellViewSimulationWidget::updateDelayValue(const double &pDelayValue)
     for (int i = 0, iMax = pDelayValue; i < iMax; ++i) {
         delay += increment;
 
-        if (delay % multiple == 0) {
+        if (!(delay % multiple)) {
             increment *= 10;
             multiple *= 10;
         }
