@@ -72,14 +72,15 @@ void PmrWorkspacesManager::emitWorkspaceCloned(PmrWorkspace *pWorkspace)
 
 void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 {
-    if (pWorkspace) mUrlWorkspaces.insert(pWorkspace->url(), pWorkspace);
+    if (pWorkspace)
+        mUrlWorkspaces.insert(pWorkspace->url(), pWorkspace);
 }
 
 //==============================================================================
 
 void PmrWorkspacesManager::clearWorkspaces()
 {
-    foreach (auto workspace, mUrlWorkspaces.values())
+    foreach (PmrWorkspace * workspace, mUrlWorkspaces.values())
         workspace->close();
 
     mUrlWorkspaces.clear();
@@ -108,9 +109,14 @@ PmrWorkspace * PmrWorkspacesManager::workspace(const QString &pUrl) const
 
 //==============================================================================
 
-QList<PmrWorkspace *> PmrWorkspacesManager::workspaces() const
+PmrWorkspaces PmrWorkspacesManager::workspaces() const
 {
-    return mUrlWorkspaces.values();
+    PmrWorkspaces res = PmrWorkspaces();
+
+    foreach (PmrWorkspace * workspace, mUrlWorkspaces.values())
+        res << workspace;
+
+    return res;
 }
 
 //==============================================================================

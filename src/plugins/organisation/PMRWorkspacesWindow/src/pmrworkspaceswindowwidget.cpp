@@ -674,7 +674,11 @@ void PmrWorkspacesWindowWidget::clearWorkspaces()
 
 void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
-    QList<PMRSupport::PmrWorkspace *> workspaces = mWorkspacesManager->workspaces();
+    PMRSupport::PmrWorkspaces workspaces = mWorkspacesManager->workspaces();
+
+    // We want the HTML table in name order
+
+    workspaces.sort();
 
     // Reset our row anchors
 

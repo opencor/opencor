@@ -62,7 +62,7 @@ public:
 
     bool hasWorkspace(const QString &pUrl) const;
     PmrWorkspace * workspace(const QString &pUrl) const;
-    QList<PmrWorkspace *> workspaces() const;
+    PmrWorkspaces workspaces() const;
 
 private:
     QMap<QString, PmrWorkspace *> mUrlWorkspaces;
