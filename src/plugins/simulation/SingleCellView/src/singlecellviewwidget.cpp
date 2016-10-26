@@ -1019,11 +1019,11 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
 
             if (    repeatedTask->getResetModel()
-                && (repeatedTask->getNumRanges() == 1)
-                && (repeatedTask->getNumTaskChanges() == 0)
-                && (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
+                &&  (repeatedTask->getNumRanges() == 1)
+                && !repeatedTask->getNumTaskChanges()
+                &&  (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
                 // Make sure that the range is a vector range and that it's the
-                // the one referenced in the repeated task
+                // one referenced in the repeated task
 
                 libsedml::SedRange *range = repeatedTask->getRange(0);
 
