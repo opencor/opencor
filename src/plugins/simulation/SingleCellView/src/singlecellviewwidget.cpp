@@ -1087,8 +1087,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     for (uint i = 0, iMax = sedmlDocument->getNumDataGenerators(); i < iMax; ++i) {
         libsedml::SedDataGenerator *dataGenerator = sedmlDocument->getDataGenerator(i);
 
-        if (   (dataGenerator->getNumVariables() != 1)
-            || (dataGenerator->getNumParameters() != 0)) {
+        if ((dataGenerator->getNumVariables() != 1) || dataGenerator->getNumParameters()) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                              tr("only SED-ML files with data generators for one variable are supported"));
 
