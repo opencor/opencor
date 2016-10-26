@@ -60,9 +60,9 @@ public:
     explicit PmrWorkspace(const QString &pUrl, const QString &pName,
                           const QString &pDescription, const QString &pOwner,
                           PmrWebService *pParent);
+    explicit PmrWorkspace(const QString &pUrl, const QString &pName,
+                          PmrWebService *pParent);
     ~PmrWorkspace();
-
-    static bool compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond);
 
     static QString getEmptyWorkspaceDirectory();
 
@@ -135,6 +135,10 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
+    void constructor(const QString &pUrl, const QString &pName,
+                     const QString &pDescription, const QString &pOwner,
+                     PmrWebService *pParent);
+
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
@@ -171,7 +175,7 @@ signals:
 class PMRSUPPORT_EXPORT PmrWorkspaces : public QList<PmrWorkspace *>
 {
 public:
-    void add(const QString &pUrl, const QString &pName, PmrWebService *pParent);
+    void sort();
 };
 
 //==============================================================================

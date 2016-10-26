@@ -43,16 +43,6 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
 
 //==============================================================================
 
-bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pSecond)
-{
-    // Return whether the first exposure is lower than the second one (without
-    // worrying about casing)
-
-    return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 QString PmrExposure::url() const
 {
     // Return our URL
@@ -133,12 +123,21 @@ void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrExposures::add(const QString &pUrl, const QString &pName,
-                       QObject *pParent)
+bool sortExposures(PmrExposure *pExposure1, PmrExposure *pExposure2)
 {
-    // Add a new exposure to the list
+    // Return whether the first exposure is lower than the second one (without
+    // worrying about casing)
 
-    QList::append(new PmrExposure(pUrl, pName, pParent));
+    return pExposure1->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+void PmrExposures::sort()
+{
+    // Sort our exposures
+
+    std::sort(begin(), end(), sortExposures);
 }
 
 //==============================================================================

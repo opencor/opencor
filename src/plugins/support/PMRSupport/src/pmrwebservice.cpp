@@ -129,12 +129,13 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
                 auto exposure = new PmrExposure(exposureUrl, exposureName, this);
 
                 mUrlExposures.insert(exposureUrl, exposure);
-                exposures.append(exposure);
+
+                exposures << exposure;
             }
         }
     }
 
-    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
+    exposures.sort();
 
     // Respond with a list of exposures
 
@@ -448,7 +449,8 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storageValue.compare("git")) {
-                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName, workspaceDescription,
+                auto workspace = new PmrWorkspace(workspaceUrl, workspaceName,
+                                                  workspaceDescription,
                                                   workspaceOwner, this);
                 auto dirName = QString();
 
@@ -549,11 +551,14 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
             if (   !workspaceUrl.isEmpty()
                 && !workspaceName.isEmpty()) {
 
-                workspaces.add(workspaceUrl, workspaceName, this);
+                workspaces << new PmrWorkspace(workspaceUrl, workspaceName, this);
+
                 workspaces.last()->setOwned(true);
             }
         }
     }
+
+    workspaces.sort();
 
     emit PmrWebService::workspaces(workspaces);
 }

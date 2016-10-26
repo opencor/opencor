@@ -43,29 +43,55 @@ namespace PMRSupport {
 
 //==============================================================================
 
+void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
+                               const QString &pDescription,
+                               const QString &pOwner, PmrWebService *pParent)
+{
+    // Customise ourselves
+
+    mOwned = false;
+    mDescription = pDescription;
+    mName = pName;
+    mOwner = pOwner;
+    mUrl = pUrl;
+    mPassword = QString();
+    mUsername = QString();
+    mGitRepository = 0;
+    mPath = QString();
+    mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
+    mRootFileNode = 0;
+
+    // Our messages are directly emitted by our parent PMR web service
+
+    connect(this, SIGNAL(progress(const double &)),
+            pParent, SIGNAL(progress(const double &)));
+    connect(this, SIGNAL(information(const QString &)),
+            pParent, SIGNAL(information(const QString &)));
+    connect(this, SIGNAL(warning(const QString &)),
+            pParent, SIGNAL(warning(const QString &)));
+}
+
+//==============================================================================
+
 PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
                            const QString &pDescription, const QString &pOwner,
                            PmrWebService *pParent) :
-    QObject(pParent),
-    mOwned(false),
-    mDescription(pDescription),
-    mName(pName),
-    mOwner(pOwner),
-    mUrl(pUrl),
-    mPassword(QString()),
-    mUsername(QString()),
-    mGitRepository(0),
-    mPath(QString()),
-    mRepositoryStatusMap(QMap<QString, PmrWorkspaceFileNode *>()),
-    mRootFileNode(0)
+    QObject(pParent)
 {
-    // Description and owner are set when workspace information is received from PMR
+    // Construct our PMR workspace
 
-    // Our messages are directly emitted by our parent PmrWebService
+    constructor(pUrl, pName, pDescription, pOwner, pParent);
+}
 
-    connect(this, SIGNAL(progress(double)), pParent, SIGNAL(progress(double)));
-    connect(this, SIGNAL(information(QString)), pParent, SIGNAL(information(QString)));
-    connect(this, SIGNAL(warning(QString)), pParent, SIGNAL(warning(QString)));
+//==============================================================================
+
+PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
+                           PmrWebService *pParent) :
+    QObject(pParent)
+{
+    // Construct our PMR workspace
+
+    constructor(pUrl, pName, QString(), QString(), pParent);
 }
 
 //==============================================================================
@@ -80,16 +106,6 @@ PmrWorkspace::~PmrWorkspace()
 bool PmrWorkspace::isLocal() const
 {
     return !mPath.isEmpty();
-}
-
-//==============================================================================
-
-bool PmrWorkspace::compare(const PmrWorkspace *pFirst, const PmrWorkspace *pSecond)
-{
-    // Return whether the first workspace is lower than the second one (without
-    // worrying about casing)
-
-    return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -1162,12 +1178,22 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 
 //==============================================================================
 
-void PmrWorkspaces::add(const QString &pUrl, const QString &pName,
-                        PmrWebService *pParent)
+bool sortWorkspaces(const PmrWorkspace *pWorkspace1,
+                    const PmrWorkspace *pWorkspace2)
 {
-    // Add a new workspace to the list
+    // Return whether the first workspace is lower than the second one (without
+    // worrying about casing)
 
-    QList::append(new PmrWorkspace(pUrl, pName, QString(), QString(), pParent));
+    return pWorkspace1->name().compare(pWorkspace2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+void PmrWorkspaces::sort()
+{
+    // Sort our workspaces
+
+    std::sort(begin(), end(), sortWorkspaces);
 }
 
 //==============================================================================

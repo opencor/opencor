@@ -50,9 +50,7 @@ class PMRSUPPORT_EXPORT PmrExposure : public QObject
 
 public:
     explicit PmrExposure(const QString &pUrl, const QString &pName,
-                        QObject *pParent);
-
-    static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
+                         QObject *pParent);
 
     QString name() const;
     QString url() const;
@@ -83,7 +81,7 @@ private:
 class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
 {
 public:
-    void add(const QString &pUrl, const QString &pName, QObject *pParent);
+    void sort();
 };
 
 //==============================================================================

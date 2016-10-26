@@ -669,10 +669,6 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
     QList<PMRSupport::PmrWorkspace *> workspaces = mWorkspacesManager->workspaces();
 
-    // We want the HTML table in name order
-
-    std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
-
     // Reset our row anchors
 
     mRowAnchor = 0;
