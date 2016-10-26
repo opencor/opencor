@@ -258,12 +258,15 @@ bool PmrWorkspace::open()
     if (!mPath.isEmpty()) {
         QByteArray pathByteArray = mPath.toUtf8();
 
-        if (git_repository_open(&mGitRepository, pathByteArray.constData()) == 0) {
+        if (!git_repository_open(&mGitRepository, pathByteArray.constData())) {
             refreshStatus();
+
             return true;
         }
+
         emitGitError(tr("An error occurred while trying to open the workspace."));
     }
+
     return false;
 }
 
@@ -308,7 +311,7 @@ void PmrWorkspace::refreshStatus()
 
         git_status_list *statusList;
 
-        if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == 0) {
+        if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
             size_t entries = git_status_list_entrycount(statusList);
             PmrWorkspaceFileNodes fileNodes = PmrWorkspaceFileNodes();
             PmrWorkspaceFileNode *currentFileNode = mRootFileNode;
@@ -368,40 +371,55 @@ void PmrWorkspace::refreshStatus()
 
 QStringList PmrWorkspace::stagedFiles()
 {
-    auto fileList = QStringList();
-
+    QStringList fileList = QStringList();
     git_index *index;
-    if (git_repository_index(&index, mGitRepository) == 0) {
 
+    if (!git_repository_index(&index, mGitRepository)) {
         git_status_options statusOptions;
+
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
-        statusOptions.show  = GIT_STATUS_SHOW_INDEX_ONLY;
-        statusOptions.flags = GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
-                            | GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY;
+
+        statusOptions.show = GIT_STATUS_SHOW_INDEX_ONLY;
+        statusOptions.flags =  GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
+                              |GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY;
 
         git_status_list *statusList;
-        if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == 0) {
+
+        if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
             size_t entries = git_status_list_entrycount(statusList);
+
             for (size_t i = 0; i < entries; ++i) {
-                auto status = git_status_byindex(statusList, i);
-                const char *filePath = (status->head_to_index)    ? status->head_to_index->old_file.path
-                                     : (status->index_to_workdir) ? status->index_to_workdir->old_file.path
-                                     :                              0;
+                const git_status_entry *status = git_status_byindex(statusList, i);
+                const char *filePath = status->head_to_index?
+                                           status->head_to_index->old_file.path:
+                                           status->index_to_workdir?
+                                               status->index_to_workdir->old_file.path:
+                                               0;
                 if (filePath) {
-                    auto flags = status->status;
-                    auto description = QString();
-                    if (flags & GIT_STATUS_INDEX_NEW) description        = "new file";
-                    if (flags & GIT_STATUS_INDEX_MODIFIED) description   = "modified";
-                    if (flags & GIT_STATUS_INDEX_DELETED) description    = "deleted";
-                    if (flags & GIT_STATUS_INDEX_RENAMED) description    = "renamed";
-                    if (flags & GIT_STATUS_INDEX_TYPECHANGE) description = "typechange";
-                    fileList << description + ":\t" + filePath;
+                    git_status_t flags = status->status;
+                    QString description = QString();
+
+                    if (flags & GIT_STATUS_INDEX_TYPECHANGE)
+                        description = "typechange";
+                    else if (flags & GIT_STATUS_INDEX_RENAMED)
+                        description = "renamed";
+                    else if (flags & GIT_STATUS_INDEX_DELETED)
+                        description = "deleted";
+                    else if (flags & GIT_STATUS_INDEX_MODIFIED)
+                        description = "modified";
+                    else if (flags & GIT_STATUS_INDEX_NEW)
+                        description = "new file";
+
+                    fileList << description+":\t"+filePath;
                 }
             }
+
             git_status_list_free(statusList);
         }
+
         git_index_free(index);
     }
+
     return fileList;
 }
 
@@ -435,30 +453,34 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
     // Return remote.origin.url if the folder contains a git repository
     // otherwise return an empty string.
 
-    auto url = QString();
+    QString url = QString();
 
     git_repository *gitRepository = 0;
     QByteArray folderByteArray = pFolder.toUtf8();
 
-    if (git_repository_open(&gitRepository, folderByteArray.constData()) == 0) {
-
+    if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
         git_strarray remotes;
-        if (git_remote_list(&remotes, gitRepository) == 0) {
 
+        if (!git_remote_list(&remotes, gitRepository)) {
             for (int i = 0; i < (int)remotes.count; i++) {
                 char *name = remotes.strings[i];
-                if (strcmp(name, "origin")==0) {
-                    git_remote *remote = {0};
 
-                    if (git_remote_lookup(&remote, gitRepository, name) == 0) {
+                if (!strcmp(name, "origin")) {
+                    git_remote *remote = 0;
+
+                    if (!git_remote_lookup(&remote, gitRepository, name)) {
                         const char *remoteUrl = git_remote_url(remote);
-                        if (remoteUrl) url = QString(remoteUrl);
+
+                        if (remoteUrl)
+                            url = QString(remoteUrl);
                     }
                 }
             }
         }
+
         git_repository_free(gitRepository);
     }
+
     return url;
 }
 
@@ -470,39 +492,44 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 // decision of whether to allow the connection to proceed. Returns 1 to allow
 // the connection, 0 to disallow it or a negative value to indicate an error.
 
-int PmrWorkspace::certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload)
+int PmrWorkspace::certificate_check_cb(git_cert *pCertificate, int pValid,
+                                       const char *pHost, void *pPayload)
 {
-    Q_UNUSED(cert)
-    Q_UNUSED(valid)
-    Q_UNUSED(host)
-    Q_UNUSED(payload)
+    Q_UNUSED(pCertificate);
+    Q_UNUSED(pValid);
+    Q_UNUSED(pHost);
+    Q_UNUSED(pPayload);
 
     // pmrWebService.Url().compare(host)
+
     return 1; // since we trust PMR (but should check host matches PMR...)
               // 0 = disallow, -ve = error
 }
 
 //==============================================================================
 
-int PmrWorkspace::transfer_progress_cb(const git_transfer_progress *stats, void *payload)
+int PmrWorkspace::transfer_progress_cb(const git_transfer_progress *pProgress,
+                                       void *pPayload)
 {
-    auto workspace = (PmrWorkspace *)payload;
+    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
 
-    workspace->emitProgress((double)(stats->received_objects + stats->indexed_objects)
-                            /(2.0*stats->total_objects));
+    workspace->emitProgress(double(pProgress->received_objects+pProgress->indexed_objects)/(pProgress->total_objects << 1));
+
     return 0;
 }
 
 //==============================================================================
 
-void PmrWorkspace::checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
-                                        void *payload)
+void PmrWorkspace::checkout_progress_cb(const char *pPath,
+                                        size_t pCompletedSteps,
+                                        size_t pTotalSteps,
+                                        void *pPayload)
 {
-    Q_UNUSED(path)
+    Q_UNUSED(pPath);
 
-    auto workspace = (PmrWorkspace *)payload;
+    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
 
-    workspace->emitProgress((double)completed_steps/(double)total_steps);
+    workspace->emitProgress(double(pCompletedSteps)/pTotalSteps);
 }
 
 //==============================================================================
@@ -602,24 +629,25 @@ bool PmrWorkspace::fetch()
 
 //==============================================================================
 
-int PmrWorkspace::checkout_notify_cb(git_checkout_notify_t why, const char *path, const git_diff_file *baseline,
-                                     const git_diff_file *target, const git_diff_file *workdir, void *payload)
+int PmrWorkspace::checkout_notify_cb(git_checkout_notify_t pNotification,
+                                     const char *pPath,
+                                     const git_diff_file *pBaseline,
+                                     const git_diff_file *pTarget,
+                                     const git_diff_file *pWorkDirectory,
+                                     void *pPayload)
 {
-    Q_UNUSED(baseline)
-    Q_UNUSED(target)
-    Q_UNUSED(workdir)
+    Q_UNUSED(pBaseline);
+    Q_UNUSED(pTarget);
+    Q_UNUSED(pWorkDirectory);
 
-    auto workspace = (PmrWorkspace *)payload;
+    // Keep track of conflicted and updated files
 
-    if (why == GIT_CHECKOUT_NOTIFY_CONFLICT) {
-        workspace->mConflictedFiles << QString(path);
-    }
-    else if (why == GIT_CHECKOUT_NOTIFY_DIRTY) {
-        // TODO: We may want to report dirty files...
-    }
-    else if (why == GIT_CHECKOUT_NOTIFY_UPDATED) {
-        workspace->mUpdatedFiles << QString(path);
-    }
+    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
+
+    if (pNotification == GIT_CHECKOUT_NOTIFY_CONFLICT)
+        workspace->mConflictedFiles << pPath;
+    else if (pNotification == GIT_CHECKOUT_NOTIFY_UPDATED)
+        workspace->mUpdatedFiles << pPath;
 
     return 0;
 }
@@ -652,130 +680,143 @@ int PmrWorkspace::mergehead_foreach_cb(const git_oid *oid, void *payload)
 
 bool PmrWorkspace::commitMerge()
 {
-    bool result = false;
-
     // Get the number of merge heads so we can allocate an array for parents
-    MergeHeadCallbackData mergeCallbackData = {0, 0, 0};
+
+    MergeHeadCallbackData mergeCallbackData = { 0, 0, 0 };
+
     git_repository_mergehead_foreach(mGitRepository, mergehead_foreach_cb, &mergeCallbackData);
-    size_t nParents = mergeCallbackData.size + 1;
-    auto parents = new git_commit *[nParents]();
+
+    size_t nbOfParents = mergeCallbackData.size+1;
+    git_commit **parents = new git_commit*[nbOfParents]();
 
     // HEAD is always a parent
 
+    bool res = false;
     git_oid parentId;
-    if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0
-     && git_commit_lookup(parents, mGitRepository, &parentId) == 0) {
-        result = true;
+
+    if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
+        && !git_commit_lookup(parents, mGitRepository, &parentId)) {
+        res = true;
 
         // Now populate the list of commit parents
 
-        if (nParents > 1) {
+        if (nbOfParents > 1) {
             mergeCallbackData.size = 0;
             mergeCallbackData.repository = mGitRepository;
             mergeCallbackData.parents = &(parents[1]);
+
             if (git_repository_mergehead_foreach(mGitRepository, mergehead_foreach_cb, &mergeCallbackData))
-                result = false;
+                res = false;
         }
 
-        if (result) {
-        // TODO: Name comes from fetch head??
-        // Also to have in reflog: "pull: Merge made by the 'recursive' strategy." ??
-// Use MERGE_MSG ???
-            auto message = std::string("Merge branch 'master' of "); // + remote_url;
-            if (doCommit(message.c_str(), nParents, (const git_commit **)parents)) {
+        if (res) {
+            std::string message = std::string("Merge branch 'master' of ");
+
+            if (doCommit(message.c_str(), nbOfParents,
+                         (const git_commit **) parents)) {
                 git_repository_state_cleanup(mGitRepository);
-            }
-            else {
-                result = false;
-        //Error 10: cannot create a tree from a not fully merged index.
+            } else {
+                res = false;
             }
         }
     }
 
-    for (size_t n = 0; n < nParents; ++n)
+    for (size_t n = 0; n < nbOfParents; ++n)
         git_commit_free(parents[n]);
+
     delete[] parents;
 
-    if (!result)
+    if (!res)
         emitGitError(tr("An error occurred while trying to commit the merge."));
 
-    return result;
+    return res;
 }
 
 //==============================================================================
 
-int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_url, const git_oid *oid,
-                                       unsigned int is_merge, void *payload)
+int PmrWorkspace::fetchhead_foreach_cb(const char *pReferenceName,
+                                       const char *pRemoteUrl,
+                                       const git_oid *pId,
+                                       unsigned int pMerge, void *pPayload)
 {
-    Q_UNUSED(ref_name)
+    Q_UNUSED(pReferenceName);
 
-    bool success = true;
+    int res = 1;
 
-    auto workspace = (PmrWorkspace *)payload;
-    auto repository = workspace->mGitRepository;
+    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
+    git_repository *repository = workspace->mGitRepository;
 
     workspace->mConflictedFiles = QStringList();
     workspace->mUpdatedFiles = QStringList();
 
-    if (is_merge) {
+    if (pMerge) {
         git_annotated_commit *remoteCommitHead = 0;
+
         if (git_annotated_commit_from_fetchhead(&remoteCommitHead, repository,
-                                                "origin/master", remote_url, oid) != 0) {
-            success = false;
-        }
-        else {
+                                                "origin/master", pRemoteUrl, pId)) {
+            res = 0;
+        } else {
             // Initialise common checkout options
 
             git_checkout_options checkoutOptions;
+
             git_checkout_init_options(&checkoutOptions, GIT_CHECKOUT_OPTIONS_VERSION);
-            checkoutOptions.checkout_strategy = GIT_CHECKOUT_SAFE
-                                              | GIT_CHECKOUT_RECREATE_MISSING
-                                              | GIT_CHECKOUT_CONFLICT_STYLE_MERGE;  // DIFF3 ??
+
+            checkoutOptions.checkout_strategy =  GIT_CHECKOUT_SAFE
+                                                |GIT_CHECKOUT_RECREATE_MISSING
+                                                |GIT_CHECKOUT_CONFLICT_STYLE_MERGE;
             checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
             checkoutOptions.notify_cb = checkout_notify_cb;
-            checkoutOptions.notify_payload = (void *)workspace;
+            checkoutOptions.notify_payload = (void *) workspace;
 
             // Find the type of merge we can do
 
             git_merge_analysis_t analysis = GIT_MERGE_ANALYSIS_NONE;
             git_merge_preference_t preference = GIT_MERGE_PREFERENCE_NONE;
-            git_merge_analysis(&analysis, &preference, repository, (const git_annotated_commit**)(&remoteCommitHead), 1);
+
+            git_merge_analysis(&analysis, &preference, repository,
+                               (const git_annotated_commit**) &remoteCommitHead, 1);
 
             if (analysis & GIT_MERGE_ANALYSIS_UNBORN) {
                 // We can simply set HEAD to the target commit.
 
                 git_reference *newMaster = 0;
-                success = git_reference_create(&newMaster, repository, "refs/heads/master",
-                                                  git_annotated_commit_id(remoteCommitHead),
-                                                  true, "initial pull") == 0
-                          && git_repository_set_head(repository, "refs/heads/master") == 0
-                          && git_checkout_head(repository, &checkoutOptions) == 0;
+
+                res =    !git_reference_create(&newMaster, repository,
+                                               "refs/heads/master",
+                                               git_annotated_commit_id(remoteCommitHead),
+                                               true, "initial pull")
+                      && !git_repository_set_head(repository,
+                                                  "refs/heads/master")
+                      && !git_checkout_head(repository, &checkoutOptions);
 
                 if (newMaster)
                     git_reference_free(newMaster);
-            }
-            else if (analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) {
+            } else if (analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) {
                 // We can check out the newly fetched head without merging
 
                 const git_oid *AnnotatedCommitId = git_annotated_commit_id(remoteCommitHead);
-
                 git_commit *commit = 0;
                 git_reference *headReference = 0;
                 git_reference *newHeadReference = 0;
 
-                success = git_commit_lookup(&commit, repository, AnnotatedCommitId) == 0
-                       && git_checkout_tree(repository, (const git_object *)commit, &checkoutOptions) == 0
-                       && git_reference_lookup(&headReference, repository, "refs/heads/master") == 0;
-                if (success) {
+                res =    !git_commit_lookup(&commit, repository, AnnotatedCommitId)
+                      && !git_checkout_tree(repository, (const git_object *) commit, &checkoutOptions)
+                      && !git_reference_lookup(&headReference, repository, "refs/heads/master");
+
+                if (res) {
                     const git_oid *commitId = git_commit_id(commit);
                     const char *msg = "pull: Fast-forward";
 
                     if (git_reference_type(headReference) == GIT_REF_OID) {
-                        success = git_reference_set_target(&newHeadReference, headReference, commitId, msg) == 0;
-                    }
-                    else {
-                        success = git_reference_create(&newHeadReference, repository,
-                                                       "refs/heads/master", commitId, false,  msg) == 0;
+                        res = !git_reference_set_target(&newHeadReference,
+                                                            headReference,
+                                                            commitId, msg);
+                    } else {
+                        res = !git_reference_create(&newHeadReference,
+                                                    repository,
+                                                    "refs/heads/master",
+                                                    commitId, false, msg);
                     }
                 }
 
@@ -787,27 +828,24 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *ref_name, const char *remote_
 
                 if (newHeadReference)
                     git_reference_free(newHeadReference);
-            }
-
-            else if (analysis & GIT_MERGE_ANALYSIS_NORMAL) {
-                // A "normal" merge; both HEAD and the given merge input have diverged from
-                // their common ancestor. The divergent commits must be merged.
+            } else if (analysis & GIT_MERGE_ANALYSIS_NORMAL) {
+                // A "normal" merge, i.e. both HEAD and the given merge input
+                // have diverged from their common ancestor, which means that
+                // the divergent commits must be merged
 
                 git_merge_options mergeOptions;
                 git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
 
-// Setting this means we don't update file with conflict lines...
-//              mergeOptions.flags = GIT_MERGE_FAIL_ON_CONFLICT;
-
-                success = git_merge(repository, (const git_annotated_commit**)(&remoteCommitHead), 1,
-                                    &mergeOptions, &checkoutOptions) == 0;
+                res = !git_merge(repository,
+                                 (const git_annotated_commit**) &remoteCommitHead,
+                                 1, &mergeOptions, &checkoutOptions);
             }
 
-        git_annotated_commit_free(remoteCommitHead);
+            git_annotated_commit_free(remoteCommitHead);
         }
     }
 
-    return success ? 0 : 1;
+    return !res;
 }
 
 //==============================================================================
@@ -830,7 +868,7 @@ bool PmrWorkspace::merge()
     bool res = true;
     int error = git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this);
 
-    if (error == 0) {
+    if (!error) {
         // We only need to commit NORMAL merges
 
         if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
@@ -841,8 +879,7 @@ bool PmrWorkspace::merge()
         // List of updated files:
         //    mUpdatedFiles.join("\n")
         // Just emit the list... ???
-    }
-    else if (error != GIT_ENOTFOUND) {
+    } else if (error != GIT_ENOTFOUND) {
         QString errorMessage = tr("An error occurred while trying to merge the workspace.");
 
         if (mConflictedFiles.size()) {
@@ -850,8 +887,7 @@ bool PmrWorkspace::merge()
                             +"\n\t"+mConflictedFiles.join("\n\t");
 
             emit warning(errorMessage);
-        }
-        else {
+        } else {
             emitGitError(errorMessage);
         }
 
@@ -930,7 +966,8 @@ void PmrWorkspace::push()
 
 //==============================================================================
 
-bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git_commit **pParents)
+bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount,
+                            const git_commit **pParents)
 {
     git_signature *author = 0;
     git_index *index = 0;
@@ -946,12 +983,13 @@ bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount, const git
 // `git config --local user.name "name"
 // `git config --local user.email "email"
 
-    bool error = git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org") != 0
-              || git_repository_index(&index, mGitRepository) != 0
-              || git_index_write_tree(&treeId, index) != 0
-              || git_tree_lookup(&tree, mGitRepository, &treeId) != 0
-              || git_commit_create(&commitId, mGitRepository, "HEAD", author, author,
-                                   0, pMessage, tree, pParentCount, pParents) != 0;
+    bool error = git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org")
+              || git_repository_index(&index, mGitRepository)
+              || git_index_write_tree(&treeId, index)
+              || git_tree_lookup(&tree, mGitRepository, &treeId)
+              || git_commit_create(&commitId, mGitRepository, "HEAD", author,
+                                   author, 0, pMessage, tree, pParentCount,
+                                   pParents);
     if (tree)
         git_tree_free(tree);
 
@@ -990,12 +1028,13 @@ bool PmrWorkspace::commit(const QString &pMessage)
             // Committing to an empty repository
             // TODO: create a master branch...
             nParents = 0;
-        }
-        else {
+        } else {
             // Get HEAD as the commit object to use as the parent of the commit
+
             git_oid parentId;
-            if (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == 0
-             && git_commit_lookup(&parent, mGitRepository, &parentId) == 0) {
+
+            if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
+                && !git_commit_lookup(&parent, mGitRepository, &parentId)) {
                 nParents = 1;
             }
         }
@@ -1022,51 +1061,61 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 {
     // Get the status of the repository
 
-    auto status = StatusUnknown;
+    WorkspaceStatus status = StatusUnknown;
 
     if (isOpen()) {
-
         if (git_repository_head_unborn(mGitRepository) == 1) {
             status = StatusCurrent;
-        }
-        else {
+        } else {
             bool error = false;
 
             git_oid masterOid;
-            if (git_reference_name_to_id(&masterOid, mGitRepository,
-                                         "refs/heads/master") == 0) {
+
+            if (!git_reference_name_to_id(&masterOid, mGitRepository,
+                                          "refs/heads/master")) {
                 git_oid originMasterOid;
-                if (git_reference_name_to_id(&originMasterOid, mGitRepository,
-                                             "refs/remotes/origin/master") == 0) {
+
+                if (!git_reference_name_to_id(&originMasterOid, mGitRepository,
+                                              "refs/remotes/origin/master")) {
                     size_t ahead = 0;
                     size_t behind = 0;
-                    if (git_graph_ahead_behind(&ahead, &behind, mGitRepository,
-                                               &masterOid, &originMasterOid) == 0) {
-                        status = ahead  ? StatusAhead
-                               : behind ? StatusBehind
-                               :          StatusCurrent;
+
+                    if (!git_graph_ahead_behind(&ahead, &behind, mGitRepository,
+                                                &masterOid, &originMasterOid)) {
+                        status = ahead?
+                                    StatusAhead:
+                                    behind?
+                                        StatusBehind:
+                                        StatusCurrent;
+                    } else {
+                        error = true;
                     }
-                    else error = true;
+                } else {
+                    // Need an initial `push origin master`
+
+                    status = StatusAhead;
                 }
-                else {
-                    status = StatusAhead;    // Need an initial `push origin master`
-                }
+            } else {
+                error = true;
             }
-            else error = true;
 
             if (error)
                 emitGitError(tr("An error occurred while trying to get the remote status of %1.").arg(mPath));
         }
 
         git_index *index;
-        if (git_repository_index(&index, mGitRepository) == 0) {
+
+        if (!git_repository_index(&index, mGitRepository)) {
             if (git_index_has_conflicts(index)) {
-                status = (WorkspaceStatus)(status | StatusConflict);
+                status = WorkspaceStatus(status|StatusConflict);
+            } else {
+                if (mStagedCount)
+                    status = WorkspaceStatus(status|StatusCommit);
+
+                if (mUnstagedCount)
+                    status = WorkspaceStatus(status|StatusUnstaged);
             }
-            else {
-                if (mStagedCount > 0) status = (WorkspaceStatus)(status | StatusCommit);
-                if (mUnstagedCount > 0) status = (WorkspaceStatus)(status | StatusUnstaged);
-            }
+
             git_index_free(index);
         }
     }
@@ -1123,16 +1172,18 @@ const CharPair PmrWorkspace::gitStatusChars(const int &pFlags)
 
 const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
-    auto status = CharPair(' ', ' ');
+    CharPair status = CharPair(' ', ' ');
 
     if (isOpen()) {
-        auto repoDir = QDir(mPath);
+        QDir repoDir = QDir(mPath);
         unsigned int statusFlags = 0;
         QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
 
-        if (git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData()) == 0) {
+        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
             status = gitStatusChars(statusFlags);
+
             // Also update status in file tree
+
             if (mRepositoryStatusMap.contains(pPath))
                 mRepositoryStatusMap.value(pPath)->setStatus(status);
         }
@@ -1147,59 +1198,67 @@ const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
     if (isOpen()) {
-        auto repoDir = QDir(mPath);
-        auto relativePathBuffer = repoDir.relativeFilePath(pPath).toUtf8();
-        auto relativePath = relativePathBuffer.constData();
+        QDir repoDir = QDir(mPath);
+        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
+        const char *relativePath = relativePathByteArray.constData();
         bool success = false;
         git_index *index;
 
-       if (git_repository_index(&index, mGitRepository) == 0) {
+       if (!git_repository_index(&index, mGitRepository)) {
             if (pStage) {
                 unsigned int statusFlags = 0;
+
                 git_status_file(&statusFlags, mGitRepository, relativePath);
-                if (statusFlags & GIT_STATUS_WT_DELETED) {
-                    success = (git_index_remove_bypath(index, relativePath) == 0);
-                }
-                else {
-                    success = (git_index_add_bypath(index, relativePath) == 0);
-                }
-            }
 
-            else if (git_repository_head_unborn(mGitRepository) == 1) {
-                success = (git_index_remove_bypath(index, relativePath) == 0);
-            }
+                if (statusFlags & GIT_STATUS_WT_DELETED)
+                    success = !git_index_remove_bypath(index, relativePath);
+                else
+                    success = !git_index_add_bypath(index, relativePath);
+            } else if (git_repository_head_unborn(mGitRepository) == 1) {
+                success = !git_index_remove_bypath(index, relativePath);
+            } else {
+                // We need to add a "reset stage" to the index, which means
+                // getting the tree for HEAD and tree_entry for the file
 
-            else {
-                // Need to add a "reset stage" to the index
-                // Get tree of HEAD, then tree_entry for file
                 git_reference *headReference;
-                if (git_repository_head(&headReference, mGitRepository) == 0) {
+
+                if (!git_repository_head(&headReference, mGitRepository)) {
                     git_tree *headTree;
-                    if (git_reference_peel((git_object **)&headTree, headReference, GIT_OBJ_TREE) == 0) {
+
+                    if (!git_reference_peel((git_object **) &headTree, headReference, GIT_OBJ_TREE)) {
                         git_tree_entry *headEntry;
-                        if (git_tree_entry_bypath(&headEntry, headTree, relativePath) == 0) {
+
+                        if (!git_tree_entry_bypath(&headEntry, headTree, relativePath)) {
                             git_index_entry indexEntry;
+
                             memset(&indexEntry, '\0', sizeof(git_index_entry));
+
                             indexEntry.id = *git_tree_entry_id(headEntry);
                             indexEntry.mode = git_tree_entry_filemode(headEntry);
                             indexEntry.path = relativePath;
+
                             git_index_add(index, &indexEntry);
+
                             git_tree_entry_free(headEntry);
+
                             success = true;
+                        } else {
+                            success = !git_index_remove_bypath(index, relativePath);
                         }
-                        else {
-                            success = (git_index_remove_bypath(index, relativePath) == 0);
-                        }
+
                         git_tree_free(headTree);
                     }
+
                     git_reference_free(headReference);
                 }
             }
 
-            if (success) git_index_write(index);
+            if (success)
+                git_index_write(index);
 
             git_index_free(index);
         }
+
         if (!success)
             emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
     }

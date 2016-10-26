@@ -149,8 +149,7 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
 
     QNetworkReply *networkReply;
 
-    QByteArray requestData = pJsonDocument.isNull() ? ""
-                                                    : pJsonDocument.toJson(QJsonDocument::Compact);
+    QByteArray requestData = pJsonDocument.isNull()?QByteArray():pJsonDocument.toJson(QJsonDocument::Compact);
 
     // Use the authenticated link if it's available
 
@@ -158,17 +157,14 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
         O1Requestor *requestor = new O1Requestor(this, mPmrOAuthClient, this);
         if (!pUsePost && pJsonDocument.isNull()) {
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
-        }
-        else {
+        } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
             networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(), requestData);
         }
-
     } else {
         if (!pUsePost && pJsonDocument.isNull()) {
             networkReply = get(networkRequest);
-        }
-        else {
+        } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
             networkReply = post(networkRequest, requestData);
         }

@@ -59,7 +59,7 @@ PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo()
 
 bool PMRWorkspacesWindowPlugin::isIndirectRemoteFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 
     return false;
 }
@@ -70,8 +70,8 @@ bool PMRWorkspacesWindowPlugin::saveFile(const QString &pOldFileName,
                                          const QString &pNewFileName,
                                          bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName)
-    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
     Q_UNUSED(pNeedFeedback);
 
     return true;
@@ -81,21 +81,21 @@ bool PMRWorkspacesWindowPlugin::saveFile(const QString &pOldFileName,
 
 void PMRWorkspacesWindowPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
 
 void PMRWorkspacesWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
 
 void PMRWorkspacesWindowPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
@@ -103,7 +103,7 @@ void PMRWorkspacesWindowPlugin::fileModified(const QString &pFileName)
 void PMRWorkspacesWindowPlugin::fileReloaded(const QString &pFileName,
                                              const bool &pFileChanged)
 {
-    Q_UNUSED(pFileChanged)
+    Q_UNUSED(pFileChanged);
 
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
@@ -125,7 +125,7 @@ void PMRWorkspacesWindowPlugin::fileRenamed(const QString &pOldFileName,
 
 void PMRWorkspacesWindowPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================

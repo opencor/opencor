@@ -58,8 +58,7 @@ void PmrWebServiceResponse::processResponse()
         // Get the raw content
 
         contentData = mNetworkReply->readAll();
-    }
-    else {
+    } else {
         // Retrieve and uncompress the content
 
         QByteArray compressedData = mNetworkReply->readAll();
@@ -104,31 +103,20 @@ void PmrWebServiceResponse::processResponse()
                                                                << CollectionMimeType;
 
     if (mNetworkReply->error() != QNetworkReply::NoError) {
-
         if (httpStatusCode == 403) {
             emit unauthorised(mNetworkReply->url().toString());
-        }
-        else {
+        } else {
             QString errorMessage = mNetworkReply->errorString();
 
             emit error(errorMessage, true);
         }
-    }
-
-    // Check for a moved location response
-
-    else if (httpStatusCode == 302) {
+    } else if (httpStatusCode == 302) {
+        // Moved location response
 
         emit movedLocation(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
-    }
-
-    // Check we actually have JSON from PMR
-
-    else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
+    } else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
         emit error(tr("Response has unexpected content type"), true);
-    }
-
-    else {
+    } else {
         // Parse our uncompressed JSON data
 
         QJsonParseError jsonParseError;
@@ -136,12 +124,10 @@ void PmrWebServiceResponse::processResponse()
 
         // Check for parse errors
 
-        if (jsonParseError.error != QJsonParseError::NoError)
+        if (jsonParseError.error != QJsonParseError::NoError) {
             emit error(jsonParseError.errorString(), true);
-
-        // All good...
-
-        else {
+        } else {
+            // All good...
 
             emit gotJsonResponse(jsonDocument);
         }

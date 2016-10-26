@@ -68,10 +68,10 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void contextMenuEvent(QContextMenuEvent *event);
-    virtual void mouseDoubleClickEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
 
     void aboutWorkspace(const QString &pUrl);
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
@@ -132,7 +132,7 @@ private:
     QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 
-    static const QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
+    static QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
 
     void cloneWorkspace(const QString &pUrl);
     void duplicateCloneMessage(const QString &pUrl,

@@ -317,8 +317,7 @@ void PmrWorkspacesWindowWindow::updateAuthenticationStatus(const bool &pAuthenti
         mGui->actionRescan->setEnabled(true);
         mGui->actionUnauthenticate->setVisible(true);
         mWorkspacesWindowWidget->refreshWorkspaces(false);
-    }
-    else {
+    } else {
         mGui->actionAuthenticate->setVisible(true);
         mGui->actionNew->setEnabled(false);
         mGui->actionRefresh->setEnabled(false);
@@ -346,14 +345,13 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
     PmrWorkspacesWindowNewWorkspace *newWorkspaceDialog = new PmrWorkspacesWindowNewWorkspace(Core::mainWindow());
 
     if (newWorkspaceDialog->exec() == QDialog::Accepted) {
-
         // Create the folder for the new workspace
 
         QDir workspaceFolder(newWorkspaceDialog->path());
+
         if (!workspaceFolder.exists()) {
             workspaceFolder.mkpath(".");
-        }
-        else {
+        } else {
             // TODO Need to check the folder is empty and if not, give
             // an error and return.
             //
@@ -417,22 +415,22 @@ void PmrWorkspacesWindowWindow::showCustomContextMenu() const
 void PmrWorkspacesWindowWindow::fileCreated(const QString &pFileName,
                                             const QString &pUrl)
 {
-    Q_UNUSED(pFileName)
-    Q_UNUSED(pUrl)
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pUrl);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWindow::fileDeleted(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWindow::fileDuplicated(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================

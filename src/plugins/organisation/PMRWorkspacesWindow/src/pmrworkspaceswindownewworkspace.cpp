@@ -122,15 +122,17 @@ void PmrWorkspacesWindowNewWorkspace::titleTextChanged(const QString &text)
 
 void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &checked)
 {
-    Q_UNUSED(checked)
+    Q_UNUSED(checked);
 
     QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
+
     if (!dirName.isEmpty()) {
         mGui->path->setText(dirName);
+
         mPathChosen = true;
+
         mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!title().isEmpty());
-    }
-    else {
+    } else {
         mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(false);
     }
 }

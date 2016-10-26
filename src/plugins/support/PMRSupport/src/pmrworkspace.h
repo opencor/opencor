@@ -141,15 +141,22 @@ private:
 
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
-    static int certificate_check_cb(git_cert *cert, int valid, const char *host, void *payload);
-    static int checkout_notify_cb(git_checkout_notify_t why, const char *path, const git_diff_file *baseline,
-                                  const git_diff_file *target, const git_diff_file *workdir, void *payload);
-    static void checkout_progress_cb(const char *path, size_t completed_steps, size_t total_steps,
-                                     void *payload);
-    static int fetchhead_foreach_cb(const char *ref_name, const char *remote_url, const git_oid *oid,
-                                    unsigned int is_merge, void *payload);
+    static int certificate_check_cb(git_cert *pCertificate, int pValid,
+                                    const char *pHost, void *pPayload);
+    static int checkout_notify_cb(git_checkout_notify_t pNotification,
+                                  const char *pPath,
+                                  const git_diff_file *pBaseline,
+                                  const git_diff_file *pTarget,
+                                  const git_diff_file *pWorkDirectory,
+                                  void *pPayload);
+    static void checkout_progress_cb(const char *pPath, size_t pCompletedSteps,
+                                     size_t pTotalSteps, void *pPayload);
+    static int fetchhead_foreach_cb(const char *pReferenceName,
+                                    const char *pRemoteUrl, const git_oid *pId,
+                                    unsigned int pMerge, void *pPayload);
     static int mergehead_foreach_cb(const git_oid *oid, void *payload);
-    static int transfer_progress_cb(const git_transfer_progress *stats, void *payload);
+    static int transfer_progress_cb(const git_transfer_progress *pProgress,
+                                    void *pPayload);
 
     void emitGitError(const QString &pMessage) const;
     void emitProgress(const double &pProgress) const;

@@ -150,7 +150,7 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
 
     if (exposure->fileUrlsLeftCount() < 0) {
         requestExposureInformation(exposure, RequestExposureFiles);
-    } else if (exposure->fileUrlsLeftCount() == 0) {
+    } else if (!exposure->fileUrlsLeftCount()) {
         if (exposure->exposureFiles().count())
             emit exposureFiles(pUrl, exposure->exposureFiles());
         else
@@ -209,20 +209,19 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
 
         if (workspaceUrl.isEmpty()) {
             emitInformation(tr("No workspace URL could be found for %1.").arg(exposure->toHtml()));
-        }
-        else if (Action(sender()->property(NextActionProperty).toInt()) == CloneExposureWorkspace) {
+        } else if (Action(sender()->property(NextActionProperty).toInt()) == CloneExposureWorkspace) {
             // Retrieve workspace file information and clone the workspace
 
             requestWorkspaceInformation(workspaceUrl, QString(), exposure);
         }
 
-        if (exposureFileUrls.isEmpty()
-         && Action(sender()->property(NextActionProperty).toInt()) == RequestExposureFiles)
+        if (   exposureFileUrls.isEmpty()
+            && (Action(sender()->property(NextActionProperty).toInt()) == RequestExposureFiles)) {
             emitInformation(tr("No exposure file URLs could be found for %1.").arg(exposure->toHtml()));
-
-        foreach (const QString &exposureFileUrl, exposureFileUrls) {
-            requestExposureFileInformation(exposure, exposureFileUrl);
         }
+
+        foreach (const QString &exposureFileUrl, exposureFileUrls)
+            requestExposureFileInformation(exposure, exposureFileUrl);
     }
 }
 
@@ -289,7 +288,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     // should we have no exposure file URLs left to
                     // handle
 
-                    if (exposure->fileUrlsLeftCount() == 0) {
+                    if (!exposure->fileUrlsLeftCount()) {
                         emit exposureFiles(exposure->url(), exposure->exposureFiles());
                     }
                 }
@@ -317,7 +316,7 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QStrin
 
 void PmrWebService::workspaceCloneFinished(PmrWorkspace *pWorkspace)
 {
-    Q_UNUSED(pWorkspace)
+    Q_UNUSED(pWorkspace);
 
     emit busy(false);
 }
@@ -338,23 +337,22 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         if (!dirName.isEmpty()) {
             emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, dirName));
             // TODO Prompt user to create a fork on PMR??
-        }
-        else {
+        } else {
             PmrWorkspace *existing = PmrWorkspacesManager::instance()->workspace(url);
 
             if (!existing) {
                 // Retrieve the name of an empty directory
 
                 dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
-                if (!dirName.isEmpty()) requestWorkspaceClone(exposure->workspace(), dirName);
-            }
-            else {
+
+                if (!dirName.isEmpty())
+                    requestWorkspaceClone(exposure->workspace(), dirName);
+            } else {
                 emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, existing->path()));
                 // TODO Prompt user to create a fork on PMR??
             }
         }
-    }
-    else {
+    } else {
         // To clone the workspace associated with the given exposure, we first
         // need to retrieve some information about the exposure itself
 
@@ -433,7 +431,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
         foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = dataVariant.toMap();
 
-            if      (!dataMap["name"].toString().compare("storage"))
+            if (!dataMap["name"].toString().compare("storage"))
                 storageValue = dataMap["value"].toString();
             else if (!dataMap["name"].toString().compare("description"))
                 workspaceDescription = dataMap["value"].toString();
@@ -471,13 +469,11 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                         // Retrieve the name of an empty directory
 
                         dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
-                    }
-                    else {
+                    } else {
                         emit warning(tr("Workspace %1 is already cloned in %2.").arg(workspaceUrl, existing->path()));
                         // TODO Prompt user to create a fork on PMR??
                     }
-                }
-                else {
+                } else {
                     // Cloning after creating a new workspace
 
                     dirName = sender()->property(DirNameProperty).toString();
@@ -485,16 +481,14 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
                 // Clone the workspace, if we have a directory
 
-                if (!dirName.isEmpty()) requestWorkspaceClone(workspace, dirName);
-
+                if (!dirName.isEmpty())
+                    requestWorkspaceClone(workspace, dirName);
             } else if (exposure) {
                 emitInformation(tr("The workspace for %1 is not a Git repository.").arg(exposure->toHtml()));
             }
-
         } else if (exposure) {
             emitInformation(tr("No workspace information could be found for %1.").arg(exposure->toHtml()));
         }
-
     }
 }
 
@@ -697,7 +691,7 @@ void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::workspaceUnauthorised(const QString &pUrl)
 {
-    Q_UNUSED(pUrl)
+    Q_UNUSED(pUrl);
 
     // Do nothing, getWorkspace() will return 0
 }
