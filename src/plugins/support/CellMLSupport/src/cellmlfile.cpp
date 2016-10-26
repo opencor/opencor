@@ -678,7 +678,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
     // Sort our issues
 
-    std::sort(pIssues.begin(), pIssues.end());
+    pIssues.sort();
 
     return !cellmlErrorsCount;
 }

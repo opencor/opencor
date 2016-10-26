@@ -58,13 +58,8 @@ static const auto CorePluginName = QStringLiteral("Core");
 
 //==============================================================================
 
-class Plugin;
 class PluginInfo;
 class PluginManager;
-
-//==============================================================================
-
-typedef QList<Plugin *> Plugins;
 
 //==============================================================================
 
@@ -118,6 +113,17 @@ private:
     QObject *mInstance;
     Status mStatus;
     QString mStatusErrors;
+};
+
+//==============================================================================
+
+class Plugins : public QList<Plugin *>
+{
+public:
+    void sort();
+
+private:
+    static bool compare(Plugin *pPlugin1, Plugin *pPlugin2);
 };
 
 //==============================================================================

@@ -80,7 +80,15 @@ private:
 
 //==============================================================================
 
-typedef QList<DataStoreVariable *> DataStoreVariables;
+class DataStoreVariables : public QList<DataStoreVariable *>
+{
+public:
+    void sort();
+
+private:
+    static bool compare(DataStoreVariable *pVariable1,
+                        DataStoreVariable *pVariable2);
+};
 
 //==============================================================================
 

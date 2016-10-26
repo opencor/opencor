@@ -74,7 +74,11 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileIssue> CellmlFileIssues;
+class CellmlFileIssues : public QList<CellmlFileIssue>
+{
+public:
+    void sort();
+};
 
 //==============================================================================
 
