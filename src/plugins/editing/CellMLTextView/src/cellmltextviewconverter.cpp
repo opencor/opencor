@@ -1349,9 +1349,9 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                 } else {
                     QString operand = processMathmlNode(childNode, pHasError);
 
-                    if (pHasError)
+                    if (pHasError) {
                         return QString();
-                    else {
+                    } else {
                         if (operatorNodeType == PlusMathmlNode) {
                             res = pOperator+operand;
                         } else if (operatorNodeType == MinusMathmlNode) {
