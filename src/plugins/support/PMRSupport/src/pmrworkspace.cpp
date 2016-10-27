@@ -550,8 +550,9 @@ void PmrWorkspace::clone(const QString &pDirName)
     // Perform the clone
 
     if (git_clone(&mGitRepository, workspaceByteArray.constData(),
-                          dirNameByteArray.constData(), &cloneOptions))
+                          dirNameByteArray.constData(), &cloneOptions)) {
         emitGitError(tr("An error occurred while trying to clone the workspace."));
+    }
 
     git_strarray_free(&authorisationStrArray);
 

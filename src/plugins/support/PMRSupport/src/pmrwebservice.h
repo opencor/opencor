@@ -102,17 +102,17 @@ signals:
     void busy(const bool &pBusy);
     void progress(const double &pProgress);
 
-    void error(const QString &pErrorMessage,
-               const bool &pInternetConnectionAvailable);
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
+    void error(const QString &pErrorMessage,
+               const bool &pInternetConnectionAvailable);
 
-    void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
     void exposures(const PMRSupport::PmrExposures &pExposures);
+    void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
 
+    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
     void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
