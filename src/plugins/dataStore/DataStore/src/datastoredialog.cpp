@@ -201,8 +201,6 @@ DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
     if (pItem->rowCount()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
             res << doSelectedData(pItem->child(i));
-
-        return res;
     } else if (pItem->checkState() == Qt::Checked) {
         res << mData.value(pItem);
     }

@@ -185,7 +185,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mNetworkReply(0)
 {
     // Create a network access manager so that we can then retrieve a list of
-    // ontological terms models from the PMR
+    // ontological terms models from PMR
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
