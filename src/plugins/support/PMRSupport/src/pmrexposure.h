@@ -60,9 +60,9 @@ public:
     int fileUrlsLeftCount() const;
     void setFileUrlsLeftCount(const int &pFileUrlsLeftCount);
 
-    void addExposureFile(const QString &pFileName);
-    void addOtherFile(const QString &pFileName);
     QStringList exposureFiles() const;
+    void addExposureFile(const QString &pFileName,
+                         const bool &pDecrementCounter = true);
 
     PmrWorkspace * workspace() const;
     void setWorkspace(PmrWorkspace *pWorkspace);

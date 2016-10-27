@@ -88,29 +88,28 @@ void PmrExposure::setFileUrlsLeftCount(const int &pFileUrlsLeftCount)
 
 //==============================================================================
 
-void PmrExposure::addExposureFile(const QString &pFileName)
-{
-    if (mFileUrlsLeftCount) {
-        mExposureFiles << pFileName;
-
-        --mFileUrlsLeftCount;
-    }
-}
-
-//==============================================================================
-
-void PmrExposure::addOtherFile(const QString &pFileName)
-{
-    if (!mExposureFiles.contains(pFileName))
-        mExposureFiles << pFileName;
-}
-
-//==============================================================================
 QStringList PmrExposure::exposureFiles() const
 {
     // Return our list of exposure files
 
     return mExposureFiles;
+}
+
+//==============================================================================
+
+void PmrExposure::addExposureFile(const QString &pFileName,
+                                  const bool &pDecrementCounter)
+{
+    // Keep track of the given exposure file, if not already tracked
+
+    if (!mExposureFiles.contains(pFileName))
+        mExposureFiles << pFileName;
+
+    // Decrement our number of file URLs left to handle, if possible and
+    // requested
+
+    if (mFileUrlsLeftCount && pDecrementCounter)
+        --mFileUrlsLeftCount;
 }
 
 //==============================================================================

@@ -150,7 +150,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
-    PmrExposure * exposure = mUrlExposures.value(pUrl);
+    PmrExposure *exposure = mUrlExposures.value(pUrl);
 
     if (exposure->fileUrlsLeftCount() < 0) {
         requestExposureInformation(exposure, RequestExposureFiles);
@@ -195,10 +195,8 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
             QVariantMap linksMap = linksVariant.toMap();
             QString relValue = linksMap["rel"].toString();
 
-            if (!relValue.compare("via")) { // What about prompt == "Workspace URL" ??
-
+            if (!relValue.compare("via")) {
                 workspaceUrl = linksMap["href"].toString().trimmed();
-
             } else if (!relValue.compare("bookmark")) {
                 QString exposureFileUrl = linksMap["href"].toString().trimmed();
                 if (!exposureFileUrl.isEmpty()) {
@@ -270,7 +268,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     exposure->addExposureFile(exposureFile);
 
                     // Check whether the exposure file has a link called
-                    // "Launch with OpenCOR"
+                    // "Launch with OpenCOR" (e.g. for SED-ML files)
 
                     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
                         QVariantMap linksMap = linksVariant.toMap();
@@ -287,7 +285,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                             exposureFile = linksMap["href"].toString().trimmed().remove("opencor://openFile/");
 
                             if (!exposureFile.isEmpty())
-                                exposure->addOtherFile(exposureFile);
+                                exposure->addExposureFile(exposureFile, false);
                         }
                     }
 
