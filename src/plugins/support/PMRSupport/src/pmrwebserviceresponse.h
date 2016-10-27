@@ -26,7 +26,6 @@ limitations under the License.
 
 #include <QJsonDocument>
 #include <QObject>
-#include <QString>
 
 //==============================================================================
 
@@ -50,12 +49,14 @@ private:
 
 signals:
     void busy(const bool &pBusy);
+
+    void response(const QJsonDocument &pJsonDocument);
+    void finished();
+
+    void unauthorised(const QString &pUrl);
+    void movedLocation(const QString &locationUrl);
     void error(const QString &pErrorMessage,
                const bool &pInternetConnectionAvailable);
-    void finished();
-    void gotJsonResponse(const QJsonDocument &pJsonDocument);
-    void movedLocation(const QString &locationUrl);
-    void unauthorised(const QString &pUrl);
 
 private slots:
     void processResponse();

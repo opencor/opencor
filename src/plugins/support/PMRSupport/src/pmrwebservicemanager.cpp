@@ -128,8 +128,8 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
     // Check that we are connected to the Internet
 
     if (!Core::internetConnectionAvailable()) {
+        emit error(tr("Cannot connect to the Internet"), false);
 
-        emit error(tr("Cannot connect to Internet"), false);
         return 0;
     }
 
@@ -137,7 +137,7 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
 
     emit busy(true);
 
-    // Send our request to the PMR, asking for the response to be compressed
+    // Send our request to PMR, asking for the response to be compressed
 
     QNetworkRequest networkRequest;
 

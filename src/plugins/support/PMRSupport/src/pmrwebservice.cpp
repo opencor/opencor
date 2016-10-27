@@ -112,7 +112,7 @@ void PmrWebService::requestExposures()
 
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(PmrUrl+"/exposure", false);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(exposuresResponse(const QJsonDocument &)));
 }
 
@@ -167,7 +167,7 @@ void PmrWebService::requestExposureInformation(PmrExposure *pExposure,
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     pmrResponse->setProperty(NextActionProperty, pNextAction);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(exposureInformationResponse(const QJsonDocument &)));
 }
 
@@ -231,7 +231,7 @@ void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const
 
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(exposureFileInformationResponse(const QJsonDocument &)));
 }
 
@@ -361,7 +361,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)exposure));
         pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
 
-        connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
                 this, SLOT(exposureInformationResponse(const QJsonDocument &)));
     }
 }
@@ -392,7 +392,7 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
 }
 
@@ -406,7 +406,7 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QStri
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     pmrResponse->setProperty(DirNameProperty, pDirName);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
 }
 
@@ -530,7 +530,7 @@ void PmrWebService::requestWorkspaces()
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(PmrUrl), true);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspacesResponse(const QJsonDocument &)));
 }
 
@@ -575,7 +575,7 @@ void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 
     pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)pWorkspace));
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));
 
     // Don't return until the response has been processed
@@ -604,13 +604,12 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 
 PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
 {
-    PmrWorkspace *newWorkspace = 0;
-
+    PmrWorkspace *workspace = 0;
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
 
-    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
+    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) &workspace));
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(getWorkspaceResponse(const QJsonDocument &)));
 
     // We want to catch any 403 (unauthorised) response
@@ -627,7 +626,7 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
 
     waitLoop.exec();
 
-    return newWorkspace;
+    return workspace;
 }
 
 //==============================================================================

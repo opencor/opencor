@@ -26,7 +26,6 @@ limitations under the License.
 //==============================================================================
 
 #include <QNetworkReply>
-#include <QNetworkRequest>
 
 //==============================================================================
 
@@ -42,6 +41,8 @@ namespace PMRSupport {
 PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) :
     mNetworkReply(pNetworkReply)
 {
+    // Process the response once we have got it
+
     connect(mNetworkReply, SIGNAL(finished()),
             this, SLOT(processResponse()));
 }
@@ -50,18 +51,18 @@ PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) :
 
 void PmrWebServiceResponse::processResponse()
 {
-    // Uncompress the response body and check that it is valid JSON
+    // Retrieve the contents of the response and uncompress it if needed
 
-    QByteArray contentData = QByteArray();
+    QByteArray jsonResponse = QByteArray();
 
     if (mNetworkReply->rawHeader("Content-Encoding") != "gzip") {
-        // Get the raw content
+        // The response is not compressed, so just retrieve its raw contents
 
-        contentData = mNetworkReply->readAll();
+        jsonResponse = mNetworkReply->readAll();
     } else {
-        // Retrieve and uncompress the content
+        // Retrieve the raw contents of the response and uncompress it
 
-        QByteArray compressedData = mNetworkReply->readAll();
+        QByteArray compressedJsonResponse = mNetworkReply->readAll();
         z_stream stream;
 
         memset(&stream, 0, sizeof(z_stream));
@@ -73,8 +74,8 @@ void PmrWebServiceResponse::processResponse()
 
             Bytef buffer[BufferSize];
 
-            stream.next_in = (Bytef *) compressedData.data();
-            stream.avail_in = compressedData.size();
+            stream.next_in = (Bytef *) compressedJsonResponse.data();
+            stream.avail_in = compressedJsonResponse.size();
 
             do {
                 stream.next_out = buffer;
@@ -83,18 +84,14 @@ void PmrWebServiceResponse::processResponse()
                 inflate(&stream, Z_NO_FLUSH);
 
                 if (!stream.msg)
-                    contentData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
+                    jsonResponse += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
                 else
-                    contentData = QByteArray();
+                    jsonResponse = QByteArray();
             } while (!stream.avail_out);
 
             inflateEnd(&stream);
         }
     }
-
-    // Get the HTTP response code
-
-    int httpStatusCode = mNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     // Check for network errors
 
@@ -102,44 +99,35 @@ void PmrWebServiceResponse::processResponse()
                                                                << RequestMimeType
                                                                << CollectionMimeType;
 
+    int httpStatusCode = mNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
     if (mNetworkReply->error() != QNetworkReply::NoError) {
-        if (httpStatusCode == 403) {
+        if (httpStatusCode == 403)
             emit unauthorised(mNetworkReply->url().toString());
-        } else {
-            QString errorMessage = mNetworkReply->errorString();
-
-            emit error(errorMessage, true);
-        }
+        else
+            emit error(mNetworkReply->errorString(), true);
     } else if (httpStatusCode == 302) {
-        // Moved location response
-
         emit movedLocation(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
     } else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
         emit error(tr("Response has unexpected content type"), true);
     } else {
-        // Parse our uncompressed JSON data
+        // Parse our response
 
         QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(contentData, &jsonParseError);
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonResponse, &jsonParseError);
 
         // Check for parse errors
 
-        if (jsonParseError.error != QJsonParseError::NoError) {
+        if (jsonParseError.error != QJsonParseError::NoError)
             emit error(jsonParseError.errorString(), true);
-        } else {
-            // All good...
-
-            emit gotJsonResponse(jsonDocument);
-        }
+        else
+            emit response(jsonDocument);
     }
 
     emit busy(false);
+    emit finished();
 
     mNetworkReply->deleteLater();
-
-    // Let anyone waiting on us know that we are done
-
-    emit finished();
 }
 
 //==============================================================================
