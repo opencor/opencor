@@ -96,10 +96,6 @@ private slots:
     void retrieveExposures(const bool &pVisible);
 
     void gotExposures(const PMRSupport::PmrExposures &pExposures);
-
-    void requestExposureFiles(const QString &pUrl);
-
-    void cloneWorkspace(const QString &pExposureUrl);
 };
 
 //==============================================================================

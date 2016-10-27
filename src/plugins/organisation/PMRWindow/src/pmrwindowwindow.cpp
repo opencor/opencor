@@ -113,9 +113,9 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Some connections to know what our PMR widget wants from us
 
     connect(mPmrWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
-            this, SLOT(cloneWorkspace(const QString &)));
-    connect(mPmrWidget, SIGNAL(requestExposureFiles(const QString &)),
-            this, SLOT(requestExposureFiles(const QString &)));
+            mPmrWebService, SLOT(requestExposureWorkspaceClone(const QString &)));
+    connect(mPmrWidget, SIGNAL(exposureFilesRequested(const QString &)),
+            mPmrWebService, SLOT(requestExposureFiles(const QString &)));
 
     connect(mPmrWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
@@ -281,22 +281,6 @@ void PmrWindowWindow::retrieveExposures(const bool &pVisible)
 
         QTimer::singleShot(0, this, SLOT(on_refreshButton_clicked()));
     }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::cloneWorkspace(const QString &pExposureUrl)
-{
-    mPmrWebService->requestExposureWorkspaceClone(pExposureUrl);
-}
-
-//==============================================================================
-
-void PmrWindowWindow::requestExposureFiles(const QString &pUrl)
-{
-    // Request a list of the exposure's files from our PMR web service
-
-    mPmrWebService->requestExposureFiles(pUrl);
 }
 
 //==============================================================================

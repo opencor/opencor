@@ -58,8 +58,6 @@ public:
     explicit PmrWebService(QObject *pParent);
 
     void requestExposures();
-    void requestExposureFiles(const QString &pUrl);
-    void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
     PmrWorkspace * getWorkspace(const QString &pUrl);
 
@@ -120,6 +118,9 @@ public slots:
     void authenticate(const bool &pLink = true);
     void getAuthenticationStatus();
     void unauthorised(const QString &pUrl);
+
+    void requestExposureFiles(const QString &pUrl);
+    void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
 private slots:
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);

@@ -400,7 +400,7 @@ void PmrWindowWidget::linkClicked()
                 // received and request them
 
                 setShowExposureFilesUrl(linkList[1]);
-                emit requestExposureFiles(linkList[1]);
+                emit exposureFilesRequested(linkList[1]);
             } else {
                 showExposureFiles(linkList[1],
                                   documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id)).hasClass("button"));

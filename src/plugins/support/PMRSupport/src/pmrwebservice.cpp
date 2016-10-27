@@ -86,7 +86,7 @@ QString PmrWebService::informationNoteMessage() const
 
 void PmrWebService::emitInformation(const QString &pMessage)
 {
-    emit information(pMessage + "<br/><br/>" + informationNoteMessage());
+    emit information(pMessage+"<br/><br/>"+informationNoteMessage());
 }
 
 //==============================================================================
@@ -150,6 +150,9 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
+    // Request exposure information for the exposure which URL is given, or let
+    // people know whether there are exposure files for that exposure
+
     PmrExposure *exposure = mUrlExposures.value(pUrl);
 
     if (exposure->fileUrlsLeftCount() < 0) {
@@ -164,7 +167,8 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWebService::requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction)
+void PmrWebService::requestExposureInformation(PmrExposure *pExposure,
+                                               const Action &pNextAction)
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pExposure->url(), false);
 

@@ -90,7 +90,7 @@ private:
 
 signals:
     void cloneWorkspaceRequested(const QString &pUrl);
-    void requestExposureFiles(const QString &pUrl);
+    void exposureFilesRequested(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
 
