@@ -39,40 +39,22 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName,
     mStatus(pStatus),
     mChildren(PmrWorkspaceFileNodes())
 {
-
-}
-
-//==============================================================================
-
-PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pShortName,
-                                                      const CharPair &pStatus)
-{
-    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pShortName,
-                                                         fullName()+"/"+pShortName,
-                                                         pStatus, this);
-
-    mChildren << res;
-
-    return res;
-}
-
-//==============================================================================
-
-void PmrWorkspaceFileNode::setStatus(const CharPair &pStatus)
-{
-    mStatus = pStatus;
 }
 
 //==============================================================================
 
 QString PmrWorkspaceFileNode::shortName() const
 {
+    // Return our short name
+
     return mShortName;
 }
 //==============================================================================
 
 QString PmrWorkspaceFileNode::fullName() const
 {
+    // Return our full name
+
     return mFullName;
 }
 
@@ -80,21 +62,52 @@ QString PmrWorkspaceFileNode::fullName() const
 
 CharPair PmrWorkspaceFileNode::status() const
 {
+    // Return our status
+
     return mStatus;
+}
+
+//==============================================================================
+
+void PmrWorkspaceFileNode::setStatus(const CharPair &pStatus)
+{
+    // Set our status
+
+    mStatus = pStatus;
 }
 
 //==============================================================================
 
 bool PmrWorkspaceFileNode::hasChildren() const
 {
-    return (mChildren.size() > 0);
+    // Return whether we have children
+
+    return mChildren.size();
 }
 
 //==============================================================================
 
 PmrWorkspaceFileNodes PmrWorkspaceFileNode::children() const
 {
+    // Return our children
+
     return mChildren;
+}
+
+//==============================================================================
+
+PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pShortName,
+                                                      const CharPair &pStatus)
+{
+    // Add the given child to ourselves
+
+    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pShortName,
+                                                         fullName()+"/"+pShortName,
+                                                         pStatus, this);
+
+    mChildren << res;
+
+    return res;
 }
 
 //==============================================================================

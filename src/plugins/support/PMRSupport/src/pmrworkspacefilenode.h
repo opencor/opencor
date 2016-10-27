@@ -28,10 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
 #include <QObject>
-#include <QPair>
-#include <QString>
 
 //==============================================================================
 
@@ -40,14 +37,11 @@ namespace PMRSupport {
 
 //==============================================================================
 
-typedef QPair<QChar, QChar> CharPair;
-
-//==============================================================================
-
 class PmrWorkspaceFileNode;
 
 //==============================================================================
 
+typedef QPair<QChar, QChar> CharPair;
 typedef QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNodes;
 
 //==============================================================================
@@ -62,17 +56,16 @@ public:
                                   const CharPair &pStatus = CharPair(),
                                   PmrWorkspaceFileNode *pParent = 0);
 
-    PmrWorkspaceFileNode * addChild(const QString &pName,
-                                    const CharPair &pStatus = CharPair());
-
     QString shortName() const;
     QString fullName() const;
+
     CharPair status() const;
+    void setStatus(const CharPair &pStatus);
 
     bool hasChildren() const;
     PmrWorkspaceFileNodes children() const;
-
-    void setStatus(const CharPair &pStatus);
+    PmrWorkspaceFileNode * addChild(const QString &pName,
+                                    const CharPair &pStatus = CharPair());
 
 private:
     QString mShortName;

@@ -322,7 +322,7 @@ void PmrWorkspace::refreshStatus()
                     }
                     // Cut back stack to matching path component
 
-                    while ((i + 1) < fileNodes.size())
+                    while (i+1 < fileNodes.size())
                         fileNodes.removeLast();
 
                     currentFileNode = fileNodes[i];
