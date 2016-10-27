@@ -40,7 +40,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebService::PmrWebService(QObject *pParent) : QObject(pParent),
+PmrWebService::PmrWebService(QObject *pParent) :
+    QObject(pParent),
     mUrlExposures(QMap<QString, PmrExposure *>())
 {
     // Create a network access manager so that we can then retrieve various
@@ -50,9 +51,12 @@ PmrWebService::PmrWebService(QObject *pParent) : QObject(pParent),
 
     // Pass network manager signals directly to ourselves
 
-    connect(mPmrWebServiceManager, SIGNAL(authenticated(bool)), this, SIGNAL(authenticated(bool)));
-    connect(mPmrWebServiceManager, SIGNAL(busy(bool)), this, SIGNAL(busy(bool)));
-    connect(mPmrWebServiceManager, SIGNAL(error(QString, bool)), this, SIGNAL(error(QString, bool)));
+    connect(mPmrWebServiceManager, SIGNAL(authenticated(const bool &)),
+            this, SIGNAL(authenticated(const bool &)));
+    connect(mPmrWebServiceManager, SIGNAL(busy(const bool &)),
+            this, SIGNAL(busy(const bool &)));
+    connect(mPmrWebServiceManager, SIGNAL(error(const QString &, const bool &)),
+            this, SIGNAL(error(const QString &, const bool &)));
 }
 
 //==============================================================================
@@ -184,8 +188,8 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         // information about the exposure's workspace and exposure
         // files
 
-        QString workspaceUrl;
-        QStringList exposureFileUrls;
+        QString workspaceUrl = QString();
+        QStringList exposureFileUrls = QStringList();
 
         foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
             QVariantMap linksMap = linksVariant.toMap();
@@ -203,6 +207,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
                 }
             }
         }
+
         exposure->setFileUrlsLeftCount(exposureFileUrls.count());
 
         // Make sure that we at least have a workspace

@@ -40,6 +40,8 @@ limitations under the License.
 namespace OpenCOR {
 namespace PMRSupport {
 
+//==============================================================================
+
 class PmrWorkspace;
 
 //==============================================================================
