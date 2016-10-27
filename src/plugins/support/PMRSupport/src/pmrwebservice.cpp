@@ -57,7 +57,7 @@ PmrWebService::PmrWebService() :
     mExposureFileNames(QMap<QString, QString>())
 {
     // Create a network access manager so that we can then retrieve various
-    // things from the PMR
+    // things from PMR
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
@@ -94,8 +94,8 @@ void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
 
     emit busy(true);
 
-    // Send our request to the PMR, asking for the response to be compressed,
-    // but only if we are connected to the Internet
+    // Send our request to PMR, asking for the response to be compressed, but
+    // only if we are connected to the Internet
 
     if (Core::internetConnectionAvailable()) {
         QNetworkRequest networkRequest;
@@ -567,8 +567,8 @@ void PmrWebService::sslErrors(QNetworkReply *pNetworkReply,
 
 void PmrWebService::requestExposuresList()
 {
-    // Get the list of exposures from the PMR after making sure that our
-    // internal data has been reset
+    // Get the list of exposures from PMR after making sure that our internal
+    // data has been reset
 
     mWorkspaces.clear();
     mExposureUrls.clear();
