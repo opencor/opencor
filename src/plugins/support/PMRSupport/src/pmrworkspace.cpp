@@ -464,12 +464,6 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 
 //==============================================================================
 
-// See https://libgit2.github.com/libgit2/#HEAD/type/git_remote_callbacks
-
-// If cert verification fails, this is called to let the user make the final
-// decision of whether to allow the connection to proceed. Returns 1 to allow
-// the connection, 0 to disallow it or a negative value to indicate an error.
-
 int PmrWorkspace::certificateCheckCallback(git_cert *pCertificate, int pValid,
                                            const char *pHost, void *pPayload)
 {
@@ -478,10 +472,9 @@ int PmrWorkspace::certificateCheckCallback(git_cert *pCertificate, int pValid,
     Q_UNUSED(pHost);
     Q_UNUSED(pPayload);
 
-    // pmrWebService.Url().compare(host)
+    // Bypass the certificate check
 
-    return 1; // since we trust PMR (but should check host matches PMR...)
-              // 0 = disallow, -ve = error
+    return 1;
 }
 
 //==============================================================================
