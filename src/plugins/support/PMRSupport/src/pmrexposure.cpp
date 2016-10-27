@@ -35,9 +35,8 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
     QObject(pParent),
     mUrl(pUrl),
     mName(pName),
-    mExposureFiles(QStringList()),
-    mFileUrlsLeftCount(-1),
-    mWorkspace(0)
+    mWorkspace(0),
+    mExposureFiles(QStringList())
 {
 }
 
@@ -61,29 +60,16 @@ QString PmrExposure::name() const
 
 //==============================================================================
 
-QString PmrExposure::toHtml() const
+PmrWorkspace * PmrExposure::workspace() const
 {
-    // Return an HTML description of ourselves
-
-    return QString("<a href=\"%1\">%2</a>").arg(mUrl, mName);
+    return mWorkspace;
 }
 
 //==============================================================================
 
-int PmrExposure::fileUrlsLeftCount() const
+void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
 {
-    // Return our number of file URLs left to handle
-
-    return mFileUrlsLeftCount;
-}
-
-//==============================================================================
-
-void PmrExposure::setFileUrlsLeftCount(const int &pFileUrlsLeftCount)
-{
-    // Set the number of file URLs left to handle
-
-    mFileUrlsLeftCount = pFileUrlsLeftCount;
+    mWorkspace = pWorkspace;
 }
 
 //==============================================================================
@@ -97,33 +83,21 @@ QStringList PmrExposure::exposureFiles() const
 
 //==============================================================================
 
-void PmrExposure::addExposureFile(const QString &pFileName,
-                                  const bool &pDecrementCounter)
+void PmrExposure::addExposureFile(const QString &pFileName)
 {
-    // Keep track of the given exposure file, if not already tracked
+    // Keep track of the given exposure file, if it's not already tracked
 
     if (!mExposureFiles.contains(pFileName))
         mExposureFiles << pFileName;
-
-    // Decrement our number of file URLs left to handle, if possible and
-    // requested
-
-    if (mFileUrlsLeftCount && pDecrementCounter)
-        --mFileUrlsLeftCount;
 }
 
 //==============================================================================
 
-PmrWorkspace * PmrExposure::workspace() const
+QString PmrExposure::toHtml() const
 {
-    return mWorkspace;
-}
+    // Return an HTML description of ourselves
 
-//==============================================================================
-
-void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
-{
-    mWorkspace = pWorkspace;
+    return QString("<a href=\"%1\">%2</a>").arg(mUrl, mName);
 }
 
 //==============================================================================

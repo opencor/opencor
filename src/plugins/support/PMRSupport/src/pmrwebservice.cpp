@@ -42,7 +42,8 @@ namespace PMRSupport {
 
 PmrWebService::PmrWebService(QObject *pParent) :
     QObject(pParent),
-    mUrlExposures(QMap<QString, PmrExposure *>())
+    mUrlExposures(QMap<QString, PmrExposure *>()),
+    mFileExposuresLeftCount(QMap<PmrExposure *, int>())
 {
     // Create a network access manager so that we can then retrieve various
     // things from PMR
@@ -150,19 +151,10 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
-    // Request exposure information for the exposure which URL is given, or let
-    // people know whether there are exposure files for that exposure
+    // Request some exposure information (and then exposure files) for the
+    // exposure which URL is given
 
-    PmrExposure *exposure = mUrlExposures.value(pUrl);
-
-    if (exposure->fileUrlsLeftCount() < 0) {
-        requestExposureInformation(exposure, RequestExposureFiles);
-    } else if (!exposure->fileUrlsLeftCount()) {
-        if (exposure->exposureFiles().count())
-            emit exposureFiles(pUrl, exposure->exposureFiles());
-        else
-            emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
-    }
+    requestExposureInformation(mUrlExposures.value(pUrl), RequestExposureFiles);
 }
 
 //==============================================================================
@@ -203,14 +195,13 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
                 workspaceUrl = linksMap["href"].toString().trimmed();
             } else if (!relValue.compare("bookmark")) {
                 QString exposureFileUrl = linksMap["href"].toString().trimmed();
-                if (!exposureFileUrl.isEmpty()) {
 
+                if (!exposureFileUrl.isEmpty())
                     exposureFileUrls << exposureFileUrl;
-                }
             }
         }
 
-        exposure->setFileUrlsLeftCount(exposureFileUrls.count());
+        mFileExposuresLeftCount.insert(exposure, exposureFileUrls.count());
 
         // Make sure that we at least have a workspace
 
@@ -271,6 +262,8 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 
                     exposure->addExposureFile(exposureFile);
 
+                    mFileExposuresLeftCount.insert(exposure, mFileExposuresLeftCount.value(exposure)-1);
+
                     // Check whether the exposure file has a link called
                     // "Launch with OpenCOR" (e.g. for SED-ML files)
 
@@ -289,14 +282,14 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                             exposureFile = linksMap["href"].toString().trimmed().remove("opencor://openFile/");
 
                             if (!exposureFile.isEmpty())
-                                exposure->addExposureFile(exposureFile, false);
+                                exposure->addExposureFile(exposureFile);
                         }
                     }
 
                     // Ask our widget to add our exposure files, should we have
                     // no exposure file URLs left to handle
 
-                    if (!exposure->fileUrlsLeftCount())
+                    if (!mFileExposuresLeftCount.value(exposure))
                         emit exposureFiles(exposure->url(), exposure->exposureFiles());
                 }
             }

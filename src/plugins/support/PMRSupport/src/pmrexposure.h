@@ -57,15 +57,11 @@ public:
     QString url() const;
     QString name() const;
 
-    int fileUrlsLeftCount() const;
-    void setFileUrlsLeftCount(const int &pFileUrlsLeftCount);
-
-    QStringList exposureFiles() const;
-    void addExposureFile(const QString &pFileName,
-                         const bool &pDecrementCounter = true);
-
     PmrWorkspace * workspace() const;
     void setWorkspace(PmrWorkspace *pWorkspace);
+
+    QStringList exposureFiles() const;
+    void addExposureFile(const QString &pFileName);
 
     QString toHtml() const;
 
@@ -73,9 +69,9 @@ private:
     QString mUrl;
     QString mName;
 
-    QStringList mExposureFiles;
-    int mFileUrlsLeftCount;
     PmrWorkspace *mWorkspace;
+
+    QStringList mExposureFiles;
 };
 
 //==============================================================================

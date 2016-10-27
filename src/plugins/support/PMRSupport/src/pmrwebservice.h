@@ -81,6 +81,7 @@ private:
     PmrWebServiceManager *mPmrWebServiceManager;
 
     QMap<QString, PmrExposure *> mUrlExposures;
+    QMap<PmrExposure *, int> mFileExposuresLeftCount;
 
     void emitInformation(const QString &pMessage);
     QString informationNoteMessage() const;
