@@ -39,7 +39,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "git2.h"
+#include "git2/checkout.h"
 
 //==============================================================================
 
@@ -166,7 +166,8 @@ private:
 
     static const CharPair gitStatusChars(const int &pFlags);
 
-    bool doCommit(const char *pMessage, size_t pParentCount, const git_commit **pParents);
+    bool doCommit(const char *pMessage, size_t pParentCount,
+                  const git_commit **pParents);
     bool fetch();
     bool merge();
     void push();

@@ -38,6 +38,21 @@ limitations under the License.
 
 //==============================================================================
 
+#include "git2/annotated_commit.h"
+#include "git2/clone.h"
+#include "git2/commit.h"
+#include "git2/errors.h"
+#include "git2/graph.h"
+#include "git2/index.h"
+#include "git2/merge.h"
+#include "git2/message.h"
+#include "git2/remote.h"
+#include "git2/repository.h"
+#include "git2/signature.h"
+#include "git2/status.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRSupport {
 
@@ -277,15 +292,14 @@ void PmrWorkspace::refreshStatus()
     mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath);
 
     if (isOpen()) {
-
         git_status_options statusOptions;
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
         statusOptions.show  = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
-        statusOptions.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
-                            | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
-                            | GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
-                            | GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY
-                            | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+        statusOptions.flags =  GIT_STATUS_OPT_INCLUDE_UNTRACKED
+                              |GIT_STATUS_OPT_INCLUDE_UNMODIFIED
+                              |GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
+                              |GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY
+                              |GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
 
         git_status_list *statusList;
 
