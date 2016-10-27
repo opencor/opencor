@@ -48,15 +48,17 @@ public:
 
     static PmrWorkspacesManager * instance();
 
-    void emitWorkspaceCloned(PmrWorkspace *pWorkspace);
+    int count() const;
 
-    void addWorkspace(PmrWorkspace *pWorkspace);
-    void clearWorkspaces();
-    size_t count() const;
+    PmrWorkspaces workspaces() const;
 
     bool hasWorkspace(const QString &pUrl) const;
     PmrWorkspace * workspace(const QString &pUrl) const;
-    PmrWorkspaces workspaces() const;
+
+    void addWorkspace(PmrWorkspace *pWorkspace);
+    void clearWorkspaces();
+
+    void emitWorkspaceCloned(PmrWorkspace *pWorkspace);
 
 private:
     QMap<QString, PmrWorkspace *> mUrlWorkspaces;

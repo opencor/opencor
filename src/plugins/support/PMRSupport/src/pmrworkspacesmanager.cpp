@@ -37,6 +37,8 @@ namespace PMRSupport {
 PmrWorkspacesManager::PmrWorkspacesManager() :
     mUrlWorkspaces(QMap<QString, PmrWorkspace *>())
 {
+    // Initialise libgit2
+
     git_libgit2_init();
 }
 
@@ -44,6 +46,8 @@ PmrWorkspacesManager::PmrWorkspacesManager() :
 
 PmrWorkspacesManager::~PmrWorkspacesManager()
 {
+    // Shutdown libgit2
+
     git_libgit2_shutdown();
 }
 
@@ -61,17 +65,51 @@ PmrWorkspacesManager * PmrWorkspacesManager::instance()
 
 //==============================================================================
 
-void PmrWorkspacesManager::emitWorkspaceCloned(PmrWorkspace *pWorkspace)
+int PmrWorkspacesManager::count() const
 {
-    // This tells the PMR Workspaces plugin that a workspace has been cloned
+    // Return our number of workspaces
 
-    emit workspaceCloned(pWorkspace);
+    return mUrlWorkspaces.count();
+}
+
+//==============================================================================
+
+PmrWorkspaces PmrWorkspacesManager::workspaces() const
+{
+    // Return our workspaces
+
+    PmrWorkspaces res = PmrWorkspaces();
+
+    foreach (PmrWorkspace *workspace, mUrlWorkspaces.values())
+        res << workspace;
+
+    return res;
+}
+
+//==============================================================================
+
+bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
+{
+    // Return whether we hold the workspace which URL is given
+
+    return mUrlWorkspaces.contains(pUrl);
+}
+
+//==============================================================================
+
+PmrWorkspace * PmrWorkspacesManager::workspace(const QString &pUrl) const
+{
+    // Return the workspace, if any, with the given URL
+
+    return mUrlWorkspaces.value(pUrl);
 }
 
 //==============================================================================
 
 void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 {
+    // Keep track of the given workspace, if any
+
     if (pWorkspace)
         mUrlWorkspaces.insert(pWorkspace->url(), pWorkspace);
 }
@@ -80,6 +118,8 @@ void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 
 void PmrWorkspacesManager::clearWorkspaces()
 {
+    // Stop tracking all of our workspaces
+
     foreach (PmrWorkspace * workspace, mUrlWorkspaces.values())
         workspace->close();
 
@@ -88,35 +128,11 @@ void PmrWorkspacesManager::clearWorkspaces()
 
 //==============================================================================
 
-size_t PmrWorkspacesManager::count() const
+void PmrWorkspacesManager::emitWorkspaceCloned(PmrWorkspace *pWorkspace)
 {
-    return mUrlWorkspaces.count();
-}
+    // This tells the PMR Workspaces plugin that a workspace has been cloned
 
-//==============================================================================
-
-bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
-{
-    return mUrlWorkspaces.contains(pUrl);
-}
-
-//==============================================================================
-
-PmrWorkspace * PmrWorkspacesManager::workspace(const QString &pUrl) const
-{
-    return mUrlWorkspaces.value(pUrl);
-}
-
-//==============================================================================
-
-PmrWorkspaces PmrWorkspacesManager::workspaces() const
-{
-    PmrWorkspaces res = PmrWorkspaces();
-
-    foreach (PmrWorkspace * workspace, mUrlWorkspaces.values())
-        res << workspace;
-
-    return res;
+    emit workspaceCloned(pWorkspace);
 }
 
 //==============================================================================
