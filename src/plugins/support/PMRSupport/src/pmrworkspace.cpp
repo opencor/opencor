@@ -162,27 +162,6 @@ void PmrWorkspace::setCredentials(const QString &pUsername, const QString &pPass
 }
 
 //==============================================================================
-/*
-void PmrWorkspace::setDescription(const QString &pDescription)
-{
-    mDescription = pDescription;
-}
-
-//==============================================================================
-
-void PmrWorkspace::setName(const QString &pName)
-{
-    mName = pName;
-}
-
-//==============================================================================
-
-void PmrWorkspace::setOwner(const QString &pOwner)
-{
-    mOwner = pOwner;
-}
-*/
-//==============================================================================
 
 void PmrWorkspace::setPath(const QString &pPath)
 {
@@ -296,7 +275,6 @@ void PmrWorkspace::refreshStatus()
     mRepositoryStatusMap.clear();
 
     mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath);
-// TODO: Need to check that we aren't in the middle of a (failed) merge.
 
     if (isOpen()) {
 
@@ -492,8 +470,8 @@ QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
 // decision of whether to allow the connection to proceed. Returns 1 to allow
 // the connection, 0 to disallow it or a negative value to indicate an error.
 
-int PmrWorkspace::certificate_check_cb(git_cert *pCertificate, int pValid,
-                                       const char *pHost, void *pPayload)
+int PmrWorkspace::certificateCheckCallback(git_cert *pCertificate, int pValid,
+                                           const char *pHost, void *pPayload)
 {
     Q_UNUSED(pCertificate);
     Q_UNUSED(pValid);
@@ -508,8 +486,8 @@ int PmrWorkspace::certificate_check_cb(git_cert *pCertificate, int pValid,
 
 //==============================================================================
 
-int PmrWorkspace::transfer_progress_cb(const git_transfer_progress *pProgress,
-                                       void *pPayload)
+int PmrWorkspace::transferProgressCallback(const git_transfer_progress *pProgress,
+                                           void *pPayload)
 {
     PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
 
@@ -520,10 +498,10 @@ int PmrWorkspace::transfer_progress_cb(const git_transfer_progress *pProgress,
 
 //==============================================================================
 
-void PmrWorkspace::checkout_progress_cb(const char *pPath,
-                                        size_t pCompletedSteps,
-                                        size_t pTotalSteps,
-                                        void *pPayload)
+void PmrWorkspace::checkoutProgressCallback(const char *pPath,
+                                            size_t pCompletedSteps,
+                                            size_t pTotalSteps,
+                                            void *pPayload)
 {
     Q_UNUSED(pPath);
 
@@ -546,14 +524,14 @@ void PmrWorkspace::clone(const QString &pDirName)
 
     // We trust PMR's SSL certificate
 
-    cloneOptions.fetch_opts.callbacks.certificate_check = certificate_check_cb;
+    cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
 
     // Track clone and checkout progress
 
-    cloneOptions.fetch_opts.callbacks.transfer_progress = transfer_progress_cb;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
     cloneOptions.fetch_opts.callbacks.payload = (void *)this;
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
-    cloneOptions.checkout_opts.progress_cb = checkout_progress_cb;
+    cloneOptions.checkout_opts.progress_cb = checkoutProgressCallback;
     cloneOptions.checkout_opts.progress_payload = (void *)this;
 
     // Set up Basic authorization
@@ -591,11 +569,11 @@ bool PmrWorkspace::fetch()
 
     // We trust PMR's SSL certificate
 
-    fetchOptions.callbacks.certificate_check = certificate_check_cb;
+    fetchOptions.callbacks.certificate_check = certificateCheckCallback;
 
     // Track push progress
 
-    fetchOptions.callbacks.transfer_progress = transfer_progress_cb;
+    fetchOptions.callbacks.transfer_progress = transferProgressCallback;
     fetchOptions.callbacks.payload = (void *)this;
 
     // Set up Basic authorization
@@ -606,7 +584,7 @@ bool PmrWorkspace::fetch()
 
     git_remote_callbacks remoteCallbacks;
     git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
-    remoteCallbacks.certificate_check = certificate_check_cb;
+    remoteCallbacks.certificate_check = certificateCheckCallback;
 
     // Get the remote, connect to it, add a refspec, and do the push
 
@@ -629,12 +607,12 @@ bool PmrWorkspace::fetch()
 
 //==============================================================================
 
-int PmrWorkspace::checkout_notify_cb(git_checkout_notify_t pNotification,
-                                     const char *pPath,
-                                     const git_diff_file *pBaseline,
-                                     const git_diff_file *pTarget,
-                                     const git_diff_file *pWorkDirectory,
-                                     void *pPayload)
+int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
+                                         const char *pPath,
+                                         const git_diff_file *pBaseline,
+                                         const git_diff_file *pTarget,
+                                         const git_diff_file *pWorkDirectory,
+                                         void *pPayload)
 {
     Q_UNUSED(pBaseline);
     Q_UNUSED(pTarget);
@@ -662,7 +640,7 @@ typedef struct {
 
 //==============================================================================
 
-int PmrWorkspace::mergehead_foreach_cb(const git_oid *oid, void *payload)
+int PmrWorkspace::mergeheadForeachCallback(const git_oid *oid, void *payload)
 {
     int error = 0;
     MergeHeadCallbackData *mergeCallbackData = (MergeHeadCallbackData *)payload;
@@ -684,7 +662,7 @@ bool PmrWorkspace::commitMerge()
 
     MergeHeadCallbackData mergeCallbackData = { 0, 0, 0 };
 
-    git_repository_mergehead_foreach(mGitRepository, mergehead_foreach_cb, &mergeCallbackData);
+    git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &mergeCallbackData);
 
     size_t nbOfParents = mergeCallbackData.size+1;
     git_commit **parents = new git_commit*[nbOfParents]();
@@ -705,7 +683,7 @@ bool PmrWorkspace::commitMerge()
             mergeCallbackData.repository = mGitRepository;
             mergeCallbackData.parents = &(parents[1]);
 
-            if (git_repository_mergehead_foreach(mGitRepository, mergehead_foreach_cb, &mergeCallbackData))
+            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &mergeCallbackData))
                 res = false;
         }
 
@@ -734,10 +712,10 @@ bool PmrWorkspace::commitMerge()
 
 //==============================================================================
 
-int PmrWorkspace::fetchhead_foreach_cb(const char *pReferenceName,
-                                       const char *pRemoteUrl,
-                                       const git_oid *pId,
-                                       unsigned int pMerge, void *pPayload)
+int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
+                                           const char *pRemoteUrl,
+                                           const git_oid *pId,
+                                           unsigned int pMerge, void *pPayload)
 {
     Q_UNUSED(pReferenceName);
 
@@ -766,7 +744,7 @@ int PmrWorkspace::fetchhead_foreach_cb(const char *pReferenceName,
                                                 |GIT_CHECKOUT_RECREATE_MISSING
                                                 |GIT_CHECKOUT_CONFLICT_STYLE_MERGE;
             checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
-            checkoutOptions.notify_cb = checkout_notify_cb;
+            checkoutOptions.notify_cb = checkoutNotifyCallback;
             checkoutOptions.notify_payload = (void *) workspace;
 
             // Find the type of merge we can do
@@ -866,7 +844,7 @@ bool PmrWorkspace::merge()
         return false;
 
     bool res = true;
-    int error = git_repository_fetchhead_foreach(mGitRepository, fetchhead_foreach_cb, this);
+    int error = git_repository_fetchhead_foreach(mGitRepository, fetchheadForeachCallback, this);
 
     if (!error) {
         // We only need to commit NORMAL merges
@@ -928,11 +906,11 @@ void PmrWorkspace::push()
 
     // We trust PMR's SSL certificate
 
-    pushOptions.callbacks.certificate_check = certificate_check_cb;
+    pushOptions.callbacks.certificate_check = certificateCheckCallback;
 
     // Track push progress
 
-    pushOptions.callbacks.transfer_progress = transfer_progress_cb;
+    pushOptions.callbacks.transfer_progress = transferProgressCallback;
     pushOptions.callbacks.payload = (void *)this;
 
     // Set up Basic authorization
@@ -943,7 +921,7 @@ void PmrWorkspace::push()
 
     git_remote_callbacks remoteCallbacks;
     git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
-    remoteCallbacks.certificate_check = certificate_check_cb;
+    remoteCallbacks.certificate_check = certificateCheckCallback;
 
     // Get the remote, connect to it, add a refspec, and do the push
 
