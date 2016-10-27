@@ -59,8 +59,10 @@ PmrWorkspacesWindowCommit::PmrWorkspacesWindowCommit(const QStringList &pStagedF
     mGui->message->setPlainText("\n; Changes to be committed:\n;\t"
                                 + pStagedFiles.join("\n;\t"));
 
-    connect(mGui->cancel_save, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(mGui->cancel_save, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(mGui->cancel_save, SIGNAL(accepted()),
+            this, SLOT(accept()));
+    connect(mGui->cancel_save, SIGNAL(rejected()),
+            this, SLOT(reject()));
 }
 
 //==============================================================================

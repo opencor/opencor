@@ -72,14 +72,18 @@ QString PmrExposure::toHtml() const
 
 int PmrExposure::fileUrlsLeftCount() const
 {
+    // Return our number of file URLs left to handle
+
     return mFileUrlsLeftCount;
 }
 
 //==============================================================================
 
-void PmrExposure::setFileUrlsLeftCount(const int &count)
+void PmrExposure::setFileUrlsLeftCount(const int &pFileUrlsLeftCount)
 {
-    mFileUrlsLeftCount = count;
+    // Set the number of file URLs left to handle
+
+    mFileUrlsLeftCount = pFileUrlsLeftCount;
 }
 
 //==============================================================================

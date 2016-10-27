@@ -101,8 +101,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     connect(mPmrWebService, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(mPmrWebService, SIGNAL(workspaceCreated(QString)),
-            this, SLOT(workspaceCreated(QString)));
+    connect(mPmrWebService, SIGNAL(workspaceCreated(const QString &)),
+            this, SLOT(workspaceCreated(const QString &)));
     connect(mPmrWebService, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
 

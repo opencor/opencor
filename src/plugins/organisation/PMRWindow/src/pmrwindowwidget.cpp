@@ -304,10 +304,16 @@ void PmrWindowWidget::setShowExposureFilesUrl(const QString &pUrl)
 void PmrWindowWidget::startShowExposureFilesTimer()
 {
     // Only show exposure files if list received with 30 seconds
+
     stopShowExposureFilesTimer();
+
     mShowExposureFilesTimer = new QTimer(this);
+
     mShowExposureFilesTimer->setSingleShot(true);
-    connect(mShowExposureFilesTimer, SIGNAL(timeout()), this, SLOT(clearShowExposureFilesUrl()));
+
+    connect(mShowExposureFilesTimer, SIGNAL(timeout()),
+            this, SLOT(clearShowExposureFilesUrl()));
+
     mShowExposureFilesTimer->start(30000);
 }
 

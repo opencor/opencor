@@ -58,7 +58,7 @@ public:
     QString name() const;
 
     int fileUrlsLeftCount() const;
-    void setFileUrlsLeftCount(const int &count);
+    void setFileUrlsLeftCount(const int &pFileUrlsLeftCount);
 
     void addExposureFile(const QString &pFileName);
     void addOtherFile(const QString &pFileName);

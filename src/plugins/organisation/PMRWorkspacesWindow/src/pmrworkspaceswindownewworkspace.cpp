@@ -57,7 +57,7 @@ PmrWorkspacesWindowNewWorkspace::PmrWorkspacesWindowNewWorkspace(QWidget *pParen
     // Connect some signals
 
     connect(mGui->choosePath, SIGNAL(clicked(bool)),
-            this, SLOT(choosePath(bool)));
+            this, SLOT(choosePath(const bool &)));
 
     connect(mGui->path, SIGNAL(textChanged(const QString &)),
             this, SLOT(setPathToolTip(const QString &)));
@@ -65,8 +65,10 @@ PmrWorkspacesWindowNewWorkspace::PmrWorkspacesWindowNewWorkspace(QWidget *pParen
     connect(mGui->title, SIGNAL(textChanged(const QString &)),
             this, SLOT(titleTextChanged(const QString &)));
 
-    connect(mGui->cancel_save, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(mGui->cancel_save, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(mGui->cancel_save, SIGNAL(accepted()),
+            this, SLOT(accept()));
+    connect(mGui->cancel_save, SIGNAL(rejected()),
+            this, SLOT(reject()));
 }
 
 //==============================================================================

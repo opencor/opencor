@@ -106,7 +106,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Keep track of the window's visibility, so that we can request the list of
     // exposures, if necessary
 
-    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(retrieveWorkspaces(bool)));
+    connect(this, SIGNAL(visibilityChanged(bool)),
+            this, SLOT(retrieveWorkspaces(const bool &)));
 
     // Create and populate our context menu
 
@@ -122,8 +123,9 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // We want our own context menu for the toolbar widget
 
     toolBarWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(toolBarWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showCustomContextMenu()));
 
+    connect(toolBarWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu()));
 
     // Watch for changes to managed files
 
@@ -138,22 +140,31 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Some connections to process responses from the PMR web service
 
-    connect(mPmrWebService, SIGNAL(busy(bool)), this, SLOT(busy(bool)));
-    connect(mPmrWebService, SIGNAL(progress(double)), this, SLOT(showProgress(double)));
+    connect(mPmrWebService, SIGNAL(busy(const bool &)),
+            this, SLOT(busy(const bool &)));
+    connect(mPmrWebService, SIGNAL(progress(const double &)),
+            this, SLOT(showProgress(const double &)));
 
-    connect(mPmrWebService, SIGNAL(error(QString, bool)), this, SLOT(showError(QString)));
-    connect(mPmrWebService, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
-    connect(mPmrWebService, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
+    connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
+            this, SLOT(showError(const QString &)));
+    connect(mPmrWebService, SIGNAL(information(const QString &)),
+            this, SLOT(showInformation(const QString &)));
+    connect(mPmrWebService, SIGNAL(warning(const QString &)),
+            this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(authenticated(bool)), this, SLOT(updateAuthenticationStatus(bool)));
-    connect(mPmrWebService, SIGNAL(workspaces(PMRSupport::PmrWorkspaces)),
-            mWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(PMRSupport::PmrWorkspaces)));
+    connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
+            this, SLOT(updateAuthenticationStatus(const bool &)));
+    connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
+            mWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &)));
 
     // Connections to process requests from our widget
 
-    connect(mWorkspacesWindowWidget, SIGNAL(information(QString)), this, SLOT(showInformation(QString)));
-    connect(mWorkspacesWindowWidget, SIGNAL(openFileRequested(QString)), this, SLOT(openFile(QString)));
-    connect(mWorkspacesWindowWidget, SIGNAL(warning(QString)), this, SLOT(showWarning(QString)));
+    connect(mWorkspacesWindowWidget, SIGNAL(information(const QString &)),
+            this, SLOT(showInformation(const QString &)));
+    connect(mWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
+            this, SLOT(openFile(const QString &)));
+    connect(mWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
+            this, SLOT(showWarning(const QString &)));
 
     // Retranslate the GUI
 

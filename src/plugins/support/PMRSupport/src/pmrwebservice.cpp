@@ -171,8 +171,8 @@ void PmrWebService::requestExposureInformation(PmrExposure *pExposure, const Act
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     pmrResponse->setProperty(NextActionProperty, pNextAction);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(exposureInformationResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(exposureInformationResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
@@ -238,8 +238,8 @@ void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const
 
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(exposureFileInformationResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(exposureFileInformationResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
@@ -259,43 +259,43 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
             QVariantList linksList = itemsList.first().toMap()["links"].toList();
 
             if (linksList.count()) {
-                // Retrieve the exposure file name, from the
-                // exposure file information, and keep track of it
+                // Retrieve the exposure file name, from the exposure file
+                // information, and keep track of it
 
                 QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
+
                 if (!exposureFile.isEmpty()) {
                     hasExposureFileInformation = true;
 
-                    exposure->addExposureFile(exposureFile); // Decrements count left...
+                    exposure->addExposureFile(exposureFile);
 
-                    // Check whether the exposure file has a link
-                    // called "Launch with OpenCOR"
+                    // Check whether the exposure file has a link called
+                    // "Launch with OpenCOR"
 
                     foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
                         QVariantMap linksMap = linksVariant.toMap();
                         QString promptValue = linksMap["prompt"].toString();
                         QString relValue = linksMap["rel"].toString();
+
                         if (   !promptValue.compare("Launch with OpenCOR")
                             && !relValue.compare("section")) {
                             // Our exposure file has a link called
-                            // "Launch with OpenCOR", so check
-                            // whether its href value is already
-                            // listed in our list of exposure files
-                            // and, if not, then add it to it
+                            // "Launch with OpenCOR", so check whether its href
+                            // value is already listed in our list of exposure
+                            // files and, if not, then add it to it
+
                             exposureFile = linksMap["href"].toString().trimmed().remove("opencor://openFile/");
-                            if (!exposureFile.isEmpty()) {
-                                exposure->addOtherFile(exposureFile); // Doesn't decrement count left
-                            }
+
+                            if (!exposureFile.isEmpty())
+                                exposure->addOtherFile(exposureFile);
                         }
                     }
 
-                    // Ask our widget to add our exposure files,
-                    // should we have no exposure file URLs left to
-                    // handle
+                    // Ask our widget to add our exposure files, should we have
+                    // no exposure file URLs left to handle
 
-                    if (!exposure->fileUrlsLeftCount()) {
+                    if (!exposure->fileUrlsLeftCount())
                         emit exposureFiles(exposure->url(), exposure->exposureFiles());
-                    }
                 }
             }
         }
@@ -366,8 +366,8 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)exposure));
         pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
 
-        connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-                this, SLOT(exposureInformationResponse(QJsonDocument)));
+        connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+                this, SLOT(exposureInformationResponse(const QJsonDocument &)));
     }
 }
 
@@ -397,8 +397,8 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(pUrl, true);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(workspaceInformationResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
@@ -411,8 +411,8 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QStri
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
     pmrResponse->setProperty(DirNameProperty, pDirName);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(workspaceInformationResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
@@ -515,8 +515,8 @@ void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDe
 
     pmrResponse->setProperty(DirNameProperty, pDirName);
 
-    connect(pmrResponse, SIGNAL(movedLocation(QString)),
-            this, SLOT(workspaceCreatedResponse(QString)));
+    connect(pmrResponse, SIGNAL(movedLocation(const QString &)),
+            this, SLOT(workspaceCreatedResponse(const QString &)));
 }
 
 //==============================================================================
@@ -535,8 +535,8 @@ void PmrWebService::requestWorkspaces()
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->sendPmrRequest(QString("%1/my-workspaces").arg(PmrUrl), true);
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(workspacesResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(workspacesResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
@@ -580,14 +580,15 @@ void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 
     pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)pWorkspace));
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(workspaceCredentialsResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));
 
     // Don't return until the response has been processed
 
     QEventLoop waitLoop;
 
-    connect(pmrResponse, SIGNAL(finished()), &waitLoop, SLOT(quit()));
+    connect(pmrResponse, SIGNAL(finished()),
+            &waitLoop, SLOT(quit()));
 
     waitLoop.exec();
 }
@@ -614,8 +615,8 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
 
     pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)&newWorkspace));
 
-    connect(pmrResponse, SIGNAL(gotJsonResponse(QJsonDocument)),
-            this, SLOT(getWorkspaceResponse(QJsonDocument)));
+    connect(pmrResponse, SIGNAL(gotJsonResponse(const QJsonDocument &)),
+            this, SLOT(getWorkspaceResponse(const QJsonDocument &)));
 
     // We want to catch any 403 (unauthorised) response
 

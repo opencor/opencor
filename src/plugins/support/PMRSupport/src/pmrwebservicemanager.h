@@ -52,7 +52,6 @@ class PmrWebServiceManager : public QNetworkAccessManager
 
 public:
     explicit PmrWebServiceManager(PmrWebService *pPmrWebService);
-    ~PmrWebServiceManager();
 
     void authenticate(const bool &pLink);
     bool isAuthenticated() const;

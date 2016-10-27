@@ -54,28 +54,27 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     // Make sure that we get told when there are SSL errors (which would happen if the
     // website's certificate is invalid, e.g. it has expired)
 
-    connect(this, SIGNAL(sslErrors(QNetworkReply *, QList<QSslError>)),
-            this, SLOT(sslErrors(QNetworkReply *, QList<QSslError>)));
+    connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
     // Connect some signals
 
-    connect(mPmrOAuthClient, SIGNAL(linkingFailed()), this, SLOT(authenticationFailed()));
-    connect(mPmrOAuthClient, SIGNAL(linkingSucceeded()), this, SLOT(authenticationSucceeded()));
-    connect(mPmrOAuthClient, SIGNAL(openBrowser(QUrl)), this, SLOT(openBrowser(QUrl)));
-}
-
-//==============================================================================
-
-PmrWebServiceManager::~PmrWebServiceManager()
-{
+    connect(mPmrOAuthClient, SIGNAL(linkingFailed()),
+            this, SLOT(authenticationFailed()));
+    connect(mPmrOAuthClient, SIGNAL(linkingSucceeded()),
+            this, SLOT(authenticationSucceeded()));
+    connect(mPmrOAuthClient, SIGNAL(openBrowser(const QUrl &)),
+            this, SLOT(openBrowser(const QUrl &)));
 }
 
 //==============================================================================
 
 void PmrWebServiceManager::authenticate(const bool &pLink)
 {
-    if (pLink) mPmrOAuthClient->link();
-    else       mPmrOAuthClient->unlink();
+    if (pLink)
+        mPmrOAuthClient->link();
+    else
+        mPmrOAuthClient->unlink();
 }
 
 //==============================================================================
