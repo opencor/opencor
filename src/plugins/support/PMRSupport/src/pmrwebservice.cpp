@@ -215,7 +215,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         // Make sure that we at least have a workspace
 
         if (workspaceUrl.isEmpty()) {
-            emitInformation(tr("No workspace URL could be found for %1.").arg(exposure->toHtml()));
+            emitInformation(tr("No workspace could be found for %1.").arg(exposure->toHtml()));
         } else if (Action(sender()->property(NextActionProperty).toInt()) == CloneExposureWorkspace) {
             // Retrieve workspace file information and clone the workspace
 
@@ -224,7 +224,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
 
         if (   exposureFileUrls.isEmpty()
             && (Action(sender()->property(NextActionProperty).toInt()) == RequestExposureFiles)) {
-            emitInformation(tr("No exposure file URLs could be found for %1.").arg(exposure->toHtml()));
+            emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
         }
 
         foreach (const QString &exposureFileUrl, exposureFileUrls)

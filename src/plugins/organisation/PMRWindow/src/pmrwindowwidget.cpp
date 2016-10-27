@@ -400,6 +400,7 @@ void PmrWindowWidget::linkClicked()
                 // received and request them
 
                 setShowExposureFilesUrl(linkList[1]);
+
                 emit exposureFilesRequested(linkList[1]);
             } else {
                 showExposureFiles(linkList[1],

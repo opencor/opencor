@@ -16,14 +16,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No workspace URL could be found for %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No exposure file URLs could be found for %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No exposure file information could be found for %1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -41,6 +33,10 @@
     </message>
     <message>
         <source>** Unknown name **</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No workspace could be found for %1.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
