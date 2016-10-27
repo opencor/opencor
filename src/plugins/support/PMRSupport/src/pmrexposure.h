@@ -29,11 +29,6 @@ limitations under the License.
 //==============================================================================
 
 #include <QObject>
-#include <QList>
-#include <QSet>
-#include <QString>
-#include <QStringList>
-#include <QVector>
 
 //==============================================================================
 

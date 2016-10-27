@@ -21,7 +21,6 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrexposure.h"
-#include "pmrworkspace.h"
 
 //==============================================================================
 
@@ -62,6 +61,8 @@ QString PmrExposure::name() const
 
 PmrWorkspace * PmrExposure::workspace() const
 {
+    // Return our workspace
+
     return mWorkspace;
 }
 
@@ -69,6 +70,8 @@ PmrWorkspace * PmrExposure::workspace() const
 
 void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
 {
+    // Set our workspace
+
     mWorkspace = pWorkspace;
 }
 
