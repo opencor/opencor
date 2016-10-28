@@ -112,19 +112,19 @@ const QString PmrWorkspacesWindowNewWorkspace::title() const
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::titleTextChanged(const QString &text)
+void PmrWorkspacesWindowNewWorkspace::titleTextChanged(const QString &pText)
 {
     // Only save if there is a title
 
-    mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!text.trimmed().isEmpty()
-                                                                  && mPathChosen);
+    mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(   !pText.trimmed().isEmpty()
+                                                                  &&  mPathChosen);
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &checked)
+void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &pChecked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(pChecked);
 
     QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
 
@@ -141,7 +141,7 @@ void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &checked)
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::setPathToolTip(const QString &text)
+void PmrWorkspacesWindowNewWorkspace::setPathToolTip(const QString &pText)
 {
     // Show the full path as a tooltip if its display field is too short
 
@@ -150,8 +150,8 @@ void PmrWorkspacesWindowNewWorkspace::setPathToolTip(const QString &text)
 
     int width = mGui->path->width();
 
-    if(metrics.width(text) > width)
-        mGui->path->setToolTip(text);
+    if(metrics.width(pText) > width)
+        mGui->path->setToolTip(pText);
     else
         mGui->path->setToolTip("");
 }

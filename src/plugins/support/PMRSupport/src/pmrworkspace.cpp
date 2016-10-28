@@ -944,11 +944,11 @@ bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount,
 
 // TODO: Get user's name and email... From preferences?? Git configuration settings??
 //                                    Should OpenCOR set git's global configuration settings?? NO.
-// `git_remote_push()` also obtains a signature to use in the reflog
+// git_remote_push() also obtains a signature to use in the reflog
 //  so it would make sense to store the name/email with the local repository's .git configuration...
 
-// `git config --local user.name "name"
-// `git config --local user.email "email"
+// git config --local user.name "name"
+// git config --local user.email "email"
 
     bool error = git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org")
               || git_repository_index(&index, mGitRepository)
@@ -980,7 +980,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
     message.ptr = 0;
     git_buf_set(&message, 0, 0);
 
-    // Clean up message and remove `;` comments
+    // Clean up message and remove comments (which start with ";")
 
     QByteArray messageByteArray = pMessage.toUtf8();
 

@@ -54,11 +54,10 @@ public:
     const QString title() const;
 
 private slots:
-    void titleTextChanged(const QString &text);
+    void titleTextChanged(const QString &pText);
 
-    void choosePath(const bool &checked);
-    void setPathToolTip(const QString &text);
-
+    void choosePath(const bool &pChecked);
+    void setPathToolTip(const QString &pText);
 
 private:
     Ui::PmrWorkspacesWindowNewWorkspace *mGui;

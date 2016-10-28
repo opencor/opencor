@@ -291,7 +291,7 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
 
 void PmrWorkspacesWindowWindow::getAuthenticationStatus()
 {
-    // Results in us being sent an `authenticated` signal.
+    // Results in us being sent an authenticated() signal
 
     mPmrWebService->getAuthenticationStatus();
 }

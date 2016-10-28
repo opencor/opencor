@@ -575,8 +575,8 @@ void PmrWorkspacesWindowWidget::startStopTimer()
                    this, SLOT(focusWindowChanged()));
 
         /* TODO: To avoid redrawing on every timed refresh we could check if
-           `workspace->modified()` (or have `refreshStatus()` return true if
-           modifications) where the `PmrWorkspace` class compares (via SHA?)
+           workspace->modified() (or have refreshStatus() return true if
+           modifications) where the PmrWorkspace class compares (via SHA?)
            current and new status.
         */
         refreshCurrentWorkspace();
@@ -785,7 +785,7 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
             aElement = aElement.parent();
         }
 
-        // Check if an `<a>` element has been clicked
+        // Check if an anchor element has been clicked
 
         QString aLink = aElement.attribute("href");
 
@@ -992,11 +992,11 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
     mWorkspaceManager->clearWorkspaces();
 
-    // We now reconcile URLs of `my-workspaces` (on PMR) with those from workspace
+    // We now reconcile URLs of my-workspaces (on PMR) with those from workspace
     // folders. In doing so folders/URLs that don't correspond to an actual PMR
     // workspace are pruned from the relevant maps.
 
-    // First clear the `owned` flag from the list of URLs with workspace folders
+    // First clear the owned flag from the list of URLs with workspace folders
 
     QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
     while (urlsIterator.hasNext()) {
@@ -1022,7 +1022,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
         }
     }
 
-    // Now check the workspace folders that aren't from `my-workspaces`
+    // Now check the workspace folders that aren't from my-workspaces (on PMR)
 
     urlsIterator.toFront();
     while (urlsIterator.hasNext()) {
@@ -1204,7 +1204,7 @@ void PmrWorkspacesWindowWidget::workspaceCreated(const QString &pUrl)
 {
     Q_UNUSED(pUrl);
 
-    // Ignore as `workspaceCloned` will be called next
+    // Ignore as workspaceCloned() will be called next
 }
 
 //==============================================================================
