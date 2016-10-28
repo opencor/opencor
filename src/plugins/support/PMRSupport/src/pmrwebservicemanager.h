@@ -25,13 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QJsonDocument>
-#include <QList>
 #include <QNetworkAccessManager>
-#include <QSslError>
-
-//==============================================================================
-
-class QNetworkReply;
 
 //==============================================================================
 

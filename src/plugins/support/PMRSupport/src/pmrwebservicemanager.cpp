@@ -29,8 +29,6 @@ limitations under the License.
 //==============================================================================
 
 #include <QDesktopServices>
-#include <QNetworkReply>
-#include <QNetworkRequest>
 
 //==============================================================================
 
@@ -189,4 +187,3 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
 //==============================================================================
 // End of file
 //==============================================================================
-
