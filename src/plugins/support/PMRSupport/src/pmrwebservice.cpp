@@ -367,7 +367,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull)
+void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, const bool pOnlyPull)
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);

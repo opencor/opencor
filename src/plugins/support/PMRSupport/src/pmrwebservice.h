@@ -65,7 +65,7 @@ public:
                                const QString &pDirName);
     void requestWorkspaceInformation(const QString &pUrl);
     void requestWorkspaces();
-    void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace,
+    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool pOnlyPull);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
