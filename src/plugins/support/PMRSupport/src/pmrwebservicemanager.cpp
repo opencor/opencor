@@ -123,10 +123,10 @@ void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl,
-                                                             const bool &pSecureRequest,
-                                                             const bool &pUsePost,
-                                                             const QJsonDocument &pJsonDocument)
+PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
+                                                      const bool &pSecureRequest,
+                                                      const bool &pUsePost,
+                                                      const QJsonDocument &pJsonDocument)
 {
     // Check that we are connected to the Internet
 

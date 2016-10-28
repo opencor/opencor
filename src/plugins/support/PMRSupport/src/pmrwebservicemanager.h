@@ -50,10 +50,10 @@ public:
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate);
 
-    PmrWebServiceResponse * sendPmrRequest(const QString &pUrl,
-                                           const bool &pSecureRequest,
-                                           const bool &pUsePost = false,
-                                           const QJsonDocument &pJsonDocument = QJsonDocument());
+    PmrWebServiceResponse * request(const QString &pUrl,
+                                    const bool &pSecureRequest,
+                                    const bool &pUsePost = false,
+                                    const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
     PmrOauthClient *mPmrOAuthClient;
     PmrWebService *mPmrWebService;
