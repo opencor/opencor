@@ -407,8 +407,9 @@ void PmrWorkspacesWindowWindow::on_actionUnauthenticate_triggered()
     // Log off PMR
 
     if (QMessageBox::question(this, tr("OpenCOR"),
-                              tr("Log off PMR?")) == QMessageBox::Yes)
+                              tr("Log off PMR?")) == QMessageBox::Yes) {
         mPmrWebService->authenticate(false);
+    }
 }
 
 //==============================================================================

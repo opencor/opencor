@@ -62,9 +62,9 @@ PmrWebService::PmrWebService(QObject *pParent) :
 
 //==============================================================================
 
-void PmrWebService::authenticate(const bool &pLink)
+void PmrWebService::authenticate(const bool &pAuthenticate)
 {
-    mPmrWebServiceManager->authenticate(pLink);
+    mPmrWebServiceManager->authenticate(pAuthenticate);
 }
 
 //==============================================================================

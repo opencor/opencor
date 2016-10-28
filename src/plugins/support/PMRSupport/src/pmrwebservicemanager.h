@@ -47,8 +47,8 @@ class PmrWebServiceManager : public QNetworkAccessManager
 public:
     explicit PmrWebServiceManager(PmrWebService *pPmrWebService);
 
-    void authenticate(const bool &pLink);
     bool isAuthenticated() const;
+    void authenticate(const bool &pAuthenticate);
 
     PmrWebServiceResponse * sendPmrRequest(const QString &pUrl,
                                            const bool &pSecureRequest,
@@ -65,8 +65,9 @@ signals:
                const bool &pInternetConnectionAvailable);
 
 private slots:
-    void authenticationFailed();
     void authenticationSucceeded();
+    void authenticationFailed();
+
     void openBrowser(const QUrl &pUrl);
 
     void sslErrors(QNetworkReply *pNetworkReply,

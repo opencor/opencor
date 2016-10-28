@@ -57,19 +57,31 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 
     // Connect some signals
 
-    connect(mPmrOAuthClient, SIGNAL(linkingFailed()),
-            this, SLOT(authenticationFailed()));
     connect(mPmrOAuthClient, SIGNAL(linkingSucceeded()),
             this, SLOT(authenticationSucceeded()));
+    connect(mPmrOAuthClient, SIGNAL(linkingFailed()),
+            this, SLOT(authenticationFailed()));
+
     connect(mPmrOAuthClient, SIGNAL(openBrowser(const QUrl &)),
             this, SLOT(openBrowser(const QUrl &)));
 }
 
 //==============================================================================
 
-void PmrWebServiceManager::authenticate(const bool &pLink)
+bool PmrWebServiceManager::isAuthenticated() const
 {
-    if (pLink)
+    // Return whether we are authenticated to PMR
+
+    return mPmrOAuthClient->linked();
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::authenticate(const bool &pAuthenticate)
+{
+    // Authenticate ourselves to PMR
+
+    if (pAuthenticate)
         mPmrOAuthClient->link();
     else
         mPmrOAuthClient->unlink();
@@ -89,13 +101,6 @@ void PmrWebServiceManager::authenticationSucceeded()
     PmrOauthClient *o1t = qobject_cast<PmrOauthClient *>(sender());
 
     emit authenticated(o1t->linked());
-}
-
-//==============================================================================
-
-bool PmrWebServiceManager::isAuthenticated() const
-{
-    return mPmrOAuthClient->linked();
 }
 
 //==============================================================================

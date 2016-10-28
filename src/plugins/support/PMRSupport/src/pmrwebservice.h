@@ -116,7 +116,7 @@ signals:
     void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
-    void authenticate(const bool &pLink = true);
+    void authenticate(const bool &pAuthenticate = true);
     void getAuthenticationStatus();
     void unauthorised(const QString &pUrl);
 
