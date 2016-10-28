@@ -7,6 +7,11 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." }
                          ]
                        },
+                       { "name": "Data store",
+                         "entries": [
+                           { "type": "Improved", "description": "Selection of data." }
+                         ]
+                       },
                        { "name": "Miscellaneous",
                          "entries": [
                            { "type": "Added", "description": "Web Browser window." }
