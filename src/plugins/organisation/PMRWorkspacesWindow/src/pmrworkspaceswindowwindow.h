@@ -38,10 +38,6 @@ namespace Ui {
 
 //==============================================================================
 
-class QMenu;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -85,8 +81,6 @@ private:
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mWorkspacesWindowWidget;
 
-    QMenu *mContextMenu;
-
 private slots:
     void busy(const bool &pBusy);
     void showError(const QString &pMessage);
@@ -100,12 +94,9 @@ private slots:
     void on_actionAuthenticate_triggered();
     void on_actionNew_triggered();
     void on_actionRefresh_triggered();
-    void on_actionRescan_triggered();
     void on_actionUnauthenticate_triggered();
 
     void showProgress(const double &pProgress);
-
-    void showCustomContextMenu() const;
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDeleted(const QString &pFileName);

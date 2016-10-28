@@ -55,7 +55,7 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
                                const QString &pDescription,
                                const QString &pOwner, PmrWebService *pParent)
 {
-    // Customise ourselves
+    // Initialise ourselves
 
     mOwned = false;
     mDescription = pDescription;
@@ -69,8 +69,8 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
     mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
     mRootFileNode = 0;
 
-    // Forward a couple of our signals to the global 'global' instance of our
-    // workspace manager class
+    // Forward a couple of our signals to the 'global' instance of our workspace
+    // manager class
 
     PmrWorkspaceManager *workspaceManager = PmrWorkspaceManager::instance();
 
@@ -79,7 +79,7 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
     connect(this, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
             workspaceManager, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
 
-    // Our messages are directly emitted by our parent PMR web service
+    // Forward our signals to our parent PMR web service
 
     connect(this, SIGNAL(progress(const double &)),
             pParent, SIGNAL(progress(const double &)));
@@ -128,33 +128,12 @@ bool PmrWorkspace::isLocal() const
 
 //==============================================================================
 
-QString PmrWorkspace::WorkspacesDirectory()
-{
-    static QString workspacesHome =  QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                                    +QDir::separator()+"OpenCOR"+QDir::separator()+"Workspaces";
-    static bool checkedFolder = false;
-
-    if (!checkedFolder) {
-        QDir workspacesFolder = QDir(workspacesHome);
-
-        if (!workspacesFolder.exists())
-            workspacesFolder.mkpath(".");
-
-        checkedFolder = true;
-    }
-
-    return workspacesHome;
-}
-
-//==============================================================================
-
 QString PmrWorkspace::getEmptyWorkspaceDirectory()
 {
     // Retrieve the name of an empty directory
 
     return Core::getExistingDirectory(tr("Select Empty Directory"),
-                                      PmrWorkspace::WorkspacesDirectory(),
-                                      true);
+                                      QString(), true);
 }
 
 //==============================================================================

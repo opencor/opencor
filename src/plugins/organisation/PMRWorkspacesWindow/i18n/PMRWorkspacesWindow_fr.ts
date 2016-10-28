@@ -166,13 +166,5 @@
         <source>Refresh the list of workspaces</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Rescan Folders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rescan workspace folders</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>

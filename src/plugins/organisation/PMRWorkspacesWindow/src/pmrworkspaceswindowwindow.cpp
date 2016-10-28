@@ -42,7 +42,6 @@ limitations under the License.
 
 #include <QDir>
 #include <QMainWindow>
-#include <QMenu>
 #include <QPoint>
 #include <QSettings>
 #include <QTimer>
@@ -108,24 +107,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveWorkspaces(const bool &)));
-
-    // Create and populate our context menu
-
-    mContextMenu = new QMenu(this);
-
-    mContextMenu->addAction(mGui->actionNew);
-    mContextMenu->addAction(mGui->actionRefresh);
-    mContextMenu->addAction(mGui->actionAuthenticate);
-    mContextMenu->addAction(mGui->actionUnauthenticate);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mGui->actionRescan);
-
-    // We want our own context menu for the toolbar widget
-
-    toolBarWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(toolBarWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
 
     // Watch for changes to managed files
 
@@ -321,21 +302,15 @@ void PmrWorkspacesWindowWindow::updateAuthenticationStatus(const bool &pAuthenti
 {
     // Show authentication state and allow workspace creation if authenticated
 
-    if (pAuthenticated) {
-        mGui->actionAuthenticate->setVisible(false);
-        mGui->actionNew->setEnabled(true);
-        mGui->actionRefresh->setEnabled(true);
-        mGui->actionRescan->setEnabled(true);
-        mGui->actionUnauthenticate->setVisible(true);
-        mWorkspacesWindowWidget->refreshWorkspaces(false);
-    } else {
-        mGui->actionAuthenticate->setVisible(true);
-        mGui->actionNew->setEnabled(false);
-        mGui->actionRefresh->setEnabled(false);
-        mGui->actionRescan->setEnabled(false);
-        mGui->actionUnauthenticate->setVisible(false);
+    Core::showEnableAction(mGui->actionAuthenticate, pAuthenticated);
+    Core::showEnableAction(mGui->actionNew, true, pAuthenticated);
+    Core::showEnableAction(mGui->actionRefresh, true, pAuthenticated);
+    Core::showEnableAction(mGui->actionUnauthenticate, !pAuthenticated);
+
+    if (pAuthenticated)
+        mWorkspacesWindowWidget->refreshWorkspaces();
+    else
         mWorkspacesWindowWidget->clearWorkspaces();
-    }
 }
 
 //==============================================================================
@@ -388,16 +363,7 @@ void PmrWorkspacesWindowWindow::on_actionRefresh_triggered()
 {
     // Ask the workspaces widget to refresh itself
 
-    mWorkspacesWindowWidget->refreshWorkspaces(false);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::on_actionRescan_triggered()
-{
-    // Rescan the default workspace folders directory before refreshing
-
-    mWorkspacesWindowWidget->refreshWorkspaces(true);
+    mWorkspacesWindowWidget->refreshWorkspaces();
 }
 
 //==============================================================================
@@ -410,16 +376,6 @@ void PmrWorkspacesWindowWindow::on_actionUnauthenticate_triggered()
                               tr("Log off PMR?")) == QMessageBox::Yes) {
         mPmrWebService->authenticate(false);
     }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::showCustomContextMenu() const
-{
-    // Show our context menu which items match the contents of our tool bar
-    // widget
-
-    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

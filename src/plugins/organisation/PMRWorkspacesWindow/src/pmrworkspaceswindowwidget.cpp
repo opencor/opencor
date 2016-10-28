@@ -291,21 +291,11 @@ const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFold
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::scanDefaultWorkspaceDirectory()
-{
-    QDir workspaceDirectory = QDir(PMRSupport::PmrWorkspace::WorkspacesDirectory());
-    foreach(QFileInfo info, workspaceDirectory.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
-        if (info.isDir()) addWorkspaceFolder(info.absoluteFilePath());
-    }
-}
-
-//==============================================================================
-
 const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 {
-    StringPair action;
-    QStringList actions;
-    foreach (action, pActions)
+    QStringList actions = QStringList();
+
+    foreach (const StringPair &action, pActions)
         actions << QString("<a href=\"%1|%2\"><img class=\"button noHover %1\" /></a>").arg(action.first, action.second);
 
     return actions.join("");
@@ -1190,11 +1180,9 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaces(const bool &pScanFolders)
+void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
-    if (pScanFolders) scanDefaultWorkspaceDirectory();
-
-    // `initialiseWorkspaceWidget()` will be called when list received.
+    // initialiseWorkspaceWidget() will be called when list received.
 
     mPmrWebService->requestWorkspaces();
 }

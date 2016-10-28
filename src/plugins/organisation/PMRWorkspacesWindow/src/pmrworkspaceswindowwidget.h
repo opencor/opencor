@@ -84,7 +84,7 @@ public:
     void clearWorkspaces();
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
-    void refreshWorkspaces(const bool &pScanFolders);
+    void refreshWorkspaces();
 
 protected:
     virtual QSize sizeHint() const;
@@ -108,8 +108,6 @@ private:
     QMap<QString, int> mItemAnchors;
 
     QTimer *mTimer;
-
-    void scanDefaultWorkspaceDirectory();
 
     void displayWorkspaces();
     void expandHtmlTree(const QString &pId);

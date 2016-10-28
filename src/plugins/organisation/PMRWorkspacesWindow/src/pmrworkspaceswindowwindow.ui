@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PmrWorkspacesWindowWindow</class>
- <widget class="QDockWidget" name="PmrWorkspacesWindow">
+ <widget class="QDockWidget" name="PmrWorkspacesWindowWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -100,14 +100,6 @@
    </property>
    <property name="toolTip">
     <string>Refresh the list of workspaces</string>
-   </property>
-  </action>
-  <action name="actionRescan">
-   <property name="text">
-    <string>Rescan Folders</string>
-   </property>
-   <property name="toolTip">
-    <string>Rescan workspace folders</string>
    </property>
   </action>
  </widget>

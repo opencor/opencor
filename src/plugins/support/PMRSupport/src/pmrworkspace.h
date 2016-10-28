@@ -64,8 +64,6 @@ public:
     static QString getUrlFromFile(const QString &pPath);
     static QString getUrlFromFolder(const QString &pFolder);
 
-    static QString WorkspacesDirectory();
-
     bool isLocal() const;
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
