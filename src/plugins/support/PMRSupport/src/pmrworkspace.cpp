@@ -20,16 +20,10 @@ limitations under the License.
 // PMR workspace
 //==============================================================================
 
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
-#include "pmrworkspacefilenode.h"
 #include "pmrworkspacemanager.h"
-
-//==============================================================================
-
-#include <Qt>
 
 //==============================================================================
 
@@ -38,7 +32,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "git2/annotated_commit.h"
 #include "git2/clone.h"
 #include "git2/commit.h"
 #include "git2/errors.h"
