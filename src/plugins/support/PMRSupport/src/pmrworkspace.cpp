@@ -25,7 +25,7 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacefilenode.h"
-#include "pmrworkspacesmanager.h"
+#include "pmrworkspacemanager.h"
 
 //==============================================================================
 
@@ -77,14 +77,14 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
     mRootFileNode = 0;
 
     // Forward a couple of our signals to the global 'global' instance of our
-    // workspaces manager class
+    // workspace manager class
 
-    PmrWorkspacesManager *workspacesManager = PmrWorkspacesManager::instance();
+    PmrWorkspaceManager *workspaceManager = PmrWorkspaceManager::instance();
 
     connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            workspacesManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)));
+            workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)));
     connect(this, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
-            workspacesManager, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
+            workspaceManager, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
 
     // Our messages are directly emitted by our parent PMR web service
 

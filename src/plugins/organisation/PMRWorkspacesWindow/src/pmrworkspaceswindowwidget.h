@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Workspaces widget
+// PMR Workspaces window widget
 //==============================================================================
 
 #pragma once
@@ -26,7 +26,7 @@ limitations under the License.
 
 #include "commonwidget.h"
 #include "corecliutils.h"
-#include "pmrworkspacesmanager.h"
+#include "pmrworkspacemanager.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -92,7 +92,7 @@ protected:
 private:
     PMRSupport::PmrWebService *mPmrWebService;
 
-    PMRSupport::PmrWorkspacesManager *mWorkspacesManager;
+    PMRSupport::PmrWorkspaceManager *mWorkspaceManager;
 
     QMap<QString, QString> mWorkspaceFolderUrls;
     QMap<QString, QPair<QString, bool>> mUrlFolderNameMines;

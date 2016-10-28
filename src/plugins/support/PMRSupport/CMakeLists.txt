@@ -15,7 +15,7 @@ ADD_PLUGIN(PMRSupport
         src/pmrwebserviceresponse.cpp
         src/pmrworkspace.cpp
         src/pmrworkspacefilenode.cpp
-        src/pmrworkspacesmanager.cpp
+        src/pmrworkspacemanager.cpp
     HEADERS_MOC
         src/pmrauthentication.h
         src/pmrexposure.h
@@ -25,7 +25,7 @@ ADD_PLUGIN(PMRSupport
         src/pmrwebserviceresponse.h
         src/pmrworkspace.h
         src/pmrworkspacefilenode.h
-        src/pmrworkspacesmanager.h
+        src/pmrworkspacemanager.h
     INCLUDE_DIRS
         src
     PLUGINS

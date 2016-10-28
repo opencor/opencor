@@ -17,14 +17,14 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Workspaces widget
+// PMR Workspaces window widget
 //==============================================================================
 
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacefilenode.h"
-#include "pmrworkspacesmanager.h"
+#include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindowcommit.h"
 #include "pmrworkspaceswindowwidget.h"
 
@@ -80,7 +80,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     WebViewerWidget::WebViewerWidget(pParent),
     Core::CommonWidget(this),
     mPmrWebService(pPmrWebService),
-    mWorkspacesManager(PMRSupport::PmrWorkspacesManager::instance()),
+    mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),
     mUrlFolderNameMines(QMap<QString, QPair<QString, bool>>()),
     mCurrentWorkspaceUrl(QString()),
@@ -108,7 +108,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     // Handle workspace cloned signals from other plugins
 
-    connect(mWorkspacesManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+    connect(mWorkspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
     // Retrieve the HTML template
@@ -252,7 +252,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
         } else {
             mWorkspaceFolderUrls.insert(folder, url);
             mUrlFolderNameMines.insert(url, QPair<QString, bool>(folder, pOwned));
-            mWorkspacesManager->addWorkspace(pWorkspace);
+            mWorkspaceManager->addWorkspace(pWorkspace);
         }
     }
 }
@@ -564,7 +564,7 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
         // Set the active directory to the workspace
 
-        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
+        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
         if (workspace->isLocal())
             Core::setActiveDirectory(workspace->path());
@@ -674,7 +674,7 @@ void PmrWorkspacesWindowWidget::clearWorkspaces()
 
 void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
-    PMRSupport::PmrWorkspaces workspaces = mWorkspacesManager->workspaces();
+    PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
 
     // We want the HTML table in name order
 
@@ -757,7 +757,7 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
             QString link = webElement.attribute("id");
 
             if (webElement.hasClass("workspace")) {
-                PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(link);
+                PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(link);
 
                 toolTip = QString("%1\n%2").arg(workspace->url(), workspace->path());
             }
@@ -820,7 +820,7 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
                     if (!workspaceElement.isNull()) {
                         // Stage/unstage the file
 
-                        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+                        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
                         workspace->stageFile(linkUrl, (action == "stage"));
 
                         // Now update the file's status and action
@@ -932,7 +932,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addAction(refreshAction);
 
-        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(elementId);
+        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(elementId);
 
         if (workspace) {
             QAction *action = new QAction(tr("View in PMR..."), this);
@@ -1000,7 +1000,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 {
     // First clear existing workspaces from the manager
 
-    mWorkspacesManager->clearWorkspaces();
+    mWorkspaceManager->clearWorkspaces();
 
     // We now reconcile URLs of `my-workspaces` (on PMR) with those from workspace
     // folders. In doing so folders/URLs that don't correspond to an actual PMR
@@ -1019,7 +1019,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
         QString url = workspace->url();
 
-        mWorkspacesManager->addWorkspace(workspace);
+        mWorkspaceManager->addWorkspace(workspace);
 
         // Check if we know its folder and flag it is ours
 
@@ -1043,7 +1043,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
             PMRSupport::PmrWorkspace *workspace = mPmrWebService->getWorkspace(url);
 
             if (workspace) {
-                mWorkspacesManager->addWorkspace(workspace);
+                mWorkspaceManager->addWorkspace(workspace);
                 workspace->setPath(urlsIterator.value().first);
                 workspace->open();
             } else {
@@ -1069,7 +1069,7 @@ void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
 
     if (!workspaceElement.isNull()) {
-        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
 
         if (workspace) {
             QStringList workspaceInformation = QStringList() << workspace->name();
@@ -1094,7 +1094,7 @@ void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 {
-    PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && !workspace->isLocal()) {
         QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
@@ -1116,7 +1116,7 @@ void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
-    PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal()) {
         if (workspace->isMerging()) {
@@ -1139,7 +1139,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
                                        QString("tr.workspace[id=\"%1\"]").arg(pUrl));
     if (!workspaceElement.isNull()) {
-        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
 
         if (workspace) {
             // We have a valid workspace so refresh its status
@@ -1168,7 +1168,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
     QWebElement workspaceElement = parentWorkspaceElement(fileElement);
 
     if (!workspaceElement.isNull()) {
-        PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(workspaceElement.attribute("id"));
+        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
 
         if (workspace) {
             // We have a valid workspace so update file's status
@@ -1204,7 +1204,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces(const bool &pScanFolders)
 void PmrWorkspacesWindowWidget::synchroniseWorkspace(const QString &pUrl,
                                                      const bool pOnlyPull)
 {
-    PMRSupport::PmrWorkspace *workspace = mWorkspacesManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal())
         mPmrWebService->requestWorkspaceSynchronise(workspace, pOnlyPull);

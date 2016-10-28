@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR workspaces manager
+// PMR workspace manager
 //==============================================================================
 
 #pragma once
@@ -38,15 +38,15 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrWorkspacesManager : public QObject
+class PMRSUPPORT_EXPORT PmrWorkspaceManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesManager();
-    ~PmrWorkspacesManager();
+    explicit PmrWorkspaceManager();
+    ~PmrWorkspaceManager();
 
-    static PmrWorkspacesManager * instance();
+    static PmrWorkspaceManager * instance();
 
     int count() const;
 

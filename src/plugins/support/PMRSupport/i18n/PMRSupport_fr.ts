@@ -43,7 +43,7 @@
 <context>
     <name>OpenCOR::PMRSupport::PmrWebServiceManager</name>
     <message>
-        <source>Cannot connect to Internet</source>
+        <source>Cannot connect to the Internet</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -23,7 +23,7 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
-#include "pmrworkspacesmanager.h"
+#include "pmrworkspacemanager.h"
 
 //==============================================================================
 
@@ -336,7 +336,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
             emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, dirName));
             // TODO Prompt user to create a fork on PMR??
         } else {
-            PmrWorkspace *existing = PmrWorkspacesManager::instance()->workspace(url);
+            PmrWorkspace *existing = PmrWorkspaceManager::instance()->workspace(url);
 
             if (!existing) {
                 // Retrieve the name of an empty directory
@@ -461,7 +461,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     // Check that we aren't already managing a clone of the
                     // workspace
 
-                    PmrWorkspace *existing = PmrWorkspacesManager::instance()->workspace(workspaceUrl);
+                    PmrWorkspace *existing = PmrWorkspaceManager::instance()->workspace(workspaceUrl);
 
                     if (!existing) {
                         // Retrieve the name of an empty directory

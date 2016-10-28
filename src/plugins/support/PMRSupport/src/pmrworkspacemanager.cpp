@@ -17,10 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR workspaces manager
+// PMR workspace manager
 //==============================================================================
 
-#include "pmrworkspacesmanager.h"
+#include "pmrworkspacemanager.h"
 #include "corecliutils.h"
 
 //==============================================================================
@@ -34,7 +34,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspacesManager::PmrWorkspacesManager() :
+PmrWorkspaceManager::PmrWorkspaceManager() :
     mUrlWorkspaces(QMap<QString, PmrWorkspace *>())
 {
     // Initialise libgit2
@@ -44,7 +44,7 @@ PmrWorkspacesManager::PmrWorkspacesManager() :
 
 //==============================================================================
 
-PmrWorkspacesManager::~PmrWorkspacesManager()
+PmrWorkspaceManager::~PmrWorkspaceManager()
 {
     // Shutdown libgit2
 
@@ -53,19 +53,19 @@ PmrWorkspacesManager::~PmrWorkspacesManager()
 
 //==============================================================================
 
-PmrWorkspacesManager * PmrWorkspacesManager::instance()
+PmrWorkspaceManager * PmrWorkspaceManager::instance()
 {
-    // Return the 'global' instance of our workspaces manager class
+    // Return the 'global' instance of our workspace manager class
 
-    static PmrWorkspacesManager instance;
+    static PmrWorkspaceManager instance;
 
-    return static_cast<PmrWorkspacesManager *>(Core::globalInstance("OpenCOR::PMRSupport::PmrWorkspacesManager::instance()",
+    return static_cast<PmrWorkspaceManager *>(Core::globalInstance("OpenCOR::PMRSupport::PmrWorkspaceManager::instance()",
                                                                     &instance));
 }
 
 //==============================================================================
 
-int PmrWorkspacesManager::count() const
+int PmrWorkspaceManager::count() const
 {
     // Return our number of workspaces
 
@@ -74,7 +74,7 @@ int PmrWorkspacesManager::count() const
 
 //==============================================================================
 
-PmrWorkspaces PmrWorkspacesManager::workspaces() const
+PmrWorkspaces PmrWorkspaceManager::workspaces() const
 {
     // Return our workspaces
 
@@ -88,7 +88,7 @@ PmrWorkspaces PmrWorkspacesManager::workspaces() const
 
 //==============================================================================
 
-bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
+bool PmrWorkspaceManager::hasWorkspace(const QString &pUrl) const
 {
     // Return whether we hold the workspace which URL is given
 
@@ -97,7 +97,7 @@ bool PmrWorkspacesManager::hasWorkspace(const QString &pUrl) const
 
 //==============================================================================
 
-PmrWorkspace * PmrWorkspacesManager::workspace(const QString &pUrl) const
+PmrWorkspace * PmrWorkspaceManager::workspace(const QString &pUrl) const
 {
     // Return the workspace, if any, with the given URL
 
@@ -106,7 +106,7 @@ PmrWorkspace * PmrWorkspacesManager::workspace(const QString &pUrl) const
 
 //==============================================================================
 
-void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
+void PmrWorkspaceManager::addWorkspace(PmrWorkspace *pWorkspace)
 {
     // Keep track of the given workspace, if any
 
@@ -116,7 +116,7 @@ void PmrWorkspacesManager::addWorkspace(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
-void PmrWorkspacesManager::clearWorkspaces()
+void PmrWorkspaceManager::clearWorkspaces()
 {
     // Stop tracking all of our workspaces
 
