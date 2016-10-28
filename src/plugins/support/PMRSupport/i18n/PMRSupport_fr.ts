@@ -39,6 +39,10 @@
         <source>No workspace could be found for %1.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Select Empty Directory</source>
+        <translation type="unfinished">Sélectionner Répertoire Vide</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRSupport::PmrWebServiceManager</name>
@@ -59,10 +63,6 @@
     <message>
         <source>An error occurred while trying to clone the workspace.</source>
         <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
-    </message>
-    <message>
-        <source>Select Empty Directory</source>
-        <translation>Sélectionner Répertoire Vide</translation>
     </message>
     <message>
         <source>An error occurred while trying to open the workspace.</source>

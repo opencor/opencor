@@ -53,25 +53,28 @@ limitations under the License.
 
 //==============================================================================
 
+#include "git2/remote.h"
+#include "git2/repository.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-#define ICON_ABOUT        ":/oxygen/actions/help-about.png"
-#define ICON_CLONE        ":/oxygen/places/folder-downloads.png"
-#define ICON_COMMIT       ":/oxygen/actions/view-task.png"
-#define ICON_FOLDER       ":/oxygen/places/folder.png"
-#define ICON_FOLDER_OPEN  ":/oxygen/places/folder-open.png"
-#define ICON_OWNED        ":/oxygen/places/folder-favorites.png"
-//#define ICON_PULL         ":/oxygen/actions/arrow-down-double.png"
-//#define ICON_PUSH         ":/oxygen/actions/arrow-up-double.png"
-#define ICON_REFRESH      ":/oxygen/actions/view-refresh.png"
-#define ICON_STAGE        ":/oxygen/actions/dialog-ok-apply.png"
-#define ICON_SYNC_PULL    ":/PMRWorkspacesWindow/icons/sync-pull.png"
-#define ICON_SYNC_PUSH    ":/PMRWorkspacesWindow/icons/sync-push.png"
-#define ICON_SYNCHRONISE  ":/PMRWorkspacesWindow/icons/synchronise.png"
-#define ICON_UNSTAGE      ":/oxygen/actions/dialog-cancel.png"
+static const auto AboutIcon           = QStringLiteral(":/oxygen/actions/help-about.png");
+static const auto CloneIcon           = QStringLiteral(":/oxygen/places/folder-downloads.png");
+static const auto CommitIcon          = QStringLiteral(":/oxygen/actions/view-task.png");
+static const auto FolderIcon          = QStringLiteral(":/oxygen/places/folder.png");
+static const auto FolderOpenIcon      = QStringLiteral(":/oxygen/places/folder-open.png");
+static const auto OwnedIcon           = QStringLiteral(":/oxygen/places/folder-favorites.png");
+static const auto RefreshIcon         = QStringLiteral(":/oxygen/actions/view-refresh.png");
+static const auto StageIcon           = QStringLiteral(":/oxygen/actions/dialog-ok-apply.png");
+static const auto UnstageIcon         = QStringLiteral(":/oxygen/actions/dialog-cancel.png");
+static const auto SynchroniseIcon     = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronise.png");
+static const auto SynchronisePushIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/sync-push.png");
+static const auto SynchronisePullIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/sync-pull.png");
 
 //==============================================================================
 
@@ -115,17 +118,17 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     QString fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspacesWindow/output.html", fileContents);
-    mTemplate = fileContents.arg( // clone, commit, folder, open, star, stage, pull, push, sync, unstage
-                                 Core::iconDataUri(ICON_CLONE, 16, 16),
-                                 Core::iconDataUri(ICON_COMMIT, 16, 16),
-                                 Core::iconDataUri(ICON_FOLDER, 16, 16),
-                                 Core::iconDataUri(ICON_FOLDER_OPEN, 16, 16),
-                                 Core::iconDataUri(ICON_OWNED, 16, 16),
-                                 Core::iconDataUri(ICON_STAGE, 16, 16),
-                                 Core::iconDataUri(ICON_SYNC_PULL, 16, 16),
-                                 Core::iconDataUri(ICON_SYNC_PUSH, 16, 16),
-                                 Core::iconDataUri(ICON_SYNCHRONISE, 16, 16))
-                                 .arg(Core::iconDataUri(ICON_UNSTAGE, 16, 16), "%1");
+    mTemplate = fileContents.arg(Core::iconDataUri(CloneIcon, 16, 16),
+                                 Core::iconDataUri(CommitIcon, 16, 16))
+                            .arg(Core::iconDataUri(FolderIcon, 16, 16),
+                                 Core::iconDataUri(FolderOpenIcon, 16, 16))
+                            .arg(Core::iconDataUri(OwnedIcon, 16, 16))
+                            .arg(Core::iconDataUri(StageIcon, 16, 16),
+                                 Core::iconDataUri(UnstageIcon, 16, 16))
+                            .arg(Core::iconDataUri(SynchroniseIcon, 16, 16),
+                                 Core::iconDataUri(SynchronisePushIcon, 16, 16),
+                                 Core::iconDataUri(SynchronisePullIcon, 16, 16))
+                            .arg("%1");
 
     // Create our timer for refreshing the current workspace
 
@@ -271,19 +274,46 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 {
     if (!mWorkspaceFolderUrls.contains(pFolder)) {
-        // Get the workspace url (= remote.origin.url)
+        // Retrieve the workspace url (i.e. remote.origin.url) for the given
+        // folder
 
-        QString url = PMRSupport::PmrWorkspace::getUrlFromFolder(pFolder);
+        QString res = QString();
 
-        if (!url.isEmpty()) {
-            if (mUrlFolderNameMines.contains(url)) {
-                duplicateCloneMessage(url, mUrlFolderNameMines.value(url).first, pFolder);
+        git_repository *gitRepository = 0;
+        QByteArray folderByteArray = pFolder.toUtf8();
+
+        if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
+            git_strarray remotes;
+
+            if (!git_remote_list(&remotes, gitRepository)) {
+                for (int i = 0; i < (int)remotes.count; i++) {
+                    char *name = remotes.strings[i];
+
+                    if (!strcmp(name, "origin")) {
+                        git_remote *remote = 0;
+
+                        if (!git_remote_lookup(&remote, gitRepository, name)) {
+                            const char *remoteUrl = git_remote_url(remote);
+
+                            if (remoteUrl)
+                                res = QString(remoteUrl);
+                        }
+                    }
+                }
+            }
+
+            git_repository_free(gitRepository);
+        }
+
+        if (!res.isEmpty()) {
+            if (mUrlFolderNameMines.contains(res)) {
+                duplicateCloneMessage(res, mUrlFolderNameMines.value(res).first, pFolder);
             } else {
-                mWorkspaceFolderUrls.insert(pFolder, url);
-                mUrlFolderNameMines.insert(url, QPair<QString, bool>(pFolder, false));
+                mWorkspaceFolderUrls.insert(pFolder, res);
+                mUrlFolderNameMines.insert(res, QPair<QString, bool>(pFolder, false));
             }
         }
-        return url;
+        return res;
     } else {
         return mWorkspaceFolderUrls.value(pFolder);
     }
@@ -877,14 +907,14 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
         QString elementId = trElement.attribute("id");
 
         if (!trElement.findFirst("img.clone").isNull()) {
-            QAction *action = new QAction(QIcon(ICON_CLONE), tr("Clone workspace"), this);
+            QAction *action = new QAction(QIcon(CloneIcon), tr("Clone workspace"), this);
 
             action->setData(QString("clone|%1").arg(elementId));
 
             menu->addAction(action);
         } else {
             if (!trElement.findFirst("img.commit").isNull()) {
-                QAction *action = new QAction(QIcon(ICON_COMMIT), tr("Commit staged changes"), this);
+                QAction *action = new QAction(QIcon(CommitIcon), tr("Commit staged changes"), this);
 
                 action->setData(QString("commit|%1").arg(elementId));
 
@@ -892,7 +922,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
             }
 
             if (!trElement.findFirst("img.pull").isNull()) {
-                QAction *action = new QAction(QIcon(ICON_SYNC_PULL), tr("Synchronise with PMR"), this);
+                QAction *action = new QAction(QIcon(SynchronisePullIcon), tr("Synchronise with PMR"), this);
 
                 action->setData(QString("pull|%1").arg(elementId));
 
@@ -900,13 +930,13 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
             }
 
             if (!trElement.findFirst("img.sync").isNull()) {
-                QAction *action = new QAction(QIcon(ICON_SYNCHRONISE), tr("Synchronise with PMR"), this);
+                QAction *action = new QAction(QIcon(SynchroniseIcon), tr("Synchronise with PMR"), this);
 
                 action->setData(QString("sync|%1").arg(elementId));
 
                 menu->addAction(action);
             } else if (!trElement.findFirst("img.push").isNull()) {
-                QAction *action = new QAction(QIcon(ICON_SYNC_PUSH), tr("Synchronise and upload to PMR"), this);
+                QAction *action = new QAction(QIcon(SynchronisePushIcon), tr("Synchronise and upload to PMR"), this);
 
                 action->setData(QString("push|%1").arg(elementId));
 
@@ -916,7 +946,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addSeparator();
 
-        QAction *refreshAction = new QAction(QIcon(ICON_REFRESH), tr("Refresh display"), this);
+        QAction *refreshAction = new QAction(QIcon(RefreshIcon), tr("Refresh display"), this);
 
         refreshAction->setData(QString("refresh|%1").arg(elementId));
 
@@ -942,7 +972,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addSeparator();
 
-        QAction *aboutAction = new QAction(QIcon(ICON_ABOUT), tr("About the workspace"), this);
+        QAction *aboutAction = new QAction(QIcon(AboutIcon), tr("About the workspace"), this);
 
         aboutAction->setData(QString("about|%1").arg(elementId));
 
@@ -1087,7 +1117,7 @@ void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && !workspace->isLocal()) {
-        QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
+        QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
         if (!dirName.isEmpty()) {
             // Create the folder for the new workspace

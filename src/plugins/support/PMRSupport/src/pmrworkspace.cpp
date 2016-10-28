@@ -20,7 +20,6 @@ limitations under the License.
 // PMR workspace
 //==============================================================================
 
-#include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacemanager.h"
@@ -124,16 +123,6 @@ PmrWorkspace::~PmrWorkspace()
 bool PmrWorkspace::isLocal() const
 {
     return !mPath.isEmpty();
-}
-
-//==============================================================================
-
-QString PmrWorkspace::getEmptyWorkspaceDirectory()
-{
-    // Retrieve the name of an empty directory
-
-    return Core::getExistingDirectory(tr("Select Empty Directory"),
-                                      QString(), true);
 }
 
 //==============================================================================
@@ -418,44 +407,6 @@ void PmrWorkspace::setGitAuthorisation(git_strarray *pAuthorisationStrArray)
         pAuthorisationStrArray->strings = authorisationStrArrayArray;
         pAuthorisationStrArray->count = 1;
     }
-}
-
-//==============================================================================
-
-QString PmrWorkspace::getUrlFromFolder(const QString &pFolder)
-{
-    // Return remote.origin.url if the folder contains a git repository
-    // otherwise return an empty string.
-
-    QString url = QString();
-
-    git_repository *gitRepository = 0;
-    QByteArray folderByteArray = pFolder.toUtf8();
-
-    if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
-        git_strarray remotes;
-
-        if (!git_remote_list(&remotes, gitRepository)) {
-            for (int i = 0; i < (int)remotes.count; i++) {
-                char *name = remotes.strings[i];
-
-                if (!strcmp(name, "origin")) {
-                    git_remote *remote = 0;
-
-                    if (!git_remote_lookup(&remote, gitRepository, name)) {
-                        const char *remoteUrl = git_remote_url(remote);
-
-                        if (remoteUrl)
-                            url = QString(remoteUrl);
-                    }
-                }
-            }
-        }
-
-        git_repository_free(gitRepository);
-    }
-
-    return url;
 }
 
 //==============================================================================

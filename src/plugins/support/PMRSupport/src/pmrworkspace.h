@@ -59,11 +59,6 @@ public:
                           PmrWebService *pParent);
     ~PmrWorkspace();
 
-    static QString getEmptyWorkspaceDirectory();
-
-    static QString getUrlFromFile(const QString &pPath);
-    static QString getUrlFromFolder(const QString &pFolder);
-
     bool isLocal() const;
 
     void setCredentials(const QString &pUsername, const QString &pPassword);

@@ -20,6 +20,7 @@ limitations under the License.
 // PMR web service
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
@@ -341,7 +342,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
             if (!existing) {
                 // Retrieve the name of an empty directory
 
-                dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
+                dirName = getEmptyDirectory();
 
                 if (!dirName.isEmpty())
                     requestWorkspaceClone(exposure->workspace(), dirName);
@@ -466,7 +467,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     if (!existing) {
                         // Retrieve the name of an empty directory
 
-                        dirName = PmrWorkspace::getEmptyWorkspaceDirectory();
+                        dirName = getEmptyDirectory();
                     } else {
                         emit warning(tr("Workspace %1 is already cloned in %2.").arg(workspaceUrl, existing->path()));
                         // TODO Prompt user to create a fork on PMR??
@@ -510,6 +511,15 @@ void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDe
 
     connect(pmrResponse, SIGNAL(movedLocation(const QString &)),
             this, SLOT(workspaceCreatedResponse(const QString &)));
+}
+
+//==============================================================================
+
+QString PmrWebService::getEmptyDirectory()
+{
+    // Retrieve and return the name of an empty directory
+
+    return Core::getEmptyDirectory(tr("Select Empty Directory"));
 }
 
 //==============================================================================

@@ -71,6 +71,8 @@ public:
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pDirName);
 
+    static QString getEmptyDirectory();
+
 private:
     enum Action {
         None,

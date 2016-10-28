@@ -295,10 +295,10 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
 //==============================================================================
 
-QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
-                             const bool &pEmptyDir)
+QString getDirectory(const QString &pCaption, const QString &pDirName,
+                     const bool &pEmptyDir)
 {
-    // Retrieve and return an existing directory path
+    // Retrieve and return the name of an existing directory
     // Note: normally, we would rely on QFileDialog::getExistingDirectory() to
     //       retrieve the path of an existing directory, but then we wouldn't be
     //       able to handle the case where the user cancels his/her action, so
@@ -333,6 +333,15 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
     } else {
         return QString();
     }
+}
+
+//==============================================================================
+
+QString getEmptyDirectory(const QString &pCaption, const QString &pDirName)
+{
+    // Retrieve and return the name of an empty directory
+
+    return getDirectory(pCaption, pDirName, true);
 }
 
 //==============================================================================

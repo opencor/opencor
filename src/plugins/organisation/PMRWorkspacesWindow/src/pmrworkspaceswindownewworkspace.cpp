@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindownewworkspace.h"
 
@@ -126,7 +127,7 @@ void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &pChecked)
 {
     Q_UNUSED(pChecked);
 
-    QString dirName = PMRSupport::PmrWorkspace::getEmptyWorkspaceDirectory();
+    QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
     if (!dirName.isEmpty()) {
         mGui->path->setText(dirName);
