@@ -131,7 +131,7 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
     // Check that we are connected to the Internet
 
     if (!Core::internetConnectionAvailable()) {
-        emit error(tr("Cannot connect to the Internet"));
+        emit error(tr("Cannot connect to the Internet"), false);
 
         return 0;
     }

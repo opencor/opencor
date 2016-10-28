@@ -56,8 +56,8 @@ PmrWebService::PmrWebService(QObject *pParent) :
             this, SIGNAL(authenticated(const bool &)));
     connect(mPmrWebServiceManager, SIGNAL(busy(const bool &)),
             this, SIGNAL(busy(const bool &)));
-    connect(mPmrWebServiceManager, SIGNAL(error(const QString &)),
-            this, SLOT(emitError(const QString &)));
+    connect(mPmrWebServiceManager, SIGNAL(error(const QString &, const bool &)),
+            this, SIGNAL(error(const QString &, const bool &)));
 }
 
 //==============================================================================
@@ -233,15 +233,6 @@ void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure, const
 
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(exposureFileInformationResponse(const QJsonDocument &)));
-}
-
-//==============================================================================
-
-void PmrWebService::emitError(const QString &pErrorMessage)
-{
-    // Let people know about the given error
-
-    emit error(pErrorMessage, false);
 }
 
 //==============================================================================

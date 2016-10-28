@@ -124,8 +124,6 @@ public slots:
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
 private slots:
-    void emitError(const QString &pErrorMessage);
-
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
     void exposuresResponse(const QJsonDocument &pJsonDocument);

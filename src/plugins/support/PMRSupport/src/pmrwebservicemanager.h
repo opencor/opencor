@@ -55,13 +55,14 @@ public:
                                     const bool &pUsePost = false,
                                     const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
-    PmrWebService *mPmrWebService;
     PmrOauthClient *mPmrOAuthClient;
+    PmrWebService *mPmrWebService;
 
 signals:
-    void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
-    void error(const QString &pErrorMessage);
+    void busy(const bool &pBusy);
+    void error(const QString &pErrorMessage,
+               const bool &pInternetConnectionAvailable);
 
 private slots:
     void authenticationSucceeded();
