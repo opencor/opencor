@@ -76,6 +76,16 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
     mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
     mRootFileNode = 0;
 
+    // Forward a couple of our signals to the global 'global' instance of our
+    // workspaces manager class
+
+    PmrWorkspacesManager *workspacesManager = PmrWorkspacesManager::instance();
+
+    connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            workspacesManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)));
+    connect(this, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
+            workspacesManager, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
+
     // Our messages are directly emitted by our parent PMR web service
 
     connect(this, SIGNAL(progress(const double &)),
@@ -558,7 +568,6 @@ void PmrWorkspace::clone(const QString &pDirName)
 
     mPath = pDirName;
 
-    PmrWorkspacesManager::instance()->emitWorkspaceCloned(this);
     emit workspaceCloned(this);
 }
 

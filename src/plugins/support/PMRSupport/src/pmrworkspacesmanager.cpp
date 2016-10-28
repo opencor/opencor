@@ -128,15 +128,6 @@ void PmrWorkspacesManager::clearWorkspaces()
 
 //==============================================================================
 
-void PmrWorkspacesManager::emitWorkspaceCloned(PmrWorkspace *pWorkspace)
-{
-    // This tells the PMR Workspaces plugin that a workspace has been cloned
-
-    emit workspaceCloned(pWorkspace);
-}
-
-//==============================================================================
-
 }   // namespace PMRSupport
 }   // namespace OpenCOR
 

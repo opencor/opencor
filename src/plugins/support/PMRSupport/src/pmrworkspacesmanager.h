@@ -58,13 +58,12 @@ public:
     void addWorkspace(PmrWorkspace *pWorkspace);
     void clearWorkspaces();
 
-    void emitWorkspaceCloned(PmrWorkspace *pWorkspace);
-
 private:
     QMap<QString, PmrWorkspace *> mUrlWorkspaces;
 
 signals:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

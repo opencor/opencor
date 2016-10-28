@@ -177,8 +177,8 @@ signals:
     void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 
-    void workspaceCloned(PmrWorkspace *pWorkspace);
-    void workspaceSynchronised(PmrWorkspace *pWorkspace);
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
