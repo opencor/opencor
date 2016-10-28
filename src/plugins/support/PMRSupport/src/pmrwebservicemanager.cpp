@@ -49,8 +49,8 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 
     mPmrOAuthClient = new PmrOauthClient(PmrUrl, this);
 
-    // Make sure that we get told when there are SSL errors (which would happen if the
-    // website's certificate is invalid, e.g. it has expired)
+    // Make sure that we get told when there are SSL errors (which would happen
+    // if the website's certificate is invalid, e.g. it has expired)
 
     connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
@@ -144,18 +144,19 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
 
     networkRequest.setUrl(QUrl(pUrl));
 
-    QNetworkReply *networkReply;
-
-    QByteArray requestData = pJsonDocument.isNull()?QByteArray():pJsonDocument.toJson(QJsonDocument::Compact);
-
     // Use the authenticated link if it's available
+
+    QNetworkReply *networkReply;
+    QByteArray requestData = pJsonDocument.isNull()?QByteArray():pJsonDocument.toJson(QJsonDocument::Compact);
 
     if (pSecureRequest && mPmrOAuthClient->linked()) {
         O1Requestor *requestor = new O1Requestor(this, mPmrOAuthClient, this);
+
         if (!pUsePost && pJsonDocument.isNull()) {
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
         } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
+
             networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(), requestData);
         }
     } else {
@@ -163,6 +164,7 @@ PmrWebServiceResponse * PmrWebServiceManager::sendPmrRequest(const QString &pUrl
             networkReply = get(networkRequest);
         } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
+
             networkReply = post(networkRequest, requestData);
         }
     }

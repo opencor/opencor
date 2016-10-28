@@ -71,7 +71,6 @@ private slots:
 
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
-
 };
 
 //==============================================================================
