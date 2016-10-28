@@ -89,24 +89,28 @@ void PmrWebServiceManager::authenticate(const bool &pAuthenticate)
 
 //==============================================================================
 
-void PmrWebServiceManager::authenticationFailed()
+void PmrWebServiceManager::authenticationSucceeded()
 {
-    emit authenticated(false);
+    // Let people know whether we are really authenticated, i.e. linked
+
+    emit authenticated(qobject_cast<PmrOauthClient *>(sender())->linked());
 }
 
 //==============================================================================
 
-void PmrWebServiceManager::authenticationSucceeded()
+void PmrWebServiceManager::authenticationFailed()
 {
-    PmrOauthClient *o1t = qobject_cast<PmrOauthClient *>(sender());
+    // Let people know that authentication failed
 
-    emit authenticated(o1t->linked());
+    emit authenticated(false);
 }
 
 //==============================================================================
 
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
+    // Open the given URL in the user's browser
+
     QDesktopServices::openUrl(pUrl);
 }
 
@@ -115,7 +119,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
                                      const QList<QSslError> &pSslErrors)
 {
-    // Ignore the SSL errors since we trust the website and therefore its
+    // Ignore SSL errors since we trust the website and therefore its
     // certificate (even if it is invalid, e.g. it has expired)
 
     pNetworkReply->ignoreSslErrors(pSslErrors);
@@ -136,7 +140,7 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
         return 0;
     }
 
-    // Let the user know that we are busy
+    // Let the user know that we are (going to be) busy
 
     emit busy(true);
 
@@ -152,25 +156,30 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
     // Use the authenticated link if it's available
 
     QNetworkReply *networkReply;
-    QByteArray requestData = pJsonDocument.isNull()?QByteArray():pJsonDocument.toJson(QJsonDocument::Compact);
 
     if (pSecureRequest && mPmrOAuthClient->linked()) {
         O1Requestor *requestor = new O1Requestor(this, mPmrOAuthClient, this);
 
-        if (!pUsePost && pJsonDocument.isNull()) {
+        if (!pUsePost && pJsonDocument.isEmpty()) {
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
         } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
 
-            networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(), requestData);
+            networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(),
+                                           pJsonDocument.isNull()?
+                                               QByteArray():
+                                               pJsonDocument.toJson(QJsonDocument::Compact));
         }
     } else {
-        if (!pUsePost && pJsonDocument.isNull()) {
+        if (!pUsePost && pJsonDocument.isEmpty()) {
             networkReply = get(networkRequest);
         } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
 
-            networkReply = post(networkRequest, requestData);
+            networkReply = post(networkRequest,
+                                pJsonDocument.isNull()?
+                                    QByteArray():
+                                    pJsonDocument.toJson(QJsonDocument::Compact));
         }
     }
 
