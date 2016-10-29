@@ -83,6 +83,7 @@ private:
 class DataStoreVariables : public QList<DataStoreVariable *>
 {
 public:
+    void reset();
     void sort();
 
 private:

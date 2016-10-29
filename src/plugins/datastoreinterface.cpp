@@ -199,6 +199,18 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
+void DataStoreVariables::reset()
+{
+    // Reset our variables
+
+    for (int i = 0, iMax = size(); i < iMax; ++i)
+        delete (*this)[i];
+
+    clear();
+}
+
+//==============================================================================
+
 void DataStoreVariables::sort()
 {
     // Sort our variables
@@ -265,10 +277,7 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
-         variable != variableEnd; ++variable) {
-        delete *variable;
-    }
+    mVariables.reset();
 }
 
 //==============================================================================
