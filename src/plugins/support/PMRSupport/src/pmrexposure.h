@@ -31,6 +31,11 @@ limitations under the License.
 #include <QList>
 #include <QString>
 
+#ifdef Q_OS_WIN
+    #include <QSet>
+    #include <QVector>
+#endif
+
 //==============================================================================
 
 namespace OpenCOR {
@@ -55,7 +60,7 @@ private:
 
 //==============================================================================
 
-class PmrExposures : public QList<PmrExposure *>
+class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
 {
 public:
     explicit PmrExposures();
