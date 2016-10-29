@@ -86,7 +86,7 @@ void PmrExposures::add(const QString &pUrl, const QString &pName)
 {
     // Add a new exposure to the list
 
-    QList::append(new PmrExposure(pUrl, pName));
+    *this << new PmrExposure(pUrl, pName);
 }
 
 //==============================================================================
