@@ -169,6 +169,8 @@ class CELLMLSUPPORT_EXPORT CellmlFileRdfTriples: public QList<CellmlFileRdfTripl
 public:
     explicit CellmlFileRdfTriples(CellmlFile *pCellmlFile);
 
+    void reset();
+
     CellmlFileRdfTriple::Type type() const;
 
     CellmlFileRdfTriples associatedWith(iface::cellml_api::CellMLElement *pElement) const;

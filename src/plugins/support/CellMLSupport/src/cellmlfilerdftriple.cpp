@@ -479,6 +479,18 @@ CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
 
 //==============================================================================
 
+void CellmlFileRdfTriples::reset()
+{
+    // Reset our RDF triples
+
+    for (int i = 0, iMax = size(); i < iMax; ++i)
+        delete (*this)[i];
+
+    clear();
+}
+
+//==============================================================================
+
 CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 {
     // Return the type of the RDF triples
