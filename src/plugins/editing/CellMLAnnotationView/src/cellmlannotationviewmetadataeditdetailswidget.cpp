@@ -113,24 +113,35 @@ QString CellmlAnnotationViewMetadataEditDetailsItem::id() const
 
 //==============================================================================
 
-bool CellmlAnnotationViewMetadataEditDetailsItem::operator==(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const
+void CellmlAnnotationViewMetadataEditDetailsItems::reset()
 {
-    // Return whether the current item is the same as the given one
+    // Reset our items
 
-    return    !mName.compare(pItem.name())
-           && !mResource.compare(pItem.resource())
-           && !mId.compare(pItem.id());
+    for (int i = 0, iMax = size(); i < iMax; ++i)
+        delete (*this)[i];
+
+    clear();
 }
 
 //==============================================================================
 
-bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const
+void CellmlAnnotationViewMetadataEditDetailsItems::sort()
 {
-    // Return whether the current item is lower than the given one
+    // Sort our items
 
-    int nameComparison = mName.compare(pItem.name());
-    int resourceComparison = mResource.compare(pItem.resource());
-    int idComparison = mId.compare(pItem.id());
+    std::sort(begin(), end(), CellmlAnnotationViewMetadataEditDetailsItems::compare);
+}
+
+//==============================================================================
+
+bool CellmlAnnotationViewMetadataEditDetailsItems::compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
+                                                           CellmlAnnotationViewMetadataEditDetailsItem *pItem2)
+{
+    // Determine which of the two items should be first
+
+    int nameComparison = pItem1->name().compare(pItem2->name());
+    int resourceComparison = pItem1->resource().compare(pItem2->resource());
+    int idComparison = pItem1->id().compare(pItem2->id());
 
     return (nameComparison < 0)?
                true:
@@ -147,15 +158,6 @@ bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotati
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsItems::sort()
-{
-    // Sort our items
-
-    std::sort(begin(), end());
-}
-
-//==============================================================================
-
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
                                                                                              CellmlAnnotationViewEditingWidget *pViewEditingWidget,
                                                                                              CellMLSupport::CellmlFile *pCellmlFile,
@@ -167,13 +169,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTerms(QStringList()),
-    mItemsCount(0),
+    mItems(CellmlAnnotationViewMetadataEditDetailsItems()),
     mLookUpTerm(false),
     mErrorMessage(QString()),
     mInternetConnectionAvailable(true),
     mInformationType(None),
     mLookUpInformation(false),
-    mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
+    mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem *>()),
     mEnabledItems(QMap<QString, bool>()),
     mCellmlFile(pCellmlFile),
     mElement(0),
@@ -381,6 +383,15 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
 //==============================================================================
 
+CellmlAnnotationViewMetadataEditDetailsWidget::~CellmlAnnotationViewMetadataEditDetailsWidget()
+{
+    // Delete some internal objects
+
+    mItems.reset();
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 {
     // Retranslate our action
@@ -467,19 +478,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
     foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
-        CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
+        CellmlAnnotationViewMetadataEditDetailsItem *item = mItemsMapping.value(itemInformationSha1);
         bool enabledButton;
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                       item.resource(), item.id());
+                                                       item->resource(), item->id());
         } else {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                       item.resource(), item.id());
+                                                       item->resource(), item->id());
         }
 
         if (enabledButton != mEnabledItems.value(itemInformationSha1)) {
@@ -553,10 +564,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
 
-    if (mItemsCount == 1)
+    if (mItems.count() == 1)
         countElement.setInnerXml(tr("(1 term)"));
     else
-        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
+        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItems.count())));
 }
 
 //==============================================================================
@@ -598,16 +609,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
         QString ontologicalTerms = QString();
 
-        foreach (const CellmlAnnotationViewMetadataEditDetailsItem &item, pItems) {
+        foreach (CellmlAnnotationViewMetadataEditDetailsItem *item, pItems) {
             // Keep track of some information
 
-            QString itemInformation = item.resource()+"|"+item.id();
+            QString itemInformation = item->resource()+"|"+item->id();
             QString itemInformationSha1 = Core::sha1(itemInformation);
-            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item.resource());
-            QString idUrl = CellmlAnnotationViewWidget::idUrl(item.resource(), item.id());
+            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item->resource());
+            QString idUrl = CellmlAnnotationViewWidget::idUrl(item->resource(), item->id());
 
-            if (!mUrls.contains(item.resource()))
-                mUrls.insert(item.resource(), resourceUrl);
+            if (!mUrls.contains(item->resource()))
+                mUrls.insert(item->resource(), resourceUrl);
 
             mUrls.insert(itemInformation, idUrl);
 
@@ -620,13 +631,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
             ontologicalTerms += "<tr id=\"item_"+itemInformationSha1+"\">\n"
                                 "    <td>\n"
-                                "        "+item.name()+"\n"
+                                "        "+item->name()+"\n"
                                 "    </td>\n"
                                 "    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                "        <a href=\""+itemInformation+"\">"+item.resource()+"</a>\n"
+                                "        <a href=\""+itemInformation+"\">"+item->resource()+"</a>\n"
                                 "    </td>\n"
                                 "    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                "        <a href=\""+itemInformation+"\">"+item.id()+"</a>\n"
+                                "        <a href=\""+itemInformation+"\">"+item->id()+"</a>\n"
                                 "    </td>\n"
                                 "    <td id=\"button_"+itemInformationSha1+"\">\n"
                                 "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
@@ -843,7 +854,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
         // We have clicked on a button link, so retrieve the item associated
         // with it
 
-        CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(mLink);
+        CellmlAnnotationViewMetadataEditDetailsItem *item = mItemsMapping.value(mLink);
 
         // Add the ontological term to our CellML element as an RDF triple
 
@@ -852,11 +863,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                  item.resource(), item.id());
+                                                  item->resource(), item->id());
         } else {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                  item.resource(), item.id());
+                                                  item->resource(), item->id());
         }
 
         // Disable the add button, now that we have added the ontological term
@@ -985,9 +996,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
+    // Reset our items
+
+    mItems.reset();
+
     // Retrieve the list of terms, should there be a network reply
 
-    CellmlAnnotationViewMetadataEditDetailsItems items = CellmlAnnotationViewMetadataEditDetailsItems();
     QString errorMessage = QString();
     bool internetConnectionAvailable = true;
 
@@ -1029,12 +1043,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                     if (   !name.isEmpty()
                         &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
                         // We have a name and we could decode the term, so add
-                        // the item to our list, should it not already be in it
+                        // the item to our list
 
-                        CellmlAnnotationViewMetadataEditDetailsItem newItem = CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
-
-                        if (!items.contains(newItem))
-                            items << newItem;
+                        mItems << new CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
                     }
                 }
             } else {
@@ -1050,11 +1061,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Update our GUI with the results of the look up after having sorted them
     // and kept track of it size
 
-    items.sort();
+    mItems.sort();
 
-    mItemsCount = items.count();
-
-    updateItemsGui(items, false, errorMessage, internetConnectionAvailable);
+    updateItemsGui(mItems, false, errorMessage, internetConnectionAvailable);
 
     // Update our GUI (incl. its enabled state)
 
@@ -1144,7 +1153,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::filePermissionsChanged()
 {
     // Update our GUI (incl. its enabled state)
 
-    updateGui(mElement, !mItemsCount, true);
+    updateGui(mElement, !mItems.count(), true);
 }
 
 //==============================================================================

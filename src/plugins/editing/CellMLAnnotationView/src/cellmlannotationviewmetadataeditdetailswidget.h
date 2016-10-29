@@ -84,9 +84,6 @@ public:
     QString resource() const;
     QString id() const;
 
-    bool operator==(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const;
-    bool operator<(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const;
-
 private:
     QString mName;
     QString mResource;
@@ -95,10 +92,15 @@ private:
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsItems : public QList<CellmlAnnotationViewMetadataEditDetailsItem>
+class CellmlAnnotationViewMetadataEditDetailsItems : public QList<CellmlAnnotationViewMetadataEditDetailsItem *>
 {
 public:
+    void reset();
     void sort();
+
+private:
+    static bool compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
+                        CellmlAnnotationViewMetadataEditDetailsItem *pItem2);
 };
 
 //==============================================================================
@@ -112,6 +114,7 @@ public:
                                                            CellmlAnnotationViewEditingWidget *pViewEditingWidget,
                                                            CellMLSupport::CellmlFile *pCellmlFile,
                                                            QWidget *pParent);
+    ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -141,7 +144,7 @@ private:
     QString mTerm;
     QStringList mTerms;
 
-    int mItemsCount;
+    CellmlAnnotationViewMetadataEditDetailsItems mItems;
 
     bool mLookUpTerm;
     QString mErrorMessage;
@@ -159,7 +162,7 @@ private:
 
     bool mLookUpInformation;
 
-    QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem> mItemsMapping;
+    QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem *> mItemsMapping;
     QMap<QString, bool> mEnabledItems;
 
     CellMLSupport::CellmlFile *mCellmlFile;
