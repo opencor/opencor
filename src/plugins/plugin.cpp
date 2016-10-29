@@ -397,6 +397,18 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
 
 //==============================================================================
 
+void Plugins::reset()
+{
+    // Reset our plugins
+
+    for (int i = 0, iMax = size(); i < iMax; ++i)
+        delete (*this)[i];
+
+    clear();
+}
+
+//==============================================================================
+
 void Plugins::sort()
 {
     // Sort our plugins

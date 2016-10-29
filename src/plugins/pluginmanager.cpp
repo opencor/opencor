@@ -191,10 +191,9 @@ PluginManager::PluginManager(const bool &pGuiMode) :
 
 PluginManager::~PluginManager()
 {
-    // Delete all our plugins
+    // Delete some internal objects
 
-    foreach (Plugin *plugin, mPlugins)
-        delete plugin;
+    mPlugins.reset();
 }
 
 //==============================================================================

@@ -120,6 +120,7 @@ private:
 class Plugins : public QList<Plugin *>
 {
 public:
+    void reset();
     void sort();
 
 private:
