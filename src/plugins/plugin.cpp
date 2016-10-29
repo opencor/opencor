@@ -401,7 +401,7 @@ void Plugins::sort()
 {
     // Sort our plugins
 
-    std::sort(begin(), end(), Plugins::compare);
+    std::sort(begin(), end(), compare);
 }
 
 //==============================================================================

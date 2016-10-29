@@ -176,7 +176,7 @@ void CellmlFileRuntimeParameters::sort()
 {
     // Sort our parameters
 
-    std::sort(begin(), end(), CellmlFileRuntimeParameters::compare);
+    std::sort(begin(), end(), compare);
 }
 
 //==============================================================================

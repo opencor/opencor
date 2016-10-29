@@ -129,7 +129,7 @@ void CellmlAnnotationViewMetadataEditDetailsItems::sort()
 {
     // Sort our items
 
-    std::sort(begin(), end(), CellmlAnnotationViewMetadataEditDetailsItems::compare);
+    std::sort(begin(), end(), compare);
 }
 
 //==============================================================================

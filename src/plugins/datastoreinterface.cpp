@@ -215,7 +215,7 @@ void DataStoreVariables::sort()
 {
     // Sort our variables
 
-    std::sort(begin(), end(), DataStoreVariables::compare);
+    std::sort(begin(), end(), compare);
 }
 
 //==============================================================================
