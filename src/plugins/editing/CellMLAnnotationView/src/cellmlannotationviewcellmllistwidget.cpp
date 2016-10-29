@@ -551,10 +551,10 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
         // the issue(s) and leave
 
         for (int i = 0; i < issuesCount; ++i) {
-            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                     QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
-                                                                                                                               QString::number(issues[i].column()),
-                                                                                                                               issues[i].formattedMessage())));
+            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i]->type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                                                     QString("[%1:%2] %3").arg(QString::number(issues[i]->line()),
+                                                                                                                               QString::number(issues[i]->column()),
+                                                                                                                               issues[i]->formattedMessage())));
         }
 
         return;

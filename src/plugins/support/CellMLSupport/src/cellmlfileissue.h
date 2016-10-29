@@ -31,6 +31,11 @@ limitations under the License.
 #include <QList>
 #include <QString>
 
+#ifdef Q_OS_WIN
+    #include <QSet>
+    #include <QVector>
+#endif
+
 //==============================================================================
 
 namespace OpenCOR {
@@ -50,8 +55,6 @@ public:
                              const int &pColumn, const QString &pMessage,
                              const QString &pImportedFile);
     explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
-
-    bool operator<(const CellmlFileIssue &pIssue) const;
 
     Type type() const;
     int line() const;
@@ -74,10 +77,14 @@ private:
 
 //==============================================================================
 
-class CellmlFileIssues : public QList<CellmlFileIssue>
+class CELLMLSUPPORT_EXPORT CellmlFileIssues : public QList<CellmlFileIssue *>
 {
 public:
+    void reset();
     void sort();
+
+private:
+    static bool compare(CellmlFileIssue *pIssue1, CellmlFileIssue *pIssue2);
 };
 
 //==============================================================================

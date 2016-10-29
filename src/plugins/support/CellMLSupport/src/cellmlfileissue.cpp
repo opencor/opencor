@@ -71,27 +71,6 @@ CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage)
 
 //==============================================================================
 
-bool CellmlFileIssue::operator<(const CellmlFileIssue &pIssue) const
-{
-    // Return whether the current issue is lower than the given one
-
-    return (mLine < pIssue.line())?
-               true:
-               (mLine > pIssue.line())?
-                   false:
-                   (mColumn < pIssue.column())?
-                       true:
-                       (mColumn > pIssue.column())?
-                           false:
-                            (mType < pIssue.type())?
-                                true:
-                                (mType > pIssue.type())?
-                                    false:
-                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 CellmlFileIssue::Type CellmlFileIssue::type() const
 {
     // Return the issue's type
@@ -147,11 +126,44 @@ QString CellmlFileIssue::importedFile() const
 
 //==============================================================================
 
+void CellmlFileIssues::reset()
+{
+    // Reset our issues
+
+    for (int i = 0, iMax = size(); i < iMax; ++i)
+        delete (*this)[i];
+
+    clear();
+}
+
+//==============================================================================
+
 void CellmlFileIssues::sort()
 {
     // Sort our issues
 
-    std::sort(begin(), end());
+    std::sort(begin(), end(), compare);
+}
+
+//==============================================================================
+
+bool CellmlFileIssues::compare(CellmlFileIssue *pIssue1,
+                               CellmlFileIssue *pIssue2)
+{
+    // Determine which of the two issues should be first
+
+    if (pIssue1->line() == pIssue2->line()) {
+        if (pIssue1->column() == pIssue2->column()) {
+            if (pIssue1->type() == pIssue2->type())
+                return pIssue1->message().compare(pIssue2->message(), Qt::CaseInsensitive) < 0;
+            else
+                return pIssue1->type() < pIssue2->type();
+        } else {
+            return pIssue1->column() < pIssue2->column();
+        }
+    } else {
+        return pIssue1->line() < pIssue2->line();
+    }
 }
 
 //==============================================================================

@@ -823,10 +823,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                 // We don't have a valid runtime, so either there are some
                 // problems with the CellML file or its runtime
 
-                foreach (const CellMLSupport::CellmlFileIssue &issue,
+                foreach (CellMLSupport::CellmlFileIssue *issue,
                          cellmlFileRuntime?cellmlFileRuntime->issues():mCellmlFile->issues()) {
-                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                         issue.message());
+                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue->type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                         issue->message());
                 }
             }
         }
