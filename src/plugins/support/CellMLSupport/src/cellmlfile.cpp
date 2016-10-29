@@ -111,10 +111,7 @@ void CellmlFile::reset()
     mRdfApiRepresentation = 0;
     mRdfDataSource = 0;
 
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
-        delete rdfTriple;
-
-    mRdfTriples.clear();
+    mRdfTriples.reset();
 
     mIssues.reset();
 
