@@ -32,6 +32,11 @@ limitations under the License.
 #include <QList>
 #include <QStringList>
 
+#ifdef Q_OS_WIN
+    #include <QSet>
+    #include <QVector>
+#endif
+
 //==============================================================================
 
 #include "cellmlapidisablewarnings.h"
@@ -104,7 +109,7 @@ private:
 
 //==============================================================================
 
-class CellmlFileRuntimeParameters : public QList<CellmlFileRuntimeParameter *>
+class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameters : public QList<CellmlFileRuntimeParameter *>
 {
 public:
     void sort();
