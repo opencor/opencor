@@ -371,7 +371,7 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, const 
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
-    connect(pWorkspace, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
+    connect(pWorkspace, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *)));
 
     QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronise, pOnlyPull);
@@ -382,7 +382,7 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, const 
 void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
 {
     emit busy(false);
-    emit workspaceSynchronised(pWorkspace);
+    emit workspaceSynchronized(pWorkspace);
 }
 
 //==============================================================================

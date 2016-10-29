@@ -166,7 +166,7 @@ signals:
     void warning(const QString &pMessage) const;
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

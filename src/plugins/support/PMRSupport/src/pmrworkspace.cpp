@@ -75,8 +75,8 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
 
     connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceSynchronised(PMRSupport::PmrWorkspace *)));
+    connect(this, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
+            workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
     // Forward our signals to our parent PMR web service
 
@@ -821,17 +821,15 @@ void PmrWorkspace::synchronise(const bool pOnlyPull)
 {
     // Synchronise our local workspace with PMR
 
-    if (fetch()
-      && merge()
-      && !pOnlyPull) {
+    if (fetch() && merge() && !pOnlyPull) {
         // We've successfully fetched and merged
         // so push if we are allowed to.
 
         push();
     }
 
-    emit workspaceSynchronised(this);
-    }
+    emit workspaceSynchronized(this);
+}
 
 //==============================================================================
 

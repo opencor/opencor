@@ -63,7 +63,7 @@ private:
 
 signals:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

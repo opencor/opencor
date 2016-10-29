@@ -115,7 +115,7 @@ signals:
     void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
-    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
     void authenticate(const bool &pAuthenticate = true);
