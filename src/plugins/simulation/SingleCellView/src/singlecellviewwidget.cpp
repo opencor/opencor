@@ -197,6 +197,8 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
         if (fileType != SedmlFile)
             delete sedmlFile;
 
+        Core::resetList(sedmlFileIssues);
+
         return res;
     } else {
         return false;
@@ -721,8 +723,8 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
     // Make sure that we have an algorithm
 
     if (!pSedmlAlgorithm) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one or two simulations with an algorithm are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with one or two simulations with an algorithm are supported"));
 
         return false;
     }
@@ -741,8 +743,8 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
     }
 
     if (!usedSolverInterface) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("unsupported algorithm (%1)").arg(kisaoId));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("unsupported algorithm (%1)").arg(kisaoId));
 
         return false;
     }
@@ -754,8 +756,8 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
         QString id = usedSolverInterface->id(kisaoId);
 
         if (id.isEmpty() || !id.compare(usedSolverInterface->solverName())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("unsupported algorithm parameter (%1)").arg(kisaoId));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("unsupported algorithm parameter (%1)").arg(kisaoId));
 
             return false;
         }
@@ -798,8 +800,8 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
             }
 
             if (!validSolverProperties) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("incomplete algorithm annotation (missing algorithm property information)"));
+                pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                     tr("incomplete algorithm annotation (missing algorithm property information)"));
 
                 return false;
             }
@@ -819,8 +821,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
 
     if (sedmlDocument->getNumModels() != 1) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one model are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with one model are supported"));
 
         return false;
     }
@@ -833,8 +835,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     if (   language.compare(SEDMLSupport::Language::Cellml)
         && language.compare(SEDMLSupport::Language::Cellml_1_0)
         && language.compare(SEDMLSupport::Language::Cellml_1_1)) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with a CellML file are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with a CellML file are supported"));
 
         return false;
     }
@@ -844,8 +846,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     int nbOfSimulations = sedmlDocument->getNumSimulations();
 
     if ((nbOfSimulations != 1) && (nbOfSimulations != 2)) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one or two simulations are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with one or two simulations are supported"));
 
         return false;
     }
@@ -855,8 +857,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     libsedml::SedSimulation *firstSimulation = sedmlDocument->getSimulation(0);
 
     if (firstSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
 
         return false;
     }
@@ -872,22 +874,22 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     int nbOfPoints = uniformTimeCourse->getNumberOfPoints();
 
     if (initialTime != outputStartTime) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with the same values for initialTime and outputStartTime are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files with the same values for initialTime and outputStartTime are supported"));
 
         return false;
     }
 
     if (outputStartTime == outputEndTime) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("the values for outputStartTime and outputEndTime must be different"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("the values for outputStartTime and outputEndTime must be different"));
 
         return false;
     }
 
     if (nbOfPoints <= 0) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("the value for numberOfPoints must be greater than zero"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("the value for numberOfPoints must be greater than zero"));
 
         return false;
     }
@@ -917,16 +919,16 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
             if ((nameIndex != -1) && !node.getAttrValue(nameIndex).empty()) {
                 if (hasNlaSolver) {
-                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                     tr("only one NLA solver is allowed"));
+                    pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                         tr("only one NLA solver is allowed"));
 
                     return false;
                 } else {
                     hasNlaSolver = true;
                 }
             } else {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("incomplete simulation annotation (missing NLA solver name)"));
+                pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                     tr("incomplete simulation annotation (missing NLA solver name)"));
 
                 return false;
             }
@@ -941,8 +943,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         // Make sure that the second simulation is a one-step simulation
 
         if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with a one-step as a second simulation are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with a one-step as a second simulation are supported"));
 
             return false;
         }
@@ -950,8 +952,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         // Make sure that its step is greater than zero
 
         if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("the value for step must be greater than zero"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                 tr("the value for step must be greater than zero"));
 
             return false;
         }
@@ -978,8 +980,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             secondSimulationAnnotation->write(secondXmlStream);
 
         if (firstStream.str().compare(secondStream.str())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with two simulations with the same algorithm are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with two simulations with the same algorithm are supported"));
 
             return false;
         }
@@ -991,8 +993,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     const uint totalNbOfTasks = secondSimulation?3:2;
 
     if (sedmlDocument->getNumTasks() != totalNbOfTasks) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files that execute one or two simulations once are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files that execute one or two simulations once are supported"));
 
         return false;
     }
@@ -1073,8 +1075,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         || !firstSubTaskOk || repeatedTaskFirstSubTaskId.compare(firstSubTaskId)
         || (     secondSimulation
             && (!secondSubTaskOk || repeatedTaskSecondSubTaskId.compare(secondSubTaskId)))) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files that execute one or two simulations once are supported"));
+        pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                             tr("only SED-ML files that execute one or two simulations once are supported"));
 
         return false;
     }
@@ -1088,8 +1090,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         libsedml::SedDataGenerator *dataGenerator = sedmlDocument->getDataGenerator(i);
 
         if ((dataGenerator->getNumVariables() != 1) || dataGenerator->getNumParameters()) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with data generators for one variable are supported"));
 
             return false;
         }
@@ -1097,15 +1099,15 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         libsedml::SedVariable *variable = dataGenerator->getVariable(0);
 
         if (variable->getSymbol().size() || variable->getModelReference().size()) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable with a target and a task reference are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with data generators for one variable with a target and a task reference are supported"));
 
             return false;
         }
 
         if (variable->getTaskReference().compare(repeatedTask->getId())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable with a reference to a repeated task are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with data generators for one variable with a reference to a repeated task are supported"));
 
             return false;
         }
@@ -1138,8 +1140,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         }
 
         if (!referencingCellmlVariable) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable with a reference to a CellML variable are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with data generators for one variable with a reference to a CellML variable are supported"));
 
             return false;
         }
@@ -1165,8 +1167,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
                 }
 
                 if (!validVariableDegree) {
-                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                     tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
+                    pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                         tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
 
                     return false;
                 }
@@ -1177,8 +1179,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
         if (   (mathNode->getType() != libsbml::AST_NAME)
             || variable->getId().compare(mathNode->getName())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable that is not modified are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with data generators for one variable that is not modified are supported"));
 
             return false;
         }
@@ -1190,8 +1192,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
         libsedml::SedOutput *output = sedmlDocument->getOutput(i);
 
         if (output->getTypeCode() != libsedml::SEDML_OUTPUT_PLOT2D) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with 2D outputs are supported"));
+            pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                 tr("only SED-ML files with 2D outputs are supported"));
 
             return false;
         }
@@ -1205,16 +1207,16 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             libsedml::SedCurve *curve = plot->getCurve(j);
 
             if (curve->getLogX() || curve->getLogY()) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("only SED-ML files with linear 2D outputs are supported"));
+                pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
+                                                                     tr("only SED-ML files with linear 2D outputs are supported"));
 
                 return false;
             }
 
             if (   !sedmlDocument->getDataGenerator(curve->getXDataReference())
                 || !sedmlDocument->getDataGenerator(curve->getYDataReference())) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("a curve must reference existing data generators"));
+                pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                     tr("a curve must reference existing data generators"));
 
                 return false;
             }
@@ -1317,8 +1319,8 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
                                                                                  << pCellmlFile->dependencies(true));
                 }
             } else {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("%1 could not be found").arg(modelSource));
+                pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                     tr("%1 could not be found").arg(modelSource));
             }
         } else {
             // Handle the case where our model source is a relative remote file
@@ -1351,12 +1353,12 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
                     mLocallyManagedCellmlFiles.insert(pFileName, cellmlFileName);
                 } else {
-                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                     tr("%1 could not be saved").arg(modelSource));
+                    pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                         tr("%1 could not be saved").arg(modelSource));
                 }
             } else {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+                pSedmlFileIssues << new SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                                     tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
             }
         }
     }
@@ -1401,7 +1403,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
 
-    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
+    Core::resetList(pSedmlFileIssues);
     pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
 
     if (pCombineArchive)

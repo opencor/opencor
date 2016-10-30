@@ -29,7 +29,13 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
+#ifdef Q_OS_WIN
+    #include <QSet>
+#endif
 #include <QString>
+#ifdef Q_OS_WIN
+    #include <QVector>
+#endif
 
 //==============================================================================
 
@@ -52,8 +58,6 @@ public:
                             const int &pColumn, const QString &pMessage);
     explicit SedmlFileIssue(const Type &pType, const QString &pMessage);
 
-    bool operator<(const SedmlFileIssue &pIssue) const;
-
     Type type() const;
     int line() const;
     int column() const;
@@ -71,7 +75,14 @@ private:
 
 //==============================================================================
 
-typedef QList<SedmlFileIssue> SedmlFileIssues;
+class SEDMLSUPPORT_EXPORT SedmlFileIssues : public QList<SedmlFileIssue *>
+{
+public:
+    void sort();
+
+private:
+    static bool compare(SedmlFileIssue *pIssue1, SedmlFileIssue *pIssue2);
+};
 
 //==============================================================================
 

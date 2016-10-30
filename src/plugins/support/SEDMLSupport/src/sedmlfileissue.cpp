@@ -67,27 +67,6 @@ SedmlFileIssue::SedmlFileIssue(const Type &pType, const QString &pMessage)
 
 //==============================================================================
 
-bool SedmlFileIssue::operator<(const SedmlFileIssue &pIssue) const
-{
-    // Return whether the current issue is lower than the given one
-
-    return (mLine < pIssue.line())?
-               true:
-               (mLine > pIssue.line())?
-                   false:
-                   (mColumn < pIssue.column())?
-                       true:
-                       (mColumn > pIssue.column())?
-                           false:
-                            (mType < pIssue.type())?
-                                true:
-                                (mType > pIssue.type())?
-                                    false:
-                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 SedmlFileIssue::Type SedmlFileIssue::type() const
 {
     // Return the issue's type
@@ -120,6 +99,35 @@ QString SedmlFileIssue::message() const
     // Return the issue's message
 
     return mMessage;
+}
+
+//==============================================================================
+
+void SedmlFileIssues::sort()
+{
+    // Sort our issues
+
+    std::sort(begin(), end(), compare);
+}
+
+//==============================================================================
+
+bool SedmlFileIssues::compare(SedmlFileIssue *pIssue1, SedmlFileIssue *pIssue2)
+{
+    // Determine which of the two issues should be first
+
+    if (pIssue1->line() == pIssue2->line()) {
+        if (pIssue1->column() == pIssue2->column()) {
+            if (pIssue1->type() == pIssue2->type())
+                return pIssue1->message().compare(pIssue2->message(), Qt::CaseInsensitive) < 0;
+            else
+                return pIssue1->type() < pIssue2->type();
+        } else {
+            return pIssue1->column() < pIssue2->column();
+        }
+    } else {
+        return pIssue1->line() < pIssue2->line();
+    }
 }
 
 //==============================================================================

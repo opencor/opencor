@@ -29,10 +29,11 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
-#include <QString>
-
 #ifdef Q_OS_WIN
     #include <QSet>
+#endif
+#include <QString>
+#ifdef Q_OS_WIN
     #include <QVector>
 #endif
 
