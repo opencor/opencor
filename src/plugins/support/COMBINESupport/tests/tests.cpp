@@ -206,8 +206,8 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid(mIssues));
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first()->message(), QString("the archive does not have a manifest"));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first()->message(), QString("the archive does not have a manifest"));
 
     // Try to load a COMBINE archive which manifest is not a valid OMEX file
 
@@ -215,8 +215,8 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid(mIssues));
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first()->message(), QString("the manifest is not a valid OMEX file"));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first()->message(), QString("the manifest is not a valid OMEX file"));
 
     // Try to load a COMBINE archive that contains a non-existent file
 
@@ -224,8 +224,8 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid(mIssues));
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first()->message(), QString("<strong>nonexistentfile.txt</strong> could not be found"));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first()->message(), QString("<strong>nonexistentfile.txt</strong> could not be found"));
 
     // Try to load a COMBINE archive which manifest doesn't reference the
     // COMBINE archive itself
@@ -234,8 +234,8 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid(mIssues));
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first()->message(), QString("no reference to the COMBINE archive itself could be found"));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first()->message(), QString("no reference to the COMBINE archive itself could be found"));
 }
 
 //==============================================================================
