@@ -151,7 +151,8 @@ void CombineArchive::reset()
     mLoadingNeeded = true;
 
     mFiles.clear();
-    mIssues.clear();
+
+    Core::resetList(mIssues);
 }
 
 //==============================================================================
@@ -175,8 +176,8 @@ bool CombineArchive::load()
     if (mNew) {
         return true;
     } else if (!QFile::exists(mFileName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("the archive does not exist"));
+        mIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("the archive does not exist"));
 
         return false;
     }
@@ -192,8 +193,8 @@ bool CombineArchive::load()
     uchar signatureData[SignatureSize];
 
     if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("the archive is not signed"));
+        mIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("the archive is not signed"));
 
         return false;
     }
@@ -204,8 +205,8 @@ bool CombineArchive::load()
                      +(signatureData[3] << 24);
 
     if (signature != 0x04034b50) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("the archive does not have the correct signature"));
+        mIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("the archive does not have the correct signature"));
 
         return false;
     }
@@ -215,8 +216,8 @@ bool CombineArchive::load()
     zipReader.device()->reset();
 
     if (!zipReader.extractAll(mDirName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("the contents of the archive could not be extracted"));
+        mIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("the contents of the archive could not be extracted"));
 
         return false;
     }
@@ -302,14 +303,14 @@ bool CombineArchive::save(const QString &pFileName)
 
 //==============================================================================
 
-bool CombineArchive::isValid()
+bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
 {
     // Make sure that we are loaded and fine
 
     if (!load())
         return false;
     else
-        mIssues.clear();
+        Core::resetList(pIssues);
 
     // Consider ourselves valid if new
 
@@ -321,8 +322,8 @@ bool CombineArchive::isValid()
     QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
 
     if (!QFile::exists(manifestFileName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("the archive does not have a manifest"));
+        pIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("the archive does not have a manifest"));
 
         return false;
     }
@@ -336,8 +337,8 @@ bool CombineArchive::isValid()
     Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("the manifest is not a valid OMEX file"));
+        pIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("the manifest is not a valid OMEX file"));
 
         return false;
     }
@@ -357,8 +358,8 @@ bool CombineArchive::isValid()
         QString fileName = mDirName+QDir::separator()+location;
 
         if (!QFile::exists(fileName)) {
-            mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                           QObject::tr("<strong>%1</strong> could not be found").arg(location));
+            pIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                               QObject::tr("<strong>%1</strong> could not be found").arg(location));
 
             mFiles.clear();
 
@@ -391,8 +392,8 @@ bool CombineArchive::isValid()
     }
 
     if (!combineArchiveReferenceFound) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
-                                       QObject::tr("no reference to the COMBINE archive itself could be found"));
+        pIssues << new CombineArchiveIssue(CombineArchiveIssue::Error,
+                                           QObject::tr("no reference to the COMBINE archive itself could be found"));
 
         mFiles.clear();
 

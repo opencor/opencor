@@ -198,6 +198,7 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
             delete sedmlFile;
 
         Core::resetList(sedmlFileIssues);
+        Core::resetList(combineArchiveIssues);
 
         return res;
     } else {
@@ -1233,17 +1234,16 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
 {
     // Load and make sure that our COMBINE archive is valid
 
-    if (!pCombineArchive->load() || !pCombineArchive->isValid()) {
-        pCombineArchiveIssues = pCombineArchive->issues();
-
+    if (   !pCombineArchive->load()
+        || !pCombineArchive->isValid(pCombineArchiveIssues)) {
         return false;
     }
 
     // Make sure that there is only one master file in our COMBINE archive
 
     if (pCombineArchive->masterFiles().count() != 1) {
-        pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                                     tr("only COMBINE archives with one master file are supported"));
+        pCombineArchiveIssues << new COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
+                                                                         tr("only COMBINE archives with one master file are supported"));
 
         return false;
     }
@@ -1404,7 +1404,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     // corresponding CellML file
 
     Core::resetList(pSedmlFileIssues);
-    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
+    Core::resetList(pCombineArchiveIssues);
 
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
