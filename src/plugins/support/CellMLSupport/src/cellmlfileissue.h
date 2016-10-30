@@ -80,7 +80,6 @@ private:
 class CELLMLSUPPORT_EXPORT CellmlFileIssues : public QList<CellmlFileIssue *>
 {
 public:
-    void reset();
     void sort();
 
 private:

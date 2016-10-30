@@ -111,9 +111,9 @@ void CellmlFile::reset()
     mRdfApiRepresentation = 0;
     mRdfDataSource = 0;
 
-    mRdfTriples.reset();
+    Core::resetList(mRdfTriples);
 
-    mIssues.reset();
+    Core::resetList(mIssues);
 
     Core::FileManager::instance()->setDependencies(mFileName, QStringList());
 
@@ -316,7 +316,7 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 {
     // Make sure that pIssues is empty
 
-    pIssues.reset();
+    Core::resetList(pIssues);
 
     // Get a bootstrap object and its model loader
 
@@ -571,7 +571,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
     // Make sure that pIssues is empty
 
-    pIssues.reset();
+    Core::resetList(pIssues);
 
     // Determine the number of errors and warnings
     // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of

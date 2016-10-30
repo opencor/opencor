@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -120,7 +119,6 @@ private:
 class Plugins : public QList<Plugin *>
 {
 public:
-    void reset();
     void sort();
 
 private:

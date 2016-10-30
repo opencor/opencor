@@ -126,18 +126,6 @@ QString CellmlFileIssue::importedFile() const
 
 //==============================================================================
 
-void CellmlFileIssues::reset()
-{
-    // Reset our issues
-
-    for (int i = 0, iMax = size(); i < iMax; ++i)
-        delete (*this)[i];
-
-    clear();
-}
-
-//==============================================================================
-
 void CellmlFileIssues::sort()
 {
     // Sort our issues

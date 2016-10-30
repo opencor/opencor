@@ -95,7 +95,6 @@ private:
 class CellmlAnnotationViewMetadataEditDetailsItems : public QList<CellmlAnnotationViewMetadataEditDetailsItem *>
 {
 public:
-    void reset();
     void sort();
 
 private:

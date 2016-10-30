@@ -20,6 +20,11 @@ limitations under the License.
 // Data store interface
 //==============================================================================
 
+#ifdef OpenCOR_MAIN
+    #include "cliutils.h"
+#else
+    #include "corecliutils.h"
+#endif
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -199,18 +204,6 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-void DataStoreVariables::reset()
-{
-    // Reset our variables
-
-    for (int i = 0, iMax = size(); i < iMax; ++i)
-        delete (*this)[i];
-
-    clear();
-}
-
-//==============================================================================
-
 void DataStoreVariables::sort()
 {
     // Sort our variables
@@ -277,7 +270,11 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    mVariables.reset();
+#ifdef OpenCOR_MAIN
+    resetList(mVariables);
+#else
+    Core::resetList(mVariables);
+#endif
 }
 
 //==============================================================================

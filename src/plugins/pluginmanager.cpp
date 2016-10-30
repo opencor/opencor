@@ -193,7 +193,11 @@ PluginManager::~PluginManager()
 {
     // Delete some internal objects
 
-    mPlugins.reset();
+#ifdef OpenCOR_MAIN
+    resetList(mPlugins);
+#else
+    Core::resetList(mPlugins);
+#endif
 }
 
 //==============================================================================

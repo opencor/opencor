@@ -113,18 +113,6 @@ QString CellmlAnnotationViewMetadataEditDetailsItem::id() const
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsItems::reset()
-{
-    // Reset our items
-
-    for (int i = 0, iMax = size(); i < iMax; ++i)
-        delete (*this)[i];
-
-    clear();
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsItems::sort()
 {
     // Sort our items
@@ -387,7 +375,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::~CellmlAnnotationViewMetadataEdit
 {
     // Delete some internal objects
 
-    mItems.reset();
+    Core::resetList(mItems);
 }
 
 //==============================================================================
@@ -998,7 +986,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 {
     // Reset our items
 
-    mItems.reset();
+    Core::resetList(mItems);
 
     // Retrieve the list of terms, should there be a network reply
 

@@ -366,7 +366,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         editorList->selectFirstItem();
 
-        cellmlFileIssues.reset();
+        Core::resetList(cellmlFileIssues);
 
         return res;
     } else {

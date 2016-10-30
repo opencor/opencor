@@ -501,7 +501,7 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
     resetFunctions();
 
     if (pResetIssues)
-        mIssues.reset();
+        Core::resetList(mIssues);
 
     if (!mParameters.contains(mVariableOfIntegration))
         delete mVariableOfIntegration;
