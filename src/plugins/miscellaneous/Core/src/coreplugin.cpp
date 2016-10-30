@@ -534,7 +534,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
             // supported file types, but only if they are not already in our
             // list
 
-            foreach (FileType *fileType, fileTypeInterface->fileTypes()) {
+            foreach (const FileType &fileType, fileTypeInterface->fileTypes()) {
                 if (!supportedFileTypes.contains(fileType))
                     supportedFileTypes << fileType;
             }

@@ -49,8 +49,8 @@ COMBINESupportPlugin::COMBINESupportPlugin()
     // The file types that we support
     // Note: they will get deleted by FileTypeInterface...
 
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             CombineMimeType, CombineFileExtension);
+    mFileTypes = FileTypes() << FileType(qobject_cast<FileTypeInterface *>(this),
+                                         CombineMimeType, CombineFileExtension);
 
     mDefaultViews = QStringList() << "SingleCellView";
 }

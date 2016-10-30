@@ -57,8 +57,8 @@ CellMLSupportPlugin::CellMLSupportPlugin()
     // The file types that we support
     // Note: they will get deleted by FileTypeInterface...
 
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             CellmlMimeType, CellmlFileExtension);
+    mFileTypes = FileTypes() << FileType(qobject_cast<FileTypeInterface *>(this),
+                                         CellmlMimeType, CellmlFileExtension);
 
     mDefaultViews = QStringList() << "CellMLTextView" << "RawCellMLView" << "RawTextView";
 }

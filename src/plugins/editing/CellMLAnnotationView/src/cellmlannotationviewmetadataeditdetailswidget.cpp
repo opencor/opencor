@@ -28,7 +28,6 @@ limitations under the License.
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"
@@ -86,17 +85,17 @@ CellmlAnnotationViewMetadataEditDetailsItem::CellmlAnnotationViewMetadataEditDet
 
 //==============================================================================
 
-bool CellmlAnnotationViewMetadataEditDetailsItem::compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
-                                                          CellmlAnnotationViewMetadataEditDetailsItem *pItem2)
+bool CellmlAnnotationViewMetadataEditDetailsItem::compare(const CellmlAnnotationViewMetadataEditDetailsItem &pItem1,
+                                                          const CellmlAnnotationViewMetadataEditDetailsItem &pItem2)
 {
     // Determine which of the two items should be first
 
-    int nameComparison = pItem1->name().compare(pItem2->name());
-    int resourceComparison = pItem1->resource().compare(pItem2->resource());
+    int nameComparison = pItem1.name().compare(pItem2.name());
+    int resourceComparison = pItem1.resource().compare(pItem2.resource());
 
     return !nameComparison?
                 !resourceComparison?
-                    pItem1->id().compare(pItem2->id()) < 0:
+                    pItem1.id().compare(pItem2.id()) < 0:
                     resourceComparison < 0:
                 nameComparison < 0;
 }
@@ -147,7 +146,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mInternetConnectionAvailable(true),
     mInformationType(None),
     mLookUpInformation(false),
-    mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem *>()),
+    mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
     mEnabledItems(QMap<QString, bool>()),
     mCellmlFile(pCellmlFile),
     mElement(0),
@@ -355,15 +354,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::~CellmlAnnotationViewMetadataEditDetailsWidget()
-{
-    // Delete some internal objects
-
-    Core::resetList(mItems);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 {
     // Retranslate our action
@@ -450,19 +440,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
     foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
-        CellmlAnnotationViewMetadataEditDetailsItem *item = mItemsMapping.value(itemInformationSha1);
+        CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
         bool enabledButton;
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                       item->resource(), item->id());
+                                                       item.resource(), item.id());
         } else {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                       item->resource(), item->id());
+                                                       item.resource(), item.id());
         }
 
         if (enabledButton != mEnabledItems.value(itemInformationSha1)) {
@@ -581,16 +571,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
         QString ontologicalTerms = QString();
 
-        foreach (CellmlAnnotationViewMetadataEditDetailsItem *item, pItems) {
+        foreach (const CellmlAnnotationViewMetadataEditDetailsItem &item, pItems) {
             // Keep track of some information
 
-            QString itemInformation = item->resource()+"|"+item->id();
+            QString itemInformation = item.resource()+"|"+item.id();
             QString itemInformationSha1 = Core::sha1(itemInformation);
-            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item->resource());
-            QString idUrl = CellmlAnnotationViewWidget::idUrl(item->resource(), item->id());
+            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item.resource());
+            QString idUrl = CellmlAnnotationViewWidget::idUrl(item.resource(), item.id());
 
-            if (!mUrls.contains(item->resource()))
-                mUrls.insert(item->resource(), resourceUrl);
+            if (!mUrls.contains(item.resource()))
+                mUrls.insert(item.resource(), resourceUrl);
 
             mUrls.insert(itemInformation, idUrl);
 
@@ -603,13 +593,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
             ontologicalTerms += "<tr id=\"item_"+itemInformationSha1+"\">\n"
                                 "    <td>\n"
-                                "        "+item->name()+"\n"
+                                "        "+item.name()+"\n"
                                 "    </td>\n"
                                 "    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                "        <a href=\""+itemInformation+"\">"+item->resource()+"</a>\n"
+                                "        <a href=\""+itemInformation+"\">"+item.resource()+"</a>\n"
                                 "    </td>\n"
                                 "    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                "        <a href=\""+itemInformation+"\">"+item->id()+"</a>\n"
+                                "        <a href=\""+itemInformation+"\">"+item.id()+"</a>\n"
                                 "    </td>\n"
                                 "    <td id=\"button_"+itemInformationSha1+"\">\n"
                                 "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
@@ -826,7 +816,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
         // We have clicked on a button link, so retrieve the item associated
         // with it
 
-        CellmlAnnotationViewMetadataEditDetailsItem *item = mItemsMapping.value(mLink);
+        CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(mLink);
 
         // Add the ontological term to our CellML element as an RDF triple
 
@@ -835,11 +825,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                  item->resource(), item->id());
+                                                  item.resource(), item.id());
         } else {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                  item->resource(), item->id());
+                                                  item.resource(), item.id());
         }
 
         // Disable the add button, now that we have added the ontological term
@@ -968,9 +958,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
-    // Reset our items
+    // Clear our items
 
-    Core::resetList(mItems);
+    mItems.clear();
 
     // Retrieve the list of terms, should there be a network reply
 
@@ -1017,7 +1007,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                         // We have a name and we could decode the term, so add
                         // the item to our list
 
-                        mItems << new CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
+                        mItems << CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
                     }
                 }
             } else {

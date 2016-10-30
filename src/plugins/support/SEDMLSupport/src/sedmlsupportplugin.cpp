@@ -57,8 +57,8 @@ SEDMLSupportPlugin::SEDMLSupportPlugin()
     // The file types that we support
     // Note: they will get deleted by FileTypeInterface...
 
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             SedmlMimeType, SedmlFileExtension);
+    mFileTypes = FileTypes() << FileType(qobject_cast<FileTypeInterface *>(this),
+                                         SedmlMimeType, SedmlFileExtension);
 
     mDefaultViews = QStringList() << "SingleCellView" << "RawSEDMLView" << "RawTextView";
 }
