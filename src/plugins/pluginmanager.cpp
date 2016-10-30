@@ -217,7 +217,7 @@ Plugins PluginManager::sortedPlugins() const
 
     Plugins res = mPlugins;
 
-    res.sort();
+    std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
 }
@@ -239,7 +239,7 @@ Plugins PluginManager::sortedLoadedPlugins() const
 
     Plugins res = mLoadedPlugins;
 
-    res.sort();
+    std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
 }

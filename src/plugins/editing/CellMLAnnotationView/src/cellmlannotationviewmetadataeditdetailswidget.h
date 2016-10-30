@@ -80,6 +80,9 @@ public:
                                                          const QString &pResource = QString(),
                                                          const QString &pId = QString());
 
+    static bool compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
+                        CellmlAnnotationViewMetadataEditDetailsItem *pItem2);
+
     QString name() const;
     QString resource() const;
     QString id() const;
@@ -92,15 +95,7 @@ private:
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsItems : public QList<CellmlAnnotationViewMetadataEditDetailsItem *>
-{
-public:
-    void sort();
-
-private:
-    static bool compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
-                        CellmlAnnotationViewMetadataEditDetailsItem *pItem2);
-};
+typedef QList<CellmlAnnotationViewMetadataEditDetailsItem *> CellmlAnnotationViewMetadataEditDetailsItems;
 
 //==============================================================================
 

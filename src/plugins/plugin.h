@@ -85,6 +85,8 @@ public:
                     PluginManager *pPluginManager);
     ~Plugin();
 
+    static bool compare(Plugin *pPlugin1, Plugin *pPlugin2);
+
     QString name() const;
     PluginInfo * info() const;
     QString errorMessage() const;
@@ -116,14 +118,7 @@ private:
 
 //==============================================================================
 
-class Plugins : public QList<Plugin *>
-{
-public:
-    void sort();
-
-private:
-    static bool compare(Plugin *pPlugin1, Plugin *pPlugin2);
-};
+typedef QList<Plugin *> Plugins;
 
 //==============================================================================
 

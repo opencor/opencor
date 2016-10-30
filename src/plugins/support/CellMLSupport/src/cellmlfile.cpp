@@ -673,9 +673,10 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
                                        importedFile);
     }
 
-    // Sort our issues
+    // Sort our issues (since the CellML API may generate them in a non-ordered
+    // manner)
 
-    pIssues.sort();
+    std::sort(pIssues.begin(), pIssues.end(), CellmlFileIssue::compare);
 
     return !cellmlErrorsCount;
 }

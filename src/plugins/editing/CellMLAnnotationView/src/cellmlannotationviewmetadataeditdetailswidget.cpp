@@ -86,6 +86,23 @@ CellmlAnnotationViewMetadataEditDetailsItem::CellmlAnnotationViewMetadataEditDet
 
 //==============================================================================
 
+bool CellmlAnnotationViewMetadataEditDetailsItem::compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
+                                                          CellmlAnnotationViewMetadataEditDetailsItem *pItem2)
+{
+    // Determine which of the two items should be first
+
+    int nameComparison = pItem1->name().compare(pItem2->name());
+    int resourceComparison = pItem1->resource().compare(pItem2->resource());
+
+    return !nameComparison?
+                !resourceComparison?
+                    pItem1->id().compare(pItem2->id()) < 0:
+                    resourceComparison < 0:
+                nameComparison < 0;
+}
+
+//==============================================================================
+
 QString CellmlAnnotationViewMetadataEditDetailsItem::name() const
 {
     // Return our name
@@ -109,39 +126,6 @@ QString CellmlAnnotationViewMetadataEditDetailsItem::id() const
     // Return our id
 
     return mId;
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataEditDetailsItems::sort()
-{
-    // Sort our items
-
-    std::sort(begin(), end(), compare);
-}
-
-//==============================================================================
-
-bool CellmlAnnotationViewMetadataEditDetailsItems::compare(CellmlAnnotationViewMetadataEditDetailsItem *pItem1,
-                                                           CellmlAnnotationViewMetadataEditDetailsItem *pItem2)
-{
-    // Determine which of the two items should be first
-
-    int nameComparison = pItem1->name().compare(pItem2->name());
-    int resourceComparison = pItem1->resource().compare(pItem2->resource());
-    int idComparison = pItem1->id().compare(pItem2->id());
-
-    return (nameComparison < 0)?
-               true:
-               (nameComparison > 0)?
-                   false:
-                   (resourceComparison < 0)?
-                       true:
-                       (resourceComparison > 0)?
-                           false:
-                           (idComparison < 0)?
-                               true:
-                               false;
 }
 
 //==============================================================================
@@ -1049,7 +1033,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Update our GUI with the results of the look up after having sorted them
     // and kept track of it size
 
-    mItems.sort();
+    std::sort(mItems.begin(), mItems.end(), CellmlAnnotationViewMetadataEditDetailsItem::compare);
 
     updateItemsGui(mItems, false, errorMessage, internetConnectionAvailable);
 

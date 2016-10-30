@@ -73,6 +73,28 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
 
 //==============================================================================
 
+bool CellmlFileRuntimeParameter::compare(CellmlFileRuntimeParameter *pParameter1,
+                                         CellmlFileRuntimeParameter *pParameter2)
+{
+    // Determine which of the two parameters should be first
+    // Note: the two comparisons are case insensitive, so that it's easier for
+    //       people to find a parameter...
+
+    QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
+    QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
+
+    if (!componentHierarchy1.compare(componentHierarchy2)) {
+        if (!pParameter1->name().compare(pParameter2->name()))
+            return pParameter1->degree() < pParameter2->degree();
+        else
+            return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
+    } else {
+        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
+    }
+}
+
+//==============================================================================
+
 QString CellmlFileRuntimeParameter::name() const
 {
     // Return our name
@@ -168,37 +190,6 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
     }
 
     return mUnit+perVoiUnitDegree;
-}
-
-//==============================================================================
-
-void CellmlFileRuntimeParameters::sort()
-{
-    // Sort our parameters
-
-    std::sort(begin(), end(), compare);
-}
-
-//==============================================================================
-
-bool CellmlFileRuntimeParameters::compare(CellmlFileRuntimeParameter *pParameter1,
-                                          CellmlFileRuntimeParameter *pParameter2)
-{
-    // Determine which of the two parameters should be first
-    // Note: the two comparisons are case insensitive, so that it's easier for
-    //       people to find a parameter...
-
-    QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
-    QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
-
-    if (!componentHierarchy1.compare(componentHierarchy2)) {
-        if (!pParameter1->name().compare(pParameter2->name()))
-            return pParameter1->degree() < pParameter2->degree();
-        else
-            return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
-    } else {
-        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
-    }
 }
 
 //==============================================================================
@@ -929,7 +920,7 @@ void CellmlFileRuntime::update()
         }
     }
 
-    mParameters.sort();
+    std::sort(mParameters.begin(), mParameters.end(), CellmlFileRuntimeParameter::compare);
 
     // Generate the model code
 

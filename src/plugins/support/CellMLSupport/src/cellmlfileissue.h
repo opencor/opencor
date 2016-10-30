@@ -29,13 +29,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
-#ifdef Q_OS_WIN
-    #include <QSet>
-#endif
 #include <QString>
-#ifdef Q_OS_WIN
-    #include <QVector>
-#endif
 
 //==============================================================================
 
@@ -56,6 +50,8 @@ public:
                              const int &pColumn, const QString &pMessage,
                              const QString &pImportedFile);
     explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
+
+    static bool compare(CellmlFileIssue *pIssue1, CellmlFileIssue *pIssue2);
 
     Type type() const;
     int line() const;
@@ -78,14 +74,7 @@ private:
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileIssues : public QList<CellmlFileIssue *>
-{
-public:
-    void sort();
-
-private:
-    static bool compare(CellmlFileIssue *pIssue1, CellmlFileIssue *pIssue2);
-};
+typedef QList<CellmlFileIssue *> CellmlFileIssues;
 
 //==============================================================================
 

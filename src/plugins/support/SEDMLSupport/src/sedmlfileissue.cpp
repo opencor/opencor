@@ -103,35 +103,6 @@ QString SedmlFileIssue::message() const
 
 //==============================================================================
 
-void SedmlFileIssues::sort()
-{
-    // Sort our issues
-
-    std::sort(begin(), end(), compare);
-}
-
-//==============================================================================
-
-bool SedmlFileIssues::compare(SedmlFileIssue *pIssue1, SedmlFileIssue *pIssue2)
-{
-    // Determine which of the two issues should be first
-
-    if (pIssue1->line() == pIssue2->line()) {
-        if (pIssue1->column() == pIssue2->column()) {
-            if (pIssue1->type() == pIssue2->type())
-                return pIssue1->message().compare(pIssue2->message(), Qt::CaseInsensitive) < 0;
-            else
-                return pIssue1->type() < pIssue2->type();
-        } else {
-            return pIssue1->column() < pIssue2->column();
-        }
-    } else {
-        return pIssue1->line() < pIssue2->line();
-    }
-}
-
-//==============================================================================
-
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
 

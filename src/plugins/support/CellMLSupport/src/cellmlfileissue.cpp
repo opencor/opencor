@@ -71,6 +71,26 @@ CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage)
 
 //==============================================================================
 
+bool CellmlFileIssue::compare(CellmlFileIssue *pIssue1,
+                              CellmlFileIssue *pIssue2)
+{
+    // Determine which of the two issues should be first
+
+    if (pIssue1->line() == pIssue2->line()) {
+        if (pIssue1->column() == pIssue2->column()) {
+            if (pIssue1->type() == pIssue2->type())
+                return pIssue1->message().compare(pIssue2->message(), Qt::CaseInsensitive) < 0;
+            else
+                return pIssue1->type() < pIssue2->type();
+        } else {
+            return pIssue1->column() < pIssue2->column();
+        }
+    } else {
+        return pIssue1->line() < pIssue2->line();
+    }
+}
+//==============================================================================
+
 CellmlFileIssue::Type CellmlFileIssue::type() const
 {
     // Return the issue's type
@@ -122,36 +142,6 @@ QString CellmlFileIssue::importedFile() const
     // Return the issue's imported file
 
     return mImportedFile;
-}
-
-//==============================================================================
-
-void CellmlFileIssues::sort()
-{
-    // Sort our issues
-
-    std::sort(begin(), end(), compare);
-}
-
-//==============================================================================
-
-bool CellmlFileIssues::compare(CellmlFileIssue *pIssue1,
-                               CellmlFileIssue *pIssue2)
-{
-    // Determine which of the two issues should be first
-
-    if (pIssue1->line() == pIssue2->line()) {
-        if (pIssue1->column() == pIssue2->column()) {
-            if (pIssue1->type() == pIssue2->type())
-                return pIssue1->message().compare(pIssue2->message(), Qt::CaseInsensitive) < 0;
-            else
-                return pIssue1->type() < pIssue2->type();
-        } else {
-            return pIssue1->column() < pIssue2->column();
-        }
-    } else {
-        return pIssue1->line() < pIssue2->line();
-    }
 }
 
 //==============================================================================

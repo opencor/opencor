@@ -63,6 +63,18 @@ DataStoreVariable::~DataStoreVariable()
 
 //==============================================================================
 
+bool DataStoreVariable::compare(DataStoreVariable *pVariable1,
+                                DataStoreVariable *pVariable2)
+{
+    // Determine which of the two variables should be first based on their URI
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a variable...
+
+    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 bool DataStoreVariable::isVisible() const
 {
     // Return whether we are visible, i.e. we have a non-empty URI
@@ -204,27 +216,6 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-void DataStoreVariables::sort()
-{
-    // Sort our variables
-
-    std::sort(begin(), end(), compare);
-}
-
-//==============================================================================
-
-bool DataStoreVariables::compare(DataStoreVariable *pVariable1,
-                                 DataStoreVariable *pVariable2)
-{
-    // Determine which of the two variables should be first based on their URI
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a variable...
-
-    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 DataStoreData::DataStoreData(const QString &pFileName,
                              const DataStoreVariables &pSelectedVariables) :
     mFileName(pFileName),
@@ -306,7 +297,7 @@ DataStoreVariables DataStore::voiAndVariables()
 
     res << mVoi << mVariables;
 
-    res.sort();
+    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
 
     return res;
 }
@@ -339,7 +330,7 @@ DataStoreVariables DataStore::variables()
 {
     // Return all our variables, after making sure that they are sorted
 
-    mVariables.sort();
+    std::sort(mVariables.begin(), mVariables.end(), DataStoreVariable::compare);
 
     return mVariables;
 }

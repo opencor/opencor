@@ -43,6 +43,9 @@ public:
     explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
     ~DataStoreVariable();
 
+    static bool compare(DataStoreVariable *pVariable1,
+                        DataStoreVariable *pVariable2);
+
     bool isVisible() const;
 
     QIcon icon() const;
@@ -80,15 +83,7 @@ private:
 
 //==============================================================================
 
-class DataStoreVariables : public QList<DataStoreVariable *>
-{
-public:
-    void sort();
-
-private:
-    static bool compare(DataStoreVariable *pVariable1,
-                        DataStoreVariable *pVariable2);
-};
+typedef QList<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 

@@ -86,6 +86,9 @@ public:
                                         const ParameterType &pType,
                                         const int &pIndex);
 
+    static bool compare(CellmlFileRuntimeParameter *pParameter1,
+                        CellmlFileRuntimeParameter *pParameter2);
+
     QString name() const;
     int degree() const;
     QString unit() const;
@@ -110,15 +113,7 @@ private:
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameters : public QList<CellmlFileRuntimeParameter *>
-{
-public:
-    void sort();
-
-private:
-    static bool compare(CellmlFileRuntimeParameter *pParameter1,
-                        CellmlFileRuntimeParameter *pParameter2);
-};
+typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
 
 //==============================================================================
 

@@ -75,14 +75,7 @@ private:
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFileIssues : public QList<SedmlFileIssue *>
-{
-public:
-    void sort();
-
-private:
-    static bool compare(SedmlFileIssue *pIssue1, SedmlFileIssue *pIssue2);
-};
+typedef QList<SedmlFileIssue *> SedmlFileIssues;
 
 //==============================================================================
 
