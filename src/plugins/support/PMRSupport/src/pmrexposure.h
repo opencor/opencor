@@ -31,9 +31,6 @@ limitations under the License.
 #include <QList>
 #ifdef Q_OS_WIN
     #include <QSet>
-#endif
-#include <QString>
-#ifdef Q_OS_WIN
     #include <QVector>
 #endif
 
@@ -49,7 +46,8 @@ class PMRSUPPORT_EXPORT PmrExposure
 public:
     explicit PmrExposure(const QString &pUrl, const QString &pName);
 
-    static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
+    static bool compare(const PmrExposure *pExposure1,
+                        const PmrExposure *pExposure2);
 
     QString url() const;
     QString name() const;
