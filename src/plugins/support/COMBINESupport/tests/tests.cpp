@@ -129,7 +129,7 @@ void Tests::basicTests()
     QString yetAnotherFileName = OpenCOR::Core::temporaryFileName();
 
     QVERIFY(otherCombineArchive.load());
-    QVERIFY(otherCombineArchive.isValid());
+    QVERIFY(otherCombineArchive.isValid(mIssues));
     QVERIFY(otherCombineArchive.save(yetAnotherFileName));
 
     // Unzip our two COMBINE archives and make sure that their contents is the
@@ -203,27 +203,27 @@ void Tests::loadingErrorTests()
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nomanifest.omex"));
 
     QVERIFY(combineArchive.reload());
-    QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("the archive does not have a manifest"));
+    QVERIFY(!combineArchive.isValid(mIssues));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first().message(), QString("the archive does not have a manifest"));
 
     // Try to load a COMBINE archive which manifest is not a valid OMEX file
 
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/notvalidomex.omex"));
 
     QVERIFY(combineArchive.reload());
-    QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("the manifest is not a valid OMEX file"));
+    QVERIFY(!combineArchive.isValid(mIssues));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first().message(), QString("the manifest is not a valid OMEX file"));
 
     // Try to load a COMBINE archive that contains a non-existent file
 
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nonexistentfile.omex"));
 
     QVERIFY(combineArchive.reload());
-    QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("<strong>nonexistentfile.txt</strong> could not be found"));
+    QVERIFY(!combineArchive.isValid(mIssues));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first().message(), QString("<strong>nonexistentfile.txt</strong> could not be found"));
 
     // Try to load a COMBINE archive which manifest doesn't reference the
     // COMBINE archive itself
@@ -231,9 +231,9 @@ void Tests::loadingErrorTests()
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nocombinearchivereference.omex"));
 
     QVERIFY(combineArchive.reload());
-    QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("no reference to the COMBINE archive itself could be found"));
+    QVERIFY(!combineArchive.isValid(mIssues));
+    QVERIFY(mIssues.count() == 1);
+    QCOMPARE(mIssues.first().message(), QString("no reference to the COMBINE archive itself could be found"));
 }
 
 //==============================================================================

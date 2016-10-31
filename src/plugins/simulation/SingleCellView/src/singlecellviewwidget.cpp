@@ -1231,9 +1231,8 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
 {
     // Load and make sure that our COMBINE archive is valid
 
-    if (!pCombineArchive->load() || !pCombineArchive->isValid()) {
-        pCombineArchiveIssues = pCombineArchive->issues();
-
+    if (   !pCombineArchive->load()
+        || !pCombineArchive->isValid(pCombineArchiveIssues)) {
         return false;
     }
 
@@ -1401,8 +1400,8 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
 
-    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
-    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
+    pSedmlFileIssues.clear();
+    pCombineArchiveIssues.clear();
 
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);

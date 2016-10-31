@@ -46,7 +46,7 @@ public:
     explicit FileType(FileTypeInterface *pOwner, const QString &pMimeType,
                       const QString &pFileExtension);
 
-    bool operator==(FileType *pFileType) const;
+    bool operator==(const FileType &pFileType) const;
 
     QString mimeType() const;
     QString fileExtension() const;
@@ -61,7 +61,7 @@ private:
 
 //==============================================================================
 
-typedef QList<FileType *> FileTypes;
+typedef QList<FileType> FileTypes;
 
 //==============================================================================
 
@@ -69,7 +69,6 @@ class FileTypeInterface
 {
 public:
     explicit FileTypeInterface();
-    ~FileTypeInterface();
 
 #define INTERFACE_DEFINITION
     #include "filetypeinterface.inl"

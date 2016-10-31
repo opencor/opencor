@@ -661,9 +661,9 @@ QStringList filters(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
 
     QStringList res = QStringList();
 
-    foreach (FileType *fileType, pFileTypes) {
-        if (!pCheckMimeTypes || pMimeTypes.contains(fileType->mimeType()))
-            res << fileType->description()+" (*."+fileType->fileExtension()+")";
+    foreach (const FileType &fileType, pFileTypes) {
+        if (!pCheckMimeTypes || pMimeTypes.contains(fileType.mimeType()))
+            res << fileType.description()+" (*."+fileType.fileExtension()+")";
     }
 
     return res;

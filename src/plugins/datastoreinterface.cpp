@@ -20,6 +20,11 @@ limitations under the License.
 // Data store interface
 //==============================================================================
 
+#ifdef OpenCOR_MAIN
+    #include "cliutils.h"
+#else
+    #include "corecliutils.h"
+#endif
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -54,6 +59,18 @@ DataStoreVariable::~DataStoreVariable()
     // Delete some internal objects
 
     delete[] mValues;
+}
+
+//==============================================================================
+
+bool DataStoreVariable::compare(DataStoreVariable *pVariable1,
+                                DataStoreVariable *pVariable2)
+{
+    // Determine which of the two variables should be first based on their URI
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a variable...
+
+    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -199,27 +216,6 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-void DataStoreVariables::sort()
-{
-    // Sort our variables
-
-    std::sort(begin(), end(), DataStoreVariables::compare);
-}
-
-//==============================================================================
-
-bool DataStoreVariables::compare(DataStoreVariable *pVariable1,
-                                 DataStoreVariable *pVariable2)
-{
-    // Determine which of the two variables should be first based on their URI
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a variable...
-
-    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 DataStoreData::DataStoreData(const QString &pFileName,
                              const DataStoreVariables &pSelectedVariables) :
     mFileName(pFileName),
@@ -265,10 +261,11 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
-         variable != variableEnd; ++variable) {
-        delete *variable;
-    }
+#ifdef OpenCOR_MAIN
+    resetList(mVariables);
+#else
+    Core::resetList(mVariables);
+#endif
 }
 
 //==============================================================================
@@ -300,7 +297,7 @@ DataStoreVariables DataStore::voiAndVariables()
 
     res << mVoi << mVariables;
 
-    res.sort();
+    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
 
     return res;
 }
@@ -333,7 +330,7 @@ DataStoreVariables DataStore::variables()
 {
     // Return all our variables, after making sure that they are sorted
 
-    mVariables.sort();
+    std::sort(mVariables.begin(), mVariables.end(), DataStoreVariable::compare);
 
     return mVariables;
 }

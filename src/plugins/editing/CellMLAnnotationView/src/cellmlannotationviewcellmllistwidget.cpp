@@ -544,17 +544,16 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
     // Make sure that the CellML file was properly loaded
 
     CellMLSupport::CellmlFileIssues issues = mCellmlFile->issues();
-    int issuesCount = issues.count();
 
-    if (issuesCount) {
+    if (mCellmlFile->issues().count()) {
         // Something went wrong while trying to load the CellML file, so report
         // the issue(s) and leave
 
-        for (int i = 0; i < issuesCount; ++i) {
-            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                     QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
-                                                                                                                               QString::number(issues[i].column()),
-                                                                                                                               issues[i].formattedMessage())));
+        foreach (const CellMLSupport::CellmlFileIssue &issue, mCellmlFile->issues()) {
+            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issue.type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                                                     QString("[%1:%2] %3").arg(QString::number(issue.line()),
+                                                                                                                               QString::number(issue.column()),
+                                                                                                                               issue.formattedMessage())));
         }
 
         return;

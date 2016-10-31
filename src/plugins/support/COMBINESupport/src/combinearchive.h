@@ -91,7 +91,7 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
-    bool isValid();
+    bool isValid(CombineArchiveIssues &pIssues);
 
     QString location(const CombineArchiveFile &pFile) const;
 
