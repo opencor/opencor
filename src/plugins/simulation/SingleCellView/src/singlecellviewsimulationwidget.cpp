@@ -492,8 +492,6 @@ SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
 
     if (mFileType != SingleCellViewWidget::SedmlFile)
         delete mSedmlFile;
-
-    Core::resetList(mCombineArchiveIssues);
 }
 
 //==============================================================================
@@ -743,10 +741,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
         // There is one or several issues with our COMBINE archive, so list
         // it/them
 
-        foreach (COMBINESupport::CombineArchiveIssue *combineArchiveIssue, mCombineArchiveIssues) {
+        foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, mCombineArchiveIssues) {
             QString issueType;
 
-            switch (combineArchiveIssue->type()) {
+            switch (combineArchiveIssue.type()) {
             case COMBINESupport::CombineArchiveIssue::Information:
                 issueType = tr("Information:");
 
@@ -765,7 +763,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, combineArchiveIssue->message());
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, combineArchiveIssue.message());
         }
     } else if (!mSedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
