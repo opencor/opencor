@@ -89,6 +89,7 @@ bool CellmlFileIssue::compare(const CellmlFileIssue &pIssue1,
         return pIssue1.line() < pIssue2.line();
     }
 }
+
 //==============================================================================
 
 CellmlFileIssue::Type CellmlFileIssue::type() const

@@ -208,7 +208,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 {
     // Reset (initialise, here) our properties
 
-    reset(true, true);
+    reset(true, false);
 }
 
 //==============================================================================
