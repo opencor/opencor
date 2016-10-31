@@ -51,7 +51,8 @@ public:
                              const QString &pImportedFile);
     explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
 
-    static bool compare(CellmlFileIssue *pIssue1, CellmlFileIssue *pIssue2);
+    static bool compare(const CellmlFileIssue &pIssue1,
+                        const CellmlFileIssue &pIssue2);
 
     Type type() const;
     int line() const;
@@ -74,7 +75,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileIssue *> CellmlFileIssues;
+typedef QList<CellmlFileIssue> CellmlFileIssues;
 
 //==============================================================================
 

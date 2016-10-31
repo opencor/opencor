@@ -71,22 +71,22 @@ CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage)
 
 //==============================================================================
 
-bool CellmlFileIssue::compare(CellmlFileIssue *pIssue1,
-                              CellmlFileIssue *pIssue2)
+bool CellmlFileIssue::compare(const CellmlFileIssue &pIssue1,
+                              const CellmlFileIssue &pIssue2)
 {
     // Determine which of the two issues should be first
 
-    if (pIssue1->line() == pIssue2->line()) {
-        if (pIssue1->column() == pIssue2->column()) {
-            if (pIssue1->type() == pIssue2->type())
-                return pIssue1->message().compare(pIssue2->message(), Qt::CaseInsensitive) < 0;
+    if (pIssue1.line() == pIssue2.line()) {
+        if (pIssue1.column() == pIssue2.column()) {
+            if (pIssue1.type() == pIssue2.type())
+                return pIssue1.message().compare(pIssue2.message(), Qt::CaseInsensitive) < 0;
             else
-                return pIssue1->type() < pIssue2->type();
+                return pIssue1.type() < pIssue2.type();
         } else {
-            return pIssue1->column() < pIssue2->column();
+            return pIssue1.column() < pIssue2.column();
         }
     } else {
-        return pIssue1->line() < pIssue2->line();
+        return pIssue1.line() < pIssue2.line();
     }
 }
 //==============================================================================

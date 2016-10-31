@@ -113,7 +113,7 @@ void CellmlFile::reset()
 
     Core::resetList(mRdfTriples);
 
-    Core::resetList(mIssues);
+    mIssues.clear();
 
     Core::FileManager::instance()->setDependencies(mFileName, QStringList());
 
@@ -287,8 +287,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
         } catch (...) {
             // Something went wrong with the full instantiation of the imports
 
-            pIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the imports could not be fully instantiated"));
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the imports could not be fully instantiated"));
 
             return false;
         }
@@ -316,7 +316,7 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 {
     // Make sure that pIssues is empty
 
-    Core::resetList(pIssues);
+    pIssues.clear();
 
     // Get a bootstrap object and its model loader
 
@@ -334,11 +334,11 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
         // Something went wrong with the loading of the model
 
         if (pFileContents.isEmpty()) {
-            pIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the model could not be loaded (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the model could not be loaded (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
         } else {
-            pIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the model could not be created (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the model could not be created (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
         }
 
         return false;
@@ -571,7 +571,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
     // Make sure that pIssues is empty
 
-    Core::resetList(pIssues);
+    pIssues.clear();
 
     // Determine the number of errors and warnings
     // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
@@ -668,9 +668,9 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
         // Append the issue to our list
 
-        pIssues << new CellmlFileIssue(issueType, line, column,
-                                       QString::fromStdWString(cellmlValidityIssue->description()),
-                                       importedFile);
+        pIssues << CellmlFileIssue(issueType, line, column,
+                                   QString::fromStdWString(cellmlValidityIssue->description()),
+                                   importedFile);
     }
 
     // Sort our issues (since the CellML API may generate them in a non-ordered
@@ -1052,8 +1052,8 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
             CellmlFileCellml10Exporter exporter(mModel, pFileName);
 
             if (!exporter.errorMessage().isEmpty()) {
-                mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                               exporter.errorMessage());
+                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                           exporter.errorMessage());
             }
 
             return exporter.result();
@@ -1062,8 +1062,8 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
             CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
             if (!exporter.errorMessage().isEmpty()) {
-                mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                               exporter.errorMessage());
+                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                           exporter.errorMessage());
             }
 
             return exporter.result();
@@ -1086,8 +1086,8 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Check that the user-defined format file actually exists
 
         if (!QFile::exists(pUserDefinedFormatFileName)) {
-            mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the user-defined format file does not exist"));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the user-defined format file does not exist"));
 
             return false;
         }
@@ -1099,8 +1099,8 @@ bool CellmlFile::exportTo(const QString &pFileName,
         QString userDefinedFormatFileContents;
 
         if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
-            mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the user-defined format file could not be read"));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the user-defined format file could not be read"));
 
             return false;
         }
@@ -1108,8 +1108,8 @@ bool CellmlFile::exportTo(const QString &pFileName,
         QDomDocument domDocument;
 
         if (!domDocument.setContent(userDefinedFormatFileContents)) {
-            mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the user-defined format file is not a valid XML file"));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the user-defined format file is not a valid XML file"));
 
             return false;
         }
@@ -1125,8 +1125,8 @@ bool CellmlFile::exportTo(const QString &pFileName,
         ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(userDefinedFormatFileContents).toStdWString());
 
         if (celedsExporterBootstrap->loadError().length()) {
-            mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the user-defined format file could not be loaded"));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the user-defined format file could not be loaded"));
 
             return false;
         }
@@ -1137,8 +1137,8 @@ bool CellmlFile::exportTo(const QString &pFileName,
         if (pFileName.isEmpty()) {
             std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
         } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
-            mIssues << new CellmlFileIssue(CellmlFileIssue::Error,
-                                           QObject::tr("the output file could not be saved"));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the output file could not be saved"));
 
             return false;
         }

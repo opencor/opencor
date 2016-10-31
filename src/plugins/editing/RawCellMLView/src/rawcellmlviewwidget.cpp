@@ -335,9 +335,9 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         int nbOfReportedIssues = 0;
 
-        foreach (CellMLSupport::CellmlFileIssue *cellmlFileIssue, cellmlFileIssues) {
+        foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
             nbOfReportedIssues +=    !pOnlyErrors
-                                  ||  (cellmlFileIssue->type() == CellMLSupport::CellmlFileIssue::Error);
+                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
         }
 
         if (   (cellmlFile->version() != CellMLSupport::CellmlFile::Cellml_1_0)
@@ -352,21 +352,19 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         // Add whatever issue there may be to our list and select the first one
         // of them
 
-        foreach (CellMLSupport::CellmlFileIssue *cellmlFileIssue, cellmlFileIssues) {
+        foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
             if (   !pOnlyErrors
-                || (cellmlFileIssue->type() == CellMLSupport::CellmlFileIssue::Error)) {
-                editorList->addItem((cellmlFileIssue->type() == CellMLSupport::CellmlFileIssue::Error)?
+                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
                                         EditorWidget::EditorListItem::Error:
                                         EditorWidget::EditorListItem::Warning,
-                                    cellmlFileIssue->line(),
-                                    cellmlFileIssue->column(),
-                                    qPrintable(cellmlFileIssue->formattedMessage()));
+                                    cellmlFileIssue.line(),
+                                    cellmlFileIssue.column(),
+                                    qPrintable(cellmlFileIssue.formattedMessage()));
             }
         }
 
         editorList->selectFirstItem();
-
-        Core::resetList(cellmlFileIssues);
 
         return res;
     } else {
