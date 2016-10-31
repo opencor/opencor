@@ -152,7 +152,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     //       temporary file which contents is that of our given file contents,
     //       and simply call libsedml::readSedML()...
 
-    Core::resetList(pIssues);
+    pIssues.clear();
 
     QTemporaryFile file;
     QByteArray fileContentsByteArray = pFileContents.toUtf8();
@@ -193,7 +193,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
         QString errorMessage = QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx);
 
-        pIssues << new SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
+        pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
     }
 
     file.close();

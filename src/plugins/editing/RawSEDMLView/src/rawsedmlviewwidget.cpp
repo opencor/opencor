@@ -313,12 +313,12 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
         // Add whatever issue there may be to our list and select the first one
         // of them
 
-        foreach (SEDMLSupport::SedmlFileIssue *sedmlFileIssue, sedmlFileIssues) {
+        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
             if (   !pOnlyErrors
-                || (sedmlFileIssue->type() == SEDMLSupport::SedmlFileIssue::Error)) {
+                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
                 EditorWidget::EditorListItem::Type issueType;
 
-                switch (sedmlFileIssue->type()) {
+                switch (sedmlFileIssue.type()) {
                 case SEDMLSupport::SedmlFileIssue::Information:
                     issueType = EditorWidget::EditorListItem::Information;
 
@@ -337,14 +337,12 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
                     break;
                 }
 
-                editorList->addItem(issueType, sedmlFileIssue->line(), sedmlFileIssue->column(),
-                                    qPrintable(sedmlFileIssue->message()));
+                editorList->addItem(issueType, sedmlFileIssue.line(), sedmlFileIssue.column(),
+                                    qPrintable(sedmlFileIssue.message()));
             }
         }
 
         editorList->selectFirstItem();
-
-        Core::resetList(sedmlFileIssues);
 
         return res;
     } else {

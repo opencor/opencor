@@ -493,7 +493,6 @@ SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
     if (mFileType != SingleCellViewWidget::SedmlFile)
         delete mSedmlFile;
 
-    Core::resetList(mSedmlFileIssues);
     Core::resetList(mCombineArchiveIssues);
 }
 
@@ -771,10 +770,10 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     } else if (!mSedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
-        foreach (SEDMLSupport::SedmlFileIssue *sedmlFileIssue, mSedmlFileIssues) {
+        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, mSedmlFileIssues) {
             QString issueType;
 
-            switch (sedmlFileIssue->type()) {
+            switch (sedmlFileIssue.type()) {
             case SEDMLSupport::SedmlFileIssue::Information:
                 issueType = tr("Information:");
 
@@ -793,7 +792,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, sedmlFileIssue->message());
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, sedmlFileIssue.message());
         }
     } else {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
