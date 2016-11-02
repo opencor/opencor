@@ -252,16 +252,16 @@ void PmrWorkspace::clone(const QString &pPath)
 
     setGitAuthorization(&authorizationStrArray);
 
+    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
+
     cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
-    cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
     cloneOptions.fetch_opts.callbacks.payload = this;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
     cloneOptions.fetch_opts.custom_headers = authorizationStrArray;
 
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
     cloneOptions.checkout_opts.progress_cb = checkoutProgressCallback;
     cloneOptions.checkout_opts.progress_payload = this;
-
-    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
 
     // Perform the cloning itself and let people know whether it worked or not
 
@@ -1094,62 +1094,57 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 
 bool PmrWorkspace::fetch()
 {
-    // Fetch any updates for a workspace
+    // Fetch any updates for a workspace, if possible
 
-    if (!isOpen()) return false;
+    if (!isOpen())
+        return false;
 
-    bool fetched = true;
-
+    bool res = true;
     git_fetch_options fetchOptions;
-    git_fetch_init_options(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
-
-    // We trust PMR's SSL certificate
-
-    fetchOptions.callbacks.certificate_check = certificateCheckCallback;
-
-    // Track push progress
-
-    fetchOptions.callbacks.payload = this;
-    fetchOptions.callbacks.transfer_progress = transferProgressCallback;
-
-    // Set up Basic authorization
-
     git_strarray authorizationStrArray = { 0, 0 };
+    git_remote_callbacks remoteCallbacks;
+
+    git_fetch_init_options(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
 
     setGitAuthorization(&authorizationStrArray);
 
-    fetchOptions.custom_headers = authorizationStrArray;
-
-    git_remote_callbacks remoteCallbacks;
-
     git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+
+    fetchOptions.callbacks.certificate_check = certificateCheckCallback;
+    fetchOptions.callbacks.payload = this;
+    fetchOptions.callbacks.transfer_progress = transferProgressCallback;
+
+    fetchOptions.custom_headers = authorizationStrArray;
 
     remoteCallbacks.certificate_check = certificateCheckCallback;
 
-    // Get the remote, connect to it, add a refspec, and do the push
+    // Get the remote, connect to it, add a refspec, and do the fetch
+
+    static const char *masterReference = "refs/heads/master";
 
     git_remote *gitRemote = 0;
-
-    const char *masterReference = "refs/heads/master";
-    git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
+    git_strarray refSpecsStrArray = { (char **) &masterReference, 1 };
 
     if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
      || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, 0)) {
         emitGitError(tr("An error occurred while trying to fetch the remote workspace."));
-        fetched = false;
+
+        res = false;
     }
-    if (gitRemote) git_remote_free(gitRemote);
+
+    if (gitRemote)
+        git_remote_free(gitRemote);
 
     git_strarray_free(&authorizationStrArray);
 
-    return fetched;
+    return res;
 }
 
 //==============================================================================
 
 bool PmrWorkspace::merge()
 {
-    // Merge and commit fetched updates
+    // Merge and commit fetched updates, if possible
 
     if (!isOpen())
         return false;
@@ -1184,48 +1179,43 @@ bool PmrWorkspace::merge()
 
 void PmrWorkspace::push()
 {
-    // Push a workspace
+    // Push a workspace, if possible
 
-    if (!isOpen()) return;
+    if (!isOpen())
+        return;
 
     git_push_options pushOptions;
-    git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
-
-    // We trust PMR's SSL certificate
-
-    pushOptions.callbacks.certificate_check = certificateCheckCallback;
-
-    // Track push progress
-
-    pushOptions.callbacks.payload = this;
-    pushOptions.callbacks.transfer_progress = transferProgressCallback;
-
-    // Set up Basic authorization
-
     git_strarray authorizationStrArray = { 0, 0 };
+    git_remote_callbacks remoteCallbacks;
+
+    git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
 
     setGitAuthorization(&authorizationStrArray);
 
-    pushOptions.custom_headers = authorizationStrArray;
-
-    git_remote_callbacks remoteCallbacks;
-
     git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+
+    pushOptions.callbacks.certificate_check = certificateCheckCallback;
+    pushOptions.callbacks.payload = this;
+    pushOptions.callbacks.transfer_progress = transferProgressCallback;
+
+    pushOptions.custom_headers = authorizationStrArray;
 
     remoteCallbacks.certificate_check = certificateCheckCallback;
 
     // Get the remote, connect to it, add a refspec, and do the push
 
-    git_remote *gitRemote = 0;
+    static const char *masterReference = "refs/heads/master";
 
-    const char *masterReference = "refs/heads/master";
-    git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
+    git_remote *gitRemote = 0;
+    git_strarray refSpecsStrArray = { (char **) &masterReference, 1 };
 
     if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
      || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
         emitGitError(tr("An error occurred while trying to push the workspace."));
     }
-    if (gitRemote) git_remote_free(gitRemote);
+
+    if (gitRemote)
+        git_remote_free(gitRemote);
 
     git_strarray_free(&authorizationStrArray);
 }
