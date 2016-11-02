@@ -98,7 +98,7 @@ public:
         StatusUnstaged = 128
     };
 
-    const CharPair gitFileStatus(const QString &pPath) const;
+    CharPair gitFileStatus(const QString &pPath) const;
     WorkspaceStatus gitWorkspaceStatus() const;
 
     void stageFile(const QString &pPath, const bool &pStage);
@@ -132,7 +132,7 @@ private:
     bool doCommit(const char *pMessage, const size_t &pParentCount,
                   const git_commit **pParents);
 
-    static const CharPair gitStatusChars(const int &pFlags);
+    CharPair gitStatusChars(const int &pFlags) const;
 
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 

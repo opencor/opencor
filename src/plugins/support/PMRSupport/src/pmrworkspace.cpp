@@ -494,7 +494,7 @@ bool PmrWorkspace::open()
 
 //==============================================================================
 
-const CharPair PmrWorkspace::gitStatusChars(const int &pFlags)
+CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
 {
     // Git status
 
@@ -642,6 +642,99 @@ void PmrWorkspace::synchronize(const bool pOnlyPull)
     }
 
     emit workspaceSynchronized(this);
+}
+
+//==============================================================================
+
+const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
+{
+    CharPair status = CharPair(' ', ' ');
+
+    if (isOpen()) {
+        QDir repoDir = QDir(mPath);
+        unsigned int statusFlags = 0;
+        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
+
+        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
+            status = gitStatusChars(statusFlags);
+
+            // Also update status in file tree
+
+            if (mRepositoryStatusMap.contains(pPath))
+                mRepositoryStatusMap.value(pPath)->setStatus(status);
+        }
+        else
+            emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
+    }
+    return status;
+}
+
+//==============================================================================
+
+PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
+{
+    // Get the status of the repository
+
+    WorkspaceStatus status = StatusUnknown;
+
+    if (isOpen()) {
+        if (git_repository_head_unborn(mGitRepository) == 1) {
+            status = StatusCurrent;
+        } else {
+            bool error = false;
+
+            git_oid masterOid;
+
+            if (!git_reference_name_to_id(&masterOid, mGitRepository,
+                                          "refs/heads/master")) {
+                git_oid originMasterOid;
+
+                if (!git_reference_name_to_id(&originMasterOid, mGitRepository,
+                                              "refs/remotes/origin/master")) {
+                    size_t ahead = 0;
+                    size_t behind = 0;
+
+                    if (!git_graph_ahead_behind(&ahead, &behind, mGitRepository,
+                                                &masterOid, &originMasterOid)) {
+                        status = ahead?
+                                    StatusAhead:
+                                    behind?
+                                        StatusBehind:
+                                        StatusCurrent;
+                    } else {
+                        error = true;
+                    }
+                } else {
+                    // Need an initial `push origin master`
+
+                    status = StatusAhead;
+                }
+            } else {
+                error = true;
+            }
+
+            if (error)
+                emitGitError(tr("An error occurred while trying to get the remote status of %1.").arg(mPath));
+        }
+
+        git_index *index;
+
+        if (!git_repository_index(&index, mGitRepository)) {
+            if (git_index_has_conflicts(index)) {
+                status = WorkspaceStatus(status|StatusConflict);
+            } else {
+                if (mStagedCount)
+                    status = WorkspaceStatus(status|StatusCommit);
+
+                if (mUnstagedCount)
+                    status = WorkspaceStatus(status|StatusUnstaged);
+            }
+
+            git_index_free(index);
+        }
+    }
+
+    return status;
 }
 
 //==============================================================================
@@ -1060,99 +1153,6 @@ void PmrWorkspace::push()
     if (gitRemote) git_remote_free(gitRemote);
 
     git_strarray_free(&authorisationStrArray);
-}
-
-//==============================================================================
-
-const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
-{
-    CharPair status = CharPair(' ', ' ');
-
-    if (isOpen()) {
-        QDir repoDir = QDir(mPath);
-        unsigned int statusFlags = 0;
-        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
-
-        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
-            status = gitStatusChars(statusFlags);
-
-            // Also update status in file tree
-
-            if (mRepositoryStatusMap.contains(pPath))
-                mRepositoryStatusMap.value(pPath)->setStatus(status);
-        }
-        else
-            emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
-    }
-    return status;
-}
-
-//==============================================================================
-
-PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
-{
-    // Get the status of the repository
-
-    WorkspaceStatus status = StatusUnknown;
-
-    if (isOpen()) {
-        if (git_repository_head_unborn(mGitRepository) == 1) {
-            status = StatusCurrent;
-        } else {
-            bool error = false;
-
-            git_oid masterOid;
-
-            if (!git_reference_name_to_id(&masterOid, mGitRepository,
-                                          "refs/heads/master")) {
-                git_oid originMasterOid;
-
-                if (!git_reference_name_to_id(&originMasterOid, mGitRepository,
-                                              "refs/remotes/origin/master")) {
-                    size_t ahead = 0;
-                    size_t behind = 0;
-
-                    if (!git_graph_ahead_behind(&ahead, &behind, mGitRepository,
-                                                &masterOid, &originMasterOid)) {
-                        status = ahead?
-                                    StatusAhead:
-                                    behind?
-                                        StatusBehind:
-                                        StatusCurrent;
-                    } else {
-                        error = true;
-                    }
-                } else {
-                    // Need an initial `push origin master`
-
-                    status = StatusAhead;
-                }
-            } else {
-                error = true;
-            }
-
-            if (error)
-                emitGitError(tr("An error occurred while trying to get the remote status of %1.").arg(mPath));
-        }
-
-        git_index *index;
-
-        if (!git_repository_index(&index, mGitRepository)) {
-            if (git_index_has_conflicts(index)) {
-                status = WorkspaceStatus(status|StatusConflict);
-            } else {
-                if (mStagedCount)
-                    status = WorkspaceStatus(status|StatusCommit);
-
-                if (mUnstagedCount)
-                    status = WorkspaceStatus(status|StatusUnstaged);
-            }
-
-            git_index_free(index);
-        }
-    }
-
-    return status;
 }
 
 //==============================================================================
