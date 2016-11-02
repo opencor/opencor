@@ -195,7 +195,6 @@ static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
     pSettings->beginGroup(SettingsWorkspaces);
-
         // Retrieve the current workspace url, if any
 
         mCurrentWorkspaceUrl = pSettings->value(SettingsCurrentWorkspace).toString();
@@ -223,7 +222,6 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // Retrieve the currently selected item, if any
 
         mSelectedItem = pSettings->value(SettingsSelectedItem).toString();
-
     pSettings->endGroup();
 }
 
@@ -338,7 +336,7 @@ const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
     QStringList actions = QStringList();
 
     foreach (const StringPair &action, pActions)
-        actions << QString("<a href=\"%1|%2\"><img class=\"button noHover %1\" /></a>").arg(action.first, action.second);
+        actions << QString("<a href=\"%1|%2\"><img class=\"button noHover %1\"></a>").arg(action.first, action.second);
 
     return actions.join("");
 }
@@ -359,7 +357,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                 "  <td class=\"action\">%6</td>\n"
                                 "</tr>\n";
 
-    const QString iconHtml = QString("<img class=\"%1\" />").arg(pIcon);
+    const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
     const QString rowClass = pClass + ((pId == mSelectedItem || pId == mCurrentWorkspaceUrl)?" selected":"");
 
     // Use an anchor element to allow us to set the scroll position at a row
