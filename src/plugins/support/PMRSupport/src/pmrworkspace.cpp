@@ -57,16 +57,24 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
     // Initialise ourselves
 
     mOwned = false;
-    mDescription = pDescription;
-    mName = pName;
-    mOwner = pOwner;
-    mUrl = pUrl;
-    mPassword = QString();
-    mUsername = QString();
-    mGitRepository = 0;
     mPath = QString();
-    mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
+    mUsername = QString();
+    mPassword = QString();
+    mUrl = pUrl;
+    mName = pName;
+    mDescription = pDescription;
+    mOwner = pOwner;
+
+    mGitRepository = 0;
+
     mRootFileNode = 0;
+    mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
+
+    mConflictedFiles = QStringList();
+    mUpdatedFiles = QStringList();
+
+    mStagedCount = 0;
+    mUnstagedCount = 0;
 
     // Forward a couple of our signals to the 'global' instance of our workspace
     // manager class
@@ -115,6 +123,8 @@ PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
 
 PmrWorkspace::~PmrWorkspace()
 {
+    // Close ourselves
+
     close();
 }
 
@@ -132,6 +142,8 @@ bool PmrWorkspace::compare(PmrWorkspace *pWorkspace1, PmrWorkspace *pWorkspace2)
 
 bool PmrWorkspace::isLocal() const
 {
+    // Return whether we are local, i.e. whether our path isn't empty
+
     return !mPath.isEmpty();
 }
 
@@ -139,6 +151,8 @@ bool PmrWorkspace::isLocal() const
 
 bool PmrWorkspace::isOwned() const
 {
+    // Return whether we are owned
+
     return mOwned;
 }
 
@@ -146,29 +160,46 @@ bool PmrWorkspace::isOwned() const
 
 void PmrWorkspace::setOwned(const bool &pOwned)
 {
+    // Set whether we are owned
+
     mOwned = pOwned;
 }
 
 //==============================================================================
 
-void PmrWorkspace::setCredentials(const QString &pUsername, const QString &pPassword)
+QString PmrWorkspace::path() const
 {
-    mUsername = pUsername;
-    mPassword = pPassword;
+    // Return our path
+
+    return mPath;
 }
 
 //==============================================================================
 
 void PmrWorkspace::setPath(const QString &pPath)
 {
+    // Set our path
+
     mPath = pPath;
 }
 
 //==============================================================================
 
-QString PmrWorkspace::description() const
+void PmrWorkspace::setCredentials(const QString &pUsername, const QString &pPassword)
 {
-    return mDescription;
+    // Set our credentials
+
+    mUsername = pUsername;
+    mPassword = pPassword;
+}
+
+//==============================================================================
+
+QString PmrWorkspace::url() const
+{
+    // Return our URL
+
+    return mUrl;
 }
 
 //==============================================================================
@@ -182,25 +213,20 @@ QString PmrWorkspace::name() const
 
 //==============================================================================
 
+QString PmrWorkspace::description() const
+{
+    // Return our description
+
+    return mDescription;
+}
+
+//==============================================================================
+
 QString PmrWorkspace::owner() const
 {
+    // Return our owner
+
     return mOwner;
-}
-
-//==============================================================================
-
-QString PmrWorkspace::path() const
-{
-    return mPath;
-}
-
-//==============================================================================
-
-QString PmrWorkspace::url() const
-{
-    // Return our URL
-
-    return mUrl;
 }
 
 //==============================================================================

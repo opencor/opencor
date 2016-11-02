@@ -63,17 +63,18 @@ public:
 
     bool isLocal() const;
 
-    void setCredentials(const QString &pUsername, const QString &pPassword);
-    void setPath(const QString &pPath);
-
     bool isOwned() const;
     void setOwned(const bool &pOwned);
 
-    QString description() const;
-    QString name() const;
-    QString owner() const;
     QString path() const;
+    void setPath(const QString &pPath);
+
+    void setCredentials(const QString &pUsername, const QString &pPassword);
+
     QString url() const;
+    QString name() const;
+    QString description() const;
+    QString owner() const;
 
     PmrWorkspaceFileNode * rootFileNode() const;
 
@@ -105,20 +106,18 @@ public:
 
 private:
     bool mOwned;
-
-    QString mDescription;
-    QString mName;
-    QString mOwner;
-    QString mUrl;
-
-    QString mPassword;
+    QString mPath;
     QString mUsername;
+    QString mPassword;
+    QString mUrl;
+    QString mName;
+    QString mDescription;
+    QString mOwner;
 
     git_repository *mGitRepository;
-    QString mPath;
 
-    QMap<QString, PmrWorkspaceFileNode *> mRepositoryStatusMap;
     PmrWorkspaceFileNode *mRootFileNode;
+    QMap<QString, PmrWorkspaceFileNode *> mRepositoryStatusMap;
 
     QStringList mConflictedFiles;
     QStringList mUpdatedFiles;

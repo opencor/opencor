@@ -559,9 +559,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
             QString workspaceUrl = linksMap["href"].toString().trimmed();
             QString workspaceName = linksMap["prompt"].toString().simplified();
 
-            if (   !workspaceUrl.isEmpty()
-                && !workspaceName.isEmpty()) {
-
+            if (!workspaceUrl.isEmpty() && !workspaceName.isEmpty()) {
                 workspaces << new PmrWorkspace(workspaceUrl, workspaceName, this);
 
                 workspaces.last()->setOwned(true);
