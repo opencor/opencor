@@ -100,7 +100,7 @@ void PmrWebService::unauthorised(const QString &pUrl)
 
 //==============================================================================
 
-static const char *DirNameProperty    = "DirName";
+static const char *PathProperty       = "Path";
 static const char *ExposureProperty   = "Exposure";
 static const char *NextActionProperty = "NextAction";
 static const char *WorkspaceProperty  = "Workspace";
@@ -212,9 +212,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
             // Retrieve workspace file information and clone the workspace
 
             requestWorkspaceInformation(workspaceUrl, QString(), exposure);
-        }
-
-        if (   exposureFileUrls.isEmpty()
+        } else if (   exposureFileUrls.isEmpty()
             && (Action(sender()->property(NextActionProperty).toInt()) == RequestExposureFiles)) {
             emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
         }
@@ -303,14 +301,15 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName)
+void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
+                                          const QString &pPath)
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished()));
 
-    QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pDirName);
+    QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pPath);
 }
 
 //==============================================================================
@@ -397,13 +396,14 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
+void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QString &pPath,
                                                 PmrExposure *pExposure)
 {
+qDebug(">>> %s", qPrintable(pPath));
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));
-    pmrResponse->setProperty(DirNameProperty, pDirName);
+    pmrResponse->setProperty(PathProperty, pPath);
 
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
@@ -475,7 +475,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 } else {
                     // Cloning after creating a new workspace
 
-                    dirName = sender()->property(DirNameProperty).toString();
+                    dirName = sender()->property(PathProperty).toString();
                 }
 
                 // Clone the workspace, if we have a directory
@@ -493,8 +493,9 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
 //==============================================================================
 
-void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDescription,
-                                        const QString &pDirName)
+void PmrWebService::requestNewWorkspace(const QString &pName,
+                                        const QString &pDescription,
+                                        const QString &pPath)
 {
     QJsonDocument jsonCreateWorkspace = QJsonDocument::fromJson(QString(
         "{\"template\": {\"data\": ["
@@ -507,7 +508,7 @@ void PmrWebService::requestNewWorkspace(const QString &pName, const QString &pDe
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/workspace/+/addWorkspace",
                                                                                true, true, jsonCreateWorkspace);
 
-    pmrResponse->setProperty(DirNameProperty, pDirName);
+    pmrResponse->setProperty(PathProperty, pPath);
 
     connect(pmrResponse, SIGNAL(movedLocation(const QString &)),
             this, SLOT(workspaceCreatedResponse(const QString &)));
@@ -528,7 +529,7 @@ void PmrWebService::workspaceCreatedResponse(const QString &pUrl)
 {
     emit workspaceCreated(pUrl);
 
-    requestWorkspaceInformation(pUrl, sender()->property(DirNameProperty).toString());
+    requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
     // Note: a non-empty dirname will clone the workspace...
 }
 

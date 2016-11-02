@@ -245,7 +245,7 @@ void PmrWorkspace::clone(const QString &pPath)
     // Clone the workspace to the given directory, using basic authentication
 
     QByteArray workspaceByteArray = mUrl.toUtf8();
-    QByteArray dirNameByteArray = pPath.toUtf8();
+    QByteArray pathByteArray = pPath.toUtf8();
     git_clone_options cloneOptions;
     git_strarray authorisationStrArray = { 0, 0 };
 
@@ -265,7 +265,7 @@ void PmrWorkspace::clone(const QString &pPath)
     // Perform the cloning itself and let people know whether it worked or not
 
     if (git_clone(&mGitRepository, workspaceByteArray.constData(),
-                  dirNameByteArray.constData(), &cloneOptions)) {
+                  pathByteArray.constData(), &cloneOptions)) {
         emitGitError(tr("An error occurred while trying to clone the workspace."));
     }
 

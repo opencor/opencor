@@ -62,14 +62,14 @@ public:
     PmrWorkspace * getWorkspace(const QString &pUrl);
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
-                               const QString &pDirName);
+                               const QString &pPath);
     void requestWorkspaceInformation(const QString &pUrl);
     void requestWorkspaces();
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool pOnlyPull);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
-                             const QString &pDirName);
+                             const QString &pPath);
 
     static QString getEmptyDirectory();
 
@@ -95,7 +95,7 @@ private:
                                     const Action &pNextAction);
 
     void requestWorkspaceInformation(const QString &pUrl,
-                                     const QString &pDirName,
+                                     const QString &pPath,
                                      PmrExposure *pExposure = 0);
 
 signals:
