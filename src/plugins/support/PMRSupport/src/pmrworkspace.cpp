@@ -350,13 +350,13 @@ bool PmrWorkspace::commit(const QString &pMessage)
     bool res = true;
 
     if (message.size) {
-        int nbOfParents = -1;
+        int parentsCount = -1;
         git_commit *parent = 0;
 
         if (git_repository_head_unborn(mGitRepository) == 1) {
             // We are committing to an empty repository
 
-            nbOfParents = 0;
+            parentsCount = 0;
         } else {
             // Get HEAD as the commit object to use as the parent of the commit
 
@@ -364,12 +364,12 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
             if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
                 && !git_commit_lookup(&parent, mGitRepository, &parentId)) {
-                nbOfParents = 1;
+                parentsCount = 1;
             }
         }
 
-        if (nbOfParents >= 0) {
-            res = doCommit(message.ptr, nbOfParents,
+        if (parentsCount >= 0) {
+            res = doCommit(message.ptr, parentsCount,
                            (const git_commit **) (&parent));
 
             if (!res)
@@ -404,8 +404,8 @@ bool PmrWorkspace::commitMerge()
     git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback,
                                      &mergeCallbackData);
 
-    size_t nbOfParents = mergeCallbackData.size+1;
-    git_commit **parents = new git_commit*[nbOfParents]();
+    size_t parentsCount = mergeCallbackData.size+1;
+    git_commit **parents = new git_commit*[parentsCount]();
 
     // HEAD is always a parent
 
@@ -416,9 +416,9 @@ bool PmrWorkspace::commitMerge()
         && !git_commit_lookup(parents, mGitRepository, &parentId)) {
         res = true;
 
-        // Now populate the list of commit parents
+        // Populate the list of commit parents
 
-        if (nbOfParents > 1) {
+        if (parentsCount > 1) {
             mergeCallbackData.size = 0;
             mergeCallbackData.repository = mGitRepository;
             mergeCallbackData.parents = &(parents[1]);
@@ -430,7 +430,7 @@ bool PmrWorkspace::commitMerge()
         if (res) {
             std::string message = std::string("Merge branch 'master' of ");
 
-            if (doCommit(message.c_str(), nbOfParents,
+            if (doCommit(message.c_str(), parentsCount,
                          (const git_commit **) parents)) {
                 git_repository_state_cleanup(mGitRepository);
             } else {
@@ -439,7 +439,7 @@ bool PmrWorkspace::commitMerge()
         }
     }
 
-    for (size_t n = 0; n < nbOfParents; ++n)
+    for (size_t n = 0; n < parentsCount; ++n)
         git_commit_free(parents[n]);
 
     delete[] parents;
@@ -448,6 +448,16 @@ bool PmrWorkspace::commitMerge()
         emitGitError(tr("An error occurred while trying to commit the merge."));
 
     return res;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::isMerging() const
+{
+    // Return whether we are merging
+
+    return     mGitRepository
+           && (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE);
 }
 
 //==============================================================================
@@ -463,6 +473,8 @@ bool PmrWorkspace::isOpen() const
 
 bool PmrWorkspace::open()
 {
+    // Open ourselves (by first making sure that we are closed)
+
     close();
 
     if (!mPath.isEmpty()) {
@@ -484,8 +496,11 @@ bool PmrWorkspace::open()
 
 void PmrWorkspace::refreshStatus()
 {
+    // Refresh our status
+
     mStagedCount = 0;
     mUnstagedCount = 0;
+
     mRepositoryStatusMap.clear();
 
     mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath);
@@ -884,14 +899,6 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
     }
 
     return !res;
-}
-
-//==============================================================================
-
-bool PmrWorkspace::isMerging() const
-{
-    return     mGitRepository
-           && (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE);
 }
 
 //==============================================================================

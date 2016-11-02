@@ -129,6 +129,9 @@ private:
                      const QString &pDescription, const QString &pOwner,
                      PmrWebService *pParent);
 
+    bool doCommit(const char *pMessage, const size_t &pParentCount,
+                  const git_commit **pParents);
+
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificateCheckCallback(git_cert *pCertificate, int pValid,
@@ -155,8 +158,6 @@ private:
 
     static const CharPair gitStatusChars(const int &pFlags);
 
-    bool doCommit(const char *pMessage, const size_t &pParentCount,
-                  const git_commit **pParents);
     bool fetch();
     bool merge();
     void push();
