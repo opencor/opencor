@@ -184,10 +184,10 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 //==============================================================================
 
-static const auto SettingsWorkspaces    = QStringLiteral("Workspaces");
-static const auto SettingsFolders       = QStringLiteral("Folders");
-static const auto SettingsExpandedItems = QStringLiteral("ExpandedItems");
-static const auto SettingsSelectedItem  = QStringLiteral("SelectedItem");
+static const auto SettingsWorkspaces       = QStringLiteral("Workspaces");
+static const auto SettingsFolders          = QStringLiteral("Folders");
+static const auto SettingsExpandedItems    = QStringLiteral("ExpandedItems");
+static const auto SettingsSelectedItem     = QStringLiteral("SelectedItem");
 static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
 
 //==============================================================================
@@ -360,7 +360,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                 "</tr>\n";
 
     const QString iconHtml = QString("<img class=\"%1\" />").arg(pIcon);
-    const QString rowClass = pClass + ((pId == mSelectedItem || pId == mCurrentWorkspaceUrl) ? " selected" : "");
+    const QString rowClass = pClass + ((pId == mSelectedItem || pId == mCurrentWorkspaceUrl)?" selected":"");
 
     // Use an anchor element to allow us to set the scroll position at a row
 
@@ -471,7 +471,7 @@ QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFi
                 itemHtml << fileHtml(fileNode);
         }
 
-        return html.arg(pHidden ? " hidden" : "", itemHtml.join("\n"));
+        return html.arg(pHidden?" hidden":"", itemHtml.join("\n"));
     } else {
         return emptyContentsHtml();
     }
@@ -494,12 +494,12 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
     } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict) {
         // Indicate that there are merge conflicts
 
-        status = "C";       // TODO: Show an icon without an action ??
+        status = "C";
     } else {
         // Indicate whether there are unstaged files
 
         if (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
-            status = "?";   // TODO: Show an icon without an action ??
+            status = "?";
 
         // Indicate whether files are staged for commit
 
