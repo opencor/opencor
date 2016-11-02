@@ -632,11 +632,11 @@ void PmrWorkspace::refreshStatus()
 
 void PmrWorkspace::synchronize(const bool pOnlyPull)
 {
-    // Synchronise our local workspace with PMR
+    // Synchronise our local workspace with PMR and let people know that we have
+    // done so
 
     if (fetch() && merge() && !pOnlyPull) {
-        // We've successfully fetched and merged
-        // so push if we are allowed to.
+        // We've successfully fetched and merged, so push if we are allowed to
 
         push();
     }
