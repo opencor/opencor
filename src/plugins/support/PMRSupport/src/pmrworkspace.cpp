@@ -399,12 +399,11 @@ bool PmrWorkspace::commitMerge()
 {
     // Get the number of merge heads so we can allocate an array for parents
 
-    MergeheadForeachCallbackData mergeCallbackData = { 0, 0, 0 };
+    MergeheadForeachCallbackData data = { 0, 0, 0 };
 
-    git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback,
-                                     &mergeCallbackData);
+    git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &data);
 
-    size_t parentsCount = mergeCallbackData.size+1;
+    size_t parentsCount = data.size+1;
     git_commit **parents = new git_commit*[parentsCount]();
 
     // HEAD is always a parent
@@ -419,11 +418,11 @@ bool PmrWorkspace::commitMerge()
         // Populate the list of commit parents
 
         if (parentsCount > 1) {
-            mergeCallbackData.size = 0;
-            mergeCallbackData.repository = mGitRepository;
-            mergeCallbackData.parents = &(parents[1]);
+            data.size = 0;
+            data.repository = mGitRepository;
+            data.parents = &(parents[1]);
 
-            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &mergeCallbackData))
+            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &data))
                 res = false;
         }
 
@@ -941,9 +940,9 @@ void PmrWorkspace::checkoutProgressCallback(const char *pPath,
 {
     Q_UNUSED(pPath);
 
-    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
+    // Let people know about our progress
 
-    workspace->emitProgress(double(pCompletedSteps)/pTotalSteps);
+    ((PmrWorkspace *) pPayload)->emitProgress(double(pCompletedSteps)/pTotalSteps);
 }
 
 //==============================================================================
@@ -1066,11 +1065,13 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 
 int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
 {
+    // Retrieve and return the number of merge heads
+
     int res = 0;
-    MergeheadForeachCallbackData *data = (MergeheadForeachCallbackData *)pPayload;
+    MergeheadForeachCallbackData *data = (MergeheadForeachCallbackData *) pPayload;
 
     if (data->parents)
-        res = git_commit_lookup(&(data->parents[data->size]), data->repository, pOid);
+        res = git_commit_lookup(&data->parents[data->size], data->repository, pOid);
 
     if (!res)
         ++data->size;
@@ -1083,9 +1084,9 @@ int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
 int PmrWorkspace::transferProgressCallback(const git_transfer_progress *pProgress,
                                            void *pPayload)
 {
-    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
+    // Let people know about the progress of our transfer
 
-    workspace->emitProgress(double(pProgress->received_objects+pProgress->indexed_objects)/(pProgress->total_objects << 1));
+    ((PmrWorkspace *) pPayload)->emitProgress(double(pProgress->received_objects+pProgress->indexed_objects)/(pProgress->total_objects << 1));
 
     return 0;
 }
