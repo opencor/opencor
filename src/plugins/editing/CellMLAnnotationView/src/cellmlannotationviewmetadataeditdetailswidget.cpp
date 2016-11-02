@@ -602,10 +602,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
                                 "        <a href=\""+itemInformation+"\">"+item.id()+"</a>\n"
                                 "    </td>\n"
                                 "    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"></a>\n"
                                 "    </td>\n"
                                 "    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
-                                "        <img class=\"disabledButton\"/>\n"
+                                "        <img class=\"disabledButton\">\n"
                                 "    </td>\n"
                                 "</tr>\n";
         }
