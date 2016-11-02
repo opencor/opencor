@@ -302,10 +302,10 @@ void PmrWorkspacesWindowWindow::updateAuthenticationStatus(const bool &pAuthenti
 {
     // Show authentication state and allow workspace creation if authenticated
 
-    Core::showEnableAction(mGui->actionAuthenticate, pAuthenticated);
+    Core::showEnableAction(mGui->actionAuthenticate, !pAuthenticated);
     Core::showEnableAction(mGui->actionNew, true, pAuthenticated);
     Core::showEnableAction(mGui->actionRefresh, true, pAuthenticated);
-    Core::showEnableAction(mGui->actionUnauthenticate, !pAuthenticated);
+    Core::showEnableAction(mGui->actionUnauthenticate, pAuthenticated);
 
     if (pAuthenticated)
         mWorkspacesWindowWidget->refreshWorkspaces();
