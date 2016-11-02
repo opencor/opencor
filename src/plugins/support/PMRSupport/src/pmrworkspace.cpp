@@ -740,6 +740,77 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
 //==============================================================================
 
+void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
+{
+    if (isOpen()) {
+        QDir repoDir = QDir(mPath);
+        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
+        const char *relativePath = relativePathByteArray.constData();
+        bool success = false;
+        git_index *index;
+
+       if (!git_repository_index(&index, mGitRepository)) {
+            if (pStage) {
+                unsigned int statusFlags = 0;
+
+                git_status_file(&statusFlags, mGitRepository, relativePath);
+
+                if (statusFlags & GIT_STATUS_WT_DELETED)
+                    success = !git_index_remove_bypath(index, relativePath);
+                else
+                    success = !git_index_add_bypath(index, relativePath);
+            } else if (git_repository_head_unborn(mGitRepository) == 1) {
+                success = !git_index_remove_bypath(index, relativePath);
+            } else {
+                // We need to add a "reset stage" to the index, which means
+                // getting the tree for HEAD and tree_entry for the file
+
+                git_reference *headReference;
+
+                if (!git_repository_head(&headReference, mGitRepository)) {
+                    git_tree *headTree;
+
+                    if (!git_reference_peel((git_object **) &headTree, headReference, GIT_OBJ_TREE)) {
+                        git_tree_entry *headEntry;
+
+                        if (!git_tree_entry_bypath(&headEntry, headTree, relativePath)) {
+                            git_index_entry indexEntry;
+
+                            memset(&indexEntry, '\0', sizeof(git_index_entry));
+
+                            indexEntry.id = *git_tree_entry_id(headEntry);
+                            indexEntry.mode = git_tree_entry_filemode(headEntry);
+                            indexEntry.path = relativePath;
+
+                            git_index_add(index, &indexEntry);
+
+                            git_tree_entry_free(headEntry);
+
+                            success = true;
+                        } else {
+                            success = !git_index_remove_bypath(index, relativePath);
+                        }
+
+                        git_tree_free(headTree);
+                    }
+
+                    git_reference_free(headReference);
+                }
+            }
+
+            if (success)
+                git_index_write(index);
+
+            git_index_free(index);
+        }
+
+        if (!success)
+            emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
+    }
+}
+
+//==============================================================================
+
 QStringList PmrWorkspace::stagedFiles()
 {
     QStringList fileList = QStringList();
@@ -1154,77 +1225,6 @@ void PmrWorkspace::push()
     if (gitRemote) git_remote_free(gitRemote);
 
     git_strarray_free(&authorisationStrArray);
-}
-
-//==============================================================================
-
-void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
-{
-    if (isOpen()) {
-        QDir repoDir = QDir(mPath);
-        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
-        const char *relativePath = relativePathByteArray.constData();
-        bool success = false;
-        git_index *index;
-
-       if (!git_repository_index(&index, mGitRepository)) {
-            if (pStage) {
-                unsigned int statusFlags = 0;
-
-                git_status_file(&statusFlags, mGitRepository, relativePath);
-
-                if (statusFlags & GIT_STATUS_WT_DELETED)
-                    success = !git_index_remove_bypath(index, relativePath);
-                else
-                    success = !git_index_add_bypath(index, relativePath);
-            } else if (git_repository_head_unborn(mGitRepository) == 1) {
-                success = !git_index_remove_bypath(index, relativePath);
-            } else {
-                // We need to add a "reset stage" to the index, which means
-                // getting the tree for HEAD and tree_entry for the file
-
-                git_reference *headReference;
-
-                if (!git_repository_head(&headReference, mGitRepository)) {
-                    git_tree *headTree;
-
-                    if (!git_reference_peel((git_object **) &headTree, headReference, GIT_OBJ_TREE)) {
-                        git_tree_entry *headEntry;
-
-                        if (!git_tree_entry_bypath(&headEntry, headTree, relativePath)) {
-                            git_index_entry indexEntry;
-
-                            memset(&indexEntry, '\0', sizeof(git_index_entry));
-
-                            indexEntry.id = *git_tree_entry_id(headEntry);
-                            indexEntry.mode = git_tree_entry_filemode(headEntry);
-                            indexEntry.path = relativePath;
-
-                            git_index_add(index, &indexEntry);
-
-                            git_tree_entry_free(headEntry);
-
-                            success = true;
-                        } else {
-                            success = !git_index_remove_bypath(index, relativePath);
-                        }
-
-                        git_tree_free(headTree);
-                    }
-
-                    git_reference_free(headReference);
-                }
-            }
-
-            if (success)
-                git_index_write(index);
-
-            git_index_free(index);
-        }
-
-        if (!success)
-            emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
-    }
 }
 
 //==============================================================================
