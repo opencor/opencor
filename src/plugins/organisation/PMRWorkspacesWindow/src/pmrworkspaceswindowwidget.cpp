@@ -85,8 +85,8 @@ static const auto RefreshIcon         = QStringLiteral(":/oxygen/actions/view-re
 static const auto StageIcon           = QStringLiteral(":/oxygen/actions/dialog-ok-apply.png");
 static const auto UnstageIcon         = QStringLiteral(":/oxygen/actions/dialog-cancel.png");
 static const auto SynchronizeIcon     = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize.png");
-static const auto SynchronizePushIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/sync-push.png");
-static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/sync-pull.png");
+static const auto SynchronizePushIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize-push.png");
+static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize-pull.png");
 
 //==============================================================================
 
@@ -130,6 +130,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     QString fileContents;
     Core::readFileContentsFromFile(":/PMRWorkspacesWindow/output.html", fileContents);
+
     mTemplate = fileContents.arg(Core::iconDataUri(CloneIcon, 16, 16),
                                  Core::iconDataUri(CommitIcon, 16, 16))
                             .arg(Core::iconDataUri(FolderIcon, 16, 16),
