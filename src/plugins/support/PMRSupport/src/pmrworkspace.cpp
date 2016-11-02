@@ -248,14 +248,14 @@ void PmrWorkspace::clone(const QString &pPath)
     QByteArray workspaceByteArray = mUrl.toUtf8();
     QByteArray pathByteArray = pPath.toUtf8();
     git_clone_options cloneOptions;
-    git_strarray authorisationStrArray = { 0, 0 };
+    git_strarray authorizationStrArray = { 0, 0 };
 
-    setGitAuthorisation(&authorisationStrArray);
+    setGitAuthorization(&authorizationStrArray);
 
     cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
     cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
     cloneOptions.fetch_opts.callbacks.payload = this;
-    cloneOptions.fetch_opts.custom_headers = authorisationStrArray;
+    cloneOptions.fetch_opts.custom_headers = authorizationStrArray;
 
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
     cloneOptions.checkout_opts.progress_cb = checkoutProgressCallback;
@@ -270,7 +270,7 @@ void PmrWorkspace::clone(const QString &pPath)
         emitGitError(tr("An error occurred while trying to clone the workspace."));
     }
 
-    git_strarray_free(&authorisationStrArray);
+    git_strarray_free(&authorizationStrArray);
 
     mPath = pPath;
 
@@ -870,24 +870,25 @@ QStringList PmrWorkspace::stagedFiles()
 
 //==============================================================================
 
-void PmrWorkspace::setGitAuthorisation(git_strarray *pAuthorisationStrArray)
+void PmrWorkspace::setGitAuthorization(git_strarray *pAuthorizationStrArray)
 {
+    // Set the Git authorisation
+
     if (!mUsername.isEmpty()) {
-        // Initialise a git_strarray with a Basic Authorization header
+        // Initialise with a Basic Authorisation header
 
-        QByteArray authorisationHeader = QByteArray("Authorization: Basic ");
-        QByteArray usernamePassword = QString(mUsername+":"+mPassword).toUtf8();
+        QByteArray authorisationHeader =  QByteArray("Authorization: Basic ")
+                                         +QString(mUsername+":"+mPassword).toUtf8().toBase64();
 
-        authorisationHeader += usernamePassword.toBase64();
+        char *authorizationStrArrayData = (char *) malloc(authorisationHeader.count()+1);
+        char **authorizationStrArrayArray = (char **) malloc(sizeof(char *));
 
-        char *authorisationStrArrayData = (char *)malloc(authorisationHeader.count() + 1);
-        memcpy(authorisationStrArrayData, authorisationHeader.constData(), authorisationHeader.count() + 1);
+        memcpy(authorizationStrArrayData, authorisationHeader.constData(), authorisationHeader.count()+1);
 
-        char **authorisationStrArrayArray = (char **)malloc(sizeof(char *));
-        authorisationStrArrayArray[0] = authorisationStrArrayData;
+        authorizationStrArrayArray[0] = authorizationStrArrayData;
 
-        pAuthorisationStrArray->strings = authorisationStrArrayArray;
-        pAuthorisationStrArray->count = 1;
+        pAuthorizationStrArray->count = 1;
+        pAuthorizationStrArray->strings = authorizationStrArrayArray;
     }
 }
 
@@ -951,17 +952,21 @@ bool PmrWorkspace::fetch()
 
     // Track push progress
 
+    fetchOptions.callbacks.payload = this;
     fetchOptions.callbacks.transfer_progress = transferProgressCallback;
-    fetchOptions.callbacks.payload = (void *)this;
 
     // Set up Basic authorization
 
-    git_strarray authorisationStrArray = { 0, 0 };
-    setGitAuthorisation(&authorisationStrArray);
-    fetchOptions.custom_headers = authorisationStrArray;
+    git_strarray authorizationStrArray = { 0, 0 };
+
+    setGitAuthorization(&authorizationStrArray);
+
+    fetchOptions.custom_headers = authorizationStrArray;
 
     git_remote_callbacks remoteCallbacks;
+
     git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+
     remoteCallbacks.certificate_check = certificateCheckCallback;
 
     // Get the remote, connect to it, add a refspec, and do the push
@@ -978,7 +983,7 @@ bool PmrWorkspace::fetch()
     }
     if (gitRemote) git_remote_free(gitRemote);
 
-    git_strarray_free(&authorisationStrArray);
+    git_strarray_free(&authorizationStrArray);
 
     return fetched;
 }
@@ -1157,12 +1162,6 @@ bool PmrWorkspace::merge()
 
         if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
             res = commitMerge();
-
-        // emit information(tr("Merge succeeded..."));
-
-        // List of updated files:
-        //    mUpdatedFiles.join("\n")
-        // Just emit the list... ???
     } else if (error != GIT_ENOTFOUND) {
         QString errorMessage = tr("An error occurred while trying to merge the workspace.");
 
@@ -1198,25 +1197,26 @@ void PmrWorkspace::push()
 
     // Track push progress
 
+    pushOptions.callbacks.payload = this;
     pushOptions.callbacks.transfer_progress = transferProgressCallback;
-    pushOptions.callbacks.payload = (void *)this;
 
     // Set up Basic authorization
 
-    git_strarray authorisationStrArray = { 0, 0 };
-    setGitAuthorisation(&authorisationStrArray);
-    pushOptions.custom_headers = authorisationStrArray;
+    git_strarray authorizationStrArray = { 0, 0 };
+
+    setGitAuthorization(&authorizationStrArray);
+
+    pushOptions.custom_headers = authorizationStrArray;
 
     git_remote_callbacks remoteCallbacks;
+
     git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+
     remoteCallbacks.certificate_check = certificateCheckCallback;
 
     // Get the remote, connect to it, add a refspec, and do the push
 
     git_remote *gitRemote = 0;
-
-// TODO: Does first push need to create a master ??
-//       it needs to create refs/remotes/origin/master
 
     const char *masterReference = "refs/heads/master";
     git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
@@ -1227,7 +1227,7 @@ void PmrWorkspace::push()
     }
     if (gitRemote) git_remote_free(gitRemote);
 
-    git_strarray_free(&authorisationStrArray);
+    git_strarray_free(&authorizationStrArray);
 }
 
 //==============================================================================

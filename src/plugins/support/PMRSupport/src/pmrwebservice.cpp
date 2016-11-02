@@ -399,7 +399,6 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QString &pPath,
                                                 PmrExposure *pExposure)
 {
-qDebug(">>> %s", qPrintable(pPath));
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
     pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *)pExposure));

@@ -134,7 +134,7 @@ private:
 
     CharPair gitStatusChars(const int &pFlags) const;
 
-    void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
+    void setGitAuthorization(git_strarray *pAuthorizationStrArray);
 
     static int certificateCheckCallback(git_cert *pCertificate, int pValid,
                                         const char *pHost, void *pPayload);
