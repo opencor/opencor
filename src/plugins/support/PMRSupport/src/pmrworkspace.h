@@ -78,7 +78,7 @@ public:
 
     PmrWorkspaceFileNode * rootFileNode() const;
 
-    void clone(const QString &pDirName);
+    void clone(const QString &pPath);
     void close();
     bool commit(const QString &pMessage);
     bool commitMerge();
@@ -86,7 +86,7 @@ public:
     bool isOpen() const;
     bool open();
     void refreshStatus();
-    void synchronise(const bool pOnlyPull);
+    void synchronize(const bool pOnlyPull);
 
     enum WorkspaceStatus {
         StatusUnknown  = 0,

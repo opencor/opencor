@@ -233,7 +233,60 @@ QString PmrWorkspace::owner() const
 
 PmrWorkspaceFileNode * PmrWorkspace::rootFileNode() const
 {
+    // Return our root file node
+
     return mRootFileNode;
+}
+
+//==============================================================================
+
+void PmrWorkspace::clone(const QString &pPath)
+{
+    // Clone the workspace to the given directory, using basic authentication
+
+    QByteArray workspaceByteArray = mUrl.toUtf8();
+    QByteArray dirNameByteArray = pPath.toUtf8();
+    git_clone_options cloneOptions;
+    git_strarray authorisationStrArray = { 0, 0 };
+
+    setGitAuthorisation(&authorisationStrArray);
+
+    cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
+    cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
+    cloneOptions.fetch_opts.callbacks.payload = this;
+    cloneOptions.fetch_opts.custom_headers = authorisationStrArray;
+
+    cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
+    cloneOptions.checkout_opts.progress_cb = checkoutProgressCallback;
+    cloneOptions.checkout_opts.progress_payload = this;
+
+    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
+
+    // Perform the cloning itself and let people know whether it worked or not
+
+    if (git_clone(&mGitRepository, workspaceByteArray.constData(),
+                  dirNameByteArray.constData(), &cloneOptions)) {
+        emitGitError(tr("An error occurred while trying to clone the workspace."));
+    }
+
+    git_strarray_free(&authorisationStrArray);
+
+    mPath = pPath;
+
+    emit workspaceCloned(this);
+}
+
+//==============================================================================
+
+void PmrWorkspace::close()
+{
+    // Close ourselves, i.e. reset our Git repository object
+
+    if (mGitRepository) {
+        git_repository_free(mGitRepository);
+
+        mGitRepository = 0;
+    }
 }
 
 //==============================================================================
@@ -276,16 +329,6 @@ bool PmrWorkspace::open()
 bool PmrWorkspace::isOpen() const
 {
     return mGitRepository;
-}
-
-//==============================================================================
-
-void PmrWorkspace::close()
-{
-    if (mGitRepository) {
-        git_repository_free(mGitRepository);
-        mGitRepository = 0;
-    }
 }
 
 //==============================================================================
@@ -484,50 +527,6 @@ void PmrWorkspace::checkoutProgressCallback(const char *pPath,
     PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
 
     workspace->emitProgress(double(pCompletedSteps)/pTotalSteps);
-}
-
-//==============================================================================
-
-void PmrWorkspace::clone(const QString &pDirName)
-{
-    // Clone a workspace
-
-    QByteArray workspaceByteArray = mUrl.toUtf8();
-    QByteArray dirNameByteArray = pDirName.toUtf8();
-
-    git_clone_options cloneOptions;
-    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
-
-    // We trust PMR's SSL certificate
-
-    cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
-
-    // Track clone and checkout progress
-
-    cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
-    cloneOptions.fetch_opts.callbacks.payload = (void *)this;
-    cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
-    cloneOptions.checkout_opts.progress_cb = checkoutProgressCallback;
-    cloneOptions.checkout_opts.progress_payload = (void *)this;
-
-    // Set up Basic authorization
-
-    git_strarray authorisationStrArray = { 0, 0 };
-    setGitAuthorisation(&authorisationStrArray);
-    cloneOptions.fetch_opts.custom_headers = authorisationStrArray;
-
-    // Perform the clone
-
-    if (git_clone(&mGitRepository, workspaceByteArray.constData(),
-                          dirNameByteArray.constData(), &cloneOptions)) {
-        emitGitError(tr("An error occurred while trying to clone the workspace."));
-    }
-
-    git_strarray_free(&authorisationStrArray);
-
-    mPath = pDirName;
-
-    emit workspaceCloned(this);
 }
 
 //==============================================================================
@@ -853,7 +852,7 @@ bool PmrWorkspace::merge()
 
 //==============================================================================
 
-void PmrWorkspace::synchronise(const bool pOnlyPull)
+void PmrWorkspace::synchronize(const bool pOnlyPull)
 {
     // Synchronise our local workspace with PMR
 
