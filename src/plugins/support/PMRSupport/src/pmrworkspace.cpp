@@ -494,6 +494,51 @@ bool PmrWorkspace::open()
 
 //==============================================================================
 
+const CharPair PmrWorkspace::gitStatusChars(const int &pFlags)
+{
+    // Git status
+
+    if (pFlags & GIT_STATUS_CONFLICTED)
+        return CharPair(' ', 'C');
+
+    if (pFlags & GIT_STATUS_IGNORED)
+        return CharPair(' ', '!');
+
+    // iStatus
+
+    QChar iStatus = ' ';
+
+    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
+        iStatus = 'T';
+    else if (pFlags & GIT_STATUS_INDEX_RENAMED)
+        iStatus = 'R';
+    else if (pFlags & GIT_STATUS_INDEX_DELETED)
+        iStatus = 'D';
+    else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
+        iStatus = 'M';
+    else if (pFlags & GIT_STATUS_INDEX_NEW)
+        iStatus = 'A';
+
+    // wStatus
+
+    QChar wStatus = ' ';
+
+    if (pFlags & GIT_STATUS_WT_TYPECHANGE)
+        wStatus = 'T';
+    else if (pFlags & GIT_STATUS_WT_RENAMED)
+        wStatus = 'R';
+    else if (pFlags & GIT_STATUS_WT_DELETED)
+        wStatus = 'D';
+    else if (pFlags & GIT_STATUS_WT_MODIFIED)
+        wStatus = 'M';
+    else if (pFlags & GIT_STATUS_WT_NEW)
+        wStatus = 'A';
+
+    return CharPair(iStatus, wStatus);
+}
+
+//==============================================================================
+
 void PmrWorkspace::refreshStatus()
 {
     // Refresh our status
@@ -507,13 +552,15 @@ void PmrWorkspace::refreshStatus()
 
     if (isOpen()) {
         git_status_options statusOptions;
+
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
-        statusOptions.show  = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
+
         statusOptions.flags =  GIT_STATUS_OPT_INCLUDE_UNTRACKED
                               |GIT_STATUS_OPT_INCLUDE_UNMODIFIED
                               |GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
                               |GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY
                               |GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+        statusOptions.show  = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
 
         git_status_list *statusList;
 
@@ -524,13 +571,17 @@ void PmrWorkspace::refreshStatus()
 
             fileNodes << currentFileNode;
 
+            // Go through the different entries
+
             for (size_t i = 0; i < entries; ++i) {
                 const git_status_entry *status = git_status_byindex(statusList, i);
-                const char *filePath = (status->head_to_index)    ? status->head_to_index->old_file.path
-                                     : (status->index_to_workdir) ? status->index_to_workdir->old_file.path
-                                     :                              0;
+                const char *filePath = (status->head_to_index)?
+                                           status->head_to_index->old_file.path:
+                                           (status->index_to_workdir)?
+                                               status->index_to_workdir->old_file.path:
+                                               0;
+
                 if (filePath) {
-                    QStringList pathComponents = QString(filePath).split('/');
                     const CharPair statusChars = gitStatusChars(status->status);
 
                     if (statusChars.first != ' ')
@@ -539,24 +590,28 @@ void PmrWorkspace::refreshStatus()
                     if (statusChars.second != ' ')
                         ++mUnstagedCount;
 
-                    // Find correct place in tree to add file
+                    // Find the correct place in the tree to add the file
 
+                    QStringList pathComponents = QString(filePath).split('/');
+                    int pathComponentsSize = pathComponents.size();
                     int i = 0;
-                    int n = std::min(pathComponents.size(), fileNodes.size()) - 1;
+                    int n = std::min(pathComponentsSize, fileNodes.size())-1;
 
-                    while (   (i < n )
+                    while (   (i < n)
                            && pathComponents[i].compare(fileNodes[i+1]->shortName(), Qt::CaseInsensitive)) {
                         ++i;
                     }
-                    // Cut back stack to matching path component
+
+                    // Cut back the stack so that it matches the path component
 
                     while (i+1 < fileNodes.size())
                         fileNodes.removeLast();
 
                     currentFileNode = fileNodes[i];
 
-                    // Add directory nodes as required
-                    while (i < (pathComponents.size() - 1)) {
+                    // Add the directory nodes as required
+
+                    while (i < pathComponentsSize-1) {
                         currentFileNode = currentFileNode->addChild(pathComponents[i]);
 
                         fileNodes << currentFileNode;
@@ -564,10 +619,10 @@ void PmrWorkspace::refreshStatus()
                         ++i;
                     }
 
-                    mRepositoryStatusMap.insert(QString(filePath),
-                                                currentFileNode->addChild(pathComponents[i], statusChars));
+                    mRepositoryStatusMap.insert(filePath, currentFileNode->addChild(pathComponents[i], statusChars));
                 }
             }
+
             git_status_list_free(statusList);
         }
     }
@@ -1098,51 +1153,6 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
     }
 
     return status;
-}
-
-//==============================================================================
-
-const CharPair PmrWorkspace::gitStatusChars(const int &pFlags)
-{
-    // Git status
-
-    if (pFlags & GIT_STATUS_CONFLICTED)
-        return CharPair(' ', 'C');
-
-    if (pFlags & GIT_STATUS_IGNORED)
-        return CharPair(' ', '!');
-
-    // iStatus
-
-    QChar iStatus = ' ';
-
-    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
-        iStatus = 'T';
-    else if (pFlags & GIT_STATUS_INDEX_RENAMED)
-        iStatus = 'R';
-    else if (pFlags & GIT_STATUS_INDEX_DELETED)
-        iStatus = 'D';
-    else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
-        iStatus = 'M';
-    else if (pFlags & GIT_STATUS_INDEX_NEW)
-        iStatus = 'A';
-
-    // wStatus
-
-    QChar wStatus = ' ';
-
-    if (pFlags & GIT_STATUS_WT_TYPECHANGE)
-        wStatus = 'T';
-    else if (pFlags & GIT_STATUS_WT_RENAMED)
-        wStatus = 'R';
-    else if (pFlags & GIT_STATUS_WT_DELETED)
-        wStatus = 'D';
-    else if (pFlags & GIT_STATUS_WT_MODIFIED)
-        wStatus = 'M';
-    else if (pFlags & GIT_STATUS_WT_NEW)
-        wStatus = 'A';
-
-    return CharPair(iStatus, wStatus);
 }
 
 //==============================================================================

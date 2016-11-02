@@ -132,6 +132,8 @@ private:
     bool doCommit(const char *pMessage, const size_t &pParentCount,
                   const git_commit **pParents);
 
+    static const CharPair gitStatusChars(const int &pFlags);
+
     void setGitAuthorisation(git_strarray *pAuthorisationStrArray);
 
     static int certificateCheckCallback(git_cert *pCertificate, int pValid,
@@ -155,8 +157,6 @@ private:
 
     void emitGitError(const QString &pMessage) const;
     void emitProgress(const double &pProgress) const;
-
-    static const CharPair gitStatusChars(const int &pFlags);
 
     bool fetch();
     bool merge();
