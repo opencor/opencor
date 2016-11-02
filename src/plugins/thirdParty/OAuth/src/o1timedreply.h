@@ -3,17 +3,11 @@
 
 #include <QNetworkReply>
 #include <QTimer>
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+
+#include "o0export.h"
 
 /// A timer connected to a network reply.
-/*---OPENCOR---
-class O1TimedReply: public QTimer {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O1TimedReply: public QTimer {
-//---OPENCOR--- END
+class O0_EXPORT O1TimedReply: public QTimer {
     Q_OBJECT
 
 public:

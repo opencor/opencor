@@ -8,19 +8,12 @@
 #include <QUrl>
 #include <QVariantMap>
 
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+#include "o0export.h"
 #include "o0abstractstore.h"
 #include "o0requestparameter.h"
 
 /// Base class of OAuth authenticators
-/*---OPENCOR---
-class O0BaseAuth : public QObject {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O0BaseAuth : public QObject {
-//---OPENCOR--- END
+class O0_EXPORT O0BaseAuth : public QObject {
     Q_OBJECT
 
 public:

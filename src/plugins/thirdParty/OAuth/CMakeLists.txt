@@ -70,6 +70,8 @@ ELSE()
             src/oauthplugin.h
         INCLUDE_DIRS
             src
+        DEFINITIONS
+            O2_DLL_EXPORT
         QT_MODULES
             Core
             Network

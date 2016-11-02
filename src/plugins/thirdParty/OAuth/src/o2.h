@@ -6,9 +6,7 @@
 #include <QNetworkReply>
 #include <QPair>
 
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+#include "o0export.h"
 #include "o0baseauth.h"
 #include "o2reply.h"
 #include "o0abstractstore.h"
@@ -16,12 +14,7 @@
 class O2ReplyServer;
 
 /// Simple OAuth2 authenticator.
-/*---OPENCOR---
-class O2: public O0BaseAuth {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O2: public O0BaseAuth {
-//---OPENCOR--- END
+class O0_EXPORT O2: public O0BaseAuth {
     Q_OBJECT
     Q_ENUMS(GrantFlow)
 

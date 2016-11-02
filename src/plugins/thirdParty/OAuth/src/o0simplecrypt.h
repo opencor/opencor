@@ -30,9 +30,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QString>
 #include <QVector>
 #include <QFlags>
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+
+#include "o0baseauth.h"
 
 /**
   @short Simple encryption and decryption of strings and byte arrays
@@ -57,12 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   SimpleCrypt is prepared for the case that the encryption and decryption
   algorithm is changed in a later version, by prepending a version identifier to the cypertext.
   */
-/*---OPENCOR---
-class O0SimpleCrypt
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O0SimpleCrypt
-//---OPENCOR--- END
+class O0_EXPORT O0SimpleCrypt
 {
 public:
     /**

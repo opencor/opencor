@@ -8,20 +8,13 @@
 #include <QUrl>
 #include <QByteArray>
 
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+#include "o0export.h"
 #include "o2reply.h"
 
 class O2;
 
 /// Makes authenticated requests.
-/*---OPENCOR---
-class O2Requestor: public QObject {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O2Requestor: public QObject {
-//---OPENCOR--- END
+class O0_EXPORT O2Requestor: public QObject {
     Q_OBJECT
 
 public:

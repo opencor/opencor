@@ -7,17 +7,11 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QByteArray>
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+
+#include "o0export.h"
 
 /// A network request/reply pair that can time out.
-/*---OPENCOR---
-class O2Reply: public QTimer {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O2Reply: public QTimer {
-//---OPENCOR--- END
+class O0_EXPORT O2Reply: public QTimer {
     Q_OBJECT
 
 public:

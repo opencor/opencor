@@ -5,17 +5,11 @@
 #include <QMap>
 #include <QByteArray>
 #include <QString>
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+
+#include "o0export.h"
 
 /// HTTP server to process authentication response.
-/*---OPENCOR---
-class O2ReplyServer: public QTcpServer {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O2ReplyServer: public QTcpServer {
-//---OPENCOR--- END
+class O0_EXPORT O2ReplyServer: public QTcpServer {
     Q_OBJECT
 
 public:

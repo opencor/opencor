@@ -4,19 +4,12 @@
 #include <QSettings>
 #include <QString>
 
-//---OPENCOR--- BEGIN
-#include "oauthglobal.h"
-//---OPENCOR--- END
+#include "o0baseauth.h"
 #include "o0abstractstore.h"
 #include "o0simplecrypt.h"
 
 /// Persistent storage for authentication tokens, using QSettings.
-/*---OPENCOR---
-class O0SettingsStore: public O0AbstractStore {
-*/
-//---OPENCOR--- BEGIN
-class OAUTH_EXPORT O0SettingsStore: public O0AbstractStore {
-//---OPENCOR--- END
+class O0_EXPORT O0SettingsStore: public O0AbstractStore {
     Q_OBJECT
 
 public:
