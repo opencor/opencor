@@ -37,7 +37,7 @@ namespace OpenCOR {
 //==============================================================================
 
 QString dirName(const QString &pDirName);
-QString filePath(const QString &pFilePath);
+QString fileName(const QString &pFilePath);
 
 QByteArray rawFileContents(const QString &pFileName);
 QStringList fileContents(const QString &pFileName);
