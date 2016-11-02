@@ -98,8 +98,8 @@ public:
         StatusUnstaged = 128
     };
 
-    WorkspaceStatus gitWorkspaceStatus() const;
     const CharPair gitFileStatus(const QString &pPath) const;
+    WorkspaceStatus gitWorkspaceStatus() const;
 
     void stageFile(const QString &pPath, const bool &pStage);
     QStringList stagedFiles();
@@ -146,7 +146,7 @@ private:
                                         const char *pRemoteUrl,
                                         const git_oid *pId,
                                         unsigned int pMerge, void *pPayload);
-    static int mergeheadForeachCallback(const git_oid *oid, void *payload);
+    static int mergeheadForeachCallback(const git_oid *pOid, void *pPayload);
     static int transferProgressCallback(const git_transfer_progress *pProgress,
                                         void *pPayload);
 
@@ -155,7 +155,7 @@ private:
 
     static const CharPair gitStatusChars(const int &pFlags);
 
-    bool doCommit(const char *pMessage, size_t pParentCount,
+    bool doCommit(const char *pMessage, const size_t &pParentCount,
                   const git_commit **pParents);
     bool fetch();
     bool merge();

@@ -185,7 +185,8 @@ void PmrWorkspace::setPath(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspace::setCredentials(const QString &pUsername, const QString &pPassword)
+void PmrWorkspace::setCredentials(const QString &pUsername,
+                                  const QString &pPassword)
 {
     // Set our credentials
 
@@ -291,16 +292,171 @@ void PmrWorkspace::close()
 
 //==============================================================================
 
-void PmrWorkspace::emitProgress(const double &pProgress) const
+bool PmrWorkspace::doCommit(const char *pMessage, const size_t &pParentCount,
+                            const git_commit **pParents)
 {
-    emit progress(pProgress);
+    // Commit everything that is staged
+
+    git_signature *author = 0;
+    git_index *index = 0;
+    git_tree *tree = 0;
+    git_oid commitId;
+    git_oid treeId;
+
+    bool res =    git_signature_now(&author, "Test Author",
+                                    "testing@staging.physiomeproject.org")
+               || git_repository_index(&index, mGitRepository)
+               || git_index_write_tree(&treeId, index)
+               || git_tree_lookup(&tree, mGitRepository, &treeId)
+               || git_commit_create(&commitId, mGitRepository, "HEAD", author,
+                                    author, 0, pMessage, tree, pParentCount,
+                                    pParents);
+
+    if (tree)
+        git_tree_free(tree);
+
+    if (index)
+        git_index_free(index);
+
+    if (author)
+        git_signature_free(author);
+
+    return !res;
 }
 
 //==============================================================================
 
-void PmrWorkspace::emitGitError(const QString &pMessage) const
+bool PmrWorkspace::commit(const QString &pMessage)
 {
-    emit warning(pMessage);
+    // Make sure that we are open
+
+    if (!isOpen())
+        return false;
+
+    // Get an empty buffer to hold the cleaned message
+
+    git_buf message;
+
+    message.ptr = 0;
+
+    git_buf_set(&message, 0, 0);
+
+    // Clean up the message and remove comments (which start with ";")
+
+    QByteArray messageByteArray = pMessage.toUtf8();
+
+    git_message_prettify(&message, messageByteArray.constData(), true, ';');
+
+    bool res = true;
+
+    if (message.size) {
+        int nbOfParents = -1;
+        git_commit *parent = 0;
+
+        if (git_repository_head_unborn(mGitRepository) == 1) {
+            // We are committing to an empty repository
+
+            nbOfParents = 0;
+        } else {
+            // Get HEAD as the commit object to use as the parent of the commit
+
+            git_oid parentId;
+
+            if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
+                && !git_commit_lookup(&parent, mGitRepository, &parentId)) {
+                nbOfParents = 1;
+            }
+        }
+
+        if (nbOfParents >= 0) {
+            res = doCommit(message.ptr, nbOfParents,
+                           (const git_commit **) (&parent));
+
+            if (!res)
+                emitGitError(tr("An error occurred while trying to commit to the workspace."));
+        }
+
+        if (parent)
+            git_commit_free(parent);
+    }
+
+    git_buf_free(&message);
+
+    return res;
+}
+
+//==============================================================================
+
+typedef struct {
+    size_t size;
+    git_repository *repository;
+    git_commit **parents;
+} MergeheadForeachCallbackData;
+
+//==============================================================================
+
+bool PmrWorkspace::commitMerge()
+{
+    // Get the number of merge heads so we can allocate an array for parents
+
+    MergeheadForeachCallbackData mergeCallbackData = { 0, 0, 0 };
+
+    git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback,
+                                     &mergeCallbackData);
+
+    size_t nbOfParents = mergeCallbackData.size+1;
+    git_commit **parents = new git_commit*[nbOfParents]();
+
+    // HEAD is always a parent
+
+    bool res = false;
+    git_oid parentId;
+
+    if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
+        && !git_commit_lookup(parents, mGitRepository, &parentId)) {
+        res = true;
+
+        // Now populate the list of commit parents
+
+        if (nbOfParents > 1) {
+            mergeCallbackData.size = 0;
+            mergeCallbackData.repository = mGitRepository;
+            mergeCallbackData.parents = &(parents[1]);
+
+            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &mergeCallbackData))
+                res = false;
+        }
+
+        if (res) {
+            std::string message = std::string("Merge branch 'master' of ");
+
+            if (doCommit(message.c_str(), nbOfParents,
+                         (const git_commit **) parents)) {
+                git_repository_state_cleanup(mGitRepository);
+            } else {
+                res = false;
+            }
+        }
+    }
+
+    for (size_t n = 0; n < nbOfParents; ++n)
+        git_commit_free(parents[n]);
+
+    delete[] parents;
+
+    if (!res)
+        emitGitError(tr("An error occurred while trying to commit the merge."));
+
+    return res;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::isOpen() const
+{
+    // Return whether we are open
+
+    return mGitRepository;
 }
 
 //==============================================================================
@@ -322,13 +478,6 @@ bool PmrWorkspace::open()
     }
 
     return false;
-}
-
-//==============================================================================
-
-bool PmrWorkspace::isOpen() const
-{
-    return mGitRepository;
 }
 
 //==============================================================================
@@ -607,80 +756,16 @@ int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
 
 //==============================================================================
 
-typedef struct {
-    size_t size;
-    git_repository *repository;
-    git_commit **parents;
-} MergeHeadCallbackData;
-
-//==============================================================================
-
-int PmrWorkspace::mergeheadForeachCallback(const git_oid *oid, void *payload)
+int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
 {
-    int error = 0;
-    MergeHeadCallbackData *mergeCallbackData = (MergeHeadCallbackData *)payload;
+    int res = 0;
+    MergeheadForeachCallbackData *data = (MergeheadForeachCallbackData *)pPayload;
 
-    if (mergeCallbackData->parents)
-        error = git_commit_lookup(&(mergeCallbackData->parents[mergeCallbackData->size]), mergeCallbackData->repository, oid);
-
-    if (!error)
-        ++mergeCallbackData->size;
-
-    return error;
-}
-
-//==============================================================================
-
-bool PmrWorkspace::commitMerge()
-{
-    // Get the number of merge heads so we can allocate an array for parents
-
-    MergeHeadCallbackData mergeCallbackData = { 0, 0, 0 };
-
-    git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &mergeCallbackData);
-
-    size_t nbOfParents = mergeCallbackData.size+1;
-    git_commit **parents = new git_commit*[nbOfParents]();
-
-    // HEAD is always a parent
-
-    bool res = false;
-    git_oid parentId;
-
-    if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
-        && !git_commit_lookup(parents, mGitRepository, &parentId)) {
-        res = true;
-
-        // Now populate the list of commit parents
-
-        if (nbOfParents > 1) {
-            mergeCallbackData.size = 0;
-            mergeCallbackData.repository = mGitRepository;
-            mergeCallbackData.parents = &(parents[1]);
-
-            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &mergeCallbackData))
-                res = false;
-        }
-
-        if (res) {
-            std::string message = std::string("Merge branch 'master' of ");
-
-            if (doCommit(message.c_str(), nbOfParents,
-                         (const git_commit **) parents)) {
-                git_repository_state_cleanup(mGitRepository);
-            } else {
-                res = false;
-            }
-        }
-    }
-
-    for (size_t n = 0; n < nbOfParents; ++n)
-        git_commit_free(parents[n]);
-
-    delete[] parents;
+    if (data->parents)
+        res = git_commit_lookup(&(data->parents[data->size]), data->repository, pOid);
 
     if (!res)
-        emitGitError(tr("An error occurred while trying to commit the merge."));
+        ++data->size;
 
     return res;
 }
@@ -917,93 +1002,27 @@ void PmrWorkspace::push()
 
 //==============================================================================
 
-bool PmrWorkspace::doCommit(const char *pMessage, size_t pParentCount,
-                            const git_commit **pParents)
+const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
-    git_signature *author = 0;
-    git_index *index = 0;
-    git_tree *tree = 0;
-    git_oid commitId;
-    git_oid treeId;
+    CharPair status = CharPair(' ', ' ');
 
-// TODO: Get user's name and email... From preferences?? Git configuration settings??
-//                                    Should OpenCOR set git's global configuration settings?? NO.
-// git_remote_push() also obtains a signature to use in the reflog
-//  so it would make sense to store the name/email with the local repository's .git configuration...
+    if (isOpen()) {
+        QDir repoDir = QDir(mPath);
+        unsigned int statusFlags = 0;
+        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
 
-// git config --local user.name "name"
-// git config --local user.email "email"
+        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
+            status = gitStatusChars(statusFlags);
 
-    bool error = git_signature_now(&author, "Test Author", "testing@staging.physiomeproject.org")
-              || git_repository_index(&index, mGitRepository)
-              || git_index_write_tree(&treeId, index)
-              || git_tree_lookup(&tree, mGitRepository, &treeId)
-              || git_commit_create(&commitId, mGitRepository, "HEAD", author,
-                                   author, 0, pMessage, tree, pParentCount,
-                                   pParents);
-    if (tree)
-        git_tree_free(tree);
+            // Also update status in file tree
 
-    if (index)
-        git_index_free(index);
-
-    if (author)
-        git_signature_free(author);
-
-    return !error;
-}
-
-//==============================================================================
-
-bool PmrWorkspace::commit(const QString &pMessage)
-{
-    if (!isOpen()) return false;
-
-    // Get an empty buffer to hold the cleaned message
-    git_buf message;
-    message.ptr = 0;
-    git_buf_set(&message, 0, 0);
-
-    // Clean up message and remove comments (which start with ";")
-
-    QByteArray messageByteArray = pMessage.toUtf8();
-
-    git_message_prettify(&message, messageByteArray.constData(), true, ';');
-
-    bool committed = true;
-    if (message.size > 0) {
-        int nParents = -1;
-        git_commit *parent = 0;
-
-        if (git_repository_head_unborn(mGitRepository) == 1) {
-            // Committing to an empty repository
-            // TODO: create a master branch...
-            nParents = 0;
-        } else {
-            // Get HEAD as the commit object to use as the parent of the commit
-
-            git_oid parentId;
-
-            if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
-                && !git_commit_lookup(&parent, mGitRepository, &parentId)) {
-                nParents = 1;
-            }
+            if (mRepositoryStatusMap.contains(pPath))
+                mRepositoryStatusMap.value(pPath)->setStatus(status);
         }
-
-        if (nParents >= 0) {
-            committed = doCommit(message.ptr, nParents, (const git_commit **)(&parent));
-
-            if (!committed)
-                emitGitError(tr("An error occurred while trying to commit to the workspace."));
-        }
-
-        if (parent)
-            git_commit_free(parent);
+        else
+            emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
     }
-
-    git_buf_free(&message);
-
-    return committed;
+    return status;
 }
 
 //==============================================================================
@@ -1121,31 +1140,6 @@ const CharPair PmrWorkspace::gitStatusChars(const int &pFlags)
 
 //==============================================================================
 
-const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
-{
-    CharPair status = CharPair(' ', ' ');
-
-    if (isOpen()) {
-        QDir repoDir = QDir(mPath);
-        unsigned int statusFlags = 0;
-        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
-
-        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
-            status = gitStatusChars(statusFlags);
-
-            // Also update status in file tree
-
-            if (mRepositoryStatusMap.contains(pPath))
-                mRepositoryStatusMap.value(pPath)->setStatus(status);
-        }
-        else
-            emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
-    }
-    return status;
-}
-
-//==============================================================================
-
 void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
     if (isOpen()) {
@@ -1213,6 +1207,20 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
         if (!success)
             emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
     }
+}
+
+//==============================================================================
+
+void PmrWorkspace::emitProgress(const double &pProgress) const
+{
+    emit progress(pProgress);
+}
+
+//==============================================================================
+
+void PmrWorkspace::emitGitError(const QString &pMessage) const
+{
+    emit warning(pMessage);
 }
 
 //==============================================================================
