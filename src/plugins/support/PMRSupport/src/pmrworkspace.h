@@ -155,15 +155,16 @@ private:
     static int transferProgressCallback(const git_transfer_progress *pProgress,
                                         void *pPayload);
 
-    void emitGitError(const QString &pMessage) const;
-    void emitProgress(const double &pProgress) const;
-
     bool fetch();
     bool merge();
     void push();
 
+    void emitProgress(const double &pProgress) const;
+    void emitGitError(const QString &pMessage) const;
+
 signals:
     void progress(const double &pProgress) const;
+
     void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 

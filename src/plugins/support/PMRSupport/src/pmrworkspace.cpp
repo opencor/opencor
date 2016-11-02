@@ -935,61 +935,6 @@ void PmrWorkspace::checkoutProgressCallback(const char *pPath,
 
 //==============================================================================
 
-bool PmrWorkspace::fetch()
-{
-    // Fetch any updates for a workspace
-
-    if (!isOpen()) return false;
-
-    bool fetched = true;
-
-    git_fetch_options fetchOptions;
-    git_fetch_init_options(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
-
-    // We trust PMR's SSL certificate
-
-    fetchOptions.callbacks.certificate_check = certificateCheckCallback;
-
-    // Track push progress
-
-    fetchOptions.callbacks.payload = this;
-    fetchOptions.callbacks.transfer_progress = transferProgressCallback;
-
-    // Set up Basic authorization
-
-    git_strarray authorizationStrArray = { 0, 0 };
-
-    setGitAuthorization(&authorizationStrArray);
-
-    fetchOptions.custom_headers = authorizationStrArray;
-
-    git_remote_callbacks remoteCallbacks;
-
-    git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
-
-    remoteCallbacks.certificate_check = certificateCheckCallback;
-
-    // Get the remote, connect to it, add a refspec, and do the push
-
-    git_remote *gitRemote = 0;
-
-    const char *masterReference = "refs/heads/master";
-    git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
-
-    if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
-     || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, 0)) {
-        emitGitError(tr("An error occurred while trying to fetch the remote workspace."));
-        fetched = false;
-    }
-    if (gitRemote) git_remote_free(gitRemote);
-
-    git_strarray_free(&authorizationStrArray);
-
-    return fetched;
-}
-
-//==============================================================================
-
 int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
                                          const char *pPath,
                                          const git_diff_file *pBaseline,
@@ -1064,7 +1009,7 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
                                                 |GIT_CHECKOUT_CONFLICT_STYLE_MERGE;
             checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
             checkoutOptions.notify_cb = checkoutNotifyCallback;
-            checkoutOptions.notify_payload = (void *) workspace;
+            checkoutOptions.notify_payload = workspace;
 
             // Find the type of merge we can do
 
@@ -1143,6 +1088,61 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
     }
 
     return !res;
+}
+
+//==============================================================================
+
+bool PmrWorkspace::fetch()
+{
+    // Fetch any updates for a workspace
+
+    if (!isOpen()) return false;
+
+    bool fetched = true;
+
+    git_fetch_options fetchOptions;
+    git_fetch_init_options(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
+
+    // We trust PMR's SSL certificate
+
+    fetchOptions.callbacks.certificate_check = certificateCheckCallback;
+
+    // Track push progress
+
+    fetchOptions.callbacks.payload = this;
+    fetchOptions.callbacks.transfer_progress = transferProgressCallback;
+
+    // Set up Basic authorization
+
+    git_strarray authorizationStrArray = { 0, 0 };
+
+    setGitAuthorization(&authorizationStrArray);
+
+    fetchOptions.custom_headers = authorizationStrArray;
+
+    git_remote_callbacks remoteCallbacks;
+
+    git_remote_init_callbacks(&remoteCallbacks, GIT_REMOTE_CALLBACKS_VERSION);
+
+    remoteCallbacks.certificate_check = certificateCheckCallback;
+
+    // Get the remote, connect to it, add a refspec, and do the push
+
+    git_remote *gitRemote = 0;
+
+    const char *masterReference = "refs/heads/master";
+    git_strarray refSpecsStrArray = { (char **)(&masterReference), 1 };
+
+    if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
+     || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, 0)) {
+        emitGitError(tr("An error occurred while trying to fetch the remote workspace."));
+        fetched = false;
+    }
+    if (gitRemote) git_remote_free(gitRemote);
+
+    git_strarray_free(&authorizationStrArray);
+
+    return fetched;
 }
 
 //==============================================================================
@@ -1234,6 +1234,8 @@ void PmrWorkspace::push()
 
 void PmrWorkspace::emitProgress(const double &pProgress) const
 {
+    // Let people know about our progress
+
     emit progress(pProgress);
 }
 
@@ -1241,6 +1243,8 @@ void PmrWorkspace::emitProgress(const double &pProgress) const
 
 void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
+    // Let people know, through a warning, about our Git error
+
     emit warning(pMessage);
 }
 
