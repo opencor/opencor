@@ -954,10 +954,12 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 {
     Q_UNUSED(pReferenceName);
 
+    // Determine whether merging can be done
+
     int res = 1;
 
     PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
-    git_repository *repository = workspace->mGitRepository;
+    git_repository *gitRepository = workspace->mGitRepository;
 
     workspace->mConflictedFiles = QStringList();
     workspace->mUpdatedFiles = QStringList();
@@ -965,11 +967,11 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
     if (pMerge) {
         git_annotated_commit *remoteCommitHead = 0;
 
-        if (git_annotated_commit_from_fetchhead(&remoteCommitHead, repository,
+        if (git_annotated_commit_from_fetchhead(&remoteCommitHead, gitRepository,
                                                 "origin/master", pRemoteUrl, pId)) {
             res = 0;
         } else {
-            // Initialise common checkout options
+            // Initialise some common checkout options
 
             git_checkout_options checkoutOptions;
 
@@ -978,58 +980,59 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
             checkoutOptions.checkout_strategy =  GIT_CHECKOUT_SAFE
                                                 |GIT_CHECKOUT_RECREATE_MISSING
                                                 |GIT_CHECKOUT_CONFLICT_STYLE_MERGE;
-            checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
             checkoutOptions.notify_cb = checkoutNotifyCallback;
+            checkoutOptions.notify_flags = GIT_CHECKOUT_NOTIFY_ALL;
             checkoutOptions.notify_payload = workspace;
 
-            // Find the type of merge we can do
+            // Determine the type of merge we can do
+
+            static const char *RefsHeadMaster = "refs/heads/master";
 
             git_merge_analysis_t analysis = GIT_MERGE_ANALYSIS_NONE;
             git_merge_preference_t preference = GIT_MERGE_PREFERENCE_NONE;
 
-            git_merge_analysis(&analysis, &preference, repository,
+            git_merge_analysis(&analysis, &preference, gitRepository,
                                (const git_annotated_commit**) &remoteCommitHead, 1);
 
             if (analysis & GIT_MERGE_ANALYSIS_UNBORN) {
-                // We can simply set HEAD to the target commit.
+                // We can simply set HEAD to the target commit
 
                 git_reference *newMaster = 0;
 
-                res =    !git_reference_create(&newMaster, repository,
-                                               "refs/heads/master",
+                res =    !git_reference_create(&newMaster, gitRepository, RefsHeadMaster,
                                                git_annotated_commit_id(remoteCommitHead),
                                                true, "initial pull")
-                      && !git_repository_set_head(repository,
-                                                  "refs/heads/master")
-                      && !git_checkout_head(repository, &checkoutOptions);
+                      && !git_repository_set_head(gitRepository, RefsHeadMaster)
+                      && !git_checkout_head(gitRepository, &checkoutOptions);
 
                 if (newMaster)
                     git_reference_free(newMaster);
             } else if (analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) {
                 // We can check out the newly fetched head without merging
 
-                const git_oid *AnnotatedCommitId = git_annotated_commit_id(remoteCommitHead);
+                const git_oid *commitId = git_annotated_commit_id(remoteCommitHead);
                 git_commit *commit = 0;
                 git_reference *headReference = 0;
                 git_reference *newHeadReference = 0;
 
-                res =    !git_commit_lookup(&commit, repository, AnnotatedCommitId)
-                      && !git_checkout_tree(repository, (const git_object *) commit, &checkoutOptions)
-                      && !git_reference_lookup(&headReference, repository, "refs/heads/master");
+                res =    !git_commit_lookup(&commit, gitRepository, commitId)
+                      && !git_checkout_tree(gitRepository, (const git_object *) commit, &checkoutOptions)
+                      && !git_reference_lookup(&headReference, gitRepository, RefsHeadMaster);
 
                 if (res) {
+                    static const char *LogMessage = "pull: fast-forward";
+
                     const git_oid *commitId = git_commit_id(commit);
-                    const char *msg = "pull: Fast-forward";
 
                     if (git_reference_type(headReference) == GIT_REF_OID) {
                         res = !git_reference_set_target(&newHeadReference,
-                                                            headReference,
-                                                            commitId, msg);
+                                                        headReference,
+                                                        commitId, LogMessage);
                     } else {
                         res = !git_reference_create(&newHeadReference,
-                                                    repository,
-                                                    "refs/heads/master",
-                                                    commitId, false, msg);
+                                                    gitRepository,
+                                                    RefsHeadMaster,
+                                                    commitId, false, LogMessage);
                     }
                 }
 
@@ -1047,10 +1050,11 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
                 // the divergent commits must be merged
 
                 git_merge_options mergeOptions;
+
                 git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
 
-                res = !git_merge(repository,
-                                 (const git_annotated_commit**) &remoteCommitHead,
+                res = !git_merge(gitRepository,
+                                 (const git_annotated_commit **) &remoteCommitHead,
                                  1, &mergeOptions, &checkoutOptions);
             }
 
@@ -1121,10 +1125,10 @@ bool PmrWorkspace::fetch()
 
     // Get the remote, connect to it, add a refspec, and do the fetch
 
-    static const char *masterReference = "refs/heads/master";
+    static const char *RefsHeadMaster = "refs/heads/master";
 
     git_remote *gitRemote = 0;
-    git_strarray refSpecsStrArray = { (char **) &masterReference, 1 };
+    git_strarray refSpecsStrArray = { (char **) &RefsHeadMaster, 1 };
 
     if (   git_remote_lookup(&gitRemote, mGitRepository, "origin")
         || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, 0)) {
@@ -1203,10 +1207,10 @@ void PmrWorkspace::push()
 
     // Get the remote, connect to it, add a refspec, and do the push
 
-    static const char *masterReference = "refs/heads/master";
+    static const char *RefsHeadMaster = "refs/heads/master";
 
     git_remote *gitRemote = 0;
-    git_strarray refSpecsStrArray = { (char **) &masterReference, 1 };
+    git_strarray refSpecsStrArray = { (char **) &RefsHeadMaster, 1 };
 
     if (   git_remote_lookup(&gitRemote, mGitRepository, "origin")
         || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
