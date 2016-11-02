@@ -1125,8 +1125,8 @@ bool PmrWorkspace::fetch()
     git_remote *gitRemote = 0;
     git_strarray refSpecsStrArray = { (char **) &masterReference, 1 };
 
-    if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
-     || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, 0)) {
+    if (   git_remote_lookup(&gitRemote, mGitRepository, "origin")
+        || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, 0)) {
         emitGitError(tr("An error occurred while trying to fetch the remote workspace."));
 
         res = false;
@@ -1153,7 +1153,7 @@ bool PmrWorkspace::merge()
     int error = git_repository_fetchhead_foreach(mGitRepository, fetchheadForeachCallback, this);
 
     if (!error) {
-        // We only need to commit NORMAL merges
+        // We only need to commit normal merges
 
         if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
             res = commitMerge();
@@ -1163,11 +1163,9 @@ bool PmrWorkspace::merge()
         if (mConflictedFiles.size()) {
             errorMessage +=  "\n\n"+tr("The following files have conflicts:")
                             +"\n\t"+mConflictedFiles.join("\n\t");
-
-            emit warning(errorMessage);
-        } else {
-            emitGitError(errorMessage);
         }
+
+        emitGitError(errorMessage);
 
         res = false;
     }
@@ -1209,8 +1207,8 @@ void PmrWorkspace::push()
     git_remote *gitRemote = 0;
     git_strarray refSpecsStrArray = { (char **) &masterReference, 1 };
 
-    if (git_remote_lookup(&gitRemote, mGitRepository, "origin")
-     || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
+    if (   git_remote_lookup(&gitRemote, mGitRepository, "origin")
+        || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
         emitGitError(tr("An error occurred while trying to push the workspace."));
     }
 
