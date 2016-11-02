@@ -63,15 +63,15 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-static const auto AboutAction           = QStringLiteral("About");
-static const auto CloneAction           = QStringLiteral("Clone");
-static const auto CommitAction          = QStringLiteral("Commit");
-static const auto RefreshAction         = QStringLiteral("Refresh");
-static const auto StageAction           = QStringLiteral("Action");
-static const auto UnstageAction         = QStringLiteral("Unstage");
-static const auto SynchronizeAction     = QStringLiteral("Synchronize");
-static const auto SynchronizePushAction = QStringLiteral("SynchronizePush");
-static const auto SynchronizePullAction = QStringLiteral("SynchronizePull");
+static const auto AboutAction           = QStringLiteral("about");
+static const auto CloneAction           = QStringLiteral("clone");
+static const auto CommitAction          = QStringLiteral("commit");
+static const auto RefreshAction         = QStringLiteral("refresh");
+static const auto StageAction           = QStringLiteral("action");
+static const auto UnstageAction         = QStringLiteral("unstage");
+static const auto SynchronizeAction     = QStringLiteral("synchronize");
+static const auto SynchronizePushAction = QStringLiteral("synchronizePush");
+static const auto SynchronizePullAction = QStringLiteral("synchronizePull");
 
 //==============================================================================
 
