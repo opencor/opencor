@@ -909,32 +909,6 @@ int PmrWorkspace::certificateCheckCallback(git_cert *pCertificate, int pValid,
 
 //==============================================================================
 
-int PmrWorkspace::transferProgressCallback(const git_transfer_progress *pProgress,
-                                           void *pPayload)
-{
-    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
-
-    workspace->emitProgress(double(pProgress->received_objects+pProgress->indexed_objects)/(pProgress->total_objects << 1));
-
-    return 0;
-}
-
-//==============================================================================
-
-void PmrWorkspace::checkoutProgressCallback(const char *pPath,
-                                            size_t pCompletedSteps,
-                                            size_t pTotalSteps,
-                                            void *pPayload)
-{
-    Q_UNUSED(pPath);
-
-    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
-
-    workspace->emitProgress(double(pCompletedSteps)/pTotalSteps);
-}
-
-//==============================================================================
-
 int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
                                          const char *pPath,
                                          const git_diff_file *pBaseline,
@@ -960,18 +934,16 @@ int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
 
 //==============================================================================
 
-int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
+void PmrWorkspace::checkoutProgressCallback(const char *pPath,
+                                            size_t pCompletedSteps,
+                                            size_t pTotalSteps,
+                                            void *pPayload)
 {
-    int res = 0;
-    MergeheadForeachCallbackData *data = (MergeheadForeachCallbackData *)pPayload;
+    Q_UNUSED(pPath);
 
-    if (data->parents)
-        res = git_commit_lookup(&(data->parents[data->size]), data->repository, pOid);
+    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
 
-    if (!res)
-        ++data->size;
-
-    return res;
+    workspace->emitProgress(double(pCompletedSteps)/pTotalSteps);
 }
 
 //==============================================================================
@@ -1088,6 +1060,34 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
     }
 
     return !res;
+}
+
+//==============================================================================
+
+int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
+{
+    int res = 0;
+    MergeheadForeachCallbackData *data = (MergeheadForeachCallbackData *)pPayload;
+
+    if (data->parents)
+        res = git_commit_lookup(&(data->parents[data->size]), data->repository, pOid);
+
+    if (!res)
+        ++data->size;
+
+    return res;
+}
+
+//==============================================================================
+
+int PmrWorkspace::transferProgressCallback(const git_transfer_progress *pProgress,
+                                           void *pPayload)
+{
+    PmrWorkspace *workspace = (PmrWorkspace *) pPayload;
+
+    workspace->emitProgress(double(pProgress->received_objects+pProgress->indexed_objects)/(pProgress->total_objects << 1));
+
+    return 0;
 }
 
 //==============================================================================
