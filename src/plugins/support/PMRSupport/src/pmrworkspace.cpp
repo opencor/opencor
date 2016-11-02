@@ -630,6 +630,22 @@ void PmrWorkspace::refreshStatus()
 
 //==============================================================================
 
+void PmrWorkspace::synchronize(const bool pOnlyPull)
+{
+    // Synchronise our local workspace with PMR
+
+    if (fetch() && merge() && !pOnlyPull) {
+        // We've successfully fetched and merged
+        // so push if we are allowed to.
+
+        push();
+    }
+
+    emit workspaceSynchronized(this);
+}
+
+//==============================================================================
+
 QStringList PmrWorkspace::stagedFiles()
 {
     QStringList fileList = QStringList();
@@ -995,22 +1011,6 @@ bool PmrWorkspace::merge()
     }
 
     return res;
-}
-
-//==============================================================================
-
-void PmrWorkspace::synchronize(const bool pOnlyPull)
-{
-    // Synchronise our local workspace with PMR
-
-    if (fetch() && merge() && !pOnlyPull) {
-        // We've successfully fetched and merged
-        // so push if we are allowed to.
-
-        push();
-    }
-
-    emit workspaceSynchronized(this);
 }
 
 //==============================================================================
