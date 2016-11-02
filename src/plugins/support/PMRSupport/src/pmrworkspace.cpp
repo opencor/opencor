@@ -646,44 +646,47 @@ void PmrWorkspace::synchronize(const bool pOnlyPull)
 
 //==============================================================================
 
-const CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
+CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
-    CharPair status = CharPair(' ', ' ');
+    // Retrieve and return the status of the file, which path is given
+
+    CharPair res = CharPair(' ', ' ');
 
     if (isOpen()) {
-        QDir repoDir = QDir(mPath);
         unsigned int statusFlags = 0;
-        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
+        QByteArray relativePathByteArray = QDir(mPath).relativeFilePath(pPath).toUtf8();
 
         if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
-            status = gitStatusChars(statusFlags);
+            // Retrieve the status itself
+
+            res = gitStatusChars(statusFlags);
 
             // Also update status in file tree
 
             if (mRepositoryStatusMap.contains(pPath))
-                mRepositoryStatusMap.value(pPath)->setStatus(status);
-        }
-        else
+                mRepositoryStatusMap.value(pPath)->setStatus(res);
+        } else {
             emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
+        }
     }
-    return status;
+
+    return res;
 }
 
 //==============================================================================
 
 PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 {
-    // Get the status of the repository
+    // Get the status of the workspace
 
-    WorkspaceStatus status = StatusUnknown;
+    WorkspaceStatus res = StatusUnknown;
 
     if (isOpen()) {
         if (git_repository_head_unborn(mGitRepository) == 1) {
-            status = StatusCurrent;
+            res = StatusCurrent;
         } else {
-            bool error = false;
-
             git_oid masterOid;
+            bool error = false;
 
             if (!git_reference_name_to_id(&masterOid, mGitRepository,
                                           "refs/heads/master")) {
@@ -696,18 +699,16 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
                     if (!git_graph_ahead_behind(&ahead, &behind, mGitRepository,
                                                 &masterOid, &originMasterOid)) {
-                        status = ahead?
-                                    StatusAhead:
-                                    behind?
-                                        StatusBehind:
-                                        StatusCurrent;
+                        res = ahead?
+                                  StatusAhead:
+                                  behind?
+                                      StatusBehind:
+                                      StatusCurrent;
                     } else {
                         error = true;
                     }
                 } else {
-                    // Need an initial `push origin master`
-
-                    status = StatusAhead;
+                    res = StatusAhead;
                 }
             } else {
                 error = true;
@@ -721,20 +722,20 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
         if (!git_repository_index(&index, mGitRepository)) {
             if (git_index_has_conflicts(index)) {
-                status = WorkspaceStatus(status|StatusConflict);
+                res = WorkspaceStatus(res|StatusConflict);
             } else {
                 if (mStagedCount)
-                    status = WorkspaceStatus(status|StatusCommit);
+                    res = WorkspaceStatus(res|StatusCommit);
 
                 if (mUnstagedCount)
-                    status = WorkspaceStatus(status|StatusUnstaged);
+                    res = WorkspaceStatus(res|StatusUnstaged);
             }
 
             git_index_free(index);
         }
     }
 
-    return status;
+    return res;
 }
 
 //==============================================================================
