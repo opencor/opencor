@@ -38,6 +38,7 @@ namespace PMRSupport {
 //==============================================================================
 
 class PmrWorkspace;
+class PmrWebService;
 
 //==============================================================================
 
@@ -47,7 +48,7 @@ class PMRSUPPORT_EXPORT PmrExposure : public QObject
 
 public:
     explicit PmrExposure(const QString &pUrl, const QString &pName,
-                         QObject *pParent);
+                         PmrWebService *pParent);
 
     static bool compare(PmrExposure *pExposure1, PmrExposure *pExposure2);
 

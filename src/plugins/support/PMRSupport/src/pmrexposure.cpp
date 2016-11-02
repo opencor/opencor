@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrexposure.h"
+#include "pmrwebservice.h"
 
 //==============================================================================
 
@@ -30,7 +31,7 @@ namespace PMRSupport {
 //==============================================================================
 
 PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
-                         QObject *pParent) :
+                         PmrWebService *pParent) :
     QObject(pParent),
     mUrl(pUrl),
     mName(pName),
