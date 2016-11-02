@@ -705,7 +705,7 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
     // We want the HTML table in name order
 
-    workspaces.sort();
+    std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
 
     // Reset our row anchors
 

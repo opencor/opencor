@@ -120,6 +120,16 @@ PmrWorkspace::~PmrWorkspace()
 
 //==============================================================================
 
+bool PmrWorkspace::compare(PmrWorkspace *pWorkspace1, PmrWorkspace *pWorkspace2)
+{
+    // Return whether the first workspace is lower than the second one (without
+    // worrying about casing)
+
+    return pWorkspace1->name().compare(pWorkspace2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 bool PmrWorkspace::isLocal() const
 {
     return !mPath.isEmpty();
@@ -1178,26 +1188,6 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
         if (!success)
             emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
     }
-}
-
-//==============================================================================
-
-bool sortWorkspaces(const PmrWorkspace *pWorkspace1,
-                    const PmrWorkspace *pWorkspace2)
-{
-    // Return whether the first workspace is lower than the second one (without
-    // worrying about casing)
-
-    return pWorkspace1->name().compare(pWorkspace2->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void PmrWorkspaces::sort()
-{
-    // Sort our workspaces
-
-    std::sort(begin(), end(), sortWorkspaces);
 }
 
 //==============================================================================

@@ -49,6 +49,8 @@ public:
     explicit PmrExposure(const QString &pUrl, const QString &pName,
                          QObject *pParent);
 
+    static bool compare(PmrExposure *pExposure1, PmrExposure *pExposure2);
+
     QString url() const;
     QString name() const;
 
@@ -71,11 +73,7 @@ private:
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
-{
-public:
-    void sort();
-};
+typedef QList<PmrExposure *> PmrExposures;
 
 //==============================================================================
 

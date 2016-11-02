@@ -41,6 +41,16 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
 
 //==============================================================================
 
+bool PmrExposure::compare(PmrExposure *pExposure1, PmrExposure *pExposure2)
+{
+    // Return whether the first exposure is lower than the second one (without
+    // worrying about casing)
+
+    return pExposure1->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 QString PmrExposure::url() const
 {
     // Return our URL
@@ -101,25 +111,6 @@ QString PmrExposure::toHtml() const
     // Return an HTML description of ourselves
 
     return QString("<a href=\"%1\">%2</a>").arg(mUrl, mName);
-}
-
-//==============================================================================
-
-bool sortExposures(PmrExposure *pExposure1, PmrExposure *pExposure2)
-{
-    // Return whether the first exposure is lower than the second one (without
-    // worrying about casing)
-
-    return pExposure1->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void PmrExposures::sort()
-{
-    // Sort our exposures
-
-    std::sort(begin(), end(), sortExposures);
 }
 
 //==============================================================================

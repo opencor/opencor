@@ -59,6 +59,8 @@ public:
                           PmrWebService *pParent);
     ~PmrWorkspace();
 
+    static bool compare(PmrWorkspace *pWorkspace1, PmrWorkspace *pWorkspace2);
+
     bool isLocal() const;
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
@@ -171,11 +173,7 @@ signals:
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrWorkspaces : public QList<PmrWorkspace *>
-{
-public:
-    void sort();
-};
+typedef QList<PmrWorkspace *> PmrWorkspaces;
 
 //==============================================================================
 

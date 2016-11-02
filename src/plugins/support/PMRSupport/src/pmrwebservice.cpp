@@ -141,7 +141,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
         }
     }
 
-    exposures.sort();
+    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
 
     // Respond with a list of exposures
 
@@ -569,7 +569,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
         }
     }
 
-    workspaces.sort();
+    std::sort(workspaces.begin(), workspaces.end(), PmrWorkspace::compare);
 
     emit PmrWebService::workspaces(workspaces);
 }
