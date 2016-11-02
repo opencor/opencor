@@ -565,7 +565,6 @@ void PmrWorkspace::refreshStatus()
         git_status_list *statusList;
 
         if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
-            size_t entries = git_status_list_entrycount(statusList);
             PmrWorkspaceFileNodes fileNodes = PmrWorkspaceFileNodes();
             PmrWorkspaceFileNode *currentFileNode = mRootFileNode;
 
@@ -573,7 +572,7 @@ void PmrWorkspace::refreshStatus()
 
             // Go through the different entries
 
-            for (size_t i = 0; i < entries; ++i) {
+            for (size_t i = 0, iMax = git_status_list_entrycount(statusList); i < iMax; ++i) {
                 const git_status_entry *status = git_status_byindex(statusList, i);
                 const char *filePath = (status->head_to_index)?
                                            status->head_to_index->old_file.path:
@@ -742,9 +741,11 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
 void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 {
+    // Un/stage the file, which path is given, and let people know of the
+    // outcome
+
     if (isOpen()) {
-        QDir repoDir = QDir(mPath);
-        QByteArray relativePathByteArray = repoDir.relativeFilePath(pPath).toUtf8();
+        QByteArray relativePathByteArray = QDir(mPath).relativeFilePath(pPath).toUtf8();
         const char *relativePath = relativePathByteArray.constData();
         bool success = false;
         git_index *index;
@@ -770,10 +771,12 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
                 if (!git_repository_head(&headReference, mGitRepository)) {
                     git_tree *headTree;
 
-                    if (!git_reference_peel((git_object **) &headTree, headReference, GIT_OBJ_TREE)) {
+                    if (!git_reference_peel((git_object **) &headTree,
+                                            headReference, GIT_OBJ_TREE)) {
                         git_tree_entry *headEntry;
 
-                        if (!git_tree_entry_bypath(&headEntry, headTree, relativePath)) {
+                        if (!git_tree_entry_bypath(&headEntry, headTree,
+                                                   relativePath)) {
                             git_index_entry indexEntry;
 
                             memset(&indexEntry, '\0', sizeof(git_index_entry));
@@ -813,6 +816,8 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 
 QStringList PmrWorkspace::stagedFiles()
 {
+    // Retrieve and return all current staged files
+
     QStringList fileList = QStringList();
     git_index *index;
 
@@ -821,35 +826,33 @@ QStringList PmrWorkspace::stagedFiles()
 
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
 
-        statusOptions.show = GIT_STATUS_SHOW_INDEX_ONLY;
         statusOptions.flags =  GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
                               |GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY;
+        statusOptions.show = GIT_STATUS_SHOW_INDEX_ONLY;
 
         git_status_list *statusList;
 
         if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
-            size_t entries = git_status_list_entrycount(statusList);
-
-            for (size_t i = 0; i < entries; ++i) {
+            for (size_t i = 0, iMax = git_status_list_entrycount(statusList); i < iMax; ++i) {
                 const git_status_entry *status = git_status_byindex(statusList, i);
                 const char *filePath = status->head_to_index?
                                            status->head_to_index->old_file.path:
                                            status->index_to_workdir?
                                                status->index_to_workdir->old_file.path:
                                                0;
+
                 if (filePath) {
-                    git_status_t flags = status->status;
                     QString description = QString();
 
-                    if (flags & GIT_STATUS_INDEX_TYPECHANGE)
+                    if (status->status & GIT_STATUS_INDEX_TYPECHANGE)
                         description = "typechange";
-                    else if (flags & GIT_STATUS_INDEX_RENAMED)
+                    else if (status->status & GIT_STATUS_INDEX_RENAMED)
                         description = "renamed";
-                    else if (flags & GIT_STATUS_INDEX_DELETED)
+                    else if (status->status & GIT_STATUS_INDEX_DELETED)
                         description = "deleted";
-                    else if (flags & GIT_STATUS_INDEX_MODIFIED)
+                    else if (status->status & GIT_STATUS_INDEX_MODIFIED)
                         description = "modified";
-                    else if (flags & GIT_STATUS_INDEX_NEW)
+                    else if (status->status & GIT_STATUS_INDEX_NEW)
                         description = "new file";
 
                     fileList << description+":\t"+filePath;
