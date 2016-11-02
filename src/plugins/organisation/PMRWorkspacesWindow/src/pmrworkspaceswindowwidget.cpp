@@ -903,8 +903,6 @@ void PmrWorkspacesWindowWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-// TODO: Context menus for folders and files
-
     QMenu *menu = new QMenu(this);
     const QPoint &pos = pEvent->pos();
     QWebElement trElement = page()->mainFrame()->hitTestContent(pos).element();
