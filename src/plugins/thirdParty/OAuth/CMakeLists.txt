@@ -72,6 +72,8 @@ ELSE()
             src
         DEFINITIONS
             O2_DLL_EXPORT
+            QT_NO_DEBUG_OUTPUT
+            QT_NO_WARNING_OUTPUT
         QT_MODULES
             Core
             Network
