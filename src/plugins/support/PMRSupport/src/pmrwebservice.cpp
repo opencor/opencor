@@ -438,6 +438,15 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
+QString PmrWebService::emptyDirectory()
+{
+    // Retrieve and return the name of an empty directory
+
+    return Core::getEmptyDirectory(tr("Select Empty Directory"));
+}
+
+//==============================================================================
+
 void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore and that the given workspace
@@ -445,15 +454,6 @@ void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWork
 
     emit busy(false);
     emit workspaceSynchronized(pWorkspace);
-}
-
-//==============================================================================
-
-QString PmrWebService::emptyDirectory()
-{
-    // Retrieve and return the name of an empty directory
-
-    return Core::getEmptyDirectory(tr("Select Empty Directory"));
 }
 
 //==============================================================================
