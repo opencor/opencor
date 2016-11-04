@@ -196,16 +196,18 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
                                         const QString &pDescription,
                                         const QString &pPath)
 {
-    QJsonDocument jsonCreateWorkspace = QJsonDocument::fromJson(QString(
-        "{\"template\": {\"data\": ["
-            "{\"name\": \"form.widgets.title\", \"value\": \"%1\"},"
-            "{\"name\": \"form.widgets.description\", \"value\": \"%2\"},"
-            "{\"name\": \"form.widgets.storage\", \"value\": \"git\"},"
-            "{\"name\": \"form.buttons.add\", \"value\": \"Add\"}"
-        "]}}").arg(pName, pDescription).toUtf8());
+    // Create a new workspace
 
+    static const QString CreateWorkspaceJson = "{ \"template\": { \"data\": ["
+                                               "  { \"name\": \"form.widgets.title\", \"value\": \"%1\" },"
+                                               "  { \"name\": \"form.widgets.description\", \"value\": \"%2\" },"
+                                               "  { \"name\": \"form.widgets.storage\", \"value\": \"git\" },"
+                                               "  { \"name\": \"form.buttons.add\", \"value\": \"Add\" }"
+                                               "] } }";
+
+    QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName, pDescription).toUtf8());
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/workspace/+/addWorkspace",
-                                                                               true, true, jsonCreateWorkspace);
+                                                                        true, true, createWorkspaceJson);
 
     pmrResponse->setProperty(PathProperty, pPath);
 
@@ -215,9 +217,19 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
 
 //==============================================================================
 
+void PmrWebService::newWorkspaceResponse(const QString &pUrl)
+{
+    emit workspaceCreated(pUrl);
+
+    requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
+    // Note: a non-empty dirname will clone the workspace...
+}
+
+//==============================================================================
+
 void PmrWebService::requestWorkspaces()
 {
-    // Retrieve all of the user's workspaces
+    // Retrieve all the workspaces
 
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/my-workspaces", true);
 
@@ -642,16 +654,6 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             emitInformation(tr("No workspace information could be found for %1.").arg(exposure->toHtml()));
         }
     }
-}
-
-//==============================================================================
-
-void PmrWebService::newWorkspaceResponse(const QString &pUrl)
-{
-    emit workspaceCreated(pUrl);
-
-    requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
-    // Note: a non-empty dirname will clone the workspace...
 }
 
 //==============================================================================
