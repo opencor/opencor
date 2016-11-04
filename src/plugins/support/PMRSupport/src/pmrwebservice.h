@@ -137,10 +137,10 @@ private slots:
     void workspaceCloneFinished();
     void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 
-    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
-    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
-
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
+
+    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
+    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
 };
 
 //==============================================================================
