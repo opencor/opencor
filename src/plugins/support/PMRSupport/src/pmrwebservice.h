@@ -129,14 +129,15 @@ private slots:
 
     void workspaceResponse(const QJsonDocument &pJsonDocument);
 
+    void newWorkspaceResponse(const QString &pUrl);
+    void workspacesResponse(const QJsonDocument &pJsonDocument);
+
+    void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
+
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
 
-    void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
-    void workspacesResponse(const QJsonDocument &pJsonDocument);
-
     void workspaceCloneFinished();
-    void newWorkspaceResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
     void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };
