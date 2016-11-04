@@ -138,7 +138,7 @@ private slots:
 
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 
-    void exposureFilesResponse(const QJsonDocument &pJsonDocument);
+    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
 };
 

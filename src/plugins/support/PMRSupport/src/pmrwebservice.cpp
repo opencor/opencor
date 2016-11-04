@@ -623,12 +623,12 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
     pmrResponse->setProperty(NextActionProperty, RequestExposureFiles);
 
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
-            this, SLOT(exposureFilesResponse(const QJsonDocument &)));
+            this, SLOT(exposureInformationResponse(const QJsonDocument &)));
 }
 
 //==============================================================================
 
-void PmrWebService::exposureFilesResponse(const QJsonDocument &pJsonDocument)
+void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocument)
 {
     PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
 
