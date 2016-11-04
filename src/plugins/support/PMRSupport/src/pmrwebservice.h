@@ -90,8 +90,6 @@ private:
                                      PmrExposure *pExposure = 0);
     void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
-    void requestExposureInformation(PmrExposure *pExposure,
-                                    const Action &pNextAction);
     void requestExposureFileInformation(PmrExposure *pExposure,
                                         const QString &pUrl);
 
@@ -139,7 +137,7 @@ private slots:
 
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 
-    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
+    void exposureFilesResponse(const QJsonDocument &pJsonDocument);
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
 };
 
