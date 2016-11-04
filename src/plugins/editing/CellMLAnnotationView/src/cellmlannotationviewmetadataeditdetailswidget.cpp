@@ -998,8 +998,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                 QString resource;
                 QString id;
 
-                foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
-                    termMap = termsVariant.toMap();
+                foreach (const QVariant &terms, jsonDocument.object().toVariantMap()["results"].toList()) {
+                    termMap = terms.toMap();
                     name = termMap["name"].toString();
 
                     if (   !name.isEmpty()
