@@ -1107,7 +1107,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 //==============================================================================
 
 QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
-                                          const bool pNeedOffset) const
+                                          const bool &pNeedOffset) const
 {
     // Return the mouse position using canvas coordinates, making sure that they
     // are within our ranges
