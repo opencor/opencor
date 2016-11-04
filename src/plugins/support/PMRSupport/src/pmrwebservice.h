@@ -90,13 +90,12 @@ private:
                                      PmrExposure *pExposure = 0);
     void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
-    void emitInformation(const QString &pMessage);
-    QString informationNoteMessage() const;
-
-    void requestExposureFileInformation(PmrExposure *pExposure,
-                                        const QString &pUrl);
     void requestExposureInformation(PmrExposure *pExposure,
                                     const Action &pNextAction);
+    void requestExposureFileInformation(PmrExposure *pExposure,
+                                        const QString &pUrl);
+
+    void emitInformation(const QString &pMessage);
 
 signals:
     void busy(const bool &pBusy);

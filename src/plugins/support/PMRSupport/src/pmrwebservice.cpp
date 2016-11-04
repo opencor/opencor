@@ -472,18 +472,10 @@ void PmrWebService::getAuthenticationStatus()
 
 //==============================================================================
 
-QString PmrWebService::informationNoteMessage() const
-{
-    // Return some information note
-
-    return tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
-}
-
-//==============================================================================
-
 void PmrWebService::emitInformation(const QString &pMessage)
 {
-    emit information(pMessage+"<br/><br/>"+informationNoteMessage());
+    emit information( pMessage+"<br/><br/>"
+                     +tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."));
 }
 
 //==============================================================================
