@@ -23,62 +23,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clone workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Synchronise with PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Synchronise and upload to PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commit staged changes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Workspace has merge conflicts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File has been added</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File has merge conflicts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File has been deleted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File has been modified</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Refresh display</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>View in PMR...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show containing folder...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About the workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Owner: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -88,6 +32,62 @@
     </message>
     <message>
         <source>Path: &lt;a href=&quot;file://%1/&quot;&gt;%1&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone Workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise And Upload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commit Staged Changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commit Changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View In PMR...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Containing Folder...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About Workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Added</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Modified</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -102,19 +102,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Look off PMR</source>
+        <source>Log off PMR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Look on to PMR</source>
+        <source>Log on to PMR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Look off</source>
+        <source>Log Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Look on</source>
+        <source>Log On</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

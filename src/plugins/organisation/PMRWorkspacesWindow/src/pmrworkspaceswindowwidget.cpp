@@ -750,18 +750,18 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
             } else if (!action.compare(UnstageAction)) {
                 toolTip = tr("Unstage");
             } else if (webElement.parent().parent().hasClass("file")) {
-                toolTip = tr("Open file");
+                toolTip = tr("Open File");
 
                 mouseCursor = QCursor(Qt::PointingHandCursor);
             } else if (!action.compare(CloneAction)) {
-                toolTip = tr("Clone workspace");
+                toolTip = tr("Clone Workspace");
             } else if (   !action.compare(SynchronizeAction)
                        || !action.compare(SynchronizePullAction)) {
-                toolTip = tr("Synchronise with PMR");
+                toolTip = tr("Synchronise");
             } else if (!action.compare(SynchronizePushAction)) {
-                toolTip = tr("Synchronise and upload to PMR");
+                toolTip = tr("Synchronise And Upload");
             } else if (!action.compare(CommitAction)) {
-                toolTip = tr("Commit staged changes");
+                toolTip = tr("Commit Staged Changes");
             }
         } else if (   webElement.hasClass("status")
                    || webElement.hasClass("istatus")
@@ -770,16 +770,16 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
             if (webElement.hasClass("status")) {
                 if (!statusChar.compare("C"))
-                    toolTip = tr("Workspace has merge conflicts");
+                    toolTip = tr("Conflicts");
             } else {
                 if (!statusChar.compare("A"))
-                    toolTip = tr("File has been added");
+                    toolTip = tr("Added");
                 else if (!statusChar.compare("C"))
-                    toolTip = tr("File has merge conflicts");
+                    toolTip = tr("Conflicts");
                 else if (!statusChar.compare("D"))
-                    toolTip = tr("File has been deleted");
+                    toolTip = tr("Deleted");
                 else if (!statusChar.compare("M"))
-                    toolTip = tr("File has been modified");
+                    toolTip = tr("Modified");
             }
         }
 
@@ -916,14 +916,14 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
         QString elementId = trElement.attribute("id");
 
         if (!trElement.findFirst("img.clone").isNull()) {
-            QAction *action = new QAction(QIcon(CloneIcon), tr("Clone workspace"), this);
+            QAction *action = new QAction(QIcon(CloneIcon), tr("Clone Workspace"), this);
 
             action->setData(QString(CloneAction+"|%1").arg(elementId));
 
             menu->addAction(action);
         } else {
             if (!trElement.findFirst("img.commit").isNull()) {
-                QAction *action = new QAction(QIcon(CommitIcon), tr("Commit staged changes"), this);
+                QAction *action = new QAction(QIcon(CommitIcon), tr("Commit Changes"), this);
 
                 action->setData(QString(CommitAction+"|%1").arg(elementId));
 
@@ -931,7 +931,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
             }
 
             if (!trElement.findFirst("img.synchronizePull").isNull()) {
-                QAction *action = new QAction(QIcon(SynchronizePullIcon), tr("Synchronise with PMR"), this);
+                QAction *action = new QAction(QIcon(SynchronizePullIcon), tr("Synchronise"), this);
 
                 action->setData(QString(SynchronizePullAction+"|%1").arg(elementId));
 
@@ -939,13 +939,13 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
             }
 
             if (!trElement.findFirst("img.synchronize").isNull()) {
-                QAction *action = new QAction(QIcon(SynchronizeIcon), tr("Synchronise with PMR"), this);
+                QAction *action = new QAction(QIcon(SynchronizeIcon), tr("Synchronise"), this);
 
                 action->setData(QString(SynchronizeAction+"|%1").arg(elementId));
 
                 menu->addAction(action);
             } else if (!trElement.findFirst("img.synchronizePush").isNull()) {
-                QAction *action = new QAction(QIcon(SynchronizePushIcon), tr("Synchronise and upload to PMR"), this);
+                QAction *action = new QAction(QIcon(SynchronizePushIcon), tr("Synchronise And Upload"), this);
 
                 action->setData(QString(SynchronizePushAction+"|%1").arg(elementId));
 
@@ -955,7 +955,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addSeparator();
 
-        QAction *refreshAction = new QAction(QIcon(RefreshIcon), tr("Refresh display"), this);
+        QAction *refreshAction = new QAction(QIcon(RefreshIcon), tr("Refresh Display"), this);
 
         refreshAction->setData(QString(RefreshAction+"|%1").arg(elementId));
 
@@ -964,14 +964,14 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
         PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(elementId);
 
         if (workspace) {
-            QAction *action = new QAction(tr("View in PMR..."), this);
+            QAction *action = new QAction(tr("View In PMR..."), this);
 
             action->setData(QString("pmr|%1").arg(workspace->url()));
 
             menu->addAction(action);
 
             if (workspace->isLocal()) {
-                action = new QAction(tr("Show containing folder..."), this);
+                action = new QAction(tr("Show Containing Folder..."), this);
 
                 action->setData(QString("show|%1").arg(workspace->path()));
 
@@ -981,7 +981,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
         menu->addSeparator();
 
-        QAction *aboutAction = new QAction(QIcon(AboutIcon), tr("About the workspace"), this);
+        QAction *aboutAction = new QAction(QIcon(AboutIcon), tr("About Workspace"), this);
 
         aboutAction->setData(QString(AboutAction+"|%1").arg(elementId));
 
