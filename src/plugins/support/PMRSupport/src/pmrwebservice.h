@@ -57,6 +57,8 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
 public:
     explicit PmrWebService(QObject *pParent);
 
+    bool isAuthenticated() const;
+
     void requestExposures();
 
     PmrWorkspace * workspace(const QString &pUrl) const;
@@ -116,7 +118,6 @@ signals:
 
 public slots:
     void authenticate(const bool &pAuthenticate = true);
-    void getAuthenticationStatus();
     void forbidden(const QString &pUrl);
 
     void requestExposureFiles(const QString &pUrl);

@@ -134,7 +134,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, SLOT(showWarning(const QString &)));
 
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
-            this, SLOT(updateAuthenticationStatus(const bool &)));
+            this, SLOT(updateGui()));
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
             mWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &)));
 
@@ -272,42 +272,36 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
 
 void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
 {
-    // Request authentication status, if we are becoming visible and the list
-    // of workspaces has never been requested before (through a single shot, this
-    // to allow other events, such as the one asking OpenCOR's main window to
-    // resize itself, to be handled properly). This will result in the workspace
-    // list being populated if we are in fact authenticated with PMR.
+    // Update our GUI, if we are becoming visible and the list of workspaces has
+    // never been requested before (through a single shot, this to allow other
+    // events, such as the one asking OpenCOR's main window to resize itself, to
+    // be handled properly)
+    // Note: this will result in the workspace list being populated if we are
+    //       authenticated with PMR...
 
     static bool firstTime = true;
 
     if (pVisible && firstTime) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, SLOT(getAuthenticationStatus()));
+        QTimer::singleShot(0, this, SLOT(updateGui()));
     }
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::getAuthenticationStatus()
+void PmrWorkspacesWindowWindow::updateGui()
 {
-    // Results in us being sent an authenticated() signal
+    // Update our GUI based on whether we are authenticated with PMR
 
-    mPmrWebService->getAuthenticationStatus();
-}
+    bool authenticated = mPmrWebService->isAuthenticated();
 
-//==============================================================================
+    Core::showEnableAction(mGui->actionAuthenticate, !authenticated);
+    Core::showEnableAction(mGui->actionNew, true, authenticated);
+    Core::showEnableAction(mGui->actionRefresh, true, authenticated);
+    Core::showEnableAction(mGui->actionUnauthenticate, authenticated);
 
-void PmrWorkspacesWindowWindow::updateAuthenticationStatus(const bool &pAuthenticated)
-{
-    // Show authentication state and allow workspace creation if authenticated
-
-    Core::showEnableAction(mGui->actionAuthenticate, !pAuthenticated);
-    Core::showEnableAction(mGui->actionNew, true, pAuthenticated);
-    Core::showEnableAction(mGui->actionRefresh, true, pAuthenticated);
-    Core::showEnableAction(mGui->actionUnauthenticate, pAuthenticated);
-
-    if (pAuthenticated)
+    if (authenticated)
         mWorkspacesWindowWidget->refreshWorkspaces();
     else
         mWorkspacesWindowWidget->clearWorkspaces();

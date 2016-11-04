@@ -82,19 +82,19 @@ private:
     PmrWorkspacesWindowWidget *mWorkspacesWindowWidget;
 
 private slots:
+    void on_actionAuthenticate_triggered();
+    void on_actionNew_triggered();
+    void on_actionRefresh_triggered();
+    void on_actionUnauthenticate_triggered();
+
     void busy(const bool &pBusy);
     void showError(const QString &pMessage);
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
 
-    void getAuthenticationStatus();
-    void retrieveWorkspaces(const bool &pVisible);
-    void updateAuthenticationStatus(const bool &pAuthenticated);
+    void updateGui();
 
-    void on_actionAuthenticate_triggered();
-    void on_actionNew_triggered();
-    void on_actionRefresh_triggered();
-    void on_actionUnauthenticate_triggered();
+    void retrieveWorkspaces(const bool &pVisible);
 
     void showProgress(const double &pProgress);
 

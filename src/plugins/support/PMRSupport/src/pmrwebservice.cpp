@@ -63,6 +63,15 @@ PmrWebService::PmrWebService(QObject *pParent) :
 
 //==============================================================================
 
+bool PmrWebService::isAuthenticated() const
+{
+    // Return whether we are authenticated
+
+    return mPmrWebServiceManager->isAuthenticated();
+}
+
+//==============================================================================
+
 void PmrWebService::requestExposures()
 {
     // Request the list of exposures from PMR
@@ -587,13 +596,6 @@ void PmrWebService::emitInformation(const QString &pMessage)
 void PmrWebService::authenticate(const bool &pAuthenticate)
 {
     mPmrWebServiceManager->authenticate(pAuthenticate);
-}
-
-//==============================================================================
-
-void PmrWebService::getAuthenticationStatus()
-{
-    emit authenticated(mPmrWebServiceManager->isAuthenticated());
 }
 
 //==============================================================================
