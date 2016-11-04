@@ -229,14 +229,13 @@ void PmrWebService::requestWorkspaces()
 
 void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 {
-    // Retrieve the list of workspaces
-
-    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    // Retrieve the list of workspaces from the given PMR response
 
     PmrWorkspaces workspaces = PmrWorkspaces();
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
-    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-        QVariantMap linksMap = linksVariant.toMap();
+    foreach (const QVariant &links, collectionMap["links"].toList()) {
+        QVariantMap linksMap = links.toMap();
 
         if (!linksMap["rel"].toString().compare("bookmark")) {
             QString workspaceUrl = linksMap["href"].toString().trimmed();
@@ -251,6 +250,8 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
     }
 
     std::sort(workspaces.begin(), workspaces.end(), PmrWorkspace::compare);
+
+    // Let people know about the list of workspaces
 
     emit PmrWebService::workspaces(workspaces);
 }
