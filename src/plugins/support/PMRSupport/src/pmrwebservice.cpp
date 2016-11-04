@@ -77,17 +77,19 @@ void PmrWebService::requestExposures()
 
 void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 {
-    PmrExposures exposures = PmrExposures();
+    // Retrieve the list of exposures from the given PMR response
 
+    PmrExposures exposures = PmrExposures();
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-        QVariantMap linksMap = linksVariant.toMap();
+
+    foreach (const QVariant &links, collectionMap["links"].toList()) {
+        QVariantMap linksMap = links.toMap();
 
         if (!linksMap["rel"].toString().compare("bookmark")) {
             QString exposureUrl = linksMap["href"].toString().trimmed();
             QString exposureName = linksMap["prompt"].toString().simplified();
 
-            if (   !exposureUrl.isEmpty() && !exposureName.isEmpty()) {
+            if (!exposureUrl.isEmpty() && !exposureName.isEmpty()) {
                 PmrExposure *exposure = new PmrExposure(exposureUrl, exposureName, this);
 
                 mUrlExposures.insert(exposureUrl, exposure);
@@ -99,7 +101,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
     std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
 
-    // Respond with a list of exposures
+    // Let people know about the list of exposures
 
     emit PmrWebService::exposures(exposures);
 }
@@ -141,36 +143,35 @@ PmrWorkspace * PmrWebService::workspace(const QString &pUrl)
 
 void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
 {
-    PmrWorkspace **workspacePointer = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
+    // Retrieve the workspace from the given PMR response
 
+    PmrWorkspace **workspacePointer = (PmrWorkspace **) sender()->property(WorkspaceProperty).value<void *>();
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-
     QVariantList itemsList = collectionMap["items"].toList();
 
     if (itemsList.count()) {
-        // Retrieve details of the workspace we are dealing with
+        // Retrieve the details of the workspace we are dealing with
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-
         QString storageValue = QString();
         QString workspaceDescription = QString();
         QString workspaceOwner = QString();
         QString workspaceName = QString();
         QString workspaceId = QString();
 
-        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
-            QVariantMap dataMap = dataVariant.toMap();
-            QString fieldName = dataMap["name"].toString();
+        foreach (const QVariant &data, itemsList.first().toMap()["data"].toList()) {
+            QVariantMap dataMap = data.toMap();
+            QString name = dataMap["name"].toString();
 
-            if (!fieldName.compare("storage"))
+            if (!name.compare("storage"))
                 storageValue = dataMap["value"].toString();
-            else if (!fieldName.compare("description"))
+            else if (!name.compare("description"))
                 workspaceDescription = dataMap["value"].toString();
-            else if (!fieldName.compare("owner"))
+            else if (!name.compare("owner"))
                 workspaceOwner = dataMap["value"].toString();
-            else if (!fieldName.compare("title"))
+            else if (!name.compare("title"))
                 workspaceName = dataMap["value"].toString();
-            else if (!fieldName.compare("id"))
+            else if (!name.compare("id"))
                 workspaceId = dataMap["value"].toString();
         }
 
@@ -181,17 +182,11 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
             workspaceName = tr("** Unknown name **");
 
         if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
-
-            PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
-                                                       workspaceName,
-                                                       workspaceDescription,
-                                                       workspaceOwner, this);
-
-            // Return result to requestor
-
-            *workspacePointer = workspace;
+            *workspacePointer = new PmrWorkspace(workspaceUrl,
+                                                 workspaceName,
+                                                 workspaceDescription,
+                                                 workspaceOwner, this);
         }
-
     }
 }
 
