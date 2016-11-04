@@ -86,7 +86,7 @@ public:
     bool isOpen() const;
     bool open();
     void refreshStatus();
-    void synchronize(const bool pOnlyPull);
+    void synchronize(const bool &pPush);
 
     enum WorkspaceStatus {
         StatusUnknown  = 0,

@@ -840,10 +840,11 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
                     cloneWorkspace(linkUrl);
                 } else if (!action.compare(CommitAction)) {
                     commitWorkspace(linkUrl);
-                } else if (!action.compare(SynchronizePullAction) || !action.compare(SynchronizeAction)) {
-                    synchronizeWorkspace(linkUrl, true);
-                } else if (!action.compare(SynchronizePushAction)) {
+                } else if (   !action.compare(SynchronizeAction)
+                           || !action.compare(SynchronizePullAction)) {
                     synchronizeWorkspace(linkUrl, false);
+                } else if (!action.compare(SynchronizePushAction)) {
+                    synchronizeWorkspace(linkUrl);
                 } else if (!action.compare(StageAction) || !action.compare(UnstageAction)) {
                     QWebElement workspaceElement = parentWorkspaceElement(trElement);
 
@@ -1003,11 +1004,11 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
                 refreshWorkspace(linkId);
             } else if (   !action.compare(SynchronizePullAction)
                        || !action.compare(SynchronizeAction)) {
-                synchronizeWorkspace(linkId, true);
+                synchronizeWorkspace(linkId, false);
             } else if (!action.compare(CommitAction)) {
                 commitWorkspace(linkId);
             } else if (!action.compare(SynchronizePushAction)) {
-                synchronizeWorkspace(linkId, false);
+                synchronizeWorkspace(linkId);
             } else if (!action.compare("pmr")) {
                 QDesktopServices::openUrl(linkId);
             } else if (!action.compare("show")) {
@@ -1230,12 +1231,12 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
-                                                     const bool pOnlyPull)
+                                                     const bool pPush)
 {
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal())
-        mPmrWebService->requestWorkspaceSynchronize(workspace, pOnlyPull);
+        mPmrWebService->requestWorkspaceSynchronize(workspace, pPush);
 }
 
 //==============================================================================

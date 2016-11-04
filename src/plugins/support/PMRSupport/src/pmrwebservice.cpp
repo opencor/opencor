@@ -390,8 +390,16 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                           const QString &pPath)
 {
+    // Let people know that we are (going to be) busy
+
     emit busy(true);
-    getWorkspaceCredentials(pWorkspace);
+
+    // Get credentials for the given workspace
+
+    requestWorkspaceCredentials(pWorkspace);
+
+    // Clone the given workspace to the given path
+
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished()));
 
@@ -400,15 +408,30 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
-                                                const bool pOnlyPull)
+void PmrWebService::workspaceCloneFinished()
 {
+    emit busy(false);
+}
+
+//==============================================================================
+
+void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
+                                                const bool &pPush)
+{
+    // Let people know that we are (going to be) busy
+
     emit busy(true);
-    getWorkspaceCredentials(pWorkspace);
+
+    // Get credentials for the given workspace
+
+    requestWorkspaceCredentials(pWorkspace);
+
+    // Synchronise the given workspace
+
     connect(pWorkspace, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *)));
 
-    QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronize, pOnlyPull);
+    QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronize, pPush);
 }
 
 //==============================================================================
@@ -610,13 +633,6 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 
 //==============================================================================
 
-void PmrWebService::workspaceCloneFinished()
-{
-    emit busy(false);
-}
-
-//==============================================================================
-
 void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 {
     // Check whether we already know about the workspace for the given exposure
@@ -668,12 +684,12 @@ void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWork
 
 //==============================================================================
 
-void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
+void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url() + "/request_temporary_password",
-                                                                               true, true);
+                                                                        true, true);
 
-    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *)pWorkspace));
+    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) pWorkspace));
 
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));

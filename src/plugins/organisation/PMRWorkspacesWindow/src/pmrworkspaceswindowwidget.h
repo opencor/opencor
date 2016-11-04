@@ -142,7 +142,7 @@ private:
                                const QString &pPath1, const QString &pPath2);
 
     void commitWorkspace(const QString &pUrl);
-    void synchronizeWorkspace(const QString &pUrl, const bool pOnlyPull);
+    void synchronizeWorkspace(const QString &pUrl, const bool pPush = true);
 
     void showInGraphicalShell(const QString &pPath);
 

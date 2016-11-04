@@ -69,7 +69,7 @@ public:
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                const QString &pPath);
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
-                                     const bool pOnlyPull);
+                                     const bool &pPush);
 
     static QString emptyDirectory();
 
@@ -88,11 +88,11 @@ private:
     void requestWorkspaceInformation(const QString &pUrl,
                                      const QString &pPath,
                                      PmrExposure *pExposure = 0);
+    void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
     void emitInformation(const QString &pMessage);
     QString informationNoteMessage() const;
 
-    void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
     void requestExposureFileInformation(PmrExposure *pExposure,
                                         const QString &pUrl);
     void requestExposureInformation(PmrExposure *pExposure,
@@ -134,10 +134,11 @@ private slots:
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
 
+    void workspaceCloneFinished();
+
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
 
-    void workspaceCloneFinished();
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
     void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };
