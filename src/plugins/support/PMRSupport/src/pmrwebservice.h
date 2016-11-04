@@ -59,19 +59,19 @@ public:
 
     void requestExposures();
 
-    PmrWorkspace * workspace(const QString &pUrl);
+    PmrWorkspace * workspace(const QString &pUrl) const;
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
-                             const QString &pPath);
-    void requestWorkspaces();
+                             const QString &pPath) const;
+    void requestWorkspaces() const;
 
-    void requestWorkspaceInformation(const QString &pUrl);
+    void requestWorkspaceInformation(const QString &pUrl) const;
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                const QString &pPath);
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool pOnlyPull);
 
-    static QString getEmptyDirectory();
+    static QString emptyDirectory();
 
 private:
     enum Action {

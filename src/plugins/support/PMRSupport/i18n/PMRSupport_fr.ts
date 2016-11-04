@@ -8,19 +8,11 @@
         <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous pourriez vouloir envoyer un message à &lt;a href=&quot;mailto: help@physiomeproject.org&quot;&gt;help@physiomeproject.org&lt;/a&gt; et demander pourquoi c&apos;est le cas.</translation>
     </message>
     <message>
-        <source>Not authorised to access %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No exposure files could be found for %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No exposure file information could be found for %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Workspace %1 is already cloned in %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -42,6 +34,14 @@
     <message>
         <source>Select Empty Directory</source>
         <translation type="unfinished">Sélectionner Répertoire Vide</translation>
+    </message>
+    <message>
+        <source>The workspace for %1 is already cloned in %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Access to %1 is forbidden.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

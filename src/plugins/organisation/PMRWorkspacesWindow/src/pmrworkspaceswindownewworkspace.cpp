@@ -127,7 +127,7 @@ void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &pChecked)
 {
     Q_UNUSED(pChecked);
 
-    QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
+    QString dirName = PMRSupport::PmrWebService::emptyDirectory();
 
     if (!dirName.isEmpty()) {
         mGui->path->setText(dirName);

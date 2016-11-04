@@ -115,7 +115,7 @@ static const char *WorkspaceProperty  = "Workspace";
 
 //==============================================================================
 
-PmrWorkspace * PmrWebService::workspace(const QString &pUrl)
+PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
 {
     // Retrieve and return the workspace for the given URL
 
@@ -153,7 +153,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         // Retrieve the details of the workspace we are dealing with
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-        QString storageValue = QString();
+        QString storage = QString();
         QString workspaceDescription = QString();
         QString workspaceOwner = QString();
         QString workspaceName = QString();
@@ -164,7 +164,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
             QString name = dataMap["name"].toString();
 
             if (!name.compare("storage"))
-                storageValue = dataMap["value"].toString();
+                storage = dataMap["value"].toString();
             else if (!name.compare("description"))
                 workspaceDescription = dataMap["value"].toString();
             else if (!name.compare("owner"))
@@ -181,7 +181,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         if (workspaceName.isEmpty())
             workspaceName = tr("** Unknown name **");
 
-        if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
+        if (!workspaceUrl.isEmpty() && !storage.compare("git")) {
             *workspacePointer = new PmrWorkspace(workspaceUrl,
                                                  workspaceName,
                                                  workspaceDescription,
@@ -194,7 +194,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
 
 void PmrWebService::requestNewWorkspace(const QString &pName,
                                         const QString &pDescription,
-                                        const QString &pPath)
+                                        const QString &pPath) const
 {
     // Create a new workspace
 
@@ -231,7 +231,7 @@ void PmrWebService::newWorkspaceResponse(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaces()
+void PmrWebService::requestWorkspaces() const
 {
     // Retrieve all the workspaces
 
@@ -274,7 +274,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
+void PmrWebService::requestWorkspaceInformation(const QString &pUrl) const
 {
     // Retrieve some information about the workspace, which URL is given
 
@@ -306,25 +306,25 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl,
 
 void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocument)
 {
-    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    // Retrieve the workspace information from the given PMR response
 
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
     QVariantList itemsList = collectionMap["items"].toList();
 
     if (itemsList.count()) {
-        // Retrieve details of the workspace we are dealing with
+        // Retrieve the details of the workspace we are dealing with
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-
-        QString storageValue = QString();
+        QString storage = QString();
         QString workspaceDescription = QString();
         QString workspaceOwner = QString();
         QString workspaceName = QString();
 
-        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
-            QVariantMap dataMap = dataVariant.toMap();
+        foreach (const QVariant &data, itemsList.first().toMap()["data"].toList()) {
+            QVariantMap dataMap = data.toMap();
 
             if (!dataMap["name"].toString().compare("storage"))
-                storageValue = dataMap["value"].toString();
+                storage = dataMap["value"].toString();
             else if (!dataMap["name"].toString().compare("description"))
                 workspaceDescription = dataMap["value"].toString();
             else if (!dataMap["name"].toString().compare("owner"))
@@ -333,13 +333,14 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 workspaceName = dataMap["value"].toString();
         }
 
-        PmrExposure *exposure = (PmrExposure *)sender()->property(ExposureProperty).value<void *>();
+        // Retrieve the the exposure
+
+        PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
 
         if (!workspaceUrl.isEmpty()) {
-
             // Make sure that our workspace is a Git repository
 
-            if (!storageValue.compare("git")) {
+            if (!storage.compare("git")) {
                 PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
                                                            workspaceName,
                                                            workspaceDescription,
@@ -355,15 +356,15 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     // Check that we aren't already managing a clone of the
                     // workspace
 
-                    PmrWorkspace *existing = PmrWorkspaceManager::instance()->workspace(workspaceUrl);
+                    PmrWorkspace *existingWorkspace = PmrWorkspaceManager::instance()->workspace(workspaceUrl);
 
-                    if (!existing) {
+                    if (!existingWorkspace) {
                         // Retrieve the name of an empty directory
 
-                        dirName = getEmptyDirectory();
+                        dirName = emptyDirectory();
                     } else {
-                        emit warning(tr("Workspace %1 is already cloned in %2.").arg(workspaceUrl, existing->path()));
-                        // TODO Prompt user to create a fork on PMR??
+                        emit warning(tr("The workspace for %1 is already cloned in %2.").arg(workspaceUrl,
+                                                                                             existingWorkspace->path()));
                     }
                 } else {
                     // Cloning after creating a new workspace
@@ -371,7 +372,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     dirName = sender()->property(PathProperty).toString();
                 }
 
-                // Clone the workspace, if we have a directory
+                // Clone the workspace, if we have an empty directory
 
                 if (!dirName.isEmpty())
                     requestWorkspaceClone(workspace, dirName);
@@ -399,7 +400,8 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, const bool pOnlyPull)
+void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
+                                                const bool pOnlyPull)
 {
     emit busy(true);
     getWorkspaceCredentials(pWorkspace);
@@ -411,7 +413,7 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, const 
 
 //==============================================================================
 
-QString PmrWebService::getEmptyDirectory()
+QString PmrWebService::emptyDirectory()
 {
     // Retrieve and return the name of an empty directory
 
@@ -452,7 +454,7 @@ void PmrWebService::emitInformation(const QString &pMessage)
 
 void PmrWebService::forbidden(const QString &pUrl)
 {
-    emitInformation(tr("Access to %1 is forbidden").arg(pUrl));
+    emitInformation(tr("Access to %1 is forbidden.").arg(pUrl));
 }
 
 //==============================================================================
@@ -495,8 +497,8 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         QString workspaceUrl = QString();
         QStringList exposureFileUrls = QStringList();
 
-        foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-            QVariantMap linksMap = linksVariant.toMap();
+        foreach (const QVariant &links, collectionMap["links"].toList()) {
+            QVariantMap linksMap = links.toMap();
             QString relValue = linksMap["rel"].toString();
 
             if (!relValue.compare("via")) {
@@ -573,8 +575,8 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     // Check whether the exposure file has a link called
                     // "Launch with OpenCOR" (e.g. for SED-ML files)
 
-                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-                        QVariantMap linksMap = linksVariant.toMap();
+                    foreach (const QVariant &links, collectionMap["links"].toList()) {
+                        QVariantMap linksMap = links.toMap();
                         QString promptValue = linksMap["prompt"].toString();
                         QString relValue = linksMap["rel"].toString();
 
@@ -627,21 +629,19 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
 
         // Check that we aren't already managing a clone of the workspace
         if (!dirName.isEmpty()) {
-            emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, dirName));
-            // TODO Prompt user to create a fork on PMR??
+            emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url, dirName));
         } else {
             PmrWorkspace *existing = PmrWorkspaceManager::instance()->workspace(url);
 
             if (!existing) {
                 // Retrieve the name of an empty directory
 
-                dirName = getEmptyDirectory();
+                dirName = emptyDirectory();
 
                 if (!dirName.isEmpty())
                     requestWorkspaceClone(exposure->workspace(), dirName);
             } else {
-                emit warning(tr("Workspace %1 is already cloned in %2.").arg(url, existing->path()));
-                // TODO Prompt user to create a fork on PMR??
+                emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url, existing->path()));
             }
         }
     } else {
