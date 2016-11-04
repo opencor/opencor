@@ -120,7 +120,7 @@ signals:
 public slots:
     void authenticate(const bool &pAuthenticate = true);
     void getAuthenticationStatus();
-    void unauthorised(const QString &pUrl);
+    void forbidden(const QString &pUrl);
 
     void requestExposureFiles(const QString &pUrl);
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
@@ -131,13 +131,13 @@ private slots:
     void exposuresResponse(const QJsonDocument &pJsonDocument);
 
     void getWorkspaceResponse(const QJsonDocument &pJsonDocument);
-    void workspaceUnauthorised(const QString &pUrl);
+    void workspaceForbidden(const QString &pUrl);
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceCloneFinished();
-    void workspaceCreatedResponse(const QString &pUrl);
+    void newWorkspaceResponse(const QString &pUrl);
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
     void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };

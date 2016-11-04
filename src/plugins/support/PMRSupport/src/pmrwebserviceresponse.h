@@ -54,10 +54,10 @@ signals:
     void response(const QJsonDocument &pJsonDocument);
     void finished();
 
-    void unauthorised(const QString &pUrl);
-    void movedLocation(const QString &locationUrl);
     void error(const QString &pErrorMessage,
                const bool &pInternetConnectionAvailable);
+    void forbidden(const QString &pUrl);
+    void found(const QString &locationUrl);
 
 private slots:
     void processResponse();

@@ -189,8 +189,8 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
             mPmrWebService, SIGNAL(busy(const bool &)));
     connect(pmrWebServiceResponse, SIGNAL(error(const QString &, const bool &)),
             mPmrWebService, SIGNAL(error(const QString &, const bool &)));
-    connect(pmrWebServiceResponse, SIGNAL(unauthorised(const QString &)),
-            mPmrWebService, SLOT(unauthorised(const QString &)));
+    connect(pmrWebServiceResponse, SIGNAL(forbidden(const QString &)),
+            mPmrWebService, SLOT(forbidden(const QString &)));
 
     return pmrWebServiceResponse;
 }

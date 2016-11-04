@@ -103,11 +103,11 @@ void PmrWebServiceResponse::processResponse()
 
     if (mNetworkReply->error() != QNetworkReply::NoError) {
         if (httpStatusCode == 403)
-            emit unauthorised(mNetworkReply->url().toString());
+            emit forbidden(mNetworkReply->url().toString());
         else
             emit error(mNetworkReply->errorString(), true);
     } else if (httpStatusCode == 302) {
-        emit movedLocation(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
+        emit found(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
     } else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
         emit error(tr("Response has unexpected content type"), true);
     } else {

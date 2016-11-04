@@ -75,8 +75,17 @@ void PmrWebService::requestExposures()
 
 //==============================================================================
 
+static const char *PathProperty       = "Path";
+static const char *ExposureProperty   = "Exposure";
+static const char *NextActionProperty = "NextAction";
+static const char *WorkspaceProperty  = "Workspace";
+
+//==============================================================================
+
 PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
 {
+    // Retrieve and return the workspace for the given URL
+
     PmrWorkspace *workspace = 0;
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
@@ -85,10 +94,10 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(getWorkspaceResponse(const QJsonDocument &)));
 
-    // We want to catch any 403 (unauthorised) response
+    // We want to catch any 403 (forbidden) response
 
-    connect(pmrResponse, SIGNAL(unauthorised(const QString &)),
-            this, SLOT(workspaceUnauthorised(const QString &)));
+    connect(pmrResponse, SIGNAL(forbidden(const QString &)),
+            this, SLOT(workspaceForbidden(const QString &)));
 
     // Don't return until the response has been processed
 
@@ -121,8 +130,8 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
 
     pmrResponse->setProperty(PathProperty, pPath);
 
-    connect(pmrResponse, SIGNAL(movedLocation(const QString &)),
-            this, SLOT(workspaceCreatedResponse(const QString &)));
+    connect(pmrResponse, SIGNAL(found(const QString &)),
+            this, SLOT(newWorkspaceResponse(const QString &)));
 }
 
 //==============================================================================
@@ -225,17 +234,10 @@ void PmrWebService::emitInformation(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWebService::unauthorised(const QString &pUrl)
+void PmrWebService::forbidden(const QString &pUrl)
 {
-    emitInformation(tr("Not authorised to access %1").arg(pUrl));
+    emitInformation(tr("Access to %1 is forbidden").arg(pUrl));
 }
-
-//==============================================================================
-
-static const char *PathProperty       = "Path";
-static const char *ExposureProperty   = "Exposure";
-static const char *NextActionProperty = "NextAction";
-static const char *WorkspaceProperty  = "Workspace";
 
 //==============================================================================
 
@@ -563,7 +565,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
 //==============================================================================
 
-void PmrWebService::workspaceCreatedResponse(const QString &pUrl)
+void PmrWebService::newWorkspaceResponse(const QString &pUrl)
 {
     emit workspaceCreated(pUrl);
 
@@ -695,7 +697,7 @@ void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
 
 //==============================================================================
 
-void PmrWebService::workspaceUnauthorised(const QString &pUrl)
+void PmrWebService::workspaceForbidden(const QString &pUrl)
 {
     Q_UNUSED(pUrl);
 
