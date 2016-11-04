@@ -438,6 +438,17 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
+void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Let people know that we are not busy anymore and that the given workspace
+    // has been synchronised
+
+    emit busy(false);
+    emit workspaceSynchronized(pWorkspace);
+}
+
+//==============================================================================
+
 QString PmrWebService::getEmptyDirectory()
 {
     // Retrieve and return the name of an empty directory
@@ -447,13 +458,36 @@ QString PmrWebService::getEmptyDirectory()
 
 //==============================================================================
 
-void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
-    // Let people know that we are not busy anymore and that the given workspace
-    // has been synchronised
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url() + "/request_temporary_password",
+                                                                        true, true);
 
-    emit busy(false);
-    emit workspaceSynchronized(pWorkspace);
+    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) pWorkspace));
+
+    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+            this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));
+
+    // Don't return until the response has been processed
+
+    QEventLoop waitLoop;
+
+    connect(pmrResponse, SIGNAL(finished()),
+            &waitLoop, SLOT(quit()));
+
+    waitLoop.exec();
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
+{
+    QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
+
+    PmrWorkspace *workspace = (PmrWorkspace *)sender()->property(WorkspaceProperty).value<void *>();
+
+    if (workspace && jsonResponse["target"].toString() == workspace->url())
+        workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
 }
 
 //==============================================================================
@@ -677,40 +711,6 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
                 this, SLOT(exposureInformationResponse(const QJsonDocument &)));
     }
-}
-
-//==============================================================================
-
-void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
-{
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url() + "/request_temporary_password",
-                                                                        true, true);
-
-    pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) pWorkspace));
-
-    connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
-            this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));
-
-    // Don't return until the response has been processed
-
-    QEventLoop waitLoop;
-
-    connect(pmrResponse, SIGNAL(finished()),
-            &waitLoop, SLOT(quit()));
-
-    waitLoop.exec();
-}
-
-//==============================================================================
-
-void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
-{
-    QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
-
-    PmrWorkspace *workspace = (PmrWorkspace *)sender()->property(WorkspaceProperty).value<void *>();
-
-    if (workspace && jsonResponse["target"].toString() == workspace->url())
-        workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
 }
 
 //==============================================================================
