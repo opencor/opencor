@@ -51,42 +51,15 @@
     </item>
    </layout>
   </widget>
-  <action name="actionAuthenticate">
-   <property name="icon">
-    <iconset resource="../res/PMRWorkspacesWindow_ui.qrc">
-     <normaloff>:/PMRWorkspacesWindow/icons/pmr-unauthenticated.png</normaloff>:/PMRWorkspacesWindow/icons/pmr-unauthenticated.png</iconset>
-   </property>
-   <property name="text">
-    <string>Log on to PMR</string>
-   </property>
-   <property name="toolTip">
-    <string>Log on to PMR</string>
-   </property>
-  </action>
-  <action name="actionUnauthenticate">
-   <property name="icon">
-    <iconset resource="../res/PMRWorkspacesWindow_ui.qrc">
-     <normaloff>:/PMRWorkspacesWindow/icons/pmr-authenticated.png</normaloff>:/PMRWorkspacesWindow/icons/pmr-authenticated.png</iconset>
-   </property>
-   <property name="text">
-    <string>Log off PMR</string>
-   </property>
-   <property name="toolTip">
-    <string>Log off PMR</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
   <action name="actionNew">
    <property name="icon">
     <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
-   <property name="text">
+   <property name="toolTip">
     <string>New Workspace</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Create a new workspace</string>
    </property>
   </action>
@@ -95,17 +68,16 @@
     <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
    </property>
-   <property name="text">
+   <property name="toolTip">
     <string>Refresh List</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Refresh the list of workspaces</string>
    </property>
   </action>
  </widget>
  <resources>
   <include location="../../../../../res/ui.qrc"/>
-  <include location="../res/PMRWorkspacesWindow_ui.qrc"/>
  </resources>
  <connections/>
 </ui>

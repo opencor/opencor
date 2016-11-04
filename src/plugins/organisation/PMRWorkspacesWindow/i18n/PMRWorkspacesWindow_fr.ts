@@ -101,6 +101,22 @@
         <source>Log off PMR?</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Look off PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Look on to PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Look off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Look on</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PmrWorkspacesWindowCommit</name>
@@ -140,14 +156,6 @@
     <name>PmrWorkspacesWindowWindow</name>
     <message>
         <source>PMR Workspaces</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Log on to PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Log off PMR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

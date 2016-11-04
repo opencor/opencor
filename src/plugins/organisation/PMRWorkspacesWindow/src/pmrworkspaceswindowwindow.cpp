@@ -43,6 +43,7 @@ limitations under the License.
 #include <QDir>
 #include <QMainWindow>
 #include <QPoint>
+#include <QPushButton>
 #include <QSettings>
 #include <QTimer>
 
@@ -72,21 +73,25 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addAction(mGui->actionRefresh);
 
-    // Right align logon/off
+    // Right align our authentication button
 
-    QWidget *spacer1 = new QWidget();
-    spacer1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    toolBarWidget->addWidget(spacer1);
+    QWidget *spacer = new QWidget(toolBarWidget);
 
-    toolBarWidget->addAction(mGui->actionAuthenticate);
-    toolBarWidget->addAction(mGui->actionUnauthenticate);
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QWidget *spacer2 = new QWidget();
-    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-    spacer2->setMinimumSize(4, 0);
-    toolBarWidget->addWidget(spacer2);
+    toolBarWidget->addWidget(spacer);
+
+    mAuthenticationButton = new QPushButton(toolBarWidget);
+
+    mAuthenticationButton->setCheckable(true);
+    mAuthenticationButton->setIcon(QIcon(":/oxygen/apps/preferences-desktop-user-password.png"));
+
+    toolBarWidget->addWidget(mAuthenticationButton);
 
     mGui->layout->addWidget(toolBarWidget);
+
+    connect(mAuthenticationButton, SIGNAL(clicked(bool)),
+            this, SLOT(authenticate(const bool &)));
 
     // Create and add the workspaces widget
 
@@ -169,6 +174,8 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
+    updateGui();
+
     // Retranslate the workspaces widget
 
     mWorkspacesWindowWidget->retranslateUi();
@@ -207,6 +214,29 @@ void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
     pSettings->beginGroup(mWorkspacesWindowWidget->objectName());
         mWorkspacesWindowWidget->saveSettings(pSettings);
     pSettings->endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::authenticate(const bool &pChecked)
+{
+    // Log on/off to/ PMR
+
+    mAuthenticationButton->setChecked(!pChecked);
+    // Note #1: this is in case the user doesn't actually grant us access to
+    //          PMR or decides not to log off PMR...
+    // Note #2: as soon as we have been granted access to PMR or the user has
+    //          logged off PMR, the checked state of our authentication button
+    //          will be automatically updated (see updateGui())...
+
+    if (pChecked) {
+        mPmrWebService->authenticate();
+    } else {
+        if (QMessageBox::question(this, tr("OpenCOR"),
+                                  tr("Log off PMR?")) == QMessageBox::Yes) {
+            mPmrWebService->authenticate(false);
+        }
+    }
 }
 
 //==============================================================================
@@ -296,24 +326,21 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     bool authenticated = mPmrWebService->isAuthenticated();
 
-    Core::showEnableAction(mGui->actionAuthenticate, !authenticated);
+    mAuthenticationButton->setChecked(authenticated);
+    mAuthenticationButton->setStatusTip(authenticated?
+                                            tr("Log off PMR"):
+                                            tr("Log on to PMR"));
+    mAuthenticationButton->setToolTip(authenticated?
+                                          tr("Log Off"):
+                                          tr("Log On"));
+
     Core::showEnableAction(mGui->actionNew, true, authenticated);
     Core::showEnableAction(mGui->actionRefresh, true, authenticated);
-    Core::showEnableAction(mGui->actionUnauthenticate, authenticated);
 
     if (authenticated)
         mWorkspacesWindowWidget->refreshWorkspaces();
     else
         mWorkspacesWindowWidget->clearWorkspaces();
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::on_actionAuthenticate_triggered()
-{
-    // Log on to PMR
-
-    mPmrWebService->authenticate();
 }
 
 //==============================================================================
@@ -358,18 +385,6 @@ void PmrWorkspacesWindowWindow::on_actionRefresh_triggered()
     // Ask the workspaces widget to refresh itself
 
     mWorkspacesWindowWidget->refreshWorkspaces();
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::on_actionUnauthenticate_triggered()
-{
-    // Log off PMR
-
-    if (QMessageBox::question(this, tr("OpenCOR"),
-                              tr("Log off PMR?")) == QMessageBox::Yes) {
-        mPmrWebService->authenticate(false);
-    }
 }
 
 //==============================================================================

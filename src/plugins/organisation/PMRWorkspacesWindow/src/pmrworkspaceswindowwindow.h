@@ -38,6 +38,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QPushButton;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -81,11 +85,13 @@ private:
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mWorkspacesWindowWidget;
 
+    QPushButton *mAuthenticationButton;
+
 private slots:
-    void on_actionAuthenticate_triggered();
     void on_actionNew_triggered();
     void on_actionRefresh_triggered();
-    void on_actionUnauthenticate_triggered();
+
+    void authenticate(const bool &pChecked);
 
     void busy(const bool &pBusy);
     void showError(const QString &pMessage);
