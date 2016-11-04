@@ -61,15 +61,16 @@ public:
 
     PmrWorkspace * getWorkspace(const QString &pUrl);
 
-    void requestWorkspaceClone(PmrWorkspace *pWorkspace,
-                               const QString &pPath);
-    void requestWorkspaceInformation(const QString &pUrl);
-    void requestWorkspaces();
-    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
-                                     const bool pOnlyPull);
-
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pPath);
+
+    void requestWorkspaces();
+
+    void requestWorkspaceInformation(const QString &pUrl);
+    void requestWorkspaceClone(PmrWorkspace *pWorkspace,
+                               const QString &pPath);
+    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
+                                     const bool pOnlyPull);
 
     static QString getEmptyDirectory();
 
@@ -85,6 +86,10 @@ private:
     QMap<QString, PmrExposure *> mUrlExposures;
     QMap<PmrExposure *, int> mFileExposuresLeftCount;
 
+    void requestWorkspaceInformation(const QString &pUrl,
+                                     const QString &pPath,
+                                     PmrExposure *pExposure = 0);
+
     void emitInformation(const QString &pMessage);
     QString informationNoteMessage() const;
 
@@ -94,14 +99,9 @@ private:
     void requestExposureInformation(PmrExposure *pExposure,
                                     const Action &pNextAction);
 
-    void requestWorkspaceInformation(const QString &pUrl,
-                                     const QString &pPath,
-                                     PmrExposure *pExposure = 0);
-
 signals:
-    void authenticated(const bool &pAuthenticated);
-
     void busy(const bool &pBusy);
+    void authenticated(const bool &pAuthenticated);
     void progress(const double &pProgress);
 
     void information(const QString &pMessage);

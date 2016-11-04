@@ -41,6 +41,7 @@ namespace PMRSupport {
 class PmrWebServiceResponse : public QObject
 {
     Q_OBJECT
+
 public:
     explicit PmrWebServiceResponse(QNetworkReply *pNetworkReply);
 
