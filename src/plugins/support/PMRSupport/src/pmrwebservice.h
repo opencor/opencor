@@ -58,6 +58,7 @@ public:
     explicit PmrWebService(QObject *pParent);
 
     bool isAuthenticated() const;
+    void authenticate(const bool &pAuthenticate = true);
 
     void requestExposures();
 
@@ -117,7 +118,6 @@ signals:
     void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
 
 public slots:
-    void authenticate(const bool &pAuthenticate = true);
     void forbidden(const QString &pUrl);
 
     void requestExposureFiles(const QString &pUrl);

@@ -72,6 +72,15 @@ bool PmrWebService::isAuthenticated() const
 
 //==============================================================================
 
+void PmrWebService::authenticate(const bool &pAuthenticate)
+{
+    // Un/authenticate ourselves
+
+    mPmrWebServiceManager->authenticate(pAuthenticate);
+}
+
+//==============================================================================
+
 void PmrWebService::requestExposures()
 {
     // Request the list of exposures from PMR
@@ -593,15 +602,10 @@ void PmrWebService::emitInformation(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWebService::authenticate(const bool &pAuthenticate)
-{
-    mPmrWebServiceManager->authenticate(pAuthenticate);
-}
-
-//==============================================================================
-
 void PmrWebService::forbidden(const QString &pUrl)
 {
+    // Let people know that access to the given URL is forbidden
+
     emitInformation(tr("Access to %1 is forbidden.").arg(pUrl));
 }
 
