@@ -217,10 +217,42 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
 
 void PmrWebService::requestWorkspaces()
 {
+    // Retrieve all of the user's workspaces
+
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/my-workspaces", true);
 
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspacesResponse(const QJsonDocument &)));
+}
+
+//==============================================================================
+
+void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve the list of workspaces
+
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+
+    PmrWorkspaces workspaces = PmrWorkspaces();
+
+    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
+        QVariantMap linksMap = linksVariant.toMap();
+
+        if (!linksMap["rel"].toString().compare("bookmark")) {
+            QString workspaceUrl = linksMap["href"].toString().trimmed();
+            QString workspaceName = linksMap["prompt"].toString().simplified();
+
+            if (!workspaceUrl.isEmpty() && !workspaceName.isEmpty()) {
+                workspaces << new PmrWorkspace(workspaceUrl, workspaceName, this);
+
+                workspaces.last()->setOwned(true);
+            }
+        }
+    }
+
+    std::sort(workspaces.begin(), workspaces.end(), PmrWorkspace::compare);
+
+    emit PmrWebService::workspaces(workspaces);
 }
 
 //==============================================================================
@@ -619,36 +651,6 @@ void PmrWebService::newWorkspaceResponse(const QString &pUrl)
 
     requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
     // Note: a non-empty dirname will clone the workspace...
-}
-
-//==============================================================================
-
-void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
-{
-    // Retrieve the list of workspaces
-
-    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-
-    PmrWorkspaces workspaces = PmrWorkspaces();
-
-    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-        QVariantMap linksMap = linksVariant.toMap();
-
-        if (!linksMap["rel"].toString().compare("bookmark")) {
-            QString workspaceUrl = linksMap["href"].toString().trimmed();
-            QString workspaceName = linksMap["prompt"].toString().simplified();
-
-            if (!workspaceUrl.isEmpty() && !workspaceName.isEmpty()) {
-                workspaces << new PmrWorkspace(workspaceUrl, workspaceName, this);
-
-                workspaces.last()->setOwned(true);
-            }
-        }
-    }
-
-    std::sort(workspaces.begin(), workspaces.end(), PmrWorkspace::compare);
-
-    emit PmrWebService::workspaces(workspaces);
 }
 
 //==============================================================================
