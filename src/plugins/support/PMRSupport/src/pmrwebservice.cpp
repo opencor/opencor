@@ -410,6 +410,8 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
 void PmrWebService::workspaceCloneFinished()
 {
+    // Let people know that we are not busy anymore
+
     emit busy(false);
 }
 
@@ -432,6 +434,17 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
             this, SLOT(workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *)));
 
     QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronize, pPush);
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Let people know that we are not busy anymore and that the given workspace
+    // has been synchronised
+
+    emit busy(false);
+    emit workspaceSynchronized(pWorkspace);
 }
 
 //==============================================================================
@@ -672,14 +685,6 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
                 this, SLOT(exposureInformationResponse(const QJsonDocument &)));
     }
-}
-
-//==============================================================================
-
-void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
-{
-    emit busy(false);
-    emit workspaceSynchronized(pWorkspace);
 }
 
 //==============================================================================

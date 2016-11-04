@@ -1231,7 +1231,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
-                                                     const bool pPush)
+                                                     const bool &pPush)
 {
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 

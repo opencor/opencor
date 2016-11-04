@@ -108,13 +108,14 @@ signals:
     void error(const QString &pErrorMessage,
                const bool &pInternetConnectionAvailable);
 
+    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
+
+    void workspaceCreated(const QString &pUrl);
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+
     void exposures(const PMRSupport::PmrExposures &pExposures);
     void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
-
-    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceCreated(const QString &pUrl);
-    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
     void authenticate(const bool &pAuthenticate = true);
@@ -135,12 +136,12 @@ private slots:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceCloneFinished();
+    void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 
     void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
     void exposureInformationResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
-    void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
