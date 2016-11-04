@@ -94,11 +94,6 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(getWorkspaceResponse(const QJsonDocument &)));
 
-    // We want to catch any 403 (forbidden) response
-
-    connect(pmrResponse, SIGNAL(forbidden(const QString &)),
-            this, SLOT(workspaceForbidden(const QString &)));
-
     // Don't return until the response has been processed
 
     QEventLoop waitLoop;
@@ -693,15 +688,6 @@ void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
         }
 
     }
-}
-
-//==============================================================================
-
-void PmrWebService::workspaceForbidden(const QString &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // Do nothing, getWorkspace() will return 0
 }
 
 //==============================================================================

@@ -131,7 +131,6 @@ private slots:
     void exposuresResponse(const QJsonDocument &pJsonDocument);
 
     void getWorkspaceResponse(const QJsonDocument &pJsonDocument);
-    void workspaceForbidden(const QString &pUrl);
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesResponse(const QJsonDocument &pJsonDocument);
