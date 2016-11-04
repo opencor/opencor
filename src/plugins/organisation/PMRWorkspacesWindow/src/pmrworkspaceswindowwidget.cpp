@@ -1128,7 +1128,7 @@ void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && !workspace->isLocal()) {
-        QString dirName = PMRSupport::PmrWebService::emptyDirectory();
+        QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
         if (!dirName.isEmpty()) {
             // Create the folder for the new workspace

@@ -361,7 +361,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     if (!existingWorkspace) {
                         // Retrieve the name of an empty directory
 
-                        dirName = emptyDirectory();
+                        dirName = getEmptyDirectory();
                     } else {
                         emit warning(tr("The workspace for %1 is already cloned in %2.").arg(workspaceUrl,
                                                                                              existingWorkspace->path()));
@@ -438,7 +438,7 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-QString PmrWebService::emptyDirectory()
+QString PmrWebService::getEmptyDirectory()
 {
     // Retrieve and return the name of an empty directory
 
@@ -665,7 +665,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
             if (!existing) {
                 // Retrieve the name of an empty directory
 
-                dirName = emptyDirectory();
+                dirName = getEmptyDirectory();
 
                 if (!dirName.isEmpty())
                     requestWorkspaceClone(exposure->workspace(), dirName);

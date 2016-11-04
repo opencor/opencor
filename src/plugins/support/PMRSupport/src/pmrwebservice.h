@@ -71,7 +71,7 @@ public:
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool &pPush);
 
-    static QString emptyDirectory();
+    static QString getEmptyDirectory();
 
 private:
     enum Action {
