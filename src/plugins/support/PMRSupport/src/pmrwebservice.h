@@ -59,11 +59,10 @@ public:
 
     void requestExposures();
 
-    PmrWorkspace * getWorkspace(const QString &pUrl);
+    PmrWorkspace * workspace(const QString &pUrl);
 
     void requestNewWorkspace(const QString &pName, const QString &pDescription,
                              const QString &pPath);
-
     void requestWorkspaces();
 
     void requestWorkspaceInformation(const QString &pUrl);
@@ -126,11 +125,12 @@ public slots:
     void requestExposureWorkspaceClone(const QString &pExposureUrl);
 
 private slots:
-    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
-    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
     void exposuresResponse(const QJsonDocument &pJsonDocument);
 
-    void getWorkspaceResponse(const QJsonDocument &pJsonDocument);
+    void workspaceResponse(const QJsonDocument &pJsonDocument);
+
+    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
+    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
     void workspacesResponse(const QJsonDocument &pJsonDocument);

@@ -1070,7 +1070,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
         if (!urlsIterator.value().second) {
             QString url = urlsIterator.key();
-            PMRSupport::PmrWorkspace *workspace = mPmrWebService->getWorkspace(url);
+            PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
 
             if (workspace) {
                 mWorkspaceManager->addWorkspace(workspace);

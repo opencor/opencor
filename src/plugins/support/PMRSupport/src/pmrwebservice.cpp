@@ -75,6 +75,37 @@ void PmrWebService::requestExposures()
 
 //==============================================================================
 
+void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
+{
+    PmrExposures exposures = PmrExposures();
+
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
+        QVariantMap linksMap = linksVariant.toMap();
+
+        if (!linksMap["rel"].toString().compare("bookmark")) {
+            QString exposureUrl = linksMap["href"].toString().trimmed();
+            QString exposureName = linksMap["prompt"].toString().simplified();
+
+            if (   !exposureUrl.isEmpty() && !exposureName.isEmpty()) {
+                PmrExposure *exposure = new PmrExposure(exposureUrl, exposureName, this);
+
+                mUrlExposures.insert(exposureUrl, exposure);
+
+                exposures << exposure;
+            }
+        }
+    }
+
+    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
+
+    // Respond with a list of exposures
+
+    emit PmrWebService::exposures(exposures);
+}
+
+//==============================================================================
+
 static const char *PathProperty       = "Path";
 static const char *ExposureProperty   = "Exposure";
 static const char *NextActionProperty = "NextAction";
@@ -82,7 +113,7 @@ static const char *WorkspaceProperty  = "Workspace";
 
 //==============================================================================
 
-PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
+PmrWorkspace * PmrWebService::workspace(const QString &pUrl)
 {
     // Retrieve and return the workspace for the given URL
 
@@ -92,7 +123,7 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
     pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) &workspace));
 
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
-            this, SLOT(getWorkspaceResponse(const QJsonDocument &)));
+            this, SLOT(workspaceResponse(const QJsonDocument &)));
 
     // Don't return until the response has been processed
 
@@ -104,6 +135,64 @@ PmrWorkspace * PmrWebService::getWorkspace(const QString &pUrl)
     waitLoop.exec();
 
     return workspace;
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
+{
+    PmrWorkspace **workspacePointer = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
+
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+
+    QVariantList itemsList = collectionMap["items"].toList();
+
+    if (itemsList.count()) {
+        // Retrieve details of the workspace we are dealing with
+
+        QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
+
+        QString storageValue = QString();
+        QString workspaceDescription = QString();
+        QString workspaceOwner = QString();
+        QString workspaceName = QString();
+        QString workspaceId = QString();
+
+        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
+            QVariantMap dataMap = dataVariant.toMap();
+            QString fieldName = dataMap["name"].toString();
+
+            if (!fieldName.compare("storage"))
+                storageValue = dataMap["value"].toString();
+            else if (!fieldName.compare("description"))
+                workspaceDescription = dataMap["value"].toString();
+            else if (!fieldName.compare("owner"))
+                workspaceOwner = dataMap["value"].toString();
+            else if (!fieldName.compare("title"))
+                workspaceName = dataMap["value"].toString();
+            else if (!fieldName.compare("id"))
+                workspaceId = dataMap["value"].toString();
+        }
+
+        if (workspaceName.isEmpty())
+            workspaceName = workspaceId;
+
+        if (workspaceName.isEmpty())
+            workspaceName = tr("** Unknown name **");
+
+        if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
+
+            PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
+                                                       workspaceName,
+                                                       workspaceDescription,
+                                                       workspaceOwner, this);
+
+            // Return result to requestor
+
+            *workspacePointer = workspace;
+        }
+
+    }
 }
 
 //==============================================================================
@@ -232,37 +321,6 @@ void PmrWebService::emitInformation(const QString &pMessage)
 void PmrWebService::forbidden(const QString &pUrl)
 {
     emitInformation(tr("Access to %1 is forbidden").arg(pUrl));
-}
-
-//==============================================================================
-
-void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
-{
-    PmrExposures exposures = PmrExposures();
-
-    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-        QVariantMap linksMap = linksVariant.toMap();
-
-        if (!linksMap["rel"].toString().compare("bookmark")) {
-            QString exposureUrl = linksMap["href"].toString().trimmed();
-            QString exposureName = linksMap["prompt"].toString().simplified();
-
-            if (   !exposureUrl.isEmpty() && !exposureName.isEmpty()) {
-                PmrExposure *exposure = new PmrExposure(exposureUrl, exposureName, this);
-
-                mUrlExposures.insert(exposureUrl, exposure);
-
-                exposures << exposure;
-            }
-        }
-    }
-
-    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
-
-    // Respond with a list of exposures
-
-    emit PmrWebService::exposures(exposures);
 }
 
 //==============================================================================
@@ -630,64 +688,6 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 
     if (workspace && jsonResponse["target"].toString() == workspace->url())
         workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
-}
-
-//==============================================================================
-
-void PmrWebService::getWorkspaceResponse(const QJsonDocument &pJsonDocument)
-{
-    PmrWorkspace **workspacePointer = (PmrWorkspace **)sender()->property(WorkspaceProperty).value<void *>();
-
-    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-
-    QVariantList itemsList = collectionMap["items"].toList();
-
-    if (itemsList.count()) {
-        // Retrieve details of the workspace we are dealing with
-
-        QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-
-        QString storageValue = QString();
-        QString workspaceDescription = QString();
-        QString workspaceOwner = QString();
-        QString workspaceName = QString();
-        QString workspaceId = QString();
-
-        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
-            QVariantMap dataMap = dataVariant.toMap();
-            QString fieldName = dataMap["name"].toString();
-
-            if (!fieldName.compare("storage"))
-                storageValue = dataMap["value"].toString();
-            else if (!fieldName.compare("description"))
-                workspaceDescription = dataMap["value"].toString();
-            else if (!fieldName.compare("owner"))
-                workspaceOwner = dataMap["value"].toString();
-            else if (!fieldName.compare("title"))
-                workspaceName = dataMap["value"].toString();
-            else if (!fieldName.compare("id"))
-                workspaceId = dataMap["value"].toString();
-        }
-
-        if (workspaceName.isEmpty())
-            workspaceName = workspaceId;
-
-        if (workspaceName.isEmpty())
-            workspaceName = tr("** Unknown name **");
-
-        if (!workspaceUrl.isEmpty() && !storageValue.compare("git")) {
-
-            PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
-                                                       workspaceName,
-                                                       workspaceDescription,
-                                                       workspaceOwner, this);
-
-            // Return result to requestor
-
-            *workspacePointer = workspace;
-        }
-
-    }
 }
 
 //==============================================================================
