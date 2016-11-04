@@ -219,10 +219,14 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
 
 void PmrWebService::newWorkspaceResponse(const QString &pUrl)
 {
+    // Let people know that the workspace, which URL is given, has been created
+
     emit workspaceCreated(pUrl);
 
+    // Now that the workspace has been created, we can request its information
+
     requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
-    // Note: a non-empty dirname will clone the workspace...
+    // Note: a non-empty path will clone the workspace...
 }
 
 //==============================================================================
@@ -280,7 +284,8 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl)
 
 //==============================================================================
 
-void PmrWebService::requestWorkspaceInformation(const QString &pUrl, const QString &pPath,
+void PmrWebService::requestWorkspaceInformation(const QString &pUrl,
+                                                const QString &pPath,
                                                 PmrExposure *pExposure)
 {
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
