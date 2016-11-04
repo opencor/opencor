@@ -127,7 +127,7 @@ PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceResponse(const QJsonDocument &)));
 
-    // Don't return until the response has been processed
+    // Don't return until the PMR response has been processed
 
     QEventLoop waitLoop;
 
@@ -460,6 +460,8 @@ QString PmrWebService::getEmptyDirectory()
 
 void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
+    // Request credentials for the given workspace
+
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url() + "/request_temporary_password",
                                                                         true, true);
 
@@ -468,7 +470,7 @@ void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
     connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
             this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));
 
-    // Don't return until the response has been processed
+    // Don't return until the PMR response has been processed
 
     QEventLoop waitLoop;
 
@@ -482,51 +484,15 @@ void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
 
 void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
 {
+    // Retrieve the credentials from the given PMR response
+
     QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
+    PmrWorkspace *workspace = (PmrWorkspace *) sender()->property(WorkspaceProperty).value<void *>();
 
-    PmrWorkspace *workspace = (PmrWorkspace *)sender()->property(WorkspaceProperty).value<void *>();
-
-    if (workspace && jsonResponse["target"].toString() == workspace->url())
+    if ( workspace &&
+        !jsonResponse["target"].toString().compare(workspace->url())) {
         workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
-}
-
-//==============================================================================
-
-void PmrWebService::authenticate(const bool &pAuthenticate)
-{
-    mPmrWebServiceManager->authenticate(pAuthenticate);
-}
-
-//==============================================================================
-
-void PmrWebService::getAuthenticationStatus()
-{
-    emit authenticated(mPmrWebServiceManager->isAuthenticated());
-}
-
-//==============================================================================
-
-void PmrWebService::emitInformation(const QString &pMessage)
-{
-    emit information( pMessage+"<br/><br/>"
-                     +tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."));
-}
-
-//==============================================================================
-
-void PmrWebService::forbidden(const QString &pUrl)
-{
-    emitInformation(tr("Access to %1 is forbidden.").arg(pUrl));
-}
-
-//==============================================================================
-
-void PmrWebService::requestExposureFiles(const QString &pUrl)
-{
-    // Request some exposure information (and then exposure files) for the
-    // exposure which URL is given
-
-    requestExposureInformation(mUrlExposures.value(pUrl), RequestExposureFiles);
+    }
 }
 
 //==============================================================================
@@ -591,6 +557,45 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         foreach (const QString &exposureFileUrl, exposureFileUrls)
             requestExposureFileInformation(exposure, exposureFileUrl);
     }
+}
+
+//==============================================================================
+
+void PmrWebService::authenticate(const bool &pAuthenticate)
+{
+    mPmrWebServiceManager->authenticate(pAuthenticate);
+}
+
+//==============================================================================
+
+void PmrWebService::getAuthenticationStatus()
+{
+    emit authenticated(mPmrWebServiceManager->isAuthenticated());
+}
+
+//==============================================================================
+
+void PmrWebService::emitInformation(const QString &pMessage)
+{
+    emit information( pMessage+"<br/><br/>"
+                     +tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."));
+}
+
+//==============================================================================
+
+void PmrWebService::forbidden(const QString &pUrl)
+{
+    emitInformation(tr("Access to %1 is forbidden.").arg(pUrl));
+}
+
+//==============================================================================
+
+void PmrWebService::requestExposureFiles(const QString &pUrl)
+{
+    // Request some exposure information (and then exposure files) for the
+    // exposure which URL is given
+
+    requestExposureInformation(mUrlExposures.value(pUrl), RequestExposureFiles);
 }
 
 //==============================================================================
