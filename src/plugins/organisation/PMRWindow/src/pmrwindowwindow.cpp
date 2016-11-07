@@ -70,11 +70,11 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     mPmrWidget = new PmrWindowWidget(this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
-                                                                           true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
-                                                                           true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWidget,
+                                                     true, false, false, false));
 #else
     #error Unsupported platform
 #endif

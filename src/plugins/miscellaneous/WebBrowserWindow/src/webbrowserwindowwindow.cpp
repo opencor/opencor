@@ -99,8 +99,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionPrint);
 
-    mGui->dockWidgetContents->layout()->addWidget(Core::newLineWidget(this));
-    mGui->dockWidgetContents->layout()->addWidget(toolBarWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(toolBarWidget);
 
     // Create and add the web browser widget
 
@@ -111,11 +111,11 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     setZoomLevel(DefaultZoomLevel);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
-                                                                           true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
-                                                                           true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
+                                                     true, false, false, false));
 #else
     #error Unsupported platform
 #endif
@@ -137,7 +137,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     progressBarBorderedWidget->setFixedHeight(4);
     progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    mGui->dockWidgetContents->layout()->addWidget(progressBarBorderedWidget);
+    mGui->layout->addWidget(progressBarBorderedWidget);
 
     // Various connections to handle our web browser widget
 
