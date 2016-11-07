@@ -125,8 +125,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
-    connect(mPmrWebService, SIGNAL(progress(const double &)),
-            this, SLOT(showProgress(const double &)));
 
     connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
             this, SLOT(showError(const QString &)));
@@ -224,7 +222,7 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mWorkspacesWindowWidget->showProgressBusyWidget();
+        mWorkspacesWindowWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
@@ -233,16 +231,7 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
         mWorkspacesWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
-
-        // And give focus to??
     }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::showProgress(const double &pProgress)
-{
-    mWorkspacesWindowWidget->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

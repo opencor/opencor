@@ -103,8 +103,6 @@ private slots:
 
     void retrieveWorkspaces(const bool &pVisible);
 
-    void showProgress(const double &pProgress);
-
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDeleted(const QString &pFileName);
     void fileDuplicated(const QString &pFileName);
