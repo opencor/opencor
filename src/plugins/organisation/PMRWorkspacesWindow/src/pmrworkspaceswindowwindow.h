@@ -89,6 +89,8 @@ private:
 
     QGraphicsColorizeEffect *mColorizeEffect;
 
+    void retranslateActionPmr();
+
 private slots:
     void on_actionNew_triggered();
     void on_actionRefresh_triggered();

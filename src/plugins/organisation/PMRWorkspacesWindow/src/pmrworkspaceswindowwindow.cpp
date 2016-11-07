@@ -169,7 +169,7 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    updateGui();
+    retranslateActionPmr();
 
     // Retranslate the workspaces widget
 
@@ -294,17 +294,26 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     mColorizeEffect->setColor(mAuthenticated?Qt::darkGreen:Qt::darkRed);
 
+    retranslateActionPmr();
+
+    if (mAuthenticated)
+        mWorkspacesWindowWidget->refreshWorkspaces();
+    else
+        mWorkspacesWindowWidget->clearWorkspaces();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::retranslateActionPmr()
+{
+    // Retranslate our PMR action
+
     mGui->actionPmr->setStatusTip(mAuthenticated?
                                       tr("Log off PMR"):
                                       tr("Log on to PMR"));
     mGui->actionPmr->setToolTip(mAuthenticated?
                                     tr("Log Off"):
                                     tr("Log On"));
-
-    if (mAuthenticated)
-        mWorkspacesWindowWidget->refreshWorkspaces();
-    else
-        mWorkspacesWindowWidget->clearWorkspaces();
 }
 
 //==============================================================================
