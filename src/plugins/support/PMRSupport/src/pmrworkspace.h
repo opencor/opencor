@@ -144,27 +144,19 @@ private:
                                       const git_diff_file *pTarget,
                                       const git_diff_file *pWorkDirectory,
                                       void *pPayload);
-    static void checkoutProgressCallback(const char *pPath,
-                                         size_t pCompletedSteps,
-                                         size_t pTotalSteps, void *pPayload);
     static int fetchheadForeachCallback(const char *pReferenceName,
                                         const char *pRemoteUrl,
                                         const git_oid *pId,
                                         unsigned int pMerge, void *pPayload);
     static int mergeheadForeachCallback(const git_oid *pOid, void *pPayload);
-    static int transferProgressCallback(const git_transfer_progress *pProgress,
-                                        void *pPayload);
 
     bool fetch();
     bool merge();
     void push();
 
-    void emitProgress(const double &pProgress) const;
     void emitGitError(const QString &pMessage) const;
 
 signals:
-    void progress(const double &pProgress) const;
-
     void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 

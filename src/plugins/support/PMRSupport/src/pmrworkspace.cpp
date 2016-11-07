@@ -88,8 +88,6 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
 
     // Forward our signals to our parent PMR web service
 
-    connect(this, SIGNAL(progress(const double &)),
-            pParent, SIGNAL(progress(const double &)));
     connect(this, SIGNAL(information(const QString &)),
             pParent, SIGNAL(information(const QString &)));
     connect(this, SIGNAL(warning(const QString &)),
@@ -256,12 +254,9 @@ void PmrWorkspace::clone(const QString &pPath)
 
     cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
     cloneOptions.fetch_opts.callbacks.payload = this;
-    cloneOptions.fetch_opts.callbacks.transfer_progress = transferProgressCallback;
     cloneOptions.fetch_opts.custom_headers = authorizationStrArray;
 
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
-    cloneOptions.checkout_opts.progress_cb = checkoutProgressCallback;
-    cloneOptions.checkout_opts.progress_payload = this;
 
     // Perform the cloning itself and let people know whether it worked or not
 
@@ -933,20 +928,6 @@ int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
 
 //==============================================================================
 
-void PmrWorkspace::checkoutProgressCallback(const char *pPath,
-                                            size_t pCompletedSteps,
-                                            size_t pTotalSteps,
-                                            void *pPayload)
-{
-    Q_UNUSED(pPath);
-
-    // Let people know about our progress
-
-    ((PmrWorkspace *) pPayload)->emitProgress(double(pCompletedSteps)/pTotalSteps);
-}
-
-//==============================================================================
-
 int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
                                            const char *pRemoteUrl,
                                            const git_oid *pId,
@@ -1085,18 +1066,6 @@ int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
 
 //==============================================================================
 
-int PmrWorkspace::transferProgressCallback(const git_transfer_progress *pProgress,
-                                           void *pPayload)
-{
-    // Let people know about the progress of our transfer
-
-    ((PmrWorkspace *) pPayload)->emitProgress(double(pProgress->received_objects+pProgress->indexed_objects)/(pProgress->total_objects << 1));
-
-    return 0;
-}
-
-//==============================================================================
-
 bool PmrWorkspace::fetch()
 {
     // Fetch any updates for a workspace, if possible
@@ -1117,7 +1086,6 @@ bool PmrWorkspace::fetch()
 
     fetchOptions.callbacks.certificate_check = certificateCheckCallback;
     fetchOptions.callbacks.payload = this;
-    fetchOptions.callbacks.transfer_progress = transferProgressCallback;
 
     fetchOptions.custom_headers = authorizationStrArray;
 
@@ -1199,7 +1167,6 @@ void PmrWorkspace::push()
 
     pushOptions.callbacks.certificate_check = certificateCheckCallback;
     pushOptions.callbacks.payload = this;
-    pushOptions.callbacks.transfer_progress = transferProgressCallback;
 
     pushOptions.custom_headers = authorizationStrArray;
 
@@ -1221,15 +1188,6 @@ void PmrWorkspace::push()
         git_remote_free(gitRemote);
 
     git_strarray_free(&authorizationStrArray);
-}
-
-//==============================================================================
-
-void PmrWorkspace::emitProgress(const double &pProgress) const
-{
-    // Let people know about our progress
-
-    emit progress(pProgress);
 }
 
 //==============================================================================

@@ -84,7 +84,6 @@ private slots:
     void on_refreshButton_clicked();
 
     void busy(const bool &pBusy);
-    void showProgress(const double &pProgress);
 
     void pmrError(const QString &pErrorMessage,
                   const bool &pInternetConnectionAvailable);

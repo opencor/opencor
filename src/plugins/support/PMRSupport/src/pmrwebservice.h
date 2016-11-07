@@ -101,7 +101,6 @@ private:
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
-    void progress(const double &pProgress);
 
     void information(const QString &pMessage);
     void warning(const QString &pMessage);

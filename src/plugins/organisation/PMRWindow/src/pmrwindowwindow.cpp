@@ -93,8 +93,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
-    connect(mPmrWebService, SIGNAL(progress(const double &)),
-            this, SLOT(showProgress(const double &)));
 
     connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
             this, SLOT(pmrError(const QString &, const bool &)));
@@ -172,7 +170,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWidget->showProgressBusyWidget();
+        mPmrWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
@@ -186,15 +184,6 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
         Core::setFocusTo(mGui->filterValue);
     }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::showProgress(const double &pProgress)
-{
-    // Update our busy widget progress
-
-    mPmrWidget->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
