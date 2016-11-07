@@ -56,6 +56,12 @@
     <string>Refresh the list of workspaces</string>
    </property>
   </action>
+  <action name="actionPmr">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/apps/preferences-desktop-user-password.png</normaloff>:/oxygen/apps/preferences-desktop-user-password.png</iconset>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../../../../../res/ui.qrc"/>

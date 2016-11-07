@@ -41,9 +41,9 @@ limitations under the License.
 //==============================================================================
 
 #include <QDir>
+#include <QGraphicsColorizeEffect>
 #include <QMainWindow>
 #include <QPoint>
-#include <QPushButton>
 #include <QSettings>
 #include <QTimer>
 
@@ -56,7 +56,9 @@ namespace PMRWorkspacesWindow {
 
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWorkspacesWindowWindow)
+    mGui(new Ui::PmrWorkspacesWindowWindow),
+    mAuthenticated(false),
+    mColorizeEffect(new QGraphicsColorizeEffect(this))
 {
     // Set up the GUI
 
@@ -66,43 +68,38 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mPmrWebService = new PMRSupport::PmrWebService(this);
 
-    // Create a tool bar widget with different buttons
+    // Create a tool bar widget with different actions
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
     toolBarWidget->addAction(mGui->actionNew);
+    toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionRefresh);
 
-    // Right align our authentication button
+    // Right align our PMR-related action and get it ready for colorisation
+    // effect
 
     QWidget *spacer = new QWidget(toolBarWidget);
 
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     toolBarWidget->addWidget(spacer);
+    toolBarWidget->addAction(mGui->actionPmr);
 
-    mAuthenticationButton = new QPushButton(toolBarWidget);
-
-    mAuthenticationButton->setCheckable(true);
-    mAuthenticationButton->setIcon(QIcon(":/oxygen/apps/preferences-desktop-user-password.png"));
-
-    toolBarWidget->addWidget(mAuthenticationButton);
+    toolBarWidget->widgetForAction(mGui->actionPmr)->setGraphicsEffect(mColorizeEffect);
 
     mGui->layout->addWidget(toolBarWidget);
-
-    connect(mAuthenticationButton, SIGNAL(clicked(bool)),
-            this, SLOT(authenticate(const bool &)));
 
     // Create and add the workspaces widget
 
     mWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrWebService, this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWorkspacesWindowWidget,
-                                                                           true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mWorkspacesWindowWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWorkspacesWindowWidget,
-                                                                           true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mWorkspacesWindowWidget,
+                                                     true, false, false, false));
 #else
     #error Unsupported platform
 #endif
@@ -218,29 +215,6 @@ void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::authenticate(const bool &pChecked)
-{
-    // Log on/off to/ PMR
-
-    mAuthenticationButton->setChecked(!pChecked);
-    // Note #1: this is in case the user doesn't actually grant us access to
-    //          PMR or decides not to log off PMR...
-    // Note #2: as soon as we have been granted access to PMR or the user has
-    //          logged off PMR, the checked state of our authentication button
-    //          will be automatically updated (see updateGui())...
-
-    if (pChecked) {
-        mPmrWebService->authenticate();
-    } else {
-        if (QMessageBox::question(this, tr("OpenCOR"),
-                                  tr("Log off PMR?")) == QMessageBox::Yes) {
-            mPmrWebService->authenticate(false);
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
@@ -324,20 +298,21 @@ void PmrWorkspacesWindowWindow::updateGui()
 {
     // Update our GUI based on whether we are authenticated with PMR
 
-    bool authenticated = mPmrWebService->isAuthenticated();
+    mAuthenticated = mPmrWebService->isAuthenticated();
 
-    mAuthenticationButton->setChecked(authenticated);
-    mAuthenticationButton->setStatusTip(authenticated?
-                                            tr("Log off PMR"):
-                                            tr("Log on to PMR"));
-    mAuthenticationButton->setToolTip(authenticated?
-                                          tr("Log Off"):
-                                          tr("Log On"));
+    Core::showEnableAction(mGui->actionNew, true, mAuthenticated);
+    Core::showEnableAction(mGui->actionRefresh, true, mAuthenticated);
 
-    Core::showEnableAction(mGui->actionNew, true, authenticated);
-    Core::showEnableAction(mGui->actionRefresh, true, authenticated);
+    mColorizeEffect->setColor(mAuthenticated?Qt::darkGreen:Qt::darkRed);
 
-    if (authenticated)
+    mGui->actionPmr->setStatusTip(mAuthenticated?
+                                      tr("Log off PMR"):
+                                      tr("Log on to PMR"));
+    mGui->actionPmr->setToolTip(mAuthenticated?
+                                    tr("Log Off"):
+                                    tr("Log On"));
+
+    if (mAuthenticated)
         mWorkspacesWindowWidget->refreshWorkspaces();
     else
         mWorkspacesWindowWidget->clearWorkspaces();
@@ -385,6 +360,20 @@ void PmrWorkspacesWindowWindow::on_actionRefresh_triggered()
     // Ask the workspaces widget to refresh itself
 
     mWorkspacesWindowWidget->refreshWorkspaces();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
+{
+    // Log on/off to/ PMR
+
+    if (mAuthenticated) {
+        if (Core::questionMessageBox(this, windowTitle(), tr("Log off PMR?")) == QMessageBox::Yes)
+            mPmrWebService->authenticate(false);
+    } else {
+        mPmrWebService->authenticate();
+    }
 }
 
 //==============================================================================

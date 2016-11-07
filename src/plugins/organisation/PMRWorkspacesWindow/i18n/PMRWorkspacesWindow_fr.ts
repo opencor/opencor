@@ -94,10 +94,6 @@
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
     <message>
-        <source>OpenCOR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Log off PMR?</source>
         <translation type="unfinished"></translation>
     </message>

@@ -38,7 +38,7 @@ namespace Ui {
 
 //==============================================================================
 
-class QPushButton;
+class QGraphicsColorizeEffect;
 
 //==============================================================================
 
@@ -85,13 +85,14 @@ private:
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mWorkspacesWindowWidget;
 
-    QPushButton *mAuthenticationButton;
+    bool mAuthenticated;
+
+    QGraphicsColorizeEffect *mColorizeEffect;
 
 private slots:
     void on_actionNew_triggered();
     void on_actionRefresh_triggered();
-
-    void authenticate(const bool &pChecked);
+    void on_actionPmr_triggered();
 
     void busy(const bool &pBusy);
     void showError(const QString &pMessage);
