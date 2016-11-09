@@ -65,16 +65,16 @@
         <source>Select Empty Directory</source>
         <translation>Sélectionner Répertoire Vide</translation>
     </message>
+    <message>
+        <source>Filter:</source>
+        <translation>Filtre :</translation>
+    </message>
 </context>
 <context>
     <name>PmrWindowWindow</name>
     <message>
         <source>PMR</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Filter:</source>
-        <translation>Filtre :</translation>
     </message>
     <message>
         <source>Reload</source>
