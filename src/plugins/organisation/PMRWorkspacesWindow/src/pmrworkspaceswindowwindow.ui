@@ -37,6 +37,9 @@
     <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
+   <property name="text">
+    <string>New Workspace</string>
+   </property>
    <property name="toolTip">
     <string>New Workspace</string>
    </property>
@@ -48,6 +51,9 @@
    <property name="icon">
     <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh List</string>
    </property>
    <property name="toolTip">
     <string>Refresh List</string>
