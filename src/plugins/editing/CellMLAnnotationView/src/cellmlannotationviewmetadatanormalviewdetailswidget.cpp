@@ -306,10 +306,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
                               "        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->id()+"</a>\n"
                               "    </td>\n"
                               "    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
-                              "        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
+                              "        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"></a>\n"
                               "    </td>\n"
                               "    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
-                              "        <img class=\"disabledButton\"/>\n"
+                              "        <img class=\"disabledButton\">\n"
                               "    </td>\n"
                               "</tr>\n";
 

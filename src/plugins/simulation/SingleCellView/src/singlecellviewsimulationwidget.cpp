@@ -97,6 +97,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
+    mCellmlFile(0),
+    mSedmlFile(0),
+    mCombineArchive(0),
+    mFileType(SingleCellViewWidget::CellmlFile),
+    mSedmlFileIssues(SEDMLSupport::SedmlFileIssues()),
+    mCombineArchiveIssues(COMBINESupport::CombineArchiveIssues()),
+    mErrorType(General),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
@@ -2442,7 +2449,7 @@ void SingleCellViewSimulationWidget::updateDelayValue(const double &pDelayValue)
     for (int i = 0, iMax = pDelayValue; i < iMax; ++i) {
         delay += increment;
 
-        if (delay % multiple == 0) {
+        if (!(delay % multiple)) {
             increment *= 10;
             multiple *= 10;
         }

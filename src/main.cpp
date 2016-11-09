@@ -28,6 +28,10 @@ limitations under the License.
 #include "mainwindow.h"
 #include "splashscreenwindow.h"
 
+#ifdef Q_OS_MAC
+    #include "macos.h"
+#endif
+
 //==============================================================================
 
 #include <QDir>
@@ -49,6 +53,7 @@ int main(int pArgC, char *pArgV[])
     OpenCOR::initQtMessagePattern();
 
     // On macOS, make sure that no ApplePersistenceIgnoreState message is shown
+    // and that some macOS specific menu items are not shown
 
 #ifdef Q_OS_MAC
     QProcess::execute("defaults",
@@ -56,6 +61,8 @@ int main(int pArgC, char *pArgV[])
                                     << "ws.opencor"
                                     << "ApplePersistenceIgnoreState"
                                     << "NO");
+
+    OpenCOR::removeMacosSpecificMenuItems();
 #endif
 
     // Determine whether we should try the CLI version of OpenCOR:

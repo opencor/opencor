@@ -1,10 +1,15 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 0, "month": 0, "year": 0,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 11, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Preferences dialog." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." }
+                         ]
+                       },
+                       { "name": "Data store",
+                         "entries": [
+                           { "type": "Improved", "description": "Selection of data." }
                          ]
                        },
                        { "name": "Miscellaneous",

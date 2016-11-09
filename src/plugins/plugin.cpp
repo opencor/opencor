@@ -174,6 +174,17 @@ Plugin::~Plugin()
 
 //==============================================================================
 
+bool Plugin::compare(Plugin *pPlugin1, Plugin *pPlugin2)
+{
+    // Determine which of the two plugins should be first based on their name
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a plugin (when we list them)...
+
+    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 QString Plugin::name() const
 {
     // Return the plugin's name

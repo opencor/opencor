@@ -55,24 +55,24 @@
         <translation>Aggrandir</translation>
     </message>
     <message>
-        <source>Zoom in the help page contents</source>
-        <translation>Aggrandir le contenu de la page d&apos;aide</translation>
+        <source>Zoom in the Web page contents</source>
+        <translation>Aggrandir le contenu de la page Web</translation>
     </message>
     <message>
         <source>Zoom Out</source>
         <translation>Réduire</translation>
     </message>
     <message>
-        <source>Zoom out the help page contents</source>
-        <translation>Réduire le contenu de la page d&apos;aide</translation>
+        <source>Zoom out the Web page contents</source>
+        <translation>Réduire le contenu de la page Web</translation>
     </message>
     <message>
         <source>Normal Size</source>
         <translation>Taille Normale</translation>
     </message>
     <message>
-        <source>Reset the size of the help page contents</source>
-        <translation>Réinitialiser la taille du contenu de la page d&apos;aide</translation>
+        <source>Reset the size of the Web page contents</source>
+        <translation>Réinitialiser la taille du contenu de la page Web</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -87,8 +87,16 @@
         <translation>Imprimer</translation>
     </message>
     <message>
-        <source>Print the help page contents</source>
-        <translation>Imprimer le contenu de la page d&apos;aide</translation>
+        <source>Print the Web page contents</source>
+        <translation>Imprimer le contenu de la page Web</translation>
+    </message>
+    <message>
+        <source>Inspect</source>
+        <translation>Inspecter</translation>
+    </message>
+    <message>
+        <source>Inspect the Web page contents</source>
+        <translation>Inspecter le contenu de la page Web</translation>
     </message>
 </context>
 </TS>

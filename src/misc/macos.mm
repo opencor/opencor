@@ -17,81 +17,45 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR exposure
+// macOS utilities
 //==============================================================================
 
-#include "pmrexposure.h"
+#include "macos.h"
+
+//==============================================================================
+
+#import <AppKit/NSWindow.h>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PMRSupport {
 
 //==============================================================================
 
-PmrExposure::PmrExposure(const QString &pUrl, const QString &pName) :
-    mUrl(pUrl),
-    mName(pName)
+void removeMacosSpecificMenuItems()
 {
+    // Remove (disable) the "Start Dictation..." and "Emoji & Symbols" menu
+    // items from the "Edit" menu
+
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NSDisabledDictationMenuItem"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NSDisabledCharacterPaletteMenuItem"];
+
+#ifdef AVAILABLE_MAC_OS_X_VERSION_10_12_AND_LATER
+    // Remove (don't allow) the "Show Tab Bar" menu item from the "View" menu,
+    // if supported
+
+    if ([NSWindow respondsToSelector:@selector(allowsAutomaticWindowTabbing)])
+        NSWindow.allowsAutomaticWindowTabbing = NO;
+#endif
+
+    // Remove (don't have) the "Enter Full Screen" menu item from the "View"
+    // menu
+
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
 //==============================================================================
 
-bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pExposure2)
-{
-    // Return whether the first exposure is lower than the second one (without
-    // worrying about casing)
-
-    return pFirst->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-QString PmrExposure::url() const
-{
-    // Return our URL
-
-    return mUrl;
-}
-
-//==============================================================================
-
-QString PmrExposure::name() const
-{
-    // Return our name
-
-    return mName;
-}
-
-//==============================================================================
-
-PmrExposures::PmrExposures() :
-    QList<PmrExposure *>()
-{
-}
-
-//==============================================================================
-
-PmrExposures::~PmrExposures()
-{
-    // Delete the list of exposures
-
-    while (!isEmpty())
-        delete takeFirst();
-}
-
-//==============================================================================
-
-void PmrExposures::add(const QString &pUrl, const QString &pName)
-{
-    // Add a new exposure to the list
-
-    *this << new PmrExposure(pUrl, pName);
-}
-
-//==============================================================================
-
-}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

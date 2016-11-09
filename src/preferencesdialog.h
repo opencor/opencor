@@ -61,12 +61,12 @@ namespace Preferences {
 
 //==============================================================================
 
-class PluginCategoryWidget : public QWidget
+class PreferencesPluginCategoryWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PluginCategoryWidget(QWidget *pParent);
+    explicit PreferencesPluginCategoryWidget(QWidget *pParent);
 
     void setCategory(const QString &pCategory);
     void setDescription(const QString &pDescription);
@@ -108,7 +108,7 @@ private:
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
     QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
 
-    PluginCategoryWidget *mPluginCategoryWidget;
+    PreferencesPluginCategoryWidget *mPluginCategoryWidget;
 
     QPushButton *mResetAllButton;
     QPushButton *mResetPluginButton;

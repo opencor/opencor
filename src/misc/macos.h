@@ -17,60 +17,21 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR exposure
+// macOS utilities
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "pmrsupportglobal.h"
-
-//==============================================================================
-
-#include <QList>
-#ifdef Q_OS_WIN
-    #include <QSet>
-    #include <QVector>
-#endif
-
-//==============================================================================
-
 namespace OpenCOR {
-namespace PMRSupport {
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposure
-{
-public:
-    explicit PmrExposure(const QString &pUrl, const QString &pName);
-
-    static bool compare(const PmrExposure *pExposure1,
-                        const PmrExposure *pExposure2);
-
-    QString url() const;
-    QString name() const;
-
-private:
-    QString mUrl;
-    QString mName;
-};
+void removeMacosSpecificMenuItems();
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
-{
-public:
-    explicit PmrExposures();
-    ~PmrExposures();
-
-    void add(const QString &pUrl, const QString &pName);
-};
-
-//==============================================================================
-
-}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

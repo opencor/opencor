@@ -26,6 +26,7 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -37,6 +38,8 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QLabel>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QTimer>
 
@@ -55,26 +58,60 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    // Create a tool bar widget with a URL value and refresh button
+    // Note: the spacers are a little trick to improve the rendering of our tool
+    //       bar widget...
+
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    QWidget *spacer1 = new QWidget(toolBarWidget);
+    QWidget *spacer2 = new QWidget(toolBarWidget);
+
+    spacer1->setMinimumSize(0, 0);
+    spacer1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+
+    spacer2->setMinimumSize(0, 0);
+    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+
+    mFilterLabel = new QLabel(toolBarWidget);
+    mFilterValue = new QLineEdit(toolBarWidget);
+
+    QFont font = mFilterLabel->font();
+
+    font.setBold(true);
+
+    mFilterLabel->setFont(font);
+
 #ifdef Q_OS_MAC
-    mGui->filterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above removes the focus border since it messes up the look of
-    //       our filter value widget...
+    //       our URL value widget...
 #endif
 
-    // Make the name value our focus proxy
+    connect(mFilterValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(filterValueChanged(const QString &)));
 
-    setFocusProxy(mGui->filterValue);
+    toolBarWidget->addWidget(spacer1);
+    toolBarWidget->addWidget(mFilterLabel);
+    toolBarWidget->addWidget(mFilterValue);
+    toolBarWidget->addAction(mGui->actionReload);
+    toolBarWidget->addWidget(spacer2);
+
+    mGui->layout->addWidget(toolBarWidget);
+
+    // Make the filter value our focus proxy
+
+    setFocusProxy(mFilterValue);
 
     // Create and add the PMR widget
 
     mPmrWidget = new PmrWindowWidget(this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
-                                                                           true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
-                                                                           true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWidget,
+                                                     true, false, false, false));
 #else
     #error Unsupported platform
 #endif
@@ -144,6 +181,8 @@ void PmrWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
+    mFilterLabel->setText(tr("Filter:"));
+
     // Retranslate our PMR widget
 
     mPmrWidget->retranslateUi();
@@ -164,6 +203,16 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
+void PmrWindowWindow::filterValueChanged(const QString &pText)
+{
+    // Ask our PMR widget to filter its output using the given regular
+    // expression
+
+    mPmrWidget->filter(pText);
+}
+
+//==============================================================================
+
 void PmrWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
@@ -178,14 +227,13 @@ void PmrWindowWindow::busy(const bool &pBusy)
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
-        // to mGui->filterValue, but only if the current window already has the
-        // focus
+        // to mFilterValue, but only if the current window already has the focus
 
         mPmrWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
-        Core::setFocusTo(mGui->filterValue);
+        Core::setFocusTo(mFilterValue);
     }
 }
 
@@ -209,17 +257,7 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
-{
-    // Ask our PMR widget to filter its output using the given regular
-    // expression
-
-    mPmrWidget->filter(pText);
-}
-
-//==============================================================================
-
-void PmrWindowWindow::on_refreshButton_clicked()
+void PmrWindowWindow::on_actionReload_triggered()
 {
     // Get the list of exposures from our PMR web service
 
@@ -235,8 +273,7 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
     // Ask our PMR widget to initialise itself
 
     mPmrWidget->initialize(pExposures, pErrorMessage,
-                           mGui->filterValue->text(),
-                           pInternetConnectionAvailable);
+                           mFilterValue->text(), pInternetConnectionAvailable);
 }
 
 //==============================================================================
@@ -253,7 +290,7 @@ void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
     if (pVisible && firstTime) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, SLOT(on_refreshButton_clicked()));
+        QTimer::singleShot(0, this, SLOT(on_actionReload_triggered()));
     }
 }
 

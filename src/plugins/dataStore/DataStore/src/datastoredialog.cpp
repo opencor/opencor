@@ -128,6 +128,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
                     if (!hierarchyItem) {
                         hierarchyItem = new QStandardItem(hierarchyPart);
 
+                        hierarchyItem->setAutoTristate(true);
                         hierarchyItem->setCheckable(true);
                         hierarchyItem->setEditable(false);
 
@@ -196,18 +197,16 @@ DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
 {
     // Return the selected data for the given item
 
-    if (pItem->rowCount()) {
-        DataStoreVariables res = DataStoreVariables();
+    DataStoreVariables res = DataStoreVariables();
 
+    if (pItem->rowCount()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
             res << doSelectedData(pItem->child(i));
-
-        return res;
     } else if (pItem->checkState() == Qt::Checked) {
-        return DataStoreVariables() << mData.value(pItem);
-    } else {
-        return DataStoreVariables();
+        res << mData.value(pItem);
     }
+
+    return res;
 }
 
 //==============================================================================

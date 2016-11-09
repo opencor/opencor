@@ -205,7 +205,7 @@ bool File::isNew() const
 {
     // Return whether we are new
 
-    return mNewIndex != 0;
+    return mNewIndex;
 }
 
 //==============================================================================

@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QLineEdit;
 class QMenu;
 
 //==============================================================================
@@ -39,6 +40,12 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
 
 //==============================================================================
 
@@ -71,14 +78,16 @@ private:
 
     QMenu *mContextMenu;
 
+    QLineEdit *mUrlValue;
+
+    QString mUrl;
     int mZoomLevel;
+
+    Core::ProgressBarWidget *mProgressBarWidget;
 
     void setZoomLevel(const int &pZoomLevel);
 
 private slots:
-    void on_urlValue_returnPressed();
-    void on_refreshButton_clicked();
-
     void on_actionClear_triggered();
     void on_actionBack_triggered();
     void on_actionForward_triggered();
@@ -87,11 +96,18 @@ private slots:
     void on_actionZoomIn_triggered();
     void on_actionZoomOut_triggered();
     void on_actionPrint_triggered();
+    void on_actionInspect_triggered();
+    void on_actionReload_triggered();
+
+    void returnPressed();
 
     void updateActions();
     void urlChanged(const QUrl &pUrl);
     void documentChanged();
     void showCustomContextMenu() const;
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 };
 
 //==============================================================================

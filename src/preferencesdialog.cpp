@@ -43,7 +43,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginCategoryWidget::PluginCategoryWidget(QWidget *pParent) :
+PreferencesPluginCategoryWidget::PreferencesPluginCategoryWidget(QWidget *pParent) :
     QWidget(pParent)
 {
     // Create a form widget layout
@@ -65,7 +65,7 @@ PluginCategoryWidget::PluginCategoryWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void PluginCategoryWidget::setCategory(const QString &pCategory)
+void PreferencesPluginCategoryWidget::setCategory(const QString &pCategory)
 {
     // Set our category
 
@@ -74,7 +74,7 @@ void PluginCategoryWidget::setCategory(const QString &pCategory)
 
 //==============================================================================
 
-void PluginCategoryWidget::setDescription(const QString &pDescription)
+void PreferencesPluginCategoryWidget::setDescription(const QString &pDescription)
 {
     // Set our description
 
@@ -83,7 +83,7 @@ void PluginCategoryWidget::setDescription(const QString &pDescription)
 
 //==============================================================================
 
-QLabel * PluginCategoryWidget::label(const QString &pLabel)
+QLabel * PreferencesPluginCategoryWidget::label(const QString &pLabel)
 {
     // Create and return a label
 
@@ -149,7 +149,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Create and add our plugin category widget
 
-    mPluginCategoryWidget = new PluginCategoryWidget(this);
+    mPluginCategoryWidget = new PreferencesPluginCategoryWidget(this);
 
     mGui->stackedWidget->addWidget(mPluginCategoryWidget);
 

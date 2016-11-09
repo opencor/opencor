@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -58,13 +57,8 @@ static const auto CorePluginName = QStringLiteral("Core");
 
 //==============================================================================
 
-class Plugin;
 class PluginInfo;
 class PluginManager;
-
-//==============================================================================
-
-typedef QList<Plugin *> Plugins;
 
 //==============================================================================
 
@@ -90,6 +84,8 @@ public:
                     const QString &pErrorMessage, const bool &pLoad,
                     PluginManager *pPluginManager);
     ~Plugin();
+
+    static bool compare(Plugin *pPlugin1, Plugin *pPlugin2);
 
     QString name() const;
     PluginInfo * info() const;
@@ -119,6 +115,10 @@ private:
     Status mStatus;
     QString mStatusErrors;
 };
+
+//==============================================================================
+
+typedef QList<Plugin *> Plugins;
 
 //==============================================================================
 

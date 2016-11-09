@@ -455,21 +455,17 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Note: we must do that in reverse order since we are inserting menus,
         //       as opposed to appending some...
 
-        Gui::MenuIterator menuIter(guiInterface->guiMenus());
+        Gui::Menus guiMenus = guiInterface->guiMenus();
 
-        menuIter.toBack();
-
-        while (menuIter.hasPrevious()) {
+        for (int i = guiMenus.count()-1; i >= 0; --i) {
             // Insert the menu in the right place
 
-            Gui::Menu menu = menuIter.previous();
-
-            QMenu *newMenu = menu.menu();
+            QMenu *newMenu = guiMenus[i].menu();
             QString newMenuName = newMenu->objectName();
 
             QMenu *oldMenu = mMenus.value(newMenuName);
 
-            if (oldMenu && !menu.action()) {
+            if (oldMenu && !guiMenus[i].action()) {
                 // A menu with the same name already exists, so add the contents
                 // of the new menu to the existing one
 
@@ -483,7 +479,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 // No menu with the same name already exists (or the menu
                 // doesn't have a name), so add the new menu to our menu bar
 
-                switch (menu.type()) {
+                switch (guiMenus[i].type()) {
                 case Gui::Menu::File:
                     // Not a relevant type, so do nothing
 
@@ -506,23 +502,20 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Note: as for the menus above, we must do it in reverse order since we
         //       are inserting actions, as opposed to appending some...
 
-        Gui::MenuActionIterator menuActionIter(guiInterface->guiMenuActions());
+        Gui::MenuActions guiMenuActions = guiInterface->guiMenuActions();
 
-        menuActionIter.toBack();
-
-        while (menuActionIter.hasPrevious()) {
+        for (int i = guiMenuActions.count()-1; i >= 0; --i) {
             // Insert the action/separator to the right menu, if any
 
             QMenu *menu = 0;
-            Gui::MenuAction menuAction = menuActionIter.previous();
 
-            if (menuAction.type() == Gui::MenuAction::File)
+            if (guiMenuActions[i].type() == Gui::MenuAction::File)
                 menu = mGui->menuFile;
-            else if (menuAction.type() == Gui::MenuAction::Tools)
+            else if (guiMenuActions[i].type() == Gui::MenuAction::Tools)
                 menu = mGui->menuTools;
 
             if (menu) {
-                QAction *action = menuAction.action();
+                QAction *action = guiMenuActions[i].action();
 
                 if (action)
                     menu->insertAction(menu->actions().first(), action);
@@ -538,13 +531,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some sub-menus before some menu items
 
-        foreach (const Gui::Menu &menu, guiInterface->guiMenus()) {
+        foreach (const Gui::Menu &guiMenu, guiMenus) {
             // Insert the menu before a menu item / separator
 
-            if (menu.action()) {
-                switch (menu.type()) {
+            if (guiMenu.action()) {
+                switch (guiMenu.type()) {
                 case Gui::Menu::File:
-                    mGui->menuFile->insertMenu(menu.action(), menu.menu());
+                    mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
 
                     break;
                 case Gui::Menu::View:
@@ -1170,23 +1163,28 @@ void MainWindow::on_actionPreferences_triggered()
     // Show the preferences dialog, if we have at least one plugin that supports
     // the Preferences interface
 
-    bool canShowPreferences = false;
+    if (mPluginManager->plugins().count()) {
+        bool pluginsWithPreferences = false;
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
-        if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
-            canShowPreferences = true;
+        foreach (Plugin *plugin, mPluginManager->plugins()) {
+            if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
+                pluginsWithPreferences = true;
 
-            break;
+                break;
+            }
         }
-    }
 
-    if (canShowPreferences) {
-        PreferencesDialog preferencesDialog(mPluginManager, this);
+        if (pluginsWithPreferences) {
+            PreferencesDialog preferencesDialog(mPluginManager, this);
 
-        preferencesDialog.exec();
+            preferencesDialog.exec();
+        } else {
+            warningMessageBox(this, tr("Preferences"),
+                              tr("No plugins have preferences."));
+        }
     } else {
         warningMessageBox(this, tr("Preferences"),
-                          tr("No plugins have preferences."));
+                          tr("No plugins could be found."));
     }
 }
 

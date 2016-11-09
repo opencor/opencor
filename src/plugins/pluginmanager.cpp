@@ -20,10 +20,10 @@ limitations under the License.
 // Plugin manager
 //==============================================================================
 
-#ifndef OpenCOR_MAIN
-    #include "corecliutils.h"
-#else
+#ifdef OpenCOR_MAIN
     #include "cliutils.h"
+#else
+    #include "corecliutils.h"
 #endif
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -36,17 +36,6 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
-{
-    // Determine which of the two plugins should be first based on their name
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a plugin (when we list them)...
-
-    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
-}
 
 //==============================================================================
 
@@ -68,10 +57,10 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     QStringList fileNames = QStringList();
 
     foreach (const QFileInfo &fileInfo, fileInfoList) {
-#ifndef OpenCOR_MAIN
-        fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
-#else
+#ifdef OpenCOR_MAIN
         fileNames << nativeCanonicalFileName(fileInfo.canonicalFilePath());
+#else
+        fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
 #endif
     }
 
@@ -202,10 +191,13 @@ PluginManager::PluginManager(const bool &pGuiMode) :
 
 PluginManager::~PluginManager()
 {
-    // Delete all our plugins
+    // Delete some internal objects
 
-    foreach (Plugin *plugin, mPlugins)
-        delete plugin;
+#ifdef OpenCOR_MAIN
+    resetList(mPlugins);
+#else
+    Core::resetList(mPlugins);
+#endif
 }
 
 //==============================================================================
@@ -225,7 +217,7 @@ Plugins PluginManager::sortedPlugins() const
 
     Plugins res = mPlugins;
 
-    std::sort(res.begin(), res.end(), sortPlugins);
+    std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
 }
@@ -247,7 +239,7 @@ Plugins PluginManager::sortedLoadedPlugins() const
 
     Plugins res = mLoadedPlugins;
 
-    std::sort(res.begin(), res.end(), sortPlugins);
+    std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
 }

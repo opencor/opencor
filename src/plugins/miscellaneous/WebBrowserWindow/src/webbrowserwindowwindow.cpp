@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "borderedwidget.h"
 #include "coreguiutils.h"
+#include "progressbarwidget.h"
 #include "toolbarwidget.h"
 #include "webbrowserwindowwindow.h"
 #include "webviewerwidget.h"
@@ -33,10 +34,12 @@ limitations under the License.
 //==============================================================================
 
 #include <QClipboard>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPrinterInfo>
+#include <QTimer>
 #include <QWebHistory>
 
 //==============================================================================
@@ -56,6 +59,7 @@ enum {
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
     mGui(new Ui::WebBrowserWindowWindow),
+    mUrl(QString()),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
                      // first call to setZoomLevel
 {
@@ -63,57 +67,104 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-#ifdef Q_OS_MAC
-    mGui->urlValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our URL value widget...
-#endif
-
-    // Make the URL value our focus proxy
-
-    setFocusProxy(mGui->urlValue);
-
     // Initially, we cannot go backward/forward
 
     mGui->actionBack->setEnabled(false);
     mGui->actionForward->setEnabled(false);
 
+    // Create a tool bar widget with a URL value and refresh button
+    // Note: the spacers are a little trick to improve the rendering of our tool
+    //       bar widget...
+
+    Core::ToolBarWidget *topToolBarWidget = new Core::ToolBarWidget(this);
+    QWidget *spacer1 = new QWidget(topToolBarWidget);
+    QWidget *spacer2 = new QWidget(topToolBarWidget);
+
+    spacer1->setMinimumSize(0, 0);
+    spacer1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+
+    spacer2->setMinimumSize(0, 0);
+    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+
+    mUrlValue = new QLineEdit(topToolBarWidget);
+
+#ifdef Q_OS_MAC
+    mUrlValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our URL value widget...
+#endif
+
+    connect(mUrlValue, SIGNAL(returnPressed()),
+            this, SLOT(returnPressed()));
+
+    topToolBarWidget->addWidget(spacer1);
+    topToolBarWidget->addWidget(mUrlValue);
+    topToolBarWidget->addAction(mGui->actionReload);
+    topToolBarWidget->addWidget(spacer2);
+
+    mGui->layout->addWidget(topToolBarWidget);
+
+    // Make the URL value our focus proxy
+
+    setFocusProxy(mUrlValue);
+
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *bottomToolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBarWidget->addAction(mGui->actionClear);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionBack);
-    toolBarWidget->addAction(mGui->actionForward);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionCopy);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionNormalSize);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionZoomIn);
-    toolBarWidget->addAction(mGui->actionZoomOut);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionPrint);
+    bottomToolBarWidget->addAction(mGui->actionClear);
+    bottomToolBarWidget->addSeparator();
+    bottomToolBarWidget->addAction(mGui->actionBack);
+    bottomToolBarWidget->addAction(mGui->actionForward);
+    bottomToolBarWidget->addSeparator();
+    bottomToolBarWidget->addAction(mGui->actionCopy);
+    bottomToolBarWidget->addSeparator();
+    bottomToolBarWidget->addAction(mGui->actionNormalSize);
+    bottomToolBarWidget->addSeparator();
+    bottomToolBarWidget->addAction(mGui->actionZoomIn);
+    bottomToolBarWidget->addAction(mGui->actionZoomOut);
+    bottomToolBarWidget->addSeparator();
+    bottomToolBarWidget->addAction(mGui->actionPrint);
 
-    mGui->dockWidgetContents->layout()->addWidget(Core::newLineWidget(this));
-    mGui->dockWidgetContents->layout()->addWidget(toolBarWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(bottomToolBarWidget);
 
     // Create and add the web browser widget
 
     mWebBrowserWidget = new WebViewerWidget::WebViewerWidget(this);
 
+    mWebBrowserWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
     setZoomLevel(DefaultZoomLevel);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
-                                                                           true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
-                                                                           true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
+                                                     true, false, false, false));
 #else
     #error Unsupported platform
 #endif
+
+    // Create our (thin) simulation progress widget
+
+    mProgressBarWidget = new Core::ProgressBarWidget(this);
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                                               false, true, true, true);
+#elif defined(Q_OS_MAC)
+    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                                               true, false, false, false);
+#else
+    #error Unsupported platform
+#endif
+
+    progressBarBorderedWidget->setFixedHeight(4);
+    progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+    mGui->layout->addWidget(progressBarBorderedWidget);
 
     // Various connections to handle our web browser widget
 
@@ -127,6 +178,11 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     connect(mWebBrowserWidget->page(), SIGNAL(selectionChanged()),
             this, SLOT(updateActions()));
+
+    connect(mWebBrowserWidget, SIGNAL(loadProgress(int)),
+            this, SLOT(loadProgress(const int &)));
+    connect(mWebBrowserWidget, SIGNAL(loadFinished(bool)),
+            this, SLOT(loadFinished()));
 
     // Start with a clear web browser widget
 
@@ -149,6 +205,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mContextMenu->addAction(mGui->actionZoomOut);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionPrint);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionInspect);
 
     // We want our own context menu for the help window widget (indeed, we don't
     // want the default one, which has the reload menu item and not the other
@@ -198,7 +256,7 @@ void WebBrowserWindowWindow::updateActions()
 {
     // Update the enabled state of our various actions
 
-    mGui->actionClear->setEnabled(!mGui->urlValue->text().isEmpty());
+    mGui->actionClear->setEnabled(!mUrlValue->text().isEmpty());
 
     mGui->actionCopy->setEnabled(!mWebBrowserWidget->page()->selectedText().isEmpty());
 
@@ -218,7 +276,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
     QString url = pUrl.toString();
 
-    mGui->urlValue->setText(url.compare(AboutBlank)?pUrl.toString():QString());
+    mUrlValue->setText(url.compare(AboutBlank)?url:QString());
 
     updateActions();
 }
@@ -258,35 +316,15 @@ void WebBrowserWindowWindow::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_urlValue_returnPressed()
-{
-    // Load the URL
-
-    mWebBrowserWidget->load(mGui->urlValue->text());
-
-    updateActions();
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::on_refreshButton_clicked()
-{
-    // Reload the URL
-
-    mWebBrowserWidget->reload();
-}
-
-//==============================================================================
-
 void WebBrowserWindowWindow::on_actionClear_triggered()
 {
     // Go to the home page, i.e. a blank page
     // Note: to set a blank page will make our web page completely white, which
     //       looks better than the default grey background...
 
-    mGui->urlValue->setText(AboutBlank);
+    mUrlValue->setText(AboutBlank);
 
-    on_urlValue_returnPressed();
+    returnPressed();
 
     mWebBrowserWidget->history()->clear();
 }
@@ -361,12 +399,83 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
+void WebBrowserWindowWindow::on_actionInspect_triggered()
+{
+    // Inspect the current page
+
+    mWebBrowserWidget->pageAction(QWebPage::InspectElement)->trigger();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::on_actionReload_triggered()
+{
+    // Reload the URL
+
+    mWebBrowserWidget->reload();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::returnPressed()
+{
+    // Load the URL
+    // Note: we keep track of the URL since, in loadProgress(), the initial
+    //       value of mWebBrowserWidget->url() will be that of the previous
+    //       URL, meaning that we would, in the case of a blank page, start
+    //       showing the progress while we clearly shouldn't be...
+
+    mUrl = mUrlValue->text();
+
+    mWebBrowserWidget->load(mUrl);
+
+    updateActions();
+}
+
+//==============================================================================
+
 void WebBrowserWindowWindow::showCustomContextMenu() const
 {
     // Show our context menu which items match the contents of our tool bar
     // widget
 
     mContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::loadProgress(const int &pProgress)
+{
+    // Update the value of our progress bar, but only if we are not dealing with
+    // a blank page
+
+    if (mUrl.compare(AboutBlank))
+        mProgressBarWidget->setValue(0.01*pProgress);
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::loadFinished()
+{
+    // The loading is finished, so reset our progress bar, but only if we are
+    // not dealing with a blank page and with a slight delay (it looks better
+    // that way)
+
+    enum {
+        ResetDelay = 169
+    };
+
+    if (mUrl.compare(AboutBlank))
+        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================

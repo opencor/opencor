@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
 # Project definition
 
-PROJECT(OpenCOR VERSION 0.5)
+PROJECT(OpenCOR)
 
 # Some in-house CMake functions/macros
 
@@ -152,11 +152,15 @@ IF(WIN32)
 ENDIF()
 
 # Various include directories
+# Note: access to the Core plugin's source folder is needed so that we can build
+#       OpenCOR on its own, i.e. without any plugins (due to the global CLI/GUI
+#       utilities needing access to some features that are in common with the
+#       Core CLI/GUI utilities)...
 
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-    src/preferences
+    src/plugins/miscellaneous/Core/src
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
@@ -394,6 +398,12 @@ ENDFOREACH()
 QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 QT5_WRAP_UI(SOURCES_UIS ${UIS})
 QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+
+IF(APPLE)
+    LIST(APPEND SOURCES
+        src/misc/macos.mm
+    )
+ENDIF()
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES}
