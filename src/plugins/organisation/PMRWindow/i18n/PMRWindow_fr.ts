@@ -62,8 +62,8 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
     <message>
-        <source>Select Empty Directory</source>
-        <translation>Sélectionner Répertoire Vide</translation>
+        <source>Filter:</source>
+        <translation>Filtre :</translation>
     </message>
 </context>
 <context>

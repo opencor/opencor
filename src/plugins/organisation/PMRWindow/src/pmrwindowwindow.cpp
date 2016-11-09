@@ -276,16 +276,6 @@ void PmrWindowWindow::showError(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
-{
-    // Ask our PMR widget to filter its output using the given regular
-    // expression
-
-    mPmrWidget->filter(pText);
-}
-
-//==============================================================================
-
 void PmrWindowWindow::on_actionReload_triggered()
 {
     // Get the list of exposures from our PMR web service
