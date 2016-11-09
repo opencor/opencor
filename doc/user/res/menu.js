@@ -23,6 +23,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 2, "label": "RawTextView", "link": "user/plugins/editing/RawTextView.html", "subMenuItem": true },
                                 { "level": 1, "label": "Miscellaneous", "subMenuHeader": true },
                                 { "level": 2, "label": "HelpWindow", "link": "user/plugins/miscellaneous/HelpWindow.html", "subMenuItem": true },
+                                { "level": 2, "label": "WebBrowserWindow", "link": "user/plugins/miscellaneous/WebBrowserWindow.html", "subMenuItem": true },
                                 { "level": 1, "label": "Organisation", "subMenuHeader": true },
                                 { "level": 2, "label": "FileBrowserWindow", "link": "user/plugins/organisation/FileBrowserWindow.html", "subMenuItem": true },
                                 { "level": 2, "label": "FileOrganiserWindow", "link": "user/plugins/organisation/FileOrganiserWindow.html", "subMenuItem": true },
