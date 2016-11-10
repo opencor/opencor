@@ -4,6 +4,7 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Preferences dialog." },
+                           { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." }
                          ]
                        },
