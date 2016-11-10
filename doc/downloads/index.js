@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> fixed a small problem with the desktop icon not showing on Ubuntu (see issue <a href=\"https://github.com/opencor/opencor/issues/1147\">#1147</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.24.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1145\">#1145</a>)." }
                      ]
                    },
