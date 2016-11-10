@@ -43,19 +43,6 @@ PLUGININFO_FUNC COMBINESupportPluginInfo()
 }
 
 //==============================================================================
-
-COMBINESupportPlugin::COMBINESupportPlugin()
-{
-    // The file types that we support
-    // Note: they will get deleted by FileTypeInterface...
-
-    mFileTypes = FileTypes() << FileType(qobject_cast<FileTypeInterface *>(this),
-                                         CombineMimeType, CombineFileExtension);
-
-    mDefaultViews = QStringList() << "SingleCellView";
-}
-
-//==============================================================================
 // File interface
 //==============================================================================
 
@@ -68,18 +55,38 @@ bool COMBINESupportPlugin::isFile(const QString &pFileName) const
 
 //==============================================================================
 
-QString COMBINESupportPlugin::fileTypeDescription(const QString &pMimeType) const
+QString COMBINESupportPlugin::mimeType() const
 {
-    // Return the description for the requested MIME type, that is as long as it
-    // is for the MIME type that we support
+    // Return the MIME type we support
 
-    if (!pMimeType.compare(CombineMimeType)) {
-        return tr("COMBINE Archive");
-    } else {
-        // Not a MIME type that we can recognise
+    return CombineMimeType;
+}
 
-        return QString();
-    }
+//==============================================================================
+
+QString COMBINESupportPlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return CombineFileExtension;
+}
+
+//==============================================================================
+
+QString COMBINESupportPlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("COMBINE Archive");
+}
+
+//==============================================================================
+
+QStringList COMBINESupportPlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList() << "SingleCellView";
 }
 
 //==============================================================================

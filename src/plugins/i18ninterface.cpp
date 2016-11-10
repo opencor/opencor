@@ -33,22 +33,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
-void I18nInterface::setLocale(const QString &pLocale)
+void I18nInterface::updateTranslator(const QString &pTranslator)
 {
     // Update the plugin's translator
 
     qApp->removeTranslator(&mTranslator);
-    mTranslator.load(QString(":%1_%2").arg(mPluginName, pLocale));
+
+    mTranslator.load(pTranslator);
+
     qApp->installTranslator(&mTranslator);
-}
-
-//==============================================================================
-
-void I18nInterface::setPluginName(const QString &pPluginName)
-{
-    // Set the name of the plugin
-
-    mPluginName = pPluginName;
 }
 
 //==============================================================================

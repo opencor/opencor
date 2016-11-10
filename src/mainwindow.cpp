@@ -255,11 +255,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     foreach (Plugin *plugin, mPluginManager->loadedPlugins())
         initializeGuiPlugin(plugin);
 
-    // Keep track of the plugin's name in case we support internationalisation
-
-    foreach (Plugin *plugin, mLoadedI18nPlugins)
-        qobject_cast<I18nInterface *>(plugin->instance())->setPluginName(plugin->name());
-
     // Let our various plugins know that all of them have been initialised
     // Note: this is important to do since the initialisation of a plugin is
     //       something that is done without knowing anything about other
@@ -826,13 +821,13 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         if (mViewWindowsMenu)
             I18nInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
 
-        // Update the locale of our various loaded plugins
-        // Note: we must set the locale of all the plugins before we can safely
-        //       retranslate them since a plugin may require another plugin to
-        //       work properly...
+        // Update the translator of our various loaded plugins
+        // Note: we must update the translator of all our plugins before we can
+        //       safely retranslate them since a plugin may require another
+        //       plugin to work properly...
 
         foreach (Plugin *plugin, mLoadedI18nPlugins)
-            qobject_cast<I18nInterface *>(plugin->instance())->setLocale(newLocale);
+            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":%1_%2").arg(plugin->name(), newLocale));
 
         // Retranslate our various plugins
 

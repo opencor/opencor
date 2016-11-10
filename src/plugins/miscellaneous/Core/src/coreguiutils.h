@@ -127,8 +127,8 @@ void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
 
-QStringList CORE_EXPORT filters(const FileTypes &pFileTypes);
-QStringList CORE_EXPORT filters(const FileTypes &pFileTypes,
+QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces);
+QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces,
                                 const QStringList &pMimeTypes);
 
 bool CORE_EXPORT opencorActive();
