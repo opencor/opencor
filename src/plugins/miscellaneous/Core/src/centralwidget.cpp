@@ -467,14 +467,14 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Remove all the settings related to previously opened files
 
-    static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
-    static const QString settingsFileMode = SettingsFileMode.arg(QString());
-    static const QString settingsFileModeView = SettingsFileModeView.arg(QString(), QString());
+    static const QString SettingsFileIsRemoteHeader = SettingsFileIsRemote.arg(QString());
+    static const QString SettingsFileModeHeader = SettingsFileMode.arg(QString());
+    static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString(), QString());
 
     foreach (const QString &key, pSettings->allKeys()) {
-        if (   key.startsWith(settingsFileIsRemote)
-            || key.startsWith(settingsFileMode)
-            || key.startsWith(settingsFileModeView)) {
+        if (   key.startsWith(SettingsFileIsRemoteHeader)
+            || key.startsWith(SettingsFileModeHeader)
+            || key.startsWith(SettingsFileModeViewHeader)) {
             pSettings->remove(key);
         }
     }
