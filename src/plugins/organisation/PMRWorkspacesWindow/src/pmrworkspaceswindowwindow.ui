@@ -47,19 +47,19 @@
     <string>Create a new workspace</string>
    </property>
   </action>
-  <action name="actionRefresh">
+  <action name="actionReload">
    <property name="icon">
     <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
    </property>
    <property name="text">
-    <string>Refresh List</string>
+    <string>Reload</string>
    </property>
    <property name="toolTip">
-    <string>Refresh List</string>
+    <string>Reload</string>
    </property>
    <property name="statusTip">
-    <string>Refresh the list of workspaces</string>
+    <string>Reload the list of workspaces</string>
    </property>
   </action>
   <action name="actionPmr">

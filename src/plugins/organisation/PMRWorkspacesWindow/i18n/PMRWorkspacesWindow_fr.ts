@@ -163,11 +163,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Refresh List</source>
+        <source>Reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Refresh the list of workspaces</source>
+        <source>Reload the list of workspaces</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

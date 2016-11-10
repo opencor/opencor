@@ -24,6 +24,7 @@ limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
+#include "i18ninterface.h"
 #include "toolbarwidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspaceswindownewworkspace.h"
@@ -74,7 +75,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionRefresh);
+    toolBarWidget->addAction(mGui->actionReload);
 
     // Right align our PMR-related action and get it ready for colorisation
     // effect
@@ -290,7 +291,7 @@ void PmrWorkspacesWindowWindow::updateGui()
     mAuthenticated = mPmrWebService->isAuthenticated();
 
     Core::showEnableAction(mGui->actionNew, true, mAuthenticated);
-    Core::showEnableAction(mGui->actionRefresh, true, mAuthenticated);
+    Core::showEnableAction(mGui->actionReload, true, mAuthenticated);
 
     mColorizeEffect->setColor(mAuthenticated?Qt::darkGreen:Qt::darkRed);
 
@@ -307,13 +308,15 @@ void PmrWorkspacesWindowWindow::updateGui()
 void PmrWorkspacesWindowWindow::retranslateActionPmr()
 {
     // Retranslate our PMR action
+qDebug("HELLO!");
 
-    mGui->actionPmr->setStatusTip(mAuthenticated?
-                                      tr("Log off PMR"):
-                                      tr("Log on to PMR"));
-    mGui->actionPmr->setToolTip(mAuthenticated?
-                                    tr("Log Off"):
-                                    tr("Log On"));
+    I18nInterface::retranslateAction(mGui->actionPmr,
+                                     mAuthenticated?
+                                         tr("Log Off"):
+                                         tr("Log On"),
+                                     mAuthenticated?
+                                         tr("Log off PMR"):
+                                         tr("Log on to PMR"));
 }
 
 //==============================================================================
@@ -353,7 +356,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionRefresh_triggered()
+void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 {
     // Ask the workspaces widget to refresh itself
 

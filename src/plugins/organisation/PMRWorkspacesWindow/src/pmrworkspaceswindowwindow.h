@@ -93,7 +93,7 @@ private:
 
 private slots:
     void on_actionNew_triggered();
-    void on_actionRefresh_triggered();
+    void on_actionReload_triggered();
     void on_actionPmr_triggered();
 
     void busy(const bool &pBusy);
