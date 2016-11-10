@@ -308,7 +308,6 @@ void PmrWorkspacesWindowWindow::updateGui()
 void PmrWorkspacesWindowWindow::retranslateActionPmr()
 {
     // Retranslate our PMR action
-qDebug("HELLO!");
 
     I18nInterface::retranslateAction(mGui->actionPmr,
                                      mAuthenticated?
