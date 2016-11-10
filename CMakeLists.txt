@@ -174,8 +174,8 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
 # Set the application icon, but only for Windows and macOS, since in the case of
-# Linux, it's done through the use of app_icon (see res/ui.qrc) in
-# src/mainwindow.ui
+# Linux, it's done through the use of app_icon (see res/ui.qrc) when we register
+# our URL scheme (see MainWindow::registerOpencorUrlScheme())
 # Note: on Windows, we set a bit more than just the application icon. We also
 #       set its product name, version, copyright, etc.
 
