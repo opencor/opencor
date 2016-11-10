@@ -60,8 +60,6 @@ class SEDMLSupportPlugin : public QObject, public FileTypeInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit SEDMLSupportPlugin();
-
 #include "filetypeinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"

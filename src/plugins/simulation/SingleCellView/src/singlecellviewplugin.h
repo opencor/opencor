@@ -77,8 +77,8 @@ public:
     Plugins cellmlEditingViewPlugins() const;
     Plugins cellmlSimulationViewPlugins() const;
 
-    FileTypes sedmlFileTypes() const;
-    FileTypes combineFileTypes() const;
+    FileTypeInterface * sedmlFileTypeInterface() const;
+    FileTypeInterface * combineFileTypeInterface() const;
 
 private:
     SingleCellViewWidget *mViewWidget;
@@ -88,8 +88,8 @@ private:
     Plugins mCellmlEditingViewPlugins;
     Plugins mCellmlSimulationViewPlugins;
 
-    FileTypes mSedmlFileTypes;
-    FileTypes mCombineFileTypes;
+    FileTypeInterface *mSedmlFileTypeInterface;
+    FileTypeInterface *mCombineFileTypeInterface;
 };
 
 //==============================================================================

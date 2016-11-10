@@ -4,7 +4,6 @@ PROJECT(CellMLSupportPlugin)
 
 ADD_PLUGIN(CellMLSupport
     SOURCES
-        ../../filetypeinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
