@@ -629,12 +629,12 @@ QColor lockedColor(const QColor &pColor)
         lockedBlue = 0
     };
 
-    static const double alpha = 0.05;
-    static const double oneMinusAlpha = 1.0-alpha;
+    static const double Alpha = 0.05;
+    static const double OneMinusAlpha = 1.0-Alpha;
 
-    return QColor(alpha*lockedRed+oneMinusAlpha*red,
-                  alpha*lockedGreen+oneMinusAlpha*green,
-                  alpha*lockedBlue+oneMinusAlpha*blue);
+    return QColor(Alpha*lockedRed+OneMinusAlpha*red,
+                  Alpha*lockedGreen+OneMinusAlpha*green,
+                  Alpha*lockedBlue+OneMinusAlpha*blue);
 }
 
 //==============================================================================
