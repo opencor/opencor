@@ -420,14 +420,22 @@ void MainWindow::registerOpencorUrlScheme()
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
     if (!exec("which", QStringList() << "xdg-mime").isEmpty()) {
+        QString iconPath = nativeCanonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
+                                                                                               qApp->organizationName(),
+                                                                                               qApp->applicationName()));
+
+        writeResourceToFile(iconPath, ":app_icon");
+
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
                                 QString("[Desktop Entry]\n"
                                         "Type=Application\n"
-                                        "Name=OpenCOR\n"
-                                        "Exec=%1 %u\n"
-                                        "Icon=%1\n"
+                                        "Name=%1\n"
+                                        "Exec=%2 %u\n"
+                                        "Icon=%3\n"
                                         "Terminal=false\n"
-                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())));
+                                        "MimeType=x-scheme-handler/opencor\n").arg(qApp->applicationName(),
+                                                                                   nativeCanonicalFileName(qApp->applicationFilePath()),
+                                                                                   iconPath));
 
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
