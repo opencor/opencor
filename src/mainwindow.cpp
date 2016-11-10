@@ -419,9 +419,7 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
-    QString res = exec("which", QStringList() << "xdg-mime");
-
-    if (!res.isEmpty()) {
+    if (!exec("which", QStringList() << "xdg-mime").isEmpty()) {
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
 
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
