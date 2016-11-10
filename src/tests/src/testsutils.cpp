@@ -125,7 +125,7 @@ QStringList runCli(const QStringList pArguments)
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(buildDir+"/bin");
+    QDir::setCurrent(BuildDir+"/bin");
 #endif
 
     // Execute the CLI version of OpenCOR (passing to it the given arguments)
@@ -134,7 +134,7 @@ QStringList runCli(const QStringList pArguments)
 #if defined(Q_OS_WIN)
     QString program = "OpenCOR.com";
 #elif defined(Q_OS_LINUX)
-    QString program = buildDir+"/bin/OpenCOR";
+    QString program = BuildDir+"/bin/OpenCOR";
 #elif defined(Q_OS_MAC)
     QString program = BuildDir+"/OpenCOR.app/Contents/MacOS/OpenCOR";
 #else
