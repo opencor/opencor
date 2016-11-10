@@ -59,7 +59,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 //==============================================================================
 
 CellMLToolsPlugin::CellMLToolsPlugin() :
-    mCellmlFileTypes(FileTypes()),
+    mCellmlFileTypeInterface(0),
     mFileName(QString())
 {
 }
@@ -205,16 +205,16 @@ void CellMLToolsPlugin::finalizePlugin()
 
 void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the file types supported by the CellMLSupport plugin
+    // Retrieve the file type interfaces supported by the CellMLSupport plugin
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
         if (!plugin->name().compare("CellMLSupport") && fileTypeInterface) {
             // This is the CellMLSupport plugin and, as expected, it implements
-            // our file type interface, so retrieve the file types it supports
+            // our file type interface, so keep track of it
 
-            mCellmlFileTypes << fileTypeInterface->fileTypes();
+            mCellmlFileTypeInterface = fileTypeInterface;
 
             break;
         }
@@ -259,7 +259,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                          "CellML 1.0":
                          "CellML 1.1";
-    QStringList cellmlFilters = Core::filters(mCellmlFileTypes);
+    QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << mCellmlFileTypeInterface);
     QString firstCellmlFilter = cellmlFilters.first();
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
                                              Core::newFileName(mFileName, tr("Exported"), false),

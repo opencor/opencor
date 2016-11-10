@@ -65,7 +65,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    FileTypes mCellmlFileTypes;
+    FileTypeInterface *mCellmlFileTypeInterface;
 
     QString mFileName;
 

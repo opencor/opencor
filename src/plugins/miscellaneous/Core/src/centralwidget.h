@@ -102,7 +102,7 @@ public:
 
     virtual void retranslateUi();
 
-    void setSupportedFileTypes(const FileTypes &pSupportedFileTypes);
+    void setFileTypeInterfaces(const FileTypeInterfaces &pFileTypeInterfaces);
 
     void addView(Plugin *pPlugin);
 
@@ -153,7 +153,7 @@ private:
     QMap<QString, int> mFileModeTabIndexes;
     QMap<QString, QMap<int, int>> mFileModeViewTabIndexes;
 
-    FileTypes mSupportedFileTypes;
+    FileTypeInterfaces mFileTypeInterfaces;
 
     QStringList mFileNames;
 
@@ -172,8 +172,6 @@ private:
     QMap<QString, QString> mRemoteLocalFileNames;
 
     QMap<QString, QWidget *> mViews;
-
-    QStringList mDefaultViews;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;

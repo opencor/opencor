@@ -41,8 +41,7 @@ namespace OpenCOR {
 class I18nInterface
 {
 public:
-    void setLocale(const QString &pLocale);
-    void setPluginName(const QString &pPluginName);
+    void updateTranslator(const QString &pTranslator);
 
 #define INTERFACE_DEFINITION
     #include "i18ninterface.inl"
@@ -54,8 +53,6 @@ public:
                                   const QString &pStatusTip);
 
 private:
-    QString mPluginName;
-
     QTranslator mTranslator;
 };
 

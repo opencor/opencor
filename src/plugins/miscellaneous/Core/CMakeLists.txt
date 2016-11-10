@@ -10,7 +10,6 @@ ENDIF()
 
 ADD_PLUGIN(Core
     SOURCES
-        ../../filetypeinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp

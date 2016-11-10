@@ -62,8 +62,8 @@ SingleCellViewPlugin::SingleCellViewPlugin() :
     mDataStoreInterfaces(DataStoreInterfaces()),
     mCellmlEditingViewPlugins(Plugins()),
     mCellmlSimulationViewPlugins(Plugins()),
-    mSedmlFileTypes(FileTypes()),
-    mCombineFileTypes(FileTypes())
+    mSedmlFileTypeInterface(0),
+    mCombineFileTypeInterface(0)
 {
 }
 
@@ -224,15 +224,16 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
             }
         }
 
-        // File types supported by the SEDMLSupport and COMBINESupport plugins
+        // Keep track of the file type interfaces for the SEDMLSupport and
+        // COMBINESupport plugins
 
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
         if (fileTypeInterface) {
             if (!plugin->name().compare("SEDMLSupport"))
-                mSedmlFileTypes << fileTypeInterface->fileTypes();
+                mSedmlFileTypeInterface = fileTypeInterface;
             else if (!plugin->name().compare("COMBINESupport"))
-                mCombineFileTypes << fileTypeInterface->fileTypes();
+                mCombineFileTypeInterface = fileTypeInterface;
         }
     }
 }
@@ -400,20 +401,20 @@ Plugins SingleCellViewPlugin::cellmlSimulationViewPlugins() const
 
 //==============================================================================
 
-FileTypes SingleCellViewPlugin::sedmlFileTypes() const
+FileTypeInterface * SingleCellViewPlugin::sedmlFileTypeInterface() const
 {
-    // Return our SED-ML file types
+    // Return our SED-ML file type interface
 
-    return mSedmlFileTypes;
+    return mSedmlFileTypeInterface;
 }
 
 //==============================================================================
 
-FileTypes SingleCellViewPlugin::combineFileTypes() const
+FileTypeInterface * SingleCellViewPlugin::combineFileTypeInterface() const
 {
-    // Return our COMBINE file types
+    // Return our COMBINE file type interface
 
-    return mCombineFileTypes;
+    return mCombineFileTypeInterface;
 }
 
 //==============================================================================
