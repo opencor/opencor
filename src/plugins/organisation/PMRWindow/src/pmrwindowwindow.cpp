@@ -59,18 +59,14 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     // Create a tool bar widget with a URL value and refresh button
-    // Note: the spacers are a little trick to improve the rendering of our tool
+    // Note: the spacers is a little trick to improve the rendering of our tool
     //       bar widget...
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
-    QWidget *spacer1 = new QWidget(toolBarWidget);
-    QWidget *spacer2 = new QWidget(toolBarWidget);
+    QWidget *spacer = new QWidget(toolBarWidget);
 
-    spacer1->setMinimumSize(0, 0);
-    spacer1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-
-    spacer2->setMinimumSize(0, 0);
-    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    spacer->setMinimumSize(0, 0);
+    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mFilterLabel = new QLabel(toolBarWidget);
     mFilterValue = new QLineEdit(toolBarWidget);
@@ -90,11 +86,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mFilterValue, SIGNAL(textChanged(const QString &)),
             this, SLOT(filterValueChanged(const QString &)));
 
-    toolBarWidget->addWidget(spacer1);
+    toolBarWidget->addWidget(spacer);
     toolBarWidget->addWidget(mFilterLabel);
     toolBarWidget->addWidget(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
-    toolBarWidget->addWidget(spacer2);
 
     mGui->layout->addWidget(toolBarWidget);
 
