@@ -152,7 +152,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -211,7 +211,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
 
-    centralWidgetVBoxLayout->setMargin(0);
+    centralWidgetVBoxLayout->setContentsMargins(QMargins());
     centralWidgetVBoxLayout->setSpacing(0);
 
     centralWidget->setLayout(centralWidgetVBoxLayout);
