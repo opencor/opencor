@@ -73,18 +73,14 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mGui->actionForward->setEnabled(false);
 
     // Create a tool bar widget with a URL value and refresh button
-    // Note: the spacers are a little trick to improve the rendering of our tool
+    // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
 
     Core::ToolBarWidget *topToolBarWidget = new Core::ToolBarWidget(this);
-    QWidget *spacer1 = new QWidget(topToolBarWidget);
-    QWidget *spacer2 = new QWidget(topToolBarWidget);
+    QWidget *spacer = new QWidget(topToolBarWidget);
 
-    spacer1->setMinimumSize(0, 0);
-    spacer1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-
-    spacer2->setMinimumSize(0, 0);
-    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    spacer->setMinimumSize(0, 0);
+    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mUrlValue = new QLineEdit(topToolBarWidget);
 
@@ -97,10 +93,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mUrlValue, SIGNAL(returnPressed()),
             this, SLOT(returnPressed()));
 
-    topToolBarWidget->addWidget(spacer1);
+    topToolBarWidget->addWidget(spacer);
     topToolBarWidget->addWidget(mUrlValue);
     topToolBarWidget->addAction(mGui->actionReload);
-    topToolBarWidget->addWidget(spacer2);
 
     mGui->layout->addWidget(topToolBarWidget);
 
