@@ -25,8 +25,10 @@ limitations under the License.
 //==============================================================================
 
 #include <QCursor>
+#include <QDesktopServices>
 #include <QEvent>
 #include <QHelpEvent>
+#include <QNetworkRequest>
 #include <QToolTip>
 #include <QWebElement>
 #include <QWebHitTestResult>
@@ -38,11 +40,47 @@ namespace WebViewerWidget {
 
 //==============================================================================
 
+WebViewerPage::WebViewerPage(WebViewerWidget *pParent) :
+    QWebPage(pParent),
+    mOwner(pParent)
+{
+}
+
+//==============================================================================
+
+bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
+                                            const QNetworkRequest &pRequest,
+                                            QWebPage::NavigationType pType)
+{
+    Q_UNUSED(pFrame);
+    Q_UNUSED(pType);
+
+    // Ask our owner whether the URL should be handled by ourselves or just
+    // opened the default way
+
+    QUrl url = pRequest.url();
+    QString urlScheme = url.scheme();
+
+    if (mOwner->isUrlSchemeSupported(urlScheme)) {
+        return true;
+    } else {
+        QDesktopServices::openUrl(url);
+
+        return false;
+    }
+}
+
+//==============================================================================
+
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWebView(pParent),
     mResettingCursor(false),
     mLinkToolTip(QString())
 {
+    // Use our own page
+
+    setPage(new WebViewerPage(this));
+
     // Customise ourselves
 
     setAcceptDrops(false);
@@ -92,6 +130,17 @@ bool WebViewerWidget::event(QEvent *pEvent)
     } else {
         return QWebView::event(pEvent);
     }
+}
+
+//==============================================================================
+
+bool WebViewerWidget::isUrlSchemeSupported(const QString &pUrlScheme)
+{
+    Q_UNUSED(pUrlScheme);
+
+    // By default, we support all URL schemes
+
+    return true;
 }
 
 //==============================================================================

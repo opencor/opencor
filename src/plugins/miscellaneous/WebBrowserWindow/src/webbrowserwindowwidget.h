@@ -17,72 +17,35 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web Viewer widget
+// Web browser window widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "webviewerwidgetglobal.h"
-
-//==============================================================================
-
-#include <QString>
-#include <QWebView>
+#include "webviewerwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace WebViewerWidget {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-class WebViewerWidget;
-
-//==============================================================================
-
-class WebViewerPage : public QWebPage
-{
-public:
-    explicit WebViewerPage(WebViewerWidget *pParent);
-
-protected:
-    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
-                                         const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType pType);
-
-private:
-    WebViewerWidget *mOwner;
-};
-
-//==============================================================================
-
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView
+class WebBrowserWindowWidget : public WebViewerWidget::WebViewerWidget
 {
     Q_OBJECT
 
 public:
-    explicit WebViewerWidget(QWidget *pParent);
-
-    QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
-
-    void setLinkToolTip(const QString &pLinkToolTip);
+    explicit WebBrowserWindowWidget(QWidget *pParent);
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
-
-protected:
-    virtual bool event(QEvent *pEvent);
-
-private:
-    bool mResettingCursor;
-
-    QString mLinkToolTip;
 };
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

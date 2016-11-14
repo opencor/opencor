@@ -49,13 +49,11 @@ namespace Core {
 
 //==============================================================================
 
-namespace WebViewerWidget {
-    class WebViewerWidget;
-}   // namespace WebViewerWidget
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-namespace WebBrowserWindow {
+class WebBrowserWindowWidget;
 
 //==============================================================================
 
@@ -74,7 +72,7 @@ protected:
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
-    WebViewerWidget::WebViewerWidget *mWebBrowserWidget;
+    WebBrowserWindowWidget *mWebBrowserWidget;
 
     QMenu *mContextMenu;
 

@@ -17,72 +17,36 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web Viewer widget
+// Web browser window widget
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "webviewerwidgetglobal.h"
-
-//==============================================================================
-
-#include <QString>
-#include <QWebView>
+#include "webbrowserwindowwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace WebViewerWidget {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-class WebViewerWidget;
-
-//==============================================================================
-
-class WebViewerPage : public QWebPage
+WebBrowserWindowWidget::WebBrowserWindowWidget(QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent)
 {
-public:
-    explicit WebViewerPage(WebViewerWidget *pParent);
-
-protected:
-    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
-                                         const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType pType);
-
-private:
-    WebViewerWidget *mOwner;
-};
+}
 
 //==============================================================================
 
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView
+bool WebBrowserWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
-    Q_OBJECT
+    // We support all URL schemes, but the OpenCOR one (opencor://...), which we
+    // want to be handled (i.e. opened) the default way
 
-public:
-    explicit WebViewerWidget(QWidget *pParent);
-
-    QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
-
-    void setLinkToolTip(const QString &pLinkToolTip);
-
-    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
-
-protected:
-    virtual bool event(QEvent *pEvent);
-
-private:
-    bool mResettingCursor;
-
-    QString mLinkToolTip;
-};
+    return pUrlScheme.compare("opencor");
+}
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

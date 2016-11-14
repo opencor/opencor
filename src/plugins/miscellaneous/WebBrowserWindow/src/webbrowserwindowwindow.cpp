@@ -24,8 +24,8 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "progressbarwidget.h"
 #include "toolbarwidget.h"
+#include "webbrowserwindowwidget.h"
 #include "webbrowserwindowwindow.h"
-#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -126,7 +126,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Create and add the web browser widget
 
-    mWebBrowserWidget = new WebViewerWidget::WebViewerWidget(this);
+    mWebBrowserWidget = new WebBrowserWindowWidget(this);
 
     mWebBrowserWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
