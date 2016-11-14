@@ -91,9 +91,6 @@ protected:
     virtual bool acceptNavigationRequest(QWebFrame *pFrame,
                                          const QNetworkRequest &pRequest,
                                          QWebPage::NavigationType pType);
-
-private:
-    QMap<QString, QString> mFileNames;
 };
 
 //==============================================================================
