@@ -86,8 +86,8 @@ class HelpWindowWidget : public WebViewerWidget::WebViewerWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindowWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-                              QWidget *pParent);
+    explicit HelpWindowWidget(QWidget *pParent);
+    ~HelpWindowWidget();
 
     virtual void retranslateUi();
 
@@ -106,7 +106,8 @@ protected:
 private:
     QHelpEngine *mHelpEngine;
 
-    QUrl mHomePage;
+    QString mQchFileName;
+    QString mQhcFileName;
 
 signals:
     void notHomePage(const bool &pNotHomePage);

@@ -31,6 +31,7 @@ limitations under the License.
 
 #include <QAction>
 #include <QDesktopServices>
+#include <QDir>
 #include <QHelpEngine>
 #include <QIODevice>
 #include <QMouseEvent>
@@ -144,15 +145,27 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
 
 //==============================================================================
 
-HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
-                                   const QUrl &pHomePage, QWidget *pParent) :
-    WebViewerWidget::WebViewerWidget(pParent),
-    mHelpEngine(pHelpEngine),
-    mHomePage(pHomePage)
+HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent)
 {
+    // Extract the help files
+
+    QString applicationBaseFileName =  QDir::tempPath()+QDir::separator()
+                                      +QFileInfo(qApp->applicationFilePath()).baseName();
+
+    mQchFileName = applicationBaseFileName+".qch";
+    mQhcFileName = applicationBaseFileName+".qhc";
+
+    Core::writeResourceToFile(mQchFileName, ":HelpWindow_qchFile");
+    Core::writeResourceToFile(mQhcFileName, ":HelpWindow_qhcFile");
+
+    // Set up the help engine
+
+    mHelpEngine = new QHelpEngine(mQhcFileName);
+
     // Use our own help network access manager classes
 
-    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
+    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
 
     // Some connections
 
@@ -170,6 +183,20 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
     // Go to the home page
 
     goToHomePage();
+}
+
+//==============================================================================
+
+HelpWindowWidget::~HelpWindowWidget()
+{
+    // Delete some internal objects
+
+    delete mHelpEngine;
+
+    // Delete the help files
+
+    QFile(mQchFileName).remove();
+    QFile(mQhcFileName).remove();
 }
 
 //==============================================================================
@@ -224,6 +251,10 @@ bool HelpWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 
 //==============================================================================
 
+static const auto OpencorHelpWindowHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
+
+//==============================================================================
+
 void HelpWindowWidget::goToHomePage()
 {
     // Go to the home page
@@ -231,7 +262,7 @@ void HelpWindowWidget::goToHomePage()
     //       that url() becomes valid straightaway (which is important for
     //       retranslateUi()) and that the document gets loaded immediately...
 
-    setUrl(mHomePage);
+    setUrl(OpencorHelpWindowHomepageUrl);
 }
 
 //==============================================================================
@@ -281,7 +312,7 @@ void HelpWindowWidget::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so let the user know whether it's the home page
 
-    emit notHomePage(pUrl != mHomePage);
+    emit notHomePage(pUrl != OpencorHelpWindowHomepageUrl);
 }
 
 //==============================================================================

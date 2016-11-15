@@ -28,7 +28,6 @@ limitations under the License.
 
 //==============================================================================
 
-class QHelpEngine;
 class QMenu;
 class QUrl;
 
@@ -66,11 +65,6 @@ private:
     Ui::HelpWindowWindow *mGui;
 
     HelpWindowWidget *mHelpWindowWidget;
-
-    QHelpEngine *mHelpEngine;
-
-    QString mQchFileName;
-    QString mQhcFileName;
 
     QMenu *mContextMenu;
 

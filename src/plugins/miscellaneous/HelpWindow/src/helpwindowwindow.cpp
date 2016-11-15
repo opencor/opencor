@@ -37,7 +37,6 @@ limitations under the License.
 //==============================================================================
 
 #include <QClipboard>
-#include <QDir>
 #include <QHelpEngine>
 #include <QMenu>
 #include <QPoint>
@@ -53,10 +52,6 @@ namespace HelpWindow {
 
 //==============================================================================
 
-static const auto OpencorHelpWindowHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
-
-//==============================================================================
-
 HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     WindowWidget(pParent),
     mGui(new Ui::HelpWindowWindow)
@@ -64,21 +59,6 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Extract the help files
-
-    QString applicationBaseFileName =  QDir::tempPath()+QDir::separator()
-                                      +QFileInfo(qApp->applicationFilePath()).baseName();
-
-    mQchFileName = applicationBaseFileName+".qch";
-    mQhcFileName = applicationBaseFileName+".qhc";
-
-    Core::writeResourceToFile(mQchFileName, ":HelpWindow_qchFile");
-    Core::writeResourceToFile(mQhcFileName, ":HelpWindow_qhcFile");
-
-    // Set up the help engine
-
-    mHelpEngine = new QHelpEngine(mQhcFileName);
 
     // Create a tool bar widget with different buttons
 
@@ -102,7 +82,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     // Create and add a help window widget
 
-    mHelpWindowWidget = new HelpWindowWidget(mHelpEngine, OpencorHelpWindowHomepageUrl, this);
+    mHelpWindowWidget = new HelpWindowWidget(this);
 
     mHelpWindowWidget->setObjectName("HelpWindowWidget");
 
@@ -171,15 +151,6 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
 HelpWindowWindow::~HelpWindowWindow()
 {
-    // Delete some internal objects
-
-    delete mHelpEngine;
-
-    // Delete the help files
-
-    QFile(mQchFileName).remove();
-    QFile(mQhcFileName).remove();
-
     // Delete the GUI
 
     delete mGui;
