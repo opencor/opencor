@@ -153,9 +153,9 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     connect(mHelpWindowWidget, SIGNAL(forwardEnabled(const bool &)),
             mGui->actionForward, SLOT(setEnabled(bool)));
 
-    connect(mHelpWindowWidget, SIGNAL(notDefaultZoomLevel(const bool &)),
-            mGui->actionNormalSize, SLOT(setEnabled(bool)));
-    connect(mHelpWindowWidget, SIGNAL(zoomOutEnabled(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
+            mGui->actionNormalSize, SLOT(setDisabled(bool)));
+    connect(mHelpWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
             mGui->actionZoomOut, SLOT(setEnabled(bool)));
 
     connect(mHelpWindowWidget, SIGNAL(copyTextEnabled(const bool &)),

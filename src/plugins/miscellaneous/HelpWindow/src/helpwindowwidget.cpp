@@ -176,32 +176,17 @@ bool HelpWindowPage::acceptNavigationRequest(QWebFrame *pFrame,
 
 //==============================================================================
 
-enum {
-    MinimumZoomLevel =  1,
-    DefaultZoomLevel = 10
-};
-
-//==============================================================================
-
 HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                                    const QUrl &pHomePage, QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
     mHelpEngine(pHelpEngine),
-    mHomePage(pHomePage),
-    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
-                     // first call to setZoomLevel
+    mHomePage(pHomePage)
 {
     // Use our own help page and help network access manager classes
 
     setPage(new HelpWindowPage(this));
 
     page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
-
-    // Set our initial zoom level to the default value
-    // Note: to set mZoomLevel directly is not good enough since one of the
-    //       things setZoomLevel does is to set our zoom factor...
-
-    setZoomLevel(DefaultZoomLevel);
 
     // Some connections
 
@@ -236,12 +221,12 @@ void HelpWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
-
-//==============================================================================
-
 void HelpWindowWidget::loadSettings(QSettings *pSettings)
 {
+    // Default handling of the event
+
+    WebViewerWidget::WebViewerWidget::loadSettings(pSettings);
+
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
@@ -251,21 +236,15 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
     emit forwardEnabled(false);
 
     emit copyTextEnabled(false);
-
-    emitZoomRelatedSignals();
-
-    // Retrieve the zoom level
-
-    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
 }
 
 //==============================================================================
 
 void HelpWindowWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the text size multiplier
+    // Default handling of the event
 
-    pSettings->setValue(SettingsZoomLevel, mZoomLevel);
+    WebViewerWidget::WebViewerWidget::saveSettings(pSettings);
 }
 
 //==============================================================================
@@ -278,62 +257,6 @@ void HelpWindowWidget::goToHomePage()
     //       retranslateUi()) and that the document gets loaded immediately...
 
     setUrl(mHomePage);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::resetZoom()
-{
-    // Reset the zoom level
-
-    setZoomLevel(DefaultZoomLevel);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::zoomIn()
-{
-    // Zoom in the help document contents
-
-    setZoomLevel(mZoomLevel+1);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::zoomOut()
-{
-    // Zoom out the help document contents
-
-    setZoomLevel(qMax(int(MinimumZoomLevel), mZoomLevel-1));
-}
-
-//==============================================================================
-
-void HelpWindowWidget::emitZoomRelatedSignals()
-{
-    // Let the user know whether we are not at the default zoom level and
-    // whether we can still zoom out
-
-    emit notDefaultZoomLevel(mZoomLevel != DefaultZoomLevel);
-    emit zoomOutEnabled(mZoomLevel != MinimumZoomLevel);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::setZoomLevel(const int &pZoomLevel)
-{
-    if (pZoomLevel == mZoomLevel)
-        return;
-
-    // Set the zoom level of the help document contents to a particular value
-
-    mZoomLevel = pZoomLevel;
-
-    setZoomFactor(0.1*mZoomLevel);
-
-    // Emit a few zoom-related signals
-
-    emitZoomRelatedSignals();
 }
 
 //==============================================================================
@@ -374,30 +297,6 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         // Something else, so use the default handling of the event
 
         WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
-    }
-}
-
-//==============================================================================
-
-void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
-{
-    // Handle the wheel mouse button for zooming in/out the help document
-    // contents
-
-    if (pEvent->modifiers() == Qt::ControlModifier) {
-        int delta = pEvent->delta();
-
-        if (delta > 0)
-            zoomIn();
-        else if (delta < 0)
-            zoomOut();
-
-        pEvent->accept();
-    } else {
-        // Not the modifier we were expecting, so call the default handling of
-        // the event
-
-        WebViewerWidget::WebViewerWidget::wheelEvent(pEvent);
     }
 }
 

@@ -67,19 +67,41 @@ class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView,
 public:
     explicit WebViewerWidget(QWidget *pParent);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
     void setLinkToolTip(const QString &pLinkToolTip);
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
+    void resetZoom();
+
+    void zoomIn();
+    void zoomOut();
+
+    void setZoomingEnabled(const bool &pZoomingEnabled);
+
 protected:
     virtual bool event(QEvent *pEvent);
+    virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
     bool mResettingCursor;
 
     QString mLinkToolTip;
+
+    bool mZoomingEnabled;
+    int mZoomLevel;
+
+    void emitZoomRelatedSignals();
+
+    void setZoomLevel(const int &pZoomLevel);
+
+signals:
+    void defaultZoomLevel(const bool &pDefault);
+    void zoomingOutEnabled(const bool &pEnabled);
 };
 
 //==============================================================================

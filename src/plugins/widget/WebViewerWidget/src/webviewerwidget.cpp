@@ -29,6 +29,7 @@ limitations under the License.
 #include <QEvent>
 #include <QHelpEvent>
 #include <QNetworkRequest>
+#include <QSettings>
 #include <QToolTip>
 #include <QWebElement>
 #include <QWebHitTestResult>
@@ -72,11 +73,21 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
 
 //==============================================================================
 
+enum {
+    MinimumZoomLevel =  1,
+    DefaultZoomLevel = 10
+};
+
+//==============================================================================
+
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWebView(pParent),
     Core::CommonWidget(this),
     mResettingCursor(false),
-    mLinkToolTip(QString())
+    mLinkToolTip(QString()),
+    mZoomingEnabled(true),
+    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
+                     // first call to setZoomLevel
 {
     // Use our own page
 
@@ -87,6 +98,36 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     setAcceptDrops(false);
     setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    // Set our initial zoom level to the default value
+    // Note: to set mZoomLevel directly is not good enough since one of the
+    //       things setZoomLevel does is to set our zoom factor...
+
+    setZoomLevel(DefaultZoomLevel);
+}
+
+//==============================================================================
+
+static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
+
+//==============================================================================
+
+void WebViewerWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the zoom level
+
+    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
+
+    emitZoomRelatedSignals();
+}
+
+//==============================================================================
+
+void WebViewerWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the text size multiplier
+
+    pSettings->setValue(SettingsZoomLevel, mZoomLevel);
 }
 
 //==============================================================================
@@ -135,6 +176,30 @@ bool WebViewerWidget::event(QEvent *pEvent)
 
 //==============================================================================
 
+void WebViewerWidget::wheelEvent(QWheelEvent *pEvent)
+{
+    // Handle the wheel mouse button for zooming in/out the help document
+    // contents
+
+    if (mZoomingEnabled && (pEvent->modifiers() == Qt::ControlModifier)) {
+        int delta = pEvent->delta();
+
+        if (delta > 0)
+            zoomIn();
+        else if (delta < 0)
+            zoomOut();
+
+        pEvent->accept();
+    } else {
+        // Not the modifier we were expecting, so call the default handling of
+        // the event
+
+        QWebView::wheelEvent(pEvent);
+    }
+}
+
+//==============================================================================
+
 bool WebViewerWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
     Q_UNUSED(pUrlScheme);
@@ -174,6 +239,71 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
     }
 
     return res;
+}
+
+//==============================================================================
+
+void WebViewerWidget::resetZoom()
+{
+    // Reset the zoom level
+
+    setZoomLevel(DefaultZoomLevel);
+}
+
+//==============================================================================
+
+void WebViewerWidget::zoomIn()
+{
+    // Zoom in the help document contents
+
+    setZoomLevel(mZoomLevel+1);
+}
+
+//==============================================================================
+
+void WebViewerWidget::zoomOut()
+{
+    // Zoom out the help document contents
+
+    setZoomLevel(qMax(int(MinimumZoomLevel), mZoomLevel-1));
+}
+
+//==============================================================================
+
+void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
+{
+    // Set zooming in/out is enabled
+
+    mZoomingEnabled = pZoomingEnabled;
+}
+
+//==============================================================================
+
+void WebViewerWidget::emitZoomRelatedSignals()
+{
+    // Let the user know whether we are not at the default zoom level and
+    // whether we can still zoom out
+
+    emit defaultZoomLevel(mZoomLevel == DefaultZoomLevel);
+    emit zoomingOutEnabled(mZoomLevel != MinimumZoomLevel);
+}
+
+//==============================================================================
+
+void WebViewerWidget::setZoomLevel(const int &pZoomLevel)
+{
+    if (!mZoomingEnabled || (pZoomLevel == mZoomLevel))
+        return;
+
+    // Set the zoom level of the help document contents to a particular value
+
+    mZoomLevel = pZoomLevel;
+
+    setZoomFactor(0.1*mZoomLevel);
+
+    // Emit a few zoom-related signals
+
+    emitZoomRelatedSignals();
 }
 
 //==============================================================================

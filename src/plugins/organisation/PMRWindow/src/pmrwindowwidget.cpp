@@ -65,6 +65,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     mContextMenu->addAction(mCopyAction);
 
+    // Prevent zooming in/out
+
+    setZoomingEnabled(false);
+
     // We want our own context menu
 
     setContextMenuPolicy(Qt::CustomContextMenu);

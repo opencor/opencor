@@ -109,27 +109,15 @@ public:
 
     void goToHomePage();
 
-    void resetZoom();
-
-    void zoomIn();
-    void zoomOut();
-
 protected:
     virtual QSize sizeHint() const;
 
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
     QHelpEngine *mHelpEngine;
 
     QUrl mHomePage;
-
-    int mZoomLevel;
-
-    void emitZoomRelatedSignals();
-
-    void setZoomLevel(const int &pZoomLevel);
 
 signals:
     void notHomePage(const bool &pNotHomePage);
@@ -138,9 +126,6 @@ signals:
     void forwardEnabled(const bool &pEnabled);
 
     void copyTextEnabled(const bool &pEnabled);
-
-    void notDefaultZoomLevel(const bool &pEnabled);
-    void zoomOutEnabled(const bool &pEnabled);
 
 private slots:
     void urlChanged(const QUrl &pUrl);
