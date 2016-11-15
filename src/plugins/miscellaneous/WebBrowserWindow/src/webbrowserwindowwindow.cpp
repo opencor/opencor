@@ -57,11 +57,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Initially, we cannot go backward/forward
-
-    mGui->actionBack->setEnabled(false);
-    mGui->actionForward->setEnabled(false);
-
     // Create a tool bar widget with a URL value and refresh button
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
@@ -191,6 +186,11 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     connect(mWebBrowserWindowWidget, SIGNAL(homePage(const bool &)),
             mGui->actionClear, SLOT(setDisabled(bool)));
+
+    connect(mWebBrowserWindowWidget, SIGNAL(backEnabled(const bool &)),
+            mGui->actionBack, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, SIGNAL(forwardEnabled(const bool &)),
+            mGui->actionForward, SLOT(setEnabled(bool)));
 
     connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
             mGui->actionNormalSize, SLOT(setDisabled(bool)));

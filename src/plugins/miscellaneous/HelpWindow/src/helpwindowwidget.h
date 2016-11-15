@@ -106,13 +106,6 @@ private:
 
     QString mQchFileName;
     QString mQhcFileName;
-
-signals:
-    void backEnabled(const bool &pEnabled);
-    void forwardEnabled(const bool &pEnabled);
-
-private slots:
-    void documentChanged();
 };
 
 //==============================================================================

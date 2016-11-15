@@ -109,6 +109,9 @@ private:
 signals:
     void homePage(const bool &pHomePage);
 
+    void backEnabled(const bool &pEnabled);
+    void forwardEnabled(const bool &pEnabled);
+
     void copyTextEnabled(const bool &pEnabled);
 
     void defaultZoomLevel(const bool &pDefault);
@@ -118,6 +121,8 @@ private slots:
     void urlChanged(const QUrl &pUrl);
 
     void selectionChanged();
+
+    void pageChanged();
 };
 
 //==============================================================================

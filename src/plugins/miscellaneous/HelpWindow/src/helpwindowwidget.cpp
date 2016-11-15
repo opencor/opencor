@@ -167,13 +167,6 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 
     page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
 
-    // Some connections
-
-    connect(pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-    connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-
     // Set and go to our home page
 
     setHomePage("qthelp://opencor/doc/user/index.html");
@@ -215,12 +208,6 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
     // Default handling of the event
 
     WebViewerWidget::WebViewerWidget::loadSettings(pSettings);
-
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    emit backEnabled(false);
-    emit forwardEnabled(false);
 }
 
 //==============================================================================
@@ -280,21 +267,6 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
     }
-}
-
-//==============================================================================
-
-void HelpWindowWidget::documentChanged()
-{
-    // A new help document has been selected, resulting in the previous or next
-    // help document becoming either available or not
-
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action == pageAction(QWebPage::Back))
-        emit backEnabled(action->isEnabled());
-    else if (action == pageAction(QWebPage::Forward))
-        emit forwardEnabled(action->isEnabled());
 }
 
 //==============================================================================

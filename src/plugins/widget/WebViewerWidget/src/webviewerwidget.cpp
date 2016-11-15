@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
 #include <QCursor>
 #include <QDesktopServices>
 #include <QEvent>
@@ -105,6 +106,11 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     connect(this, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
 
+    connect(pageAction(QWebPage::Back), SIGNAL(changed()),
+            this, SLOT(pageChanged()));
+    connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
+            this, SLOT(pageChanged()));
+
     connect(page(), SIGNAL(selectionChanged()),
             this, SLOT(selectionChanged()));
 
@@ -136,6 +142,9 @@ void WebViewerWidget::loadSettings(QSettings *pSettings)
     // few signals
 
     emit homePage(true);
+
+    emit backEnabled(false);
+    emit forwardEnabled(false);
 
     emit copyTextEnabled(false);
 }
@@ -373,6 +382,21 @@ void WebViewerWidget::selectionChanged()
     // now selected
 
     emit copyTextEnabled(!selectedText().isEmpty());
+}
+
+//==============================================================================
+
+void WebViewerWidget::pageChanged()
+{
+    // We have a new page, resulting in the previous or next page becoming
+    // either available or not
+
+    QAction *action = qobject_cast<QAction *>(sender());
+
+    if (action == pageAction(QWebPage::Back))
+        emit backEnabled(action->isEnabled());
+    else if (action == pageAction(QWebPage::Forward))
+        emit forwardEnabled(action->isEnabled());
 }
 
 //==============================================================================
