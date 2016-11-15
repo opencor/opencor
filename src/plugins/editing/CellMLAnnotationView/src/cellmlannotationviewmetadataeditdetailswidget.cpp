@@ -321,6 +321,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputOntologicalTerms = new WebViewerWidget::WebViewerWidget(mOutput);
 
+    mOutputOntologicalTerms->setZoomingEnabled(false);
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
