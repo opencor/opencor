@@ -109,11 +109,15 @@ private:
 signals:
     void homePage(const bool &pHomePage);
 
+    void copyTextEnabled(const bool &pEnabled);
+
     void defaultZoomLevel(const bool &pDefault);
     void zoomingOutEnabled(const bool &pEnabled);
 
 private slots:
     void urlChanged(const QUrl &pUrl);
+
+    void selectionChanged();
 };
 
 //==============================================================================

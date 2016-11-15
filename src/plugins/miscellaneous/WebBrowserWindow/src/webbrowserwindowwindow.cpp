@@ -57,9 +57,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Initially, we are cleared and we cannot go backward/forward
-
-    mGui->actionClear->setEnabled(false);
+    // Initially, we cannot go backward/forward
 
     mGui->actionBack->setEnabled(false);
     mGui->actionForward->setEnabled(false);
@@ -198,6 +196,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
             mGui->actionNormalSize, SLOT(setDisabled(bool)));
     connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
             mGui->actionZoomOut, SLOT(setEnabled(bool)));
+
+    connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
+            mGui->actionCopy, SLOT(setEnabled(bool)));
 
     // We want our own context menu for our Web browser window widget (indeed,
     // we don't want the default one, which has the reload menu item and not the

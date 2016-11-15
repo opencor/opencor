@@ -169,9 +169,6 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
-
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
             this, SLOT(documentChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
@@ -224,8 +221,6 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
 
     emit backEnabled(false);
     emit forwardEnabled(false);
-
-    emit copyTextEnabled(false);
 }
 
 //==============================================================================
@@ -285,16 +280,6 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
     }
-}
-
-//==============================================================================
-
-void HelpWindowWidget::selectionChanged()
-{
-    // The text selection has changed, so let the user know whether some text is
-    // now selected
-
-    emit copyTextEnabled(!selectedText().isEmpty());
 }
 
 //==============================================================================

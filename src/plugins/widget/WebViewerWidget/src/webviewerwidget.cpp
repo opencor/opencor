@@ -105,6 +105,9 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     connect(this, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
 
+    connect(page(), SIGNAL(selectionChanged()),
+            this, SLOT(selectionChanged()));
+
     // Go to our (blank) home page and set our initial zoom level to its default
     // value
     // Note: to set mZoomLevel directly is not good enough since one of the
@@ -128,6 +131,13 @@ void WebViewerWidget::loadSettings(QSettings *pSettings)
     setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
 
     emitZoomRelatedSignals();
+
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emit homePage(true);
+
+    emit copyTextEnabled(false);
 }
 
 //==============================================================================
@@ -353,6 +363,16 @@ void WebViewerWidget::urlChanged(const QUrl &pUrl)
     // The URL has changed, so let the user know whether it's our home page
 
     emit homePage(pUrl == mHomePage);
+}
+
+//==============================================================================
+
+void WebViewerWidget::selectionChanged()
+{
+    // The text selection has changed, so let the user know whether some text is
+    // now selected
+
+    emit copyTextEnabled(!selectedText().isEmpty());
 }
 
 //==============================================================================

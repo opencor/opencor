@@ -111,11 +111,7 @@ signals:
     void backEnabled(const bool &pEnabled);
     void forwardEnabled(const bool &pEnabled);
 
-    void copyTextEnabled(const bool &pEnabled);
-
 private slots:
-    void selectionChanged();
-
     void documentChanged();
 };
 
