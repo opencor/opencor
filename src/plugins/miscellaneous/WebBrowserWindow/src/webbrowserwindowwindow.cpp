@@ -372,7 +372,7 @@ void WebBrowserWindowWindow::returnPressed()
     if (mUrlValue->text().isEmpty())
         mWebBrowserWindowWidget->goToHomePage();
     else
-        mWebBrowserWindowWidget->load(mUrlValue->text());
+        mWebBrowserWindowWidget->setUrl(mUrlValue->text());
 }
 
 //==============================================================================
