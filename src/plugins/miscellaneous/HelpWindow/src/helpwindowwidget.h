@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -95,8 +94,7 @@ protected:
 
 //==============================================================================
 
-class HelpWindowWidget : public WebViewerWidget::WebViewerWidget,
-                         public Core::CommonWidget
+class HelpWindowWidget : public WebViewerWidget::WebViewerWidget
 {
     Q_OBJECT
 

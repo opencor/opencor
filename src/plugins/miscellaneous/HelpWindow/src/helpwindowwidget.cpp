@@ -186,7 +186,6 @@ enum {
 HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                                    const QUrl &pHomePage, QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(this),
     mHelpEngine(pHelpEngine),
     mHomePage(pHomePage),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our

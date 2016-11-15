@@ -74,6 +74,7 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
 
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWebView(pParent),
+    Core::CommonWidget(this),
     mResettingCursor(false),
     mLinkToolTip(QString())
 {

@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "webviewerwidgetglobal.h"
 
 //==============================================================================
@@ -58,7 +59,8 @@ private:
 
 //==============================================================================
 
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView
+class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView,
+                                               public Core::CommonWidget
 {
     Q_OBJECT
 
