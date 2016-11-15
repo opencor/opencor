@@ -96,8 +96,6 @@ public:
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
-    void goToHomePage();
-
 protected:
     virtual QSize sizeHint() const;
 
@@ -110,16 +108,12 @@ private:
     QString mQhcFileName;
 
 signals:
-    void homePage(const bool &pHomePage);
-
     void backEnabled(const bool &pEnabled);
     void forwardEnabled(const bool &pEnabled);
 
     void copyTextEnabled(const bool &pEnabled);
 
 private slots:
-    void urlChanged(const QUrl &pUrl);
-
     void selectionChanged();
 
     void documentChanged();

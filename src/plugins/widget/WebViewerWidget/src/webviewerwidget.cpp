@@ -85,6 +85,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     Core::CommonWidget(this),
     mResettingCursor(false),
     mLinkToolTip(QString()),
+    mHomePage(QString()),
     mZoomingEnabled(true),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
                      // first call to setZoomLevel
@@ -104,6 +105,11 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     //       things setZoomLevel does is to set our zoom factor...
 
     setZoomLevel(DefaultZoomLevel);
+
+    // Some connections
+
+    connect(this, SIGNAL(urlChanged(const QUrl &)),
+            this, SLOT(urlChanged(const QUrl &)));
 }
 
 //==============================================================================
@@ -243,6 +249,37 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
 
 //==============================================================================
 
+void WebViewerWidget::setHomePage(const QString &pHomePage)
+{
+    // Set our home page
+
+    mHomePage = pHomePage;
+}
+
+//==============================================================================
+
+QString WebViewerWidget::homePage() const
+{
+    // Return our home page
+
+    return mHomePage;
+}
+
+//==============================================================================
+
+void WebViewerWidget::goToHomePage()
+{
+    // Go to our home page
+    // Note: we use setUrl() rather than load() since the former will ensure
+    //       that url() becomes valid straightaway (which might be important in
+    //       some cases, e.g. when retranslating) and that the document gets
+    //       loaded immediately...
+
+    setUrl(mHomePage);
+}
+
+//==============================================================================
+
 void WebViewerWidget::resetZoom()
 {
     // Reset the zoom level
@@ -272,7 +309,7 @@ void WebViewerWidget::zoomOut()
 
 void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
 {
-    // Set zooming in/out is enabled
+    // Set whether zooming in/out is enabled
 
     mZoomingEnabled = pZoomingEnabled;
 }
@@ -304,6 +341,15 @@ void WebViewerWidget::setZoomLevel(const int &pZoomLevel)
     // Emit a few zoom-related signals
 
     emitZoomRelatedSignals();
+}
+
+//==============================================================================
+
+void WebViewerWidget::urlChanged(const QUrl &pUrl)
+{
+    // The URL has changed, so let the user know whether it's our home page
+
+    emit homePage(pUrl == mHomePage);
 }
 
 //==============================================================================

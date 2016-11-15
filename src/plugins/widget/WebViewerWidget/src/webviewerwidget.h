@@ -76,6 +76,11 @@ public:
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
+    void setHomePage(const QString &pHomePage);
+    QString homePage() const;
+
+    void goToHomePage();
+
     void resetZoom();
 
     void zoomIn();
@@ -92,6 +97,8 @@ private:
 
     QString mLinkToolTip;
 
+    QString mHomePage;
+
     bool mZoomingEnabled;
     int mZoomLevel;
 
@@ -100,8 +107,13 @@ private:
     void setZoomLevel(const int &pZoomLevel);
 
 signals:
+    void homePage(const bool &pHomePage);
+
     void defaultZoomLevel(const bool &pDefault);
     void zoomingOutEnabled(const bool &pEnabled);
+
+private slots:
+    void urlChanged(const QUrl &pUrl);
 };
 
 //==============================================================================

@@ -169,9 +169,6 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(this, SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(urlChanged(const QUrl &)));
-
     connect(page(), SIGNAL(selectionChanged()),
             this, SLOT(selectionChanged()));
 
@@ -180,7 +177,9 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(documentChanged()));
 
-    // Go to the home page
+    // Set and go to our home page
+
+    setHomePage("qthelp://opencor/doc/user/index.html");
 
     goToHomePage();
 }
@@ -223,8 +222,6 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
-    emit homePage(true);
-
     emit backEnabled(false);
     emit forwardEnabled(false);
 
@@ -247,22 +244,6 @@ bool HelpWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
     // We only support URLs that refer to an OpenCOR document (qthelp://...)
 
     return !pUrlScheme.compare("qthelp");
-}
-
-//==============================================================================
-
-static const auto OpencorHelpWindowHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
-
-//==============================================================================
-
-void HelpWindowWidget::goToHomePage()
-{
-    // Go to the home page
-    // Note: we use setUrl() rather than load() since the former will ensure
-    //       that url() becomes valid straightaway (which is important for
-    //       retranslateUi()) and that the document gets loaded immediately...
-
-    setUrl(OpencorHelpWindowHomepageUrl);
 }
 
 //==============================================================================
@@ -304,15 +285,6 @@ void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
     }
-}
-
-//==============================================================================
-
-void HelpWindowWidget::urlChanged(const QUrl &pUrl)
-{
-    // The URL has changed, so let the user know whether it's the home page
-
-    emit homePage(pUrl == OpencorHelpWindowHomepageUrl);
 }
 
 //==============================================================================
