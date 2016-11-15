@@ -54,9 +54,6 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
                                             const QNetworkRequest &pRequest,
                                             QWebPage::NavigationType pType)
 {
-    Q_UNUSED(pFrame);
-    Q_UNUSED(pType);
-
     // Ask our owner whether the URL should be handled by ourselves or just
     // opened the default way
 
@@ -64,6 +61,47 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
     QString urlScheme = url.scheme();
 
     if (mOwner->isUrlSchemeSupported(urlScheme)) {
+        // We should be handled the URL ourseves, but now let's see whether
+        // anything should be delegated
+        // Note: this comes (and was adapted) from
+        //       QWebPage::acceptNavigationRequest(),
+        //       QWebPageAdapter::treatSchemeAsLocal(),
+        //       SchemeRegistry::shouldTreatURLSchemeAsLocal() and
+        //       localURLSchemes()...
+
+        if (pType == NavigationTypeLinkClicked) {
+            static QStringList localSchemes = QStringList();
+
+            if (localSchemes.isEmpty()) {
+                localSchemes << "file";
+#ifdef Q_OS_MAC
+                localSchemes << "applewebdata";
+#endif
+                localSchemes << "qrc";
+            }
+
+            switch (linkDelegationPolicy()) {
+            case DontDelegateLinks:
+                return true;
+            case DelegateExternalLinks:
+                if (   urlScheme.isEmpty()
+                    && localSchemes.contains(pFrame->baseUrl().scheme())) {
+                    return true;
+                }
+
+                if (localSchemes.contains(urlScheme))
+                    return true;
+
+                emit linkClicked(pRequest.url());
+
+                return false;
+            case DelegateAllLinks:
+                emit linkClicked(pRequest.url());
+
+                return false;
+            }
+        }
+
         return true;
     } else {
         QDesktopServices::openUrl(url);
