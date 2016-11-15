@@ -125,8 +125,8 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mHelpWindowWidget, SIGNAL(notHomePage(const bool &)),
-            mGui->actionHome, SLOT(setEnabled(bool)));
+    connect(mHelpWindowWidget, SIGNAL(homePage(const bool &)),
+            mGui->actionHome, SLOT(setDisabled(bool)));
 
     connect(mHelpWindowWidget, SIGNAL(backEnabled(const bool &)),
             mGui->actionBack, SLOT(setEnabled(bool)));

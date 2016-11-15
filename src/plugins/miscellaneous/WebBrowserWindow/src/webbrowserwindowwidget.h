@@ -41,6 +41,14 @@ public:
     explicit WebBrowserWindowWidget(QWidget *pParent);
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
+
+    void clear();
+
+signals:
+    void clear(const bool &pClear);
+
+private slots:
+    void urlChanged(const QUrl &pUrl);
 };
 
 //==============================================================================

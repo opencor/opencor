@@ -110,7 +110,7 @@ private:
     QString mQhcFileName;
 
 signals:
-    void notHomePage(const bool &pNotHomePage);
+    void homePage(const bool &pHomePage);
 
     void backEnabled(const bool &pEnabled);
     void forwardEnabled(const bool &pEnabled);

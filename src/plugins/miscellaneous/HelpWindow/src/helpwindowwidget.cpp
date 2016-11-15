@@ -223,7 +223,7 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
-    emit notHomePage(false);
+    emit homePage(true);
 
     emit backEnabled(false);
     emit forwardEnabled(false);
@@ -312,7 +312,7 @@ void HelpWindowWidget::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so let the user know whether it's the home page
 
-    emit notHomePage(pUrl != OpencorHelpWindowHomepageUrl);
+    emit homePage(pUrl == OpencorHelpWindowHomepageUrl);
 }
 
 //==============================================================================
