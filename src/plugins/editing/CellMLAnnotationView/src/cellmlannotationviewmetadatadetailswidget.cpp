@@ -327,9 +327,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResourc
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing()
 {
-    // We are 'asked' to look nothing up, so 'clean up' our web viewer
+    // We are 'asked' to look nothing up, so 'clean up' our web viewer by going
+    // to our home page (i.e. blank page)
 
-    mWebViewer->setUrl(QUrl());
+    mWebViewer->goToHomePage();
 }
 
 //==============================================================================
