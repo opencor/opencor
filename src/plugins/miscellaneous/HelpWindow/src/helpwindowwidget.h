@@ -81,19 +81,6 @@ private:
 
 //==============================================================================
 
-class HelpWindowPage : public QWebPage
-{
-public:
-    explicit HelpWindowPage(QObject *pParent);
-
-protected:
-    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
-                                         const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType pType);
-};
-
-//==============================================================================
-
 class HelpWindowWidget : public WebViewerWidget::WebViewerWidget
 {
     Q_OBJECT
@@ -106,6 +93,8 @@ public:
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
+
+    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
     void goToHomePage();
 

@@ -144,47 +144,13 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
 
 //==============================================================================
 
-HelpWindowPage::HelpWindowPage(QObject *pParent) :
-    QWebPage(pParent)
-{
-}
-
-//==============================================================================
-
-bool HelpWindowPage::acceptNavigationRequest(QWebFrame *pFrame,
-                                             const QNetworkRequest &pRequest,
-                                             QWebPage::NavigationType pType)
-{
-    Q_UNUSED(pFrame);
-    Q_UNUSED(pType);
-
-    // Determine whether the URL refers to an OpenCOR document (qthelp://...) or
-    // an external resource of sorts (e.g. http[s]://... and opencor://...), and
-    // if it is the latter then just open the URL the default way
-
-    QUrl url = pRequest.url();
-    QString urlScheme = url.scheme();
-
-    if (!urlScheme.compare("qthelp")) {
-        return true;
-    } else {
-        QDesktopServices::openUrl(url);
-
-        return false;
-    }
-}
-
-//==============================================================================
-
 HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                                    const QUrl &pHomePage, QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
     mHelpEngine(pHelpEngine),
     mHomePage(pHomePage)
 {
-    // Use our own help page and help network access manager classes
-
-    setPage(new HelpWindowPage(this));
+    // Use our own help network access manager classes
 
     page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
 
@@ -245,6 +211,15 @@ void HelpWindowWidget::saveSettings(QSettings *pSettings) const
     // Default handling of the event
 
     WebViewerWidget::WebViewerWidget::saveSettings(pSettings);
+}
+
+//==============================================================================
+
+bool HelpWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
+{
+    // We only support URLs that refer to an OpenCOR document (qthelp://...)
+
+    return !pUrlScheme.compare("qthelp");
 }
 
 //==============================================================================
