@@ -194,8 +194,12 @@ void HelpWindowWidget::retranslateUi()
 {
     // Retranslate the current document, but only if it is an error document
     // since a valid document is hard-coded and therefore cannot be translated
-    // Note: we use setUrl() rather than reload() since the latter won't work
-    //       upon starting OpenCOR with a non-system locale...
+    // Note: we use setUrl() rather than reload() since it ensures that the URL
+    //       will be loaded straightaway while otherwise, upon starting OpenCOR,
+    //       we will see the non CSS-styled version of the page (which will
+    //       always be in English, no matter which locale is selected) for a
+    //       split second before seeing the CSS-styled one (which can be either
+    //       in English or in another locale)...
 
     if (!mHelpEngine->findFile(url()).isValid())
         setUrl(url());
