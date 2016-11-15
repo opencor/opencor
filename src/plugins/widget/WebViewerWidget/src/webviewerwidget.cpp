@@ -191,7 +191,7 @@ void WebViewerWidget::loadSettings(QSettings *pSettings)
 
 void WebViewerWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the text size multiplier
+    // Keep track of the zoom level
 
     pSettings->setValue(SettingsZoomLevel, mZoomLevel);
 }

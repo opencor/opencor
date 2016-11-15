@@ -113,6 +113,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWindowWidget = new WebBrowserWindowWidget(this);
 
+    mWebBrowserWindowWidget->setObjectName("WebBrowserWindowWidget");
+
     mWebBrowserWindowWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)

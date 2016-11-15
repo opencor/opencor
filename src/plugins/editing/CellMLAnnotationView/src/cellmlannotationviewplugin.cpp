@@ -155,6 +155,8 @@ void CellMLAnnotationViewPlugin::initializePlugin()
 
     mViewWidget = new CellmlAnnotationViewWidget(this, Core::mainWindow());
 
+    mViewWidget->setObjectName("CellmlAnnotationViewWidget");
+
     // Hide our CellML annotation view widget since it may not initially be
     // shown in our central widget
 

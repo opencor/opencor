@@ -242,6 +242,8 @@ void CellMLTextViewPlugin::initializePlugin()
 
     mViewWidget = new CellmlTextViewWidget(Core::mainWindow());
 
+    mViewWidget->setObjectName("CellmlTextViewWidget");
+
     // Hide our CellML text view widget since it may not initially be shown in
     // our central widget
 
