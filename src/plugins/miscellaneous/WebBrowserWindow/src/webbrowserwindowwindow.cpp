@@ -149,14 +149,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mWebBrowserWindowWidget, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
 
-    connect(mWebBrowserWindowWidget->pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-    connect(mWebBrowserWindowWidget->pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-
-    connect(mWebBrowserWindowWidget->page(), SIGNAL(selectionChanged()),
-            this, SLOT(updateActions()));
-
     connect(mWebBrowserWindowWidget, SIGNAL(loadProgress(int)),
             this, SLOT(loadProgress(const int &)));
     connect(mWebBrowserWindowWidget, SIGNAL(loadFinished(bool)),
@@ -182,6 +174,15 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionInspect);
 
+    // We want our own context menu for our Web browser window widget (indeed,
+    // we don't want the default one, which has the reload menu item and not the
+    // other actions that we have in our tool bar widget)
+
+    mWebBrowserWindowWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mWebBrowserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu()));
+
     // Some connections to update the enabled state of our various actions
 
     connect(mWebBrowserWindowWidget, SIGNAL(homePage(const bool &)),
@@ -199,15 +200,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
             mGui->actionCopy, SLOT(setEnabled(bool)));
-
-    // We want our own context menu for our Web browser window widget (indeed,
-    // we don't want the default one, which has the reload menu item and not the
-    // other actions that we have in our tool bar widget)
-
-    mWebBrowserWindowWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(mWebBrowserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
 
     // En/disable the printing action, depending on whether printers are
     // available
@@ -266,15 +258,6 @@ void WebBrowserWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void WebBrowserWindowWindow::updateActions()
-{
-    // Update the enabled state of our various actions
-
-    mGui->actionCopy->setEnabled(!mWebBrowserWindowWidget->page()->selectedText().isEmpty());
-}
-
-//==============================================================================
-
 void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so update our URL value
@@ -282,23 +265,6 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
     QString url = pUrl.toString();
 
     mUrlValue->setText(url.compare(mWebBrowserWindowWidget->homePage())?url:QString());
-
-    updateActions();
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::documentChanged()
-{
-    // A new page has been loaded, resulting in the previous or next page
-    // becoming either available or not
-
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action == mWebBrowserWindowWidget->pageAction(QWebPage::Back))
-        mGui->actionBack->setEnabled(action->isEnabled());
-    else if (action == mWebBrowserWindowWidget->pageAction(QWebPage::Forward))
-        mGui->actionForward->setEnabled(action->isEnabled());
 }
 
 //==============================================================================
@@ -407,8 +373,6 @@ void WebBrowserWindowWindow::returnPressed()
         mWebBrowserWindowWidget->goToHomePage();
     else
         mWebBrowserWindowWidget->load(mUrlValue->text());
-
-    updateActions();
 }
 
 //==============================================================================

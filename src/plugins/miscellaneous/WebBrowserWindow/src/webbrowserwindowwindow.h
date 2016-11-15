@@ -98,9 +98,7 @@ private slots:
 
     void returnPressed();
 
-    void updateActions();
     void urlChanged(const QUrl &pUrl);
-    void documentChanged();
     void showCustomContextMenu() const;
     void loadProgress(const int &pProgress);
     void loadFinished();
