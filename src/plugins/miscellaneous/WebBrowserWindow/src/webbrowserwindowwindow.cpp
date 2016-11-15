@@ -41,7 +41,6 @@ limitations under the License.
 #include <QPrinterInfo>
 #include <QSettings>
 #include <QTimer>
-#include <QWebHistory>
 
 //==============================================================================
 
@@ -195,6 +194,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
+    connect(mWebBrowserWindowWidget, SIGNAL(clear(const bool &)),
+            mGui->actionClear, SLOT(setDisabled(bool)));
+
     connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
             mGui->actionNormalSize, SLOT(setDisabled(bool)));
     connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
@@ -270,8 +272,6 @@ void WebBrowserWindowWindow::updateActions()
 {
     // Update the enabled state of our various actions
 
-    mGui->actionClear->setEnabled(!mUrlValue->text().isEmpty());
-
     mGui->actionCopy->setEnabled(!mWebBrowserWindowWidget->page()->selectedText().isEmpty());
 }
 
@@ -311,15 +311,9 @@ void WebBrowserWindowWindow::documentChanged()
 
 void WebBrowserWindowWindow::on_actionClear_triggered()
 {
-    // Go to the home page, i.e. a blank page
-    // Note: to set a blank page will make our web page completely white, which
-    //       looks better than the default grey background...
+    // Clear the contents of our Web browser window widget
 
-    mUrlValue->setText(AboutBlank);
-
-    returnPressed();
-
-    mWebBrowserWindowWidget->history()->clear();
+    mWebBrowserWindowWidget->clear();
 }
 
 //==============================================================================
@@ -414,9 +408,9 @@ void WebBrowserWindowWindow::returnPressed()
 {
     // Load the URL
     // Note: we keep track of the URL since, in loadProgress(), the initial
-    //       value of mWebBrowserWidget->url() will be that of the previous
-    //       URL, meaning that we would, in the case of a blank page, start
-    //       showing the progress while we clearly shouldn't be...
+    //       value of mWebBrowserWindowWidget->url() will be that of the
+    //       previous URL, meaning that we would, in the case of a blank page,
+    //       start showing the progress while we clearly shouldn't be...
 
     mUrl = mUrlValue->text();
 
