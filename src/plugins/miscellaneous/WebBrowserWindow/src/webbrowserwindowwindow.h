@@ -66,24 +66,25 @@ public:
     ~WebBrowserWindowWindow();
 
     virtual void retranslateUi();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
-    WebBrowserWindowWidget *mWebBrowserWidget;
+    WebBrowserWindowWidget *mWebBrowserWindowWidget;
 
     QMenu *mContextMenu;
 
     QLineEdit *mUrlValue;
 
     QString mUrl;
-    int mZoomLevel;
 
     Core::ProgressBarWidget *mProgressBarWidget;
-
-    void setZoomLevel(const int &pZoomLevel);
 
 private slots:
     void on_actionClear_triggered();

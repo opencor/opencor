@@ -100,7 +100,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(toolBarWidget);
 
-    // Create and add the help window widget
+    // Create and add a help window widget
 
     mHelpWindowWidget = new HelpWindowWidget(mHelpEngine, OpencorHelpWindowHomepageUrl, this);
 
@@ -134,7 +134,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionPrint);
 
-    // We want our own context menu for the help window widget (indeed, we don't
+    // We want our own context menu for our help window widget (indeed, we don't
     // want the default one, which has the reload menu item and not the other
     // actions that we have in our tool bar widget)
 
@@ -189,11 +189,11 @@ HelpWindowWindow::~HelpWindowWindow()
 
 void HelpWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate our whole window
 
     mGui->retranslateUi(this);
 
-    // Retranslate the help window widget
+    // Retranslate our help window widget
 
     mHelpWindowWidget->retranslateUi();
 }
@@ -202,7 +202,7 @@ void HelpWindowWindow::retranslateUi()
 
 void HelpWindowWindow::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of the help window widget
+    // Retrieve the settings of our help window widget
 
     pSettings->beginGroup(mHelpWindowWidget->objectName());
         mHelpWindowWidget->loadSettings(pSettings);
@@ -213,7 +213,7 @@ void HelpWindowWindow::loadSettings(QSettings *pSettings)
 
 void HelpWindowWindow::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of the help window widget
+    // Keep track of the settings of our help window widget
 
     pSettings->beginGroup(mHelpWindowWidget->objectName());
         mHelpWindowWidget->saveSettings(pSettings);

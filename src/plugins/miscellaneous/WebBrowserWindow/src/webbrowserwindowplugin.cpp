@@ -100,18 +100,22 @@ void WebBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    Q_UNUSED(pSettings);
+    // Retrieve our Web browser window settings
 
-    // We don't handle this interface...
+    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+        mWebBrowserWindowWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
 
 void WebBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    Q_UNUSED(pSettings);
+    // Keep track of our Web browser window settings
 
-    // We don't handle this interface...
+    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+        mWebBrowserWindowWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
