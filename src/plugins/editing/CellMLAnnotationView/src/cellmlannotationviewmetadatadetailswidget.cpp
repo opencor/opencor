@@ -87,9 +87,9 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, this);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
-    mWebViewer = new WebViewerWidget::WebViewerWidget(this);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, mSplitter);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, mSplitter);
+    mWebViewer = new WebViewerWidget::WebViewerWidget(mSplitter);
 
     mWebViewer->setZoomingEnabled(false);
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
