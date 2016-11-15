@@ -51,14 +51,15 @@ namespace WebBrowserWindow {
 
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::WebBrowserWindowWindow),
-    mUrl(QString())
+    mGui(new Ui::WebBrowserWindowWindow)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
 
-    // Initially, we cannot go backward/forward
+    // Initially, we are cleared and we cannot go backward/forward
+
+    mGui->actionClear->setEnabled(false);
 
     mGui->actionBack->setEnabled(false);
     mGui->actionForward->setEnabled(false);
@@ -168,10 +169,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mWebBrowserWindowWidget, SIGNAL(loadFinished(bool)),
             this, SLOT(loadFinished()));
 
-    // Start with a clear web browser widget
-
-    on_actionClear_triggered();
-
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
@@ -194,7 +191,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mWebBrowserWindowWidget, SIGNAL(clear(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(homePage(const bool &)),
             mGui->actionClear, SLOT(setDisabled(bool)));
 
     connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
@@ -277,17 +274,13 @@ void WebBrowserWindowWindow::updateActions()
 
 //==============================================================================
 
-static const auto AboutBlank = QStringLiteral("about:blank");
-
-//==============================================================================
-
 void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so update our URL value
 
     QString url = pUrl.toString();
 
-    mUrlValue->setText(url.compare(AboutBlank)?url:QString());
+    mUrlValue->setText(url.compare(mWebBrowserWindowWidget->homePage())?url:QString());
 
     updateActions();
 }
@@ -406,15 +399,13 @@ void WebBrowserWindowWindow::on_actionReload_triggered()
 
 void WebBrowserWindowWindow::returnPressed()
 {
-    // Load the URL
-    // Note: we keep track of the URL since, in loadProgress(), the initial
-    //       value of mWebBrowserWindowWidget->url() will be that of the
-    //       previous URL, meaning that we would, in the case of a blank page,
-    //       start showing the progress while we clearly shouldn't be...
+    // Go to our home page (i.e. bank page), if the URL is empty, or load the
+    // URL
 
-    mUrl = mUrlValue->text();
-
-    mWebBrowserWindowWidget->load(mUrl);
+    if (mUrlValue->text().isEmpty())
+        mWebBrowserWindowWidget->goToHomePage();
+    else
+        mWebBrowserWindowWidget->load(mUrlValue->text());
 
     updateActions();
 }
@@ -436,7 +427,7 @@ void WebBrowserWindowWindow::loadProgress(const int &pProgress)
     // Update the value of our progress bar, but only if we are not dealing with
     // a blank page
 
-    if (mUrl.compare(AboutBlank))
+    if (mWebBrowserWindowWidget->url() != mWebBrowserWindowWidget->homePage())
         mProgressBarWidget->setValue(0.01*pProgress);
 }
 
@@ -452,7 +443,7 @@ void WebBrowserWindowWindow::loadFinished()
         ResetDelay = 169
     };
 
-    if (mUrl.compare(AboutBlank))
+    if (mWebBrowserWindowWidget->url() != mWebBrowserWindowWidget->homePage())
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 }
 

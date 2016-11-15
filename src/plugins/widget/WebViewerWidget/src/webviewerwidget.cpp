@@ -85,7 +85,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     Core::CommonWidget(this),
     mResettingCursor(false),
     mLinkToolTip(QString()),
-    mHomePage(QString()),
+    mHomePage("about:blank"),
     mZoomingEnabled(true),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
                      // first call to setZoomLevel
@@ -100,16 +100,19 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    // Set our initial zoom level to the default value
-    // Note: to set mZoomLevel directly is not good enough since one of the
-    //       things setZoomLevel does is to set our zoom factor...
-
-    setZoomLevel(DefaultZoomLevel);
-
     // Some connections
 
     connect(this, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
+
+    // Go to our (blank) home page and set our initial zoom level to its default
+    // value
+    // Note: to set mZoomLevel directly is not good enough since one of the
+    //       things setZoomLevel does is to set our zoom factor...
+
+    goToHomePage();
+
+    setZoomLevel(DefaultZoomLevel);
 }
 
 //==============================================================================
