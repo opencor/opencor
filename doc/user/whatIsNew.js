@@ -13,6 +13,15 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Selection of data." }
                          ]
                        },
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "Fixed", "description": "Saving of a new file." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Miscellaneous",
                          "entries": [
                            { "type": "Added", "description": "Web Browser window." }
