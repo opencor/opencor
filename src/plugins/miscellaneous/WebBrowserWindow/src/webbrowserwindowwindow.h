@@ -82,6 +82,8 @@ private:
 
     QLineEdit *mUrlValue;
 
+    QString mUrl;
+
     Core::ProgressBarWidget *mProgressBarWidget;
 
 private slots:

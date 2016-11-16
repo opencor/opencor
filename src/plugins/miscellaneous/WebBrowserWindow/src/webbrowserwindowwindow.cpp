@@ -41,6 +41,7 @@ limitations under the License.
 #include <QPrinterInfo>
 #include <QSettings>
 #include <QTimer>
+#include <QWebHistory>
 
 //==============================================================================
 
@@ -51,7 +52,8 @@ namespace WebBrowserWindow {
 
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::WebBrowserWindowWindow)
+    mGui(new Ui::WebBrowserWindowWindow),
+    mUrl(QString())
 {
     // Set up the GUI
 
@@ -275,6 +277,8 @@ void WebBrowserWindowWindow::on_actionClear_triggered()
 {
     // Clear the contents of our Web browser window widget
 
+    mUrl = mWebBrowserWindowWidget->homePage();
+
     mWebBrowserWindowWidget->clear();
 }
 
@@ -284,6 +288,8 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 {
     // Go to the previous page
 
+    mUrl = mWebBrowserWindowWidget->history()->backItem().url().toString();
+
     mWebBrowserWindowWidget->back();
 }
 
@@ -292,6 +298,8 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 void WebBrowserWindowWindow::on_actionForward_triggered()
 {
     // Go to the next page
+
+    mUrl = mWebBrowserWindowWidget->history()->forwardItem().url().toString();
 
     mWebBrowserWindowWidget->forward();
 }
@@ -368,13 +376,19 @@ void WebBrowserWindowWindow::on_actionReload_triggered()
 
 void WebBrowserWindowWindow::returnPressed()
 {
-    // Go to our home page (i.e. bank page), if the URL is empty, or load the
+    // Go to our home page (i.e. blank page), if the URL is empty, or load the
     // URL
+    // Note: we keep track of the URL since, in loadProgress(), the initial
+    //       value of mWebBrowserWindowWidget->url() will be that of the
+    //       previous URL, meaning that we would, in the case of our home page,
+    //       start showing the progress while we clearly shouldn't be...
 
     if (mUrlValue->text().isEmpty())
-        mWebBrowserWindowWidget->goToHomePage();
+        mUrl = mWebBrowserWindowWidget->homePage();
     else
-        mWebBrowserWindowWidget->setUrl(mUrlValue->text());
+        mUrl = mUrlValue->text();
+
+    mWebBrowserWindowWidget->setUrl(mUrl);
 }
 
 //==============================================================================
@@ -394,7 +408,7 @@ void WebBrowserWindowWindow::loadProgress(const int &pProgress)
     // Update the value of our progress bar, but only if we are not dealing with
     // a blank page
 
-    if (mWebBrowserWindowWidget->url() != mWebBrowserWindowWidget->homePage())
+    if (mUrl.compare(mWebBrowserWindowWidget->homePage()))
         mProgressBarWidget->setValue(0.01*pProgress);
 }
 
@@ -410,7 +424,7 @@ void WebBrowserWindowWindow::loadFinished()
         ResetDelay = 169
     };
 
-    if (mWebBrowserWindowWidget->url() != mWebBrowserWindowWidget->homePage())
+    if (mUrl.compare(mWebBrowserWindowWidget->homePage()))
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 }
 
