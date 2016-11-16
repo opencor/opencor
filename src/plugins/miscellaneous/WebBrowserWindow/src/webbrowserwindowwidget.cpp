@@ -36,6 +36,9 @@ namespace WebBrowserWindow {
 WebBrowserWindowWidget::WebBrowserWindowWidget(QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent)
 {
+    // Go to our home page
+
+    goToHomePage();
 }
 
 //==============================================================================

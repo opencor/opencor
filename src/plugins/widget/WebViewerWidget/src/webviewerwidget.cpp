@@ -152,12 +152,9 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     connect(page(), SIGNAL(selectionChanged()),
             this, SLOT(selectionChanged()));
 
-    // Go to our (blank) home page and set our initial zoom level to its default
-    // value
+    // Set our initial zoom level to its default value
     // Note: to set mZoomLevel directly is not good enough since one of the
     //       things setZoomLevel does is to set our zoom factor...
-
-    goToHomePage();
 
     setZoomLevel(DefaultZoomLevel);
 }
