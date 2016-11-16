@@ -83,7 +83,7 @@ private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
     PMRSupport::PmrWebService *mPmrWebService;
-    PmrWorkspacesWindowWidget *mWorkspacesWindowWidget;
+    PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;
 
     bool mAuthenticated;
 

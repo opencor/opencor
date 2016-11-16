@@ -60,8 +60,7 @@ typedef QList<StringPair> StringPairs;
 
 //==============================================================================
 
-class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget,
-                                  public Core::CommonWidget
+class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget
 {
     Q_OBJECT
 

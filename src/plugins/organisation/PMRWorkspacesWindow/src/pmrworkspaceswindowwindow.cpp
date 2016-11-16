@@ -93,13 +93,15 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Create and add the workspaces widget
 
-    mWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrWebService, this);
+    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrWebService, this);
+
+    mPmrWorkspacesWindowWidget->setObjectName("PmrWorkspacesWindowWidget");
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->layout->addWidget(new Core::BorderedWidget(mWorkspacesWindowWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWorkspacesWindowWidget,
                                                      true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(new Core::BorderedWidget(mWorkspacesWindowWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWorkspacesWindowWidget,
                                                      true, false, false, false));
 #else
     #error Unsupported platform
@@ -137,15 +139,15 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
             this, SLOT(updateGui()));
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
-            mWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &)));
+            mPmrWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &)));
 
     // Connections to process requests from our widget
 
-    connect(mWorkspacesWindowWidget, SIGNAL(information(const QString &)),
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
-    connect(mWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
-    connect(mWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
     // Retranslate the GUI
@@ -174,7 +176,7 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
     // Retranslate the workspaces widget
 
-    mWorkspacesWindowWidget->retranslateUi();
+    mPmrWorkspacesWindowWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -187,7 +189,7 @@ void PmrWorkspacesWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
     // Resize our busy widget
 
-    mWorkspacesWindowWidget->resizeBusyWidget();
+    mPmrWorkspacesWindowWidget->resizeBusyWidget();
 }
 
 //==============================================================================
@@ -196,8 +198,8 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the workspaces widget
 
-    pSettings->beginGroup(mWorkspacesWindowWidget->objectName());
-        mWorkspacesWindowWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+        mPmrWorkspacesWindowWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -207,8 +209,8 @@ void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the workspaces widget
 
-    pSettings->beginGroup(mWorkspacesWindowWidget->objectName());
-        mWorkspacesWindowWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+        mPmrWorkspacesWindowWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -223,13 +225,13 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mWorkspacesWindowWidget->showBusyWidget();
+        mPmrWorkspacesWindowWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side
 
-        mWorkspacesWindowWidget->hideBusyWidget();
+        mPmrWorkspacesWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
     }
@@ -298,9 +300,9 @@ void PmrWorkspacesWindowWindow::updateGui()
     retranslateActionPmr();
 
     if (mAuthenticated)
-        mWorkspacesWindowWidget->refreshWorkspaces();
+        mPmrWorkspacesWindowWidget->refreshWorkspaces();
     else
-        mWorkspacesWindowWidget->clearWorkspaces();
+        mPmrWorkspacesWindowWidget->clearWorkspaces();
 }
 
 //==============================================================================
@@ -359,7 +361,7 @@ void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 {
     // Ask the workspaces widget to refresh itself
 
-    mWorkspacesWindowWidget->refreshWorkspaces();
+    mPmrWorkspacesWindowWidget->refreshWorkspaces();
 }
 
 //==============================================================================
@@ -403,15 +405,15 @@ void PmrWorkspacesWindowWindow::fileDuplicated(const QString &pFileName)
 
 void PmrWorkspacesWindowWindow::fileReloaded(const QString &pFileName)
 {
-    mWorkspacesWindowWidget->refreshWorkspaceFile(pFileName);
+    mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pFileName);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWindow::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
 {
-    mWorkspacesWindowWidget->refreshWorkspaceFile(pOldFileName);
-    mWorkspacesWindowWidget->refreshWorkspaceFile(pNewFileName);
+    mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pOldFileName);
+    mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pNewFileName);
 }
 
 //==============================================================================

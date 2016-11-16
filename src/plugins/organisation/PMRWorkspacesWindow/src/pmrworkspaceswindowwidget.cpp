@@ -93,7 +93,6 @@ static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(this),
     mPmrWebService(pPmrWebService),
     mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),

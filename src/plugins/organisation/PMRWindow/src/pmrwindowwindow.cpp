@@ -236,8 +236,8 @@ void PmrWindowWindow::pmrError(const QString &pErrorMessage,
 {
     // Tell our PMR widget we have a problem
 
-    mPmrWidget->initialize(PMRSupport::PmrExposures(), QString(),
-                           pInternetConnectionAvailable);
+    mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(),
+                                 pInternetConnectionAvailable);
 
     showError(pErrorMessage);
 }
