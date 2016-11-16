@@ -268,7 +268,8 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
     // Ask our PMR widget to initialise itself
 
     mPmrWindowWidget->initialize(pExposures, pErrorMessage,
-                           mFilterValue->text(), pInternetConnectionAvailable);
+                                 mFilterValue->text(),
+                                 pInternetConnectionAvailable);
 }
 
 //==============================================================================
