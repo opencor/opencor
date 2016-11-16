@@ -120,7 +120,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mWebBrowserWindowWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,
                                                      true, true, true, true));
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,
