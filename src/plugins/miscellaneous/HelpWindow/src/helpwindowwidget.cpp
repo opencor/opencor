@@ -245,36 +245,6 @@ QSize HelpWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
-{
-    // Handle some special mouse buttons for navigating the help
-
-    if (pEvent->button() == Qt::XButton1) {
-        // Special mouse button #1 which is used to go to the previous help
-        // document
-
-        triggerPageAction(QWebPage::Back);
-
-        // Accept the event
-
-        pEvent->accept();
-    } else if (pEvent->button() == Qt::XButton2) {
-        // Special mouse button #2 which is used to go to the next help document
-
-        triggerPageAction(QWebPage::Forward);
-
-        // Accept the event
-
-        pEvent->accept();
-    } else {
-        // Something else, so use the default handling of the event
-
-        WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
-    }
-}
-
-//==============================================================================
-
 }   // namespace HelpWindow
 }   // namespace OpenCOR
 

@@ -99,8 +99,6 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-
 private:
     QHelpEngine *mHelpEngine;
 
