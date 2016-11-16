@@ -374,7 +374,7 @@ void WebBrowserWindowWindow::on_actionInspect_triggered()
 {
     // Inspect the current page
 
-    mWebBrowserWindowWidget->pageAction(QWebPage::InspectElement)->trigger();
+    mWebBrowserWindowWidget->triggerPageAction(QWebPage::InspectElement);
 }
 
 //==============================================================================
