@@ -346,6 +346,8 @@ void CorePlugin::initializePlugin()
 
     mCentralWidget = new CentralWidget(Core::mainWindow());
 
+    mCentralWidget->setObjectName("CentralWidget");
+
     // Create our different File actions
 
     mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),

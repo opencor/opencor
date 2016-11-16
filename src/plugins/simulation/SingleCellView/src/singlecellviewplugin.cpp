@@ -171,6 +171,8 @@ void SingleCellViewPlugin::initializePlugin()
 
     mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
+    mViewWidget->setObjectName("SingleCellViewWidget");
+
     // Hide our single cell view widget since it may not initially be shown in
     // our central widget
 

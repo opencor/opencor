@@ -99,13 +99,13 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create and add the PMR widget
 
-    mPmrWidget = new PmrWindowWidget(this);
+    mPmrWindowWidget = new PmrWindowWidget(this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mPmrWidget,
                                                      true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWindowWidget,
                                                      true, false, false, false));
 #else
     #error Unsupported platform
@@ -138,16 +138,16 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             this, SLOT(gotExposures(const PMRSupport::PmrExposures &)));
 
     connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
-            mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
+            mPmrWindowWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
 
     // Some connections to know what our PMR widget wants from us
 
-    connect(mPmrWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
+    connect(mPmrWindowWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
             mPmrWebService, SLOT(requestExposureWorkspaceClone(const QString &)));
-    connect(mPmrWidget, SIGNAL(exposureFilesRequested(const QString &)),
+    connect(mPmrWindowWidget, SIGNAL(exposureFilesRequested(const QString &)),
             mPmrWebService, SLOT(requestExposureFiles(const QString &)));
 
-    connect(mPmrWidget, SIGNAL(openExposureFileRequested(const QString &)),
+    connect(mPmrWindowWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
 
     // Some further initialisations that are done as part of retranslating the
@@ -177,7 +177,7 @@ void PmrWindowWindow::retranslateUi()
 
     // Retranslate our PMR widget
 
-    mPmrWidget->retranslateUi();
+    mPmrWindowWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -190,7 +190,7 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
     // Resize our busy widget
 
-    mPmrWidget->resizeBusyWidget();
+    mPmrWindowWidget->resizeBusyWidget();
 }
 
 //==============================================================================
@@ -200,7 +200,7 @@ void PmrWindowWindow::filterValueChanged(const QString &pText)
     // Ask our PMR widget to filter its output using the given regular
     // expression
 
-    mPmrWidget->filter(pText);
+    mPmrWindowWidget->filter(pText);
 }
 
 //==============================================================================
@@ -214,14 +214,14 @@ void PmrWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWidget->showBusyWidget();
+        mPmrWindowWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
         // to mFilterValue, but only if the current window already has the focus
 
-        mPmrWidget->hideBusyWidget();
+        mPmrWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
@@ -284,7 +284,7 @@ void PmrWindowWindow::gotExposures(const PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWidget->initialize(pExposures, mFilterValue->text(), true);
+    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), true);
 }
 
 //==============================================================================

@@ -64,7 +64,7 @@ public:
 private:
     Ui::FileBrowserWindowWindow *mGui;
 
-    FileBrowserWindowWidget *mFileBrowserWidget;
+    FileBrowserWindowWidget *mFileBrowserWindowWidget;
 
     QMenu *mContextMenu;
 

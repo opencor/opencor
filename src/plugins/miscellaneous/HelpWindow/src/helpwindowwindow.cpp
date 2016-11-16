@@ -37,7 +37,6 @@ limitations under the License.
 //==============================================================================
 
 #include <QClipboard>
-#include <QDir>
 #include <QHelpEngine>
 #include <QMenu>
 #include <QPoint>
@@ -53,10 +52,6 @@ namespace HelpWindow {
 
 //==============================================================================
 
-static const auto OpencorHelpWindowHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
-
-//==============================================================================
-
 HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     WindowWidget(pParent),
     mGui(new Ui::HelpWindowWindow)
@@ -64,21 +59,6 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Extract the help files
-
-    QString applicationBaseFileName =  QDir::tempPath()+QDir::separator()
-                                      +QFileInfo(qApp->applicationFilePath()).baseName();
-
-    mQchFileName = applicationBaseFileName+".qch";
-    mQhcFileName = applicationBaseFileName+".qhc";
-
-    Core::writeResourceToFile(mQchFileName, ":HelpWindow_qchFile");
-    Core::writeResourceToFile(mQhcFileName, ":HelpWindow_qhcFile");
-
-    // Set up the help engine
-
-    mHelpEngine = new QHelpEngine(mQhcFileName);
 
     // Create a tool bar widget with different buttons
 
@@ -100,9 +80,9 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(toolBarWidget);
 
-    // Create and add the help window widget
+    // Create and add a help window widget
 
-    mHelpWindowWidget = new HelpWindowWidget(mHelpEngine, OpencorHelpWindowHomepageUrl, this);
+    mHelpWindowWidget = new HelpWindowWidget(this);
 
     mHelpWindowWidget->setObjectName("HelpWindowWidget");
 
@@ -134,7 +114,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionPrint);
 
-    // We want our own context menu for the help window widget (indeed, we don't
+    // We want our own context menu for our help window widget (indeed, we don't
     // want the default one, which has the reload menu item and not the other
     // actions that we have in our tool bar widget)
 
@@ -145,17 +125,17 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mHelpWindowWidget, SIGNAL(notHomePage(const bool &)),
-            mGui->actionHome, SLOT(setEnabled(bool)));
+    connect(mHelpWindowWidget, SIGNAL(homePage(const bool &)),
+            mGui->actionHome, SLOT(setDisabled(bool)));
 
     connect(mHelpWindowWidget, SIGNAL(backEnabled(const bool &)),
             mGui->actionBack, SLOT(setEnabled(bool)));
     connect(mHelpWindowWidget, SIGNAL(forwardEnabled(const bool &)),
             mGui->actionForward, SLOT(setEnabled(bool)));
 
-    connect(mHelpWindowWidget, SIGNAL(notDefaultZoomLevel(const bool &)),
-            mGui->actionNormalSize, SLOT(setEnabled(bool)));
-    connect(mHelpWindowWidget, SIGNAL(zoomOutEnabled(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
+            mGui->actionNormalSize, SLOT(setDisabled(bool)));
+    connect(mHelpWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
             mGui->actionZoomOut, SLOT(setEnabled(bool)));
 
     connect(mHelpWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
@@ -171,15 +151,6 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
 HelpWindowWindow::~HelpWindowWindow()
 {
-    // Delete some internal objects
-
-    delete mHelpEngine;
-
-    // Delete the help files
-
-    QFile(mQchFileName).remove();
-    QFile(mQhcFileName).remove();
-
     // Delete the GUI
 
     delete mGui;
@@ -189,11 +160,11 @@ HelpWindowWindow::~HelpWindowWindow()
 
 void HelpWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate our whole window
 
     mGui->retranslateUi(this);
 
-    // Retranslate the help window widget
+    // Retranslate our help window widget
 
     mHelpWindowWidget->retranslateUi();
 }
@@ -202,7 +173,7 @@ void HelpWindowWindow::retranslateUi()
 
 void HelpWindowWindow::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of the help window widget
+    // Retrieve the settings of our help window widget
 
     pSettings->beginGroup(mHelpWindowWidget->objectName());
         mHelpWindowWidget->loadSettings(pSettings);
@@ -213,7 +184,7 @@ void HelpWindowWindow::loadSettings(QSettings *pSettings)
 
 void HelpWindowWindow::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of the help window widget
+    // Keep track of the settings of our help window widget
 
     pSettings->beginGroup(mHelpWindowWidget->objectName());
         mHelpWindowWidget->saveSettings(pSettings);

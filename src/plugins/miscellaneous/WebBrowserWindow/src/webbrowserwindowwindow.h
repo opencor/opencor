@@ -49,13 +49,11 @@ namespace Core {
 
 //==============================================================================
 
-namespace WebViewerWidget {
-    class WebViewerWidget;
-}   // namespace WebViewerWidget
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-namespace WebBrowserWindow {
+class WebBrowserWindowWidget;
 
 //==============================================================================
 
@@ -68,24 +66,25 @@ public:
     ~WebBrowserWindowWindow();
 
     virtual void retranslateUi();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
-    WebViewerWidget::WebViewerWidget *mWebBrowserWidget;
+    WebBrowserWindowWidget *mWebBrowserWindowWidget;
 
     QMenu *mContextMenu;
 
     QLineEdit *mUrlValue;
 
     QString mUrl;
-    int mZoomLevel;
 
     Core::ProgressBarWidget *mProgressBarWidget;
-
-    void setZoomLevel(const int &pZoomLevel);
 
 private slots:
     void on_actionClear_triggered();
@@ -101,9 +100,7 @@ private slots:
 
     void returnPressed();
 
-    void updateActions();
     void urlChanged(const QUrl &pUrl);
-    void documentChanged();
     void showCustomContextMenu() const;
     void loadProgress(const int &pProgress);
     void loadFinished();

@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "webviewerwidgetglobal.h"
 
 //==============================================================================
@@ -38,24 +39,90 @@ namespace WebViewerWidget {
 
 //==============================================================================
 
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView
+class WebViewerWidget;
+
+//==============================================================================
+
+class WebViewerPage : public QWebPage
+{
+public:
+    explicit WebViewerPage(WebViewerWidget *pParent);
+
+protected:
+    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
+                                         const QNetworkRequest &pRequest,
+                                         QWebPage::NavigationType pType);
+
+private:
+    WebViewerWidget *mOwner;
+};
+
+//==============================================================================
+
+class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView,
+                                               public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit WebViewerWidget(QWidget *pParent);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
     void setLinkToolTip(const QString &pLinkToolTip);
 
+    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
+
+    void setHomePage(const QString &pHomePage);
+    QString homePage() const;
+
+    void goToHomePage();
+
+    void resetZoom();
+
+    void zoomIn();
+    void zoomOut();
+
+    void setZoomingEnabled(const bool &pZoomingEnabled);
+
 protected:
     virtual bool event(QEvent *pEvent);
+    virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
     bool mResettingCursor;
 
     QString mLinkToolTip;
+
+    QString mHomePage;
+
+    bool mZoomingEnabled;
+    int mZoomLevel;
+
+    void emitZoomRelatedSignals();
+
+    void setZoomLevel(const int &pZoomLevel);
+
+signals:
+    void homePage(const bool &pHomePage);
+
+    void backEnabled(const bool &pEnabled);
+    void forwardEnabled(const bool &pEnabled);
+
+    void copyTextEnabled(const bool &pEnabled);
+
+    void defaultZoomLevel(const bool &pDefault);
+    void zoomingOutEnabled(const bool &pEnabled);
+
+private slots:
+    void urlChanged(const QUrl &pUrl);
+
+    void selectionChanged();
+
+    void pageChanged();
 };
 
 //==============================================================================

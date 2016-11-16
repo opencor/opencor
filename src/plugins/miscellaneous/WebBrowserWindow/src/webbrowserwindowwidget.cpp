@@ -17,33 +17,54 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Web Viewer widget plugin
+// Web browser window widget
 //==============================================================================
 
-#include "webviewerwidgetplugin.h"
+#include "webbrowserwindowwidget.h"
+
+//==============================================================================
+
+#include <QWebHistory>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace WebViewerWidget {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC WebViewerWidgetPluginInfo()
+WebBrowserWindowWidget::WebBrowserWindowWidget(QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent)
 {
-    Descriptions descriptions;
+    // Go to our home page
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to visualise Web documents."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
-
-    return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Core",
-                          descriptions);
+    goToHomePage();
 }
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
+bool WebBrowserWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
+{
+    // We support all URL schemes, but the OpenCOR one (opencor://...), which we
+    // want to be handled (i.e. opened) the default way
+
+    return pUrlScheme.compare("opencor");
+}
+
+//==============================================================================
+
+void WebBrowserWindowWidget::clear()
+{
+    // Go to our home page and clear our history
+
+    goToHomePage();
+
+    history()->clear();
+}
+
+//==============================================================================
+
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

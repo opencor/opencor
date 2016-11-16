@@ -31,6 +31,7 @@ limitations under the License.
 
 #include <QAction>
 #include <QDesktopServices>
+#include <QDir>
 #include <QHelpEngine>
 #include <QIODevice>
 #include <QMouseEvent>
@@ -144,82 +145,47 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
 
 //==============================================================================
 
-HelpWindowPage::HelpWindowPage(QObject *pParent) :
-    QWebPage(pParent)
+HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent)
 {
-}
+    // Extract the help files
 
-//==============================================================================
+    QString applicationBaseFileName =  QDir::tempPath()+QDir::separator()
+                                      +QFileInfo(qApp->applicationFilePath()).baseName();
 
-bool HelpWindowPage::acceptNavigationRequest(QWebFrame *pFrame,
-                                             const QNetworkRequest &pRequest,
-                                             QWebPage::NavigationType pType)
-{
-    Q_UNUSED(pFrame);
-    Q_UNUSED(pType);
+    mQchFileName = applicationBaseFileName+".qch";
+    mQhcFileName = applicationBaseFileName+".qhc";
 
-    // Determine whether the URL refers to an OpenCOR document (qthelp://...) or
-    // an external resource of sorts (e.g. http[s]://... and opencor://...), and
-    // if it is the latter then just open the URL the default way
+    Core::writeResourceToFile(mQchFileName, ":HelpWindow_qchFile");
+    Core::writeResourceToFile(mQhcFileName, ":HelpWindow_qhcFile");
 
-    QUrl url = pRequest.url();
-    QString urlScheme = url.scheme();
+    // Set up the help engine
 
-    if (!urlScheme.compare("qthelp")) {
-        return true;
-    } else {
-        QDesktopServices::openUrl(url);
+    mHelpEngine = new QHelpEngine(mQhcFileName);
 
-        return false;
-    }
-}
+    // Use our own help network access manager classes
 
-//==============================================================================
+    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
 
-enum {
-    MinimumZoomLevel =  1,
-    DefaultZoomLevel = 10
-};
+    // Set and go to our home page
 
-//==============================================================================
-
-HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
-                                   const QUrl &pHomePage, QWidget *pParent) :
-    WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(this),
-    mHelpEngine(pHelpEngine),
-    mHomePage(pHomePage),
-    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
-                     // first call to setZoomLevel
-{
-    // Use our own help page and help network access manager classes
-
-    setPage(new HelpWindowPage(this));
-
-    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
-
-    // Set our initial zoom level to the default value
-    // Note: to set mZoomLevel directly is not good enough since one of the
-    //       things setZoomLevel does is to set our zoom factor...
-
-    setZoomLevel(DefaultZoomLevel);
-
-    // Some connections
-
-    connect(this, SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(urlChanged(const QUrl &)));
-
-    connect(page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
-
-    connect(pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-    connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-
-    // Go to the home page
+    setHomePage("qthelp://opencor/doc/user/index.html");
 
     goToHomePage();
+}
+
+//==============================================================================
+
+HelpWindowWidget::~HelpWindowWidget()
+{
+    // Delete some internal objects
+
+    delete mHelpEngine;
+
+    // Delete the help files
+
+    QFile(mQchFileName).remove();
+    QFile(mQhcFileName).remove();
 }
 
 //==============================================================================
@@ -228,8 +194,12 @@ void HelpWindowWidget::retranslateUi()
 {
     // Retranslate the current document, but only if it is an error document
     // since a valid document is hard-coded and therefore cannot be translated
-    // Note: we use setUrl() rather than reload() since the latter won't work
-    //       upon starting OpenCOR with a non-system locale...
+    // Note: we use setUrl() rather than reload() since it ensures that the URL
+    //       will be loaded straightaway while otherwise, upon starting OpenCOR,
+    //       we will see the non CSS-styled version of the page (which will
+    //       always be in English, no matter which locale is selected) for a
+    //       split second before seeing the CSS-styled one (which can be either
+    //       in English or in another locale)...
 
     if (!mHelpEngine->findFile(url()).isValid())
         setUrl(url());
@@ -237,104 +207,29 @@ void HelpWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
-
-//==============================================================================
-
 void HelpWindowWidget::loadSettings(QSettings *pSettings)
 {
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
+    // Default handling of the event
 
-    emit notHomePage(false);
-
-    emit backEnabled(false);
-    emit forwardEnabled(false);
-
-    emit copyTextEnabled(false);
-
-    emitZoomRelatedSignals();
-
-    // Retrieve the zoom level
-
-    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
+    WebViewerWidget::WebViewerWidget::loadSettings(pSettings);
 }
 
 //==============================================================================
 
 void HelpWindowWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the text size multiplier
+    // Default handling of the event
 
-    pSettings->setValue(SettingsZoomLevel, mZoomLevel);
+    WebViewerWidget::WebViewerWidget::saveSettings(pSettings);
 }
 
 //==============================================================================
 
-void HelpWindowWidget::goToHomePage()
+bool HelpWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
-    // Go to the home page
-    // Note: we use setUrl() rather than load() since the former will ensure
-    //       that url() becomes valid straightaway (which is important for
-    //       retranslateUi()) and that the document gets loaded immediately...
+    // We only support URLs that refer to an OpenCOR document (qthelp://...)
 
-    setUrl(mHomePage);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::resetZoom()
-{
-    // Reset the zoom level
-
-    setZoomLevel(DefaultZoomLevel);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::zoomIn()
-{
-    // Zoom in the help document contents
-
-    setZoomLevel(mZoomLevel+1);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::zoomOut()
-{
-    // Zoom out the help document contents
-
-    setZoomLevel(qMax(int(MinimumZoomLevel), mZoomLevel-1));
-}
-
-//==============================================================================
-
-void HelpWindowWidget::emitZoomRelatedSignals()
-{
-    // Let the user know whether we are not at the default zoom level and
-    // whether we can still zoom out
-
-    emit notDefaultZoomLevel(mZoomLevel != DefaultZoomLevel);
-    emit zoomOutEnabled(mZoomLevel != MinimumZoomLevel);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::setZoomLevel(const int &pZoomLevel)
-{
-    if (pZoomLevel == mZoomLevel)
-        return;
-
-    // Set the zoom level of the help document contents to a particular value
-
-    mZoomLevel = pZoomLevel;
-
-    setZoomFactor(0.1*mZoomLevel);
-
-    // Emit a few zoom-related signals
-
-    emitZoomRelatedSignals();
+    return !pUrlScheme.compare("qthelp");
 }
 
 //==============================================================================
@@ -346,94 +241,6 @@ QSize HelpWindowWidget::sizeHint() const
     //       it, to have a decent size when docked to the main window...
 
     return defaultSize(0.2);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
-{
-    // Handle some special mouse buttons for navigating the help
-
-    if (pEvent->button() == Qt::XButton1) {
-        // Special mouse button #1 which is used to go to the previous help
-        // document
-
-        triggerPageAction(QWebPage::Back);
-
-        // Accept the event
-
-        pEvent->accept();
-    } else if (pEvent->button() == Qt::XButton2) {
-        // Special mouse button #2 which is used to go to the next help document
-
-        triggerPageAction(QWebPage::Forward);
-
-        // Accept the event
-
-        pEvent->accept();
-    } else {
-        // Something else, so use the default handling of the event
-
-        WebViewerWidget::WebViewerWidget::mouseReleaseEvent(pEvent);
-    }
-}
-
-//==============================================================================
-
-void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
-{
-    // Handle the wheel mouse button for zooming in/out the help document
-    // contents
-
-    if (pEvent->modifiers() == Qt::ControlModifier) {
-        int delta = pEvent->delta();
-
-        if (delta > 0)
-            zoomIn();
-        else if (delta < 0)
-            zoomOut();
-
-        pEvent->accept();
-    } else {
-        // Not the modifier we were expecting, so call the default handling of
-        // the event
-
-        WebViewerWidget::WebViewerWidget::wheelEvent(pEvent);
-    }
-}
-
-//==============================================================================
-
-void HelpWindowWidget::urlChanged(const QUrl &pUrl)
-{
-    // The URL has changed, so let the user know whether it's the home page
-
-    emit notHomePage(pUrl != mHomePage);
-}
-
-//==============================================================================
-
-void HelpWindowWidget::selectionChanged()
-{
-    // The text selection has changed, so let the user know whether some text is
-    // now selected
-
-    emit copyTextEnabled(!selectedText().isEmpty());
-}
-
-//==============================================================================
-
-void HelpWindowWidget::documentChanged()
-{
-    // A new help document has been selected, resulting in the previous or next
-    // help document becoming either available or not
-
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action == pageAction(QWebPage::Back))
-        emit backEnabled(action->isEnabled());
-    else if (action == pageAction(QWebPage::Forward))
-        emit forwardEnabled(action->isEnabled());
 }
 
 //==============================================================================
