@@ -17,39 +17,37 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Web browser window widget
 //==============================================================================
 
-#include "toolbarwidget.h"
+#pragma once
+
+//==============================================================================
+
+#include "webviewerwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-ToolBarWidget::ToolBarWidget(QWidget *pParent) :
-    QToolBar(pParent)
+class WebBrowserWindowWidget : public WebViewerWidget::WebViewerWidget
 {
-    // Remove the border which is normally drawn for a tool bar widget (indeed,
-    // it doesn't look great when on a docked window) and make sure that we have
-    // a spacing of 4 pixels (indeed, on Windows/Linux, the layout has no
-    // spacing, which doesn't look great in some cases)
+    Q_OBJECT
 
-    setStyleSheet("QToolBar {"
-                  "    border: none;"
-                  "    spacing: 4px;"
-                  "}");
+public:
+    explicit WebBrowserWindowWidget(QWidget *pParent);
 
-    // Force the size of the icons to be 20 by 20 pixels
+    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
-    setIconSize(QSize(20, 20));
-}
+    void clear();
+};
 
 //==============================================================================
 
-}   // namespace Core
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

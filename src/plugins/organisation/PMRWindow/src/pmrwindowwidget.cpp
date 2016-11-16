@@ -44,7 +44,6 @@ namespace PMRWindow {
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(this),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
@@ -65,6 +64,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(copy()));
 
     mContextMenu->addAction(mCopyAction);
+
+    // Prevent zooming in/out
+
+    setZoomingEnabled(false);
 
     // We want our own context menu
 

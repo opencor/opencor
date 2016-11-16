@@ -24,8 +24,8 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "progressbarwidget.h"
 #include "toolbarwidget.h"
+#include "webbrowserwindowwidget.h"
 #include "webbrowserwindowwindow.h"
-#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -39,6 +39,7 @@ limitations under the License.
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPrinterInfo>
+#include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
 
@@ -49,42 +50,24 @@ namespace WebBrowserWindow {
 
 //==============================================================================
 
-enum {
-    MinimumZoomLevel =  1,
-    DefaultZoomLevel = 10
-};
-
-//==============================================================================
-
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
     mGui(new Ui::WebBrowserWindowWindow),
-    mUrl(QString()),
-    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
-                     // first call to setZoomLevel
+    mUrl(QString())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
 
-    // Initially, we cannot go backward/forward
-
-    mGui->actionBack->setEnabled(false);
-    mGui->actionForward->setEnabled(false);
-
     // Create a tool bar widget with a URL value and refresh button
-    // Note: the spacers are a little trick to improve the rendering of our tool
+    // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
 
     Core::ToolBarWidget *topToolBarWidget = new Core::ToolBarWidget(this);
-    QWidget *spacer1 = new QWidget(topToolBarWidget);
-    QWidget *spacer2 = new QWidget(topToolBarWidget);
+    QWidget *spacer = new QWidget(topToolBarWidget);
 
-    spacer1->setMinimumSize(0, 0);
-    spacer1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-
-    spacer2->setMinimumSize(0, 0);
-    spacer2->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    spacer->setMinimumSize(0, 0);
+    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mUrlValue = new QLineEdit(topToolBarWidget);
 
@@ -97,10 +80,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mUrlValue, SIGNAL(returnPressed()),
             this, SLOT(returnPressed()));
 
-    topToolBarWidget->addWidget(spacer1);
+    topToolBarWidget->addWidget(spacer);
     topToolBarWidget->addWidget(mUrlValue);
     topToolBarWidget->addAction(mGui->actionReload);
-    topToolBarWidget->addWidget(spacer2);
 
     mGui->layout->addWidget(topToolBarWidget);
 
@@ -129,19 +111,19 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(bottomToolBarWidget);
 
-    // Create and add the web browser widget
+    // Create and add a web browser window widget
 
-    mWebBrowserWidget = new WebViewerWidget::WebViewerWidget(this);
+    mWebBrowserWindowWidget = new WebBrowserWindowWidget(this);
 
-    mWebBrowserWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+    mWebBrowserWindowWidget->setObjectName("WebBrowserWindowWidget");
 
-    setZoomLevel(DefaultZoomLevel);
+    mWebBrowserWindowWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
                                                      true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,
                                                      true, false, false, false));
 #else
     #error Unsupported platform
@@ -166,27 +148,15 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(progressBarBorderedWidget);
 
-    // Various connections to handle our web browser widget
+    // Various connections to handle our web browser window widget
 
-    connect(mWebBrowserWidget, SIGNAL(urlChanged(const QUrl &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
 
-    connect(mWebBrowserWidget->pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-    connect(mWebBrowserWidget->pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(documentChanged()));
-
-    connect(mWebBrowserWidget->page(), SIGNAL(selectionChanged()),
-            this, SLOT(updateActions()));
-
-    connect(mWebBrowserWidget, SIGNAL(loadProgress(int)),
+    connect(mWebBrowserWindowWidget, SIGNAL(loadProgress(int)),
             this, SLOT(loadProgress(const int &)));
-    connect(mWebBrowserWidget, SIGNAL(loadFinished(bool)),
+    connect(mWebBrowserWindowWidget, SIGNAL(loadFinished(bool)),
             this, SLOT(loadFinished()));
-
-    // Start with a clear web browser widget
-
-    on_actionClear_triggered();
 
     // Create and populate our context menu
 
@@ -208,14 +178,32 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionInspect);
 
-    // We want our own context menu for the help window widget (indeed, we don't
-    // want the default one, which has the reload menu item and not the other
-    // actions that we have in our tool bar widget)
+    // We want our own context menu for our Web browser window widget (indeed,
+    // we don't want the default one, which has the reload menu item and not the
+    // other actions that we have in our tool bar widget)
 
-    mWebBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWebBrowserWindowWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWebBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
+
+    // Some connections to update the enabled state of our various actions
+
+    connect(mWebBrowserWindowWidget, SIGNAL(homePage(const bool &)),
+            mGui->actionClear, SLOT(setDisabled(bool)));
+
+    connect(mWebBrowserWindowWidget, SIGNAL(backEnabled(const bool &)),
+            mGui->actionBack, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, SIGNAL(forwardEnabled(const bool &)),
+            mGui->actionForward, SLOT(setEnabled(bool)));
+
+    connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
+            mGui->actionNormalSize, SLOT(setDisabled(bool)));
+    connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
+            mGui->actionZoomOut, SLOT(setEnabled(bool)));
+
+    connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
+            mGui->actionCopy, SLOT(setEnabled(bool)));
 
     // En/disable the printing action, depending on whether printers are
     // available
@@ -236,9 +224,45 @@ WebBrowserWindowWindow::~WebBrowserWindowWindow()
 
 void WebBrowserWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate our whole window
 
     mGui->retranslateUi(this);
+}
+
+//==============================================================================
+
+static const auto SettingsUrl = QStringLiteral("Url");
+
+//==============================================================================
+
+void WebBrowserWindowWindow::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our current URL (and load it)
+
+    mUrlValue->setText(pSettings->value(SettingsUrl).toString());
+
+    returnPressed();
+
+    // Retrieve the settings of our Web browser window widget
+
+    pSettings->beginGroup(mWebBrowserWindowWidget->objectName());
+        mWebBrowserWindowWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our current URL
+
+    pSettings->setValue(SettingsUrl, mUrlValue->text());
+
+    // Keep track of the settings of our Web browser window widget
+
+    pSettings->beginGroup(mWebBrowserWindowWidget->objectName());
+        mWebBrowserWindowWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -252,81 +276,24 @@ void WebBrowserWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void WebBrowserWindowWindow::updateActions()
-{
-    // Update the enabled state of our various actions
-
-    mGui->actionClear->setEnabled(!mUrlValue->text().isEmpty());
-
-    mGui->actionCopy->setEnabled(!mWebBrowserWidget->page()->selectedText().isEmpty());
-
-    mGui->actionNormalSize->setEnabled(mZoomLevel != DefaultZoomLevel);
-    mGui->actionZoomOut->setEnabled(mZoomLevel != MinimumZoomLevel);
-}
-
-//==============================================================================
-
-static const auto AboutBlank = QStringLiteral("about:blank");
-
-//==============================================================================
-
 void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so update our URL value
 
     QString url = pUrl.toString();
 
-    mUrlValue->setText(url.compare(AboutBlank)?url:QString());
-
-    updateActions();
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::documentChanged()
-{
-    // A new page has been loaded, resulting in the previous or next page
-    // becoming either available or not
-
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action == mWebBrowserWidget->pageAction(QWebPage::Back))
-        mGui->actionBack->setEnabled(action->isEnabled());
-    else if (action == mWebBrowserWidget->pageAction(QWebPage::Forward))
-        mGui->actionForward->setEnabled(action->isEnabled());
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::setZoomLevel(const int &pZoomLevel)
-{
-    if (pZoomLevel == mZoomLevel)
-        return;
-
-    // Set the zoom level of the help document contents to a particular value
-
-    mZoomLevel = pZoomLevel;
-
-    mWebBrowserWidget->setZoomFactor(0.1*mZoomLevel);
-
-    // Emit a few zoom-related signals
-
-    updateActions();
+    mUrlValue->setText(url.compare(mWebBrowserWindowWidget->homePage())?url:QString());
 }
 
 //==============================================================================
 
 void WebBrowserWindowWindow::on_actionClear_triggered()
 {
-    // Go to the home page, i.e. a blank page
-    // Note: to set a blank page will make our web page completely white, which
-    //       looks better than the default grey background...
+    // Clear the contents of our Web browser window widget
 
-    mUrlValue->setText(AboutBlank);
+    mUrl = mWebBrowserWindowWidget->homePage();
 
-    returnPressed();
-
-    mWebBrowserWidget->history()->clear();
+    mWebBrowserWindowWidget->clear();
 }
 
 //==============================================================================
@@ -335,7 +302,9 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 {
     // Go to the previous page
 
-    mWebBrowserWidget->back();
+    mUrl = mWebBrowserWindowWidget->history()->backItem().url().toString();
+
+    mWebBrowserWindowWidget->back();
 }
 
 //==============================================================================
@@ -344,7 +313,9 @@ void WebBrowserWindowWindow::on_actionForward_triggered()
 {
     // Go to the next page
 
-    mWebBrowserWidget->forward();
+    mUrl = mWebBrowserWindowWidget->history()->forwardItem().url().toString();
+
+    mWebBrowserWindowWidget->forward();
 }
 
 //==============================================================================
@@ -353,7 +324,7 @@ void WebBrowserWindowWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
-    QApplication::clipboard()->setText(mWebBrowserWidget->selectedText());
+    QApplication::clipboard()->setText(mWebBrowserWindowWidget->selectedText());
 }
 
 //==============================================================================
@@ -362,7 +333,7 @@ void WebBrowserWindowWindow::on_actionNormalSize_triggered()
 {
     // Reset the zoom level of the page contents
 
-    setZoomLevel(DefaultZoomLevel);
+    mWebBrowserWindowWidget->resetZoom();
 }
 
 //==============================================================================
@@ -371,7 +342,7 @@ void WebBrowserWindowWindow::on_actionZoomIn_triggered()
 {
     // Zoom in the page contents
 
-    setZoomLevel(mZoomLevel+1);
+    mWebBrowserWindowWidget->zoomIn();
 }
 
 //==============================================================================
@@ -380,7 +351,7 @@ void WebBrowserWindowWindow::on_actionZoomOut_triggered()
 {
     // Zoom out the page contents
 
-    setZoomLevel(qMax(int(MinimumZoomLevel), mZoomLevel-1));
+    mWebBrowserWindowWidget->zoomOut();
 }
 
 //==============================================================================
@@ -394,7 +365,7 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
     QPrintDialog printDialog(&printer);
 
     if (printDialog.exec() == QDialog::Accepted)
-        mWebBrowserWidget->print(&printer);
+        mWebBrowserWindowWidget->print(&printer);
 }
 
 //==============================================================================
@@ -403,7 +374,7 @@ void WebBrowserWindowWindow::on_actionInspect_triggered()
 {
     // Inspect the current page
 
-    mWebBrowserWidget->pageAction(QWebPage::InspectElement)->trigger();
+    mWebBrowserWindowWidget->pageAction(QWebPage::InspectElement)->trigger();
 }
 
 //==============================================================================
@@ -412,24 +383,26 @@ void WebBrowserWindowWindow::on_actionReload_triggered()
 {
     // Reload the URL
 
-    mWebBrowserWidget->reload();
+    mWebBrowserWindowWidget->reload();
 }
 
 //==============================================================================
 
 void WebBrowserWindowWindow::returnPressed()
 {
-    // Load the URL
+    // Go to our home page (i.e. blank page), if the URL is empty, or load the
+    // URL
     // Note: we keep track of the URL since, in loadProgress(), the initial
-    //       value of mWebBrowserWidget->url() will be that of the previous
-    //       URL, meaning that we would, in the case of a blank page, start
-    //       showing the progress while we clearly shouldn't be...
+    //       value of mWebBrowserWindowWidget->url() will be that of the
+    //       previous URL, meaning that we would, in the case of our home page,
+    //       start showing the progress while we clearly shouldn't be...
 
-    mUrl = mUrlValue->text();
+    if (mUrlValue->text().isEmpty())
+        mUrl = mWebBrowserWindowWidget->homePage();
+    else
+        mUrl = mUrlValue->text();
 
-    mWebBrowserWidget->load(mUrl);
-
-    updateActions();
+    mWebBrowserWindowWidget->load(mUrl);
 }
 
 //==============================================================================
@@ -449,7 +422,7 @@ void WebBrowserWindowWindow::loadProgress(const int &pProgress)
     // Update the value of our progress bar, but only if we are not dealing with
     // a blank page
 
-    if (mUrl.compare(AboutBlank))
+    if (mUrl.compare(mWebBrowserWindowWidget->homePage()))
         mProgressBarWidget->setValue(0.01*pProgress);
 }
 
@@ -465,7 +438,7 @@ void WebBrowserWindowWindow::loadFinished()
         ResetDelay = 169
     };
 
-    if (mUrl.compare(AboutBlank))
+    if (mUrl.compare(mWebBrowserWindowWidget->homePage()))
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 }
 

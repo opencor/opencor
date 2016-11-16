@@ -17,39 +17,54 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Web browser window widget
 //==============================================================================
 
-#include "toolbarwidget.h"
+#include "webbrowserwindowwidget.h"
+
+//==============================================================================
+
+#include <QWebHistory>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-ToolBarWidget::ToolBarWidget(QWidget *pParent) :
-    QToolBar(pParent)
+WebBrowserWindowWidget::WebBrowserWindowWidget(QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent)
 {
-    // Remove the border which is normally drawn for a tool bar widget (indeed,
-    // it doesn't look great when on a docked window) and make sure that we have
-    // a spacing of 4 pixels (indeed, on Windows/Linux, the layout has no
-    // spacing, which doesn't look great in some cases)
+    // Go to our home page
 
-    setStyleSheet("QToolBar {"
-                  "    border: none;"
-                  "    spacing: 4px;"
-                  "}");
-
-    // Force the size of the icons to be 20 by 20 pixels
-
-    setIconSize(QSize(20, 20));
+    goToHomePage();
 }
 
 //==============================================================================
 
-}   // namespace Core
+bool WebBrowserWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
+{
+    // We support all URL schemes, but the OpenCOR one (opencor://...), which we
+    // want to be handled (i.e. opened) the default way
+
+    return pUrlScheme.compare("opencor");
+}
+
+//==============================================================================
+
+void WebBrowserWindowWidget::clear()
+{
+    // Go to our home page and clear our history
+
+    goToHomePage();
+
+    history()->clear();
+}
+
+//==============================================================================
+
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

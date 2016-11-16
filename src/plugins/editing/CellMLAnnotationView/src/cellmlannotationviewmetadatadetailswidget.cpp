@@ -60,7 +60,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -87,10 +87,11 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, this);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, this);
-    mWebViewer = new WebViewerWidget::WebViewerWidget(this);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, mSplitter);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, mSplitter);
+    mWebViewer = new WebViewerWidget::WebViewerWidget(mSplitter);
 
+    mWebViewer->setZoomingEnabled(false);
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
 
     mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
@@ -326,9 +327,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResourc
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing()
 {
-    // We are 'asked' to look nothing up, so 'clean up' our web viewer
+    // We are 'asked' to look nothing up, so 'clean up' our web viewer by going
+    // to our home page (i.e. blank page)
 
-    mWebViewer->setUrl(QUrl());
+    mWebViewer->goToHomePage();
 }
 
 //==============================================================================

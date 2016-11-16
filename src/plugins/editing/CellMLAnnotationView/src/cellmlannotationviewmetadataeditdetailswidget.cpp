@@ -195,7 +195,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     QWidget *qualifierWidget = new QWidget(formWidget);
     QHBoxLayout *qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
 
-    qualifierWidgetLayout->setMargin(0);
+    qualifierWidgetLayout->setContentsMargins(QMargins());
 
     qualifierWidget->setLayout(qualifierWidgetLayout);
 
@@ -236,7 +236,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     QWidget *termWidget = new QWidget(formWidget);
     QHBoxLayout *termWidgetLayout = new QHBoxLayout(termWidget);
 
-    termWidgetLayout->setMargin(0);
+    termWidgetLayout->setContentsMargins(QMargins());
 
     termWidget->setLayout(termWidgetLayout);
 
@@ -321,6 +321,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputOntologicalTerms = new WebViewerWidget::WebViewerWidget(mOutput);
 
+    mOutputOntologicalTerms->setZoomingEnabled(false);
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),

@@ -81,7 +81,7 @@ private:
 
     PMRSupport::PmrWebService *mPmrWebService;
 
-    PmrWindowWidget *mPmrWidget;
+    PmrWindowWidget *mPmrWindowWidget;
 
 private slots:
     void on_actionReload_triggered();

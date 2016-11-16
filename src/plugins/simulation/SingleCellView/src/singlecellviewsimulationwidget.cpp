@@ -403,7 +403,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     QWidget *simulationOutputWidget = new QWidget(this);
     QVBoxLayout *simulationOutputLayout= new QVBoxLayout(simulationOutputWidget);
 
-    simulationOutputLayout->setMargin(0);
+    simulationOutputLayout->setContentsMargins(QMargins());
     simulationOutputLayout->setSpacing(0);
 
     simulationOutputWidget->setLayout(simulationOutputLayout);

@@ -196,6 +196,8 @@ void RawSEDMLViewPlugin::initializePlugin()
 
     mViewWidget = new RawSedmlViewWidget(Core::mainWindow());
 
+    mViewWidget->setObjectName("RawSedmlViewWidget");
+
     // Hide our raw SED-ML view widget since it may not initially be shown in
     // our central widget
 
