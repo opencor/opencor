@@ -330,12 +330,8 @@ QString WebViewerWidget::homePage() const
 void WebViewerWidget::goToHomePage()
 {
     // Go to our home page
-    // Note: we use setUrl() rather than load() since the former will ensure
-    //       that url() becomes valid straightaway (which might be important in
-    //       some cases, e.g. when retranslating) and that the document gets
-    //       loaded immediately...
 
-    setUrl(mHomePage);
+    load(mHomePage);
 }
 
 //==============================================================================

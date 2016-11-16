@@ -388,7 +388,7 @@ void WebBrowserWindowWindow::returnPressed()
     else
         mUrl = mUrlValue->text();
 
-    mWebBrowserWindowWidget->setUrl(mUrl);
+    mWebBrowserWindowWidget->load(mUrl);
 }
 
 //==============================================================================
