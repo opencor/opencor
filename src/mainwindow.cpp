@@ -375,10 +375,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
-        // Keep track of the fact that we are about to quit
-
-        qApp->setProperty("OpenCOR::aboutToQuit()", true);
-
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
         //       some settings (e.g. docked windows) won't be properly saved...
