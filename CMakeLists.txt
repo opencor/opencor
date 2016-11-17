@@ -568,10 +568,22 @@ ELSE()
             )
         ENDIF()
 
+        RETRIEVE_BINARY_FILE(distrib/windows api-ms-win-crt-heap-l1-1-0.dll cee6f776fe0aa5a6d4854058f20f675253f48998)
+        RETRIEVE_BINARY_FILE(distrib/windows api-ms-win-crt-locale-l1-1-0.dll 251bbcad15771d80492f1deb001491a7abb6c563)
+        RETRIEVE_BINARY_FILE(distrib/windows api-ms-win-crt-math-l1-1-0.dll 117b9a201d1e8bb9e5fadeae808141d3fa41fb60)
+        RETRIEVE_BINARY_FILE(distrib/windows api-ms-win-crt-runtime-l1-1-0.dll f67bc165cefb119ad767b6bec27a1102c0fd2bac)
+        RETRIEVE_BINARY_FILE(distrib/windows api-ms-win-crt-stdio-l1-1-0.dll f4a7fbd2d9384873f708f1eeaeb041a3fbe2c144)
+
         RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 58f3cc096cfc002f575fb9041de757da8af6fd8d)
         RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll beca4818b830b2d9a0727b12df4794a1dfdb8cfd)
 
         LIST(APPEND ADDITIONAL_FILES
+            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-heap-l1-1-0.dll
+            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-locale-l1-1-0.dll
+            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-math-l1-1-0.dll
+            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-runtime-l1-1-0.dll
+            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-stdio-l1-1-0.dll
+
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
             ${CMAKE_SOURCE_DIR}/distrib/bin/ssleay32.dll
         )
