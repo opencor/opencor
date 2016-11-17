@@ -65,6 +65,7 @@ limitations under the License.
 #include <QSettings>
 #include <QShortcut>
 #include <QUrl>
+#include <QWindow>
 
 //==============================================================================
 
@@ -375,6 +376,14 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
+        // Delete any Web inspector window (which may have been created through
+        // our use of QtWebKit)
+
+        foreach (QWindow *window, QGuiApplication::topLevelWindows()) {
+            if (!window->objectName().compare("QWebInspectorClassWindow"))
+                window->close();
+        }
+
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
         //       some settings (e.g. docked windows) won't be properly saved...
