@@ -117,8 +117,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWindowWidget->setObjectName("WebBrowserWindowWidget");
 
-    mWebBrowserWindowWidget->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,
                                                      true, true, true, true));
@@ -372,9 +370,9 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
 
 void WebBrowserWindowWindow::on_actionInspect_triggered()
 {
-    // Inspect the current page
+    // Inspect the current page using our Web inspector
 
-    mWebBrowserWindowWidget->triggerPageAction(QWebPage::InspectElement);
+    mWebBrowserWindowWidget->showWebInspector();
 }
 
 //==============================================================================
