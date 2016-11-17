@@ -596,12 +596,6 @@ ELSE()
         RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll beca4818b830b2d9a0727b12df4794a1dfdb8cfd)
 
         LIST(APPEND ADDITIONAL_FILES
-            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-heap-l1-1-0.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-locale-l1-1-0.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-math-l1-1-0.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-runtime-l1-1-0.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/api-ms-win-crt-stdio-l1-1-0.dll
-
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
             ${CMAKE_SOURCE_DIR}/distrib/bin/ssleay32.dll
         )
