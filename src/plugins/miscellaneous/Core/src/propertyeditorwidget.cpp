@@ -1859,7 +1859,7 @@ bool PropertyEditorWidget::removeProperty(Property *pProperty)
     if (!mProperties.contains(pProperty))
         return false;
 
-    // Stop track the property
+    // Stop tracking the property
 
     mProperties.removeOne(pProperty);
 
