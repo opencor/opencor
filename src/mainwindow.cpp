@@ -65,6 +65,7 @@ limitations under the License.
 #include <QSettings>
 #include <QShortcut>
 #include <QUrl>
+#include <QWindow>
 
 //==============================================================================
 
@@ -375,9 +376,13 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
-        // Keep track of the fact that we are about to quit
+        // Delete any Web inspector window (which may have been created through
+        // our use of QtWebKit)
 
-        qApp->setProperty("OpenCOR::aboutToQuit()", true);
+        foreach (QWindow *window, QGuiApplication::topLevelWindows()) {
+            if (!window->objectName().compare("QWebInspectorClassWindow"))
+                window->close();
+        }
 
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
@@ -419,7 +424,7 @@ void MainWindow::registerOpencorUrlScheme()
                                                                                                qApp->organizationName(),
                                                                                                qApp->applicationName()));
 
-        writeResourceToFile(iconPath, ":app_icon");
+        writeResourceToFile(iconPath, ":/app_icon");
 
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
                                 QString("[Desktop Entry]\n"
@@ -805,7 +810,7 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         qApp->installTranslator(&mQtXmlPatternsTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
-        mAppTranslator.load(":app_"+newLocale);
+        mAppTranslator.load(":/app_"+newLocale);
         qApp->installTranslator(&mAppTranslator);
 
         // Retranslate OpenCOR
@@ -827,7 +832,7 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         //       plugin to work properly...
 
         foreach (Plugin *plugin, mLoadedI18nPlugins)
-            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":%1_%2").arg(plugin->name(), newLocale));
+            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name(), newLocale));
 
         // Retranslate our various plugins
 

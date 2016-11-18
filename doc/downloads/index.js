@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 11, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 11, "year": 2016, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,8 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed a small problem with the desktop icon not showing on Ubuntu (see issue <a href=\"https://github.com/opencor/opencor/issues/1147\">#1147</a>)." },
-                       { "change": "<strong>Web Browser window:</strong> now the OpenCOR URL scheme (see issue <a href=\"https://github.com/opencor/opencor/issues/1152\">#1152</a>)." },
+                       { "change": "<strong>General:</strong> fixed a small problem with the desktop icon not showing on Ubuntu (see issue <a href=\"https://github.com/opencor/opencor/issues/1147\">#1147</a>). Now deploy the Universal C Runtime files needed by OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1150\">#1150</a>)." },
+                       { "change": "<strong>Web Browser window:</strong> made sure that all Web Inspector windows are closed upon quitting OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1151\">#1151</a>). Added support the OpenCOR URL scheme (see issue <a href=\"https://github.com/opencor/opencor/issues/1152\">#1152</a>)." },
                        { "change": "<strong>Raw Text view:</strong> fixed a crash that occurred when trying to save a new file (see issue <a href=\"https://github.com/opencor/opencor/issues/1155\">#1155</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.24.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1145\">#1145</a>)." }
                      ]

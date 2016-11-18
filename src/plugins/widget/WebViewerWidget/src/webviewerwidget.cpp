@@ -139,6 +139,10 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+    // Make sure that we can use our Web inspector
+
+    settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
     // Some connections
 
     connect(this, SIGNAL(urlChanged(const QUrl &)),
@@ -394,6 +398,15 @@ void WebViewerWidget::setZoomLevel(const int &pZoomLevel)
     // Emit a few zoom-related signals
 
     emitZoomRelatedSignals();
+}
+
+//==============================================================================
+
+void WebViewerWidget::showWebInspector()
+{
+    // Show our Web inspector window
+
+    triggerPageAction(QWebPage::InspectElement);
 }
 
 //==============================================================================
