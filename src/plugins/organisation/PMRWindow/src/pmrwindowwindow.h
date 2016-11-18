@@ -26,7 +26,6 @@ limitations under the License.
 
 #include "organisationwidget.h"
 #include "pmrexposure.h"
-#include "pmrwindowwidget.h"
 
 //==============================================================================
 
@@ -91,16 +90,15 @@ private slots:
 
     void busy(const bool &pBusy);
 
-    void pmrError(const QString &pErrorMessage,
+    void pmrError(const QString &pMessage,
                   const bool &pInternetConnectionAvailable);
 
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
-    void showError(const QString &pMessage);
 
     void retrieveExposures(const bool &pVisible);
 
-    void gotExposures(const PMRSupport::PmrExposures &pExposures);
+    void initializeWidget(const PMRSupport::PmrExposures &pExposures);
 };
 
 //==============================================================================

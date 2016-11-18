@@ -104,7 +104,7 @@ signals:
 
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
-    void error(const QString &pErrorMessage,
+    void error(const QString &pMessage,
                const bool &pInternetConnectionAvailable);
 
     void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);

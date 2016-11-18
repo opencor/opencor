@@ -135,7 +135,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             this, SLOT(showWarning(const QString &)));
 
     connect(mPmrWebService, SIGNAL(exposures(const PMRSupport::PmrExposures &)),
-            this, SLOT(gotExposures(const PMRSupport::PmrExposures &)));
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &)));
 
     connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
             mPmrWindowWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
@@ -231,7 +231,7 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-void PmrWindowWindow::pmrError(const QString &pErrorMessage,
+void PmrWindowWindow::pmrError(const QString &pMessage,
                                const bool &pInternetConnectionAvailable)
 {
     // Tell our PMR widget we have a problem
@@ -239,7 +239,9 @@ void PmrWindowWindow::pmrError(const QString &pErrorMessage,
     mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(),
                                  pInternetConnectionAvailable);
 
-    showError(pErrorMessage);
+    // Show the given message as an error
+
+    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -262,15 +264,6 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWindowWindow::showError(const QString &pMessage)
-{
-    // Show the given message as an error
-
-    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
-}
-
-//==============================================================================
-
 void PmrWindowWindow::on_actionReload_triggered()
 {
     // Get the list of exposures from our PMR web service
@@ -280,7 +273,7 @@ void PmrWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
-void PmrWindowWindow::gotExposures(const PMRSupport::PmrExposures &pExposures)
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
