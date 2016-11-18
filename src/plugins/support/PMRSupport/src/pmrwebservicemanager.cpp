@@ -135,7 +135,7 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
     // Check that we are connected to the Internet
 
     if (!Core::internetConnectionAvailable()) {
-        emit error(tr("Cannot connect to the Internet"), false);
+        emit error(Core::noInternetConnectionAvailableMessage());
 
         return 0;
     }
@@ -187,8 +187,8 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
 
     connect(pmrWebServiceResponse, SIGNAL(busy(const bool &)),
             mPmrWebService, SIGNAL(busy(const bool &)));
-    connect(pmrWebServiceResponse, SIGNAL(error(const QString &, const bool &)),
-            mPmrWebService, SIGNAL(error(const QString &, const bool &)));
+    connect(pmrWebServiceResponse, SIGNAL(error(const QString &)),
+            mPmrWebService, SIGNAL(error(const QString &)));
     connect(pmrWebServiceResponse, SIGNAL(forbidden(const QString &)),
             mPmrWebService, SLOT(forbidden(const QString &)));
 
