@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="SourceDirectory">${PROJECT_BUILD_DIR}/sourcedirectory.txt</file>
-        <file alias="BuildDirectory">${PROJECT_BUILD_DIR}/builddirectory.txt</file>
-        <file alias="Tests">${PROJECT_BUILD_DIR}/tests.txt</file>
+        <file alias="source_directory">${PROJECT_BUILD_DIR}/sourcedirectory.txt</file>
+        <file alias="build_directory">${PROJECT_BUILD_DIR}/builddirectory.txt</file>
+        <file alias="tests">${PROJECT_BUILD_DIR}/tests.txt</file>
     </qresource>
 </RCC>

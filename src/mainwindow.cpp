@@ -424,7 +424,7 @@ void MainWindow::registerOpencorUrlScheme()
                                                                                                qApp->organizationName(),
                                                                                                qApp->applicationName()));
 
-        writeResourceToFile(iconPath, ":app_icon");
+        writeResourceToFile(iconPath, ":/app_icon");
 
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
                                 QString("[Desktop Entry]\n"
@@ -810,7 +810,7 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         qApp->installTranslator(&mQtXmlPatternsTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
-        mAppTranslator.load(":app_"+newLocale);
+        mAppTranslator.load(":/app_"+newLocale);
         qApp->installTranslator(&mAppTranslator);
 
         // Retranslate OpenCOR
@@ -832,7 +832,7 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         //       plugin to work properly...
 
         foreach (Plugin *plugin, mLoadedI18nPlugins)
-            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":%1_%2").arg(plugin->name(), newLocale));
+            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name(), newLocale));
 
         // Retranslate our various plugins
 
