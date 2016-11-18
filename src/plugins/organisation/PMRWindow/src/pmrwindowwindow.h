@@ -90,8 +90,7 @@ private slots:
 
     void busy(const bool &pBusy);
 
-    void pmrError(const QString &pMessage,
-                  const bool &pInternetConnectionAvailable);
+    void pmrError(const QString &pMessage);
 
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);

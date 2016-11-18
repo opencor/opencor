@@ -105,11 +105,11 @@ void PmrWebServiceResponse::processResponse()
         if (httpStatusCode == 403)
             emit forbidden(mNetworkReply->url().toString());
         else
-            emit error(mNetworkReply->errorString(), true);
+            emit error(mNetworkReply->errorString());
     } else if (httpStatusCode == 302) {
         emit found(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
     } else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
-        emit error(tr("Response has unexpected content type"), true);
+        emit error(tr("Response has unexpected content type"));
     } else {
         // Parse our response
 
@@ -119,7 +119,7 @@ void PmrWebServiceResponse::processResponse()
         // Check for parse errors
 
         if (jsonParseError.error != QJsonParseError::NoError)
-            emit error(jsonParseError.errorString(), true);
+            emit error(jsonParseError.errorString());
         else
             emit response(jsonDocument);
     }

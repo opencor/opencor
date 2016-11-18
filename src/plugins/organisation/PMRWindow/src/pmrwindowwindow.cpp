@@ -126,8 +126,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
 
-    connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
-            this, SLOT(pmrError(const QString &, const bool &)));
+    connect(mPmrWebService, SIGNAL(error(const QString &)),
+            this, SLOT(pmrError(const QString &)));
 
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
@@ -230,17 +230,11 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-void PmrWindowWindow::pmrError(const QString &pMessage,
-                               const bool &pInternetConnectionAvailable)
+void PmrWindowWindow::pmrError(const QString &pMessage)
 {
-    // Tell our PMR widget we have a problem
+    // Tell our PMR widget that we have a problem
 
-    mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(),
-                                 pInternetConnectionAvailable);
-
-    // Show the given message as an error
-
-    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
 }
 
 //==============================================================================
@@ -276,7 +270,7 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), true);
+    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), QString());
 }
 
 //==============================================================================

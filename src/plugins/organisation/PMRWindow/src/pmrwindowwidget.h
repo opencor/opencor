@@ -50,7 +50,7 @@ public:
 
     void initialize(const PMRSupport::PmrExposures &pExposures,
                     const QString &pFilter,
-                    const bool &pInternetConnectionAvailable);
+                    const QString &pErrorMessage);
 
     void filter(const QString &pFilter);
 
@@ -69,7 +69,7 @@ private:
     bool mInitialized;
 
     QString mTemplate;
-    bool mInternetConnectionAvailable;
+    QString mErrorMessage;
 
     int mNumberOfFilteredExposures;
 

@@ -54,8 +54,7 @@ signals:
     void response(const QJsonDocument &pJsonDocument);
     void finished();
 
-    void error(const QString &pErrorMessage,
-               const bool &pInternetConnectionAvailable);
+    void error(const QString &pErrorMessage);
     void forbidden(const QString &pUrl);
     void found(const QString &locationUrl);
 

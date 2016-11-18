@@ -49,7 +49,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
     mInitialized(false),
-    mInternetConnectionAvailable(true),
+    mErrorMessage(QString()),
     mNumberOfFilteredExposures(0),
     mExposureUrl(QString()),
     mShowExposureFilesTimer(0),
@@ -136,18 +136,17 @@ QString PmrWindowWidget::message() const
 
     QString res = QString();
 
-    if (mInternetConnectionAvailable) {
+    if (mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredExposures) {
             if (!mExposureNames.isEmpty())
-                res = tr("No exposure matches your criteria.");
+                res = tr("No exposures match your criteria.");
         } else if (mNumberOfFilteredExposures == 1) {
             res = tr("<strong>1</strong> exposure was found:");
         } else {
             res = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
         }
     } else {
-        res = tr("<strong>Error:</strong> ")+Core::formatMessage(Core::noInternetConnectionAvailableMessage(),
-                                                                 true, true);
+        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
     }
 
     return res;
@@ -157,7 +156,7 @@ QString PmrWindowWidget::message() const
 
 void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
                                  const QString &pFilter,
-                                 const bool &pInternetConnectionAvailable)
+                                 const QString &pErrorMessage)
 {
     // Initialise / keep track of some properties
 
@@ -165,7 +164,7 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     mExposureDisplayed.clear();
     mExposureUrlId.clear();
 
-    mInternetConnectionAvailable = pInternetConnectionAvailable;
+    mErrorMessage = pErrorMessage;
 
     // Initialise our list of exposures
 

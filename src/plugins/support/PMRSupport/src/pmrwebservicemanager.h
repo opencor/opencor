@@ -61,8 +61,7 @@ private:
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
-    void error(const QString &pErrorMessage,
-               const bool &pInternetConnectionAvailable);
+    void error(const QString &pErrorMessage);
 
 private slots:
     void authenticationSucceeded();

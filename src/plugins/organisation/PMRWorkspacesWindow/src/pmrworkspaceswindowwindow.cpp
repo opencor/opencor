@@ -129,7 +129,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
 
-    connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
+    connect(mPmrWebService, SIGNAL(error(const QString &)),
             this, SLOT(showError(const QString &)));
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));

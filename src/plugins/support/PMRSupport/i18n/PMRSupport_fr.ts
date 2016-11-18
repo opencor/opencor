@@ -45,13 +45,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRSupport::PmrWebServiceManager</name>
-    <message>
-        <source>Cannot connect to the Internet</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::PMRSupport::PmrWebServiceResponse</name>
     <message>
         <source>Response has unexpected content type</source>
