@@ -88,6 +88,8 @@ public:
 
     void setZoomingEnabled(const bool &pZoomingEnabled);
 
+    void showWebInspector();
+
 protected:
     virtual bool event(QEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);

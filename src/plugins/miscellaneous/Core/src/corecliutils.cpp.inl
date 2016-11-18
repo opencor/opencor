@@ -513,7 +513,12 @@ bool writeFileContentsToFile(const QString &pFileName,
         file.close();
 
         // Rename the temporary file name to the given file name, if everything
-        // went fine
+        // went fine and that the path exists or that it can be created, if
+        // needed
+
+        QDir dir(QFileInfo(pFileName).path());
+
+        res = res && (dir.exists() || dir.mkpath(dir.dirName()));
 
         if (res) {
             if (QFile::exists(pFileName))
