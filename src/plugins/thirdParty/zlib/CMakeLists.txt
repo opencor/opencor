@@ -1,10 +1,20 @@
 PROJECT(zlibPlugin)
 
-# Retrieve some header files that were generated on each of our target platforms
+SET(ZLIB_VERSION "1")
+SET(ZLIB_GIT_TAG "v1.2.8")
 
-RETRIEVE_CONFIG_FILES(
-    src/PLATFORM_DIR/zconf.h
-)
+SET(ZLIB_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+SET(EXTERNAL_BINARIES ${ZLIB_LIBRARY})
+
+SET(INSTALL_DIR ${PROJECT_SOURCE_DIR}/bin/${REMOTE_EXTERNAL_BINARIES_DIR})
+
+
+SET(ZLIB_PLUGIN_BINARY ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${ZLIB_LIBRARY} PARENT_SCOPE)
+
+
+#####
+set(USE_PREBUILT_ZLIB_PLUGIN OFF)
+#####
 
 # Use our pre-built version unless instructed otherwise
 
@@ -39,59 +49,51 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
         SET(ZLIB_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}zlib${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
     ENDIF()
 
-    ADD_PLUGIN_BINARY(zlib
-        INCLUDE_DIRS
-            src
-    )
 ELSE()
-    # Retrieve zlib's definitions
-
-    IF(WIN32)
-        SET(DEFINITIONS
-            ZLIB_DLL
-        )
-    ELSE()
-        SET(DEFINITIONS)
-    ENDIF()
+    INCLUDE(ExternalProject)
 
     # Ignore some warnings on Windows
 
     IF(WIN32)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
+        SET(ZLIB_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
     ENDIF()
 
-    # Add the plugin
-
-    SET(ZLIB_PLUGIN zlib PARENT_SCOPE)
-
-    ADD_PLUGIN(zlib
-        THIRD_PARTY
-        SOURCES
-            ../../plugininfo.cpp
-
-            src/adler32.c
-            src/compress.c
-            src/crc32.c
-            src/deflate.c
-            src/gzclose.c
-            src/gzlib.c
-            src/gzread.c
-            src/gzwrite.c
-            src/infback.c
-            src/inffast.c
-            src/inflate.c
-            src/inftrees.c
-            src/trees.c
-            src/uncompr.c
-            src/zlibplugin.cpp
-            src/zutil.c
-        HEADERS_MOC
-            src/zlibplugin.h
-        INCLUDE_DIRS
-            src
-        DEFINITIONS
-            ${DEFINITIONS}
-        QT_MODULES
-            Core
+    ExternalProject_Add(
+        zlibBuild
+        SOURCE_DIR ${PROJECT_SOURCE_DIR}/zlib
+        INSTALL_DIR ${INSTALL_DIR}
+        GIT_REPOSITORY https://github.com/madler/zlib.git
+        GIT_TAG ${ZLIB_GIT_TAG}
+        PATCH_COMMAND ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
+        CMAKE_CACHE_ARGS -DCMAKE_C_FLAGS:STRING=${ZLIB_C_FLAGS}
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                   -DCMAKE_MACOSX_RPATH=1
     )
+
+##    ExternalProject_Add_StepDependencies(zlibBuild install ${EXTERNAL_BINARIES})
+ENDIF()
+
+# Add the plugin
+
+SET(ZLIB_PLUGIN zlib PARENT_SCOPE)
+
+ADD_PLUGIN(zlib
+    SOURCES
+        ../../plugininfo.cpp
+        src/zlibplugin.cpp
+    HEADERS_MOC
+        src/zlibplugin.h
+    INCLUDE_DIRS
+        ${INSTALL_DIR}/include
+        src
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${INSTALL_DIR}/lib
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+)
+
+IF(NOT USE_PREBUILT_ZLIB_PLUGIN)
+    ADD_DEPENDENCIES(zlibPlugin zlibBuild)
 ENDIF()

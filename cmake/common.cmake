@@ -415,6 +415,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        EXTERNAL_LIBRARIES
         TESTS
     )
 
@@ -583,8 +584,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
-            IF(NOT EXISTS ${FULL_EXTERNAL_BINARY})
-                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
+            IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                SET(COPY_TARGET DIRECT)
+            ELSE()
+                SET(COPY_TARGET ${PROJECT_NAME})
+##                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -593,10 +597,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
+                COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
             # Strip the library of all its local symbols, if possible
 
@@ -614,23 +618,36 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                 )
-            ELSE()
+            ELIF(${COPY_TARGET} STREQUAL "DIRECT")
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
+            ELSE()
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_EXTERNAL_BINARY}
+                )
+                IF(APPLE)
+                    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                    )
+                ENDIF()
             ENDIF()
 
             # Package the external library, if needed
 
             IF(WIN32)
-                INSTALL(FILES ${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                INSTALL(FILES ${FULL_EXTERNAL_BINARY}
                         DESTINATION bin)
             ELSEIF(NOT APPLE)
-                INSTALL(FILES ${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                INSTALL(FILES ${FULL_EXTERNAL_BINARY}
                         DESTINATION lib)
             ENDIF()
         ENDFOREACH()
     ENDIF()
+
+    FOREACH(ARG_EXTERNAL_LIBRARY ${ARG_EXTERNAL_LIBRARIES})
+    ENDFOREACH()
 
     # Some settings
 
