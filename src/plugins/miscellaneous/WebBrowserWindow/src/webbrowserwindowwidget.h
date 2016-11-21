@@ -17,58 +17,37 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Internationalisation interface
+// Web browser window widget
 //==============================================================================
 
-#include "i18ninterface.h"
+#pragma once
 
 //==============================================================================
 
-#include <QApplication>
-#include <QMenu>
+#include "webviewerwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-void I18nInterface::updateTranslator(const QString &pTranslator)
+class WebBrowserWindowWidget : public WebViewerWidget::WebViewerWidget
 {
-    // Update the plugin's translator
+    Q_OBJECT
 
-    qApp->removeTranslator(&mTranslator);
+public:
+    explicit WebBrowserWindowWidget(QWidget *pParent);
 
-    mTranslator.load(pTranslator);
+    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
-    qApp->installTranslator(&mTranslator);
-}
-
-//==============================================================================
-
-void I18nInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
-{
-    // Retranslate the menu, i.e. retranslate its title
-
-    pMenu->setTitle(pTitle);
-}
+    void clear();
+};
 
 //==============================================================================
 
-void I18nInterface::retranslateAction(QAction *pAction,
-                                      const QString &pTextAndToolTip,
-                                      const QString &pStatusTip)
-{
-    // Retranslate the action, i.e. retranslate its text, tool tip and status
-    // tip
-
-    pAction->setText(pTextAndToolTip);
-    pAction->setToolTip(pTextAndToolTip);
-    pAction->setStatusTip(pStatusTip);
-}
-
-//==============================================================================
-
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -403,7 +403,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     QWidget *simulationOutputWidget = new QWidget(this);
     QVBoxLayout *simulationOutputLayout= new QVBoxLayout(simulationOutputWidget);
 
-    simulationOutputLayout->setMargin(0);
+    simulationOutputLayout->setContentsMargins(QMargins());
     simulationOutputLayout->setSpacing(0);
 
     simulationOutputWidget->setLayout(simulationOutputLayout);
@@ -1723,7 +1723,7 @@ void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
-    QStringList sedmlFilters = Core::filters(mPlugin->sedmlFileTypes());
+    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mPlugin->sedmlFileTypeInterface());
     QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1777,7 +1777,7 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
-    QStringList combineFilters = Core::filters(mPlugin->combineFileTypes());
+    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mPlugin->combineFileTypeInterface());
     QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {

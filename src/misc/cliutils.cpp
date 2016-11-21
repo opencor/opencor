@@ -134,7 +134,7 @@ void initApplication(QString *pAppDate)
 
     QString versionData;
 
-    readFileContentsFromFile(":app_versiondate", versionData);
+    readFileContentsFromFile(":/app_versiondate", versionData);
 
     QStringList versionDataList = versionData.split(eolString());
 

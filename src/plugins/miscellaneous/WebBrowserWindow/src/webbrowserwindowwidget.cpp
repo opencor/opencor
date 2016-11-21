@@ -17,90 +17,54 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File type interface
+// Web browser window widget
 //==============================================================================
 
-#include "filetypeinterface.h"
+#include "webbrowserwindowwidget.h"
+
+//==============================================================================
+
+#include <QWebHistory>
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-FileType::FileType(FileTypeInterface *pOwner, const QString &pMimeType,
-                   const QString &pFileExtension) :
-    mOwner(pOwner),
-    mMimeType(pMimeType),
-    mFileExtension(pFileExtension)
+WebBrowserWindowWidget::WebBrowserWindowWidget(QWidget *pParent) :
+    WebViewerWidget::WebViewerWidget(pParent)
 {
+    // Go to our home page
+
+    goToHomePage();
 }
 
 //==============================================================================
 
-bool FileType::operator==(const FileType &pFileType) const
+bool WebBrowserWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
-    // Return whether the current item is equal to the given one
+    // We support all URL schemes, but the OpenCOR one (opencor://...), which we
+    // want to be handled (i.e. opened) the default way
 
-    return    !mMimeType.compare(pFileType.mimeType())
-           && !mFileExtension.compare(pFileType.fileExtension());
+    return pUrlScheme.compare("opencor");
 }
 
 //==============================================================================
 
-QString FileType::mimeType() const
+void WebBrowserWindowWidget::clear()
 {
-    // Return the file's MIME type
+    // Go to our home page and clear our history
 
-    return mMimeType;
+    goToHomePage();
+
+    history()->clear();
 }
 
 //==============================================================================
 
-QString FileType::fileExtension() const
-{
-    // Return the file's extension
-
-    return mFileExtension;
-}
-
-//==============================================================================
-
-QString FileType::description() const
-{
-    // Return the file's description
-
-    return mOwner->fileTypeDescription(mMimeType);
-}
-
-//==============================================================================
-
-FileTypeInterface::FileTypeInterface() :
-    mFileTypes(FileTypes()),
-    mDefaultViews(QStringList())
-{
-}
-
-//==============================================================================
-
-FileTypes FileTypeInterface::fileTypes() const
-{
-    // Return the file types that we support
-
-    return mFileTypes;
-}
-
-//==============================================================================
-
-QStringList FileTypeInterface::defaultViews() const
-{
-    // Return our default views
-
-    return mDefaultViews;
-}
-
-//==============================================================================
-
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

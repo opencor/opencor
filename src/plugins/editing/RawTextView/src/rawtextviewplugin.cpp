@@ -194,6 +194,8 @@ void RawTextViewPlugin::initializePlugin()
 
     mViewWidget = new RawTextViewWidget(Core::mainWindow());
 
+    mViewWidget->setObjectName("RawTextViewWidget");
+
     // Hide our raw text view widget since it may not initially be shown in our
     // central widget
 

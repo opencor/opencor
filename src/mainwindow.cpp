@@ -65,6 +65,7 @@ limitations under the License.
 #include <QSettings>
 #include <QShortcut>
 #include <QUrl>
+#include <QWindow>
 
 //==============================================================================
 
@@ -255,11 +256,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     foreach (Plugin *plugin, mPluginManager->loadedPlugins())
         initializeGuiPlugin(plugin);
 
-    // Keep track of the plugin's name in case we support internationalisation
-
-    foreach (Plugin *plugin, mLoadedI18nPlugins)
-        qobject_cast<I18nInterface *>(plugin->instance())->setPluginName(plugin->name());
-
     // Let our various plugins know that all of them have been initialised
     // Note: this is important to do since the initialisation of a plugin is
     //       something that is done without knowing anything about other
@@ -380,9 +376,13 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
-        // Keep track of the fact that we are about to quit
+        // Delete any Web inspector window (which may have been created through
+        // our use of QtWebKit)
 
-        qApp->setProperty("OpenCOR::aboutToQuit()", true);
+        foreach (QWindow *window, QGuiApplication::topLevelWindows()) {
+            if (!window->objectName().compare("QWebInspectorClassWindow"))
+                window->close();
+        }
 
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
@@ -410,7 +410,7 @@ void MainWindow::registerOpencorUrlScheme()
     QSettings settings("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
     QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
 
-    settings.setValue("opencor/Default", "URL:OpenCOR link");
+    settings.setValue("opencor/Default", QString("URL:%1 link").arg(qApp->applicationName()));
     settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
     settings.setValue("opencor/URL Protocol", "");
     settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
@@ -419,19 +419,25 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
-    QString res = exec("which", QStringList() << "xdg-mime");
+    if (!exec("which", QStringList() << "xdg-mime").isEmpty()) {
+        QString iconPath = nativeCanonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
+                                                                                               qApp->organizationName(),
+                                                                                               qApp->applicationName()));
 
-    if (!res.isEmpty()) {
-        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
+        writeResourceToFile(iconPath, ":/app_icon");
 
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
                                 QString("[Desktop Entry]\n"
                                         "Type=Application\n"
-                                        "Name=OpenCOR\n"
-                                        "Exec=%1 %u\n"
-                                        "Icon=%1\n"
+                                        "Name=%1\n"
+                                        "Exec=%2 %u\n"
+                                        "Icon=%3\n"
                                         "Terminal=false\n"
-                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())));
+                                        "MimeType=x-scheme-handler/opencor\n").arg(qApp->applicationName(),
+                                                                                   nativeCanonicalFileName(qApp->applicationFilePath()),
+                                                                                   iconPath));
+
+        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
 #elif defined(Q_OS_MAC)
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
@@ -804,7 +810,7 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         qApp->installTranslator(&mQtXmlPatternsTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
-        mAppTranslator.load(":app_"+newLocale);
+        mAppTranslator.load(":/app_"+newLocale);
         qApp->installTranslator(&mAppTranslator);
 
         // Retranslate OpenCOR
@@ -820,13 +826,13 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         if (mViewWindowsMenu)
             I18nInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
 
-        // Update the locale of our various loaded plugins
-        // Note: we must set the locale of all the plugins before we can safely
-        //       retranslate them since a plugin may require another plugin to
-        //       work properly...
+        // Update the translator of our various loaded plugins
+        // Note: we must update the translator of all our plugins before we can
+        //       safely retranslate them since a plugin may require another
+        //       plugin to work properly...
 
         foreach (Plugin *plugin, mLoadedI18nPlugins)
-            qobject_cast<I18nInterface *>(plugin->instance())->setLocale(newLocale);
+            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name(), newLocale));
 
         // Retranslate our various plugins
 

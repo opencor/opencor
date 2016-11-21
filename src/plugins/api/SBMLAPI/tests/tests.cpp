@@ -57,11 +57,11 @@ void Tests::basicTests()
     libsbml::SBMLDocument *sbmlDocument = new libsbml::SBMLDocument();
     libsbml::Model *sbmlModel = sbmlDocument->createModel();
 
-    static const std::string modelName = "myModel";
+    static const std::string ModelName = "myModel";
 
-    sbmlModel->setName(modelName);
+    sbmlModel->setName(ModelName);
 
-    QCOMPARE(sbmlModel->getName(), modelName);
+    QCOMPARE(sbmlModel->getName(), ModelName);
 
     delete sbmlDocument;
 }

@@ -14,6 +14,8 @@ ADD_PLUGIN(WebViewerWidget
         src/webviewerwidgetplugin.h
     INCLUDE_DIRS
         src
+    PLUGINS
+        Core
     QT_MODULES
         WebKitWidgets
 )

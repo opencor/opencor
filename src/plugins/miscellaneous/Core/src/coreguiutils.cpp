@@ -629,27 +629,27 @@ QColor lockedColor(const QColor &pColor)
         lockedBlue = 0
     };
 
-    static const double alpha = 0.05;
-    static const double oneMinusAlpha = 1.0-alpha;
+    static const double Alpha = 0.05;
+    static const double OneMinusAlpha = 1.0-Alpha;
 
-    return QColor(alpha*lockedRed+oneMinusAlpha*red,
-                  alpha*lockedGreen+oneMinusAlpha*green,
-                  alpha*lockedBlue+oneMinusAlpha*blue);
+    return QColor(Alpha*lockedRed+OneMinusAlpha*red,
+                  Alpha*lockedGreen+OneMinusAlpha*green,
+                  Alpha*lockedBlue+OneMinusAlpha*blue);
 }
 
 //==============================================================================
 
-QStringList filters(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
-                    const QStringList &pMimeTypes)
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    const bool &pCheckMimeTypes, const QStringList &pMimeTypes)
 {
-    // Convert and return as a list of filters the given file types, using the
-    // given MIME types, if required
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types, if any
 
     QStringList res = QStringList();
 
-    foreach (const FileType &fileType, pFileTypes) {
-        if (!pCheckMimeTypes || pMimeTypes.contains(fileType.mimeType()))
-            res << fileType.description()+" (*."+fileType.fileExtension()+")";
+    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
+        if (!pCheckMimeTypes || pMimeTypes.contains(fileTypeInterface->mimeType()))
+            res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
     }
 
     return res;
@@ -657,21 +657,23 @@ QStringList filters(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
 
 //==============================================================================
 
-QStringList filters(const FileTypes &pFileTypes)
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
 {
-    // Convert and return as a list of filters the given file types
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces
 
-    return filters(pFileTypes, false, QStringList());
+    return filters(pFileTypeInterfaces, false, QStringList());
 }
 
 //==============================================================================
 
-QStringList filters(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    const QStringList &pMimeTypes)
 {
-    // Convert and return as a list of filters the given file types, using the
-    // given MIME types, if any
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types
 
-    return filters(pFileTypes, true, pMimeTypes);
+    return filters(pFileTypeInterfaces, true, pMimeTypes);
 }
 
 //==============================================================================

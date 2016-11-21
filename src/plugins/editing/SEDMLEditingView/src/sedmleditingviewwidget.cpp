@@ -62,6 +62,8 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
     mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
+    mEditorWidget->setObjectName("EditorWidget");
+
     connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
             this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
 
@@ -100,7 +102,9 @@ void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve our editor widget's settings
 
-    mEditorWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mEditorWidget->objectName());
+        mEditorWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

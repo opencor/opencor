@@ -33,10 +33,13 @@ ToolBarWidget::ToolBarWidget(QWidget *pParent) :
     QToolBar(pParent)
 {
     // Remove the border which is normally drawn for a tool bar widget (indeed,
-    // it doesn't look great when on a docked window)
+    // it doesn't look great when on a docked window) and make sure that we have
+    // a spacing of 4 pixels (indeed, on Windows/Linux, the layout has no
+    // spacing, which doesn't look great in some cases)
 
     setStyleSheet("QToolBar {"
                   "    border: none;"
+                  "    spacing: 4px;"
                   "}");
 
     // Force the size of the icons to be 20 by 20 pixels

@@ -142,18 +142,17 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mModeModeTabIndexes(QMap<ViewInterface::Mode, int>()),
     mFileModeTabIndexes(QMap<QString, int>()),
     mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
-    mSupportedFileTypes(FileTypes()),
+    mFileTypeInterfaces(FileTypeInterfaces()),
     mFileNames(QStringList()),
     mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
     mRemoteLocalFileNames(QMap<QString, QString>()),
-    mViews(QMap<QString, QWidget *>()),
-    mDefaultViews(QStringList())
+    mViews(QMap<QString, QWidget *>())
 {
     // Create and set our horizontal layout
 
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -212,7 +211,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
 
-    centralWidgetVBoxLayout->setMargin(0);
+    centralWidgetVBoxLayout->setContentsMargins(QMargins());
     centralWidgetVBoxLayout->setSpacing(0);
 
     centralWidget->setLayout(centralWidgetVBoxLayout);
@@ -467,14 +466,14 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Remove all the settings related to previously opened files
 
-    static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
-    static const QString settingsFileMode = SettingsFileMode.arg(QString());
-    static const QString settingsFileModeView = SettingsFileModeView.arg(QString(), QString());
+    static const QString SettingsFileIsRemoteHeader = SettingsFileIsRemote.arg(QString());
+    static const QString SettingsFileModeHeader = SettingsFileMode.arg(QString());
+    static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString(), QString());
 
     foreach (const QString &key, pSettings->allKeys()) {
-        if (   key.startsWith(settingsFileIsRemote)
-            || key.startsWith(settingsFileMode)
-            || key.startsWith(settingsFileModeView)) {
+        if (   key.startsWith(SettingsFileIsRemoteHeader)
+            || key.startsWith(SettingsFileModeHeader)
+            || key.startsWith(SettingsFileModeViewHeader)) {
             pSettings->remove(key);
         }
     }
@@ -640,11 +639,11 @@ void CentralWidget::retranslateUi()
 
 //==============================================================================
 
-void CentralWidget::setSupportedFileTypes(const FileTypes &pSupportedFileTypes)
+void CentralWidget::setFileTypeInterfaces(const FileTypeInterfaces &pFileTypeInterfaces)
 {
-    // Set the supported file types
+    // Set the file type interfaces
 
-    mSupportedFileTypes = pSupportedFileTypes;
+    mFileTypeInterfaces = pFileTypeInterfaces;
 }
 
 //==============================================================================
@@ -759,24 +758,6 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
     if (!pUrl.isEmpty())
         mRemoteLocalFileNames.insert(pUrl, nativeFileName);
 
-    // Check whether the file is recognised and, if so, the default views that
-    // ought to be tried when opening it
-
-    foreach (Plugin *plugin, mLoadedFileTypePlugins) {
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (fileTypeInterface->isFile(nativeFileName)) {
-            mDefaultViews = fileTypeInterface->defaultViews();
-
-            break;
-        }
-    }
-
-    // If there are no views, then try the Raw Text view
-
-    if (mDefaultViews.isEmpty())
-        mDefaultViews << "RawTextView";
-
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
@@ -827,7 +808,7 @@ void CentralWidget::openFile()
     // Ask for the file(s) to be opened
 
     QStringList files = getOpenFileNames(tr("Open File"),
-                                         filters(mSupportedFileTypes));
+                                         filters(mFileTypeInterfaces));
 
     // Open the file(s)
 
@@ -1092,8 +1073,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // under a new name, so we ask the user for a file name based on the
         // MIME types supported by our current view
 
-        QStringList supportedFilters = filters(mSupportedFileTypes, viewInterface->viewMimeTypes(ViewInterface::SaveMimeTypeMode));
-        QString firstSupportedFilter = supportedFilters.first();
+        QStringList supportedFilters = filters(mFileTypeInterfaces, viewInterface->viewMimeTypes(ViewInterface::SaveMimeTypeMode));
+        QString firstSupportedFilter = supportedFilters.isEmpty()?QString():supportedFilters.first();
 
         newFileName = getSaveFileName(pNeedNewFileName?
                                           tr("Save File As"):
@@ -1627,11 +1608,9 @@ void CentralWidget::updateGui()
         // Set the mode and view for the current file, depending on the case in
         // which we are (i.e. direct call, switching files/modes/views or
         // opening a file)
-        // Note: the value of mDefaultViews is only to be used once and if we
-        //       are opening a file, but it should be reset in all cases (just
-        //       to be on the safe side)...
 
-        if (((fileModeTabIndex != -1) && (changedFiles || directCall)) || changedModes) {
+        if (   changedModes
+            || ((fileModeTabIndex != -1) && (changedFiles || directCall))) {
             if (changedModes)
                 fileModeTabIndex = mModeTabs->currentIndex();
             else
@@ -1641,14 +1620,30 @@ void CentralWidget::updateGui()
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
-        } else {
-            foreach (const QString &defaultView, mDefaultViews) {
+        } else if (!changedViews) {
+            // We are opening a file, so determine the default views that we
+            // should try and if there are none, then try the Raw Text view
+
+            QStringList defaultViews = QStringList();
+
+            foreach (Plugin *plugin, mLoadedFileTypePlugins) {
+                FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
+
+                if (fileTypeInterface->isFile(fileName)) {
+                    defaultViews = fileTypeInterface->fileTypeDefaultViews();
+
+                    break;
+                }
+            }
+
+            if (defaultViews.isEmpty())
+                defaultViews << "RawTextView";
+
+            foreach (const QString &defaultView, defaultViews) {
                 if (selectView(defaultView))
                     break;
             }
         }
-
-        mDefaultViews.clear();
 
         // Keep track of the mode and view of the current file, should we not
         // have any track of them or should we be changing modes or views
