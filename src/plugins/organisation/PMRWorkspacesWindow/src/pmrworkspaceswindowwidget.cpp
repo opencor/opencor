@@ -548,26 +548,6 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 
 //==============================================================================
 
-QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
-{
-    QWebElement workspaceElement = pRowElement;
-
-    // Find parent workspace
-
-    while (   !workspaceElement.isNull()
-           && !(   !workspaceElement.tagName().compare("TR")
-                &&  workspaceElement.hasClass("workspace"))) {
-        workspaceElement = workspaceElement.parent();
-
-        if (workspaceElement.hasClass("contents"))
-            workspaceElement = workspaceElement.previousSibling();
-    }
-
-    return workspaceElement;
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 {
     if (pUrl != mCurrentWorkspaceUrl) {
@@ -724,16 +704,47 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
 //==============================================================================
 
+static const auto ATag  = QStringLiteral("A");
+static const auto TrTag = QStringLiteral("TR");
+
+//==============================================================================
+
+static const auto StatusClass  = QStringLiteral("status");
+static const auto IStatusClass = QStringLiteral("istatus");
+static const auto WStatusClass = QStringLiteral("wstatus");
+
+//==============================================================================
+
+QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
+{
+    QWebElement workspaceElement = pRowElement;
+
+    // Find parent workspace
+
+    while (   !workspaceElement.isNull()
+           && !(   !workspaceElement.tagName().compare(TrTag)
+                &&  workspaceElement.hasClass("workspace"))) {
+        workspaceElement = workspaceElement.parent();
+
+        if (workspaceElement.hasClass("contents"))
+            workspaceElement = workspaceElement.previousSibling();
+    }
+
+    return workspaceElement;
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
     while (   !webElement.isNull()
-           &&  webElement.tagName().compare("A")
-           &&  webElement.tagName().compare("TR")
-           && !webElement.hasClass("status")
-           && !webElement.hasClass("istatus")
-           && !webElement.hasClass("wstatus")) {
+           &&  webElement.tagName().compare(ATag)
+           &&  webElement.tagName().compare(TrTag)
+           && !webElement.hasClass(StatusClass)
+           && !webElement.hasClass(IStatusClass)
+           && !webElement.hasClass(WStatusClass)) {
         webElement = webElement.parent();
     }
 
@@ -741,7 +752,8 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
     QCursor mouseCursor = QCursor(Qt::ArrowCursor);
 
     if (!webElement.isNull()) {
-        if (webElement.tagName() == "A" && !webElement.attribute("href").isEmpty()) {
+        if (   !webElement.tagName().compare(ATag)
+            && !webElement.attribute("href").isEmpty()) {
             QString action = webElement.attribute("href").split("|")[0];
 
             if (!action.compare(StageAction)) {
@@ -762,16 +774,16 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
             } else if (!action.compare(CommitAction)) {
                 toolTip = tr("Commit Staged Changes");
             }
-        } else if (   webElement.hasClass("status")
-                   || webElement.hasClass("istatus")
-                   || webElement.hasClass("wstatus")) {
+        } else if (   webElement.hasClass(StatusClass)
+                   || webElement.hasClass(IStatusClass)
+                   || webElement.hasClass(WStatusClass)) {
             QString statusChar = webElement.toPlainText().trimmed();
 
-            if (webElement.hasClass("status")) {
+            if (webElement.hasClass(StatusClass)) {
                 if (!statusChar.compare("C"))
                     toolTip = tr("Conflicts");
             } else {
-                if (!statusChar.compare("A"))
+                if (!statusChar.compare(ATag))
                     toolTip = tr("Added");
                 else if (!statusChar.compare("C"))
                     toolTip = tr("Conflicts");
@@ -806,7 +818,7 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 
         QWebElement trElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
-        while (!trElement.isNull() && trElement.tagName().compare("TR"))
+        while (!trElement.isNull() && trElement.tagName().compare(TrTag))
             trElement = trElement.parent();
 
         // Select the row that's been clicked in before doing anything else
@@ -819,8 +831,8 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
         QWebElement aElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
         while (   !aElement.isNull()
-               &&  aElement.tagName().compare("A")
-               && aElement.tagName().compare("TR")) {
+               &&  aElement.tagName().compare(ATag)
+               && aElement.tagName().compare(TrTag)) {
             aElement = aElement.parent();
         }
 
@@ -828,7 +840,7 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 
         QString aLink = aElement.attribute("href");
 
-        if (   !aElement.isNull() && !aElement.tagName().compare("A")
+        if (   !aElement.isNull() && !aElement.tagName().compare(ATag)
             && !aLink.isEmpty()) {
             if (aElement.toPlainText().isEmpty() && aLink.contains("|")) {
                 QStringList linkList = aLink.split("|");
@@ -908,7 +920,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
     const QPoint &pos = pEvent->pos();
     QWebElement trElement = page()->mainFrame()->hitTestContent(pos).element();
 
-    while (!trElement.isNull() && trElement.tagName().compare("TR"))
+    while (!trElement.isNull() && trElement.tagName().compare(TrTag))
         trElement = trElement.parent();
 
     if (!trElement.isNull() && trElement.hasClass("workspace")) {
