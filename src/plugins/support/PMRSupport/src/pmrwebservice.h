@@ -68,7 +68,6 @@ public:
                              const QString &pPath) const;
     void requestWorkspaces() const;
 
-    void requestWorkspaceInformation(const QString &pUrl) const;
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                const QString &pPath);
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
@@ -93,8 +92,8 @@ private:
                                      PmrExposure *pExposure = 0);
     void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
-    void requestExposureFileInformation(PmrExposure *pExposure,
-                                        const QString &pUrl);
+    void requestExposureFileInformation(const QString &pUrl,
+                                        PmrExposure *pExposure);
 
     void emitInformation(const QString &pMessage);
 

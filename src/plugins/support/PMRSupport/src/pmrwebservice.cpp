@@ -251,9 +251,9 @@ void PmrWebService::newWorkspaceResponse(const QString &pUrl)
     emit workspaceCreated(pUrl);
 
     // Now that the workspace has been created, we can request its information
+    // Note: a non-empty path will also clone the workspace...
 
     requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
-    // Note: a non-empty path will also clone the workspace...
 }
 
 //==============================================================================
@@ -299,20 +299,6 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
     // Let people know about the list of workspaces
 
     emit PmrWebService::workspaces(workspaces);
-}
-
-//==============================================================================
-
-void PmrWebService::requestWorkspaceInformation(const QString &pUrl) const
-{
-    // Retrieve some information about the workspace, which URL is given
-
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
-
-    if (pmrResponse) {
-        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
-                this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
-    }
 }
 
 //==============================================================================
@@ -533,8 +519,8 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
 
 //==============================================================================
 
-void PmrWebService::requestExposureFileInformation(PmrExposure *pExposure,
-                                                   const QString &pUrl)
+void PmrWebService::requestExposureFileInformation(const QString &pUrl,
+                                                   PmrExposure *pExposure)
 {
     // Retrieve some information about the exposure file, which URL is given
 
@@ -704,7 +690,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         }
 
         foreach (const QString &exposureFileUrl, exposureFileUrls)
-            requestExposureFileInformation(exposure, exposureFileUrl);
+            requestExposureFileInformation(exposureFileUrl, exposure);
     }
 }
 

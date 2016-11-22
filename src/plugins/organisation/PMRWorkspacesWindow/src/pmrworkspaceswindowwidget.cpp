@@ -1048,27 +1048,30 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
     // folders. In doing so folders/URLs that don't correspond to an actual PMR
     // workspace are pruned from the relevant maps.
 
-    // First clear the owned flag from the list of URLs with workspace folders
+    // First, clear the owned flag from the list of URLs with workspace folders
 
     QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
+
     while (urlsIterator.hasNext()) {
         urlsIterator.next();
+
         urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
     }
 
     foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
-        // Remember our workspace so we can find it by URL
+        // Remember our workspace, so we can find it by URL
 
         QString url = workspace->url();
 
         mWorkspaceManager->addWorkspace(workspace);
 
-        // Check if we know its folder and flag it is ours
+        // Check if we know its folder and flag it as ours
 
         if (mUrlFolderNameMines.contains(url)) {
             QString path = mUrlFolderNameMines.value(url).first;
 
             mUrlFolderNameMines.insert(url, QPair<QString, bool>(path, true));
+
             workspace->setPath(path);
             workspace->open();
         }
@@ -1077,6 +1080,7 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
     // Now check the workspace folders that aren't from my-workspaces (on PMR)
 
     urlsIterator.toFront();
+
     while (urlsIterator.hasNext()) {
         urlsIterator.next();
 
@@ -1086,10 +1090,12 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
 
             if (workspace) {
                 mWorkspaceManager->addWorkspace(workspace);
+
                 workspace->setPath(urlsIterator.value().first);
                 workspace->open();
             } else {
                 mWorkspaceFolderUrls.remove(urlsIterator.value().first);
+
                 urlsIterator.remove();
             }
         }
@@ -1234,7 +1240,8 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 
 void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
-    // initialiseWorkspaceWidget() will be called when list received.
+    // Note: initialiseWorkspaceWidget() will be called when the list of
+    //       workspaces has been received...
 
     mPmrWebService->requestWorkspaces();
 }
