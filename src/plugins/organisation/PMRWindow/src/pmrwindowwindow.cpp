@@ -138,7 +138,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             this, SLOT(initializeWidget(const PMRSupport::PmrExposures &)));
 
     connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
-            mPmrWindowWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
+            mPmrWindowWidget, SLOT(addAndShowExposureFiles(const QString &, const QStringList &)));
 
     // Some connections to know what our PMR widget wants from us
 

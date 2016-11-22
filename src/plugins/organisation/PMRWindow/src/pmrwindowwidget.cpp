@@ -51,9 +51,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mInitialized(false),
     mErrorMessage(QString()),
     mNumberOfFilteredExposures(0),
-    mExposureUrl(QString()),
-    mShowExposureFilesTimer(0),
-    mShowExposureFilesUrl(QString())
+    mExposureUrl(QString())
 {
     // Create and populate our context menu
 
@@ -256,10 +254,10 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
-void PmrWindowWidget::addExposureFiles(const QString &pUrl,
-                                       const QStringList &pExposureFiles)
+void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
+                                              const QStringList &pExposureFiles)
 {
-    // Add the given exposure files to the exposure
+    // Add the given exposure files to the exposure and show them
 
     QStringList sortedExposureFiles = QStringList(pExposureFiles);
 
@@ -275,61 +273,7 @@ void PmrWindowWidget::addExposureFiles(const QString &pUrl,
                                        "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
     }
 
-    // Show the exposure files if we've been waiting for them
-
-    if (!pUrl.compare(mShowExposureFilesUrl)) {
-        showExposureFiles(mShowExposureFilesUrl, true);
-
-        clearShowExposureFilesUrl();
-    }
-}
-
-//==============================================================================
-
-void PmrWindowWidget::clearShowExposureFilesUrl()
-{
-    stopShowExposureFilesTimer();
-    mShowExposureFilesUrl.clear();
-}
-
-//==============================================================================
-
-void PmrWindowWidget::setShowExposureFilesUrl(const QString &pUrl)
-{
-
-    mShowExposureFilesUrl = pUrl;
-    startShowExposureFilesTimer();
-}
-
-//==============================================================================
-
-void PmrWindowWidget::startShowExposureFilesTimer()
-{
-    // Only show exposure files if list received with 30 seconds
-
-    stopShowExposureFilesTimer();
-
-    mShowExposureFilesTimer = new QTimer(this);
-
-    mShowExposureFilesTimer->setSingleShot(true);
-
-    connect(mShowExposureFilesTimer, SIGNAL(timeout()),
-            this, SLOT(clearShowExposureFilesUrl()));
-
-    mShowExposureFilesTimer->start(30000);
-}
-
-//==============================================================================
-
-void PmrWindowWidget::stopShowExposureFilesTimer()
-{
-    // Stop any active timer
-
-    if (mShowExposureFilesTimer) {
-        mShowExposureFilesTimer->stop();
-        delete mShowExposureFilesTimer;
-        mShowExposureFilesTimer = 0;
-    }
+    showExposureFiles(pUrl, true);
 }
 
 //==============================================================================
@@ -398,11 +342,6 @@ void PmrWindowWidget::linkClicked()
             QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
 
             if (ulElement.firstChild().isNull()) {
-                // Remember the exposure so its files can be shown when they are
-                // received and request them
-
-                setShowExposureFilesUrl(linkList[1]);
-
                 emit exposureFilesRequested(linkList[1]);
             } else {
                 showExposureFiles(linkList[1],
