@@ -155,10 +155,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New Workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Create a new workspace</source>
         <translation type="unfinished"></translation>
     </message>
@@ -168,6 +164,10 @@
     </message>
     <message>
         <source>Reload the list of workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

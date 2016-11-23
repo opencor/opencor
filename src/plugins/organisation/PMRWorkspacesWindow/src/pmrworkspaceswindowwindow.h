@@ -28,10 +28,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QAbstractItemModel>
-
-//==============================================================================
-
 namespace Ui {
     class PmrWorkspacesWindowWindow;
 }
