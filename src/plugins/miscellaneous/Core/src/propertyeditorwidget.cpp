@@ -29,10 +29,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
 #include <QHeaderView>

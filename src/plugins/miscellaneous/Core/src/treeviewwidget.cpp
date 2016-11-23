@@ -24,10 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDrag>
 #include <QHeaderView>
 #include <QModelIndex>

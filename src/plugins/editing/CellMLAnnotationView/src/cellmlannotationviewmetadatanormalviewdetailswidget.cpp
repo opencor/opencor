@@ -32,10 +32,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QApplication>
 #include <QClipboard>
 #include <QCursor>
