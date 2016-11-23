@@ -4,13 +4,15 @@ SET(ZLIB_VERSION "1")
 SET(ZLIB_GIT_TAG "v1.2.8")
 
 IF(WIN32)
-    SET(ZLIB_LIBRARY zlib${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+#    SET(ZLIB_LIBRARY zlib${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ZLIB_LIBRARY zlibd${CMAKE_SHARED_LIBRARY_SUFFIX})
 ELSE()
     SET(ZLIB_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
 SET(EXTERNAL_BINARIES ${ZLIB_LIBRARY})
 
-SET(INSTALL_DIR ${PROJECT_SOURCE_DIR}/bin/${REMOTE_EXTERNAL_BINARIES_DIR})
+SET(INSTALL_BASE bin/${REMOTE_EXTERNAL_BINARIES_DIR})
+SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${INSTALL_BASE})
 
 
 IF(WIN32)
@@ -69,23 +71,26 @@ ELSE()
     ExternalProject_Add(
         zlibBuild
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/zlib
-        INSTALL_DIR ${INSTALL_DIR}
+        INSTALL_DIR ${FULL_INSTALL_DIR}
         GIT_REPOSITORY https://github.com/madler/zlib.git
         GIT_TAG ${ZLIB_GIT_TAG}
         PATCH_COMMAND ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
         CMAKE_CACHE_ARGS
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_C_FLAGS:STRING=${ZLIB_C_FLAGS}
         CMAKE_ARGS
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_CONFIGURATION_TYPES=${CMAKE_CONFIGURATION_TYPES}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
+        BUILD_BYPRODUCTS <INSTALL_DIR>/lib/zlibd.lib
     )
 
-    IF(WINDOWS)
-        # the zlib library should be named zlib1.lib not zlib.lib
-        ExternalProject_Add_Step(zlib RenameLib
-            COMMAND ${CMAKE_COMMAND} -E copy ${INSTALL_DIR}/lib/zlib.lib
-                                             ${INSTALL_DIR}/lib/zlib${ZLIB_VERSION}.lib
+    IF(WIN32)
+#        # the zlib library should be named zlib1.lib not zlib.lib
+        ExternalProject_Add_Step(zlibBuild CopyDLL
+            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/bin/zlibd.dll
+                                             ${FULL_INSTALL_DIR}/lib
+#            BYPRODUCTS ${FULL_INSTALL_DIR}/lib/zlib${ZLIB_VERSION}.lib
             DEPENDEES install)
     ENDIF()
 
@@ -103,12 +108,12 @@ ADD_PLUGIN(zlib
     HEADERS_MOC
         src/zlibplugin.h
     INCLUDE_DIRS
-        ${INSTALL_DIR}/include
+        ${INSTALL_BASE}/include
         src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
-        ${INSTALL_DIR}/lib
+        ${FULL_INSTALL_DIR}/lib
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
 )
