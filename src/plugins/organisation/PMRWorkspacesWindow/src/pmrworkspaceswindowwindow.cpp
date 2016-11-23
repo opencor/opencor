@@ -21,7 +21,6 @@ limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"
@@ -37,14 +36,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDir>
 #include <QGraphicsColorizeEffect>
 #include <QMainWindow>
-#include <QPoint>
 #include <QSettings>
 #include <QTimer>
 
