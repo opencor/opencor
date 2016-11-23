@@ -27,11 +27,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-#include <QtMath>
-
-//==============================================================================
-
 #include <QApplication>
 #include <QColor>
 #include <QDesktopWidget>
