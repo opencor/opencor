@@ -61,6 +61,8 @@ bool PMRWorkspacesWindowPlugin::isIndirectRemoteFile(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
+    // We don't handle this interface...
+
     return false;
 }
 
@@ -74,13 +76,17 @@ bool PMRWorkspacesWindowPlugin::saveFile(const QString &pOldFileName,
     Q_UNUSED(pNewFileName);
     Q_UNUSED(pNeedFeedback);
 
-    return true;
+    // We don't handle this interface...
+
+    return false;
 }
 
 //==============================================================================
 
 void PMRWorkspacesWindowPlugin::fileOpened(const QString &pFileName)
 {
+    // We don't handle this interface...
+
     Q_UNUSED(pFileName);
 }
 
@@ -88,6 +94,8 @@ void PMRWorkspacesWindowPlugin::fileOpened(const QString &pFileName)
 
 void PMRWorkspacesWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
+    // We don't handle this interface...
+
     Q_UNUSED(pFileName);
 }
 
@@ -95,6 +103,8 @@ void PMRWorkspacesWindowPlugin::filePermissionsChanged(const QString &pFileName)
 
 void PMRWorkspacesWindowPlugin::fileModified(const QString &pFileName)
 {
+    // We don't handle this interface...
+
     Q_UNUSED(pFileName);
 }
 
@@ -105,7 +115,7 @@ void PMRWorkspacesWindowPlugin::fileReloaded(const QString &pFileName,
 {
     Q_UNUSED(pFileChanged);
 
-    // The given file has been reloaded, so let its corresponding view widget
+    // The given file has been reloaded, so let its corresponding view window
     // know about it
 
     mPmrWorkspacesWindowWindow->fileReloaded(pFileName);
@@ -116,7 +126,7 @@ void PMRWorkspacesWindowPlugin::fileReloaded(const QString &pFileName,
 void PMRWorkspacesWindowPlugin::fileRenamed(const QString &pOldFileName,
                                             const QString &pNewFileName)
 {
-    // Let our view widget know that a file has been renamed
+    // The given file has been renamed, so let our view window know about it
 
     mPmrWorkspacesWindowWindow->fileRenamed(pOldFileName, pNewFileName);
 }
@@ -125,6 +135,8 @@ void PMRWorkspacesWindowPlugin::fileRenamed(const QString &pOldFileName,
 
 void PMRWorkspacesWindowPlugin::fileClosed(const QString &pFileName)
 {
+    // We don't handle this interface...
+
     Q_UNUSED(pFileName);
 }
 
