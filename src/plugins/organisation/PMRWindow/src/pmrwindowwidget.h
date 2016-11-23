@@ -54,6 +54,8 @@ public:
 
     void filter(const QString &pFilter);
 
+    bool hasExposures() const;
+
 protected:
     virtual QSize sizeHint() const;
 

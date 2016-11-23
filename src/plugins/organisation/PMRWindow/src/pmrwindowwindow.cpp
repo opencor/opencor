@@ -126,13 +126,12 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
 
-    connect(mPmrWebService, SIGNAL(error(const QString &)),
-            this, SLOT(pmrError(const QString &)));
-
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
+    connect(mPmrWebService, SIGNAL(error(const QString &)),
+            this, SLOT(showError(const QString &)));
 
     connect(mPmrWebService, SIGNAL(exposures(const PMRSupport::PmrExposures &)),
             this, SLOT(initializeWidget(const PMRSupport::PmrExposures &)));
@@ -230,18 +229,9 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-void PmrWindowWindow::pmrError(const QString &pMessage)
-{
-    // Tell our PMR widget that we have a problem
-
-    mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
-}
-
-//==============================================================================
-
 void PmrWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show the given message as informative text
+    // Show the given message as an information message box
 
     Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
@@ -250,9 +240,26 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 
 void PmrWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show the given message as a warning
+    // Show the given message as a warning message box
 
     Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::showError(const QString &pMessage)
+{
+    // Either show the given message as an error message box or tell our PMR
+    // widget that we have a problem, this based on whether we tried to retrieve
+    // the list of exposures
+    // Note: indeed, the idea is not to break the user's workflow, should an
+    //       error occur when trying to retrieve the list of exposures at
+    //       startup...
+
+    if (mPmrWindowWidget->hasExposures())
+        Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    else
+        mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
 }
 
 //==============================================================================

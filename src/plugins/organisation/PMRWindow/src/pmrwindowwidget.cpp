@@ -253,6 +253,15 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
+bool PmrWindowWidget::hasExposures() const
+{
+    // Return whether we have some exposures
+
+    return !mExposureNames.isEmpty();
+}
+
+//==============================================================================
+
 void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
                                               const QStringList &pExposureFiles)
 {
