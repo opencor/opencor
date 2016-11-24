@@ -213,7 +213,7 @@
         <translation>À Propos</translation>
     </message>
     <message>
-        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
+        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you want to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
 </context>
@@ -297,7 +297,7 @@
         <translation>Catégorie :</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you want to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
     </message>
 </context>

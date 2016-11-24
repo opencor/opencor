@@ -50,10 +50,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
@@ -1157,7 +1153,7 @@ void MainWindow::on_actionPlugins_triggered()
         if (pluginsDialog.result() == QMessageBox::Apply)
             restart(true);
     } else {
-        warningMessageBox(this, tr("Plugins"),
+        warningMessageBox(tr("Plugins"),
                           tr("No plugins could be found."));
     }
 }
@@ -1185,11 +1181,11 @@ void MainWindow::on_actionPreferences_triggered()
 
             preferencesDialog.exec();
         } else {
-            warningMessageBox(this, tr("Preferences"),
+            warningMessageBox(tr("Preferences"),
                               tr("No plugins have preferences."));
         }
     } else {
-        warningMessageBox(this, tr("Preferences"),
+        warningMessageBox(tr("Preferences"),
                           tr("No plugins could be found."));
     }
 }
@@ -1220,7 +1216,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    aboutMessageBox(this, tr("About"),
+    aboutMessageBox(tr("About"),
                     "<h1 align=center><strong>"+version()+"</strong></h1>"
                     "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
@@ -1367,10 +1363,8 @@ void MainWindow::updateDockWidgetsVisibility()
 
 void MainWindow::resetAll()
 {
-    if (questionMessageBox(this, qAppName(),
-                           tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
-                           QMessageBox::Yes|QMessageBox::No,
-                           QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(qAppName(),
+                           tr("You are about to reset <strong>all</strong> of your settings. Do you want to proceed?")) == QMessageBox::Yes ) {
         // Restart OpenCOR without first saving its settings
 
         restart(false);

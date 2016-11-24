@@ -281,7 +281,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
             //       one of them following a CellML export...
         }
 
-        Core::warningMessageBox(Core::mainWindow(), tr("Export CellML File To %1").arg(format),
+        Core::warningMessageBox(tr("Export CellML File To %1").arg(format),
                                 tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
     }
 }
@@ -489,7 +489,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             //       one of them following a CellML export...
         }
 
-        Core::warningMessageBox(Core::mainWindow(), tr("Export CellML File To User-Defined Format"),
+        Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),
                                 tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
     }
 }

@@ -25,10 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAction>
 #include <QDesktopServices>
 #include <QDir>

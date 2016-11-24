@@ -36,8 +36,6 @@ ADD_PLUGIN(CellMLTextView
         ${LLVM_PLUGIN_BINARY}
         ${QSCINTILLA_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
         clitests
         conversiontests

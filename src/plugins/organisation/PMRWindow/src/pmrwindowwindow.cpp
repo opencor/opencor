@@ -34,10 +34,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
@@ -238,7 +234,7 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 {
     // Show the given message as a warning
 
-    Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::warningMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -247,7 +243,7 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 {
     // Show the given message as informative text
 
-    Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::informationMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
