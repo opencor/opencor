@@ -227,7 +227,7 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
 {
     // Show the given message as an information message box
 
-    Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::informationMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -236,7 +236,7 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
 {
     // Show the given message as a warning message box
 
-    Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::warningMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -251,7 +251,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       startup...
 
     if (mPmrWorkspacesWindowWidget->hasWorkspaces())
-        Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+        Core::criticalMessageBox(windowTitle(), pMessage);
     else
         mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
 }

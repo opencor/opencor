@@ -229,7 +229,7 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 {
     // Show the given message as an information message box
 
-    Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::informationMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -253,7 +253,7 @@ void PmrWindowWindow::showError(const QString &pMessage)
     //       startup...
 
     if (mPmrWindowWidget->hasExposures())
-        Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+        Core::criticalMessageBox(windowTitle(), pMessage);
     else
         mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
 }
