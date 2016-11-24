@@ -122,7 +122,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, SLOT(updateGui()));
 
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
-            mPmrWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &)));
+            mPmrWorkspacesWindowWidget, SLOT(initialize(const PMRSupport::PmrWorkspaces &)));
 
     // Connections to process requests from our workspaces widget
 
@@ -250,11 +250,10 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       error occur when trying to retrieve the list of workspaces at
     //       startup...
 
-//---GRY--- TO BE DONE...
-//    if (mPmrWorkspacesWindowWidget->hasWorkspaces())
+    if (mPmrWorkspacesWindowWidget->hasWorkspaces())
         Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
-//    else
-//        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
+    else
+        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
 }
 
 //==============================================================================
@@ -293,9 +292,9 @@ void PmrWorkspacesWindowWindow::updateGui()
     retranslateActionPmr();
 
     if (mAuthenticated)
-        mPmrWorkspacesWindowWidget->refreshWorkspaces();
+        mPmrWorkspacesWindowWidget->reloadWorkspaces();
     else
-        mPmrWorkspacesWindowWidget->clearWorkspaces();
+        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
 }
 
 //==============================================================================
@@ -354,7 +353,7 @@ void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 {
     // Ask the workspaces widget to refresh itself
 
-    mPmrWorkspacesWindowWidget->refreshWorkspaces();
+    mPmrWorkspacesWindowWidget->reloadWorkspaces();
 }
 
 //==============================================================================

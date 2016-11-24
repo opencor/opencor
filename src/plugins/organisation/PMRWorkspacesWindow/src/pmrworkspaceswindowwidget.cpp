@@ -100,6 +100,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mCurrentWorkspaceUrl(QString()),
     mExpandedItems(QSet<QString>()),
     mSelectedItem(QString()),
+    mInitialized(false),
+    mErrorMessage(QString()),
+    mAuthenticated(true),
     mRowAnchor(0),
     mItemAnchors(QMap<QString, int>())
 {
@@ -173,6 +176,324 @@ PmrWorkspacesWindowWidget::~PmrWorkspacesWindowWidget()
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::retranslateUi()
+{
+    // Retranslate our message, if we have been initialised
+
+    if (mInitialized)
+        page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
+}
+
+//==============================================================================
+
+static const auto ATag  = QStringLiteral("A");
+static const auto TrTag = QStringLiteral("TR");
+
+//==============================================================================
+
+static const auto StatusClass  = QStringLiteral("status");
+static const auto IStatusClass = QStringLiteral("istatus");
+static const auto WStatusClass = QStringLiteral("wstatus");
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    QMenu *menu = new QMenu(this);
+    const QPoint &pos = pEvent->pos();
+    QWebElement trElement = page()->mainFrame()->hitTestContent(pos).element();
+
+    while (!trElement.isNull() && trElement.tagName().compare(TrTag))
+        trElement = trElement.parent();
+
+    if (!trElement.isNull() && trElement.hasClass("workspace")) {
+        QString elementId = trElement.attribute("id");
+
+        if (!trElement.findFirst("img.clone").isNull()) {
+            QAction *action = new QAction(QIcon(CloneIcon), tr("Clone Workspace"), this);
+
+            action->setData(QString(CloneAction+"|%1").arg(elementId));
+
+            menu->addAction(action);
+        } else {
+            if (!trElement.findFirst("img.commit").isNull()) {
+                QAction *action = new QAction(QIcon(CommitIcon), tr("Commit Changes"), this);
+
+                action->setData(QString(CommitAction+"|%1").arg(elementId));
+
+                menu->addAction(action);
+            }
+
+            if (!trElement.findFirst("img.synchronizePull").isNull()) {
+                QAction *action = new QAction(QIcon(SynchronizePullIcon), tr("Synchronise"), this);
+
+                action->setData(QString(SynchronizePullAction+"|%1").arg(elementId));
+
+                menu->addAction(action);
+            }
+
+            if (!trElement.findFirst("img.synchronize").isNull()) {
+                QAction *action = new QAction(QIcon(SynchronizeIcon), tr("Synchronise"), this);
+
+                action->setData(QString(SynchronizeAction+"|%1").arg(elementId));
+
+                menu->addAction(action);
+            } else if (!trElement.findFirst("img.synchronizePush").isNull()) {
+                QAction *action = new QAction(QIcon(SynchronizePushIcon), tr("Synchronise And Upload"), this);
+
+                action->setData(QString(SynchronizePushAction+"|%1").arg(elementId));
+
+                menu->addAction(action);
+            }
+        }
+
+        menu->addSeparator();
+
+        QAction *refreshAction = new QAction(QIcon(RefreshIcon), tr("Refresh Display"), this);
+
+        refreshAction->setData(QString(RefreshAction+"|%1").arg(elementId));
+
+        menu->addAction(refreshAction);
+
+        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(elementId);
+
+        if (workspace) {
+            QAction *action = new QAction(tr("View In PMR..."), this);
+
+            action->setData(QString("pmr|%1").arg(workspace->url()));
+
+            menu->addAction(action);
+
+            if (workspace->isLocal()) {
+                action = new QAction(tr("Show Containing Folder..."), this);
+
+                action->setData(QString("show|%1").arg(workspace->path()));
+
+                menu->addAction(action);
+            }
+        }
+
+        menu->addSeparator();
+
+        QAction *aboutAction = new QAction(QIcon(AboutIcon), tr("About Workspace"), this);
+
+        aboutAction->setData(QString(AboutAction+"|%1").arg(elementId));
+
+        menu->addAction(aboutAction);
+    }
+
+    if (!menu->isEmpty()) {
+        QAction *item = menu->exec(mapToGlobal(pos));
+
+        if (item) {
+            QStringList linkList = item->data().toString().split("|");
+            QString action = linkList[0];
+            QString linkId = linkList[1];
+
+            if (!action.compare(AboutAction)) {
+                aboutWorkspace(linkId);
+            } else if (!action.compare(CloneAction)) {
+                cloneWorkspace(linkId);
+            } else if (!action.compare(RefreshAction)) {
+                refreshWorkspace(linkId);
+            } else if (   !action.compare(SynchronizePullAction)
+                       || !action.compare(SynchronizeAction)) {
+                synchronizeWorkspace(linkId, false);
+            } else if (!action.compare(CommitAction)) {
+                commitWorkspace(linkId);
+            } else if (!action.compare(SynchronizePushAction)) {
+                synchronizeWorkspace(linkId);
+            } else if (!action.compare("pmr")) {
+                QDesktopServices::openUrl(linkId);
+            } else if (!action.compare("show")) {
+                showInGraphicalShell(linkId);
+            }
+        }
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We handle this event ourselves so default event processing
+    // doesn't do anything (such as follow a link or open a file).
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
+{
+    QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
+
+    while (   !webElement.isNull()
+           &&  webElement.tagName().compare(ATag)
+           &&  webElement.tagName().compare(TrTag)
+           && !webElement.hasClass(StatusClass)
+           && !webElement.hasClass(IStatusClass)
+           && !webElement.hasClass(WStatusClass)) {
+        webElement = webElement.parent();
+    }
+
+    QString toolTip = QString();
+    QCursor mouseCursor = QCursor(Qt::ArrowCursor);
+
+    if (!webElement.isNull()) {
+        if (   !webElement.tagName().compare(ATag)
+            && !webElement.attribute("href").isEmpty()) {
+            QString action = webElement.attribute("href").split("|")[0];
+
+            if (!action.compare(StageAction)) {
+                toolTip = tr("Stage");
+            } else if (!action.compare(UnstageAction)) {
+                toolTip = tr("Unstage");
+            } else if (webElement.parent().parent().hasClass("file")) {
+                toolTip = tr("Open File");
+
+                mouseCursor = QCursor(Qt::PointingHandCursor);
+            } else if (!action.compare(CloneAction)) {
+                toolTip = tr("Clone Workspace");
+            } else if (   !action.compare(SynchronizeAction)
+                       || !action.compare(SynchronizePullAction)) {
+                toolTip = tr("Synchronise");
+            } else if (!action.compare(SynchronizePushAction)) {
+                toolTip = tr("Synchronise And Upload");
+            } else if (!action.compare(CommitAction)) {
+                toolTip = tr("Commit Staged Changes");
+            }
+        } else if (   webElement.hasClass(StatusClass)
+                   || webElement.hasClass(IStatusClass)
+                   || webElement.hasClass(WStatusClass)) {
+            QString statusChar = webElement.toPlainText().trimmed();
+
+            if (webElement.hasClass(StatusClass)) {
+                if (!statusChar.compare("C"))
+                    toolTip = tr("Conflicts");
+            } else {
+                if (!statusChar.compare(ATag))
+                    toolTip = tr("Added");
+                else if (!statusChar.compare("C"))
+                    toolTip = tr("Conflicts");
+                else if (!statusChar.compare("D"))
+                    toolTip = tr("Deleted");
+                else if (!statusChar.compare("M"))
+                    toolTip = tr("Modified");
+            }
+        }
+
+        if (toolTip.isEmpty()) {
+            QString link = webElement.attribute("id");
+
+            if (webElement.hasClass("workspace")) {
+                PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(link);
+
+                toolTip = QString("%1\n%2").arg(workspace->url(), workspace->path());
+            }
+        }
+    }
+
+    setCursor(mouseCursor);
+    QToolTip::showText(mapToGlobal(pEvent->pos()), toolTip, this, QRect());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    if (pEvent->button() == Qt::LeftButton) {
+        // Find the containing row and highlight it
+
+        QWebElement trElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
+
+        while (!trElement.isNull() && trElement.tagName().compare(TrTag))
+            trElement = trElement.parent();
+
+        // Select the row that's been clicked in before doing anything else
+
+        QString rowLink = trElement.attribute("id");
+
+        if (!trElement.hasClass("workspace"))
+            setSelected(trElement);
+
+        QWebElement aElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
+
+        while (   !aElement.isNull()
+               &&  aElement.tagName().compare(ATag)
+               &&  aElement.tagName().compare(TrTag)) {
+            aElement = aElement.parent();
+        }
+
+        // Check if an anchor element has been clicked
+
+        QString aLink = aElement.attribute("href");
+
+        if (   !aElement.isNull() && !aElement.tagName().compare(ATag)
+            && !aLink.isEmpty()) {
+            if (aElement.toPlainText().isEmpty() && aLink.contains("|")) {
+                QStringList linkList = aLink.split("|");
+                QString action = linkList[0];
+                QString linkUrl = linkList[1];
+
+                if (!action.compare(CloneAction)) {
+                    cloneWorkspace(linkUrl);
+                } else if (!action.compare(CommitAction)) {
+                    commitWorkspace(linkUrl);
+                } else if (   !action.compare(SynchronizeAction)
+                           || !action.compare(SynchronizePullAction)) {
+                    synchronizeWorkspace(linkUrl, false);
+                } else if (!action.compare(SynchronizePushAction)) {
+                    synchronizeWorkspace(linkUrl);
+                } else if (!action.compare(StageAction) || !action.compare(UnstageAction)) {
+                    QWebElement workspaceElement = parentWorkspaceElement(trElement);
+
+                    if (!workspaceElement.isNull()) {
+                        // Stage/unstage the file
+
+                        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
+
+                        workspace->stageFile(linkUrl, (!action.compare(StageAction)));
+
+                        // Now update the file's status and action
+
+                        QStringList statusActionHtml = fileStatusActionHtml(workspace, linkUrl);
+                        QWebElement statusElement = trElement.findFirst("td.status");
+
+                        if (!statusElement.isNull())
+                            statusElement.setInnerXml(statusActionHtml[0]);
+
+                        QWebElement actionElement = trElement.findFirst("td.action");
+
+                        if (!actionElement.isNull())
+                            actionElement.setInnerXml(statusActionHtml[1]);
+
+                        // And update the workspace's header icons
+
+                        refreshWorkspace(workspace->url());
+                    }
+               }
+            } else if (!aLink.isEmpty()) {
+                // Text link clicked, e.g. to open a file
+
+                emit openFileRequested(aLink);
+            }
+        } else if (trElement.hasClass("workspace")) {
+            if (rowLink == mCurrentWorkspaceUrl)
+                expandHtmlTree(rowLink);
+            else
+                setCurrentWorkspaceUrl(rowLink);
+
+            if (mExpandedItems.contains(rowLink))
+                refreshWorkspace(rowLink);
+        } else if (trElement.hasClass("folder")) {
+            expandHtmlTree(rowLink);
+        }
+    }
+}
+
+//==============================================================================
+
 QSize PmrWorkspacesWindowWidget::sizeHint() const
 {
     // Suggest a default size for our PMR workspaces widget
@@ -202,7 +523,8 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // Retrieve the names of folders containing cloned workspaces
 
         QStringList folders = pSettings->value(SettingsFolders).toStringList();
-        foreach (QString folder, folders) {
+
+        foreach (const QString &folder, folders) {
             if (!folder.isEmpty()) {
                 QString url = addWorkspaceFolder(folder);
 
@@ -253,6 +575,31 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+QString PmrWorkspacesWindowWidget::message() const
+{
+    // Determine the message to be displayed, if any
+
+    QString res = QString();
+
+    if (!mAuthenticated) {
+        res = tr("<strong>Warning:</strong> please authenticate yourself...");
+    } else if (mErrorMessage.isEmpty()) {
+        if (!mWorkspaceManager->count()) {
+            res = tr("No workspaces were found.");
+        } else if (mWorkspaceManager->count() == 1) {
+            res = tr("<strong>1</strong> workspace was found:");
+        } else {
+            res = tr("<strong>%1</strong> workspaces were found:").arg(QLocale().toString(mWorkspaceManager->count()));
+        }
+    } else {
+        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                              const bool &pOwned)
 {
@@ -265,6 +612,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
         } else {
             mWorkspaceFolderUrls.insert(folder, url);
             mUrlFolderNameMines.insert(url, QPair<QString, bool>(folder, pOwned));
+
             mWorkspaceManager->addWorkspace(pWorkspace);
         }
     }
@@ -672,13 +1020,6 @@ void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::clearWorkspaces()
-{
-    setHtml(mTemplate.arg(QString()));
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
     PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
@@ -699,19 +1040,8 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
     foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
         html << workspaceHtml(workspace);
 
-    setHtml(mTemplate.arg(html.join("\n")));
+    setHtml(mTemplate.arg(message(), html.join("\n")));
 }
-
-//==============================================================================
-
-static const auto ATag  = QStringLiteral("A");
-static const auto TrTag = QStringLiteral("TR");
-
-//==============================================================================
-
-static const auto StatusClass  = QStringLiteral("status");
-static const auto IStatusClass = QStringLiteral("istatus");
-static const auto WStatusClass = QStringLiteral("wstatus");
 
 //==============================================================================
 
@@ -735,302 +1065,6 @@ QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement 
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
-{
-    QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
-
-    while (   !webElement.isNull()
-           &&  webElement.tagName().compare(ATag)
-           &&  webElement.tagName().compare(TrTag)
-           && !webElement.hasClass(StatusClass)
-           && !webElement.hasClass(IStatusClass)
-           && !webElement.hasClass(WStatusClass)) {
-        webElement = webElement.parent();
-    }
-
-    QString toolTip = QString();
-    QCursor mouseCursor = QCursor(Qt::ArrowCursor);
-
-    if (!webElement.isNull()) {
-        if (   !webElement.tagName().compare(ATag)
-            && !webElement.attribute("href").isEmpty()) {
-            QString action = webElement.attribute("href").split("|")[0];
-
-            if (!action.compare(StageAction)) {
-                toolTip = tr("Stage");
-            } else if (!action.compare(UnstageAction)) {
-                toolTip = tr("Unstage");
-            } else if (webElement.parent().parent().hasClass("file")) {
-                toolTip = tr("Open File");
-
-                mouseCursor = QCursor(Qt::PointingHandCursor);
-            } else if (!action.compare(CloneAction)) {
-                toolTip = tr("Clone Workspace");
-            } else if (   !action.compare(SynchronizeAction)
-                       || !action.compare(SynchronizePullAction)) {
-                toolTip = tr("Synchronise");
-            } else if (!action.compare(SynchronizePushAction)) {
-                toolTip = tr("Synchronise And Upload");
-            } else if (!action.compare(CommitAction)) {
-                toolTip = tr("Commit Staged Changes");
-            }
-        } else if (   webElement.hasClass(StatusClass)
-                   || webElement.hasClass(IStatusClass)
-                   || webElement.hasClass(WStatusClass)) {
-            QString statusChar = webElement.toPlainText().trimmed();
-
-            if (webElement.hasClass(StatusClass)) {
-                if (!statusChar.compare("C"))
-                    toolTip = tr("Conflicts");
-            } else {
-                if (!statusChar.compare(ATag))
-                    toolTip = tr("Added");
-                else if (!statusChar.compare("C"))
-                    toolTip = tr("Conflicts");
-                else if (!statusChar.compare("D"))
-                    toolTip = tr("Deleted");
-                else if (!statusChar.compare("M"))
-                    toolTip = tr("Modified");
-            }
-        }
-
-        if (toolTip.isEmpty()) {
-            QString link = webElement.attribute("id");
-
-            if (webElement.hasClass("workspace")) {
-                PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(link);
-
-                toolTip = QString("%1\n%2").arg(workspace->url(), workspace->path());
-            }
-        }
-    }
-
-    setCursor(mouseCursor);
-    QToolTip::showText(mapToGlobal(pEvent->pos()), toolTip, this, QRect());
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
-{
-    if (pEvent->button() == Qt::LeftButton) {
-        // Find the containing row and highlight it
-
-        QWebElement trElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
-
-        while (!trElement.isNull() && trElement.tagName().compare(TrTag))
-            trElement = trElement.parent();
-
-        // Select the row that's been clicked in before doing anything else
-
-        QString rowLink = trElement.attribute("id");
-
-        if (!trElement.hasClass("workspace"))
-            setSelected(trElement);
-
-        QWebElement aElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
-
-        while (   !aElement.isNull()
-               &&  aElement.tagName().compare(ATag)
-               && aElement.tagName().compare(TrTag)) {
-            aElement = aElement.parent();
-        }
-
-        // Check if an anchor element has been clicked
-
-        QString aLink = aElement.attribute("href");
-
-        if (   !aElement.isNull() && !aElement.tagName().compare(ATag)
-            && !aLink.isEmpty()) {
-            if (aElement.toPlainText().isEmpty() && aLink.contains("|")) {
-                QStringList linkList = aLink.split("|");
-                QString action = linkList[0];
-                QString linkUrl = linkList[1];
-
-                if (!action.compare(CloneAction)) {
-                    cloneWorkspace(linkUrl);
-                } else if (!action.compare(CommitAction)) {
-                    commitWorkspace(linkUrl);
-                } else if (   !action.compare(SynchronizeAction)
-                           || !action.compare(SynchronizePullAction)) {
-                    synchronizeWorkspace(linkUrl, false);
-                } else if (!action.compare(SynchronizePushAction)) {
-                    synchronizeWorkspace(linkUrl);
-                } else if (!action.compare(StageAction) || !action.compare(UnstageAction)) {
-                    QWebElement workspaceElement = parentWorkspaceElement(trElement);
-
-                    if (!workspaceElement.isNull()) {
-                        // Stage/unstage the file
-
-                        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
-                        workspace->stageFile(linkUrl, (!action.compare(StageAction)));
-
-                        // Now update the file's status and action
-
-                        QStringList statusActionHtml = fileStatusActionHtml(workspace, linkUrl);
-                        QWebElement statusElement = trElement.findFirst("td.status");
-
-                        if (!statusElement.isNull())
-                            statusElement.setInnerXml(statusActionHtml[0]);
-
-                        QWebElement actionElement = trElement.findFirst("td.action");
-
-                        if (!actionElement.isNull())
-                            actionElement.setInnerXml(statusActionHtml[1]);
-
-                        // And update the workspace's header icons
-
-                        refreshWorkspace(workspace->url());
-                    }
-               }
-            } else if (!aLink.isEmpty()) {
-                // Text link clicked, e.g. to open a file
-
-                emit openFileRequested(aLink);
-            }
-        } else if (trElement.hasClass("workspace")) {
-            if (rowLink == mCurrentWorkspaceUrl)
-                expandHtmlTree(rowLink);
-            else
-                setCurrentWorkspaceUrl(rowLink);
-
-            if (mExpandedItems.contains(rowLink))
-                refreshWorkspace(rowLink);
-        } else if (trElement.hasClass("folder")) {
-            expandHtmlTree(rowLink);
-        }
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We handle this event ourselves so default event processing
-    // doesn't do anything (such as follow a link or open a file).
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
-{
-    QMenu *menu = new QMenu(this);
-    const QPoint &pos = pEvent->pos();
-    QWebElement trElement = page()->mainFrame()->hitTestContent(pos).element();
-
-    while (!trElement.isNull() && trElement.tagName().compare(TrTag))
-        trElement = trElement.parent();
-
-    if (!trElement.isNull() && trElement.hasClass("workspace")) {
-        QString elementId = trElement.attribute("id");
-
-        if (!trElement.findFirst("img.clone").isNull()) {
-            QAction *action = new QAction(QIcon(CloneIcon), tr("Clone Workspace"), this);
-
-            action->setData(QString(CloneAction+"|%1").arg(elementId));
-
-            menu->addAction(action);
-        } else {
-            if (!trElement.findFirst("img.commit").isNull()) {
-                QAction *action = new QAction(QIcon(CommitIcon), tr("Commit Changes"), this);
-
-                action->setData(QString(CommitAction+"|%1").arg(elementId));
-
-                menu->addAction(action);
-            }
-
-            if (!trElement.findFirst("img.synchronizePull").isNull()) {
-                QAction *action = new QAction(QIcon(SynchronizePullIcon), tr("Synchronise"), this);
-
-                action->setData(QString(SynchronizePullAction+"|%1").arg(elementId));
-
-                menu->addAction(action);
-            }
-
-            if (!trElement.findFirst("img.synchronize").isNull()) {
-                QAction *action = new QAction(QIcon(SynchronizeIcon), tr("Synchronise"), this);
-
-                action->setData(QString(SynchronizeAction+"|%1").arg(elementId));
-
-                menu->addAction(action);
-            } else if (!trElement.findFirst("img.synchronizePush").isNull()) {
-                QAction *action = new QAction(QIcon(SynchronizePushIcon), tr("Synchronise And Upload"), this);
-
-                action->setData(QString(SynchronizePushAction+"|%1").arg(elementId));
-
-                menu->addAction(action);
-            }
-        }
-
-        menu->addSeparator();
-
-        QAction *refreshAction = new QAction(QIcon(RefreshIcon), tr("Refresh Display"), this);
-
-        refreshAction->setData(QString(RefreshAction+"|%1").arg(elementId));
-
-        menu->addAction(refreshAction);
-
-        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(elementId);
-
-        if (workspace) {
-            QAction *action = new QAction(tr("View In PMR..."), this);
-
-            action->setData(QString("pmr|%1").arg(workspace->url()));
-
-            menu->addAction(action);
-
-            if (workspace->isLocal()) {
-                action = new QAction(tr("Show Containing Folder..."), this);
-
-                action->setData(QString("show|%1").arg(workspace->path()));
-
-                menu->addAction(action);
-            }
-        }
-
-        menu->addSeparator();
-
-        QAction *aboutAction = new QAction(QIcon(AboutIcon), tr("About Workspace"), this);
-
-        aboutAction->setData(QString(AboutAction+"|%1").arg(elementId));
-
-        menu->addAction(aboutAction);
-    }
-
-    if (!menu->isEmpty()) {
-        QAction *item = menu->exec(mapToGlobal(pos));
-
-        if (item) {
-            QStringList linkList = item->data().toString().split("|");
-            QString action = linkList[0];
-            QString linkId = linkList[1];
-
-            if (!action.compare(AboutAction)) {
-                aboutWorkspace(linkId);
-            } else if (!action.compare(CloneAction)) {
-                cloneWorkspace(linkId);
-            } else if (!action.compare(RefreshAction)) {
-                refreshWorkspace(linkId);
-            } else if (   !action.compare(SynchronizePullAction)
-                       || !action.compare(SynchronizeAction)) {
-                synchronizeWorkspace(linkId, false);
-            } else if (!action.compare(CommitAction)) {
-                commitWorkspace(linkId);
-            } else if (!action.compare(SynchronizePushAction)) {
-                synchronizeWorkspace(linkId);
-            } else if (!action.compare("pmr")) {
-                QDesktopServices::openUrl(linkId);
-            } else if (!action.compare("show")) {
-                showInGraphicalShell(linkId);
-            }
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::showInGraphicalShell(const QString &pPath)
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(pPath));
@@ -1038,65 +1072,73 @@ void PmrWorkspacesWindowWidget::showInGraphicalShell(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                                           const QString &pErrorMessage,
+                                           const bool &pAuthenticated)
 {
-    // First clear existing workspaces from the manager
+    // Initialise / keep track of some properties
 
     mWorkspaceManager->clearWorkspaces();
 
-    // We now reconcile URLs of my-workspaces (on PMR) with those from workspace
-    // folders. In doing so folders/URLs that don't correspond to an actual PMR
-    // workspace are pruned from the relevant maps.
+    mErrorMessage = pErrorMessage;
+    mAuthenticated = pAuthenticated;
 
-    // First, clear the owned flag from the list of URLs with workspace folders
+    if (pErrorMessage.isEmpty() && pAuthenticated) {
+        // We now reconcile URLs of my-workspaces (on PMR) with those from
+        // workspace folders. In doing so, folders/URLs that don't correspond to
+        // an actual PMR workspace are pruned from the relevant maps
 
-    QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
+        // First, clear the owned flag from the list of URLs with workspace folders
 
-    while (urlsIterator.hasNext()) {
-        urlsIterator.next();
+        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
 
-        urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
-    }
+        while (urlsIterator.hasNext()) {
+            urlsIterator.next();
 
-    foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
-        // Remember our workspace, so we can find it by URL
-
-        QString url = workspace->url();
-
-        mWorkspaceManager->addWorkspace(workspace);
-
-        // Check if we know its folder and flag it as ours
-
-        if (mUrlFolderNameMines.contains(url)) {
-            QString path = mUrlFolderNameMines.value(url).first;
-
-            mUrlFolderNameMines.insert(url, QPair<QString, bool>(path, true));
-
-            workspace->setPath(path);
-            workspace->open();
+            urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
         }
-    }
 
-    // Now check the workspace folders that aren't from my-workspaces (on PMR)
+        foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
+            // Remember our workspace, so we can find it by URL
 
-    urlsIterator.toFront();
+            QString url = workspace->url();
 
-    while (urlsIterator.hasNext()) {
-        urlsIterator.next();
+            mWorkspaceManager->addWorkspace(workspace);
 
-        if (!urlsIterator.value().second) {
-            QString url = urlsIterator.key();
-            PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
+            // Check if we know its folder and flag it as ours
 
-            if (workspace) {
-                mWorkspaceManager->addWorkspace(workspace);
+            if (mUrlFolderNameMines.contains(url)) {
+                QString path = mUrlFolderNameMines.value(url).first;
 
-                workspace->setPath(urlsIterator.value().first);
+                mUrlFolderNameMines.insert(url, QPair<QString, bool>(path, true));
+
+                workspace->setPath(path);
                 workspace->open();
-            } else {
-                mWorkspaceFolderUrls.remove(urlsIterator.value().first);
+            }
+        }
 
-                urlsIterator.remove();
+        // Now check the workspace folders that aren't from my-workspaces (on
+        // PMR)
+
+        urlsIterator.toFront();
+
+        while (urlsIterator.hasNext()) {
+            urlsIterator.next();
+
+            if (!urlsIterator.value().second) {
+                QString url = urlsIterator.key();
+                PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
+
+                if (workspace) {
+                    mWorkspaceManager->addWorkspace(workspace);
+
+                    workspace->setPath(urlsIterator.value().first);
+                    workspace->open();
+                } else {
+                    mWorkspaceFolderUrls.remove(urlsIterator.value().first);
+
+                    urlsIterator.remove();
+                }
             }
         }
     }
@@ -1108,6 +1150,17 @@ void PmrWorkspacesWindowWidget::initialiseWorkspaceWidget(const PMRSupport::PmrW
     // And scroll to the current selected item
 
     scrollToSelected();
+
+    mInitialized = true;
+}
+
+//==============================================================================
+
+bool PmrWorkspacesWindowWidget::hasWorkspaces() const
+{
+    // Return whether we have some workspaces
+
+    return !mWorkspaceManager->workspaces().isEmpty();
 }
 
 //==============================================================================
@@ -1238,10 +1291,14 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaces()
+void PmrWorkspacesWindowWidget::reloadWorkspaces()
 {
-    // Note: initialiseWorkspaceWidget() will be called when the list of
-    //       workspaces has been received...
+    // Reload our workspaces after making sure that we have cleared existing
+    // workspaces
+    // Note: initialize() will be called when the list of workspaces has been
+    //       received...
+
+    mWorkspaceManager->clearWorkspaces();
 
     mPmrWebService->requestWorkspaces();
 }

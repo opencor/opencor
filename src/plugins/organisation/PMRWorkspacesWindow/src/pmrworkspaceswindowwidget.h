@@ -69,23 +69,25 @@ public:
                                        QWidget *pParent);
     ~PmrWorkspacesWindowWidget();
 
+    virtual void retranslateUi();
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
+    bool hasWorkspaces() const;
 
     void aboutWorkspace(const QString &pUrl);
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
     const QString addWorkspaceFolder(const QString &pFolder);
-    void clearWorkspaces();
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
-    void refreshWorkspaces();
+    void reloadWorkspaces();
 
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual QSize sizeHint() const;
 
 private:
@@ -100,13 +102,19 @@ private:
     QSet<QString> mExpandedItems;
     QString mSelectedItem;
 
+    bool mInitialized;
+
     QString mTemplate;
+    QString mErrorMessage;
+    bool mAuthenticated;
 
     int mRow;
     int mRowAnchor;
     QMap<QString, int> mItemAnchors;
 
     QTimer *mTimer;
+
+    QString message() const;
 
     void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
@@ -158,7 +166,10 @@ private slots:
     void refreshCurrentWorkspace();
 
 public slots:
-    void initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &pWorkspaces);
+    void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                    const QString &pErrorMessage = QString(),
+                    const bool &pAuthenticated = true);
+
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceCreated(const QString &pUrl);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
