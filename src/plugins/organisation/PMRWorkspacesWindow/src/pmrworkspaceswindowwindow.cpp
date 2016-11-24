@@ -367,8 +367,10 @@ void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
     // Log on/off to/ PMR
 
     if (mAuthenticated) {
-        if (Core::questionMessageBox(this, windowTitle(), tr("Log off PMR?")) == QMessageBox::Yes)
+        if (Core::questionMessageBox(windowTitle(),
+                                     tr("You are about to log off PMR. Do you want to proceed?")) == QMessageBox::Yes ) {
             mPmrWebService->authenticate(false);
+        }
     } else {
         mPmrWebService->authenticate();
     }

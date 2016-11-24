@@ -582,7 +582,7 @@ QString PmrWorkspacesWindowWidget::message() const
     QString res = QString();
 
     if (!mAuthenticated) {
-        res = tr("<strong>Warning:</strong> please authenticate yourself...");
+        res = tr("You need to authenticate yourself...");
     } else if (mErrorMessage.isEmpty()) {
         if (!mWorkspaceManager->count()) {
             res = tr("No workspaces were found.");
