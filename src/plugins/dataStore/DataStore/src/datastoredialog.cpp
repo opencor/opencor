@@ -347,7 +347,7 @@ void DataStoreDialog::on_buttonBox_accepted()
     // one selected data
 
     if (mGui->allDataCheckBox->checkState() == Qt::Unchecked) {
-        Core::warningMessageBox(this, tr("Data Selector"),
+        Core::warningMessageBox(tr("Data Selector"),
                                 tr("Some data must be selected."));
     } else {
         accept();

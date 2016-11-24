@@ -1121,7 +1121,7 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
                             mCombineArchive->fileName();
 
         if (!importedParameters.isEmpty()) {
-            Core::informationMessageBox(Core::mainWindow(), tr("Save File"),
+            Core::informationMessageBox(tr("Save File"),
                                         tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
         }
     }
@@ -1307,7 +1307,7 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
             double requiredMemory = mSimulation->requiredMemory();
 
             if (requiredMemory > freeMemory) {
-                Core::warningMessageBox(Core::mainWindow(), tr("Run Simulation"),
+                Core::warningMessageBox(tr("Run Simulation"),
                                         tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
             } else {
                 // Theoretically speaking, we have enough memory to run the
@@ -1325,7 +1325,7 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
                 if (runSimulation) {
                     mSimulation->run();
                 } else {
-                    Core::warningMessageBox(Core::mainWindow(), tr("Run Simulation"),
+                    Core::warningMessageBox(tr("Run Simulation"),
                                             tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
                 }
             }
@@ -1759,7 +1759,7 @@ void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
         }
 
         if (!createSedmlFile(sedmlFileName, modelSource)) {
-            Core::warningMessageBox(Core::mainWindow(), tr("Export To SED-ML File"),
+            Core::warningMessageBox(tr("Export To SED-ML File"),
                                     tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
         }
     }
@@ -1908,7 +1908,7 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
         // Let the user know about any error that may have occurred
 
         if (!errorMessage.isEmpty()) {
-            Core::warningMessageBox(Core::mainWindow(), tr("Export To COMBINE Archive"),
+            Core::warningMessageBox(tr("Export To COMBINE Archive"),
                                     errorMessage);
         }
     }
@@ -3282,7 +3282,7 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
     // Display the given error message, if any
 
     if (!pErrorMessage.isEmpty()) {
-        Core::warningMessageBox(Core::mainWindow(), tr("Simulation Data Export"),
+        Core::warningMessageBox(tr("Simulation Data Export"),
                                 pErrorMessage);
     }
 }

@@ -728,8 +728,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
         // visible
 
         if (mainWindow()->isVisible()) {
-            warningMessageBox(mainWindow(),
-                              pUrl.isEmpty()?
+            warningMessageBox(pUrl.isEmpty()?
                                   tr("Open File"):
                                   tr("Open Remote File"),
                               tr("<strong>%1</strong> could not be opened.").arg(pFileName));
@@ -874,7 +873,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
             // let the user know about it
 
             if (pShowWarning) {
-                warningMessageBox(mainWindow(), tr("Open Remote File"),
+                warningMessageBox(tr("Open Remote File"),
                                   tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage)));
             }
         }
@@ -944,11 +943,8 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
-                doReloadFile = questionMessageBox(mainWindow(),
-                                                  tr("File Modified"),
-                                                  tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName),
-                                                  QMessageBox::Yes|QMessageBox::No,
-                                                  QMessageBox::Yes) == QMessageBox::Yes;
+                doReloadFile = questionMessageBox(tr("File Modified"),
+                                                  tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName)) == QMessageBox::Yes;
             }
 
             // Reload the file, if needed, and consider it as non-modified
@@ -976,8 +972,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
 
                         fileManagerInstance->reload(fileName, true);
                     } else {
-                        warningMessageBox(mainWindow(),
-                                          tr("Reload Remote File"),
+                        warningMessageBox(tr("Reload Remote File"),
                                           tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, formatMessage(errorMessage)));
                     }
                 } else {
@@ -1034,8 +1029,7 @@ void CentralWidget::toggleLockedFile()
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
     if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet) {
-        warningMessageBox(mainWindow(),
-                          fileLocked?tr("Unlock File"):tr("Lock File"),
+        warningMessageBox(fileLocked?tr("Unlock File"):tr("Lock File"),
                           tr("<strong>%1</strong> could not be %2.").arg(fileName, fileLocked?tr("unlocked"):tr("locked")));
     }
 }
@@ -1056,7 +1050,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     ViewInterface *viewInterface = qobject_cast<ViewInterface *>(fileViewPlugin->instance());
 
     if (!fileHandlingInterface) {
-        warningMessageBox(mainWindow(), tr("Save File"),
+        warningMessageBox(tr("Save File"),
                           tr("The <strong>%1</strong> view does not support saving files.").arg(viewInterface->viewName()));
 
         return false;
@@ -1067,7 +1061,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     QString oldFileName = mFileNames[pIndex];
 
     if (!viewInterface->viewWidget(oldFileName)) {
-        warningMessageBox(mainWindow(), tr("Save File"),
+        warningMessageBox(tr("Save File"),
                           tr("The <strong>%1</strong> view cannot save <strong>%2</strong>.").arg(viewInterface->viewName(), oldFileName));
 
         return false;
@@ -1120,7 +1114,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
             if (!fileHandlingInterface->saveFile(oldFileName, newFileName, needFeedback)) {
                 if (needFeedback) {
-                    warningMessageBox(mainWindow(), tr("Save File"),
+                    warningMessageBox(tr("Save File"),
                                       tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
                 }
 
@@ -1136,7 +1130,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             QFile::remove(newFileName);
 
             if (!QFile::copy(oldFileName, newFileName)) {
-                warningMessageBox(mainWindow(), tr("Save File"),
+                warningMessageBox(tr("Save File"),
                                   tr("<strong>%1</strong> could not be saved.").arg(newFileName));
 
                 return false;
@@ -1245,15 +1239,12 @@ bool CentralWidget::canCloseFile(const int &pIndex)
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
-        switch (questionMessageBox(mainWindow(),
-                                   fileManagerInstance->isNew(fileName)?
+        switch (questionMessageBox(fileManagerInstance->isNew(fileName)?
                                        tr("New File"):
                                        tr("File Modified"),
                                    fileManagerInstance->isNew(fileName)?
                                        tr("<strong>%1</strong> is new. Do you want to save it before closing it?").arg(mFileTabs->tabToolTip(pIndex)):
-                                       tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
-                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
-                                   QMessageBox::Yes)) {
+                                       tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName))) {
         case QMessageBox::Yes:
             return saveFile(pIndex);
         case QMessageBox::No:
@@ -1864,14 +1855,12 @@ void CentralWidget::fileChanged(const QString &pFileName,
 
         fileManagerInstance->setCheckFilesEnabled(false);
 
-        if (questionMessageBox(mainWindow(), tr("File Modified"),
+        if (questionMessageBox(tr("File Modified"),
                                fileChanged?
                                    pDependenciesChanged?
                                        tr("<strong>%1</strong> and one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName):
                                        tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
-                                   tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName),
-                               QMessageBox::Yes|QMessageBox::No,
-                               QMessageBox::Yes) == QMessageBox::Yes) {
+                                   tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName)) == QMessageBox::Yes) {
             // The user wants to reload the file, so find it and reload it
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
@@ -1903,10 +1892,8 @@ void CentralWidget::fileDeleted(const QString &pFileName)
 {
     // The given file doesn't exist anymore, so ask the user whether to close it
 
-    if (questionMessageBox(mainWindow(), tr("File Deleted"),
-                           tr("<strong>%1</strong> does not exist anymore. Do you want to close it?").arg(pFileName),
-                           QMessageBox::Yes|QMessageBox::No,
-                           QMessageBox::Yes) == QMessageBox::Yes) {
+    if (questionMessageBox(tr("File Deleted"),
+                           tr("<strong>%1</strong> does not exist anymore. Do you want to close it?").arg(pFileName)) == QMessageBox::Yes) {
         // The user wants to close the file
 
         for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
