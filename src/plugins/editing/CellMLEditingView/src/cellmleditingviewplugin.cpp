@@ -326,8 +326,7 @@ void CellMLEditingViewPlugin::cellmlValidation()
         if (mCellmlEditingViewInterface->validCellml(mFileName, extra)) {
             // There are no CellML issues, so the CellML file is valid
 
-            Core::informationMessageBox( Core::mainWindow(),
-                                         tr("CellML Validation"),
+            Core::informationMessageBox( tr("CellML Validation"),
                                          tr("The CellML file is valid.")
                                         +(extra.isEmpty()?
                                              QString():

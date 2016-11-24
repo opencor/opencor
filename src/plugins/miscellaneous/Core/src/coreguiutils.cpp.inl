@@ -238,68 +238,63 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
 //==============================================================================
 
-QMessageBox::StandardButton informationMessageBox(QWidget *pParent,
-                                                  const QString &pTitle,
+QMessageBox::StandardButton informationMessageBox(const QString &pTitle,
                                                   const QString &pText,
                                                   const QMessageBox::StandardButtons &pButtons,
                                                   const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of an information message box
 
-    return showMessageBox(pParent, QMessageBox::Information,
+    return showMessageBox(mainWindow(), QMessageBox::Information,
                           Qt::LinksAccessibleByMouse, pTitle, pText, pButtons,
                           pDefaultButton);
 }
 
 //==============================================================================
 
-QMessageBox::StandardButton questionMessageBox(QWidget *pParent,
-                                               const QString &pTitle,
+QMessageBox::StandardButton questionMessageBox(const QString &pTitle,
                                                const QString &pText,
                                                const QMessageBox::StandardButtons &pButtons,
                                                const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a question message box
 
-    return showMessageBox(pParent, QMessageBox::Question,
+    return showMessageBox(mainWindow(), QMessageBox::Question,
                           Qt::LinksAccessibleByMouse, pTitle, pText, pButtons,
                           pDefaultButton);
 }
 
 //==============================================================================
 
-QMessageBox::StandardButton warningMessageBox(QWidget *pParent,
-                                              const QString &pTitle,
+QMessageBox::StandardButton warningMessageBox(const QString &pTitle,
                                               const QString &pText,
                                               const QMessageBox::StandardButtons &pButtons,
                                               const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a warning message box
 
-    return showMessageBox(pParent, QMessageBox::Warning,
+    return showMessageBox(mainWindow(), QMessageBox::Warning,
                           Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse,
                           pTitle, pText, pButtons, pDefaultButton);
 }
 
 //==============================================================================
 
-QMessageBox::StandardButton criticalMessageBox(QWidget *pParent,
-                                               const QString &pTitle,
+QMessageBox::StandardButton criticalMessageBox(const QString &pTitle,
                                                const QString &pText,
                                                const QMessageBox::StandardButtons &pButtons,
                                                const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a critical message box
 
-    return showMessageBox(pParent, QMessageBox::Critical,
+    return showMessageBox(mainWindow(), QMessageBox::Critical,
                           Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse,
                           pTitle, pText, pButtons, pDefaultButton);
 }
 
 //==============================================================================
 
-void aboutMessageBox(QWidget *pParent, const QString &pTitle,
-                     const QString &pText)
+void aboutMessageBox(const QString &pTitle, const QString &pText)
 {
     // Show an about message box
 
@@ -315,7 +310,7 @@ void aboutMessageBox(QWidget *pParent, const QString &pTitle,
     }
 #endif
 
-    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, pParent
+    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, mainWindow()
 #ifdef Q_OS_MAC
                                               , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
 #endif

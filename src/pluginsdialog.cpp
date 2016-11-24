@@ -91,6 +91,9 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
+    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+            this, SLOT(reject()));
+
     // Make sure that all the widgets in our form layout can be resized, if
     // necessary and if possible
     // Note: indeed, it's not the case on macOS since the field growth policy is
@@ -537,21 +540,10 @@ void PluginsDialog::on_buttonBox_accepted()
 
 //==============================================================================
 
-void PluginsDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
-}
-
-//==============================================================================
-
 void PluginsDialog::apply()
 {
-    if (questionMessageBox(mainWindow(), qAppName(),
-                           tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
-                           QMessageBox::Yes|QMessageBox::No,
-                           QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(qAppName(),
+                           tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you want to proceed?").arg(qAppName())) == QMessageBox::Yes ) {
         // Do what is done when clicking on the OK button
 
         on_buttonBox_accepted();

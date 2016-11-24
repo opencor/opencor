@@ -96,7 +96,6 @@ private slots:
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
 
     void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
 
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex);
