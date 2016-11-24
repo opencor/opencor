@@ -262,8 +262,6 @@ private:
 
     QString mId;
 
-    bool mHasUnit;
-
     PropertyItem *mName;
     PropertyItem *mValue;
     PropertyItem *mUnit;

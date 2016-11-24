@@ -26,6 +26,7 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -33,10 +34,8 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
+#include <QLabel>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QTimer>
 
@@ -55,26 +54,55 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    // Create a tool bar widget with a URL value and refresh button
+    // Note: the spacers is a little trick to improve the rendering of our tool
+    //       bar widget...
+
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    QWidget *spacer = new QWidget(toolBarWidget);
+
+    spacer->setMinimumSize(0, 0);
+    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+
+    mFilterLabel = new QLabel(toolBarWidget);
+    mFilterValue = new QLineEdit(toolBarWidget);
+
+    QFont font = mFilterLabel->font();
+
+    font.setBold(true);
+
+    mFilterLabel->setFont(font);
+
 #ifdef Q_OS_MAC
-    mGui->filterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above removes the focus border since it messes up the look of
-    //       our filter value widget...
+    //       our URL value widget...
 #endif
 
-    // Make the name value our focus proxy
+    connect(mFilterValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(filterValueChanged(const QString &)));
 
-    setFocusProxy(mGui->filterValue);
+    toolBarWidget->addWidget(spacer);
+    toolBarWidget->addWidget(mFilterLabel);
+    toolBarWidget->addWidget(mFilterValue);
+    toolBarWidget->addAction(mGui->actionReload);
+
+    mGui->layout->addWidget(toolBarWidget);
+
+    // Make the filter value our focus proxy
+
+    setFocusProxy(mFilterValue);
 
     // Create and add the PMR widget
 
-    mPmrWidget = new PmrWindowWidget(this);
+    mPmrWindowWidget = new PmrWindowWidget(this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
-                                                                           true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWindowWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->dockWidgetContents->layout()->addWidget(new Core::BorderedWidget(mPmrWidget,
-                                                                           true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrWindowWidget,
+                                                     true, false, false, false));
 #else
     #error Unsupported platform
 #endif
@@ -103,18 +131,18 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             this, SLOT(initializeWidget(const PMRSupport::PmrExposures &, const QString &, const bool &)));
 
     connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, const QStringList &)),
-            mPmrWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
+            mPmrWindowWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
     connect(mPmrWebService, SIGNAL(showExposureFiles(const QString &)),
-            mPmrWidget, SLOT(showExposureFiles(const QString &)));
+            mPmrWindowWidget, SLOT(showExposureFiles(const QString &)));
 
     // Some connections to know what our PMR widget wants from us
 
-    connect(mPmrWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
+    connect(mPmrWindowWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
             this, SLOT(cloneWorkspace(const QString &)));
-    connect(mPmrWidget, SIGNAL(showExposureFilesRequested(const QString &)),
+    connect(mPmrWindowWidget, SIGNAL(showExposureFilesRequested(const QString &)),
             this, SLOT(showExposureFiles(const QString &)));
 
-    connect(mPmrWidget, SIGNAL(openExposureFileRequested(const QString &)),
+    connect(mPmrWindowWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
 
     // Some further initialisations that are done as part of retranslating the
@@ -144,9 +172,11 @@ void PmrWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
+    mFilterLabel->setText(tr("Filter:"));
+
     // Retranslate our PMR widget
 
-    mPmrWidget->retranslateUi();
+    mPmrWindowWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -159,7 +189,17 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
     // Resize our busy widget
 
-    mPmrWidget->resizeBusyWidget();
+    mPmrWindowWidget->resizeBusyWidget();
+}
+
+//==============================================================================
+
+void PmrWindowWindow::filterValueChanged(const QString &pText)
+{
+    // Ask our PMR widget to filter its output using the given regular
+    // expression
+
+    mPmrWindowWidget->filter(pText);
 }
 
 //==============================================================================
@@ -173,19 +213,18 @@ void PmrWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWidget->showBusyWidget();
+        mPmrWindowWidget->showBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
-        // to mGui->filterValue, but only if the current window already has the
-        // focus
+        // to mFilterValue, but only if the current window already has the focus
 
-        mPmrWidget->hideBusyWidget();
+        mPmrWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
-        Core::setFocusTo(mGui->filterValue);
+        Core::setFocusTo(mFilterValue);
     }
 }
 
@@ -195,7 +234,7 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 {
     // Show the given message as a warning
 
-    Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::warningMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
@@ -204,22 +243,12 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 {
     // Show the given message as informative text
 
-    Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+    Core::informationMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
 
-void PmrWindowWindow::on_filterValue_textChanged(const QString &pText)
-{
-    // Ask our PMR widget to filter its output using the given regular
-    // expression
-
-    mPmrWidget->filter(pText);
-}
-
-//==============================================================================
-
-void PmrWindowWindow::on_refreshButton_clicked()
+void PmrWindowWindow::on_actionReload_triggered()
 {
     // Get the list of exposures from our PMR web service
 
@@ -234,9 +263,9 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWidget->initialize(pExposures, pErrorMessage,
-                           mGui->filterValue->text(),
-                           pInternetConnectionAvailable);
+    mPmrWindowWidget->initialize(pExposures, pErrorMessage,
+                                 mFilterValue->text(),
+                                 pInternetConnectionAvailable);
 }
 
 //==============================================================================
@@ -253,7 +282,7 @@ void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
     if (pVisible && firstTime) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, SLOT(on_refreshButton_clicked()));
+        QTimer::singleShot(0, this, SLOT(on_actionReload_triggered()));
     }
 }
 

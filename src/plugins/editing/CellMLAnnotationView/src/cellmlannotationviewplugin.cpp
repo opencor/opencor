@@ -46,7 +46,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to annotate CellML files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
 
-    return new PluginInfo("Editing", true, false,
+    return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "CellMLSupport" << "WebViewerWidget",
                           descriptions);
 }
@@ -154,6 +154,8 @@ void CellMLAnnotationViewPlugin::initializePlugin()
     // Create our CellML annotation view widget
 
     mViewWidget = new CellmlAnnotationViewWidget(this, Core::mainWindow());
+
+    mViewWidget->setObjectName("CellmlAnnotationViewWidget");
 
     // Hide our CellML annotation view widget since it may not initially be
     // shown in our central widget

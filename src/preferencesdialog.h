@@ -24,7 +24,19 @@ limitations under the License.
 
 //==============================================================================
 
+#include "plugininfo.h"
+
+//==============================================================================
+
 #include <QDialog>
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
+class QLabel;
+class QSettings;
+class QStandardItem;
+class QStandardItemModel;
 
 //==============================================================================
 
@@ -38,16 +50,81 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class PluginManager;
+class PreferencesInterface;
+
+//==============================================================================
+
+namespace Preferences {
+    class PreferencesWidget;
+}   // namespace Preferences
+
+//==============================================================================
+
+class PreferencesPluginCategoryWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit PreferencesPluginCategoryWidget(QWidget *pParent);
+
+    void setCategory(const QString &pCategory);
+    void setDescription(const QString &pDescription);
+
+private:
+    QLabel *mCategoryValue;
+    QLabel *mDescriptionValue;
+
+    QLabel * label(const QString &pLabel);
+};
+
+//==============================================================================
+
+class PreferencesItemDelegate : public QStyledItemDelegate
+{
+public:
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+};
+
+//==============================================================================
+
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(QWidget *pParent);
+    explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PreferencesDialog();
 
 private:
     Ui::PreferencesDialog *mGui;
+
+    PluginManager *mPluginManager;
+
+    QStandardItemModel *mModel;
+
+    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
+    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
+    QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
+
+    PreferencesPluginCategoryWidget *mPluginCategoryWidget;
+
+    QPushButton *mResetAllButton;
+    QPushButton *mResetPluginButton;
+
+    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
+
+private slots:
+    void on_treeView_collapsed(const QModelIndex &pIndex);
+
+    void on_buttonBox_accepted();
+
+    void updatePreferencesWidget(const QModelIndex &pNewIndex,
+                                 const QModelIndex &pOldIndex);
+
+    void resetAll();
+    void resetPlugin();
 };
 
 //==============================================================================

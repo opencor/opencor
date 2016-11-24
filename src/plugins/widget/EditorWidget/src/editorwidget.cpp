@@ -27,10 +27,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QFrame>
 #include <QKeyEvent>
 #include <QLabel>
@@ -57,7 +53,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     setLayout(layout);

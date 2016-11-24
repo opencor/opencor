@@ -26,11 +26,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QStandardItemModel>
+#include "ui_datastoredialog.h"
 
 //==============================================================================
 
-#include "ui_datastoredialog.h"
+#include <QPushButton>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -48,7 +49,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
     QStandardItem *dataItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -78,6 +79,14 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
 #endif
 
     mGui->dataLabel->setVisible(false);
+
+    connect(mGui->allDataCheckBox, SIGNAL(toggled(bool)),
+            mGui->buttonBox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+
+    connect(mGui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+            this, SLOT(accept()));
+    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+            this, SLOT(reject()));
 
     // Populate our tree view with the data store's variables and, or not, the
     // variable of integration
@@ -197,18 +206,16 @@ DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
 {
     // Return the selected data for the given item
 
-    if (pItem->rowCount()) {
-        DataStoreVariables res = DataStoreVariables();
+    DataStoreVariables res = DataStoreVariables();
 
+    if (pItem->rowCount()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
             res << doSelectedData(pItem->child(i));
-
-        return res;
     } else if (pItem->checkState() == Qt::Checked) {
-        return DataStoreVariables() << mData.value(pItem);
-    } else {
-        return DataStoreVariables();
+        res << mData.value(pItem);
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -339,30 +346,6 @@ void DataStoreDialog::on_allDataCheckBox_clicked()
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updateDataSelectedState(QStandardItem *)));
-}
-
-//==============================================================================
-
-void DataStoreDialog::on_buttonBox_accepted()
-{
-    // Confirm that we accepted the data selection, but only if we have at least
-    // one selected data
-
-    if (mGui->allDataCheckBox->checkState() == Qt::Unchecked) {
-        Core::warningMessageBox(this, tr("Data Selector"),
-                                tr("Some data must be selected."));
-    } else {
-        accept();
-    }
-}
-
-//==============================================================================
-
-void DataStoreDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
 }
 
 //==============================================================================

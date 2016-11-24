@@ -39,10 +39,6 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
     mStartingPointProperty = addDoubleProperty(0.0);
     mEndingPointProperty = addDoubleProperty(1000.0);
     mPointIntervalProperty = addDoubleProperty(1.0);
-
-    mStartingPointProperty->setEditable(true);
-    mEndingPointProperty->setEditable(true);
-    mPointIntervalProperty->setEditable(true);
 }
 
 //==============================================================================

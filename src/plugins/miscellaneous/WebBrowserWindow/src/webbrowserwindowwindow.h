@@ -17,10 +17,25 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File type interface
+// Web Browser window
 //==============================================================================
 
-#include "filetypeinterface.h"
+#pragma once
+
+//==============================================================================
+
+#include "windowwidget.h"
+
+//==============================================================================
+
+class QLineEdit;
+class QMenu;
+
+//==============================================================================
+
+namespace Ui {
+    class WebBrowserWindowWindow;
+}
 
 //==============================================================================
 
@@ -28,89 +43,73 @@ namespace OpenCOR {
 
 //==============================================================================
 
-FileType::FileType(FileTypeInterface *pOwner, const QString &pMimeType,
-                   const QString &pFileExtension) :
-    mOwner(pOwner),
-    mMimeType(pMimeType),
-    mFileExtension(pFileExtension)
-{
-}
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
 
 //==============================================================================
 
-bool FileType::operator==(FileType *pFileType) const
-{
-    // Return whether the current item is equal to the given one
-
-    return    !mMimeType.compare(pFileType->mimeType())
-           && !mFileExtension.compare(pFileType->fileExtension());
-}
+namespace WebBrowserWindow {
 
 //==============================================================================
 
-QString FileType::mimeType() const
-{
-    // Return the file's MIME type
-
-    return mMimeType;
-}
+class WebBrowserWindowWidget;
 
 //==============================================================================
 
-QString FileType::fileExtension() const
+class WebBrowserWindowWindow : public Core::WindowWidget
 {
-    // Return the file's extension
+    Q_OBJECT
 
-    return mFileExtension;
-}
+public:
+    explicit WebBrowserWindowWindow(QWidget *pParent);
+    ~WebBrowserWindowWindow();
+
+    virtual void retranslateUi();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
+protected:
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
+private:
+    Ui::WebBrowserWindowWindow *mGui;
+
+    WebBrowserWindowWidget *mWebBrowserWindowWidget;
+
+    QMenu *mContextMenu;
+
+    QLineEdit *mUrlValue;
+
+    QString mUrl;
+
+    Core::ProgressBarWidget *mProgressBarWidget;
+
+private slots:
+    void on_actionClear_triggered();
+    void on_actionBack_triggered();
+    void on_actionForward_triggered();
+    void on_actionCopy_triggered();
+    void on_actionNormalSize_triggered();
+    void on_actionZoomIn_triggered();
+    void on_actionZoomOut_triggered();
+    void on_actionPrint_triggered();
+    void on_actionInspect_triggered();
+    void on_actionReload_triggered();
+
+    void returnPressed();
+
+    void urlChanged(const QUrl &pUrl);
+    void showCustomContextMenu() const;
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
+};
 
 //==============================================================================
 
-QString FileType::description() const
-{
-    // Return the file's description
-
-    return mOwner->fileTypeDescription(mMimeType);
-}
-
-//==============================================================================
-
-FileTypeInterface::FileTypeInterface() :
-    mFileTypes(FileTypes()),
-    mDefaultViews(QStringList())
-{
-}
-
-//==============================================================================
-
-FileTypeInterface::~FileTypeInterface()
-{
-    // Delete some internal objects
-
-    foreach (FileType *fileType, mFileTypes)
-        delete fileType;
-}
-
-//==============================================================================
-
-FileTypes FileTypeInterface::fileTypes() const
-{
-    // Return the file types that we support
-
-    return mFileTypes;
-}
-
-//==============================================================================
-
-QStringList FileTypeInterface::defaultViews() const
-{
-    // Return our default views
-
-    return mDefaultViews;
-}
-
-//==============================================================================
-
+}   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

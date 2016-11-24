@@ -30,10 +30,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QDesktopServices>
@@ -59,7 +55,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
     CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -169,7 +165,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Group:
-        setText(QObject::tr("Group #%1").arg(QString::number(pNumber)));
+        setText(QObject::tr("Group #%1").arg(pNumber));
 
         break;
     case RelationshipReference: {
@@ -185,7 +181,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Connection:
-        setText(QObject::tr("Connection #%1").arg(QString::number(pNumber)));
+        setText(QObject::tr("Connection #%1").arg(pNumber));
 
         break;
     case ComponentMapping: {
@@ -354,10 +350,6 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setRootIsDecorated(false);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    // Note: the selection mode we are opting for means that there is always
-    //       going to be a CellML element which is selected, so it's something
-    //       that we must keep in mind when showing the context menu...
 
     // Populate ourselves
 
@@ -548,17 +540,16 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
     // Make sure that the CellML file was properly loaded
 
     CellMLSupport::CellmlFileIssues issues = mCellmlFile->issues();
-    int issuesCount = issues.count();
 
-    if (issuesCount) {
+    if (mCellmlFile->issues().count()) {
         // Something went wrong while trying to load the CellML file, so report
         // the issue(s) and leave
 
-        for (int i = 0; i < issuesCount; ++i) {
-            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                     QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
-                                                                                                                               QString::number(issues[i].column()),
-                                                                                                                               issues[i].formattedMessage())));
+        foreach (const CellMLSupport::CellmlFileIssue &issue, mCellmlFile->issues()) {
+            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issue.type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                                                     QString("[%1:%2] %3").arg(QString::number(issue.line()),
+                                                                                                                               QString::number(issue.column()),
+                                                                                                                               issue.formattedMessage())));
         }
 
         return;

@@ -30,7 +30,10 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
-#include <QStringList>
+#ifdef Q_OS_WIN
+    #include <QSet>
+    #include <QVector>
+#endif
 
 //==============================================================================
 
@@ -79,6 +82,9 @@ public:
                                         const QStringList &pComponentHierarchy,
                                         const ParameterType &pType,
                                         const int &pIndex);
+
+    static bool compare(CellmlFileRuntimeParameter *pParameter1,
+                        CellmlFileRuntimeParameter *pParameter2);
 
     QString name() const;
     int degree() const;

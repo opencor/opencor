@@ -30,10 +30,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAction>
 #include <QKeyEvent>
 #include <QGridLayout>

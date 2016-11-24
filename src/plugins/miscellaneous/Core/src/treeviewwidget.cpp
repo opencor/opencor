@@ -24,10 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDrag>
 #include <QHeaderView>
 #include <QModelIndex>
@@ -53,7 +49,6 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     // Note: the above removes the focus border since it messes up our look
 #endif
     setFrameShape(QFrame::NoFrame);
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 //==============================================================================

@@ -57,9 +57,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             // Note: normally, we would only do this on Windows systems since,
             //       on Windows, a shared library's dependencies must be loaded
             //       before the shared library itself can be loaded, while on
-            //       Linux / OS X, it's possible to load a shared library even
-            //       if its dependencies are not loaded. Still, it doesn't harm
-            //       doing the same on Linux / OS X...
+            //       Linux/macOS, it's possible to load a shared library even if
+            //       its dependencies are not loaded. Still, it doesn't harm
+            //       doing the same on Linux/macOS...
 
             bool pluginDependenciesLoaded = true;
 
@@ -156,9 +156,10 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 mStatus = NotNeeded;
         }
     } else {
-       // What we thought was a plugin is not actually a plugin...
+       // What we thought was a plugin is not actually a plugin, so consider it
+        // as invalid...
 
-       mStatus = NotPlugin;
+       mStatus = Invalid;
     }
 }
 
@@ -169,6 +170,17 @@ Plugin::~Plugin()
     // Delete some internal objects
 
     delete mInfo;
+}
+
+//==============================================================================
+
+bool Plugin::compare(Plugin *pPlugin1, Plugin *pPlugin2)
+{
+    // Determine which of the two plugins should be first based on their name
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a plugin (when we list them)...
+
+    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================

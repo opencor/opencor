@@ -53,7 +53,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("en", QString::fromUtf8("the core plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
-    return new PluginInfo("Miscellaneous", false, false,
+    return new PluginInfo(PluginInfo::Miscellaneous, false, false,
                           QStringList(),
                           descriptions);
 }
@@ -61,6 +61,7 @@ PLUGININFO_FUNC CorePluginInfo()
 //==============================================================================
 
 CorePlugin::CorePlugin() :
+    mFileTypeInterfaces(FileTypeInterfaces()),
     mRecentFileNamesOrUrls(QStringList())
 {
 }
@@ -345,6 +346,8 @@ void CorePlugin::initializePlugin()
 
     mCentralWidget = new CentralWidget(Core::mainWindow());
 
+    mCentralWidget->setObjectName("CentralWidget");
+
     // Create our different File actions
 
     mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
@@ -375,12 +378,12 @@ void CorePlugin::initializePlugin()
     //       QKeySequence::PreviousChild and QKeySequence::NextChild,
     //       respectively, but for Qt this means using Ctrl+Shift+BackTab and
     //       Ctrl+Tab, respectively, on Windows/Linux, and Ctrl+{ and Ctrl+},
-    //       respectively, on OS X. On Windows, Ctrl+Shift+BackTab just doesn't
-    //       work, on OS X those key sequences are not the most natural ones.
+    //       respectively, on macOS. On Windows, Ctrl+Shift+BackTab just doesn't
+    //       work, on macOS those key sequences are not the most natural ones.
     //       So, instead, it would be more natural to use Ctrl+Shift+Tab and
     //       Ctr+Tab, respectively, on Windows/Linux, and Meta+Shift+Tab and
-    //       Meta+Tab, respectively, on OS X. The original plan was therefore to
-    //       use QKeySequence::PreviousChild and QKeySequence::NextChild, as
+    //       Meta+Tab, respectively, on macOS. The original plan was therefore
+    //       to use QKeySequence::PreviousChild and QKeySequence::NextChild, as
     //       well as our preferred key sequences, but Qt ended up 'allowing'
     //       only using one of them. So, in the end, we only use our preferred
     //       key sequences...
@@ -521,27 +524,21 @@ void CorePlugin::finalizePlugin()
 
 void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different file types supported by our various plugins and
+    // Retrieve the file type interfaces supported by our various plugins and
     // make our central widget aware of them
-
-    FileTypes supportedFileTypes = FileTypes();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
         if (fileTypeInterface) {
-            // The plugin implements our file type interface, so add the
-            // supported file types, but only if they are not already in our
+            // The plugin implements our file type interface, so add it to our
             // list
 
-            foreach (FileType *fileType, fileTypeInterface->fileTypes()) {
-                if (!supportedFileTypes.contains(fileType))
-                    supportedFileTypes << fileType;
-            }
+            mFileTypeInterfaces << fileTypeInterface;
         }
     }
 
-    mCentralWidget->setSupportedFileTypes(supportedFileTypes);
+    mCentralWidget->setFileTypeInterfaces(mFileTypeInterfaces);
 
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
@@ -740,7 +737,7 @@ void CorePlugin::reopenFile(const QString &pFileName)
         } else {
             // The file doesn't exist anymore, so let the user know about it
 
-            warningMessageBox(mainWindow(), tr("Reopen File"),
+            warningMessageBox(tr("Reopen File"),
                               tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
         }
     } else {

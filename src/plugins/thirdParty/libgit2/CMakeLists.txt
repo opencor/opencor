@@ -1,11 +1,5 @@
 PROJECT(libgit2Plugin)
 
-# Make sure that OpenSSL is available on Linux and OS X
-
-IF(NOT WIN32)
-    FIND_PACKAGE(OpenSSL REQUIRED QUIET)
-ENDIF()
-
 # Determine to which external binaries we need access
 
 IF(WIN32)
@@ -47,16 +41,16 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 35e525edefda5f3bd3c5e76e8af2526031883e91)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 95351246c023527736c30528c4acd3670604296f)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 97c8ee8633857cfdea1d72301e9f27c285fbd582)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 8151ba6992515d045af892eab34dea9369f9d99a)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 65ee4b60d9d66d1202b8e4a3083994380ab1af0d)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib f73bc7504eb8b8c10f3ec170073708bc505418a3)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll fd705fa2a3f438d711c3287699d227c1b32f5abc)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 7831503db099b76bcf996e5a27f919b0f12ddcc4)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 447b439d8502224fc50a6f5498ae113843e6f78d)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib a67bcbb704c2539cc41beb62c2dd1a3731974cef)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so c1ccd9c2ed41c4546a15ab74d5ef241a21b10ff9)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 6ad45e63aa39cf2344874f02f3669596fa977a7f)
     ENDIF()
 
     # Add the plugin as a binary
@@ -109,7 +103,7 @@ ELSE()
         STDC
     )
 
-    # Ignore some warnings on Windows and OS X
+    # Ignore some warnings on Windows and macOS
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")
@@ -153,7 +147,7 @@ ELSE()
             src/win32/path_w32.c
             src/win32/posix_w32.c
             src/win32/precompiled.c
-            src/win32/pthread.c
+            src/win32/thread.c
             src/win32/utf-conv.c
             src/win32/w32_buffer.c
             src/win32/w32_crtdbg_stacktrace.c

@@ -495,7 +495,7 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
     QStringList commentLines = pDomNode.nodeValue().remove("\r").split("\n");
     // Note #1: we don't know which end of line string is used by the file, so
     //          the above code ensures that we can handle both "\r\n" on Windows
-    //          and "\n" on Linux / OS X...
+    //          and "\n" on Linux/macOS...
     // Note #2: unlike for other nodes, we don't trim its value since leading
     //          spaces may be used in a comment...
 
@@ -1349,9 +1349,9 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                 } else {
                     QString operand = processMathmlNode(childNode, pHasError);
 
-                    if (pHasError)
+                    if (pHasError) {
                         return QString();
-                    else {
+                    } else {
                         if (operatorNodeType == PlusMathmlNode) {
                             res = pOperator+operand;
                         } else if (operatorNodeType == MinusMathmlNode) {

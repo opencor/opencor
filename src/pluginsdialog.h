@@ -71,9 +71,6 @@ public:
     explicit PluginsDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PluginsDialog();
 
-    void loadSettings(QSettings *pSettings);
-    void saveSettings(QSettings *pSettings) const;
-
 private:
     Ui::PluginsDialog *mGui;
 
@@ -81,26 +78,24 @@ private:
 
     QStandardItemModel *mModel;
 
-    QMap<QString, QString> mMappedCategories;
-
     QList<QStandardItem *> mSelectablePluginItems;
     QList<QStandardItem *> mUnselectablePluginItems;
 
     QMap<QString, bool> mInitialLoadingStates;
 
-    QMap<QString, QStandardItem *> mPluginCategories;
+    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
+    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
 
-    void newPluginCategory(const QString &pCategory, const QString &pName);
+    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 
     QString statusDescription(Plugin *pPlugin) const;
 
-    void selectFirstVisibleCategory();
-
 private slots:
+    void on_treeView_collapsed(const QModelIndex &pIndex);
+
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
 
     void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
 
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex);

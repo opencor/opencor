@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WebBrowserWindowWindow</class>
+ <widget class="QDockWidget" name="WebBrowserWindowWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Web Browser</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="layout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+   </layout>
+  </widget>
+  <action name="actionClear">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/trash-empty.png</normaloff>:/oxygen/actions/trash-empty.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear the page</string>
+   </property>
+  </action>
+  <action name="actionBack">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+   <property name="statusTip">
+    <string>Go back</string>
+   </property>
+  </action>
+  <action name="actionForward">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Forward</string>
+   </property>
+   <property name="statusTip">
+    <string>Go forward</string>
+   </property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/zoom-in.png</normaloff>:/oxygen/actions/zoom-in.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+   <property name="statusTip">
+    <string>Zoom in the Web page contents</string>
+   </property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/zoom-out.png</normaloff>:/oxygen/actions/zoom-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+   <property name="statusTip">
+    <string>Zoom out the Web page contents</string>
+   </property>
+  </action>
+  <action name="actionNormalSize">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/zoom-original.png</normaloff>:/oxygen/actions/zoom-original.png</iconset>
+   </property>
+   <property name="text">
+    <string>Normal Size</string>
+   </property>
+   <property name="statusTip">
+    <string>Reset the size of the Web page contents</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy the selection to the clipboard</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+   <property name="statusTip">
+    <string>Print the Web page contents</string>
+   </property>
+  </action>
+  <action name="actionInspect">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/document-edit-verify.png</normaloff>:/oxygen/actions/document-edit-verify.png</iconset>
+   </property>
+   <property name="text">
+    <string>Inspect</string>
+   </property>
+   <property name="toolTip">
+    <string>Inspect</string>
+   </property>
+   <property name="statusTip">
+    <string>Inspect the Web page contents</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload</string>
+   </property>
+   <property name="statusTip">
+    <string>Reload this Web page</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../../../../../res/ui.qrc"/>
+ </resources>
+ <connections/>
+</ui>

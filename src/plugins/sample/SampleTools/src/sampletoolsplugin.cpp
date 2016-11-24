@@ -48,7 +48,7 @@ PLUGININFO_FUNC SampleToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides an addition tool."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un outil d'addition."));
 
-    return new PluginInfo("Sample", true, true,
+    return new PluginInfo(PluginInfo::Sample, true, true,
                           QStringList() << "Core" << "Sample",
                           descriptions);
 }
@@ -250,7 +250,7 @@ void SampleToolsPlugin::addTwoNumbers()
                                       0, -2147483647, 2147483647, 1, &ok);
 
         if (ok) {
-            Core::informationMessageBox(Core::mainWindow(), tr("Add Two Numbers"),
+            Core::informationMessageBox(tr("Add Two Numbers"),
                                         QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
         }
     }

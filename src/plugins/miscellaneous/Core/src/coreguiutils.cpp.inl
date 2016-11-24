@@ -55,6 +55,75 @@ bool aboutToQuit()
 
 //==============================================================================
 
+void adjustWidgetSize(QWidget *pWidget)
+{
+    // Determine the adjusted size of the given widget
+    // Note: this is based on QWidgetPrivate::adjustedSize()...
+
+    QSize adjustedSize = pWidget->sizeHint();
+
+    if (pWidget->isWindow()) {
+        Qt::Orientations expandingDirections;
+        QLayout *layout = pWidget->layout();
+
+        if (layout) {
+            if (layout->hasHeightForWidth())
+                adjustedSize.setHeight(layout->totalHeightForWidth(adjustedSize.width()));
+
+            expandingDirections = layout->expandingDirections();
+        } else {
+            if (pWidget->sizePolicy().hasHeightForWidth())
+                adjustedSize.setHeight(pWidget->heightForWidth(adjustedSize.width()));
+
+            expandingDirections = pWidget->sizePolicy().expandingDirections();
+        }
+
+        if (expandingDirections & Qt::Horizontal)
+            adjustedSize.setWidth(qMax(adjustedSize.width(), 200));
+
+        if (expandingDirections & Qt::Vertical)
+            adjustedSize.setHeight(qMax(adjustedSize.height(), 100));
+
+        QRect screen = QApplication::desktop()->screenGeometry(pWidget->pos());
+
+        adjustedSize.setWidth(qMin(adjustedSize.width(), screen.width()*2/3));
+        adjustedSize.setHeight(qMin(adjustedSize.height(), screen.height()*2/3));
+    }
+
+    if (!adjustedSize.isValid()) {
+        QRect childrenRect = pWidget->childrenRect();
+
+        if (!childrenRect.isNull())
+            adjustedSize = childrenRect.size()+QSize(2*childrenRect.x(), 2*childrenRect.y());
+    }
+
+    if (!adjustedSize.isValid())
+        return;
+
+    // Determine the new size of the given widget, and resize and recenter it,
+    // if needed
+
+    QSize oldSize = pWidget->size();
+    QSize newSize = QSize(qMax(adjustedSize.width(), oldSize.width()),
+                          qMax(adjustedSize.height(), oldSize.height()));
+
+    if (newSize != oldSize) {
+        // Note: if the given widget is not visible then we only resize it
+        //       otherwise we also recenter it since being visible we are sure
+        //       that it has an original position to recenter against...
+
+        if (pWidget->isVisible()) {
+            pWidget->setGeometry(pWidget->geometry().x()-((newSize.width()-oldSize.width()) >> 1),
+                                 pWidget->geometry().y()-((newSize.height()-oldSize.height()) >> 1),
+                                 newSize.width(), newSize.height());
+        } else {
+            pWidget->resize(newSize);
+        }
+    }
+}
+
+//==============================================================================
+
 void showEnableAction(QAction *pAction, const bool &pVisible,
                       const bool &pEnabled)
 {
@@ -169,68 +238,63 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
 //==============================================================================
 
-QMessageBox::StandardButton informationMessageBox(QWidget *pParent,
-                                                  const QString &pTitle,
+QMessageBox::StandardButton informationMessageBox(const QString &pTitle,
                                                   const QString &pText,
                                                   const QMessageBox::StandardButtons &pButtons,
                                                   const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of an information message box
 
-    return showMessageBox(pParent, QMessageBox::Information,
+    return showMessageBox(mainWindow(), QMessageBox::Information,
                           Qt::LinksAccessibleByMouse, pTitle, pText, pButtons,
                           pDefaultButton);
 }
 
 //==============================================================================
 
-QMessageBox::StandardButton questionMessageBox(QWidget *pParent,
-                                               const QString &pTitle,
+QMessageBox::StandardButton questionMessageBox(const QString &pTitle,
                                                const QString &pText,
                                                const QMessageBox::StandardButtons &pButtons,
                                                const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a question message box
 
-    return showMessageBox(pParent, QMessageBox::Question,
+    return showMessageBox(mainWindow(), QMessageBox::Question,
                           Qt::LinksAccessibleByMouse, pTitle, pText, pButtons,
                           pDefaultButton);
 }
 
 //==============================================================================
 
-QMessageBox::StandardButton warningMessageBox(QWidget *pParent,
-                                              const QString &pTitle,
+QMessageBox::StandardButton warningMessageBox(const QString &pTitle,
                                               const QString &pText,
                                               const QMessageBox::StandardButtons &pButtons,
                                               const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a warning message box
 
-    return showMessageBox(pParent, QMessageBox::Warning,
+    return showMessageBox(mainWindow(), QMessageBox::Warning,
                           Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse,
                           pTitle, pText, pButtons, pDefaultButton);
 }
 
 //==============================================================================
 
-QMessageBox::StandardButton criticalMessageBox(QWidget *pParent,
-                                               const QString &pTitle,
+QMessageBox::StandardButton criticalMessageBox(const QString &pTitle,
                                                const QString &pText,
                                                const QMessageBox::StandardButtons &pButtons,
                                                const QMessageBox::StandardButton &pDefaultButton)
 {
     // Return the result of a critical message box
 
-    return showMessageBox(pParent, QMessageBox::Critical,
+    return showMessageBox(mainWindow(), QMessageBox::Critical,
                           Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse,
                           pTitle, pText, pButtons, pDefaultButton);
 }
 
 //==============================================================================
 
-void aboutMessageBox(QWidget *pParent, const QString &pTitle,
-                     const QString &pText)
+void aboutMessageBox(const QString &pTitle, const QString &pText)
 {
     // Show an about message box
 
@@ -246,7 +310,7 @@ void aboutMessageBox(QWidget *pParent, const QString &pTitle,
     }
 #endif
 
-    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, pParent
+    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, mainWindow()
 #ifdef Q_OS_MAC
                                               , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
 #endif

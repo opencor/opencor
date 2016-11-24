@@ -26,10 +26,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDragEnterEvent>
 #include <QLabel>
 #include <QMenu>
@@ -85,7 +81,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Force the use of UNIX EOL mode
     // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
-    //       Linux and OS X. However, the fact that it uses EolWindows on
+    //       Linux and macOS. However, the fact that it uses EolWindows on
     //       Windows can cause problems on that platform (with files not using a
     //       Windows EOL mode), so to be safe we use EolUnix on all platforms...
 
@@ -528,7 +524,7 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are not dropping
     // URIs
-    // Note: this is not (currently?) needed on Windows and OS X, but if we
+    // Note: this is not (currently?) needed on Windows and macOS, but if we
     //       don't have that check on Linux, then to drop some files on our
     //       Scintilla editor will result in the text/plain version of the data
     //       (e.g. file:///home/me/myFile) to be inserted in the text...

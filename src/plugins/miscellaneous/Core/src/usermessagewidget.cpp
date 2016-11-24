@@ -25,10 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QBuffer>
 #include <QFont>
 #include <QIcon>
@@ -154,7 +150,7 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
                             "    <tbody>\n"
                             "        <tr valign=middle>\n"
                             "            <td>\n"
-                            "                <img src=\"%1\"/>\n"
+                            "                <img src=\"%1\">\n"
                             "            </td>\n"
                             "            <td>\n"
                             "                %2\n"
@@ -167,7 +163,7 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
                             "    <tbody>\n"
                             "        <tr valign=middle>\n"
                             "            <td>\n"
-                            "                <img src=\"%1\"/>\n"
+                            "                <img src=\"%1\">\n"
                             "            </td>\n"
                             "            <td>\n"
                             "                %2\n"

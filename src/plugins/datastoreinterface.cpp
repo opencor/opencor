@@ -20,6 +20,11 @@ limitations under the License.
 // Data store interface
 //==============================================================================
 
+#ifdef OpenCOR_MAIN
+    #include "cliutils.h"
+#else
+    #include "corecliutils.h"
+#endif
 #include "datastoreinterface.h"
 
 //==============================================================================
@@ -33,7 +38,8 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pValue) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity,
+                                     double *pValue) :
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
@@ -53,6 +59,18 @@ DataStoreVariable::~DataStoreVariable()
     // Delete some internal objects
 
     delete[] mValues;
+}
+
+//==============================================================================
+
+bool DataStoreVariable::compare(DataStoreVariable *pVariable1,
+                                DataStoreVariable *pVariable2)
+{
+    // Determine which of the two variables should be first based on their URI
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a variable...
+
+    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -243,10 +261,11 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
-         variable != variableEnd; ++variable) {
-        delete *variable;
-    }
+#ifdef OpenCOR_MAIN
+    resetList(mVariables);
+#else
+    Core::resetList(mVariables);
+#endif
 }
 
 //==============================================================================
@@ -269,25 +288,16 @@ qulonglong DataStore::size() const
 
 //==============================================================================
 
-bool sortVariables(DataStoreVariable *pVariable1, DataStoreVariable *pVariable2)
-{
-    // Determine which of the two variables should be first based on their URI
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a variable...
-
-    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 DataStoreVariables DataStore::voiAndVariables()
 {
     // Return our variable of integration, if any, and all our variables, after
     // making sure that they are sorted
 
-    DataStoreVariables res = DataStoreVariables() << mVoi << mVariables;
+    DataStoreVariables res = DataStoreVariables();
 
-    std::sort(res.begin(), res.end(), sortVariables);
+    res << mVoi << mVariables;
+
+    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
 
     return res;
 }
@@ -320,7 +330,7 @@ DataStoreVariables DataStore::variables()
 {
     // Return all our variables, after making sure that they are sorted
 
-    std::sort(mVariables.begin(), mVariables.end(), sortVariables);
+    std::sort(mVariables.begin(), mVariables.end(), DataStoreVariable::compare);
 
     return mVariables;
 }

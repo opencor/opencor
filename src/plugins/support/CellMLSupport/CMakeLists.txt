@@ -4,7 +4,6 @@ PROJECT(CellMLSupportPlugin)
 
 ADD_PLUGIN(CellMLSupport
     SOURCES
-        ../../filetypeinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
@@ -39,8 +38,6 @@ ADD_PLUGIN(CellMLSupport
         StandardSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
         tests
 )

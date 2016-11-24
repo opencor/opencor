@@ -24,10 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SEDMLSupport {
 
@@ -63,27 +59,6 @@ SedmlFileIssue::SedmlFileIssue(const Type &pType, const QString &pMessage)
     // Construct our object
 
     constructor(pType, 0, 0, pMessage);
-}
-
-//==============================================================================
-
-bool SedmlFileIssue::operator<(const SedmlFileIssue &pIssue) const
-{
-    // Return whether the current issue is lower than the given one
-
-    return (mLine < pIssue.line())?
-               true:
-               (mLine > pIssue.line())?
-                   false:
-                   (mColumn < pIssue.column())?
-                       true:
-                       (mColumn > pIssue.column())?
-                           false:
-                            (mType < pIssue.type())?
-                                true:
-                                (mType > pIssue.type())?
-                                    false:
-                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================

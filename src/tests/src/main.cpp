@@ -46,7 +46,7 @@ int main(int pArgC, char *pArgV[])
 
     // The different groups of tests that are to be run
 
-    QString tests = OpenCOR::fileContents(":tests").first();
+    QString tests = OpenCOR::fileContents(":/tests").first();
     QMap<QString, QStringList> testsGroups;
     QStringList testItems = tests.split("|");
     QString testGroup;
@@ -59,10 +59,10 @@ int main(int pArgC, char *pArgV[])
         testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems[i+1]);
     }
 
-    // Go to the directory that contains our plugins, so that we can load them
-    // without any problem
+    // On Windows, go to the directory that contains our plugins, so that we can
+    // load them without any problem
 
-    QString buildDir = OpenCOR::fileContents(":build_directory").first();
+    QString buildDir = OpenCOR::fileContents(":/build_directory").first();
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(buildDir+"/plugins/OpenCOR");

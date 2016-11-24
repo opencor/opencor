@@ -31,10 +31,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QCoreApplication>
 #include <QSettings>
 
@@ -315,8 +311,8 @@ void CliApplication::status() const
             pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(plugin->statusErrors()));
 
             break;
-        case Plugin::NotPlugin:
-            pluginInfo += "this is not a plugin.";
+        case Plugin::Invalid:
+            pluginInfo += "the plugin is not valid.";
 
             break;
         case Plugin::NotCorePlugin:

@@ -24,10 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QtPlugin>
-
-//==============================================================================
-
+#include <QObject>
 #include <QStringList>
 
 //==============================================================================
@@ -36,52 +33,17 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class FileTypeInterface;
-
-//==============================================================================
-
-class FileType
-{
-public:
-    explicit FileType(FileTypeInterface *pOwner, const QString &pMimeType,
-                      const QString &pFileExtension);
-
-    bool operator==(FileType *pFileType) const;
-
-    QString mimeType() const;
-    QString fileExtension() const;
-    QString description() const;
-
-private:
-    FileTypeInterface *mOwner;
-
-    QString mMimeType;
-    QString mFileExtension;
-};
-
-//==============================================================================
-
-typedef QList<FileType *> FileTypes;
-
-//==============================================================================
-
 class FileTypeInterface
 {
 public:
-    explicit FileTypeInterface();
-    ~FileTypeInterface();
-
 #define INTERFACE_DEFINITION
     #include "filetypeinterface.inl"
 #undef INTERFACE_DEFINITION
-
-    FileTypes fileTypes() const;
-    QStringList defaultViews() const;
-
-protected:
-    FileTypes mFileTypes;
-    QStringList mDefaultViews;
 };
+
+//==============================================================================
+
+typedef QList<FileTypeInterface *> FileTypeInterfaces;
 
 //==============================================================================
 

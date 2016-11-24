@@ -29,7 +29,10 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
-#include <QString>
+#ifdef Q_OS_WIN
+    #include <QSet>
+    #include <QVector>
+#endif
 
 //==============================================================================
 
@@ -51,8 +54,6 @@ public:
     explicit SedmlFileIssue(const Type &pType, const int &pLine,
                             const int &pColumn, const QString &pMessage);
     explicit SedmlFileIssue(const Type &pType, const QString &pMessage);
-
-    bool operator<(const SedmlFileIssue &pIssue) const;
 
     Type type() const;
     int line() const;

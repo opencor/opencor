@@ -4,7 +4,7 @@ We build our own copy of libSBML, which requires the following:
     - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs14_release_x64.zip
     - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs14_debug_x64.zip
 
-From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
+From there, using cmake-gui on Windows or ccmake on Linux/macOS, we want to:
  - Customise libSBML:
     ===> WITH_BZIP2=ON
     ===> WITH_CPP_NAMESPACE=ON
@@ -15,14 +15,14 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
     ===> WITH_ZLIB=ON
  - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
- - Ask for C++11 compilation to be used on Linux / OS X (on Windows, MSVC uses C++11 by default) (this is part of the advanced settings):
+ - Ask for C++11 compilation to be used on Linux/macOS (on Windows, MSVC uses C++11 by default) (this is part of the advanced settings):
     - Linux:
        ===> CMAKE_CXX_FLAGS=-std=c++11
-    - OS X:
+    - macOS:
        ===> CMAKE_CXX_FLAGS=-std=c++11 -stdlib=libc++
- - Update the installation destination so that, upon 'installation', we have a ready to use version of the libSBML binaries (this is particularly useful on OS X since the 'installation' will result in 'clean' binaries):
+ - Update the installation destination so that, upon 'installation', we have a ready to use version of the libSBML binaries (this is particularly useful on macOS since the 'installation' will result in 'clean' binaries):
     ===> CMAKE_INSTALL_PREFIX=<InstallationDestination>
 
 Once we have built and 'installed' libSBML, we can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively.
 
-Note: on Linux and OS X, we want to strip the binary file off its non-global symbols (using strip -x)...
+Note: on Linux and macOS, we want to strip the binary file off its non-global symbols (using strip -x)...

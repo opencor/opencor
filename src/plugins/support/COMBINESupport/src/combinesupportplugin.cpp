@@ -37,22 +37,9 @@ PLUGININFO_FUNC COMBINESupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://co.mbine.org/\">COMBINE</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://co.mbine.org/\">COMBINE</a>."));
 
-    return new PluginInfo("Support", false, false,
+    return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "ZIPSupport",
                           descriptions);
-}
-
-//==============================================================================
-
-COMBINESupportPlugin::COMBINESupportPlugin()
-{
-    // The file types that we support
-    // Note: they will get deleted by FileTypeInterface...
-
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             CombineMimeType, CombineFileExtension);
-
-    mDefaultViews = QStringList() << "SingleCellView";
 }
 
 //==============================================================================
@@ -68,18 +55,38 @@ bool COMBINESupportPlugin::isFile(const QString &pFileName) const
 
 //==============================================================================
 
-QString COMBINESupportPlugin::fileTypeDescription(const QString &pMimeType) const
+QString COMBINESupportPlugin::mimeType() const
 {
-    // Return the description for the requested MIME type, that is as long as it
-    // is for the MIME type that we support
+    // Return the MIME type we support
 
-    if (!pMimeType.compare(CombineMimeType)) {
-        return tr("COMBINE Archive");
-    } else {
-        // Not a MIME type that we can recognise
+    return CombineMimeType;
+}
 
-        return QString();
-    }
+//==============================================================================
+
+QString COMBINESupportPlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return CombineFileExtension;
+}
+
+//==============================================================================
+
+QString COMBINESupportPlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("COMBINE Archive");
+}
+
+//==============================================================================
+
+QStringList COMBINESupportPlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList() << "SingleCellView";
 }
 
 //==============================================================================

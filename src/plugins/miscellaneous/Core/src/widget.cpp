@@ -83,7 +83,7 @@ void Widget::createLayout(const LayoutType &pLayoutType)
         break;
     }
 
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
 
     if ((pLayoutType == VerticalLayout) || (pLayoutType == HorizontalLayout))
         layout->setSpacing(0);

@@ -52,253 +52,251 @@ function versions(downloads) {
 
     var versions = jsonData.versions;
 
-    for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
-        var version = versions[versionIndex];
+    if (versions.length) {
+        for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
+            var version = versions[versionIndex];
 
-        // Retrieve some information about the version
+            // Retrieve some information about the version
 
-        var versionMajor = version.major;
-        var versionMinor = version.minor;
-        var versionPatch = version.patch;
-        var versionDay = version.day;
-        var versionMonth = version.month;
-        var versionYear = version.year;
-        var versionType = version.type;
-        var versionPlatforms = version.platforms;
-        var versionChanges = version.changes;
+            var versionMajor = version.major;
+            var versionMinor = version.minor;
+            var versionPatch = version.patch;
+            var versionDay = version.day;
+            var versionMonth = version.month;
+            var versionYear = version.year;
+            var versionType = version.type;
+            var versionPlatforms = version.platforms;
+            var versionChanges = version.changes;
 
-        if (versionMajor || versionMinor || versionPatch) {
-            versionTitle = "Version "+versionMajor+"."+versionMinor;
-            versionFolder = versionMajor+"."+versionMinor;
-            versionVersion = versionMajor+"-"+versionMinor;
+            if (versionMajor || versionMinor || versionPatch) {
+                versionTitle = "Version "+versionMajor+"."+versionMinor;
+                versionFolder = versionMajor+"."+versionMinor;
+                versionVersion = versionMajor+"-"+versionMinor;
 
-            if (versionPatch) {
-                versionTitle += "."+versionPatch;
-                versionFolder += "."+versionPatch;
-                versionVersion += "-"+versionPatch;
-            }
-
-            versionAnchor = versionFolder;
-        } else {
-            if (downloads)
-                versionTitle = "Latest snapshot";
-            else
-                versionTitle = versionDay+" "+month(versionMonth)+" "+versionYear;
-
-            versionFolder = "snapshots/"+versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
-            versionVersion = versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
-            versionAnchor = "latest";
-        }
-
-        // Output some general information about the version
-
-        var sectionClass = "section";
-
-        if (versionType === 1)
-            sectionClass += " official officialSection";
-        else if ((versionType === 2) && downloads)
-            sectionClass += " latest latestSection";
-        else
-            sectionClass += " old oldSection";
-
-        document.write("<div class=\""+sectionClass+"\">\n");
-        document.write("    <table>\n");
-        document.write("        <tbody>\n");
-        document.write("            <tr>\n");
-        document.write("                <td>\n");
-        document.write("                    "+versionTitle+"\n");
-
-        if (downloads)
-            document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
-
-        document.write("                </td>\n");
-        document.write("                <td class=\"date\">\n");
-
-        if (downloads) {
-            if (versionDay && versionMonth && versionYear)
-                document.write("                    ("+versionDay+" "+month(versionMonth)+" "+versionYear+")\n");
-            else
-                document.write("                    (???)\n");
-        }
-
-        document.write("                </td>\n");
-        document.write("            </tr>\n");
-        document.write("        </tbody>\n");
-        document.write("    </table>\n");
-        document.write("</div>\n");
-
-        // Output some information about the version files
-
-        var versionClass;
-
-        if (versionType === 1)
-            versionClass = "official withoutInfo";
-        else if ((versionType === 2) && downloads)
-            versionClass = "latest";
-        else
-            versionClass = "old withoutInfo";
-
-        document.write("<div class=\""+versionClass+"\">\n");
-        document.write("    <table class=\"version\">\n");
-        document.write("        <tbody>\n");
-        document.write("            <tr>\n");
-
-        // Show n platforms per row
-        // Note: for aesthetical reasons (i.e. having top/left separators all
-        //       the way through), we have a total of m*n platforms...
-
-        var nbOfPlatformsPerRow = 3;
-        var nbOfPlatforms = versionPlatforms.length;
-
-        while (nbOfPlatforms % nbOfPlatformsPerRow)
-            ++nbOfPlatforms;
-
-        // Percentage of the total width to use for each platform
-
-        var platformWidth = 100/nbOfPlatformsPerRow+"%";
-
-        // Go through our different platforms
-
-        for (var platformIndex = 0; platformIndex < nbOfPlatforms; ++platformIndex) {
-            var platformLocalIndex = platformIndex % nbOfPlatformsPerRow;
-
-            // 'Close' the current platform if there is a previous platform
-
-            if (platformIndex) {
-                if (typeof platform !== "undefined") {
-                    document.write("                                    </ul>\n");
-                    document.write("                                </td>\n");
-                    document.write("                            </tr>\n");
-                    document.write("                        </tbody>\n");
-                    document.write("                    </table>\n");
+                if (versionPatch) {
+                    versionTitle += "."+versionPatch;
+                    versionFolder += "."+versionPatch;
+                    versionVersion += "-"+versionPatch;
                 }
 
-                document.write("                </td>\n");
+                versionAnchor = versionFolder;
+            } else {
+                if (downloads)
+                    versionTitle = "Latest snapshot";
+                else
+                    versionTitle = versionDay+" "+month(versionMonth)+" "+versionYear;
+
+                versionFolder = "snapshots/"+versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
+                versionVersion = versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
+                versionAnchor = "latest";
             }
 
-            // End the current row of platforms and start a new one if we have
-            // just 'closed' the current platform after having listed a row of
-            // platforms
+            // Output some general information about the version
 
-            if (platformIndex && !platformLocalIndex) {
-                document.write("            </tr>\n");
-                document.write("            <tr>\n");
+            var sectionClass = "section";
+
+            if (versionType === 1)
+                sectionClass += " official officialSection";
+            else if ((versionType === 2) && downloads)
+                sectionClass += " latest latestSection";
+            else
+                sectionClass += " old oldSection";
+
+            document.write("<div class=\""+sectionClass+"\">\n");
+            document.write("    <table>\n");
+            document.write("        <tbody>\n");
+            document.write("            <tr>\n");
+            document.write("                <td>\n");
+            document.write("                    "+versionTitle+"\n");
+
+            if (downloads)
+                document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
+
+            document.write("                </td>\n");
+            document.write("                <td class=\"date\">\n");
+
+            if (downloads) {
+                if (versionDay && versionMonth && versionYear)
+                    document.write("                    ("+versionDay+" "+month(versionMonth)+" "+versionYear+")\n");
+                else
+                    document.write("                    (???)\n");
             }
 
-            // 'Open' the new platform
+            document.write("                </td>\n");
+            document.write("            </tr>\n");
+            document.write("        </tbody>\n");
+            document.write("    </table>\n");
+            document.write("</div>\n");
 
-            var platformClasses = "platform";
+            // Output some information about the version files
 
-            if (platformIndex >= nbOfPlatformsPerRow)
-                platformClasses += " topSeparator";
+            var versionClass;
 
-            if (platformLocalIndex)
-                platformClasses += " leftSeparator";
+            if (versionType === 1)
+                versionClass = "official withoutInfo";
+            else if ((versionType === 2) && downloads)
+                versionClass = "latest";
+            else
+                versionClass = "old withoutInfo";
 
-            document.write("            <td class=\""+platformClasses+"\" style=\"width: "+platformWidth+"\">\n");
+            document.write("<div class=\""+versionClass+"\">\n");
+            document.write("    <table class=\"version\">\n");
+            document.write("        <tbody>\n");
+            document.write("            <tr>\n");
 
-            var platform = versionPlatforms[platformIndex];
+            // Show n platforms per row
+            // Note: for aesthetical reasons (i.e. having top/left separators all
+            //       the way through), we have a total of m*n platforms...
+
+            var nbOfPlatformsPerRow = 3;
+            var nbOfPlatforms = versionPlatforms.length;
+
+            while (nbOfPlatforms % nbOfPlatformsPerRow)
+                ++nbOfPlatforms;
+
+            // Percentage of the total width to use for each platform
+
+            var platformWidth = 100/nbOfPlatformsPerRow+"%";
+
+            // Go through our different platforms
+
+            for (var platformIndex = 0; platformIndex < nbOfPlatforms; ++platformIndex) {
+                var platformLocalIndex = platformIndex % nbOfPlatformsPerRow;
+
+                // 'Close' the current platform if there is a previous platform
+
+                if (platformIndex) {
+                    if (typeof platform !== "undefined") {
+                        document.write("                                    </ul>\n");
+                        document.write("                                </td>\n");
+                        document.write("                            </tr>\n");
+                        document.write("                        </tbody>\n");
+                        document.write("                    </table>\n");
+                    }
+
+                    document.write("                </td>\n");
+                }
+
+                // End the current row of platforms and start a new one if we have
+                // just 'closed' the current platform after having listed a row of
+                // platforms
+
+                if (platformIndex && !platformLocalIndex) {
+                    document.write("            </tr>\n");
+                    document.write("            <tr>\n");
+                }
+
+                // 'Open' the new platform
+
+                var platformClasses = "platform";
+
+                if (platformIndex >= nbOfPlatformsPerRow)
+                    platformClasses += " topSeparator";
+
+                if (platformLocalIndex)
+                    platformClasses += " leftSeparator";
+
+                document.write("            <td class=\""+platformClasses+"\" style=\"width: "+platformWidth+"\">\n");
+
+                var platform = versionPlatforms[platformIndex];
+
+                if (typeof platform !== "undefined") {
+                    var platformName = platform.name;
+                    var platformSupported = platform.supported;
+                    var platformFiles = platform.files;
+
+                    document.write("            <table>\n");
+                    document.write("                <tbody>\n");
+                    document.write("                    <tr>\n");
+                    document.write("                        <td class=\"logo\">\n");
+                    document.write("                            <img src=\"../res/pics/"+platformName.replace(" ", "").toLowerCase()+".png\" width=72 height=72>\n");
+                    document.write("                        </td>\n");
+                    document.write("                        <td>\n");
+                    document.write("                            <div class=\"name\">\n");
+                    document.write("                                "+platformName+"\n");
+                    document.write("                            </div>\n");
+                    document.write("                            <div class=\"supported\">\n");
+                    document.write("                                "+platformSupported+"\n");
+                    document.write("                            </div>\n");
+                    document.write("                            <ul>\n");
+
+                    // List the files
+
+                    for (var fileIndex = 0; fileIndex < platformFiles.length; ++fileIndex) {
+                        var file = platformFiles[fileIndex];
+
+                        // Retrieve some information about the file
+
+                        var fileExtension = file.extension;
+                        var fileBitness = file.bitness;
+
+                        // Determine the file name, type and extra info, if any
+
+                        var fileName = versionFolder+"/OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
+
+                        if (   (fileExtension === ".exe")
+                            || (fileExtension === ".dmg"))
+                            fileType = "Installer";
+                        else if (fileExtension === ".zip")
+                            fileType = "ZIP file";
+                        else if (fileExtension === ".tar.gz")
+                            fileType = "Tarball file";
+                        else
+                            fileType = "???";
+
+                        if (typeof fileBitness !== "undefined")
+                            fileBitness = " ("+fileBitness+"-bit)";
+                        else
+                            fileBitness = "";
+
+                        // List the file for download
+
+                        document.write("                            <li><a href=\""+fileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
+                    }
+                }
+            }
+
+            // 'Close' the last platform
 
             if (typeof platform !== "undefined") {
-                var platformName = platform.name;
-                var platformSupported = platform.supported;
-                var platformFiles = platform.files;
+                document.write("                                    </ul>\n");
+                document.write("                                </td>\n");
+                document.write("                            </tr>\n");
+                document.write("                        </tbody>\n");
+                document.write("                    </table>\n");
+            }
 
-                document.write("            <table>\n");
-                document.write("                <tbody>\n");
-                document.write("                    <tr>\n");
-                document.write("                        <td class=\"logo\">\n");
-                document.write("                            <img src=\"../res/pics/"+platformName.replace(" ", "").toLowerCase()+".png\" width=72 height=72>\n");
-                document.write("                        </td>\n");
-                document.write("                        <td>\n");
-                document.write("                            <div class=\"name\">\n");
-                document.write("                                "+platformName+"\n");
-                document.write("                            </div>\n");
-                document.write("                            <div class=\"supported\">\n");
-                document.write("                                "+platformSupported+"\n");
-                document.write("                            </div>\n");
-                document.write("                            <ul>\n");
+            document.write("                </td>\n");
+            document.write("            </tr>\n");
+            document.write("        </tbody>\n");
+            document.write("    </table>\n");
 
-                // List the files
+            // Add the changes, if any
 
-                for (var fileIndex = 0; fileIndex < platformFiles.length; ++fileIndex) {
-                    var file = platformFiles[fileIndex];
+            if (typeof versionChanges !== "undefined") {
+                if (versionChanges.length) {
+                    document.write("    <table class=\"changes\">\n");
+                    document.write("        <tbody>\n");
+                    document.write("            <tr>\n");
+                    document.write("                <td class=\"topSeparator\">\n");
+                    document.write("                    <ul>\n");
 
-                    // Retrieve some information about the file
+                    for (var changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex)
+                        document.write("                        <li><span class=\"changes\">"+versionChanges[changeIndex].change+"</span></li>");
 
-                    var fileExtension = file.extension;
-                    var fileBitness = file.bitness;
-
-                    // Determine the file name, type and extra info, if any
-
-                    var fileName = versionFolder+"/OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
-
-                    if (   (fileExtension === ".exe")
-                        || (fileExtension === ".dmg"))
-                        fileType = "Installer";
-                    else if (fileExtension === ".zip")
-                        fileType = "ZIP file";
-                    else if (fileExtension === ".tar.gz")
-                        fileType = "Tarball file";
-                    else
-                        fileType = "???";
-
-                    if (typeof fileBitness !== "undefined")
-                        fileBitness = " ("+fileBitness+"-bit)";
-                    else
-                        fileBitness = "";
-
-                    // List the file for download
-
-                    document.write("                            <li><a href=\""+fileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
+                    document.write("                    </ul>\n");
+                    document.write("                </td>\n");
+                    document.write("            </tr>\n");
+                    document.write("        </tbody>\n");
+                    document.write("    </table>\n");
                 }
             }
-        }
 
-        // 'Close' the last platform
-
-        if (typeof platform !== "undefined") {
-            document.write("                                    </ul>\n");
-            document.write("                                </td>\n");
-            document.write("                            </tr>\n");
-            document.write("                        </tbody>\n");
-            document.write("                    </table>\n");
-        }
-
-        document.write("                </td>\n");
-        document.write("            </tr>\n");
-        document.write("        </tbody>\n");
-        document.write("    </table>\n");
-
-        // Add the changes, if any
-
-        if (typeof versionChanges !== "undefined") {
-            if (versionChanges.length) {
-                document.write("    <table class=\"changes\">\n");
-                document.write("        <tbody>\n");
-                document.write("            <tr>\n");
-                document.write("                <td class=\"topSeparator\">\n");
-                document.write("                    <ul>\n");
-
-                for (var changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex)
-                    document.write("                        <li><span class=\"changes\">"+versionChanges[changeIndex].change+"</span></li>");
-
-                document.write("                    </ul>\n");
-                document.write("                </td>\n");
-                document.write("            </tr>\n");
-                document.write("        </tbody>\n");
-                document.write("    </table>\n");
-            }
-        }
-
-        document.write("</div>\n");
-
-        // Add some information, if any
-
-        if ((versionType === 2) && downloads) {
-            document.write("<div class=\"latest latestInfo\">\n");
-            document.write("    <strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable.\n");
             document.write("</div>\n");
         }
+    } else {
+        document.write("<p>\n");
+        document.write("    No "+(downloads?"downloads":"previous snapshots")+" are available.\n");
+        document.write("</p>\n");
     }
 }

@@ -29,10 +29,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
 #include <QHeaderView>
@@ -216,7 +212,7 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // Note: we would normally call style()->hitTestComplexControl() and, if it
     //       returns QStyle::SC_ComboBoxArrow, then allow the default handling
     //       of the event, but if this works fine on Windows and Linux, it just
-    //       doesn't work on OS X. Indeed, no matter where we are over the
+    //       doesn't work on macOS. Indeed, no matter where we are over the
     //       widget, style()->hitTestComplexControl() will always (and as
     //       expected; [QtSources]/qtbase/src/widgets/styles/qmacstyle_mac.mm)
     //       return QStyle::SC_ComboBoxArrow. So, to get the behaviour we are
@@ -375,10 +371,9 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 {
     // Ignore events resulting from a key being pressed
 
-    if (pEvent->type() == QEvent::KeyPress)
-        return false;
-    else
-        return QStyledItemDelegate::eventFilter(pObject, pEvent);
+    return (pEvent->type() == QEvent::KeyPress)?
+               false:
+               QStyledItemDelegate::eventFilter(pObject, pEvent);
 }
 
 //==============================================================================
@@ -391,7 +386,7 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
-    QStyleOptionViewItemV4 option(pOption);
+    QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
@@ -428,9 +423,6 @@ PropertyItem::PropertyItem(Property *pOwner) :
     QStandardItem(),
     mOwner(pOwner)
 {
-    // By default, the property item is not editable
-
-    setEditable(false);
 }
 
 //==============================================================================
@@ -448,10 +440,9 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mOwner(pParent),
     mType(pType),
     mId(QString()),
-    mHasUnit(pParent->showUnits()),
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
-    mUnit(mHasUnit?new PropertyItem(this):0),
+    mUnit(pParent->showUnits()?new PropertyItem(this):0),
     mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
@@ -460,6 +451,13 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
+
+    // Make sure that our name and unit can't be edited
+
+    mName->setEditable(false);
+
+    if (mUnit)
+        mUnit->setEditable(false);
 }
 
 //==============================================================================
@@ -548,7 +546,7 @@ QList<QStandardItem *> Property::items() const
 
     QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
 
-    if (mHasUnit)
+    if (mUnit)
         res << mUnit;
 
     return res;
@@ -558,11 +556,11 @@ QList<QStandardItem *> Property::items() const
 
 bool Property::hasIndex(const QModelIndex &pIndex) const
 {
-    // Return whether the given is that our name, value or unit item
+    // Return whether the given index is that of our name, value or unit item
 
     bool res = (mName->index() == pIndex) || (mValue->index() == pIndex);
 
-    if (mHasUnit)
+    if (mUnit)
         res = res || (mUnit->index() == pIndex);
 
     return res;
@@ -696,10 +694,7 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    if (mType == Integer)
-        return mValue->text().toInt();
-    else
-        return 0;
+    return (mType == Integer)?mValue->text().toInt():0;
 }
 
 //==============================================================================
@@ -718,10 +713,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    if (mType == Double)
-        return mValue->text().toDouble();
-    else
-        return 0.0;
+    return (mType == Double)?mValue->text().toDouble():0.0;
 }
 
 //==============================================================================
@@ -905,10 +897,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    if (mType == Boolean)
-        return !mValue->text().compare(TrueValue);
-    else
-        return false;
+    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
 }
 
 //==============================================================================
@@ -927,7 +916,7 @@ QString Property::unit() const
 {
     // Return our unit
 
-    return mHasUnit?mUnit->text():QString();
+    return mUnit?mUnit->text():QString();
 }
 
 //==============================================================================
@@ -936,7 +925,7 @@ void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
-    if (mHasUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
+    if (mUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
         if (pUpdateToolTip)
@@ -999,9 +988,13 @@ void Property::setVisible(const bool &pVisible)
 
 void Property::select() const
 {
-    // Have our owner select us (i.e. our value)
+    // Have our owner select ourselves (i.e. our value), preserving the position
+    // of our horizontal scrollbar
+
+    int horizontalScrollBarValue = mOwner->horizontalScrollBar()->value();
 
     mOwner->setCurrentIndex(mValue->index());
+    mOwner->horizontalScrollBar()->setValue(horizontalScrollBarValue);
 }
 
 //==============================================================================
@@ -1030,7 +1023,7 @@ void Property::updateToolTip()
         else
             toolTip += mValue->text();
 
-        if (mHasUnit && !mUnit->text().isEmpty())
+        if (mUnit && !mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
     }
 
@@ -1042,7 +1035,7 @@ void Property::updateToolTip()
     if (mType != Section) {
         mValue->setToolTip(toolTip);
 
-        if (mHasUnit)
+        if (mUnit)
             mUnit->setToolTip(toolTip);
     }
 }
@@ -1110,10 +1103,6 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(this, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(updateHeight()));
 
-    // Further customise ourselves
-
-    setSelectionMode(QAbstractItemView::SingleSelection);
-
     header()->setSectionsMovable(false);
 
     // Retranslate ourselves, so that we are properly initialised
@@ -1177,7 +1166,7 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 
     if (    currentProperty
         && (currentProperty->type() == Property::List)
-        && currentProperty->listValues().isEmpty()) {
+        &&  currentProperty->listValues().isEmpty()) {
         currentProperty->setValue(currentProperty->emptyListValue());
     }
 
@@ -1425,7 +1414,6 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 
     Property *res = addProperty(Property::List, pParent);
 
-    res->setEditable(true);
     res->setListValues(pValues, pValue);
 
     return res;
@@ -1456,11 +1444,9 @@ Property * PropertyEditorWidget::addBooleanProperty(const bool &pValue,
                                                     Property *pParent)
 {
     // Add a boolean property and return its information
-    // Note: a boolean property is necessarily editable...
 
     Property *res = addProperty(Property::Boolean, pParent);
 
-    res->setEditable(true);
     res->setBooleanValue(pValue);
 
     return res;
@@ -1613,13 +1599,16 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     TreeViewWidget::mousePressEvent(pEvent);
 
     // Edit our 'new' property, but only if we are not right-clicking and if
-    // there is a 'new' property and it is different from our 'old' property
+    // there is a 'new' property and it is different from our 'old' property,
+    // otherwise cancel any editing if we are right-clicking
 
     Property *newProperty = property(indexAt(pEvent->pos()));
 
     mRightClicking = pEvent->button() == Qt::RightButton;
 
-    if (!mRightClicking && newProperty && (newProperty != oldProperty))
+    if (mRightClicking)
+        finishEditing(false);
+    else if (newProperty && (newProperty != oldProperty))
         editProperty(newProperty);
 }
 
@@ -1866,7 +1855,7 @@ bool PropertyEditorWidget::removeProperty(Property *pProperty)
     if (!mProperties.contains(pProperty))
         return false;
 
-    // Stop track the property
+    // Stop tracking the property
 
     mProperties.removeOne(pProperty);
 
@@ -1988,9 +1977,10 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     // Return our information about the property at the given index
 
-    foreach (Property *property, mProperties)
+    foreach (Property *property, mProperties) {
         if (property->hasIndex(pIndex))
             return property;
+    }
 
     return 0;
 }

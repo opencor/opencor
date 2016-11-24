@@ -29,7 +29,10 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
-#include <QString>
+#ifdef Q_OS_WIN
+    #include <QSet>
+    #include <QVector>
+#endif
 
 //==============================================================================
 
@@ -43,7 +46,8 @@ class PMRSUPPORT_EXPORT PmrExposure
 public:
     explicit PmrExposure(const QString &pUrl, const QString &pName);
 
-    static bool compare(const PmrExposure *pFirst, const PmrExposure *pSecond);
+    static bool compare(const PmrExposure *pExposure1,
+                        const PmrExposure *pExposure2);
 
     QString url() const;
     QString name() const;
@@ -55,11 +59,11 @@ private:
 
 //==============================================================================
 
-class PmrExposures : public QList<PmrExposure *>
+class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
 {
 public:
-    PmrExposures();
-    virtual ~PmrExposures();
+    explicit PmrExposures();
+    ~PmrExposures();
 
     void add(const QString &pUrl, const QString &pName);
 };

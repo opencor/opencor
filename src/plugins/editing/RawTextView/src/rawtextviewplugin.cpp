@@ -45,7 +45,7 @@ PLUGININFO_FUNC RawTextViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit text-based files using a text editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte."));
 
-    return new PluginInfo("Editing", true, false,
+    return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "EditingView",
                           descriptions);
 }
@@ -193,6 +193,8 @@ void RawTextViewPlugin::initializePlugin()
     // Create our raw text view widget
 
     mViewWidget = new RawTextViewWidget(Core::mainWindow());
+
+    mViewWidget->setObjectName("RawTextViewWidget");
 
     // Hide our raw text view widget since it may not initially be shown in our
     // central widget

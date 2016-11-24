@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 4272 $
- * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
+ * $Revision: 4922 $
+ * $Date: 2016-09-19 14:35:32 -0700 (Mon, 19 Sep 2016) $
  * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -45,7 +45,7 @@ static int CVSpbcgSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
 static int CVSpbcgSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
                         N_Vector ynow, N_Vector fnow);
 
-static void CVSpbcgFree(CVodeMem cv_mem);
+static int CVSpbcgFree(CVodeMem cv_mem);
 
 
 /* Readability Replacements */
@@ -167,6 +167,8 @@ int CVSpbcg(void *cvode_mem, int pretype, int maxl)
 
   cvspils_mem->s_last_flag = CVSPILS_SUCCESS;
 
+  cvSpilsInitializeCounters(cvspils_mem);
+
   setupNonNull = FALSE;
 
   /* Check for legal pretype */
@@ -247,8 +249,7 @@ static int CVSpbcgInit(CVodeMem cv_mem)
   spbcg_mem = (SpbcgMem) spils_mem;
 
   /* Initialize counters */
-  npe = nli = nps = ncfl = nstlpre = 0;
-  njtimes = nfes = 0;
+  cvSpilsInitializeCounters(cvspils_mem);
 
   /* Check for legal combination pretype - psolve */
   if ((pretype != PREC_NONE) && (psolve == NULL)) {
@@ -443,7 +444,7 @@ static int CVSpbcgSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
  * -----------------------------------------------------------------
  */
 
-static void CVSpbcgFree(CVodeMem cv_mem)
+static int CVSpbcgFree(CVodeMem cv_mem)
 {
   CVSpilsMem cvspils_mem;
   SpbcgMem spbcg_mem;
@@ -460,5 +461,7 @@ static void CVSpbcgFree(CVodeMem cv_mem)
 
   free(cvspils_mem);
   cv_mem->cv_lmem = NULL;
+
+  return(0);
 }
 

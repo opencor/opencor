@@ -46,7 +46,7 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core <a href=\"http://www.sed-ml.org/\">SED-ML</a> editing view facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
-    return new PluginInfo("Editing", false, false,
+    return new PluginInfo(PluginInfo::Editing, false, false,
                           QStringList() << "EditingView" << "SEDMLSupport",
                           descriptions);
 }
@@ -326,8 +326,7 @@ void SEDMLEditingViewPlugin::sedmlValidation()
         if (mSedmlEditingViewInterface->validSedml(mFileName, extra)) {
             // There are no SED-ML issues, so the SED-ML file is valid
 
-            Core::informationMessageBox( Core::mainWindow(),
-                                         tr("SED-ML Validation"),
+            Core::informationMessageBox( tr("SED-ML Validation"),
                                          tr("The SED-ML file is valid.")
                                         +(extra.isEmpty()?
                                              QString():

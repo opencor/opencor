@@ -25,10 +25,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QSettings>
 #include <QToolButton>
 #include <QVariant>
@@ -72,7 +68,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -82,7 +78,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     QWidget *subWidget = new QWidget(this);
     QHBoxLayout *subLayout = new QHBoxLayout(subWidget);
 
-    subLayout->setMargin(0);
+    subLayout->setContentsMargins(QMargins());
     subLayout->setSpacing(0);
 
     subWidget->setLayout(subLayout);
@@ -260,7 +256,7 @@ void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
 
     mLayout = new QVBoxLayout(this);
 
-    mLayout->setMargin(0);
+    mLayout->setContentsMargins(QMargins());
     mLayout->setSpacing(0);
 
     setLayout(mLayout);

@@ -28,15 +28,11 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAction>
 #include <QApplication>
 #include <QBuffer>
 #include <QColor>
-#include <QDate>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -44,6 +40,7 @@ limitations under the License.
 #include <QFrame>
 #include <QIODevice>
 #include <QLabel>
+#include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
@@ -269,7 +266,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // Check whether the save file already exists and is opened
 
             if (Core::FileManager::instance()->file(res)) {
-                warningMessageBox(qApp->activeWindow(), pCaption,
+                warningMessageBox(pCaption,
                                   QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
 
                 continue;
@@ -278,10 +275,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // Check whether the save file already exists
 
             if (   resInfo.exists()
-                && questionMessageBox(qApp->activeWindow(), pCaption,
-                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
-                                      QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::No) {
+                && questionMessageBox(pCaption,
+                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res)) == QMessageBox::No) {
                 continue;
             }
         }
@@ -321,7 +316,7 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
 
             if (   pEmptyDir
                 && QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
-                warningMessageBox(qApp->activeWindow(), pCaption,
+                warningMessageBox(pCaption,
                                   QObject::tr("Please choose an empty directory."));
 
                 return QString();
@@ -628,27 +623,27 @@ QColor lockedColor(const QColor &pColor)
         lockedBlue = 0
     };
 
-    static const double alpha = 0.05;
-    static const double oneMinusAlpha = 1.0-alpha;
+    static const double Alpha = 0.05;
+    static const double OneMinusAlpha = 1.0-Alpha;
 
-    return QColor(alpha*lockedRed+oneMinusAlpha*red,
-                  alpha*lockedGreen+oneMinusAlpha*green,
-                  alpha*lockedBlue+oneMinusAlpha*blue);
+    return QColor(Alpha*lockedRed+OneMinusAlpha*red,
+                  Alpha*lockedGreen+OneMinusAlpha*green,
+                  Alpha*lockedBlue+OneMinusAlpha*blue);
 }
 
 //==============================================================================
 
-QStringList filters(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
-                    const QStringList &pMimeTypes)
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    const bool &pCheckMimeTypes, const QStringList &pMimeTypes)
 {
-    // Convert and return as a list of filters the given file types, using the
-    // given MIME types, if required
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types, if any
 
     QStringList res = QStringList();
 
-    foreach (FileType *fileType, pFileTypes) {
-        if (!pCheckMimeTypes || pMimeTypes.contains(fileType->mimeType()))
-            res << fileType->description()+" (*."+fileType->fileExtension()+")";
+    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
+        if (!pCheckMimeTypes || pMimeTypes.contains(fileTypeInterface->mimeType()))
+            res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
     }
 
     return res;
@@ -656,21 +651,23 @@ QStringList filters(const FileTypes &pFileTypes, const bool &pCheckMimeTypes,
 
 //==============================================================================
 
-QStringList filters(const FileTypes &pFileTypes)
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
 {
-    // Convert and return as a list of filters the given file types
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces
 
-    return filters(pFileTypes, false, QStringList());
+    return filters(pFileTypeInterfaces, false, QStringList());
 }
 
 //==============================================================================
 
-QStringList filters(const FileTypes &pFileTypes, const QStringList &pMimeTypes)
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    const QStringList &pMimeTypes)
 {
-    // Convert and return as a list of filters the given file types, using the
-    // given MIME types, if any
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types
 
-    return filters(pFileTypes, true, pMimeTypes);
+    return filters(pFileTypeInterfaces, true, pMimeTypes);
 }
 
 //==============================================================================

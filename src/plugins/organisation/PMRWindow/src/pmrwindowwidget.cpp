@@ -44,7 +44,6 @@ namespace PMRWindow {
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(this),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
@@ -65,6 +64,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(copy()));
 
     mContextMenu->addAction(mCopyAction);
+
+    // Prevent zooming in/out
+
+    setZoomingEnabled(false);
 
     // We want our own context menu
 
@@ -138,7 +141,7 @@ QString PmrWindowWidget::message() const
         } else if (mNumberOfFilteredExposures == 1) {
             res = tr("<strong>1</strong> exposure was found:");
         } else {
-            res = tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures);
+            res = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
         }
     } else {
         res = tr("<strong>Error:</strong> ")+Core::formatMessage(mInternetConnectionAvailable?
@@ -192,10 +195,10 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
                      "                        </ul>\n"
                      "                    </td>\n"
                      "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"/></a>\n"
+                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
                      "                    </td>\n"
                      "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
                      "                    </td>\n"
                      "                </tr>\n"
                      "            </tbody>\n"

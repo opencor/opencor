@@ -26,6 +26,7 @@ limitations under the License.
 
 #include "coreinterface.h"
 #include "filehandlinginterface.h"
+#include "filetypeinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -105,6 +106,8 @@ private:
     QAction *mFileReopenSubMenuSeparator1;
     QAction *mFileReopenSubMenuSeparator2;
     QAction *mFileClearReopenSubMenuAction;
+
+    FileTypeInterfaces mFileTypeInterfaces;
 
     QStringList mRecentFileNamesOrUrls;
 

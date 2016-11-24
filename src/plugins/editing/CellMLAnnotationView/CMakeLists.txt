@@ -43,6 +43,4 @@ ADD_PLUGIN(CellMLAnnotationView
         WebViewerWidget
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
 )

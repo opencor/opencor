@@ -66,10 +66,6 @@ private:
 
 //==============================================================================
 
-typedef QList<EditorListItem> EditorListItems;
-
-//==============================================================================
-
 }   // namespace EditorWidget
 }   // namespace OpenCOR
 

@@ -281,10 +281,10 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             foreach (const CellMLTextViewConverterWarning &warning, mConverter.warnings()) {
                 editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
-                                                        successfulConversion?-1:warning.line(),
-                                                        successfulConversion?
-                                                            QString("[%1] ").arg(warning.line())+warning.message().arg(" "+tr("in the original CellML file")):
-                                                            warning.message().arg(QString()));
+                                                           successfulConversion?-1:warning.line(),
+                                                           successfulConversion?
+                                                               QString("[%1] %2").arg(QString::number(warning.line()), warning.message().arg(tr(" in the original CellML file"))):
+                                                               warning.message().arg(QString()));
             }
         }
 
@@ -314,12 +314,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             //       we want it done straightaway...
 
             editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Error,
-                                                    mConverter.errorLine(),
-                                                    mConverter.errorColumn(),
-                                                    Core::formatMessage(mConverter.errorMessage(), false)+".");
-
+                                                       mConverter.errorLine(),
+                                                       mConverter.errorColumn(),
+                                                       tr("%1.").arg(Core::formatMessage(mConverter.errorMessage(), false)));
             editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Hint,
-                                                    tr("You might want to use the Raw (CellML) view to edit the file."));
+                                                       tr("You might want to use the Raw (CellML) view to edit the file."));
 
             // Apply an XML lexer to our editor
 
@@ -576,12 +575,10 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
-                && (Core::questionMessageBox(Core::mainWindow(), tr("Save File"),
+                && (Core::questionMessageBox(tr("Save File"),
                                              tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
                                                                                                                                                                                             CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
-                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion())),
-                                             QMessageBox::Yes|QMessageBox::No,
-                                             QMessageBox::Yes) == QMessageBox::No)) {
+                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
                 pNeedFeedback = false;
 
                 return false;
@@ -617,10 +614,8 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // The parsing was unsuccessful, so ask the user whether s/he wants
             // to save the contents of the view to a text file
 
-            if (Core::questionMessageBox(Core::mainWindow(), tr("Save File"),
-                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName),
-                                         QMessageBox::Yes|QMessageBox::No,
-                                         QMessageBox::Yes) == QMessageBox::Yes) {
+            if (Core::questionMessageBox(tr("Save File"),
+                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName)) == QMessageBox::Yes) {
                 QString fileName = Core::getSaveFileName(tr("Save File"),
                                                          Core::newFileName(pNewFileName, "txt"));
 
@@ -761,10 +756,10 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
             if (   !pOnlyErrors
                 || (message.type() == CellmlTextViewParserMessage::Error)) {
                 editingWidget->editorListWidget()->addItem((message.type() == CellmlTextViewParserMessage::Error)?
-                                                         EditorWidget::EditorListItem::Error:
-                                                         EditorWidget::EditorListItem::Warning,
-                                                     message.line(), message.column(),
-                                                     message.message());
+                                                               EditorWidget::EditorListItem::Error:
+                                                               EditorWidget::EditorListItem::Warning,
+                                                           message.line(), message.column(),
+                                                           message.message());
             }
         }
 

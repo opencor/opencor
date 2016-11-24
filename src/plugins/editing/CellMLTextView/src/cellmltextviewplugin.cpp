@@ -48,7 +48,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using the CellML Text format."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide du format CellML Text."));
 
-    return new PluginInfo("Editing", true, true,
+    return new PluginInfo(PluginInfo::Editing, true, true,
                           QStringList() << "CellMLEditingView",
                           descriptions);
 }
@@ -242,6 +242,8 @@ void CellMLTextViewPlugin::initializePlugin()
 
     mViewWidget = new CellmlTextViewWidget(Core::mainWindow());
 
+    mViewWidget->setObjectName("CellmlTextViewWidget");
+
     // Hide our CellML text view widget since it may not initially be shown in
     // our central widget
 
@@ -418,9 +420,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
             CellMLTextView::CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
-                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
-                                                                                       .arg(converter.errorColumn())
-                                                                                       .arg(Core::formatMessage(converter.errorMessage(), false));
+                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(QString::number(converter.errorLine()),
+                                                                                            QString::number(converter.errorColumn()),
+                                                                                            Core::formatMessage(converter.errorMessage(), false));
             } else {
                 QByteArray converterOutputByteArray = converter.output().toUtf8();
 
@@ -434,9 +436,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
                     if (message.type() == CellmlTextViewParserMessage::Error) {
-                        errorMessage += QString("\n [%1:%2] %3").arg(message.line())
-                                                                .arg(message.column())
-                                                                .arg(message.message());
+                        errorMessage += QString("\n [%1:%2] %3").arg(QString::number(message.line()),
+                                                                     QString::number(message.column()),
+                                                                     message.message());
                     }
                 }
             } else {

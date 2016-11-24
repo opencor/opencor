@@ -24,6 +24,8 @@ QMainWindow CORE_EXPORT * mainWindow();
 
 bool CORE_EXPORT aboutToQuit();
 
+void CORE_EXPORT adjustWidgetSize(QWidget *pWidget);
+
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
                                   const bool &pEnabled = true);
 
@@ -33,26 +35,21 @@ QColor CORE_EXPORT highlightColor();
 QColor CORE_EXPORT shadowColor();
 QColor CORE_EXPORT windowColor();
 
-QMessageBox::StandardButton CORE_EXPORT informationMessageBox(QWidget *pParent,
-                                                              const QString &pTitle,
+QMessageBox::StandardButton CORE_EXPORT informationMessageBox(const QString &pTitle,
                                                               const QString &pText,
                                                               const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,
-                                                              const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
-QMessageBox::StandardButton CORE_EXPORT questionMessageBox(QWidget *pParent,
-                                                           const QString &pTitle, const QString &pText,
+                                                              const QMessageBox::StandardButton &pDefaultButton = QMessageBox::Ok);
+QMessageBox::StandardButton CORE_EXPORT questionMessageBox(const QString &pTitle, const QString &pText,
                                                            const QMessageBox::StandardButtons &pButtons = QMessageBox::StandardButtons(QMessageBox::Yes|QMessageBox::No),
-                                                           const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
-QMessageBox::StandardButton CORE_EXPORT warningMessageBox(QWidget *pParent,
-                                                          const QString &pTitle, const QString &pText,
+                                                           const QMessageBox::StandardButton &pDefaultButton = QMessageBox::Yes);
+QMessageBox::StandardButton CORE_EXPORT warningMessageBox(const QString &pTitle, const QString &pText,
                                                           const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,
-                                                          const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
-QMessageBox::StandardButton CORE_EXPORT criticalMessageBox(QWidget *pParent,
-                                                           const QString &pTitle, const QString &pText,
+                                                          const QMessageBox::StandardButton &pDefaultButton = QMessageBox::Ok);
+QMessageBox::StandardButton CORE_EXPORT criticalMessageBox(const QString &pTitle, const QString &pText,
                                                            const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,
-                                                           const QMessageBox::StandardButton &pDefaultButton = QMessageBox::NoButton);
+                                                           const QMessageBox::StandardButton &pDefaultButton = QMessageBox::Ok);
 
-void CORE_EXPORT aboutMessageBox(QWidget *pParent, const QString &pTitle,
-                                 const QString &pText);
+void CORE_EXPORT aboutMessageBox(const QString &pTitle, const QString &pText);
 
 //==============================================================================
 // End of file

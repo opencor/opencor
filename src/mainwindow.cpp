@@ -33,6 +33,7 @@ limitations under the License.
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
 #include "preferencesdialog.h"
+#include "preferencesinterface.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
@@ -49,10 +50,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
@@ -64,6 +61,7 @@ limitations under the License.
 #include <QSettings>
 #include <QShortcut>
 #include <QUrl>
+#include <QWindow>
 
 //==============================================================================
 
@@ -135,7 +133,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager(qApp);
+    mPluginManager = new PluginManager();
 
     // Retrieve some categories of plugins
 
@@ -155,16 +153,14 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Set up the GUI
     // Note: the application icon (which needs to be set for Linux, but not for
-    //       Windows or OS X, since it's set through CMake in those cases (see
+    //       Windows or macOS, since it's set through CMake in those cases (see
     //       CMakeLists.txt)) is set within the GUI file. This being said, it's
     //       good to have it set for all three platforms, since it can then be
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
-//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT USER PREFERENCES...
-showEnableAction(mGui->actionPreferences, false);
 
-    // Set the role of some of our menu items, so that OS X can move them into
+    // Set the role of some of our menu items, so that macOS can move them into
     // the application menu
 
     mGui->actionQuit->setMenuRole(QAction::QuitRole);
@@ -235,8 +231,8 @@ showEnableAction(mGui->actionPreferences, false);
 #endif
 
 #ifdef Q_OS_MAC
-    // A special shortcut to have OpenCOR minimised on OS X when pressing Cmd+M
-    // Note: indeed, when pressing Cmd+M on OS X, the active application is
+    // A special shortcut to have OpenCOR minimised on macOS when pressing Cmd+M
+    // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
 
     new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_M),
@@ -255,11 +251,6 @@ showEnableAction(mGui->actionPreferences, false);
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins())
         initializeGuiPlugin(plugin);
-
-    // Keep track of the plugin's name in case we support internationalisation
-
-    foreach (Plugin *plugin, mLoadedI18nPlugins)
-        qobject_cast<I18nInterface *>(plugin->instance())->setPluginName(plugin->name());
 
     // Let our various plugins know that all of them have been initialised
     // Note: this is important to do since the initialisation of a plugin is
@@ -356,7 +347,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
     } else if (pEvent->type() == QEvent::WindowStateChange) {
         // The window state has changed, so update the checked state of our full
         // screen action
-        // Note: useful on OS X since there is a special full screen button in
+        // Note: useful on macOS since there is a special full screen button in
         //       the main window's title bar...
 
         mGui->actionFullScreen->setChecked(isFullScreen());
@@ -381,9 +372,13 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
-        // Keep track of the fact that we are about to quit
+        // Delete any Web inspector window (which may have been created through
+        // our use of QtWebKit)
 
-        qApp->setProperty("OpenCOR::aboutToQuit()", true);
+        foreach (QWindow *window, QGuiApplication::topLevelWindows()) {
+            if (!window->objectName().compare("QWebInspectorClassWindow"))
+                window->close();
+        }
 
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
@@ -411,7 +406,7 @@ void MainWindow::registerOpencorUrlScheme()
     QSettings settings("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
     QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
 
-    settings.setValue("opencor/Default", "URL:OpenCOR link");
+    settings.setValue("opencor/Default", QString("URL:%1 link").arg(qApp->applicationName()));
     settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
     settings.setValue("opencor/URL Protocol", "");
     settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
@@ -420,19 +415,25 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
-    QString res = exec("which", QStringList() << "xdg-mime");
+    if (!exec("which", QStringList() << "xdg-mime").isEmpty()) {
+        QString iconPath = nativeCanonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
+                                                                                               qApp->organizationName(),
+                                                                                               qApp->applicationName()));
 
-    if (!res.isEmpty()) {
-        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
+        writeResourceToFile(iconPath, ":/app_icon");
 
         writeFileContentsToFile(QString("%1/.local/share/applications/opencor.desktop").arg(QDir::homePath()),
                                 QString("[Desktop Entry]\n"
                                         "Type=Application\n"
-                                        "Name=OpenCOR\n"
-                                        "Exec=%1 %u\n"
-                                        "Icon=%1\n"
+                                        "Name=%1\n"
+                                        "Exec=%2 %u\n"
+                                        "Icon=%3\n"
                                         "Terminal=false\n"
-                                        "MimeType=x-scheme-handler/opencor\n").arg(nativeCanonicalFileName(qApp->applicationFilePath())));
+                                        "MimeType=x-scheme-handler/opencor\n").arg(qApp->applicationName(),
+                                                                                   nativeCanonicalFileName(qApp->applicationFilePath()),
+                                                                                   iconPath));
+
+        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
 #elif defined(Q_OS_MAC)
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
@@ -456,21 +457,17 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Note: we must do that in reverse order since we are inserting menus,
         //       as opposed to appending some...
 
-        Gui::MenuIterator menuIter(guiInterface->guiMenus());
+        Gui::Menus guiMenus = guiInterface->guiMenus();
 
-        menuIter.toBack();
-
-        while (menuIter.hasPrevious()) {
+        for (int i = guiMenus.count()-1; i >= 0; --i) {
             // Insert the menu in the right place
 
-            Gui::Menu menu = menuIter.previous();
-
-            QMenu *newMenu = menu.menu();
+            QMenu *newMenu = guiMenus[i].menu();
             QString newMenuName = newMenu->objectName();
 
             QMenu *oldMenu = mMenus.value(newMenuName);
 
-            if (oldMenu && !menu.action()) {
+            if (oldMenu && !guiMenus[i].action()) {
                 // A menu with the same name already exists, so add the contents
                 // of the new menu to the existing one
 
@@ -484,7 +481,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 // No menu with the same name already exists (or the menu
                 // doesn't have a name), so add the new menu to our menu bar
 
-                switch (menu.type()) {
+                switch (guiMenus[i].type()) {
                 case Gui::Menu::File:
                     // Not a relevant type, so do nothing
 
@@ -507,23 +504,20 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Note: as for the menus above, we must do it in reverse order since we
         //       are inserting actions, as opposed to appending some...
 
-        Gui::MenuActionIterator menuActionIter(guiInterface->guiMenuActions());
+        Gui::MenuActions guiMenuActions = guiInterface->guiMenuActions();
 
-        menuActionIter.toBack();
-
-        while (menuActionIter.hasPrevious()) {
+        for (int i = guiMenuActions.count()-1; i >= 0; --i) {
             // Insert the action/separator to the right menu, if any
 
             QMenu *menu = 0;
-            Gui::MenuAction menuAction = menuActionIter.previous();
 
-            if (menuAction.type() == Gui::MenuAction::File)
+            if (guiMenuActions[i].type() == Gui::MenuAction::File)
                 menu = mGui->menuFile;
-            else if (menuAction.type() == Gui::MenuAction::Tools)
+            else if (guiMenuActions[i].type() == Gui::MenuAction::Tools)
                 menu = mGui->menuTools;
 
             if (menu) {
-                QAction *action = menuAction.action();
+                QAction *action = guiMenuActions[i].action();
 
                 if (action)
                     menu->insertAction(menu->actions().first(), action);
@@ -539,13 +533,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some sub-menus before some menu items
 
-        foreach (const Gui::Menu &menu, guiInterface->guiMenus()) {
+        foreach (const Gui::Menu &guiMenu, guiMenus) {
             // Insert the menu before a menu item / separator
 
-            if (menu.action()) {
-                switch (menu.type()) {
+            if (guiMenu.action()) {
+                switch (guiMenu.type()) {
                 case Gui::Menu::File:
-                    mGui->menuFile->insertMenu(menu.action(), menu.menu());
+                    mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
 
                     break;
                 case Gui::Menu::View:
@@ -715,8 +709,8 @@ void MainWindow::loadSettings()
         //       Core interface, so no need to check anything...
     }
 
-    // Remove the File menu when on OS X, should no plugins be loaded
-    // Note: our File menu should only contain the Exit menu item, but on OS X
+    // Remove the File menu when on macOS, should no plugins be loaded
+    // Note: our File menu should only contain the Exit menu item, but on macOS
     //       that menu item gets automatically moved to the application menu...
 
 #ifdef Q_OS_MAC
@@ -799,12 +793,20 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 
         QLocale::setDefault(QLocale(newLocale));
 
-        qApp->removeTranslator(&mQtTranslator);
-        mQtTranslator.load(":qt_"+newLocale);
-        qApp->installTranslator(&mQtTranslator);
+        qApp->removeTranslator(&mQtBaseTranslator);
+        mQtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtBaseTranslator);
+
+        qApp->removeTranslator(&mQtHelpTranslator);
+        mQtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtHelpTranslator);
+
+        qApp->removeTranslator(&mQtXmlPatternsTranslator);
+        mQtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(newLocale));
+        qApp->installTranslator(&mQtXmlPatternsTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
-        mAppTranslator.load(":app_"+newLocale);
+        mAppTranslator.load(":/app_"+newLocale);
         qApp->installTranslator(&mAppTranslator);
 
         // Retranslate OpenCOR
@@ -820,13 +822,13 @@ void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
         if (mViewWindowsMenu)
             I18nInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
 
-        // Update the locale of our various loaded plugins
-        // Note: we must set the locale of all the plugins before we can safely
-        //       retranslate them since a plugin may require another plugin to
-        //       work properly...
+        // Update the translator of our various loaded plugins
+        // Note: we must update the translator of all our plugins before we can
+        //       safely retranslate them since a plugin may require another
+        //       plugin to work properly...
 
         foreach (Plugin *plugin, mLoadedI18nPlugins)
-            qobject_cast<I18nInterface *>(plugin->instance())->setLocale(newLocale);
+            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name(), newLocale));
 
         // Retranslate our various plugins
 
@@ -976,7 +978,7 @@ void MainWindow::showSelf()
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    // We are on Linux or OS X, so we can simply activate the window and raise
+    // We are on Linux or macOS, so we can simply activate the window and raise
     // ourselves
 
     activateWindow();
@@ -1143,18 +1145,7 @@ void MainWindow::on_actionPlugins_triggered()
 
         PluginsDialog pluginsDialog(mPluginManager, this);
 
-        mSettings->beginGroup(pluginsDialog.objectName());
-            pluginsDialog.loadSettings(mSettings);
-        mSettings->endGroup();
-
         pluginsDialog.exec();
-        // Note: the execution of the plugins dialog may result in the saving of
-        //       the application's settings, so for this to work we must ensure
-        //       that any opened settings group has first been closed...
-
-        mSettings->beginGroup(pluginsDialog.objectName());
-            pluginsDialog.saveSettings(mSettings);
-        mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
@@ -1162,7 +1153,7 @@ void MainWindow::on_actionPlugins_triggered()
         if (pluginsDialog.result() == QMessageBox::Apply)
             restart(true);
     } else {
-        warningMessageBox(this, tr("Plugins"),
+        warningMessageBox(tr("Plugins"),
                           tr("No plugins could be found."));
     }
 }
@@ -1171,11 +1162,32 @@ void MainWindow::on_actionPlugins_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    // Show the preferences dialog
+    // Show the preferences dialog, if we have at least one plugin that supports
+    // the Preferences interface
 
-    PreferencesDialog preferencesDialog(this);
+    if (mPluginManager->plugins().count()) {
+        bool pluginsWithPreferences = false;
 
-    preferencesDialog.exec();
+        foreach (Plugin *plugin, mPluginManager->plugins()) {
+            if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
+                pluginsWithPreferences = true;
+
+                break;
+            }
+        }
+
+        if (pluginsWithPreferences) {
+            PreferencesDialog preferencesDialog(mPluginManager, this);
+
+            preferencesDialog.exec();
+        } else {
+            warningMessageBox(tr("Preferences"),
+                              tr("No plugins have preferences."));
+        }
+    } else {
+        warningMessageBox(tr("Preferences"),
+                          tr("No plugins could be found."));
+    }
 }
 
 //==============================================================================
@@ -1195,15 +1207,7 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 
     CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-    mSettings->beginGroup(checkForUpdatesDialog.objectName());
-        checkForUpdatesDialog.loadSettings(mSettings);
-    mSettings->endGroup();
-
     checkForUpdatesDialog.exec();
-
-    mSettings->beginGroup(checkForUpdatesDialog.objectName());
-        checkForUpdatesDialog.saveSettings(mSettings);
-    mSettings->endGroup();
 }
 
 //==============================================================================
@@ -1212,7 +1216,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    aboutMessageBox(this, tr("About"),
+    aboutMessageBox(tr("About"),
                     "<h1 align=center><strong>"+version()+"</strong></h1>"
                     "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
@@ -1359,10 +1363,8 @@ void MainWindow::updateDockWidgetsVisibility()
 
 void MainWindow::resetAll()
 {
-    if (questionMessageBox(this, qAppName(),
-                           tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
-                           QMessageBox::Yes|QMessageBox::No,
-                           QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(qAppName(),
+                           tr("You are about to reset <strong>all</strong> of your settings. Do you want to proceed?")) == QMessageBox::Yes ) {
         // Restart OpenCOR without first saving its settings
 
         restart(false);

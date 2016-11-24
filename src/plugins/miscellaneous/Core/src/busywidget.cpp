@@ -27,11 +27,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-#include <QtMath>
-
-//==============================================================================
-
 #include <QApplication>
 #include <QColor>
 #include <QDesktopWidget>
@@ -46,12 +41,6 @@ limitations under the License.
 
 namespace OpenCOR {
 namespace Core {
-
-//==============================================================================
-
-enum {
-    Margin = 5
-};
 
 //==============================================================================
 
@@ -402,6 +391,10 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     // Draw a background for ourselves
+
+    enum {
+        Margin = 5
+    };
 
     painter.translate(0.5*width(), 0.5*height());
 

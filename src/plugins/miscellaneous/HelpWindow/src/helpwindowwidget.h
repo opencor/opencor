@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -82,77 +81,29 @@ private:
 
 //==============================================================================
 
-class HelpWindowPage : public QWebPage
-{
-public:
-    explicit HelpWindowPage(QObject *pParent);
-
-protected:
-    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
-                                         const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType pType);
-
-private:
-    QMap<QString, QString> mFileNames;
-};
-
-//==============================================================================
-
-class HelpWindowWidget : public WebViewerWidget::WebViewerWidget,
-                         public Core::CommonWidget
+class HelpWindowWidget : public WebViewerWidget::WebViewerWidget
 {
     Q_OBJECT
 
 public:
-    explicit HelpWindowWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-                              QWidget *pParent);
+    explicit HelpWindowWidget(QWidget *pParent);
+    ~HelpWindowWidget();
 
     virtual void retranslateUi();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void goToHomePage();
-
-    void resetZoom();
-
-    void zoomIn();
-    void zoomOut();
+    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
 protected:
     virtual QSize sizeHint() const;
 
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
-
 private:
     QHelpEngine *mHelpEngine;
 
-    QUrl mHomePage;
-
-    int mZoomLevel;
-
-    void emitZoomRelatedSignals();
-
-    void setZoomLevel(const int &pZoomLevel);
-
-signals:
-    void notHomePage(const bool &pNotHomePage);
-
-    void backEnabled(const bool &pEnabled);
-    void forwardEnabled(const bool &pEnabled);
-
-    void copyTextEnabled(const bool &pEnabled);
-
-    void notDefaultZoomLevel(const bool &pEnabled);
-    void zoomOutEnabled(const bool &pEnabled);
-
-private slots:
-    void urlChanged(const QUrl &pUrl);
-
-    void selectionChanged();
-
-    void documentChanged();
+    QString mQchFileName;
+    QString mQhcFileName;
 };
 
 //==============================================================================
