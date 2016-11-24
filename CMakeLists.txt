@@ -292,90 +292,90 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-#    api/BioSignalMLAPI
-#    api/CellMLAPI
-#    api/SBMLAPI
-#    api/SEDMLAPI
+    api/BioSignalMLAPI
+    api/CellMLAPI
+    api/SBMLAPI
+    api/SEDMLAPI
 
     miscellaneous/Core
 
     support/StandardSupport
 
-#    thirdParty/libgit2
-#    thirdParty/LLVM
-#    thirdParty/QScintilla
-#    thirdParty/Qwt
-#    thirdParty/SUNDIALS
+    thirdParty/libgit2
+    thirdParty/LLVM
+    thirdParty/QScintilla
+    thirdParty/Qwt
+    thirdParty/SUNDIALS
     thirdParty/zlib
 
     # Plugins that build on top of some third-party libraries
 
-#    miscellaneous/Compiler
+    miscellaneous/Compiler
 
     # Plugins that provide support for some third-party libraries
 
-#    support/CellMLSupport
-#    support/PMRSupport
-#    support/QScintillaSupport
-#    support/SEDMLSupport
+    support/CellMLSupport
+    support/PMRSupport
+    support/QScintillaSupport
+    support/SEDMLSupport
     support/ZIPSupport
 
     # Plugins that provide support for some third-party libraries that have
     # dependencies on others
 
-#    support/COMBINESupport
+    support/COMBINESupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
-#    widget/EditorWidget
-#    widget/GraphPanelWidget
-#    widget/MathMLViewerWidget
-#    widget/WebViewerWidget
-##
-##    # Plugins that provide some generic features
-##
-##    dataStore/DataStore
-##
-##    editing/EditingView
-##
-##    # Plugins that have dependencies on others
-##
-##    editing/CellMLEditingView
-##    editing/SEDMLEditingView
-##
-##    # Selectable plugins
-##
-##    dataStore/BioSignalMLDataStore
-##    dataStore/CSVDataStore
-##
-##    editing/CellMLAnnotationView
-##    editing/CellMLTextView
-##    editing/RawCellMLView
-##    editing/RawSEDMLView
-##    editing/RawTextView
-##
-##    miscellaneous/HelpWindow
-##    miscellaneous/WebBrowserWindow
-##
-##    organisation/FileBrowserWindow
-##    organisation/FileOrganiserWindow
-##    organisation/PMRWindow
-##
-##    simulation/SingleCellView
-##
-##    solver/CVODESolver
-##    solver/ForwardEulerSolver
-##    solver/FourthOrderRungeKuttaSolver
-##    solver/HeunSolver
-##    solver/IDASolver
-##    solver/KINSOLSolver
-##    solver/SecondOrderRungeKuttaSolver
-##
-##    tools/CellMLTools
-##
-##    # Sample plugins
-##
-##    ${SAMPLE_PLUGINS}
+    widget/EditorWidget
+    widget/GraphPanelWidget
+    widget/MathMLViewerWidget
+    widget/WebViewerWidget
+
+    # Plugins that provide some generic features
+
+    dataStore/DataStore
+
+    editing/EditingView
+
+    # Plugins that have dependencies on others
+
+    editing/CellMLEditingView
+    editing/SEDMLEditingView
+
+    # Selectable plugins
+
+    dataStore/BioSignalMLDataStore
+    dataStore/CSVDataStore
+
+    editing/CellMLAnnotationView
+    editing/CellMLTextView
+    editing/RawCellMLView
+    editing/RawSEDMLView
+    editing/RawTextView
+
+    miscellaneous/HelpWindow
+    miscellaneous/WebBrowserWindow
+
+    organisation/FileBrowserWindow
+    organisation/FileOrganiserWindow
+    organisation/PMRWindow
+
+    simulation/SingleCellView
+
+    solver/CVODESolver
+    solver/ForwardEulerSolver
+    solver/FourthOrderRungeKuttaSolver
+    solver/HeunSolver
+    solver/IDASolver
+    solver/KINSOLSolver
+    solver/SecondOrderRungeKuttaSolver
+
+    tools/CellMLTools
+
+    # Sample plugins
+
+    ${SAMPLE_PLUGINS}
 )
 
 FOREACH(PLUGIN ${PLUGINS})
