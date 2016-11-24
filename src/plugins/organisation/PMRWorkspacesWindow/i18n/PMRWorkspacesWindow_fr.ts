@@ -91,10 +91,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Warning:&lt;/strong&gt; please authenticate yourself...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No workspaces were found.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -110,13 +106,13 @@
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>You need to authenticate yourself...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
-    <message>
-        <source>Log off PMR?</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Log off PMR</source>
         <translation type="unfinished"></translation>
@@ -131,6 +127,10 @@
     </message>
     <message>
         <source>Log On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You are about to log off PMR. Do you want to proceed?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
