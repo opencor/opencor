@@ -598,7 +598,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
-            # Strip the library of all its local symbols, if possible
+            # Strip the external library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
