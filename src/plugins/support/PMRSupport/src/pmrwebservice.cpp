@@ -26,10 +26,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMainWindow>

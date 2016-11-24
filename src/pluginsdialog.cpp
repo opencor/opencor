@@ -33,10 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QModelIndex>

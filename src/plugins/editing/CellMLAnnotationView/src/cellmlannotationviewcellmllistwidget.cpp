@@ -30,10 +30,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QDesktopServices>

@@ -50,10 +50,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
