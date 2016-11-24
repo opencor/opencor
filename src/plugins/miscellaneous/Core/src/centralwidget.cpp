@@ -46,6 +46,7 @@ limitations under the License.
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QMimeData>
+#include <QPushButton>
 #include <QRect>
 #include <QSettings>
 #include <QSizePolicy>
@@ -283,17 +284,22 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
     dialogLayout->addWidget(mRemoteFileDialogUrlValue, 0, 1);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
+    mRemoteFileDialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
 
-    dialogLayout->addWidget(buttonBox, 1, 0, 1, 2);
+    dialogLayout->addWidget(mRemoteFileDialogButtonBox, 1, 0, 1, 2);
 
     dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
 
+    openRemoteFileChanged();
+
     // Some connections to handle our remote file dialog box
 
-    connect(buttonBox, SIGNAL(accepted()),
+    connect(mRemoteFileDialogUrlValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(openRemoteFileChanged()));
+
+    connect(mRemoteFileDialogButtonBox, SIGNAL(accepted()),
             this, SLOT(doOpenRemoteFile()));
-    connect(buttonBox, SIGNAL(rejected()),
+    connect(mRemoteFileDialogButtonBox, SIGNAL(rejected()),
             this, SLOT(cancelOpenRemoteFile()));
 }
 
@@ -875,6 +881,16 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
     } else {
         openFile(fileName, File::Remote, fileNameOrUrl);
     }
+}
+
+//==============================================================================
+
+void CentralWidget::openRemoteFileChanged()
+{
+    // Enable/disable the open button depending on whether we have some text for
+    // the remote file
+
+    mRemoteFileDialogButtonBox->button(QDialogButtonBox::Open)->setEnabled(!mRemoteFileDialogUrlValue->text().isEmpty());
 }
 
 //==============================================================================

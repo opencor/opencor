@@ -39,6 +39,7 @@ limitations under the License.
 //==============================================================================
 
 class QDialog;
+class QDialogButtonBox;
 class QLabel;
 class QLineEdit;
 class QStackedWidget;
@@ -168,6 +169,7 @@ private:
     QDialog *mRemoteFileDialog;
     QLabel *mRemoteFileDialogUrlLabel;
     QLineEdit *mRemoteFileDialogUrlValue;
+    QDialogButtonBox *mRemoteFileDialogButtonBox;
 
     QMap<QString, QString> mRemoteLocalFileNames;
 
@@ -206,6 +208,7 @@ private slots:
 
     void openFile();
 
+    void openRemoteFileChanged();
     void doOpenRemoteFile();
     void cancelOpenRemoteFile();
     void openRemoteFile();
